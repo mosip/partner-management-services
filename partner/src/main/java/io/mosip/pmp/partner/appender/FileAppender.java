@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 import io.mosip.pmp.partner.constant.ConfigurationDefault;
 
-
 /**
  * @author sanjeev.shrivastava
  *
