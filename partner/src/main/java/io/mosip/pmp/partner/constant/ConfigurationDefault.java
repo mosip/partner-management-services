@@ -14,11 +14,10 @@
  */
 package io.mosip.pmp.partner.constant;
 
+
 /**
- * Default value of Configurations
- * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
+ *
  */
 public final class ConfigurationDefault {
 

@@ -20,8 +20,7 @@ import io.mosip.pmp.partner.constant.LoggerMethod;
 /**
  * Factory class for mosip
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
 public class Logfactory {
 

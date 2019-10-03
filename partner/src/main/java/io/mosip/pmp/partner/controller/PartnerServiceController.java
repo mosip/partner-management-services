@@ -25,6 +25,10 @@ import io.mosip.pmp.partner.logger.Logger;
 import io.mosip.pmp.partner.logger.PartnerServiceLogger;
 import io.mosip.pmp.partner.service.PartnerService;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 @RestController
 @RequestMapping(value = "/partners")
 public class PartnerServiceController {
@@ -33,11 +37,11 @@ public class PartnerServiceController {
 	
 	@Autowired
 	PartnerService partnerService;
-
-	/*
-	 * self registration by partner to create Auth/E-KYC Partners.
-	 * https://mosip.io/partnermanagement/v1/partners
-	 * 
+	
+	/**
+	 * This method is use for self registration by partner to create Auth/E-KYC Partners.
+	 * @param partnerRequest.
+	 * @return partnerResponse.
 	 */
 	
 	@RequestMapping(value = "partnerReg", method = RequestMethod.POST)
@@ -53,11 +57,11 @@ public class PartnerServiceController {
 		LOGGER.info("request", "idType", "id", "request");
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.CREATED);
 	}
-
-	/*
+	
+	/**
 	 * This API would be used to retrieve Auth/E-KYC Partner details
-	 * https://mosip.io/partnermanagement/v1/partners/{partnerID}
-	 * 
+	 * @param partnerID
+	 * @return retrievePartnerDetailsResponse.
 	 */
 	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.GET)
@@ -71,6 +75,13 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
 
+	
+	/**
+	 * @param request
+	 * @param partnerID
+	 * @return
+	 */
+	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request, @PathVariable String partnerID) {
@@ -82,13 +93,13 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.OK);
 	}
 
-	/*
+	/**
 	 * This API would be used to submit Partner api key request.
-	 * https://mosip.io/partnermanagement/v1/partners/{partnerID}/
-	 * partnerAPIKeyRequests
-	 * 
+	 * @param partnerID
+	 * @param request
+	 * @return partnerAPIKeyResponse.
 	 */
-
+	
 	@RequestMapping(value = "/{partnerID}/submitPartApiKeyReq", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
 			@PathVariable String partnerID, 
@@ -101,13 +112,13 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>>(response, HttpStatus.CREATED);
 	}
 
-	/*
-	 * This API would be used to download Partner API key for the given APIKeyReqID
-	 * https://mosip.io/partnermanagement/v1/partners/{partnerID}/
-	 * partnerAPIKeyRequests/{APIKeyReqID}
-	 * 
+	/**
+	 *  This API would be used to download Partner API key for the given APIKeyReqID.
+	 * @param partnerID
+	 * @param aPIKeyReqID
+	 * @return
 	 */
-
+	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{aPIKeyReqID}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> downloadPartnerAPIkey(
 			@PathVariable String partnerID, @PathVariable String aPIKeyReqID) {
@@ -118,13 +129,12 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>>(response, HttpStatus.OK);
 	}
 
-	/*
-	 * This API would be used to retrieve all API key requests submitted by partner
-	 * till date. https://mosip.io/partnermanagement/v1/partners/{partnerID}/
-	 * partnerAPIKeyRequests
-	 * 
+	/**
+	 * This API would be used to retrieve all API key requests submitted by partner.
+	 * @param partnerID
+	 * @return
 	 */
-
+	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
 			@PathVariable String partnerID) {
@@ -135,13 +145,13 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>>(response, HttpStatus.OK);
 	}
 
-	/*
-	 * This API would be used to view API key request status and API key (in case
-	 * request is approved).
-	 * https://mosip.io/partnermanagement/v1/partners/{partnerID}/
-	 * partnerAPIKeyRequests/{APIKeyReqID}
+	/**
+	 *  This API would be used to view API key request status and API key.
+	 * @param partnerID.
+	 * @param aPIKeyReqID.
+	 * @return aPIkeyRequests.
 	 */
-
+	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{aPIKeyReqID}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<APIkeyRequests>> viewApiKeyRequestStatusAndApiKey(
 			@PathVariable String partnerID, @PathVariable String aPIKeyReqID) {

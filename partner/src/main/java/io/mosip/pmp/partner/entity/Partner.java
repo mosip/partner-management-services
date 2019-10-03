@@ -10,12 +10,9 @@ import lombok.Data;
 
 /**
  * Entity class for PartnerId generator.
- * 
- * @author Sanjeev
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  *
  */
-
 @Entity
 @Table(name = "partner")
 @Data

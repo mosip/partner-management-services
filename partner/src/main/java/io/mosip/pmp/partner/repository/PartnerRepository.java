@@ -9,11 +9,9 @@ import io.mosip.pmp.partner.entity.Partner;
 
 /**
  * Repository class for create partner id.
- * 
- * @author Sanjeev
+ * @author sanjeev.shrivastava
  *
  */
-// TODO: once the db is finalize changes required according to schema given
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, String> {
 

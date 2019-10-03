@@ -9,11 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import io.mosip.pmp.partner.constant.ConfigurationDefault;
 
+
 /**
- * RollingFile appender for Mosip
- * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
+ *
  */
 @XmlRootElement
 public class RollingFileAppender extends FileAppender {

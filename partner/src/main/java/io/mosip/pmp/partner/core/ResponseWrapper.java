@@ -11,6 +11,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.mosip.pmp.partner.exception.ErrorResponse;
 import lombok.Data;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ * @param <T>
+ */
+
 @Data
 public class ResponseWrapper<T> {
 	private String id;

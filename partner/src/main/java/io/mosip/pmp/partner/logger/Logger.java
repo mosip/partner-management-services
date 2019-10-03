@@ -12,8 +12,7 @@ package io.mosip.pmp.partner.logger;
 /**
  * Logging interface for Mosip
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ *@author sanjeev.shrivastava
  */
 public interface Logger {
 

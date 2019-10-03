@@ -12,8 +12,7 @@ import io.mosip.pmp.partner.exception.XMLConfigurationParseException;
 /**
  * This is utility class for Logger
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
 public class LoggerUtils {
 	/**

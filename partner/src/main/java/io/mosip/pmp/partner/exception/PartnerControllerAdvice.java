@@ -21,9 +21,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import io.mosip.pmp.partner.constant.PartnerInputExceptionConstant;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 @RestControllerAdvice
 public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(PartnerAlreadyRegisteredException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassage(
 			final HttpServletRequest httpServletRequest, final PartnerAlreadyRegisteredException exception)
@@ -36,6 +46,9 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler#handleMethodArgumentNotValid(org.springframework.web.bind.MethodArgumentNotValidException, org.springframework.http.HttpHeaders, org.springframework.http.HttpStatus, org.springframework.web.context.request.WebRequest)
+	 */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -53,6 +66,13 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	}
 	
 	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	
 	@ExceptionHandler(PartnerDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistException exception)
@@ -66,6 +86,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	}
 	
 
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getAllExcepionMassage(
 			final HttpServletRequest httpServletRequest, final Exception exception) throws IOException {

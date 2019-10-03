@@ -11,11 +11,10 @@
 
 package io.mosip.pmp.partner.constant;
 
+
 /**
- * {@link Enum} for exception constants
- * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
+ *
  */
 public enum LogExeptionCodeConstant {
 	/**

@@ -12,11 +12,10 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 import io.mosip.pmp.partner.constant.ConfigurationDefault;
 
+
 /**
- * File Appender for mosip
- * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
+ *
  */
 @XmlRootElement
 @XmlSeeAlso(RollingFileAppender.class)

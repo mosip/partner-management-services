@@ -5,8 +5,7 @@ import io.mosip.pmp.partner.appender.RollingFileAppender;
 /**
  * PartnerServiceLogger logger.
  * 
- * @author 
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  *
  */
 public final class PartnerServiceLogger {

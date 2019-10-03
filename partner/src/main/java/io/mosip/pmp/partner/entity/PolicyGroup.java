@@ -9,6 +9,10 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 @Entity
 @Table(name = "policy_group")
 @Data

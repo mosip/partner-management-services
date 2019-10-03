@@ -1,24 +1,9 @@
-/*
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
 package io.mosip.pmp.partner.exception;
 
 /**
  * {@link Exception} to be file name is empty or null
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
 public class FileNameNotProvided extends BaseUncheckedException {
 

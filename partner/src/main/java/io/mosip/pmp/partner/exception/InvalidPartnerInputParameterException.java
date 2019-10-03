@@ -1,5 +1,9 @@
 package io.mosip.pmp.partner.exception;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 public class InvalidPartnerInputParameterException extends BaseUncheckedException{
 
 	/**

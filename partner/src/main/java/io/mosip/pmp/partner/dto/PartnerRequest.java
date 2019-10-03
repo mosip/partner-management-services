@@ -4,6 +4,10 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 @Data
 public class PartnerRequest{
 	

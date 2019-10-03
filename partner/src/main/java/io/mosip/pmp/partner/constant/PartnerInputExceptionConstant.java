@@ -1,5 +1,9 @@
 package io.mosip.pmp.partner.constant;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 public enum PartnerInputExceptionConstant {
 	
 	MISSING_PARTNER_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter");

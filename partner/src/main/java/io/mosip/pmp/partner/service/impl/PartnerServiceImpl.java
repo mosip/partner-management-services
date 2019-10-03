@@ -29,6 +29,10 @@ import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.util.PartnerUtil;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 @Service
 @Transactional
 public class PartnerServiceImpl implements PartnerService {
@@ -44,6 +48,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#savePartner(io.mosip.pmp.partner.dto.PartnerRequest)
+	 */
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		Partner partner = new Partner();
@@ -70,6 +77,9 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#getPartnerDetails(java.lang.String)
+	 */
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID) {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
@@ -92,6 +102,9 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#updatePartnerDetail(io.mosip.pmp.partner.dto.PartnerRequest, java.lang.String)
+	 */
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerRequest request, String partnerID) {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
@@ -115,6 +128,9 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#submitPartnerApiKeyReq(io.mosip.pmp.partner.dto.PartnerAPIKeyRequest, java.lang.String)
+	 */
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
@@ -133,6 +149,9 @@ public class PartnerServiceImpl implements PartnerService {
 		return partnerAPIKeyResponse;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#downloadPartnerAPIkey(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID, String aPIKeyReqID) {
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(aPIKeyReqID);
@@ -144,6 +163,9 @@ public class PartnerServiceImpl implements PartnerService {
 		return downloadPartnerAPIkeyResponse;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#retrieveAllApiKeyRequestsSubmittedByPartner(java.lang.String)
+	 */
 	@Override
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
 		PartnerPolicy partnerPolicy=null;
@@ -170,6 +192,9 @@ public class PartnerServiceImpl implements PartnerService {
 		return requests;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.mosip.pmp.partner.service.PartnerService#viewApiKeyRequestStatusApiKey(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID, String aPIKeyReqID) {
 		// TODO Auto-generated method stub

@@ -9,6 +9,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ * @param <T>
+ */
+
 @Data
 public class RequestWrapper<T> {
 	private String id;

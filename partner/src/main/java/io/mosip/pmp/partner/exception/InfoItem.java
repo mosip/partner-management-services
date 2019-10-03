@@ -11,8 +11,7 @@ import lombok.Setter;
  * This class is the entity class for the BaseUncheckedException and
  * BaseCheckedException class.
  * 
- * @author Sanjeev
- * @since 1.0
+ * @author sanjeev.shrivastava
  */
 @AllArgsConstructor
 @NoArgsConstructor

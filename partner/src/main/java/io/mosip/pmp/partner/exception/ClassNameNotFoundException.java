@@ -9,9 +9,8 @@ package io.mosip.pmp.partner.exception;
 
 /**
  * {@link Exception} to be thrown when a class name is not found
- * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
+ *
  */
 public class ClassNameNotFoundException extends BaseUncheckedException {
 

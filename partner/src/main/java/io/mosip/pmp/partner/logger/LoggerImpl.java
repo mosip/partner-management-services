@@ -30,8 +30,7 @@ import ch.qos.logback.core.util.FileSize;
 /**
  * Logback implementation class for mosip
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
 public class LoggerImpl implements Logger {
 

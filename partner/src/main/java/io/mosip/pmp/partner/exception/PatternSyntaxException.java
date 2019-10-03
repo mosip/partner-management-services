@@ -4,8 +4,7 @@ package io.mosip.pmp.partner.exception;
  * Unchecked exception thrown to indicate a syntax error in a regular-expression
  * pattern
  * 
- * @author Sidhant Agarwal
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  *
  */
 public class PatternSyntaxException extends BaseUncheckedException {

@@ -6,9 +6,7 @@ import lombok.Getter;
  * Log level for logger contains {@link #DEBUG} {@link #ERROR} {@link #TRACE}
  * {@link #INFO} {@link #WARN}
  * 
- * @author Urvil Joshi
- *
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
 public enum LogLevel {
 

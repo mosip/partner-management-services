@@ -1,5 +1,9 @@
 package io.mosip.pmp.partner.constant;
 
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
 public enum InvalidPartnerInputParameterExceptionConstant {
 	
      INVALID_PARTNER_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - for all attributes not as per defined data definition");

@@ -11,10 +11,9 @@ import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 
 /**
  * This interface provides the methods which can be used for PartnerService
- * 
- * @author Sanjeev
+ * @author sanjeev.shrivastava
+ *
  */
-
 public interface PartnerService {
 	
 	public PartnerResponse savePartner(PartnerRequest request);

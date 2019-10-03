@@ -6,12 +6,9 @@ import org.springframework.stereotype.Repository;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 
 /**
- * Repository class for create partner id.
- * 
- * @author Sanjeev
+ * @author sanjeev.shrivastava
  *
  */
-// TODO: once the db is finalize changes required according to schema given
 @Repository
 public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String> {
 

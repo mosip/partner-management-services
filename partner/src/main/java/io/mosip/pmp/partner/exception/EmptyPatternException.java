@@ -8,9 +8,9 @@ package io.mosip.pmp.partner.exception;
 /**
  * {@link Exception} to be thrown when pattern is empty or null
  * 
- * @author Urvil Joshi
- * @since 1.0.0
+ * @author sanjeev.shrivastava
  */
+
 public class EmptyPatternException extends BaseUncheckedException {
 
 	/**

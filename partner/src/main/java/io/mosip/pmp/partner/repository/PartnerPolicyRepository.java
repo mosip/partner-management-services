@@ -6,12 +6,10 @@ import org.springframework.stereotype.Repository;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 
 /**
- * Repository class for create PartnerPolicy.
- * 
- * @author Sanjeev
+ * @author sanjeev.shrivastava
  *
  */
-// TODO: once the db is finalize changes required according to schema given
+
 @Repository
 public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, String> {
 
