@@ -6,9 +6,6 @@ package io.mosip.pmp.partner.exception;
  */
 public class InvalidPartnerInputParameterException extends BaseUncheckedException{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public InvalidPartnerInputParameterException() {}

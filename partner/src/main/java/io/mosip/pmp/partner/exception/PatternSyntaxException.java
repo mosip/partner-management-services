@@ -7,6 +7,7 @@ package io.mosip.pmp.partner.exception;
  * @author sanjeev.shrivastava
  *
  */
+
 public class PatternSyntaxException extends BaseUncheckedException {
 	/** Serializable version Id. */
 	private static final long serialVersionUID = 123456202110630628L;

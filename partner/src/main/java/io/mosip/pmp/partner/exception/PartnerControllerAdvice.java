@@ -25,6 +25,7 @@ import io.mosip.pmp.partner.core.ResponseWrapper;
  * @author sanjeev.shrivastava
  *
  */
+
 @RestControllerAdvice
 public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 

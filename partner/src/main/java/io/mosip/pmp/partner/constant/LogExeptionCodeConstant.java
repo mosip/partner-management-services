@@ -1,14 +1,3 @@
-/*
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
-
 package io.mosip.pmp.partner.constant;
 
 

@@ -8,6 +8,7 @@ import lombok.Getter;
  * 
  * @author sanjeev.shrivastava
  */
+
 public enum LogLevel {
 
 	/**

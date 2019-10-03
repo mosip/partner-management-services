@@ -1,4 +1,3 @@
-
 package io.mosip.pmp.partner.logger;
 
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import ch.qos.logback.core.util.FileSize;
  * 
  * @author sanjeev.shrivastava
  */
+
 public class LoggerImpl implements Logger {
 
 	private static Map<String, Appender<ILoggingEvent>> rollingFileAppenders = new HashMap<>();

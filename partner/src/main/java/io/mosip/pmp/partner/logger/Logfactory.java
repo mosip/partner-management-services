@@ -22,6 +22,7 @@ import io.mosip.pmp.partner.constant.LoggerMethod;
  * 
  * @author sanjeev.shrivastava
  */
+
 public class Logfactory {
 
 	/**

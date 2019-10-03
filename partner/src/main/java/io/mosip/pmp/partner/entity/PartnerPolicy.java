@@ -11,6 +11,7 @@ import lombok.Data;
  * @author sanjeev.shrivastava
  *
  */
+
 @Entity
 @Table(name = "partner_policy")
 @Data

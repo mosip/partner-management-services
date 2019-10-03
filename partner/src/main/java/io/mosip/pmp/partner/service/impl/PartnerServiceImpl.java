@@ -33,6 +33,7 @@ import io.mosip.pmp.partner.util.PartnerUtil;
  * @author sanjeev.shrivastava
  *
  */
+
 @Service
 @Transactional
 public class PartnerServiceImpl implements PartnerService {

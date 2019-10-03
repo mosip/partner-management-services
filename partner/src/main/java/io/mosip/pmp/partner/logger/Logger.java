@@ -14,6 +14,7 @@ package io.mosip.pmp.partner.logger;
  * 
  *@author sanjeev.shrivastava
  */
+
 public interface Logger {
 
 	/**

@@ -14,6 +14,7 @@ import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
  * @author sanjeev.shrivastava
  *
  */
+
 public interface PartnerService {
 	
 	public PartnerResponse savePartner(PartnerRequest request);

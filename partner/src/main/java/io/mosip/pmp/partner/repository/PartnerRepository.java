@@ -12,6 +12,7 @@ import io.mosip.pmp.partner.entity.Partner;
  * @author sanjeev.shrivastava
  *
  */
+
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, String> {
 

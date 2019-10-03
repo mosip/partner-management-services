@@ -13,6 +13,7 @@ import lombok.Data;
  * @author sanjeev.shrivastava
  *
  */
+
 @Entity
 @Table(name = "partner")
 @Data

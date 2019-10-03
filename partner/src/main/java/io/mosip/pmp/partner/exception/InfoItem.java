@@ -13,6 +13,7 @@ import lombok.Setter;
  * 
  * @author sanjeev.shrivastava
  */
+
 @AllArgsConstructor
 @NoArgsConstructor
 class InfoItem implements Serializable {

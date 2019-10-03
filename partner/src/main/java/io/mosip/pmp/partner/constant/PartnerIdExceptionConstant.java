@@ -4,6 +4,7 @@ package io.mosip.pmp.partner.constant;
  * @author sanjeev.shrivastava
  *
  */
+
 public enum PartnerIdExceptionConstant {
 	
 	PARTNER_ALREADY_REGISTERED_EXCEPTION("PMS_PRT_001"  ,  "A Partner is already registered with name 'airtelInd' in the policy Group 'Banking' ");

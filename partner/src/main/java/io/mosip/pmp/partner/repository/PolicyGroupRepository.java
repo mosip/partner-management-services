@@ -9,6 +9,7 @@ import io.mosip.pmp.partner.entity.PolicyGroup;
  * @author sanjeev.shrivastava
  *
  */
+
 @Repository
 public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String> {
 

@@ -4,6 +4,7 @@ package io.mosip.pmp.partner.constant;
  * @author sanjeev.shrivastava
  *
  */
+
 public enum PartnerDoesNotExistExceptionConstant {
 	
 	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_005","Partner does not exist");

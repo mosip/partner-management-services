@@ -5,7 +5,6 @@ package io.mosip.pmp.partner.exception;
  * 
  * @author sanjeev.shrivastava
  */
-
 public class IllegalArgumentException extends BaseUncheckedException {
 	/** Serializable version Id. */
 	private static final long serialVersionUID = 924722202110630628L;

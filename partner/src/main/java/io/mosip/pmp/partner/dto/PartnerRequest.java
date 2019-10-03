@@ -8,6 +8,7 @@ import lombok.Data;
  * @author sanjeev.shrivastava
  *
  */
+
 @Data
 public class PartnerRequest{
 	

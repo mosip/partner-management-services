@@ -1,19 +1,5 @@
-/*
- * 
- * 
- * 
- * 
- * 
- */
-/*
- * 
- * 
- * 
- * 
- * 
- */
-package io.mosip.pmp.partner.constant;
 
+package io.mosip.pmp.partner.constant;
 
 /**
  * @author sanjeev.shrivastava

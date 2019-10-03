@@ -16,15 +16,11 @@ import java.util.List;
  * execution of the method or constructor and propagate outside the method or
  * constructor boundary.
  *
- * @author @author sanjeev.shrivastava Compile-Time Checking of Exceptions
- * @since 1.0
+ * @author sanjeev.shrivastava Compile-Time Checking of Exceptions
  */
 
 public class BaseUncheckedException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -875003872780128394L;
 	public static final String EMPTY_SPACE = " ";
 	private final List<InfoItem> infoItems = new ArrayList<>();

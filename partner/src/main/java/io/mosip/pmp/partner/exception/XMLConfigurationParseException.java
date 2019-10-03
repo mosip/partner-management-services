@@ -12,6 +12,7 @@ package io.mosip.pmp.partner.exception;
  * 
  * @author sanjeev.shrivastava
  */
+
 public class XMLConfigurationParseException extends BaseUncheckedException {
 
 	/**

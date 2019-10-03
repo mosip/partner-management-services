@@ -4,6 +4,7 @@ package io.mosip.pmp.partner.util;
  * @author sanjeev.shrivastava
  *
  */
+
 public class PartnerUtil {
 		
 	/**

@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package io.mosip.pmp.partner.exception;
 
 

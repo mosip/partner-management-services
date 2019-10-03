@@ -1,10 +1,3 @@
-/*
- * 
- * 
- * 
- * 
- * 
- */
 package io.mosip.pmp.partner.exception;
 
 /**
@@ -13,7 +6,6 @@ package io.mosip.pmp.partner.exception;
  * @author sanjeev.shrivastava
  *
  */
-
 
 public class IllegalStateException extends BaseUncheckedException {
 

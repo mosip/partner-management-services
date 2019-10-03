@@ -8,6 +8,7 @@ import io.mosip.pmp.partner.appender.RollingFileAppender;
  * @author sanjeev.shrivastava
  *
  */
+
 public final class PartnerServiceLogger {
 
 	private static RollingFileAppender mosipRollingFileAppender;

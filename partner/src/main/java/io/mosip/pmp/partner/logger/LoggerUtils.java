@@ -14,6 +14,7 @@ import io.mosip.pmp.partner.exception.XMLConfigurationParseException;
  * 
  * @author sanjeev.shrivastava
  */
+
 public class LoggerUtils {
 	/**
 	 * COnstructor for this class
