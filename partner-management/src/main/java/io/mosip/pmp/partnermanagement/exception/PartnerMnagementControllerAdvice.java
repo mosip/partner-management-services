@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partnermanagement.constant.PartnerManagementInputExceptionConstant;
 import io.mosip.pmp.partnermanagement.core.ResponseWrapper;
-
 /**
  * @author sanjeev.shrivastava
  *
@@ -91,10 +90,10 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 	
 	@ExceptionHandler(PartnerDoesNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerIdDoesNotExistExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerDoesNotExistExceptionMassage(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistException exception)
 			throws IOException {
-		ResponseWrapper<ErrorResponse> response = setErrors(httpServletRequest);
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<ErrorResponse>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
@@ -102,10 +101,105 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
 		errorlist.add(errorResponse);
 		
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
 		response.setErrors(errorlist);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	
+	@ExceptionHandler(PartnerIdDoesNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerIdDoesNotExistExceptionMassage(
+			final HttpServletRequest httpServletRequest, final PartnerIdDoesNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	
+	@ExceptionHandler(NoPartnerApiKeyRequestsException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNoPartnerApiKeyRequestExceptionMassage(
+			final HttpServletRequest httpServletRequest, final NoPartnerApiKeyRequestsException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setId("mosip.partnermanagement.partners.apikey.request.retrieve");
+		response.setVersion("1.0");
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	
+	@ExceptionHandler(PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiKeyDoesNotBelongToThePolicyGroupExceptionMassage(
+			final HttpServletRequest httpServletRequest, final PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setId("mosip.partnermanagement.partners.retrieve.policy");
+		response.setVersion("1.0");
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(PartnerAPIDoesNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiDoesNotExistExceptionMassage(
+			final HttpServletRequest httpServletRequest, final PartnerAPIDoesNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setId("mosip.partnermanagement.partners.retrieve.policy");
+		response.setVersion("1.0");
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 	/**
 	 * @param httpServletRequest
@@ -163,21 +257,5 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		body.put("errors", errors);
 		return new ResponseEntity<>(body, headers, status);
 	}
-	
-	/*@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExceptionMassageargument(
-			final HttpServletRequest httpServletRequest, final MethodArgumentNotValidException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> response = setErrors(httpServletRequest);
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(PartnerManagementInputExceptionConstant.MISSING_PARTNER_MANAGEMENT_INPUT_PARAMETER.getErrorCode());
-		errorResponse.setMessage(PartnerManagementInputExceptionConstant.MISSING_PARTNER_MANAGEMENT_INPUT_PARAMETER.getErrorCode());
-		
-		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
-		errorlist.add(errorResponse);
-		
-		response.setErrors(errorlist);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}*/
 
 }

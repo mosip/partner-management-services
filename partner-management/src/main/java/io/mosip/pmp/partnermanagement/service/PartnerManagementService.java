@@ -1,6 +1,9 @@
 package io.mosip.pmp.partnermanagement.service;
 
+import java.util.List;
+
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
+import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
@@ -23,4 +26,6 @@ public interface PartnerManagementService {
 	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup();
 	public RetrievePartnersDetails getparticularAuthEKYCPartnerDetailsForGivenPartnerId(String partnerID);
 	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID, String PartnerAPIKey);
+	public List<ApikeyRequests> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();
+	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String APIKeyReqID);
 }

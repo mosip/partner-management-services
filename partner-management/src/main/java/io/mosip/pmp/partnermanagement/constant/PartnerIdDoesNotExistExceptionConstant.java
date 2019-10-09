@@ -1,8 +1,13 @@
 package io.mosip.pmp.partnermanagement.constant;
 
-public enum PartnerDoesNotExistExceptionConstant {
+/**
+ * @author sanjeev.shrivastava
+ *
+ */
+
+public enum PartnerIdDoesNotExistExceptionConstant {
 	
-	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_013","Partner does not exist");
+	PARTNER_ID_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_005","Partner ID does not exist");
 
 	/**
 	 * The error code.
@@ -22,7 +27,7 @@ public enum PartnerDoesNotExistExceptionConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	PartnerDoesNotExistExceptionConstant(String errorCode, String errorMessage) {
+	PartnerIdDoesNotExistExceptionConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}

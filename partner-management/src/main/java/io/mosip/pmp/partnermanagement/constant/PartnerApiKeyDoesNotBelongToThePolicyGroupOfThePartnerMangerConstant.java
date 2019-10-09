@@ -1,8 +1,9 @@
 package io.mosip.pmp.partnermanagement.constant;
 
-public enum PartnerDoesNotExistExceptionConstant {
-	
-	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_013","Partner does not exist");
+public enum PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant {
+		
+	PARTNER_API_DOES_NOT_BELONGS_TO_THE_POLICYGROUP_OF_PARTNERMANAGER_EXCEPTION(
+			"PMS_PMP_009","Partner api key does not belong to the Policy Group of the Partner Manger");
 
 	/**
 	 * The error code.
@@ -22,7 +23,7 @@ public enum PartnerDoesNotExistExceptionConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	PartnerDoesNotExistExceptionConstant(String errorCode, String errorMessage) {
+	PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}

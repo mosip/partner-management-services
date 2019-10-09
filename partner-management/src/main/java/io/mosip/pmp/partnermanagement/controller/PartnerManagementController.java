@@ -1,5 +1,7 @@
 package io.mosip.pmp.partnermanagement.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.pmp.partnermanagement.core.RequestWrapper;
 import io.mosip.pmp.partnermanagement.core.ResponseWrapper;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
+import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
+import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyRequestsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
@@ -106,7 +110,33 @@ public class PartnerManagementController {
 		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>();
 		PartnerAPIKeyToPolicyMappingsResponse partnerAPIKeyToPolicyMappingsResponse = null;
 		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerID,PartnerAPIKey);
+		response.setId("mosip.partnermanagement.partners.retrieve.policy");
+		response.setVersion("1.0");
 		response.setResponse(partnerAPIKeyToPolicyMappingsResponse);
 		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>>(response , HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/PartnerAPIKeyRequests" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager(){
+		List<ApikeyRequests> apikeyRequests = null;
+		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<PartnerAPIKeyRequestsResponse>();
+		PartnerAPIKeyRequestsResponse partnerAPIKeyRequestsResponse = new PartnerAPIKeyRequestsResponse();
+		apikeyRequests = partnerManagementService.getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();
+		partnerAPIKeyRequestsResponse.setApikeyRequests(apikeyRequests);
+		response.setId("mosip.partnermanagement.partners.apikey.request.retrieve");
+		response.setVersion("1.0");
+		response.setResponse(partnerAPIKeyRequestsResponse);
+		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>>(response , HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
+			@PathVariable String APIKeyReqID) {
+		
+		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<ApikeyRequests>();
+		ApikeyRequests apikeyRequests=null;
+		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(APIKeyReqID);
+		response.setResponse(apikeyRequests);
+		return new ResponseEntity<ResponseWrapper<ApikeyRequests>>(response , HttpStatus.OK);
 	}
 }
