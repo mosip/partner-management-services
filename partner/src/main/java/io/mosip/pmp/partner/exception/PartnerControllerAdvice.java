@@ -98,7 +98,6 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 			final HttpServletRequest httpServletRequest, final Exception exception) throws IOException {
 		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<ErrorResponse>();
 		ErrorResponse errorResponse = new ErrorResponse();
-		//errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getMessage());
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);

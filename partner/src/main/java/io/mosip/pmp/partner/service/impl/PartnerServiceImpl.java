@@ -37,8 +37,6 @@ import io.mosip.pmp.partner.util.PartnerUtil;
 @Service
 @Transactional
 public class PartnerServiceImpl implements PartnerService {
-
-	
 	
 	@Autowired
 	PartnerRepository partnerRepository;
