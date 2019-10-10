@@ -136,6 +136,8 @@ public class PartnerManagementController {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<ApikeyRequests>();
 		ApikeyRequests apikeyRequests=null;
 		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(APIKeyReqID);
+		response.setId("mosip.partnermanagement.partners.apikey.requests.retrieve");
+		response.setVersion("1.0");
 		response.setResponse(apikeyRequests);
 		return new ResponseEntity<ResponseWrapper<ApikeyRequests>>(response , HttpStatus.OK);
 	}
