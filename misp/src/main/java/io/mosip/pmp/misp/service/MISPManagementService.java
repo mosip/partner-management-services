@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
+import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPLiceneseDto;
@@ -37,11 +39,11 @@ public class MISPManagementService {
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;	
 	
-//	@Autowired
-//	private MispIdGenerator<String> mispIdGenerator;
-//	
-//	@Autowired
-//	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
+	@Autowired
+	private MispIdGenerator<String> mispIdGenerator;
+	
+	@Autowired
+	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
 	
 	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto createRequestDto){
 		
@@ -52,16 +54,16 @@ public class MISPManagementService {
 		
 		MISPEntity mispEntity = MetaDataUtils.setCreateMetaData(createRequestDto, MISPEntity.class);
 		
-		mispEntity.setID(mispRepository.count() + "1");
+		mispEntity.setID(mispIdGenerator.generateId());
 		mispEntity.setIsActive(true);
 		mispEntity.setName(mispEntity.getName());
 		mispEntity.setCreatedDateTime(LocalDateTime.now());
-		mispEntity.setUserID("Nagarjuna");
+		mispEntity.setUserID("SYSTEM");
 		mispEntity.setCreatedBy("SYSTEM");
 		
 		MISPLicenseEntity misplEntity = new MISPLicenseEntity();
 		
-		misplEntity.setLicense_key("qqqq-uuyuyu-klklklk");		
+		misplEntity.setLicense_key(mispLicenseKeyGenerator.generateLicense());		
 		misplEntity.setValidFromDate(LocalDateTime.now());
 		misplEntity.setValidToDate(LocalDateTime.now());	
 		misplEntity.setCreatedDateTime(LocalDateTime.now());		
