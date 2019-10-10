@@ -227,7 +227,29 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	@Override
 	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String APIKeyReqID) {
-		// TODO Auto-generated method stub
-		return null;
+		ApikeyRequests apikeyRequests = new ApikeyRequests();
+		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(APIKeyReqID);
+		Partner partner = null;
+		if(findById.isPresent() && findById!=null) {
+			PartnerPolicy partnerPolicy = findById.get();
+			Optional<Partner> findByPartnerId = partnerRepository.findById(partnerPolicy.getPart_id());
+			if(findByPartnerId!=null) {
+				partner = findByPartnerId.get();
+				
+				apikeyRequests.setPartnerID(partner.getId());
+				apikeyRequests.setOrganizationName(partner.getName());
+				apikeyRequests.setStatus(partner.getIs_active());
+				apikeyRequests.setPolicyName("Insurance Policy");
+				apikeyRequests.setPolicyDesc("Desc about policy");
+				
+			}else {
+				System.out.println("Need to throw the Exception");
+			}
+		}else {
+			throw new NoPartnerApiKeyRequestsException(
+					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorCode(),
+					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorMessage()); 
+		}
+		return apikeyRequests;
 	}
 }
