@@ -53,4 +53,5 @@ public class PartnerPolicy {
 	
 	@Column(name = "del_dtimes")
 	private String del_dtimes;
+	
 }

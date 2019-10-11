@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.constant.PartnerInputExceptionConstant;
 import io.mosip.pmp.partner.core.ResponseWrapper;
@@ -28,6 +33,9 @@ import io.mosip.pmp.partner.core.ResponseWrapper;
 
 @RestControllerAdvice
 public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * @param httpServletRequest
@@ -39,7 +47,7 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassage(
 			final HttpServletRequest httpServletRequest, final PartnerAlreadyRegisteredException exception)
 			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<ErrorResponse>();
+		ResponseWrapper<ErrorResponse> responseError = setErrors(httpServletRequest);
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
@@ -47,9 +55,6 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler#handleMethodArgumentNotValid(org.springframework.web.bind.MethodArgumentNotValidException, org.springframework.http.HttpHeaders, org.springframework.http.HttpStatus, org.springframework.web.context.request.WebRequest)
-	 */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -78,7 +83,7 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistException exception)
 			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<ErrorResponse>();
+		ResponseWrapper<ErrorResponse> responseError =  setErrors(httpServletRequest);
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
@@ -101,5 +106,18 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		errorResponse.setMessage(exception.getMessage());
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	private ResponseWrapper<ErrorResponse> setErrors(HttpServletRequest httpServletRequest) throws IOException {
+		ResponseWrapper<ErrorResponse> responseWrapper = new ResponseWrapper<>();
+		String requestBody = null;
+		if (httpServletRequest instanceof ContentCachingRequestWrapper) {
+			requestBody = new String(((ContentCachingRequestWrapper) httpServletRequest).getContentAsByteArray());
+		}
+		
+		JsonNode reqNode = objectMapper.readTree(requestBody);
+		responseWrapper.setId(reqNode.path("id").asText());
+		responseWrapper.setVersion(reqNode.path("version").asText());
+		return responseWrapper;
 	}
 }
