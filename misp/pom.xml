@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>partner-management</groupId>
-	<artifactId>pmp-misp</artifactId>
+	<artifactId>misp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pmp-misp</name>
+	<name>misp</name>
 
 	<properties>
 		<java.version>1.8</java.version>
