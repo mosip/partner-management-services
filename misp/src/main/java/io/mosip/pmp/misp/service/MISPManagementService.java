@@ -23,9 +23,11 @@ import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.entity.MISPEntity;
 import io.mosip.pmp.misp.entity.MISPLicenseEntity;
+import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.exception.ErrorMessages;
 import io.mosip.pmp.misp.exception.MISPException;
+import io.mosip.pmp.misp.repository.MispLicenseKeyReadRepository;
 import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.utils.MetaDataUtils;
@@ -54,6 +56,9 @@ public class MISPManagementService {
 	
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;	
+
+	@Autowired
+	private MispLicenseKeyReadRepository misplKeyReadRepository;
 	
 	@Autowired
 	private MispIdGenerator<String> mispIdGenerator;
@@ -220,7 +225,7 @@ public class MISPManagementService {
 	 */
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto misplKeyStatusUpdateRequest)
 	{
-		MISPLicenseEntity mispLicense =  getMispLiecense( new MISPlKeyUniqueKeyEntity(misplKeyStatusUpdateRequest.getMispId(),
+		MISPLicenseReadEntity mispValidLicense =  getMispLicense( new MISPlKeyUniqueKeyEntity(misplKeyStatusUpdateRequest.getMispId(),
 				misplKeyStatusUpdateRequest.getMispLicenseKey()));
 		
 		Boolean status = misplKeyStatusUpdateRequest.getMispLicenseKeyStatus().contains("De-Active") ? false : true;
@@ -228,15 +233,17 @@ public class MISPManagementService {
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		MISPlKeyStatusUpdateResponseDto responseDto = new MISPlKeyStatusUpdateResponseDto();
 		
-		if(mispLicense != null)
-		{
-			mispLicense.setIsActive(status);
-			mispLicense.setUpdatedDateTime(LocalDateTime.now());
-			mispLicense.setUpdatedBy("SYSTEM");
-			misplKeyRepository.save(mispLicense);
-			responseDto.setMispLicenseKeyStatus(misplKeyStatusUpdateRequest.getMispLicenseKeyStatus());
-		}
-
+		MISPLicenseEntity mispLicense = new MISPLicenseEntity();
+		
+		mispLicense.setMisp_id(mispValidLicense.getMispUniqueEntity().getMisp_id());		
+		mispLicense.setIsActive(status);
+		mispLicense.setUpdatedDateTime(LocalDateTime.now());
+		mispLicense.setUpdatedBy("SYSTEM");
+		
+		misplKeyRepository.save(mispLicense);
+		
+		responseDto.setMispLicenseKeyStatus(misplKeyStatusUpdateRequest.getMispLicenseKeyStatus());
+		
 		response.setResponse(responseDto);
 	  
 		return response;	
@@ -366,7 +373,7 @@ public class MISPManagementService {
 	 * @param mispUniqueKey This request contains unique key of misp license(misp_id, licensekey)
 	 * @return misp license 
 	 */
-	public MISPLicenseEntity getMispLiecense(MISPlKeyUniqueKeyEntity mispUniqueKey)
+	public MISPLicenseReadEntity getMispLicense(MISPlKeyUniqueKeyEntity mispUniqueKey)
 	{
 		validateMISPWithID(mispUniqueKey.getMisp_id());		
 		
@@ -376,9 +383,9 @@ public class MISPManagementService {
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + mispUniqueKey.getLicense_key());
 			
-		}		
+		}
 		
-		MISPLicenseEntity mispLicense =  misplKeyRepository.findById(mispUniqueKey.getMisp_id()).get();
+		MISPLicenseReadEntity mispLicense = misplKeyReadRepository.findById(mispUniqueKey).get();
 		
 		if(mispLicense == null)
 		{
@@ -386,7 +393,7 @@ public class MISPManagementService {
 					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  + mispUniqueKey.getMisp_id() + 
 					", LicenseKey: " + mispUniqueKey.getLicense_key());
 		}
-        
+		
 		return mispLicense;		
 	}
 }

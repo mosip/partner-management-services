@@ -28,7 +28,7 @@ import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.entity.MISPEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseEntity;
+import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.swagger.annotations.Api;
@@ -126,9 +126,9 @@ public class MispController {
 		
 		MISPValidatelKeyResponseDto message = new MISPValidatelKeyResponseDto();
 		
-		MISPLicenseEntity mispLicense = mispManagementService.getMispLiecense(new MISPlKeyUniqueKeyEntity(mispId,misplKeyStatusUpdateRequestDto.getRequest().getMispLicenseKey()));
+		MISPLicenseReadEntity mispLicense = mispManagementService.getMispLicense(new MISPlKeyUniqueKeyEntity(mispId,misplKeyStatusUpdateRequestDto.getRequest().getMispLicenseKey()));
 		
-		message.setMessage("MISP " + mispLicense.getMisp_id() + " license key " + mispLicense.getLicense_key() + "  is " 
+		message.setMessage("MISP " + mispLicense.getMispUniqueEntity().getMisp_id() + " license key " + mispLicense.getMispUniqueEntity().getLicense_key() + "  is " 
 		+ (mispLicense.getIsActive() == true ? "valid" : "not valid"));
 		
 		response.setResponse(message);
