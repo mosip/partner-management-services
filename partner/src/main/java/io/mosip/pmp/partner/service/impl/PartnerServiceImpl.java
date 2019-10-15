@@ -1,6 +1,9 @@
 package io.mosip.pmp.partner.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,14 +19,18 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
+import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
+import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
+import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
@@ -46,20 +53,31 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
+	
+	@Autowired
+	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#savePartner(io.mosip.pmp.partner.dto.PartnerRequest)
-	 */
+	/*Save Partner which wants to self register*/
+	
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		Partner partner = new Partner();
 		partner.setId(PartnerUtil.createPartnerId());
-		partner.setPolicy_group_id(request.getPolicyGroup());
-		partner.setName(request.getOrganizationName());
-		partner.setAddress(request.getAddress());
-		partner.setContact_no(request.getContactNumber());
-		partner.setEmail_id(request.getEmailId());
-		partner.setIs_active("Active");
+		PolicyGroup policyGroup = null;
+		policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
+		
+		
+		if(policyGroup!=null) {
+			partner.setPolicy_group_id(policyGroup.getId());
+			partner.setName(request.getOrganizationName());
+			partner.setAddress(request.getAddress());
+			partner.setContact_no(request.getContactNumber());
+			partner.setEmail_id(request.getEmailId());
+			
+			partner.setIs_active(policyGroup.getIs_active());
+		}else {
+			throw new RuntimeException();
+		}
 		
 		PartnerResponse partnerResponse = new PartnerResponse();
 		List<Partner> list = partnerRepository.findByName(partner.getName());
@@ -75,15 +93,17 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
 		}
 	}
+	
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#getPartnerDetails(java.lang.String)
-	 */
+	/*Get Partner Details as per given Partner ID*/
+	
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID) {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		Partner partner = null;
+		Optional<PolicyGroup> findById2 = null;
+		PolicyGroup policyGroup = null;
 		
 		if(findById.isPresent() && findById!=null) {
 			partner = findById.get();
@@ -92,20 +112,22 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setContactNumber(partner.getContact_no());
 			response.setEmailId(partner.getEmail_id());
 			response.setOrganizationName(partner.getName());
-			response.setPolicyGroup(partner.getPolicy_group_id());
+			
+			findById2 = policyGroupRepository.findById(partner.getPolicy_group_id());
+			policyGroup = findById2.get();
+			response.setPolicyGroup(policyGroup.getName());
 			return response;
 		}else {
-			throw new PartnerDoesNotExistException(
+			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#updatePartnerDetail(io.mosip.pmp.partner.dto.PartnerRequest, java.lang.String)
-	 */
+	/*Updating Partner Details as per given Partner ID and Partner Details*/
+	
 	@Override
-	public PartnerResponse updatePartnerDetail(PartnerRequest request, String partnerID) {
+	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		Partner partner = null;
 		
@@ -127,77 +149,105 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#submitPartnerApiKeyReq(io.mosip.pmp.partner.dto.PartnerAPIKeyRequest, java.lang.String)
-	 */
+	/*API used to submit Partner api key request
+	 * Need to take 1.Partner_Policy_Request Table and 2.Policy Group Table
+	 * 
+	 * */
+	
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
-		Optional<Partner> findById = partnerRepository.findById(partnerID);
-		PolicyGroup findByName = policyGroupRepository.findByName(request.getPolicyName());
-		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
-
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-
-		if (findById.isPresent() && findByName != null) {
-			partnerAPIKeyResponse.setApiRequestId("873276828663");
-			partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");
-			partnerPolicy.setPolicy_api_key(partnerAPIKeyResponse.getApiRequestId());
-			partnerPolicy.setPart_id(partnerID);
-			partnerPolicyRepository.save(partnerPolicy);
+		PolicyGroup policyGroup = policyGroupRepository.findByName(request.getPolicyName());
+		
+		
+		if(policyGroup==null) {
+			//TODO
+			System.out.println("Need to through the exception policyGroup not exist");
 		}
+		
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		String Partner_Policy_Request_Id = PartnerUtil.createPartnerId();
+		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
+		partnerPolicyRequest.setStatus_code("in-progress");
+		//TODO
+		// Need to Validate partner id in Partner Table
+		partnerPolicyRequest.setPart_id(partnerID);
+		//TODO
+		// Need add column (api_desc) in Partner_policy_request Table
+		partnerPolicyRequest.setDel_dtimes(request.getUseCaseDescription());
+		
+		partnerPolicyRequestRepository.save(partnerPolicyRequest);
+		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
+		
+		
+		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
+		partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");
 		return partnerAPIKeyResponse;
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#downloadPartnerAPIkey(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID, String aPIKeyReqID) {
-		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(aPIKeyReqID);
+		PartnerPolicy partnerPolicy = null;
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
-		PartnerPolicy partnerPolicy = findById.get();
-		if(partnerID.equals(partnerPolicy.getPart_id())){
-			downloadPartnerAPIkeyResponse.setPartnerAPIKey(aPIKeyReqID);
+		Optional<PartnerPolicyRequest> partner_request = partnerPolicyRequestRepository.findById(aPIKeyReqID);
+		PartnerPolicyRequest partnerPolicyRequest = partner_request.get();
+		if(partnerPolicyRequest.getPart_id().equals(partnerID) && partnerPolicyRequest.getStatus_code().equals("approved")) {
+			//partnerPolicy = partnerPolicyRepository.findByPartId(partnerID);
+			//downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicy_api_key());
+			downloadPartnerAPIkeyResponse.setPartnerAPIKey("45673456759");
 		}
+		
 		return downloadPartnerAPIkeyResponse;
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#retrieveAllApiKeyRequestsSubmittedByPartner(java.lang.String)
-	 */
 	@Override
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
-		PartnerPolicy partnerPolicy=null;
-		PartnersRetrieveApiKeyRequests requests=new PartnersRetrieveApiKeyRequests();
-		List<APIkeyRequests> listAPIkeyRequests=new ArrayList<APIkeyRequests>();
-		List<PartnerPolicy> findAll = partnerPolicyRepository.findAll();
-		for (int i = 0; i < findAll.size(); i++) {
-			partnerPolicy=findAll.get(i);
-			APIkeyRequests  apIkeyRequests= new APIkeyRequests();
-			if(partnerPolicy.getPart_id().equals(partnerID) && partnerPolicy.getIs_active().equals("approved")) {
-				apIkeyRequests.setApiKeyReqID(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setApiKeyRequestStatus(partnerPolicy.getIs_active());
-				apIkeyRequests.setPartnerApiKey(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setValidityTill(partnerPolicy.getValid_from_datetime());
-				listAPIkeyRequests.add(apIkeyRequests);
+
+		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
+		// List<PartnerPolicy> list_partner_policy = partnerPolicyRepository.findByPartnerId(partnerID);
+		PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
+		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<APIkeyRequests>();
+		PartnerPolicyRequest partnerPolicyRequest = null;
+		if (!findByPartnerId.isEmpty() && findByPartnerId != null) {
+
+			Iterator<PartnerPolicyRequest> it = findByPartnerId.iterator();
+			while (it.hasNext()) {
+				partnerPolicyRequest = it.next();
+				if (partnerPolicyRequest.getStatus_code().equals("approved")) {
+
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatus_code());
+					//TODO 
+					//need to get the info from partnerPolicyRepository table
+					approvedRequest.setPartnerApiKey("fa604-affcd-33201-04770");
+					approvedRequest.setValidityTill(LocalDate.now().plusDays(60).toString());
+
+					listAPIkeyRequests.add(approvedRequest);
+				} else {
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatus_code());
+					listAPIkeyRequests.add(approvedRequest);
+				}
+
+				response.setAPIkeyRequests(listAPIkeyRequests);
 			}
-			else {
-				apIkeyRequests.setApiKeyReqID(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setApiKeyRequestStatus(partnerPolicy.getIs_active());
-				listAPIkeyRequests.add(apIkeyRequests);
-			}
+
+		} else {
+			// TODO
+			System.out.println("Partner Not Exist Exception");
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		requests.setAPIkeyRequests(listAPIkeyRequests);
-		return requests;
+		return response;
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.pmp.partner.service.PartnerService#viewApiKeyRequestStatusApiKey(java.lang.String, java.lang.String)
-	 */
+
 	@Override
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID, String aPIKeyReqID) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("@@@@@@@@@@@@@@@@@ Need to implement after clarification @@@@@@@@@@@@@@@@");
 		return null;
 	}
 }

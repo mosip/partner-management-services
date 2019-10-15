@@ -6,6 +6,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 
@@ -19,7 +20,7 @@ public interface PartnerService {
 	
 	public PartnerResponse savePartner(PartnerRequest request);
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
-	public PartnerResponse updatePartnerDetail(PartnerRequest request,String partnerID);
+	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request,String partnerID);
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request,String partnerID);
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID,String aPIKeyReqID);
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);

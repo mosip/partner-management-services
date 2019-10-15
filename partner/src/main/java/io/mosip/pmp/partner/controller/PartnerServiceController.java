@@ -2,7 +2,6 @@ package io.mosip.pmp.partner.controller;
 
 import javax.validation.Valid;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.logger.Logger;
@@ -54,6 +54,8 @@ public class PartnerServiceController {
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
 		partnerResponse = partnerService.savePartner(partnerRequest);
+		response.setId("mosip.partnermanagement.partners.create");
+		response.setVersion("1.0");
 		response.setResponse(partnerResponse);
 		LOGGER.info("request", "idType", "id", "request");
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.CREATED);
@@ -72,6 +74,8 @@ public class PartnerServiceController {
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<RetrievePartnerDetailsResponse>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerID);
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
@@ -85,11 +89,13 @@ public class PartnerServiceController {
 	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
-			@RequestBody @Valid RequestWrapper<PartnerRequest> request, @PathVariable String partnerID) {
+			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerID) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<PartnerResponse>();
 		PartnerResponse partnerResponse = null;
-		PartnerRequest partnerRequest = request.getRequest();
+		PartnerUpdateRequest partnerRequest = request.getRequest();
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerID);
+		response.setId("mosip.partnermanagement.partners.update");
+		response.setVersion("1.0");
 		response.setResponse(partnerResponse);
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.OK);
 	}
@@ -109,6 +115,8 @@ public class PartnerServiceController {
 		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
 		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
 		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerID);
+		response.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
+		response.setVersion("1.0");
 		response.setResponse(partnerAPIKeyResponse);
 		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>>(response, HttpStatus.CREATED);
 	}
@@ -126,6 +134,8 @@ public class PartnerServiceController {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<DownloadPartnerAPIkeyResponse>();
 		DownloadPartnerAPIkeyResponse resp = null;
 		resp = partnerService.downloadPartnerAPIkey(partnerID, aPIKeyReqID);
+		response.setId("mosip.partnermanagement.partnerAPIKey.download");
+		response.setVersion("1.0");
 		response.setResponse(resp);
 		return new ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>>(response, HttpStatus.OK);
 	}
@@ -142,6 +152,8 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnersRetrieveApiKeyRequests> response = new ResponseWrapper<PartnersRetrieveApiKeyRequests>();
 		PartnersRetrieveApiKeyRequests partnersRetrieveApiKeyRequests = null;
 		partnersRetrieveApiKeyRequests = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
+		response.setId("mosip.partnermanagement.partners.retrieve.apiKeyRequests");
+		response.setVersion("1.0");
 		response.setResponse(partnersRetrieveApiKeyRequests);
 		return new ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>>(response, HttpStatus.OK);
 	}

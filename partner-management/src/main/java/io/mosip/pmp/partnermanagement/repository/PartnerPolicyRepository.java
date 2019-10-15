@@ -10,6 +10,7 @@ import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
  * @author sanjeev.shrivastava
  *
  */
+
 @Repository
 public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, String> {
 

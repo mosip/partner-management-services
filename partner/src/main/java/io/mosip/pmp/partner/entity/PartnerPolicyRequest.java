@@ -1,41 +1,35 @@
 package io.mosip.pmp.partner.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
-/**
- * @author sanjeev.shrivastava
- *
- */
-
 @Entity
-@Table(name = "policy_group")
+@Table(name = "partner_policy_request")
 @Data
-public class PolicyGroup {
+public class PartnerPolicyRequest {
 	
 	@Id
 	@Column(name = "id")
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
 	
-	@Column(name = "name")
-	private String name;
+	@Column(name = "part_id")
+	private String part_id;
 	
-	@Column(name = "descr")
-	private String descr;
+	@Column(name = "policy_id")
+	private String policy_id;
 	
-	@Column(name = "user_id")
-	private String user_id;
+	@Column(name = "request_datetimes")
+	private String request_datetimes;
 	
-	@Column(name = "is_active")
-	private String is_active;
+	@Column(name = "request_detail")
+	private String request_detail;
+	
+	@Column(name = "status_code")
+	private String status_code;
 	
 	@Column(name = "cr_by")
 	private String cr_by;

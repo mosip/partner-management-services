@@ -37,7 +37,7 @@ public class PartnerManagementController {
 	@Autowired
 	PartnerManagementService partnerManagementService;
 
-	@RequestMapping(value = "/{partnerID}/partnerMappingRequest/{partnerAPIKey}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> PartnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerID,
@@ -53,7 +53,7 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/{partnerID}/statusRequest", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerID,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
@@ -68,7 +68,7 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	 }
 	
-	@RequestMapping(value = "/{partnerID}/statusRequest/{PartnerAPIKey}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerID,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
@@ -84,11 +84,29 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
+			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
+			@PathVariable String APIKeyReqID){
+		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
+		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
+		partnersPolicyMappingResponse = partnerManagementService
+				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,APIKeyReqID);
+		response.setResponse(partnersPolicyMappingResponse);
+		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
+	}
+	
+	
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<RetrievePartnerDetailsResponse>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup();
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
@@ -99,6 +117,8 @@ public class PartnerManagementController {
 		ResponseWrapper<RetrievePartnersDetails> response = new ResponseWrapper<RetrievePartnersDetails>();
 		RetrievePartnersDetails retrievePartnersDetails = null;
 		retrievePartnersDetails = partnerManagementService.getparticularAuthEKYCPartnerDetailsForGivenPartnerId(partnerID);
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
 		response.setResponse(retrievePartnersDetails);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnersDetails>>(response , HttpStatus.OK);
 	}
