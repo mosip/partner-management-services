@@ -19,9 +19,6 @@ import lombok.Data;
 @Data
 public class Partner {
 
-	/**
-	 * The partnerId generated.
-	 */
 	@Id
 	@Column(name = "id")
 	private String id;

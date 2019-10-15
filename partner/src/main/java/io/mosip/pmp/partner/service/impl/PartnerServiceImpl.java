@@ -1,6 +1,9 @@
 package io.mosip.pmp.partner.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
+import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerRepository;
@@ -114,7 +118,7 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setPolicyGroup(policyGroup.getName());
 			return response;
 		}else {
-			throw new PartnerDoesNotExistException(
+			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -155,13 +159,22 @@ public class PartnerServiceImpl implements PartnerService {
 		PolicyGroup policyGroup = policyGroupRepository.findByName(request.getPolicyName());
 		
 		
+		if(policyGroup==null) {
+			//TODO
+			System.out.println("Need to through the exception policyGroup not exist");
+		}
+		
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		String Partner_Policy_Request_Id = PartnerUtil.createPartnerId();
 		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
+		partnerPolicyRequest.setStatus_code("in-progress");
+		//TODO
+		// Need to Validate partner id in Partner Table
 		partnerPolicyRequest.setPart_id(partnerID);
+		//TODO
+		// Need add column (api_desc) in Partner_policy_request Table
+		partnerPolicyRequest.setDel_dtimes(request.getUseCaseDescription());
 		
-		policyGroup.setDescr(request.getUseCaseDescription());
-		policyGroupRepository.save(policyGroup);
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		
@@ -173,41 +186,61 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID, String aPIKeyReqID) {
-		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(aPIKeyReqID);
+		PartnerPolicy partnerPolicy = null;
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
-		PartnerPolicy partnerPolicy = findById.get();
-		if(partnerID.equals(partnerPolicy.getPart_id())){
-			downloadPartnerAPIkeyResponse.setPartnerAPIKey(aPIKeyReqID);
+		Optional<PartnerPolicyRequest> partner_request = partnerPolicyRequestRepository.findById(aPIKeyReqID);
+		PartnerPolicyRequest partnerPolicyRequest = partner_request.get();
+		if(partnerPolicyRequest.getPart_id().equals(partnerID) && partnerPolicyRequest.getStatus_code().equals("approved")) {
+			//partnerPolicy = partnerPolicyRepository.findByPartId(partnerID);
+			//downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicy_api_key());
+			downloadPartnerAPIkeyResponse.setPartnerAPIKey("45673456759");
 		}
+		
 		return downloadPartnerAPIkeyResponse;
 	}
 
 	@Override
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
-		PartnerPolicy partnerPolicy=null;
-		PartnersRetrieveApiKeyRequests requests=new PartnersRetrieveApiKeyRequests();
-		List<APIkeyRequests> listAPIkeyRequests=new ArrayList<APIkeyRequests>();
-		List<PartnerPolicy> findAll = partnerPolicyRepository.findAll();
-		//PartnerPolicyRequest findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
-		for (int i = 0; i < findAll.size(); i++) {
-			partnerPolicy=findAll.get(i);
-			APIkeyRequests  apIkeyRequests= new APIkeyRequests();
-			if(partnerPolicy.getPart_id().equals(partnerID)) {
-				//apIkeyRequests.setApiKeyReqID(findByPartnerId.getId());
-				//apIkeyRequests.setApiKeyReqID(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setApiKeyRequestStatus(partnerPolicy.getIs_active());
-				apIkeyRequests.setPartnerApiKey(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setValidityTill(partnerPolicy.getValid_to_datetime());
-				listAPIkeyRequests.add(apIkeyRequests);
+
+		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
+		// List<PartnerPolicy> list_partner_policy = partnerPolicyRepository.findByPartnerId(partnerID);
+		PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
+		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<APIkeyRequests>();
+		PartnerPolicyRequest partnerPolicyRequest = null;
+		if (!findByPartnerId.isEmpty() && findByPartnerId != null) {
+
+			Iterator<PartnerPolicyRequest> it = findByPartnerId.iterator();
+			while (it.hasNext()) {
+				partnerPolicyRequest = it.next();
+				if (partnerPolicyRequest.getStatus_code().equals("approved")) {
+
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatus_code());
+					//TODO 
+					//need to get the info from partnerPolicyRepository table
+					approvedRequest.setPartnerApiKey("fa604-affcd-33201-04770");
+					approvedRequest.setValidityTill(LocalDate.now().plusDays(60).toString());
+
+					listAPIkeyRequests.add(approvedRequest);
+				} else {
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatus_code());
+					listAPIkeyRequests.add(approvedRequest);
+				}
+
+				response.setAPIkeyRequests(listAPIkeyRequests);
 			}
-			else {
-				apIkeyRequests.setApiKeyReqID(partnerPolicy.getPolicy_api_key());
-				apIkeyRequests.setApiKeyRequestStatus(partnerPolicy.getIs_active());
-				listAPIkeyRequests.add(apIkeyRequests);
-			}
+
+		} else {
+			// TODO
+			System.out.println("Partner Not Exist Exception");
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		requests.setAPIkeyRequests(listAPIkeyRequests);
-		return requests;
+		return response;
 	}
 
 

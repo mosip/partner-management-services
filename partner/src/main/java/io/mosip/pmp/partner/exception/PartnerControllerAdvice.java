@@ -91,13 +91,28 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
-
+	@ExceptionHandler(PartnerDoesNotExistsException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
+			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId("mosip.partnermanagement");
+		responseError.setVersion("1.0");
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	
 	/**
 	 * @param httpServletRequest
 	 * @param exception
 	 * @return
 	 * @throws IOException
 	 */
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getAllExcepionMassage(
 			final HttpServletRequest httpServletRequest, final Exception exception) throws IOException {

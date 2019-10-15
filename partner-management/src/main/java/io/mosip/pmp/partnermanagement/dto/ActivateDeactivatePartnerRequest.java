@@ -1,6 +1,6 @@
 package io.mosip.pmp.partnermanagement.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
 
@@ -11,6 +11,6 @@ import lombok.Data;
 @Data
 public class ActivateDeactivatePartnerRequest {
 	
-		@NotNull
+		@NotEmpty
 		private String status;
 }

@@ -1,4 +1,4 @@
-package io.mosip.pmp.partner.entity;
+package io.mosip.pmp.partnermanagement.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

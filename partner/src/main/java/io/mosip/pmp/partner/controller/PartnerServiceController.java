@@ -134,6 +134,8 @@ public class PartnerServiceController {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<DownloadPartnerAPIkeyResponse>();
 		DownloadPartnerAPIkeyResponse resp = null;
 		resp = partnerService.downloadPartnerAPIkey(partnerID, aPIKeyReqID);
+		response.setId("mosip.partnermanagement.partnerAPIKey.download");
+		response.setVersion("1.0");
 		response.setResponse(resp);
 		return new ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>>(response, HttpStatus.OK);
 	}
