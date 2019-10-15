@@ -30,6 +30,22 @@ import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.utils.MetaDataUtils;
 
+ /**
+  * This class manages business logic before or after performing database operations.
+  * This class is performing following operations.
+  * 1. Creating misp {@link #createMISP(MISPCreateRequestDto)}
+  * 2. Updating the specific misp details {@link #update(MISPUpdateRequestDto)}
+  * 3. Updating the sepcific misp status(Active OR De-Active) {@link #updateMISPStatus(MISPStatusUpdateRequestDto)}
+  * 4. Updating the specific misp license status(Active OR De-Active) {@link #updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto)}
+  * 5. Getting or retriving all the misps details {@link #getAllMISPS()}
+  * 6. Getting or retriving specific misp details {@link #getMISPDeatils(String)}
+  * 7. Validating the misp license key {@link #getMispLiecense(MISPlKeyUniqueKeyEntity)}
+  * 
+  * @author Nagarjuna Kuchi
+  * @version 1.0
+  * @since 2019-Oct-11
+  *
+  */
 @Service
 public class MISPManagementService {
 
@@ -44,15 +60,33 @@ public class MISPManagementService {
 	
 	@Autowired
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
-	
-	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto createRequestDto){
+
+	/**
+	 * This method is creating the misp along with license. 
+	 * 	
+	 *  1. checks the database for the uniqueness of name.
+	 *     If name exists will throw exception.
+	 *  2. Transfers or maps the request dto to db entity.
+	 *  3. Uses kernal misp id generator to generate mispid.
+	 *  4. By default sets the Isactive to true, created date as today's date, userId as login id,
+	 *     and createdby as login name.
+	 *  5. Uses kernal license generator to generate misp license key.
+	 *  6. Uses pre defined variables: Active for true and De-Active for false
+	 *  7. By using corresponding repositories will save or insert the data into misp and misp_license tables.
+	 *  8. After successfull insertion maps the data to response dto.
+	 *  9. And returns the response.
+	 * 
+	 * @param mispCreateRequest this class contains all the input/request fields.
+	 * @return MISPCreateResponseDto  this class contains all the response fields.
+	 */
+	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){
 		
-		validateMISPWithName(createRequestDto.getName());
+		validateMISPWithName(mispCreateRequest.getName());
 		
 		ResponseWrapper<MISPCreateResponseDto> response = new ResponseWrapper<>();
 		MISPCreateResponseDto responseDto = new MISPCreateResponseDto();
 		
-		MISPEntity mispEntity = MetaDataUtils.setCreateMetaData(createRequestDto, MISPEntity.class);
+		MISPEntity mispEntity = MetaDataUtils.setCreateMetaData(mispCreateRequest, MISPEntity.class);
 		
 		mispEntity.setID(mispIdGenerator.generateId());
 		mispEntity.setIsActive(true);
@@ -65,7 +99,7 @@ public class MISPManagementService {
 		
 		misplEntity.setLicense_key(mispLicenseKeyGenerator.generateLicense());		
 		misplEntity.setValidFromDate(LocalDateTime.now());
-		misplEntity.setValidToDate(LocalDateTime.now());	
+		misplEntity.setValidToDate(LocalDateTime.now().plusDays(60));	
 		misplEntity.setCreatedDateTime(LocalDateTime.now());		
 		misplEntity.setMisp_id(mispEntity.getID());
 		misplEntity.setIsActive(true);
@@ -88,14 +122,24 @@ public class MISPManagementService {
 		return response;
 	}
 	
-	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(MISPStatusUpdateRequestDto requestDto)
+	/**
+	 * This method update the status of misp to active or de-active.
+	 * 
+	 * 1. Checks the db with misp id to get misp details
+	 *    if misp details not exists for misp id throws exception
+	 * 2. Update the misp status according to input received.
+	 * 3. Send the response to the caller
+	 * @param mispStatusUpdateRequest this class contains all the request parameters. 
+	 * @return MISPStatusUpdateResponseDto this class conatins all the response parameters.
+	 */
+	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(MISPStatusUpdateRequestDto mispStatusUpdateRequest)
 	{		
 		ResponseWrapper<MISPStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		MISPStatusUpdateResponseDto responseDto = new MISPStatusUpdateResponseDto();
 		
-		Boolean status = (requestDto.getMispStatus().contains("De-Active") ? false: true);
+		Boolean status = (mispStatusUpdateRequest.getMispStatus().contains("De-Active") ? false: true);
 		
-		Optional<MISPEntity> mispFromDb = mispRepository.findById(requestDto.getMispId());
+		Optional<MISPEntity> mispFromDb = mispRepository.findById(mispStatusUpdateRequest.getMispId());
 		MISPEntity mispEntity = mispFromDb.get();
 		
 		if(status != mispEntity.getIsActive())
@@ -116,6 +160,18 @@ public class MISPManagementService {
 		return response;
 	}
 	
+	/**
+	 * This method update the MISP details for a specific misp.
+	 * 
+	 * 1. Checks the db with misp id for misp details.
+	 *   if misp details not found throws exception.
+	 * 2. Checks for the uniqueness of name
+	 *    if dupliacte name found throws exception.
+	 * 3. And saves the data with inputed updated data to misp table.
+	 * 4. And sends updated details as response.
+	 * @param mispUpdateRequestDto this class contains all the required fields for misp update request.
+	 * @return mispUpdateResponseDto this class contains all the required fields for misp update response.
+	 */
 	public ResponseWrapper<MISPUpdateResponseDto> update(MISPUpdateRequestDto mispUpdateRequestDto)
 	{
 		ResponseWrapper<MISPUpdateResponseDto> response = new ResponseWrapper<>();
@@ -148,11 +204,26 @@ public class MISPManagementService {
 		return response;		
 	}
 	
-	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto request)
+	/** 
+	 * This method update the status of misp licensekey to Active or DeActive of a specific misp.
+	 * 
+	 * 1. Checks the db for misp with specific misp id.
+	 *    if misp details not found throws exception.
+	 * 2. Checks the db with the licnese key.
+	 *    if licnese key details not found throws the exception.
+	 * 3. Checks the with the combination of misp id and license key.
+	 *     if details not found throws the exception.
+	 * 4. Save the data with inputed data.
+	 * 5. And returns the updated data
+	 * @param misplKeyStatusUpdateRequest {@link MISPlKeyStatusUpdateRequestDto} this class contains all the required fields for misp license key status update request.
+	 * @return MISPlKeyStatusUpdateResponseDto {@link MISPlKeyStatusUpdateResponseDto} this class conatins all the required fields for misp license key status update response.
+	 */
+	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto misplKeyStatusUpdateRequest)
 	{
-		MISPLicenseEntity mispLicense =  getMispLiecense( new MISPlKeyUniqueKeyEntity(request.getMispId(),request.getMispLicenseKey()));
+		MISPLicenseEntity mispLicense =  getMispLiecense( new MISPlKeyUniqueKeyEntity(misplKeyStatusUpdateRequest.getMispId(),
+				misplKeyStatusUpdateRequest.getMispLicenseKey()));
 		
-		Boolean status = request.getMispLicenseKeyStatus() == "De-Active" ? false: true;
+		Boolean status = misplKeyStatusUpdateRequest.getMispLicenseKeyStatus().contains("De-Active") ? false : true;
 		
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		MISPlKeyStatusUpdateResponseDto responseDto = new MISPlKeyStatusUpdateResponseDto();
@@ -161,9 +232,9 @@ public class MISPManagementService {
 		{
 			mispLicense.setIsActive(status);
 			mispLicense.setUpdatedDateTime(LocalDateTime.now());
-			mispLicense.setUpdatedBy("Nagarjuna");
+			mispLicense.setUpdatedBy("SYSTEM");
 			misplKeyRepository.save(mispLicense);
-			responseDto.setMispLicenseKeyStatus(request.getMispLicenseKeyStatus());
+			responseDto.setMispLicenseKeyStatus(misplKeyStatusUpdateRequest.getMispLicenseKeyStatus());
 		}
 
 		response.setResponse(responseDto);
@@ -171,6 +242,13 @@ public class MISPManagementService {
 		return response;	
 	}
 	
+	/**
+	 * This method brings the all misps present in the database.
+	 * 1. Checks the db for misp details.
+	 * 2. if misp details not found throws the exception
+	 * 3. else returns the misps
+	 * @return mispEntity list of misps
+	 */
 	public List<MISPEntity> getAllMISPS()
 	{
 		List<MISPEntity> allMISPsFromDb = mispRepository.findAll(); 
@@ -184,21 +262,33 @@ public class MISPManagementService {
 		return allMISPsFromDb;
 	}
 	
-	public MISPEntity getMISPDeatils(String id)
-	{
-		return validateMISPWithID(id);
+	/**
+	 *  This method calls the validate misp id function to get the misp details.
+	 * @param mispId this is the specific misp id.
+	 * @return mispEntity specific misp details.
+	 */
+	public MISPEntity getMISPDeatils(String mispId){
+		return validateMISPWithID(mispId);
 	}
     
-	public  MISPEntity findMispByName(String name)
-	{
-		MISPEntity mispEntity = mispRepository.findByName(name);
+	/**
+	 * This method gets the misp details by using misp name.
+	 * 
+	 * @param mispName misp name/misp organization name.
+	 * @return mispEntity misp details against to give input misp name.
+	 */
+	public MISPEntity findMispByName(String mispName){
+
+		MISPEntity mispEntity = mispRepository.findByName(mispName);
+		
 		if(mispEntity == null)
 		{
 			throw new MISPException(ErrorMessages.MISP_EXISTS.getErrorCode(), 
-					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + name);
+					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + mispName);
 		}
 		
 		List<MISPEntity> misps = mispRepository.findByStartsWithName(mispEntity.getName());
+		
 		List<MISPWithLicenseDto> mispsWithLicenses = new ArrayList<MISPWithLicenseDto>();
 				
 		for(MISPEntity misp : misps)
@@ -231,17 +321,28 @@ public class MISPManagementService {
          return mispEntity;
 	}
 
-	private void validateMISPWithName(String name)
+	/**
+	 *  This method validate the misp with misp name
+	 *  1. Checke the db with misp name
+	 *     if not exists thorws the exception. 
+	 * @param mispName misp name
+	 */
+	private void validateMISPWithName(String mispName)
 	{
-		MISPEntity mispEntity = mispRepository.findByName(name);
+		MISPEntity mispEntity = mispRepository.findByName(mispName);
 		
 		if(mispEntity != null)
 		{
 			throw new MISPException(ErrorMessages.MISP_EXISTS.getErrorCode(), 
-					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + name);
+					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + mispName);
 		}
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	private MISPEntity validateMISPWithID(String id)
 	{
 		MISPEntity mispEntity = mispRepository.findById(id).get();
@@ -256,25 +357,34 @@ public class MISPManagementService {
 		}
 	}
     
-	public MISPLicenseEntity getMispLiecense(MISPlKeyUniqueKeyEntity unique)
+	/**
+	 * This method brings misp license details.
+	 * 1. Validates the misp id
+	 * 2. Validates the misp license key
+	 * 3. Validates the combination of misp id and license key
+	 * 4. Returns the license key for combination of misp id and license key.
+	 * @param mispUniqueKey This request contains unique key of misp license(misp_id, licensekey)
+	 * @return misp license 
+	 */
+	public MISPLicenseEntity getMispLiecense(MISPlKeyUniqueKeyEntity mispUniqueKey)
 	{
-		validateMISPWithID(unique.getMisp_id());		
+		validateMISPWithID(mispUniqueKey.getMisp_id());		
 		
-		List<MISPLicenseEntity> mispLicenses = misplKeyRepository.findByLicensekey(unique.getLicense_key());
+		List<MISPLicenseEntity> mispLicenses = misplKeyRepository.findByLicensekey(mispUniqueKey.getLicense_key());
 		
 		if(mispLicenses.size() <= 0){
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
-					ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + unique.getLicense_key());
+					ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + mispUniqueKey.getLicense_key());
 			
 		}		
 		
-		MISPLicenseEntity mispLicense =  misplKeyRepository.findById(unique.getMisp_id()).get();
+		MISPLicenseEntity mispLicense =  misplKeyRepository.findById(mispUniqueKey.getMisp_id()).get();
 		
 		if(mispLicense == null)
 		{
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
-					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  + unique.getMisp_id() + 
-					", LicenseKey: " + unique.getLicense_key());
+					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  + mispUniqueKey.getMisp_id() + 
+					", LicenseKey: " + mispUniqueKey.getLicense_key());
 		}
         
 		return mispLicense;		

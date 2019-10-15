@@ -10,17 +10,28 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ * 
+ * Defines an object to hold the request details.
+ *
+ */
+
 @Data
 public class RequestWrapper<T> {
-	private String id;
-	private String version;
+	public String id;
+	
+	public String version;
+
 	@ApiModelProperty(notes = "Request Timestamp", example = "2018-12-10T06:12:52.994Z", required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime requesttime;
+	public LocalDateTime requesttime;
 
-	private Object metadata;
+	public Object metadata;
 
 	@NotNull
 	@Valid
-	private T request;
+	public T request;
 }

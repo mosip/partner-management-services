@@ -9,7 +9,14 @@ import org.springframework.stereotype.Repository;
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.pmp.misp.entity.MISPEntity;
 
- 
+ /**
+  * 
+  * @author Nagarjuna Kuchi
+  * @version 1.0
+  * 
+  * Defines an object to provide misp data base related operations.
+  *
+  */
 @Repository
 public interface MispServiceRepository extends BaseRepository<MISPEntity, String> {
 

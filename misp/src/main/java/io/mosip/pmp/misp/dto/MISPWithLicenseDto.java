@@ -5,22 +5,30 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ * 
+ * Defines an object to hold the misp details along with misp licenses.
+ *
+ */
 @Data
 public class MISPWithLicenseDto implements Serializable {
 
-	private static final long serialVersionUID = 6670743917275798523L;
+	public static final long serialVersionUID = 6670743917275798523L;
 	
-	private String id;
+	public String id;
 	
-	private String organizationName;
+	public String organizationName;
 	
-	private String contactNumber;
+	public String contactNumber;
 	
-	private String emailID;
+	public String emailID;
 	
-	private String address;
+	public String address;
 	
-	private String status;
+	public String status;
 
-	private List<MISPLiceneseDto> licenses;
+	public List<MISPLiceneseDto> licenses;
 }

@@ -17,39 +17,47 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi <br/> 
+ * @version 1.0 <br/>
+ * @since 2019-Oct-11 <br/>
+ * 
+ * 
+ * Defines an object to hold the misp details
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "misp", schema = "pmp")
-//@IdClass(CodeAndLanguageCodeID.class)
 public class MISPEntity extends BaseEntity implements Serializable {
 	
 
 	private static final long serialVersionUID = -8541947597557590379L;
 	
 	@Id	
-	@Column(name ="id")
-	private String ID;	
+	@Column(name ="id")	
+	public String ID;	
 	
 	@Column(name ="name")
-	private String name;
+	public String name;
 	
 	@Column(name ="address")
-	private String address;
+	public String address;
 	
 	@Column(name="contact_no")
-	private String contactNumber;
+	public String contactNumber;
 	
 	@Column(name ="email_id")
-	private String emailId;
+	public String emailId;
 	
 	@Column(name ="user_id")
-	private String userID; 
+	public String userID; 
 
 	@OneToOne(cascade = CascadeType.ALL)	
 	@JoinColumns({@JoinColumn(name = "id", insertable = false, updatable = false), })
-	private MISPLicenseEntity mispLicenses;
+	public MISPLicenseEntity mispLicenses;
 
 }

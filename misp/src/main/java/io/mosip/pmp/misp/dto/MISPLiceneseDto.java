@@ -4,18 +4,23 @@ import java.io.Serializable;
 
 import lombok.Data;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0 
+ * @since 2019- Oct
+ *
+ * Defines the object to hold the misp license details.
+ */
 @Data
 public class MISPLiceneseDto implements Serializable{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 671785832679079663L;
+	public static final long serialVersionUID = 671785832679079663L;
 	
-	private String licenseKey;
+	public String licenseKey;
 	
-	private String licenseKeyExpiry;
+	public String licenseKeyExpiry;
 	
-	private String licenseKeyStatus;
+	public String licenseKeyStatus;
 
 }

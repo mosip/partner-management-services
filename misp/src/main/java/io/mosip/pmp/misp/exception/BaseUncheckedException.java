@@ -15,9 +15,7 @@ import java.util.List;
  * a method or constructor's {@code throws} clause if they can be thrown by the
  * execution of the method or constructor and propagate outside the method or
  * constructor boundary.
- *
- * @author Shashank Agrawal Compile-Time Checking of Exceptions
- * @since 1.0
+ * 
  */
 public class BaseUncheckedException extends RuntimeException {
 

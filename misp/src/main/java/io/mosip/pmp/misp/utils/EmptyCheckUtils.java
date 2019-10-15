@@ -7,7 +7,7 @@ import java.util.Map;
  * This class is used to avoid NPE: NullPointerException easily.
  * 
  * @author Nagarjuna Kuchi
- * @since 1.0.0
+ * @version 1.0
  */
 public final class EmptyCheckUtils {
 

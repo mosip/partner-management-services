@@ -18,6 +18,11 @@ import io.mosip.pmp.misp.dto.BaseDto;
 import io.mosip.pmp.misp.entity.BaseEntity;
 import io.mosip.pmp.misp.exception.DataAccessLayerException;
 
+/**
+ *  
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
 public class MapperUtils {
 	private MapperUtils() {
 		super();

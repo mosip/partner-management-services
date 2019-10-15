@@ -15,7 +15,8 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 /**
- * @author Nagarjuna
+ * @author Nagarjuna Kuchi
+ * @version 1.0
  *
  */
 public class ReqResFilter implements Filter {
@@ -26,24 +27,34 @@ public class ReqResFilter implements Filter {
 		// init method overriding
 	}
 
+	/**
+	 *  The doFilter method of the Filter is called by the container each time a request/response pair is passed through the 
+	 *  chain due to a client request for a resource at the end of the chain. The FilterChain passed in to this method allows the 
+	 *  Filter to pass on the request and response to the next entity in the chain.
+	 *    
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		
 		ContentCachingRequestWrapper requestWrapper = null;
 		ContentCachingResponseWrapper responseWrapper = null;	
 
-			if (httpServletRequest.getRequestURI().endsWith(".stream")) {
-				chain.doFilter(request, response);
-				return;
-			}
-			requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
-			responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
-			chain.doFilter(requestWrapper, responseWrapper);
-			
+		if (httpServletRequest.getRequestURI().endsWith(".stream")) {
+			chain.doFilter(request, response);
+			return;
+		}
+		
+		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
+		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
+		
+		chain.doFilter(requestWrapper, responseWrapper);
+		
 
-			responseWrapper.copyBodyToResponse();
+		responseWrapper.copyBodyToResponse();
 	}
 
 	@Override

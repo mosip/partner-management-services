@@ -10,6 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi <br/> 
+ * @version 1.0 <br/>
+ *  
+ * Defines an object to hold the misp license unique key.
+ */
 
 @Data
 @NoArgsConstructor

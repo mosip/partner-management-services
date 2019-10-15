@@ -13,6 +13,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi <br/> 
+ * @version 1.0 <br/>
+ *  
+ *   Defines an object to hold the misp license details.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,13 +32,14 @@ public class MISPLicenseEntity extends BaseEntity implements Serializable {
 	
 	@Id
 	@Column(insertable= false, updatable = false)
-	private String misp_id;	
-	private String license_key;
+	public String misp_id;	
+	
+	public String license_key;
 	
 	@Column(name = "valid_from_date")
-	private LocalDateTime validFromDate;	
+	public LocalDateTime validFromDate;	
 
 	@Column(name = "valid_to_date")	
-	private LocalDateTime validToDate;
+	public LocalDateTime validToDate;
 	
 }

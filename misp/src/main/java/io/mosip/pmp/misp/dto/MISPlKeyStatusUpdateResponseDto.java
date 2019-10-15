@@ -6,6 +6,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ * 
+ * Defines an object to hold the misp licese key update response details.
+ *
+ */
 @Data
 @ApiModel(value= "MISPlKeyStatusUpdateResponseDto", description = "MISP license key response representation")
 public class MISPlKeyStatusUpdateResponseDto {

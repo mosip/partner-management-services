@@ -13,18 +13,30 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.mosip.pmp.misp.exception.ServiceError;
 import lombok.Data;
 
+/**
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ * 
+ * Defines an object to hold the response details.
+ *
+ */
+
 @Data
 public class ResponseWrapper<T> {
-	private String id;
-	private String version;
+	
+	public String id;
+	
+	public String version;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
-	private Object metadata;
+	public LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
+	
+	public Object metadata;
 	
 	@NotNull
 	@Valid
-	private T response;	
+	public T response;	
 	
-	private List<ServiceError> errors = new ArrayList<>();
+	public List<ServiceError> errors = new ArrayList<>();
 
 }

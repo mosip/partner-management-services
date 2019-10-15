@@ -1,8 +1,5 @@
 package io.mosip.pmp.misp.exception;
 
-
-
-
 /**
  * Custom class for DataAccessLayerException
  * 
