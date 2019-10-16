@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPGroupResponseDto;
+import io.mosip.pmp.misp.dto.MISPLiceneseDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.MISPUpdateRequestDto;
@@ -129,7 +130,7 @@ public class MispController {
 		MISPLicenseReadEntity mispLicense = mispManagementService.getMispLicense(new MISPlKeyUniqueKeyEntity(mispId,misplKeyStatusUpdateRequestDto.getRequest().getMispLicenseKey()));
 		
 		message.setMessage("MISP " + mispLicense.getMispUniqueEntity().getMisp_id() + " license key " + mispLicense.getMispUniqueEntity().getLicense_key() + "  is " 
-		+ (mispLicense.getIsActive() == true ? "valid" : "not valid"));
+		+ (mispLicense.isActive == true ? "valid" : "not valid"));
 		
 		response.setResponse(message);
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
@@ -184,6 +185,7 @@ public class MispController {
 		return response;
 	}
 	
+	
 	/**
 	 * This API would be used to retrieve all MISPs details.
 	 * 
@@ -223,16 +225,26 @@ public class MispController {
 		return response;
 	}
 	
-//	@GetMapping
-//	public List<MISPEntity> getOrgWiseMISPDeatils(@PathVariable String orgName )
-//	{
-//		return Collections.emptyList();
-//	}
-//	
-//	@GetMapping
-//	public List<MISPEntity> downloadMISPlKey(@PathVariable String id )
-//	{
-//		return Collections.emptyList();
-//	}
+	@GetMapping(value ="/misps/misp/{orgName}")
+	public List<MISPEntity> getOrgWiseMISPDeatils(@PathVariable String orgName )
+	{
+		return mispManagementService.getMispsByOrganization(orgName);
+	}
+	
+	@GetMapping(value = "/misps/{mispId}/licenseKey")
+	public ResponseWrapper<MISPLiceneseDto> downloadMispLicenseKey(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
+			@PathVariable String mispId)
+	{
+		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();
+		
+		request.setMispId(mispId);
+		
+		ResponseWrapper<MISPLiceneseDto> response = mispManagementService.retriveMISPLicense(mispId);
+		
+		response.setId(misplKeyStatusUpdateRequestDto.getId());
+		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
+
+		return response;
+	}
 
 }

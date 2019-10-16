@@ -385,15 +385,96 @@ public class MISPManagementService {
 			
 		}
 		
-		MISPLicenseReadEntity mispLicense = misplKeyReadRepository.findById(mispUniqueKey).get();
+		Optional<MISPLicenseReadEntity> mispLicense = misplKeyReadRepository.findById(mispUniqueKey);
 		
-		if(mispLicense == null)
+		if(!mispLicense.isPresent())
 		{
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  + mispUniqueKey.getMisp_id() + 
 					", LicenseKey: " + mispUniqueKey.getLicense_key());
 		}
 		
-		return mispLicense;		
+		return mispLicense.get();		
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public List<MISPEntity> getMispsByOrganization(String name)
+	{
+		List<MISPEntity> misps = mispRepository.findByStartsWithName(name); 
+		
+		if(misps.isEmpty()){
+			throw new MISPException("", "No misp is prenset with name :" + name);
+		}
+		
+		return misps;
+	}
+	
+	public ResponseWrapper<MISPLiceneseDto> retriveMISPLicense(String mispId)
+	{
+		MISPEntity misp = validateMISPWithID(mispId);
+		
+		List<MISPLicenseEntity> mispLicenses = misplKeyRepository.findByMispId(mispId);
+		
+		if(mispLicenses.isEmpty()){
+			throw new MISPException("", "MISP " + mispId + "is not having licenses");
+		}
+		
+		ResponseWrapper<MISPLiceneseDto> response = new ResponseWrapper<>();
+
+		MISPLiceneseDto licenseDto = new MISPLiceneseDto();
+		
+		for(MISPLicenseEntity mispLicense : mispLicenses)
+		{
+			if(mispLicense.isActive){				
+				
+				if(mispLicense.getValidToDate().compareTo(LocalDateTime.now()) < 0 ){
+					
+					mispLicense.setIsActive(false);
+					mispLicense.setUpdatedBy("SYSTEM");
+					mispLicense.setUpdatedDateTime(LocalDateTime.now());					
+					
+					MISPLicenseEntity misplEntity = new MISPLicenseEntity();
+					
+					misplEntity.setLicense_key(mispLicenseKeyGenerator.generateLicense());		
+					misplEntity.setValidFromDate(LocalDateTime.now());
+					misplEntity.setValidToDate(LocalDateTime.now().plusDays(60));	
+					misplEntity.setCreatedDateTime(LocalDateTime.now());		
+					misplEntity.setMisp_id(mispLicense.getMisp_id());
+					misplEntity.setIsActive(true);
+					misplEntity.setCreatedBy("SYSTEM");
+					
+					
+					misp.setMispLicenses(misplEntity);
+					
+					
+					misp = mispRepository.save(misp);
+					misplEntity =  misplKeyRepository.save(misplEntity);
+					mispLicense = misplKeyRepository.save(mispLicense);					
+					
+					licenseDto.setLicenseKey(misplEntity.getLicense_key());
+					licenseDto.setLicenseKeyExpiry(misplEntity.getValidToDate().toLocalDate().toString());
+					licenseDto.setLicenseKeyStatus("Active");
+					response.setResponse(licenseDto);
+				}
+				else{
+					licenseDto.setLicenseKey(mispLicense.getLicense_key());
+					licenseDto.setLicenseKeyExpiry(mispLicense.getValidToDate().toLocalDate().toString());
+					licenseDto.setLicenseKeyStatus("Active");	
+					response.setResponse(licenseDto);
+				}
+			}
+			else{
+				licenseDto.setLicenseKey(mispLicense.getLicense_key());
+				licenseDto.setLicenseKeyExpiry(mispLicense.getValidToDate().toLocalDate().toString());
+				licenseDto.setLicenseKeyStatus("De-Active");	
+				response.setResponse(licenseDto);
+			}
+		}
+		
+		return response;
 	}
 }
