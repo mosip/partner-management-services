@@ -171,8 +171,9 @@ public class PartnerServiceController {
 		ResponseWrapper<APIkeyRequests> response = new ResponseWrapper<APIkeyRequests>();
 		APIkeyRequests aPIkeyRequests = null;
 		aPIkeyRequests = partnerService.viewApiKeyRequestStatusApiKey(partnerID, aPIKeyReqID);
+		response.setId("mosip.partnermanagement.partners.apikey.status");
+		response.setVersion("1.0");
 		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<ResponseWrapper<APIkeyRequests>>(response, HttpStatus.OK);
 	}
-
 }

@@ -68,6 +68,9 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	 }
 	
+	//Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
+	//PUT /pmpartners/{partnerID}/{PartnerAPIKey}
+	
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerID,

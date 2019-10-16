@@ -1,7 +1,6 @@
 package io.mosip.pmp.partner.service.impl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
+import io.mosip.pmp.partner.constant.PartnerAPIDoesNotExistConstant;
+import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
+import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
@@ -26,9 +29,13 @@ import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PolicyGroup;
+import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
+import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
+import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
+import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerRepository;
@@ -66,7 +73,6 @@ public class PartnerServiceImpl implements PartnerService {
 		PolicyGroup policyGroup = null;
 		policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
 		
-		
 		if(policyGroup!=null) {
 			partner.setPolicy_group_id(policyGroup.getId());
 			partner.setName(request.getOrganizationName());
@@ -76,7 +82,9 @@ public class PartnerServiceImpl implements PartnerService {
 			
 			partner.setIs_active(policyGroup.getIs_active());
 		}else {
-			throw new RuntimeException();
+			throw new PolicyGroupDoesNotExistException(
+					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		
 		PartnerResponse partnerResponse = new PartnerResponse();
@@ -168,8 +176,15 @@ public class PartnerServiceImpl implements PartnerService {
 		String Partner_Policy_Request_Id = PartnerUtil.createPartnerId();
 		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
 		partnerPolicyRequest.setStatus_code("in-progress");
-		//TODO
-		// Need to Validate partner id in Partner Table
+
+		Optional<Partner> findById = partnerRepository.findById(partnerID);
+		if(!findById.isPresent()) {
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		Partner partner = findById.get();
+		partnerPolicyRequest.setPolicy_id(partner.getPolicy_group_id());
 		partnerPolicyRequest.setPart_id(partnerID);
 		//TODO
 		// Need add column (api_desc) in Partner_policy_request Table
@@ -189,13 +204,35 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicy partnerPolicy = null;
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
 		Optional<PartnerPolicyRequest> partner_request = partnerPolicyRequestRepository.findById(aPIKeyReqID);
-		PartnerPolicyRequest partnerPolicyRequest = partner_request.get();
-		if(partnerPolicyRequest.getPart_id().equals(partnerID) && partnerPolicyRequest.getStatus_code().equals("approved")) {
-			//partnerPolicy = partnerPolicyRepository.findByPartId(partnerID);
-			//downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicy_api_key());
-			downloadPartnerAPIkeyResponse.setPartnerAPIKey("45673456759");
-		}
 		
+		if(partner_request.isPresent() && partner_request!=null) {
+			
+			PartnerPolicyRequest partnerPolicyRequest = partner_request.get();
+			if(partnerPolicyRequest.getPart_id().equals(partnerID)) {
+				// && partnerPolicyRequest.getStatus_code().equalsIgnoreCase("approved")
+				partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerID);
+				if(partnerPolicy!=null) {
+					downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicy_api_key());
+				}else {
+					//TODO
+					System.out.println("throw Partner_API_Key is not created / request is not approved by partnetmanager");
+					throw new PartnerAPIKeyIsNotCreatedException(
+							PartnerAPIKeyIsNotCreatedConstant.PARTNER_API_NOT_CREATED_EXCEPTION.getErrorCode(),
+							PartnerAPIKeyIsNotCreatedConstant.PARTNER_API_NOT_CREATED_EXCEPTION.getErrorMessage());
+				}
+			}else {
+				throw new PartnerDoesNotExistsException(
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+		}else {
+			//TODO
+			System.out.println("throw APIKeyReqID does not exist (PMS_PRT_005)");
+			
+			throw new PartnerAPIKeyReqIDDoesNotExistException(
+					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
 		return downloadPartnerAPIkeyResponse;
 	}
 
@@ -203,7 +240,6 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
 
 		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
-		// List<PartnerPolicy> list_partner_policy = partnerPolicyRepository.findByPartnerId(partnerID);
 		PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
 		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<APIkeyRequests>();
 		PartnerPolicyRequest partnerPolicyRequest = null;
@@ -212,14 +248,25 @@ public class PartnerServiceImpl implements PartnerService {
 			Iterator<PartnerPolicyRequest> it = findByPartnerId.iterator();
 			while (it.hasNext()) {
 				partnerPolicyRequest = it.next();
-				if (partnerPolicyRequest.getStatus_code().equals("approved")) {
+				if (partnerPolicyRequest.getStatus_code().equalsIgnoreCase("approved")) {
 
 					APIkeyRequests approvedRequest = new APIkeyRequests();
 					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
 					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatus_code());
 					//TODO 
 					//need to get the info from partnerPolicyRepository table
-					approvedRequest.setPartnerApiKey("fa604-affcd-33201-04770");
+					//String partnerId = partnerPolicyRequest.getPart_id();
+					PartnerPolicy findByPartner_Id = partnerPolicyRepository.findByPartnerId(partnerID);
+					if(findByPartner_Id == null) {
+						System.out.println(partnerPolicyRequest.getId() + ": PARTNER_API_KEY is not created");
+						throw new PartnerAPIKeyIsNotCreatedException(
+								PartnerAPIKeyIsNotCreatedConstant.PARTNER_API_NOT_CREATED_EXCEPTION.getErrorCode(),
+								PartnerAPIKeyIsNotCreatedConstant.PARTNER_API_NOT_CREATED_EXCEPTION.getErrorMessage());
+					}
+					approvedRequest.setPartnerApiKey(findByPartner_Id.getPolicy_api_key());
+					
+					
+					//approvedRequest.setPartnerApiKey("fa604-affcd-33201-04770");
 					approvedRequest.setValidityTill(LocalDate.now().plusDays(60).toString());
 
 					listAPIkeyRequests.add(approvedRequest);
@@ -234,8 +281,6 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 
 		} else {
-			// TODO
-			System.out.println("Partner Not Exist Exception");
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
@@ -246,8 +291,45 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID, String aPIKeyReqID) {
-		// TODO Auto-generated method stub
-		System.out.println("@@@@@@@@@@@@@@@@@ Need to implement after clarification @@@@@@@@@@@@@@@@");
-		return null;
+		PartnerPolicy partnerPolicy = null;
+		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(aPIKeyReqID);
+		APIkeyRequests aPIkeyRequests = new APIkeyRequests();
+		if(findById.isPresent() && findById!=null) {
+				
+			PartnerPolicyRequest partnerPolicyRequest = findById.get();
+			
+			if(partnerPolicyRequest.getPart_id().equals(partnerID)) {
+					
+				String status_code = partnerPolicyRequest.getStatus_code();
+				if(status_code.equalsIgnoreCase("Approved")) {
+					aPIkeyRequests.setApiKeyReqID(partnerPolicyRequest.getId());
+					aPIkeyRequests.setApiKeyRequestStatus(status_code);
+					partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerID);
+					aPIkeyRequests.setValidityTill(partnerPolicy.getValid_to_datetime());
+					aPIkeyRequests.setPartnerApiKey(partnerPolicy.getPolicy_api_key());
+				}else {
+					//TODO
+					System.out.println("throw the exception aPIKeyReqID status is In-progress");
+					//throw the exception aPIKeyReqID status is In-progress
+					throw new APIKeyReqIdStatusInProgressException(
+							APIKeyReqIdStatusInProgressConstant.APIKEYREQIDSTATUSINPROGRESS.getErrorCode(),
+							APIKeyReqIdStatusInProgressConstant.APIKEYREQIDSTATUSINPROGRESS.getErrorMessage());
+				}
+				
+			}else {
+				throw new PartnerDoesNotExistsException(
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			
+		}else {
+			//TODO
+			System.out.println("throw the exception aPIKeyReqID is not exist (\"errorCode\": \"PMS_PRT_006\",)");
+			// throw the exception aPIKeyReqID is not exist ("errorCode": "PMS_PRT_006",)
+			throw new PartnerAPIKeyReqIDDoesNotExistException(
+					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		return aPIkeyRequests;
 	}
 }

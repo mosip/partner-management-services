@@ -1,12 +1,13 @@
-package io.mosip.pmp.partnermanagement.constant;
+package io.mosip.pmp.partner.constant;
 
-public enum PartnerAPIDoesNotExistConstant {
+public enum PolicyGroupDoesNotExistConstant {
+
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy Group does not exist");
 	
-	PARTNER_API_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_007","Partner api key Request ID does not exist");
-
 	/**
 	 * The error code.
 	 */
+	
 	private String errorCode;
 
 	/**
@@ -22,7 +23,7 @@ public enum PartnerAPIDoesNotExistConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	PartnerAPIDoesNotExistConstant(String errorCode, String errorMessage) {
+	PolicyGroupDoesNotExistConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}
@@ -44,5 +45,4 @@ public enum PartnerAPIDoesNotExistConstant {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
-
 }

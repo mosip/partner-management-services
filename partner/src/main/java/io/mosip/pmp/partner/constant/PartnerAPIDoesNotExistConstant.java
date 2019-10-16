@@ -1,4 +1,4 @@
-package io.mosip.pmp.partnermanagement.constant;
+package io.mosip.pmp.partner.constant;
 
 public enum PartnerAPIDoesNotExistConstant {
 	

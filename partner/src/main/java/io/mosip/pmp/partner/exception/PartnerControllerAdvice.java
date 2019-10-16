@@ -91,6 +91,60 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
+	
+	@ExceptionHandler(PolicyGroupDoesNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
+			final HttpServletRequest httpServletRequest, final PolicyGroupDoesNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> responseError =  setErrors(httpServletRequest);
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(PartnerAPIKeyIsNotCreatedException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
+			final HttpServletRequest httpServletRequest, final PartnerAPIKeyIsNotCreatedException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		responseError.setId("mosip.partnermanagement.partnerAPIKey.download");
+		responseError.setVersion("1.0");
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(APIKeyReqIdStatusInProgressException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
+			final HttpServletRequest httpServletRequest, final APIKeyReqIdStatusInProgressException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		responseError.setId("mosip.partnermanagement.partners.apikey.status");
+		responseError.setVersion("1.0");
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	
+	@ExceptionHandler(PartnerAPIKeyReqIDDoesNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerAPIKEYExcepionMassages(
+			final HttpServletRequest httpServletRequest, final PartnerAPIKeyReqIDDoesNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
 	@ExceptionHandler(PartnerDoesNotExistsException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception)

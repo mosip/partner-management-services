@@ -3,6 +3,7 @@ package io.mosip.pmp.partner.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.pmp.partner.entity.PartnerPolicy;
@@ -14,8 +15,10 @@ import io.mosip.pmp.partner.entity.PartnerPolicy;
 @Repository
 public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, String> {
 	
-	//public List<PartnerPolicy> findBypart_id(String partnerId);//
+	//@Query(value = "select * from partner_policy ppr where ppr.part_id=?", nativeQuery = true )
+	//public List<PartnerPolicy> findByPartnerId(String part_id);
 	
-	//public PartnerPolicy findByPartId(String part_id);
+	@Query(value = "select * from partner_policy ppr where ppr.part_id=?", nativeQuery = true )
+	public PartnerPolicy findByPartnerId(String part_id);
  
 }

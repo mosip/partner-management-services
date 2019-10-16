@@ -21,8 +21,8 @@ public class PolicyGroup {
 	
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private String id;
 	
 	@Column(name = "name")
 	private String name;
