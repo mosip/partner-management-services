@@ -224,7 +224,12 @@ public class PolicyManagementService {
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
 		
 		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(statusUpdateRequest.getId());
-
+        if(!policyGroupDetails.isPresent()){
+        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());
+        }
+		
+		
 		PolicyGroup policyGroupFromDb = null;
 		if (policyGroupDetails != null && policyGroupDetails.get() != null) {
 			policyGroupFromDb = policyGroupDetails.get();
@@ -250,12 +255,25 @@ public class PolicyManagementService {
 		List<PolicyGroup> policies = new ArrayList<PolicyGroup>();
 		
 		if (policyId != "") {
-			policies.add(policyGroupRepository.findById(policyId).get());
+			
+			Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId); 
+			
+			if(!policyFromDb.isPresent()){
+	        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
+	        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+				
+			}
+			
+			policies.add(policyFromDb.get());
 
 		} else {
 			policies = policyGroupRepository.findAll();			
 		}
 
+		if(policies.isEmpty()){
+        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+		}
 		
 		List<PoliciesDto> allPolicies = new ArrayList<PoliciesDto>();		
 		PoliciesDto policiesDto = new PoliciesDto();
