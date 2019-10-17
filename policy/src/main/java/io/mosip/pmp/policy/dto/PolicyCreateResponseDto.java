@@ -3,24 +3,54 @@ package io.mosip.pmp.policy.dto;
 import java.time.LocalDateTime;
 
 import lombok.Data;
+/**
+ * <p> Encapsulates the response details of auth policy</p>
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
 
 @Data
 public class PolicyCreateResponseDto {
 	
-	private String id;
+	/**
+	 * policy group id.
+	 */
+	public String id;
 	
-	private String name;
+	/**
+	 * policy group name
+	 */
+	public String name;
 	
-	private String desc;
+	/**
+	 * policy group description.
+	 */
+	public String desc;
 	
-	private Boolean is_Active;
+	/**
+	 * policy group status(Active or De-Active)
+	 */
+	public Boolean is_Active;
 	
-	private String cr_by;	
+	/**
+	 * Created By
+	 */
+	public String cr_by;	
 	
-	private LocalDateTime cr_dtimes;
+	/**
+	 * Created date and time
+	 */
+	public LocalDateTime cr_dtimes;
 	
-	private String up_by;
+	/**
+	 * Updated by
+	 */
+	public String up_by;
 	
-	private LocalDateTime upd_dtimes;
+	/**
+	 * Updated date and time
+	 */
+	public LocalDateTime upd_dtimes;
 
 }

@@ -4,23 +4,53 @@ import java.time.LocalDateTime;
 
 import lombok.Data;
 
+/**
+ * <p> Encapsulates the response details of policy update.</p>
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
 @Data
 public class PolicyUpdateResponseDto {
 
-	private String id;
+	/**
+	 * policy group id.
+	 */
+	public String id;
 	
-	private String name;
+	/**
+	 * policy group name
+	 */
+	public String name;
 	
+	/**
+	 * policy group description.
+	 */
 	private String desc;
 	
+	/**
+	 * policy group Status
+	 */
 	private boolean is_Active;
 	
+	/**
+	 * created By
+	 */
 	private String cr_by;	
 	
-	private LocalDateTime cr_dtimes;
+	/**
+	 * created date and times.
+	 */
+	public LocalDateTime cr_dtimes;
 	
-	private String up_by;
+	/**
+	 * updated by
+	 */
+	public String up_by;
 	
-	private LocalDateTime upd_dtimes;
+	/**
+	 * updated date and times.
+	 */
+	public LocalDateTime upd_dtimes;
 
 }

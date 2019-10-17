@@ -6,21 +6,40 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
+/**
+ * <p> It holds the objects of auth policy {@link AuthPolicyDto} and </p>
+ * <p> allowed kyc {@link AllowedKycDto} </p>
+ *  
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
 @Data
 public class PolicyDto {
 
+	/**
+	 * policy Id
+	 */
+	public String policyId;
 	
-	private String policyId;
-	
+	/**
+	 * policy name
+	 */
 	@NotNull
-	private String name;
+	public String name;
 	
+	/**
+	 * policy description.
+	 */
 	@NotNull
-	private String descr;
+	public String descr;
 	
+	/**
+	 * list of auth policy dto's.
+	 */
+	public List<AuthPolicyDto> authPolicies;
 	
-	private List<AuthPolicyDto> authPolicies;
-	
-	
-	private List<AllowedKycDto> allowedKycAttributes;
+	/**
+	 * list of allowed Kyc dto's
+	 */
+	public List<AllowedKycDto> allowedKycAttributes;
 }

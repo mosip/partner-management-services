@@ -50,5 +50,4 @@ public String getErrorCode() {
 public String getErrorMessage() {
 	return errorMessage;
 }
-
-}
+}	

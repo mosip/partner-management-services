@@ -32,15 +32,22 @@ import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.PolicyGroup;
-import io.mosip.pmp.policy.errorMessages.DataViolationException;
-import io.mosip.pmp.policy.errorMessages.ErrorMessagesEnumeration;
-import io.mosip.pmp.policy.errorMessages.FilePathNotFoundException;
+import io.mosip.pmp.policy.errorMessages.ErrorMessages;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
+
 /**
+ * <p>This class manages business logic before or after performing database operations.</p>
+ * This class is performing following operations.</br>
+ * 1. Creating the policy group {@link #createPolicyGroup(PolicyCreateRequestDto)} </br>
+ * 2. Creating the auth policies {@link #createAuthPolicies(PolicyDto)} </br>
+ * 3. Updating the policy group {@link #update(PolicyUpdateRequestDto)} </br>
+ * 4. Updating the policy status {@link #updatePolicyStatus(PolicyStatusUpdateRequestDto)} </br>
+ * 5. Reading/Getting the policy details {@link #getPolicyDetails(String)} </br>
+ * 
  * @author Nagarjuna Kuchi
- *
+ * @version 1.0
  */
 
 @Service
@@ -57,12 +64,13 @@ public class PolicyManagementService {
 	
 
 	/**
+	 * <p> </p>
 	 * @param createRequestDto
 	 * @return
 	 * @throws IOException
 	 */	
-	public ResponseWrapper<PolicyCreateResponseDto> createPolicyGroup(PolicyCreateRequestDto createRequestDto) throws DataViolationException,
-	DataAccessLayerException, FilePathNotFoundException,Exception {
+	public ResponseWrapper<PolicyCreateResponseDto> createPolicyGroup(PolicyCreateRequestDto createRequestDto) throws 
+	DataAccessLayerException, PolicyManagementServiceException,Exception {
 		
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<>();		
 		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();
@@ -74,8 +82,8 @@ public class PolicyManagementService {
 		PolicyGroup policyGroupName = policyGroupRepository.findByName(createRequestDto.getName());
 	
 		if(policyGroupName != null){
-			throw new DataViolationException(ErrorMessagesEnumeration.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
-					ErrorMessagesEnumeration.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + createRequestDto.getName());
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
+					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + createRequestDto.getName());
 			
 		}
 		
@@ -90,8 +98,8 @@ public class PolicyManagementService {
 				policyGroupInput = policyGroupRepository.save(policyGroupInput);
 			}			
 			catch (Exception e) {
-				throw new DataViolationException(ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorCode(),
-						ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+				throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+						ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
 			}
 
 		}
@@ -111,7 +119,7 @@ public class PolicyManagementService {
 	}
 	
 	
-	public ResponseWrapper<AuthPolicyCreateResponseDto> createAuthPolicies(PolicyDto policyDto) throws FilePathNotFoundException, Exception
+	public ResponseWrapper<AuthPolicyCreateResponseDto> createAuthPolicies(PolicyDto policyDto) throws PolicyManagementServiceException, Exception
 	{
 		ResponseWrapper<AuthPolicyCreateResponseDto> response = new ResponseWrapper<>();	
 		AuthPolicyCreateResponseDto responseDto = new AuthPolicyCreateResponseDto();
@@ -121,15 +129,15 @@ public class PolicyManagementService {
 		
 		if(policyGroupDetails.get() == null)
 		{
-           throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        		   ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());
+           throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 		}	
 		
 		AuthPolicy authPolicyByName = authPolicyRepository.findByName(policyDto.getName());
 		
 		if(authPolicyByName != null){
-			throw new DataViolationException(ErrorMessagesEnumeration.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
-					ErrorMessagesEnumeration.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + " " + policyDto.getName());			
+			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
+					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + " " + policyDto.getName());			
 		}
 		
 		AuthPolicy authPolicy = new AuthPolicy();
@@ -148,8 +156,8 @@ public class PolicyManagementService {
 			authPolicy = authPolicyRepository.save(authPolicy);
 		}			
 		catch (Exception e) {
-			throw new DataViolationException(ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+			throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
 		}
 		
 		responseDto.set_Active(authPolicy.getIsActive());
@@ -173,12 +181,26 @@ public class PolicyManagementService {
 	 */
 	
 	public ResponseWrapper<PolicyUpdateResponseDto> update(PolicyUpdateRequestDto updateRequestDto) throws Exception {
+		
+		
+		PolicyGroup policyGroup = policyGroupRepository.findByName(updateRequestDto.getName());
+		if(policyGroup!=null)
+		{
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
+					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + updateRequestDto.getName());
+		}
+		
 		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(updateRequestDto.getId());
-
+		if(!policyGroupDetails.isPresent())
+		{
+           throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+		}
+		
 		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<>();	
 		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
 		PolicyGroup policyGroupFromDb = null;
-		if (policyGroupDetails != null && policyGroupDetails.get() != null) {
+		if (policyGroupDetails != null && policyGroupDetails.get() != null){
 			policyGroupFromDb = policyGroupDetails.get();
 			policyGroupFromDb.setName(updateRequestDto.getName());
 			policyGroupFromDb.setDescr(updateRequestDto.getDesc());
@@ -190,8 +212,6 @@ public class PolicyManagementService {
 			policyGroupFromDb.setUpdBy("SYSTEM");
 
 			policyGroupFromDb = policyGroupRepository.save(policyGroupFromDb);
-
-		
 		}
 		
 		updateRequestDto.getPolicies().setPolicyId(policyGroupFromDb.getId());
@@ -225,8 +245,8 @@ public class PolicyManagementService {
 		
 		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(statusUpdateRequest.getId());
         if(!policyGroupDetails.isPresent()){
-        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());
+        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
         }
 		
 		
@@ -259,8 +279,8 @@ public class PolicyManagementService {
 			Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId); 
 			
 			if(!policyFromDb.isPresent()){
-	        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
-	        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+	        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+	        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
 				
 			}
 			
@@ -271,8 +291,8 @@ public class PolicyManagementService {
 		}
 
 		if(policies.isEmpty()){
-        	throw new PolicyManagementServiceException(ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessagesEnumeration.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
 		}
 		
 		List<PoliciesDto> allPolicies = new ArrayList<PoliciesDto>();		
@@ -333,7 +353,7 @@ public class PolicyManagementService {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	private String createPolicyFile(PolicyDto policy, String name) throws FilePathNotFoundException,Exception {
+	private String createPolicyFile(PolicyDto policy, String name) throws PolicyManagementServiceException,Exception {
 		String fileName = name + ".json";
 
 		JSONObject obj = new JSONObject();

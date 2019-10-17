@@ -3,8 +3,9 @@ package io.mosip.pmp.policy.errorMessages;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
+ * 
  * @author Nagarjuna
- *
+ * @version 1.0
  */
 public class PolicyManagementServiceException extends BaseUncheckedException {
 

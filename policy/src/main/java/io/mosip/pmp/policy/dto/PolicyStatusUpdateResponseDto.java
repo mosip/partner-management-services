@@ -2,8 +2,18 @@ package io.mosip.pmp.policy.dto;
 
 import lombok.Data;
 
+/**
+ * <p> Holds the response of policy update.</p>
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ *
+ */
 @Data
 public class PolicyStatusUpdateResponseDto {
 
-	private String message;
+	/**
+	 * Contains information regarding the policy update.(Active or DeActive).
+	 */
+	public String message;
 }

@@ -30,16 +30,26 @@ import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 import io.swagger.annotations.Api;
 
-/**
- * 
+/** 
+ * <p> This is policy controller. This controller defines all the operations required </p>
+ * <p> to manage policy group.</p>
+ * <p> This controller provides following operations/functions.</p>
+ *     1. Create policy group.</br>
+ *     2. Create auth policies for policy group.</br> 
+ *     3. Update policy group.</br>
+ *     4. Update policy group status.</br>
+ *     5. Read/Get all policy groups.</br>
+ *     6. Read/Get specific policy group.</br>
+ *     7. Read/Get policy details of a partner api key.</br>
+ *       
  * @author Nagarjuna Kuchi
+ * @version 1.0
  *
  */
 
 @RestController
 @RequestMapping(value = "/pmp")
 @Api(tags = { " Partner Management : Policy Management Controller " })
-
 public class PolicyManageController {
 
 	@Autowired
@@ -47,35 +57,42 @@ public class PolicyManageController {
 
 	
 	/**
-	 * @param createRequest
-	 * @return
-	 * @throws IOException
+	 * <p> This API would be used to create new Policy for policy group.</p>
+	 * 
+	 * @param createRequest {@link PolicyCreateRequestDto} this contains all the required parameters for creating the policy.
+	 * @return response {@link PolicyCreateResponseDto} this contains all the response parameters for created policy.
+	 * @throws Exception  
 	 */
 	
 	@PostMapping(value = "/policies")	
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		
-		ResponseWrapper<PolicyCreateResponseDto> response = policyManagementService.createPolicyGroup(createRequest.getRequest());
-		
+		ResponseWrapper<PolicyCreateResponseDto> response = policyManagementService.
+				createPolicyGroup(createRequest.getRequest());		
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());
 		
 		return response;
 	}
 	
-	
-	
+	/**
+	 * <p> This API would be used to create auth policies for existing policy.</p>
+	 * 
+	 * @param policyDto {@link PolicyDto} this contains all the required parameters for creating the auth policies.
+	 * @param policyID policy group id
+	 * @return response {@link AuthPolicyCreateResponseDto} contains all response details.
+	 * @throws Exception
+	 */	
 	@PostMapping(value = "/policies/{policyID}/authPolicies")
 	public ResponseWrapper<AuthPolicyCreateResponseDto> assignAuthPolicies(@RequestBody @Valid RequestWrapper<PolicyDto> policyDto,
-			@PathVariable String policyID)
-	throws Exception
-	{
+			@PathVariable String policyID) throws Exception	{
+		
 		PolicyDto policyRequestDto = policyDto.getRequest();
 		policyRequestDto.setPolicyId(policyID);
 	
-		ResponseWrapper<AuthPolicyCreateResponseDto> response = policyManagementService.createAuthPolicies(policyRequestDto);
-		
+		ResponseWrapper<AuthPolicyCreateResponseDto> response = policyManagementService.
+				createAuthPolicies(policyRequestDto);		
 		response.setId(policyDto.getId());
 		response.setVersion(policyDto.getVersion());
 		
@@ -83,9 +100,11 @@ public class PolicyManageController {
 	}
 
 	/**
-	 * @param updateRequestDto
-	 * @param policyID
-	 * @return
+	 * <p> This API would be used to update existing policy for a policy group.</p>
+	 *  
+	 * @param updateRequestDto {@link PolicyUpdateRequestDto } Encapsulated all the required parameters required for policy update.
+	 * @param policyID policy id.
+	 * @return response {@link PolicyUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/policies/{policyID}")
@@ -104,49 +123,52 @@ public class PolicyManageController {
 	}
 
 	/**
-	 * @param statusUpdateRequestDto
-	 * @param policyID
-	 * @return
+	 * <p> This API would be used to update the status (activate/deactivate) for the given policy id.</p>
+	 * 
+	 * @param requestDto {@link PolicyStatusUpdateRequestDto } Defines all the required parameters for policy status update.	 *  
+	 * @param policyID policy id.
+	 * @return response {@link PolicyStatusUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
 	@PutMapping(value = "/policies/{policyID}")
-	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(
-			@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> statusUpdateRequestDto,
+	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto,
 			@PathVariable String policyID) throws Exception {
 		
-		PolicyStatusUpdateRequestDto statusUpdateRequest = statusUpdateRequestDto.getRequest();
-		statusUpdateRequest.setId(policyID);
+		PolicyStatusUpdateRequestDto statusUpdateRequest = requestDto.getRequest();
 		
-		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.updatePolicyStatus(statusUpdateRequest);
+		statusUpdateRequest.setId(policyID);		
 		
-		response.setId(statusUpdateRequestDto.getId());
-		response.setVersion(statusUpdateRequestDto.getVersion());
+		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.
+				updatePolicyStatus(statusUpdateRequest);		
+		response.setId(requestDto.getId());
+		response.setVersion(requestDto.getVersion());
 
 		return response;
 	}
 
 	/**
-	 * @return
-	 * @throws ParseException 
+	 * <p> This API would be used to get details for the policies in the policy group he belongs to.</p>
+	 * 
+	 * @return response {@link PoliciesDto}  policy group associated with his auth policies.
+	 * @throws ParseException  
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	@GetMapping(value = "/policies")
-	public ResponseWrapper<PoliciesDto> getPolicyDetails() throws FileNotFoundException, IOException, ParseException {
+	public ResponseWrapper<PoliciesDto> getPolicyDetails() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
 		
 		List<PoliciesDto> policies = policyManagementService.getPolicyDetails("");
 		response.setResponse(policies.get(0));
 		
-		//response.setId(statusUpdateRequestDto.getId());
-		//response.setVersion(statusUpdateRequestDto.getVersion());
-		
 		return response;
 	}
 
 	/**
-	 * @param policyID
-	 * @return
+	 * <p> This API would be used to retrieve existing policy for a policy group based on the policy id.</p>
+	 * 
+	 * @param policyID policy id.
+	 * @return response  {@link PoliciesDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/policies/{policyID}")
@@ -158,5 +180,9 @@ public class PolicyManageController {
 		
 		return response;
 	}
+	
+	/**
+	 * <p>This API would be used to retrieve the partner policy details for given PartnerAPIKey.</p>
+	 */
 
 }

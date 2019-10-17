@@ -32,8 +32,11 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 
 /**
+ * <p> This class handles all the exceptions of the policy management service.</p>
+ * 
  * @author Nagarjuna Kuchi
- *
+ * @version 1.0
+ * 
  */
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,6 +44,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	/**
+	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
+	 * 
+	 */
 	@Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
     		HttpStatus status, WebRequest request) {		
@@ -48,8 +55,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ExceptionUtils.logRootCause(ex);
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         FieldError fieldError = fieldErrors.get(0);		
-        ServiceError serviceError = new ServiceError(ErrorMessagesEnumeration.MISSING_INPUT_PARAMETER.getErrorCode(), 
-				ErrorMessagesEnumeration.MISSING_INPUT_PARAMETER.getErrorMessage() + fieldError.getField());
+        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
+        		ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + fieldError.getField());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
 			errorResponse = setErrors(request);
@@ -60,6 +67,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorResponse, status);        
     }
 	
+	/**
+	 * Exception to be thrown when misp application validations failed.
+	 * 
+	 * @param httpServletRequest
+	 * @param e
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(PolicyManagementServiceException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final PolicyManagementServiceException e) throws IOException {
@@ -67,28 +82,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(DataViolationException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataNotFoundException(
-			HttpServletRequest httpServletRequest, final DataViolationException e) throws IOException {
-		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
-	}
-
-	@ExceptionHandler(RequestException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> controlRequestException(HttpServletRequest httpServletRequest,
-			final RequestException e) throws IOException {
-		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
-	}
-	
-
-	@ExceptionHandler(FilePathNotFoundException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> controlPathNotFoundException(HttpServletRequest httpServletRequest,
-			final FilePathNotFoundException e) throws IOException {
-		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
-	}
-	
+		
+	/**
+	 * This method extract the response from HttpServletRequest request.
+	 * 
+	 * @param httpServletRequest
+	 * @param e
+	 * @param httpStatus
+	 * @return
+	 * @throws IOException
+	 */
 	private ResponseEntity<ResponseWrapper<ServiceError>> getErrorResponseEntity(HttpServletRequest httpServletRequest,
 			BaseUncheckedException e, HttpStatus httpStatus) throws IOException {
 		ServiceError error = new ServiceError(e.getErrorCode(), e.getErrorText());
@@ -98,20 +101,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	
+	/**
+	 * This method handles all runtime exceptions
+	 * 
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(HttpServletRequest httpServletRequest,
 			Exception exception) throws IOException {
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
-		ServiceError error = new ServiceError(ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorCode(),
-				ErrorMessagesEnumeration.INTERNAL_SERVER_ERROR.getErrorMessage());
+		ServiceError error = new ServiceError(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+				ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
 		errorResponse.getErrors().add(error);
 		ExceptionUtils.logRootCause(exception);
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
+	 *  This method maps the HttpServletRequest parameters to the response. 
+	 * 
 	 * @param httpServletRequest
-	 * @return
+	 * @return response
 	 * @throws IOException
 	 */
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
@@ -132,6 +145,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return responseWrapper;
 	}
 
+	/**
+	 * This method maps the WebRequest parameters to the response.
+	 * 
+	 * @param webRequest
+	 * @return
+	 * @throws IOException
+	 */
 	private ResponseWrapper<ServiceError> setErrors(WebRequest webRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponsetime(LocalDateTime.now(ZoneId.of("UTC")));

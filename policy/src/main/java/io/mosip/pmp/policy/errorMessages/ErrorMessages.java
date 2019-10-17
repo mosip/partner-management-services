@@ -1,6 +1,13 @@
 package io.mosip.pmp.policy.errorMessages;
 
-public enum ErrorMessagesEnumeration {
+/**
+ * <p> This enum contains all the error messages with codes.</p>
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
+
+public enum ErrorMessages {
 		
 	POLICY_MANAGER_NOT_FOUND_EXCEPTION("PMS_POL_001","Policy Manager does not exist"),
 	POLICY_MANAGER_WRONG_CREDENTIALS_EXCEPTION("PMS_POL_002","Mismatch of Policy Manager Credentials"),
@@ -17,17 +24,36 @@ public enum ErrorMessagesEnumeration {
 	private final String errorCode;
 	private final String errorMessage;
 
-	private ErrorMessagesEnumeration(final String errorCode, final String errorMessage) {
+	/**
+	 * Constructs a new errorMessages enum with the specified detail message and
+	 * error code and error message.
+	 *
+	 * 
+	 * @param errorCode    the error code
+	 * @param errorMessage the detail message.
+	 * @param rootCause    the specified cause
+	 */
+	
+	private ErrorMessages(final String errorCode, final String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}
 
+	/**
+	 * This method bring the error code.
+	 * @return string 
+	 */
 	public String getErrorCode() {
 		return errorCode;
 	}
 
+	/**
+	 * This method brings the error message.
+	 * @return string 
+	 */
 	public String getErrorMessage() {
 		return errorMessage;
 	}
+
 
 }

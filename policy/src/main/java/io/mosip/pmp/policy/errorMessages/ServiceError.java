@@ -1,16 +1,15 @@
 package io.mosip.pmp.policy.errorMessages;
 
-import java.io.Serializable;
-
 import lombok.Data;
 
+/**
+ * @author Nagarjuna Kuchi
+ * @since 1.0.0
+ *
+ */
 @Data
-public class ServiceError implements Serializable {
+public class ServiceError {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	/**
 	 * The error code.
 	 */
