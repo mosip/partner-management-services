@@ -10,14 +10,14 @@ import lombok.Data;
  * @since 2019-Oct
  *<br/>
  *
- * Encapsulates the response deatils of the misp creation. Specifies the details of the created misp. 
+ * Encapsulates the response details of the misp creation. Specifies the details of the created misp. 
  */
 @Data
 @ApiModel(value = "MISPCreateResponse", description = "MISP Craete response representation")
 public class MISPCreateResponseDto {
 	
 	/**
-	 *  Carries the misp status(Atcive OR De-Active) 
+	 *  Carries the misp status(Active OR De-Active) 
 	 */
 	public String mispStatus;
 	

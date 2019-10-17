@@ -19,9 +19,6 @@ import java.util.List;
  */
 public class BaseUncheckedException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -875003872780128394L;
 	public static final String EMPTY_SPACE = " ";
 	private final List<InfoItem> infoItems = new ArrayList<>();

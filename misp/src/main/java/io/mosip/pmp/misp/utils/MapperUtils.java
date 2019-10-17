@@ -16,7 +16,7 @@ import javax.persistence.Entity;
 
 import io.mosip.pmp.misp.dto.BaseDto;
 import io.mosip.pmp.misp.entity.BaseEntity;
-import io.mosip.pmp.misp.exception.DataAccessLayerException;
+import io.mosip.pmp.misp.exception.MISPException;
 
 /**
  *  
@@ -111,7 +111,7 @@ public class MapperUtils {
 		try {
 			mapValues(source, destination);
 		} catch (IllegalAccessException | InstantiationException e) {
-			throw new DataAccessLayerException("KER-MSD-991 Exception in mapping vlaues from source : "
+			throw new MISPException("KER-MSD-991 Exception in mapping vlaues from source : "
 					+ source.getClass().getName() + " to destination : " + destination.getClass().getName(), e);
 		}
 		return destination;
@@ -150,7 +150,7 @@ public class MapperUtils {
 		try {
 			destination = destinationClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new DataAccessLayerException("KER-MSD-991 Exception in mapping vlaues from source : "
+			throw new MISPException("KER-MSD-991 Exception in mapping vlaues from source : "
 					+ source.getClass().getName() + " to destination : " + destinationClass.getClass().getName(), e);
 		}
 		return (D) map(source, destination);
@@ -438,7 +438,7 @@ public class MapperUtils {
 			}
 		} catch (IllegalAccessException e) {
 
-			throw new DataAccessLayerException("KER-MSD-993 Exception raised while mapping values form "
+			throw new MISPException("KER-MSD-993 Exception raised while mapping values form "
 					+ source.getClass().getName() + " to " + destination.getClass().getName(), e);
 		}
 	}

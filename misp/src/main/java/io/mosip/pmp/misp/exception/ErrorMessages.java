@@ -1,5 +1,11 @@
 package io.mosip.pmp.misp.exception;
 
+/**
+ * <p> This enum contains all the error messages with codes.</p>
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ */
 public enum ErrorMessages {
 	
 	MISP_EXISTS("PMS_MSP_003","MISP already registred with name :"),
@@ -14,15 +20,33 @@ public enum ErrorMessages {
 private final String errorCode;
 private final String errorMessage;
 
+/**
+ * Constructs a new errorMessages enum with the specified detail message and
+ * error code and error message.
+ *
+ * 
+ * @param errorCode    the error code
+ * @param errorMessage the detail message.
+ * @param rootCause    the specified cause
+ */
+
 private ErrorMessages(final String errorCode, final String errorMessage) {
 	this.errorCode = errorCode;
 	this.errorMessage = errorMessage;
 }
 
+/**
+ * This method bring the error code.
+ * @return string 
+ */
 public String getErrorCode() {
 	return errorCode;
 }
 
+/**
+ * This method brings the error message.
+ * @return string 
+ */
 public String getErrorMessage() {
 	return errorMessage;
 }

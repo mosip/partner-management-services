@@ -35,18 +35,18 @@ import io.mosip.pmp.misp.service.MISPManagementService;
 import io.swagger.annotations.Api;
 
 /**
- * This is the MOSIP infra provider controller. This defines all the necessary operations
- * required for MISP. 
- * MISP Controller is having following operations.
- * 1. Register OR Define MISP {@link #registerMISP(RequestWrapper)}
- * 2. Updating the existing MISP {@link #updateMISP(RequestWrapper, String)}
- * 3. Validating the MISP license {@link #validateMISPlKey(RequestWrapper, String)}
- * 4. Updating the MISP status(Active OR De Active) {@link #updateMISPStatus(RequestWrapper, String)}
- * 5. Updating the MISP license key status(Active OR De Active) {@link #updateMISPlKeyStatus(RequestWrapper, String)}
- * 6. Getting the details of all the MISPS {@link #getAllMISPDetails()}
- * 7. Getting the details of specific MISP {@link #getMISPDeatils(String)}
- * 8. Getting all MISPs across the organization(domain)
- * 9. Downloading the MISP licnese key
+ * <p>This is the MOSIP infra provider controller. This defines all the necessary operations</p>
+ * <p>required for MISP</p>.
+ * MISP Controller is having following operations.<br/>
+ * 1. Register OR Define MISP {@link #registerMISP(RequestWrapper)} <br/>
+ * 2. Updating the existing MISP {@link #updateMISP(RequestWrapper, String)} <br/>
+ * 3. Validating the MISP license {@link #validateMISPlKey(RequestWrapper, String)} <br/>
+ * 4. Updating the MISP status(Active OR De Active) {@link #updateMISPStatus(RequestWrapper, String)} <br/>
+ * 5. Updating the MISP license key status(Active OR De Active) {@link #updateMISPlKeyStatus(RequestWrapper, String)} <br/>
+ * 6. Getting the details of all the MISPS {@link #getAllMISPDetails()} <br/>
+ * 7. Getting the details of specific MISP {@link #getMISPDeatils(String)} <br/>
+ * 8. Getting all MISPs across the organization(domain) <br/>
+ * 9. Downloading the MISP license key <br/>
  * 
   * @author Nagarjuna Kuchi
   * @version 1.0
@@ -62,10 +62,11 @@ public class MispController {
 	private MISPManagementService mispManagementService;
 	
 	/**
-	 * MOSIP Admin would be able to create MISP using this API. At the time of creation of MISP, MISP ID and 
-	 * MISP License Key are generated,mapped and shared back in response. Post successful MISP creation, 
-	 * by default MISP is set to active status, MISP License key is to active status. MISP License key is configurable
-	 * and set to expire in 3 months, 6 months OR any configurable period. Kernel ID generator API would be used to generate unique id.
+	 * <p>MOSIP Admin would be able to create MISP using this API. At the time of creation of MISP, MISP ID and</p> 
+	 * <p>MISP License Key are generated,mapped and shared back in response. Post successful MISP creation,</p> 
+	 * <p>by default MISP is set to active status, MISP License key is to active status. MISP License key is configurable</p>
+	 * <p>and set to expire in 3 months, 6 months OR any configurable period. Kernel ID generator API would be used <p>
+	 * <p>to generate unique id.</p>
 	 * 
 	 * @param mispCreateRequestDto  this class contains all the parameters that input should contain
 	 * @return mispCreateResponseDto this class conatins all the parameters that response should have
@@ -86,7 +87,7 @@ public class MispController {
 	
 	/**
 	 * This API would be used to update MISP for given mispID.
-	 * 
+	 * </br>
 	 * @param mispUpdateRequestDto this is request body
 	 * @param mispId this is mispid. This value coming as path variable.
 	 * @return mispUpdateResponseDto this is the response 
@@ -108,10 +109,10 @@ public class MispController {
 	}
 		
 	/**
-	 * This API would be used for validating MISPs license key-
-		1. Validate license key pattern.
-		2. Validate license key is associated with the requested MISP id.
-		3. Validate license key is Active or not.
+	 * This API would be used for validating MISPs license key.</br>
+		1. Validate license key pattern.</br>
+		2. Validate license key is associated with the requested MISP id.</br>
+		3. Validate license key is Active or not.</br>
 	 * @param misplKeyStatusUpdateRequestDto this is the request body
 	 * @param mispId This value coming as path variable.
 	 * @return mispValidatelKeyResponseDto this class contains all the reponse fields.
@@ -141,7 +142,7 @@ public class MispController {
 		
 	/**
 	 *  This API would be used to update MISP status for given MISP ID.
-	 *  
+	 *  </br>
 	 * @param mispStatusUpdateRequestDto this class contains all the fields required for input request. 
 	 * @param mispId this value coming as path variable.
 	 * @return mispStatusUpdateResponseDto this class contains all the reponse fields.
@@ -164,7 +165,7 @@ public class MispController {
 	
 	/**
 	 * This API would be used to activate/deactivate MISPs License Key for the MSIP ID.
-	 * 
+	 * </br>
 	 * @param misplKeyStatusUpdateRequestDto this class contains all the fields required for input request.
 	 * @param mispId this value coming as path variable.
 	 * @return misplKeyStatusUpdateResponseDto this class contains all the reponse fields.
@@ -188,7 +189,7 @@ public class MispController {
 	
 	/**
 	 * This API would be used to retrieve all MISPs details.
-	 * 
+	 * </br>
 	 * @return MISPGroupResponseDto  list of misps
 	 */
 	@GetMapping(value = "/misps")
@@ -208,7 +209,7 @@ public class MispController {
 	
 	/**
 	 * This API would be used to retrieve the MISPs details based on given misp id.
-	 * 
+	 * </br>
 	 * @param mispId this value coming as path variable.
 	 * @return mispEntity specific misp details.
 	 */
@@ -225,12 +226,28 @@ public class MispController {
 		return response;
 	}
 	
+	/**
+	 * This api would bring misp details with misp name
+	 * </br>
+	 * @param orgName
+	 * @return list of misp's which are starts with given name.
+	 */
 	@GetMapping(value ="/misps/misp/{orgName}")
 	public List<MISPEntity> getOrgWiseMISPDeatils(@PathVariable String orgName )
 	{
 		return mispManagementService.getMispsByOrganization(orgName);
 	}
 	
+	/**
+	 * <p> This api would be used to download misp's license key.</p>
+	 * <p> In case where license key got expired then user would be able to get a new license key. </p>
+	 * <p> New license key thus generated would be mapped with given MISP ID . Older license keys would be </p>
+	 * <p> updated with inactive status.</p>
+	 * 
+	 * @param misplKeyStatusUpdateRequestDto
+	 * @param mispId
+	 * @return misp license details.
+	 */
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLiceneseDto> downloadMispLicenseKey(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId)

@@ -3,7 +3,7 @@ package io.mosip.pmp.misp.exception;
 import lombok.Data;
 
 /**
- * @author Bal Vikash Sharma
+ * @author Nagarjuna Kuchi
  * @since 1.0.0
  *
  */

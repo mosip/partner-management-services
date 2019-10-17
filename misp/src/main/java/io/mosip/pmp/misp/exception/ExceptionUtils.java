@@ -14,6 +14,13 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * <p> This class defines all the functions required to log exceptions in user readble manner.</p> 
+ * 
+ * @author Nagarjuna Kuchi
+ * @version 1.0
+ *
+ */
 public final class ExceptionUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);

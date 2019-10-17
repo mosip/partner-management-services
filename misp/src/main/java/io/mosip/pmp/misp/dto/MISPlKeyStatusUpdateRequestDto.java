@@ -11,7 +11,7 @@ import lombok.Data;
  * @author Nagarjuna Kuchi
  * @version 1.0
  * 
- * Defines an object to hold the misp licese key update request details.
+ * Defines an object to hold the misp license key update request details.
  *
  */
 @Data

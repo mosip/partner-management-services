@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Config class with beans for keymanager service and request logging
+ * <p>Config class with beans for key manager service and request logging</p>
  * 
  * @author Nagarjuna Kuchi
  * @since 1.0.0

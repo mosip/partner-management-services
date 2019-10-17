@@ -3,7 +3,7 @@ package io.mosip.pmp.misp.validator;
 /**
  * 
  * @author Nagarjuna Kuchi
- *@version 1.0
+ * @version 1.0
  */
 public enum FilterTypeEnum {
 	CONTAINS("contains"), STARTSWITH("startsWith"), BETWEEN("between"), EQUALS("equals");

@@ -19,4 +19,8 @@ public class MISPException  extends BaseUncheckedException {
 		super(errorCode, errorMessage, rootCause);
 	}
 
+	public MISPException(String errorCode, Exception e) {
+		super(errorCode,errorCode,e);
+	}
+
 }
