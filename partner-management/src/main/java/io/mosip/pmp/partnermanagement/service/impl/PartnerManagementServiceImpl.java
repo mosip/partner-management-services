@@ -68,9 +68,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		PartnerPolicy partnerPolicy = null;
 		if (findById.isPresent() && findById != null) {
 			partnerPolicy = findById.get();
-			if (request.getOldPolicyID().equals(partnerPolicy.getPolicy_id())) {
-				partnerPolicy.setIs_active("Active");
-				partnerPolicy.setPolicy_id(request.getNewPolicyID());
+			if (request.getOldPolicyID().equals(partnerPolicy.getPolicyId())) {
+				partnerPolicy.setIsActive(true);
+				partnerPolicy.setPolicyId(request.getNewPolicyID());
 				partnerPolicyRepository.save(partnerPolicy);
 			} else {
 				throw new PolicyNotExistException(PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
@@ -114,8 +114,13 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 		if (findById.isPresent() && findById != null) {
 			PartnerPolicy partnerPolicy = findById.get();
-			if (partnerPolicy.getPart_id().equals(partnerID)) {
-				partnerPolicy.setIs_active(request.getStatus());
+			if (partnerPolicy.getPartner().getId().equals(partnerID)) {
+				
+				if(request.getStatus().equalsIgnoreCase("Active")) {
+					partnerPolicy.setIsActive(true);
+				}else if(request.getStatus().equalsIgnoreCase("De-Active")){
+					partnerPolicy.setIsActive(false);
+				}
 				partnerPolicyRepository.save(partnerPolicy);
 			} else {
 				throw new PartnerDoesNotExistException(
@@ -188,9 +193,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		PartnerAPIKeyToPolicyMappingsResponse response = new PartnerAPIKeyToPolicyMappingsResponse();
 		if (findById.isPresent() && findById != null) {
 			PartnerPolicy partnerPolicy = findById.get();
-			if (partnerPolicy.getPart_id().equals(partnerID)) {
+			if (partnerPolicy.getPartner().getId().equals(partnerID)) {
 				response.setPartnerID(partnerID);
-				response.setPolicyId(partnerPolicy.getPolicy_id());
+				response.setPolicyId(partnerPolicy.getPolicyId());
 			} else {
 				throw new PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException(
 						PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant.PARTNER_API_DOES_NOT_BELONGS_TO_THE_POLICYGROUP_OF_PARTNERMANAGER_EXCEPTION
@@ -222,9 +227,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			while (partnerPolicyRequest_iterat.hasNext()) {
 				ApikeyRequests ApikeyRequests = new ApikeyRequests();
 				partnerPolicyRequest = partnerPolicyRequest_iterat.next();
-				parnerId = partnerPolicyRequest.getPart_id();
+				parnerId = partnerPolicyRequest.getPartner().getId();
 				ApikeyRequests.setPartnerID(parnerId);
-				ApikeyRequests.setStatus(partnerPolicyRequest.getStatus_code());
+				ApikeyRequests.setStatus(partnerPolicyRequest.getStatusCode());
 				
 				Optional<Partner> findBy_PartnerId = partnerRepository.findById(parnerId);
 				
@@ -264,8 +269,8 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		if(findById.isPresent() && findById!=null) {
 			PartnerPolicyRequest partnerPolicyRequest = findById.get();
 			
-			String partnerId = partnerPolicyRequest.getPart_id();
-			String policy_Id = partnerPolicyRequest.getPolicy_id();
+			String partnerId = partnerPolicyRequest.getPartner().getId();
+			String policy_Id = partnerPolicyRequest.getPolicyId();
 			
 			Optional<Partner> findByPartnerId = partnerRepository.findById(partnerId);
 			
@@ -286,7 +291,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			PolicyGroup policyGroup = findByPolicyId.get();
 			
 			apikeyRequests.setPartnerID(partner.getId());
-			apikeyRequests.setStatus(partnerPolicyRequest.getStatus_code());
+			apikeyRequests.setStatus(partnerPolicyRequest.getStatusCode());
 			apikeyRequests.setOrganizationName(partner.getName());
 			apikeyRequests.setPolicyName(policyGroup.getName());
 			apikeyRequests.setPolicyDesc(policyGroup.getDescr());
@@ -315,8 +320,8 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		
 		partnerPolicyRequest = findById.get();
-		partnerPolicyRequest.setStatus_code(request.getStatus());
-		partner_id = partnerPolicyRequest.getPart_id();
+		partnerPolicyRequest.setStatusCode(request.getStatus());
+		partner_id = partnerPolicyRequest.getPartner().getId();
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		// Creating Partner_API_Key and Inserting Policy_Id and Partner_Id in the Same 
 		
@@ -336,10 +341,10 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				//TODO Log info
 				// duplicate Partner_API_Key
 			}else {
-				partnerPolicy.setPolicy_api_key(Partner_API_Key);
-				partnerPolicy.setPart_id(partnerPolicyRequest.getPart_id());
-				partnerPolicy.setPolicy_id(partnerPolicyRequest.getPolicy_id());
-				partnerPolicy.setIs_active("Active");
+				partnerPolicy.setPolicyApiKey(Partner_API_Key);
+				partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
+				partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
+				partnerPolicy.setIsActive(true);
 				partnerPolicyRepository.save(partnerPolicy);
 			}
 		}
