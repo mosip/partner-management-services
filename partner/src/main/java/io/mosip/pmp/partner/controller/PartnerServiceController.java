@@ -107,7 +107,7 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse.
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/submitPartApiKeyReq", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
 			@PathVariable String partnerID, 
 			@RequestBody RequestWrapper<PartnerAPIKeyRequest> request) {

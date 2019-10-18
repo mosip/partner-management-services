@@ -27,6 +27,7 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
@@ -38,9 +39,10 @@ import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
+import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
-import io.mosip.pmp.partner.repository.PartnerRepository;
+import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.util.PartnerUtil;
@@ -55,7 +57,7 @@ import io.mosip.pmp.partner.util.PartnerUtil;
 public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
-	PartnerRepository partnerRepository;
+	PartnerServiceRepository partnerRepository;
 
 	@Autowired
 	PolicyGroupRepository policyGroupRepository;
@@ -65,13 +67,20 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
-
+	
+	@Autowired
+	AuthPolicyRepository authPolicyRepository;
+	
+	//@Autowired
+	//PartnerIdGenerator<String>  partnerIdGenerator;
+	
 	/* Save Partner which wants to self register */
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		Partner partner = new Partner();
 		partner.setId(PartnerUtil.createPartnerId());
+		//partner.setId(partnerIdGenerator.generateId());
 		PolicyGroup policyGroup = null;
 		policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
 
@@ -183,7 +192,7 @@ public class PartnerServiceImpl implements PartnerService {
 			// TODO
 			System.out.println("Need to through the exception policyGroup not exist");
 		}
-
+		
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		String Partner_Policy_Request_Id = PartnerUtil.createPartnerId();
 		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
@@ -208,6 +217,32 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setCrBy(partner.getCrBy());
 
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
+		
+		// Creating Data for Mapping policy_id into auth_policy table
+		
+				AuthPolicy authPolicy =new AuthPolicy();
+				
+				String auth_policy_id = PartnerUtil.createAuthPolicyId();
+				Optional<AuthPolicy> findByAuthId = authPolicyRepository.findById(auth_policy_id);
+				if(findByAuthId.isPresent()) {
+					//TODO
+					//Log the error duplicate auth_policy_id
+				}else {
+					authPolicy.setId(auth_policy_id);
+					authPolicy.setPolicyGroup(policyGroup);
+					authPolicy.setName(policyGroup.getName());
+					authPolicy.setDescr(policyGroup.getDescr());
+					authPolicy.setPolicyFileId("PolicyFileId-101");
+					authPolicy.setIsActive(policyGroup.getIsActive());
+					authPolicy.setCrBy(policyGroup.getCrBy());
+					authPolicy.setCrDtimes(policyGroup.getCrDtimes());
+					
+					authPolicyRepository.save(authPolicy);
+				}
+				
+		
+		// Creating Response
+		
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 		partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");

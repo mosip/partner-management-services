@@ -15,5 +15,10 @@ public class PartnerUtil {
 	    int id = (int)(Math.random()*1000000);
 	    return id+"";
 	}
+	
+	public static String createAuthPolicyId(){
+	    int id = (int)(Math.random()*1000000);
+	    return id+"";
+	}
 
 }

@@ -34,6 +34,7 @@ public class PartnerPolicy implements Serializable {
 	@Column(name="is_deleted")
 	private Boolean isDeleted;
 
+	// policy_id nothing but auth_policy_id
 	@Column(name="policy_id")
 	private String policyId;
 

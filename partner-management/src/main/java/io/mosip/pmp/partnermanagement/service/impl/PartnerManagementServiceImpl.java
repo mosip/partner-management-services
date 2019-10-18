@@ -1,5 +1,7 @@
 package io.mosip.pmp.partnermanagement.service.impl;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,12 +19,13 @@ import io.mosip.pmp.partnermanagement.constant.PartnerIdDoesNotExistExceptionCon
 import io.mosip.pmp.partnermanagement.constant.PolicyNotExistConstant;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
-import io.mosip.pmp.partnermanagement.dto.Partner;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
+import io.mosip.pmp.partnermanagement.entity.AuthPolicy;
+import io.mosip.pmp.partnermanagement.entity.Partner;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partnermanagement.entity.PolicyGroup;
@@ -33,6 +36,7 @@ import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToTheP
 import io.mosip.pmp.partnermanagement.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PolicyNotExistException;
+import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerRepository;
@@ -59,28 +63,48 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	
 	@Autowired
 	PolicyGroupRepository policyGroupRepository;
+	
+	@Autowired
+	AuthPolicyRepository authPolicyRepository;
 
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
-			String partnerID, String partnerAPIKey) {
+			String partnerID, String PolicyAPIKey) {
 
-		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(partnerAPIKey);
+		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(PolicyAPIKey);
 		PartnerPolicy partnerPolicy = null;
 		if (findById.isPresent() && findById != null) {
 			partnerPolicy = findById.get();
-			if (request.getOldPolicyID().equals(partnerPolicy.getPolicyId())) {
-				partnerPolicy.setIsActive(true);
-				partnerPolicy.setPolicyId(request.getNewPolicyID());
-				partnerPolicyRepository.save(partnerPolicy);
-			} else {
-				throw new PolicyNotExistException(PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
-						PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+			
+			String auth_pilicy_id = partnerPolicy.getPolicyId();
+			if(auth_pilicy_id!=null) {
+				Optional<AuthPolicy> findByAuthId = authPolicyRepository.findById(auth_pilicy_id);
+				if(findByAuthId.isPresent()) {
+					AuthPolicy authPolicy = findByAuthId.get();
+					PolicyGroup policyGroup = null; 
+					String old_policy_id= authPolicy.getPolicyGroup().getId();
+					if(old_policy_id.equalsIgnoreCase(request.getOldPolicyID())) {
+						Optional<PolicyGroup> findByGroupId = policyGroupRepository.findById(request.getNewPolicyID());
+						if(findByGroupId.isPresent()) {
+							policyGroup = findByGroupId.get();
+						}else {
+							System.out.println("throw NewPolicyIdIsNotExist");
+						}
+						authPolicy.setPolicyGroup(policyGroup);
+						authPolicyRepository.save(authPolicy);
+					}else {
+						throw new PolicyNotExistException(PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
+								PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+					}
+				}else {
+					System.out.println("Auth Policy Not Exist");
+				}
 			}
-		} else {
+		}else {
 			throw new PartnerAPIKeyDoesNotExistException(
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
+					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());	
+		} 
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Partner api key to Policy Mappings updated successfully");
 		return partnersPolicyMappingResponse;
@@ -93,7 +117,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		if (findById.isPresent() && findById != null) {
 			Partner partner = findById.get();
-			partner.setIs_active(request.getStatus());
+			String partner_status = request.getStatus();
+				if(partner_status.equalsIgnoreCase("Active")) {
+					partner.setIsActive(true);
+				} else if (partner_status.equalsIgnoreCase("De-Active")) {
+					partner.setIsActive(false);
+				}
 			partnerRepository.save(partner);
 		} else {
 			throw new PartnerIdDoesNotExistException(
@@ -152,10 +181,14 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			partner = partner_iterat.next();
 
 			retrievePartnersDetails.setPartnerID(partner.getId());
-			retrievePartnersDetails.setStatus(partner.getIs_active());
+			if(partner.getIsActive()) {
+				retrievePartnersDetails.setStatus("Active");
+			}else {
+				retrievePartnersDetails.setStatus("De-Active");
+			}
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContact_no());
-			retrievePartnersDetails.setEmailId(partner.getEmail_id());
+			retrievePartnersDetails.setContactNumber(partner.getContactNo());
+			retrievePartnersDetails.setEmailId(partner.getEmailId());
 			retrievePartnersDetails.setAddress(partner.getAddress());
 
 			partners.add(retrievePartnersDetails);
@@ -172,10 +205,14 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			Partner partner = findById.get();
 
 			retrievePartnersDetails.setPartnerID(partner.getId());
-			retrievePartnersDetails.setStatus(partner.getIs_active());
+			if(partner.getIsActive()) {
+				retrievePartnersDetails.setStatus("Active");
+			}else {
+				retrievePartnersDetails.setStatus("De-Active");
+			}
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContact_no());
-			retrievePartnersDetails.setEmailId(partner.getEmail_id());
+			retrievePartnersDetails.setContactNumber(partner.getContactNo());
+			retrievePartnersDetails.setEmailId(partner.getEmailId());
 			retrievePartnersDetails.setAddress(partner.getAddress());
 
 		} else {
@@ -243,7 +280,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				
 				ApikeyRequests.setOrganizationName(partner.getName());
 				
-				String policy_group_id = partner.getPolicy_group_id();
+				String policy_group_id = partner.getPolicyGroupId();
 				Optional<PolicyGroup> findById = policyGroupRepository.findById(policy_group_id);
 				PolicyGroup policyGroup = findById.get();
 				
@@ -321,13 +358,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		
 		partnerPolicyRequest = findById.get();
 		partnerPolicyRequest.setStatusCode(request.getStatus());
-		partner_id = partnerPolicyRequest.getPartner().getId();
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		// Creating Partner_API_Key and Inserting Policy_Id and Partner_Id in the Same 
 		
 		//Partner_API_Key should be unique for same partner.
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		
+		partner_id = partnerPolicyRequest.getPartner().getId();
 		PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partner_id);
 		
 		if(findByPartnerId!=null) {
@@ -343,8 +379,24 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			}else {
 				partnerPolicy.setPolicyApiKey(Partner_API_Key);
 				partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-				partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
+				
+				// need to update auth_policy_id
+				String policy_id = partnerPolicyRequest.getPolicyId();
+				
+				AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policy_id);
+				if(findByPolicyId == null) {
+					System.out.println("throw the error AuthPolicyNotFoundException");
+				}
+				
+				partnerPolicy.setPolicyId(findByPolicyId.getId());
 				partnerPolicy.setIsActive(true);
+				
+				LocalDateTime now = LocalDateTime.now();		
+				partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
+				partnerPolicy.setValidToDatetime(Timestamp.valueOf(now));
+				partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
+				partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
+				
 				partnerPolicyRepository.save(partnerPolicy);
 			}
 		}

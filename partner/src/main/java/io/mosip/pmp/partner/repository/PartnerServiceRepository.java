@@ -14,7 +14,7 @@ import io.mosip.pmp.partner.entity.Partner;
  */
 
 @Repository
-public interface PartnerRepository extends JpaRepository<Partner, String> {
+public interface PartnerServiceRepository extends JpaRepository<Partner, String> {
 
 	public List<Partner> findByName(String name);
 }
