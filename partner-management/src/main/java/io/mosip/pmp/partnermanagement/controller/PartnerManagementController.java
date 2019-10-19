@@ -53,6 +53,13 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.CREATED);
 	}
 	
+	/**
+	 * This API would be used to activate/deactivate Auth/E-KYC Partners
+	 * @param partnerID
+	 * @param request
+	 * @return
+	 */
+	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerID,
@@ -68,8 +75,13 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	 }
 	
-	//Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
-	//PUT /pmpartners/{partnerID}/{PartnerAPIKey}
+	/**
+	 * Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
+	 * @param partnerID
+	 * @param request
+	 * @param PartnerAPIKey
+	 * @return
+	 */
 	
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
@@ -103,6 +115,10 @@ public class PartnerManagementController {
 	}
 	
 	
+	/**
+	 * @return
+	 */
+	
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<RetrievePartnerDetailsResponse>();
@@ -113,6 +129,11 @@ public class PartnerManagementController {
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
+	
+	/**
+	 * @param partnerID
+	 * @return
+	 */
 	
 	@RequestMapping(value="/{partnerID}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnersDetails>> getparticularAuthEKYCPartnerDetailsForGivenPartnerId(
@@ -125,6 +146,12 @@ public class PartnerManagementController {
 		response.setResponse(retrievePartnersDetails);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnersDetails>>(response , HttpStatus.OK);
 	}
+	
+	/**
+	 * @param partnerID
+	 * @param PartnerAPIKey
+	 * @return
+	 */
 	
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getPartnerAPIKeyToPolicyMappings(

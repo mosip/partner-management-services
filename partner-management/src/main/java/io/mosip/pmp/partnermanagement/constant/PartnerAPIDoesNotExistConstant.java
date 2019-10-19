@@ -2,7 +2,7 @@ package io.mosip.pmp.partnermanagement.constant;
 
 public enum PartnerAPIDoesNotExistConstant {
 	
-	PARTNER_API_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_007","Partner api key Request ID does not exist");
+	PARTNER_API_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_007","Partner api key does not exist");
 
 	/**
 	 * The error code.

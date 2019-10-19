@@ -186,14 +186,16 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
-		PolicyGroup policyGroup = policyGroupRepository.findByName(request.getPolicyName());
+		PolicyGroup policyGroup = null;
+		PartnerPolicyRequest partnerPolicyRequest = null;
+		policyGroup = policyGroupRepository.findByName(request.getPolicyName());
 
 		if (policyGroup == null) {
 			// TODO
 			System.out.println("Need to through the exception policyGroup not exist");
 		}
 		
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest = new PartnerPolicyRequest();
 		String Partner_Policy_Request_Id = PartnerUtil.createPartnerId();
 		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
 		partnerPolicyRequest.setStatusCode("in-progress");
@@ -211,14 +213,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 		LocalDateTime now = LocalDateTime.now();
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(now));
-		// TODO
-		// Need add column (api_desc) in Partner_policy_request Table
 		partnerPolicyRequest.setRequestDetail(request.getUseCaseDescription());
 		partnerPolicyRequest.setCrBy(partner.getCrBy());
 
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
 		// Creating Data for Mapping policy_id into auth_policy table
+		// In case Auth_Policy Creation module will come that time we need to remove the below Auth_policy Code.
 		
 				AuthPolicy authPolicy =new AuthPolicy();
 				
