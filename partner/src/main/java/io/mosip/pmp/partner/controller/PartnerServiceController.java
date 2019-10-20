@@ -26,10 +26,24 @@ import io.mosip.pmp.partner.logger.Logger;
 import io.mosip.pmp.partner.logger.PartnerServiceLogger;
 import io.mosip.pmp.partner.service.PartnerService;
 
+
 /**
- * @author sanjeev.shrivastava
- *
+ * <p>This is the MOSIP Partner Service controller. This defines all the necessary operations</p>
+ * <p>required for Partner</p>.
+ * Partner Service Controller is having following operations.<br/>
+ * 1. Partner SelfRegistration {{@link #partnerSelfRegistration(RequestWrapper)}.<br/>
+ * 2. Retrieve PartnerDetails {{@link #retrievePartnerDetails(String)}.<br/>
+ * 3. Update PartnerDetails {{@link #updatePartnerDetails(RequestWrapper, String)}.<br/>
+ * 4. Submitting Partner API Key Request{{@link #submitPartnerApiKeyRequest(String, RequestWrapper)}.<br/>
+ * 5. Downloading Partner API Key {{@link #downloadPartnerAPIkey(String, String)}.<br/>
+ * 6. Retrieve All ApiKeyRequest Submitted By Partner Till Date {{@link #retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(String)}.<br/>
+ * 7. View ApiKeyRequest Status And ApiKey {{@link #viewApiKeyRequestStatusAndApiKey(String, String)} .<br/>
+  *
+  * @author sanjeev.shrivastava
+  * @version 1.0
  */
+
+
 @RestController
 @RequestMapping(value = "/partners")
 public class PartnerServiceController {
@@ -40,11 +54,13 @@ public class PartnerServiceController {
 	PartnerService partnerService;
 	
 	/**
-	 * This method is use for self registration by partner to create Auth/E-KYC Partners.
+	 * This API would be used for self registration by partner to create Auth/E-KYC
+	 * Partners. Partner Management module would be integrating with Kernel IAM
+	 * module for generation of userid and password for partners.
 	 * @param partnerRequest.
 	 * @return partnerResponse.
 	 */
-	
+
 	@RequestMapping(value = "partnerReg", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
@@ -82,9 +98,10 @@ public class PartnerServiceController {
 
 	
 	/**
-	 * @param request
-	 * @param partnerID
-	 * @return
+	 * This API would be used to update Auth/E-KYC Partner's details.
+	 * @param request.
+	 * @param partnerID.
+	 * @return partnerResponse.
 	 */
 	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
@@ -123,9 +140,9 @@ public class PartnerServiceController {
 
 	/**
 	 *  This API would be used to download Partner API key for the given APIKeyReqID.
-	 * @param partnerID
-	 * @param aPIKeyReqID
-	 * @return
+	 * @param partnerID.
+	 * @param aPIKeyReqID.
+	 * @return downloadPartnerAPIkeyResponse.
 	 */
 	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{aPIKeyReqID}", method = RequestMethod.POST)
@@ -141,9 +158,9 @@ public class PartnerServiceController {
 	}
 
 	/**
-	 * This API would be used to retrieve all API key requests submitted by partner.
-	 * @param partnerID
-	 * @return
+	 * This API would be used to retrieve all API key requests submitted by partner till date.
+	 * @param partnerID.
+	 * @return partnersRetrieveApiKeyRequests.
 	 */
 	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
@@ -159,7 +176,7 @@ public class PartnerServiceController {
 	}
 
 	/**
-	 *  This API would be used to view API key request status and API key.
+	 *  This API would be used to view API key request status and API key (in case request is approved).
 	 * @param partnerID.
 	 * @param aPIKeyReqID.
 	 * @return aPIkeyRequests.
