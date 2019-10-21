@@ -64,14 +64,17 @@ public class PolicyManagementService {
 	
 
 	/**
-	 * <p> </p>
-	 * @param createRequestDto
-	 * @return
-	 * @throws IOException
+	 * <p> This function inserts the policy group data into policy group table.</p>
+	 * <p> Checks the database for uniqueness of policy group name.</p>
+	 * <p> If policy group name exists throws the exception saying policy group name exists.</p>
+	 * <p> else will insert the data into policy group table.</p>
+	 * <p> and returns the response;
+	 * @param createRequestDto {@link PolicyCreateRequestDto } Contains input request details.
+	 * @return response {@link PolicyCreateResponseDto } Contains response details.
+	 * @throws Exception
 	 */	
-	public ResponseWrapper<PolicyCreateResponseDto> createPolicyGroup(PolicyCreateRequestDto createRequestDto) throws 
-	DataAccessLayerException, PolicyManagementServiceException,Exception {
-		
+	public ResponseWrapper<PolicyCreateResponseDto> createPolicyGroup(PolicyCreateRequestDto createRequestDto) throws PolicyManagementServiceException,
+	Exception {		
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<>();		
 		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();
 		
@@ -118,7 +121,21 @@ public class PolicyManagementService {
 
 	}
 	
-	
+	/**
+	 * <p> This function creates auth policies for policy group.</p>
+	 * <p> Validates the policy group id.</p>
+	 * <p> If policy details not found for policy id, then throws exception.</p>
+	 * <p> Validates the auth policy name.</p>
+	 * <p> If name exists then throws exception saying duplicate name.</p>
+	 * <p> With input data will create policy document and stores in configured path.</p>
+	 * <p> Saves the data into auth policy table.</p>
+	 * <p> And returns the response;</p>
+	 * 
+	 * @param policyDto {@link PolicyDto} Contains input information regarding auth policies. 
+	 * @return response {@link AuthPolicyCreateResponseDto} Contains auth policies information.
+	 * @throws PolicyManagementServiceException Compile time exceptions
+	 * @throws Exception runtime exceptions.
+	 */
 	public ResponseWrapper<AuthPolicyCreateResponseDto> createAuthPolicies(PolicyDto policyDto) throws PolicyManagementServiceException, Exception
 	{
 		ResponseWrapper<AuthPolicyCreateResponseDto> response = new ResponseWrapper<>();	
@@ -174,17 +191,18 @@ public class PolicyManagementService {
 	}
 
 	/**
-	 * 
+	 * <p>This function updates the policy group details along with auth policies.</p>
+	 * <p> </p>
 	 * @param updateRequestDto
 	 * @return
 	 * @throws Exception
 	 */
 	
-	public ResponseWrapper<PolicyUpdateResponseDto> update(PolicyUpdateRequestDto updateRequestDto) throws Exception {
-		
+	public ResponseWrapper<PolicyUpdateResponseDto> update(PolicyUpdateRequestDto updateRequestDto) 
+			throws Exception {
 		
 		PolicyGroup policyGroup = policyGroupRepository.findByName(updateRequestDto.getName());
-		if(policyGroup!=null)
+		if(policyGroup!=null && !policyGroup.getId().equals(updateRequestDto.getId()))
 		{
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + updateRequestDto.getName());
