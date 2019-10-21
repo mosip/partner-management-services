@@ -129,7 +129,7 @@ public class PolicyManagementService {
 	 * <p> If name exists then throws exception saying duplicate name.</p>
 	 * <p> With input data will create policy document and stores in configured path.</p>
 	 * <p> Saves the data into auth policy table.</p>
-	 * <p> And returns the response;</p>
+	 * <p> And returns the response</p>
 	 * 
 	 * @param policyDto {@link PolicyDto} Contains input information regarding auth policies. 
 	 * @return response {@link AuthPolicyCreateResponseDto} Contains auth policies information.
