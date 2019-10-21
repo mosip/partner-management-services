@@ -30,8 +30,8 @@ import io.mosip.pmp.partner.service.PartnerService;
 /**
  * <p>This is the MOSIP Partner Service controller. This defines all the necessary operations</p>
  * <p>required for Partner</p>.
- * Partner Service Controller is having following operations.<br/>
- * 1. Partner SelfRegistration {{@link #partnerSelfRegistration(RequestWrapper)}.<br/>
+ * Partner Service Controller is having following operations <br/>
+ * 1. Partner SelfRegistration {{@link #partnerSelfRegistration(RequestWrapper)} <br/>
  * 2. Retrieve PartnerDetails {{@link #retrievePartnerDetails(String)}.<br/>
  * 3. Update PartnerDetails {{@link #updatePartnerDetails(RequestWrapper, String)}.<br/>
  * 4. Submitting Partner API Key Request{{@link #submitPartnerApiKeyRequest(String, RequestWrapper)}.<br/>
