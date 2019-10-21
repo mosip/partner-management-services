@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
