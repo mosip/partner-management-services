@@ -15,7 +15,7 @@ import lombok.Data;
 /**
  * @author sanjeev.shrivastava
  *
- * @param <T>
+ * @param <T> any type of object as a parameter
  */
 
 @Data

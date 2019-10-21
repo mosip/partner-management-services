@@ -17,20 +17,20 @@ import lombok.Data;
 /**
  * @author sanjeev.shrivastava
  *
- * @param <T>
+ * @param <T> any type of object as a parameter
  */
 
 @Data
 public class ResponseWrapper<T> {
-	private String id;
-	private String version;
+	public String id;
+	public String version;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
-	private Object metadata;
+	public LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
+	public Object metadata;
 	@NotNull
 	@Valid
-	private T response;
+	public T response;
 
-	private List<ErrorResponse> errors;
+	public List<ErrorResponse> errors;
 
 }

@@ -12,5 +12,5 @@ import lombok.Data;
 public class ActivateDeactivatePartnerRequest {
 	
 		@NotEmpty
-		private String status;
+		public String status;
 }

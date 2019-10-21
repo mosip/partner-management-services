@@ -38,10 +38,10 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	private ObjectMapper objectMapper;
 
 	/**
-	 * @param httpServletRequest
-	 * @param exception
-	 * @return
-	 * @throws IOException
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Partner already registered exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerAlreadyRegisteredException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassage(
@@ -73,10 +73,10 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	
 	
 	/**
-	 * @param httpServletRequest
-	 * @param exception
-	 * @return
-	 * @throws IOException
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Partner Does Not Exist Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
 	 */
 	
 	@ExceptionHandler(PartnerDoesNotExistException.class)
@@ -92,6 +92,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	}
 	
 	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Policy Group Does Not Exist Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	@ExceptionHandler(PolicyGroupDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PolicyGroupDoesNotExistException exception)
@@ -104,6 +110,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Partner API Key Is Not Created Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	@ExceptionHandler(PartnerAPIKeyIsNotCreatedException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PartnerAPIKeyIsNotCreatedException exception)
@@ -118,6 +130,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains APIKeyReqId Status In Progress Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	@ExceptionHandler(APIKeyReqIdStatusInProgressException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final APIKeyReqIdStatusInProgressException exception)
@@ -133,6 +151,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	}
 	
 	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Partner APIKeyReqID Does Not Exist Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	@ExceptionHandler(PartnerAPIKeyReqIDDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerAPIKEYExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PartnerAPIKeyReqIDDoesNotExistException exception)
@@ -145,6 +169,12 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Partner Does Not Exists Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	@ExceptionHandler(PartnerDoesNotExistsException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception)
@@ -161,10 +191,10 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	
 	
 	/**
-	 * @param httpServletRequest
-	 * @param exception
-	 * @return
-	 * @throws IOException
+	 * @param httpServletRequest this class contains servlet request
+	 * @param exception this class contains Checked Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
 	 */
 	
 	@ExceptionHandler(Exception.class)
@@ -176,6 +206,13 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
+	
+	
+	/**
+	 * @param httpServletRequest this class contains servlet request
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
 	
 	private ResponseWrapper<ErrorResponse> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ErrorResponse> responseWrapper = new ResponseWrapper<>();

@@ -8,11 +8,11 @@ import lombok.Data;
 public class PartnerUpdateRequest {
 	
 	@NotNull(message = "Please provide organizationName")
-	private String organizationName;
+	public String organizationName;
 	@NotNull(message = "Please provide address")
-	private String address;
+	public String address;
 	@NotNull(message = "Please provide contactNumber")
-	private String contactNumber;
+	public String contactNumber;
 	@NotNull(message = "Please provide emailId")
-	private String emailId;
+	public String emailId;
 }

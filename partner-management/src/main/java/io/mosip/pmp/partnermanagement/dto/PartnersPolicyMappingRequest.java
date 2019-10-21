@@ -8,7 +8,7 @@ import lombok.Data;
 public class PartnersPolicyMappingRequest {
 	
 		@NotNull(message = "Please provide oldPolicyID")
-		private String oldPolicyID;
+		public String oldPolicyID;
 		@NotNull(message = "Please provide newPolicyID")
-		private String newPolicyID;
+		public String newPolicyID;
 }

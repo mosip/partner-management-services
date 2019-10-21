@@ -10,8 +10,12 @@ import lombok.Data;
 @Data
 public class APIkeyRequests {
 	
-	private String apiKeyReqID;
-	private String apiKeyRequestStatus;
-	private String partnerApiKey;
-	private String validityTill;
+	public String apiKeyReqID;
+	public String apiKeyRequestStatus;
+	public String partnerApiKey;
+	public String validityTill;
+	
+	
+	
+	
 }

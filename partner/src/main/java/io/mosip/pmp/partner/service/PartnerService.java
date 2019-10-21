@@ -19,52 +19,52 @@ import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 public interface PartnerService {
 	
 	/** This method is used  for self registration by partner to create Auth/E-KYC Partners.
-	 * @param request.
-	 * @return partnerResponse.
+	 * @param request this class contains partner details
+	 * @return partnerResponse this class contains status related to partner is registered successfully or not
 	 */
 	public PartnerResponse savePartner(PartnerRequest request);
 	
 	/** This method is used to retrieve Auth/E-KYC Partner details.
-	 * @param partnerID.
-	 * @return retrievePartnerDetailsResponse.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
 	
 	/**This method is used to update Auth/E-KYC Partner's details
-	 * @param request
-	 * @param partnerID
-	 * @return partnerResponse.
+	 * @param partnerUpdateRequest this class contains updated partner details
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @return partnerResponse this class contains status of partner
 	 */
-	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request,String partnerID);
+	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest,String partnerID);
 	
 	/**
 	 * This method is used to submit Partner api key request.
-	 * @param request
-	 * @param partnerID
-	 * @return partnerAPIKeyResponse.
+	 * @param partnerAPIKeyRequest this class contains partner policy and policy description details 
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @return partnerAPIKeyResponse this class contains partner request id and massage details
 	 */
-	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request,String partnerID);
+	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest partnerAPIKeyRequest,String partnerID);
 	
 	/**
 	 * This method is used to download Partner API key for the given APIKeyReqID.
-	 * @param partnerID
-	 * @param aPIKeyReqID
-	 * @return downloadPartnerAPIkeyResponse.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param aPIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
 	 */
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID,String aPIKeyReqID);
 	
 	/**
 	 * This method is used to retrieve all API key requests submitted by partner till date.
-	 * @param partnerID
-	 * @return partnersRetrieveApiKeyRequests.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	
 	/**
 	 * This method is used to view API key request status and API key (in case request is approved).
-	 * @param partnerID
-	 * @param aPIKeyReqID
-	 * @return
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param aPIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @return this class contains partnerApiKey apiKeyRequestStatus and validity details
 	 */
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 }

@@ -18,10 +18,10 @@ import io.mosip.pmp.partnermanagement.entity.Partner;
 public interface PartnerRepository extends JpaRepository<Partner, String> {
 
 	/**
-	 * Method to fetch last updated partner id.
-	 * 
-	 * @return the entity.
+	 * Method to fetch last updated partner id
+	 * @param name partner name
+	 * @return list of partner
 	 */
-
+	
 	public List<Partner> findByName(String name);
 }

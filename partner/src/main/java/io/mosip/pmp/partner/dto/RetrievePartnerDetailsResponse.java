@@ -10,10 +10,10 @@ import lombok.Data;
 @Data
 public class RetrievePartnerDetailsResponse {
 		
-	private String partnerID;
-	private String policyGroup;
-	private String organizationName;
-	private String address;
-	private String contactNumber;
-	private String emailId;
+	public String partnerID;
+	public String policyGroup;
+	public String organizationName;
+	public String address;
+	public String contactNumber;
+	public String emailId;
 }

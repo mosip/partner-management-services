@@ -27,15 +27,15 @@ import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 
 /**
  * <p>This is the MOSIP Partner Management Service controller. This defines all the necessary operations</p>
- * 1.Partner ApiKey To Policy Mappings{{@link #PartnerApiKeyToPolicyMappings(RequestWrapper, String, String)} <br/>.
- * 2.Activate Deactivate AuthEKYC Partners{{@link #activateDeactivateAuthEKYCPartners(String, RequestWrapper)} <br/>.
- * 3.Activate Deactivate Partner APIKey for Given Partner{{@link #activateDeactivatePartnerAPIKeyGivenPartner(String, RequestWrapper, String)} <br/>.
- * 4.Approve or Reject Partner APIKey Requests Based On APIKeyRequestId{{@link #approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(RequestWrapper, String)} <br/>.
- * 5.Get All Auth EKYC Partners For PolicyGroup{{@link #getAllAuthEKYCPartnersForThePolicyGroup()} <br/>.
- * 6.Get particular Auth EKYC PartnerDetails For GivenPartnerId{{@link #getparticularAuthEKYCPartnerDetailsForGivenPartnerId(String)}<br/>.
- * 7.Get Partner APIKey To PolicyMappings{{@link #getPartnerAPIKeyToPolicyMappings(String, String)} <br/>.
- * 8.Get All Partner APIKey Requests As Received By PartnerManager{{@link #getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager()}  <br/>.
- * 9.Get Request For Partner APIKey To PolicyMappings For GivenRequestId{{@link #getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String)} <br/>.
+ * 1.Partner ApiKey To Policy Mappings{{@link #PartnerApiKeyToPolicyMappings(RequestWrapper, String, String)}
+ * 2.Activate Deactivate AuthEKYC Partners{{@link #activateDeactivateAuthEKYCPartners(String, RequestWrapper)}
+ * 3.Activate Deactivate Partner APIKey for Given Partner{{@link #activateDeactivatePartnerAPIKeyGivenPartner(String, RequestWrapper, String)}
+ * 4.Approve or Reject Partner APIKey Requests Based On APIKeyRequestId{{@link #approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(RequestWrapper, String)}
+ * 5.Get All Auth EKYC Partners For PolicyGroup{{@link #getAllAuthEKYCPartnersForThePolicyGroup()}
+ * 6.Get particular Auth EKYC PartnerDetails For GivenPartnerId{{@link #getparticularAuthEKYCPartnerDetailsForGivenPartnerId(String)}
+ * 7.Get Partner APIKey To PolicyMappings{{@link #getPartnerAPIKeyToPolicyMappings(String, String)}
+ * 8.Get All Partner APIKey Requests As Received By PartnerManager{{@link #getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager()}
+ * 9.Get Request For Partner APIKey To PolicyMappings For GivenRequestId{{@link #getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String)}
  *
  * @author sanjeev.shrivastava
  *
@@ -50,10 +50,10 @@ public class PartnerManagementController {
 
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
-	 * @param request 
-	 * @param partnerID
-	 * @param partnerAPIKey
-	 * @return partnersPolicyMappingResponse.
+	 * @param request this class cintains oldPolicyID and newPolicyID
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param partnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @return response this class contains massage about API key created successfully
 	 */
 	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> PartnerApiKeyToPolicyMappings(
@@ -73,9 +73,9 @@ public class PartnerManagementController {
 	
 	/**
 	 * This API would be used to activate/deactivate Auth/E-KYC Partners
-	 * @param partnerID
-	 * @param request
-	 * @return partnersPolicyMappingResponse.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param request this class contains the status of activate/deactivate Auth/E-KYC Partners
+	 * @return respons this class contains massage about Partner status updated successfully
 	 */
 	
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
@@ -95,10 +95,10 @@ public class PartnerManagementController {
 	
 	/**
 	 * Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
-	 * @param partnerID
-	 * @param request
-	 * @param PartnerAPIKey
-	 * @return partnersPolicyMappingResponse.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param request this class contains the status about activate OR de-activate PartnerAPIKey for given partner
+	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
 	
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}", method = RequestMethod.PUT)
@@ -124,9 +124,9 @@ public class PartnerManagementController {
 	 * mapped to requested policies. Partner API Key would be having default active
 	 * status, expiry of which would configurable.
 	 * 
-	 * @param request
-	 * @param APIKeyReqID
-	 * @return partnersPolicyMappingResponse.
+	 * @param request this class contains the status about approve OR reject partner API key requests
+	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @return response this class contains massage about PartnerAPIKey approved successfully
 	 */
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
@@ -147,7 +147,7 @@ public class PartnerManagementController {
 	
 	/** 
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
-	 * @return retrievePartnerDetailsResponse.
+	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
 	
 	@RequestMapping(value="", method = RequestMethod.GET)
@@ -163,8 +163,8 @@ public class PartnerManagementController {
 	
 	/**
 	 * This API would be used to retrieve the particular Auth/E-KYC Partner details for given partner id.
-	 * @param partnerID
-	 * @return retrievePartnersDetails.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @return response this class contains Auth/E-KYC Partner details for given partner id
 	 */
 	
 	@RequestMapping(value="/{partnerID}", method = RequestMethod.GET)
@@ -185,9 +185,9 @@ public class PartnerManagementController {
 	 * Partner API Key pattern, validate expiry for Partner API Key and status
 	 * details in background, while fetching Policy to Partner API mappings.
 	 * 
-	 * @param partnerID
-	 * @param PartnerAPIKey
-	 * @return partnerAPIKeyToPolicyMappingsResponse.
+	 * @param partnerID this is unique id created after self registered by partner
+	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @return response this class contains partnerID and policyId
 	 */
 	
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}" , method = RequestMethod.GET)
@@ -204,8 +204,8 @@ public class PartnerManagementController {
 	}
 	
 	/**
-	 * This API would be used to retrieve all Partner API Key requests as received by partner manager.
-	 * @return partnerAPIKeyRequestsResponse.
+	 * This API would be used to retrieve all Partner API Key requests as received by partner manager
+	 * @return response this class contains all Partner API Key requests as received by partner manager
 	 */
 	
 	@RequestMapping(value = "/PartnerAPIKeyRequests" , method = RequestMethod.GET)
@@ -223,8 +223,8 @@ public class PartnerManagementController {
 	
 	/**
 	 * This API would be used to retrieve the request for Partner API key to Policy Mappings for given request id.
-	 * @param APIKeyReqID
-	 * @return apikeyRequests.
+	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @return response this class contains details relared to Partner API key to Policy Mappings
 	 */
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(

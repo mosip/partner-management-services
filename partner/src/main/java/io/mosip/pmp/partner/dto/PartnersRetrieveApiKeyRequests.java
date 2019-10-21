@@ -12,5 +12,5 @@ import lombok.Data;
 @Data
 public class PartnersRetrieveApiKeyRequests {
 	
-		private List<APIkeyRequests> aPIkeyRequests;
+	public List<APIkeyRequests> aPIkeyRequests;
 }

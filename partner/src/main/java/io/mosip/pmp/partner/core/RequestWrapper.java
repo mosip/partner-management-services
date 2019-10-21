@@ -13,9 +13,8 @@ import lombok.Data;
 /**
  * @author sanjeev.shrivastava
  *
- * @param <T>
+ * @param <T> any type of object as a parameter
  */
-
 @Data
 public class RequestWrapper<T> {
 	private String id;

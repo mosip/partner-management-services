@@ -183,6 +183,12 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(PartnerAPIDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiDoesNotExistExceptionMassage(
 			final HttpServletRequest httpServletRequest, final PartnerAPIDoesNotExistException exception)

@@ -13,19 +13,19 @@ import lombok.Data;
 /**
  * @author sanjeev.shrivastava
  *
- * @param <T>
+ * @param <T> any type of object as a parameter
  */
 
 @Data
 public class RequestWrapper<T> {
-	private String id;
-	private String version;
+	public String id;
+	public String version;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime requesttime;
+	public LocalDateTime requesttime;
 
-	private Object metadata;
+	public Object metadata;
 
 	@NotNull
 	@Valid
-	private T request;
+	public T request;
 }

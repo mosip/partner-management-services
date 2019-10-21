@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class PartnerAPIKeyRequestsResponse {
 	
-	private List<ApikeyRequests> apikeyRequests;
+	public List<ApikeyRequests> apikeyRequests;
 }

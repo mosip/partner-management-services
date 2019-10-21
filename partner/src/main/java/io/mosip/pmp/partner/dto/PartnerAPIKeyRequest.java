@@ -10,6 +10,6 @@ import lombok.Data;
 @Data
 public class PartnerAPIKeyRequest {
 	
-		private String policyName;
-		private String useCaseDescription;
+		public String policyName;
+		public String useCaseDescription;
 }

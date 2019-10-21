@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class PartnerAPIKeyResponse {
 	
-		private String apiRequestId;
-		private String message;
+	public String apiRequestId;
+	public String message;
 		
 }
