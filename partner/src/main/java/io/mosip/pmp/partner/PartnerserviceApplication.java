@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-public class PartnerserviceApplication {
+public class PartnerserviceApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(PartnerserviceApplication.class, args);

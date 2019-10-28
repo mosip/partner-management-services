@@ -23,9 +23,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
+import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
@@ -82,8 +85,47 @@ public class PartnerServiceControllerTest {
     }
 
     @Test
-    public void submitPartnerApiKeyRequestTest() {
+    public void submitPartnerApiKeyRequestTest() throws JsonProcessingException, Exception {
+    	String apiRequestId = "873276828663";
     	PartnerAPIKeyResponse response = new PartnerAPIKeyResponse();
+    	response.setApiRequestId(apiRequestId);
+    	response.setMessage("partnerAPIKeyRequest successfully created");
+    	
+    	Mockito.when(partnerService.submitPartnerApiKeyReq(Mockito.any(), Mockito.any())).thenReturn(response);
+    	RequestWrapper<PartnerAPIKeyRequest> request = createSubmitPartnerApiKeyRequest();
+    	
+    	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
+                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isCreated());
+    }
+    
+    @Test
+    public void downloadPartnerAPIkeyTest() throws Exception{
+    	DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
+    	String partnerAPIKey = "fa604-affcd-33201-04770";
+    	response.setPartnerAPIKey(partnerAPIKey);
+    	
+    	Mockito.when(partnerService.downloadPartnerAPIkey(Mockito.any(), Mockito.any())).thenReturn(response);
+    	
+    	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests/partnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE))
+                 .andExpect(status().isOk());
+    	
+    }
+    
+    private RequestWrapper<PartnerAPIKeyRequest> createSubmitPartnerApiKeyRequest(){
+    	RequestWrapper<PartnerAPIKeyRequest> request = new RequestWrapper<PartnerAPIKeyRequest>();
+    	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
+    	request.setMetadata("{}");
+    	request.setRequest(createPartnerAPIKeyRequest());
+    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+    	request.setVersion("1.0");
+    	return request;
+    }
+    
+    private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
+    	PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
+    	partnerAPIKeyRequest.setPolicyName("airtelIndPolicy");
+    	partnerAPIKeyRequest.setUseCaseDescription("Need to submit the payment");
+    	return partnerAPIKeyRequest;
     }
     
     private RequestWrapper<PartnerRequest> createRequest() {

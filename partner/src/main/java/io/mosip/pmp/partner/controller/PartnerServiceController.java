@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
+import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
@@ -192,5 +194,36 @@ public class PartnerServiceController {
 		response.setVersion("1.0");
 		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<ResponseWrapper<APIkeyRequests>>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/validatedigitalcertificate", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificate(
+			@RequestBody RequestWrapper<DigitalCertificateRequest> request){
+		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
+		DigitalCertificateResponse digitalCertificateResponse = null;
+		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
+		
+		digitalCertificateResponse = partnerService.validateDigitalCertificate(digitalCertificateRequest);
+		
+		// Making Response 
+		
+		response.setId("mosip.partnermanagement.partners.certificate.validate");
+		response.setVersion("1.0");
+		response.setResponse(digitalCertificateResponse);
+		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
+	}
+	
+	// upload the digital certificates (Certification Authority) to Partner Management using this API.
+	
+	@RequestMapping(value = "/createdigitalcertificate", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> uploadDigitalCertificate(
+			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
+		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
+		DigitalCertificateResponse digitalCertificateResponse = null;
+		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
+		digitalCertificateResponse = partnerService.uploadDigitalCertificate(digitalCertificateRequest);
+		response.setResponse(digitalCertificateResponse);
+		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
 	}
 }

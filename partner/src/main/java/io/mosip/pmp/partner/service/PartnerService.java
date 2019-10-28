@@ -1,6 +1,8 @@
 package io.mosip.pmp.partner.service;
 
 import io.mosip.pmp.partner.dto.APIkeyRequests;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
+import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
@@ -67,4 +69,8 @@ public interface PartnerService {
 	 * @return this class contains partnerApiKey apiKeyRequestStatus and validity details
 	 */
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
+	
+	public DigitalCertificateResponse validateDigitalCertificate(DigitalCertificateRequest request);
+	
+	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
 }

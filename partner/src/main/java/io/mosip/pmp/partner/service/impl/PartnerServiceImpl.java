@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIDoesNotExistConstant;
@@ -19,6 +23,8 @@ import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
+import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
@@ -27,6 +33,11 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.SignResponseDto;
+import io.mosip.pmp.partner.dto.SignatureRequestDto;
+import io.mosip.pmp.partner.dto.SignatureResponseDto;
+import io.mosip.pmp.partner.dto.TimestampRequestDto;
+import io.mosip.pmp.partner.dto.ValidatorResponseDto;
 import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
@@ -73,6 +84,12 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	//@Autowired
 	//PartnerIdGenerator<String>  partnerIdGenerator;
+	
+	//@Autowired
+	//KeymanagerService keymanagerService;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	/* Save Partner which wants to self register */
 
@@ -374,5 +391,63 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		return aPIkeyRequests;
+	}
+
+	@Override
+	public DigitalCertificateResponse validateDigitalCertificate(DigitalCertificateRequest request) {
+		DigitalCertificateResponse response = new DigitalCertificateResponse();
+
+		// Getting the signature from "kernel-signature-service"
+
+		RestTemplate restTemplate = new RestTemplate();
+		final String uri = "http://localhost:8092/v1/signature/sign";
+		ResponseEntity<SignResponseDto> result = null;
+		HttpEntity<DigitalCertificateRequest> certificate_entity = new HttpEntity<DigitalCertificateRequest>(
+				request);
+		result = restTemplate.exchange(uri, HttpMethod.POST, certificate_entity, SignResponseDto.class);
+		SignResponseDto signResponseDto = result.getBody();
+
+		// Validation of Partner Digital Certificate which created by MOSIP CA using "kernel-signature-service".
+
+		ResponseEntity<ValidatorResponseDto> validate_result = null;
+		TimestampRequestDto timestampRequestDto = new TimestampRequestDto();
+		timestampRequestDto.setData(request.getPartnerCertificate());
+		timestampRequestDto.setSignature(signResponseDto.getSignature());
+		timestampRequestDto.setTimestamp(signResponseDto.getTimestamp());
+		final String uriv = "http://localhost:8092/v1/signature/validate";
+		HttpEntity<TimestampRequestDto> validate_entity = new HttpEntity<TimestampRequestDto>(timestampRequestDto);
+		validate_result = restTemplate.exchange(uriv, HttpMethod.POST, validate_entity, ValidatorResponseDto.class);
+		ValidatorResponseDto validatorResponseDto = validate_result.getBody();
+
+		response.setMessage(validatorResponseDto.getMessage());
+		
+		response.setMessage("successfully validated partner's digital certificate");
+		return response;
+	}
+
+	@Override
+	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request) {
+		DigitalCertificateResponse response = new DigitalCertificateResponse();
+
+		// doing sign-in using "kernel-keymanager-service"
+
+		ResponseEntity<SignatureResponseDto> validate_result = null;
+		SignatureRequestDto signatureRequestDto = new SignatureRequestDto();
+		signatureRequestDto.setData(request.getPartnerCertificate());
+		signatureRequestDto.setApplicationId("REGISTRATION");
+		signatureRequestDto.setReferenceId("REF01");
+		signatureRequestDto.setTimeStamp("2018-12-10T06:12:52.994Z");
+		final String uriv = "http://localhost:8092/v1/signature/validate";
+		HttpEntity<SignatureRequestDto> validate_entity = new HttpEntity<SignatureRequestDto>(signatureRequestDto);
+		validate_result = restTemplate.exchange(uriv, HttpMethod.POST, validate_entity, SignatureResponseDto.class);
+
+		SignatureResponseDto signatureResponseDto = validate_result.getBody();
+		String data = signatureResponseDto.getData();
+		
+		if(data.equalsIgnoreCase(request.getPartnerCertificate())) {
+			response.setMessage("successfully uploaded partner's digital certificate");
+		}
+		
+		return response;
 	}
 }

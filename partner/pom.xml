@@ -55,6 +55,16 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- <dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-keymanager-service</artifactId>
+			<version>0.12.18</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-signature-service</artifactId>
+			<version>0.12.18</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>
