@@ -2,6 +2,8 @@ package io.mosip.pmp.partner.controller;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,8 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partner.logger.Logger;
-import io.mosip.pmp.partner.logger.PartnerServiceLogger;
+import io.mosip.pmp.partner.dto.LoginUserRequest;
+import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 
 
@@ -50,7 +52,7 @@ import io.mosip.pmp.partner.service.PartnerService;
 @RequestMapping(value = "/partners")
 public class PartnerServiceController {
 	
-	private static final Logger LOGGER = PartnerServiceLogger.getLogger(PartnerServiceController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceController.class);
 	
 	@Autowired
 	PartnerService partnerService;
@@ -202,14 +204,17 @@ public class PartnerServiceController {
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request){
 		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
 		DigitalCertificateResponse digitalCertificateResponse = null;
+		
+		 
+		
 		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
 		
-		digitalCertificateResponse = partnerService.validateDigitalCertificate(digitalCertificateRequest);
+		digitalCertificateResponse = partnerService.validateDigitalCertificate(request);
 		
 		// Making Response 
 		
-		response.setId("mosip.partnermanagement.partners.certificate.validate");
-		response.setVersion("1.0");
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
 		response.setResponse(digitalCertificateResponse);
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
 	}
@@ -225,5 +230,19 @@ public class PartnerServiceController {
 		digitalCertificateResponse = partnerService.uploadDigitalCertificate(digitalCertificateRequest);
 		response.setResponse(digitalCertificateResponse);
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/userlogin", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<LoginUserResponse>> loginUser(
+			@RequestBody RequestWrapper<LoginUserRequest> request){
+		ResponseWrapper<LoginUserResponse> response = new ResponseWrapper<LoginUserResponse>();
+		LoginUserResponse loginUserResponse=null;
+		loginUserResponse = partnerService.userLogin(request);
+		response.setResponse(loginUserResponse);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setMetadata(request.getMetadata());
+		response.setResponsetime(request.getRequesttime());
+		return new ResponseEntity<ResponseWrapper<LoginUserResponse>>(response , HttpStatus.OK);
 	}
 }

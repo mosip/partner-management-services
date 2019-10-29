@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,12 +30,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
+import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
+import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
@@ -108,6 +113,31 @@ public class PartnerServiceControllerTest {
     	
     	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests/partnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE))
                  .andExpect(status().isOk());
+    	
+    }
+    
+    @Test
+    public void retrieveAllApiKeyRequestsSubmittedByPartnerTillDateTest()throws Exception{
+    	String partnerId = "345678";
+    	PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
+    	APIkeyRequests aPIkeyRequests = new APIkeyRequests();
+    	
+    	aPIkeyRequests.setApiKeyReqID("345678");
+    	aPIkeyRequests.setApiKeyRequestStatus("Active");
+    	aPIkeyRequests.setPartnerApiKey("34567895678");
+    	aPIkeyRequests.setValidityTill("456789");
+    	
+    	
+    	List<APIkeyRequests> list_aPIkeyRequests = new ArrayList<>();
+    	list_aPIkeyRequests.add(aPIkeyRequests);
+		response.setAPIkeyRequests(list_aPIkeyRequests);
+		
+       Mockito.when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(response);
+       mockMvc.perform(MockMvcRequestBuilders.get("/partners/partnerId/partnerAPIKeyRequests")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test
+    public void viewApiKeyRequestStatusAndApiKeyTest(){
     	
     }
     

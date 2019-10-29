@@ -1,9 +1,14 @@
 package io.mosip.pmp.partner.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.LoginUserRequest;
+import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
@@ -70,7 +75,10 @@ public interface PartnerService {
 	 */
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 	
-	public DigitalCertificateResponse validateDigitalCertificate(DigitalCertificateRequest request);
+	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
 	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
+	
+	
+	public LoginUserResponse userLogin(RequestWrapper<LoginUserRequest> request);
 }

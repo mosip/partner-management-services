@@ -6,15 +6,25 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIDoesNotExistConstant;
@@ -22,10 +32,13 @@ import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
+import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.LoginUserRequest;
+import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
@@ -36,8 +49,6 @@ import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.SignResponseDto;
 import io.mosip.pmp.partner.dto.SignatureRequestDto;
 import io.mosip.pmp.partner.dto.SignatureResponseDto;
-import io.mosip.pmp.partner.dto.TimestampRequestDto;
-import io.mosip.pmp.partner.dto.ValidatorResponseDto;
 import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
@@ -67,6 +78,8 @@ import io.mosip.pmp.partner.util.PartnerUtil;
 @Transactional
 public class PartnerServiceImpl implements PartnerService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
+	
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -99,9 +112,14 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setId(PartnerUtil.createPartnerId());
 		//partner.setId(partnerIdGenerator.generateId());
 		PolicyGroup policyGroup = null;
+		
+		LOGGER.info("***************validating the policy group********************");
+		
 		policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
-
+		
 		if (policyGroup != null) {
+			LOGGER.info(request.getPolicyGroup() + " : this is unique Policy Group for the partner");
+			
 			partner.setPolicyGroupId(policyGroup.getId());
 			partner.setName(request.getOrganizationName());
 			partner.setAddress(request.getAddress());
@@ -113,6 +131,8 @@ public class PartnerServiceImpl implements PartnerService {
 			partner.setCrBy(policyGroup.getCrBy());
 			partner.setCrDtimes(policyGroup.getCrDtimes());
 		} else {
+			LOGGER.error(request.getPolicyGroup() + " : this is invalied Policy Group for the partner");
+			
 			throw new PolicyGroupDoesNotExistException(
 					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
@@ -130,6 +150,7 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			// partnerResponse.setStatus(partner.getIsActive());
 		} else {
+			//LOGGER.error(request.getPolicyGroup() + " : this is invalied Policy Group for the partner");
 			throw new PartnerAlreadyRegisteredException(
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
@@ -394,32 +415,43 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public DigitalCertificateResponse validateDigitalCertificate(DigitalCertificateRequest request) {
+	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request) {
 		DigitalCertificateResponse response = new DigitalCertificateResponse();
-
+		System.out.println("****************************************");
 		// Getting the signature from "kernel-signature-service"
-
-		RestTemplate restTemplate = new RestTemplate();
-		final String uri = "http://localhost:8092/v1/signature/sign";
+		
+		//final String uri = "http://localhost:8092/v1/signature/sign";
+		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/sign";
 		ResponseEntity<SignResponseDto> result = null;
-		HttpEntity<DigitalCertificateRequest> certificate_entity = new HttpEntity<DigitalCertificateRequest>(
-				request);
-		result = restTemplate.exchange(uri, HttpMethod.POST, certificate_entity, SignResponseDto.class);
+		
+		//String partnerCertificate = request.getPartnerCertificate();
+		
+		//SignInputRequest SignInputRequest = new SignInputRequest();
+		HttpHeaders headers = new HttpHeaders(); 
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		
+		HttpEntity<RequestWrapper<DigitalCertificateRequest>> certificate_entity = new HttpEntity<RequestWrapper<DigitalCertificateRequest>>(
+			request);
+		result = restTemplate.postForEntity(uri, certificate_entity, SignResponseDto.class);
 		SignResponseDto signResponseDto = result.getBody();
+		
+		System.out.println(signResponseDto + "****************************************");
 
 		// Validation of Partner Digital Certificate which created by MOSIP CA using "kernel-signature-service".
 
-		ResponseEntity<ValidatorResponseDto> validate_result = null;
+		/*ResponseEntity<ValidatorResponseDto> validate_result = null;
 		TimestampRequestDto timestampRequestDto = new TimestampRequestDto();
 		timestampRequestDto.setData(request.getPartnerCertificate());
 		timestampRequestDto.setSignature(signResponseDto.getSignature());
 		timestampRequestDto.setTimestamp(signResponseDto.getTimestamp());
-		final String uriv = "http://localhost:8092/v1/signature/validate";
+		//final String uriv = "http://localhost:8092/v1/signature/validate";
+		final String uriv = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/validate";
 		HttpEntity<TimestampRequestDto> validate_entity = new HttpEntity<TimestampRequestDto>(timestampRequestDto);
 		validate_result = restTemplate.exchange(uriv, HttpMethod.POST, validate_entity, ValidatorResponseDto.class);
 		ValidatorResponseDto validatorResponseDto = validate_result.getBody();
 
-		response.setMessage(validatorResponseDto.getMessage());
+		response.setMessage(validatorResponseDto.getMessage());*/
 		
 		response.setMessage("successfully validated partner's digital certificate");
 		return response;
@@ -449,5 +481,55 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		
 		return response;
+	}
+
+	@Override
+	public LoginUserResponse userLogin(RequestWrapper<LoginUserRequest> request) {
+		// TODO Auto-generated method stub
+		LoginUserResponse loginUserResponse = new LoginUserResponse();
+		ResponseEntity<Map> response = null;
+		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/authmanager/authenticate/useridPwd";
+		
+		HttpHeaders headers = new HttpHeaders(); 
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		
+		//HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<RequestWrapper<LoginUserRequest>>(
+			//request , headers);
+		
+		request.getRequest();
+		LoginUserRequest loginUserRequest = request.getRequest();
+		
+		
+		HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<>(PartnerUtil.createRequest(loginUserRequest));
+		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		Map map = response.getBody();
+		Object response_map = null;
+		String status_value = null;
+		String message_value = null;
+		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator(); 
+		while(itr.hasNext()) {
+			Map.Entry<Object, Object> entry = itr.next();
+			if(entry.getKey().equals("response")) {
+				response_map = entry.getValue();
+			}
+		}
+		System.out.println(response_map);
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,String> convertValue = mapper.convertValue(response_map, Map.class);
+		
+		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String> entry = iterator.next();
+			if(entry.getKey().equals("status")) {
+				status_value = entry.getValue();
+			}
+			if(entry.getKey().equals("message")) {
+				message_value = entry.getValue();
+				}
+			}
+		loginUserResponse.setStatus(status_value);
+		loginUserResponse.setMessage(message_value);
+		return loginUserResponse;
 	}
 }
