@@ -20,6 +20,7 @@ public class PartnerserviceApplication{
 	
 	@Bean
 	public RestTemplate restTemplate() {
+		
 		return new RestTemplate();
 	}
 

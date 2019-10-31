@@ -1,5 +1,7 @@
 package io.mosip.pmp.partner.controller;
 
+import java.text.ParseException;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -26,6 +28,8 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.SignUserRequest;
+import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
 import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
@@ -204,15 +208,7 @@ public class PartnerServiceController {
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request){
 		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
 		DigitalCertificateResponse digitalCertificateResponse = null;
-		
-		 
-		
-		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
-		
 		digitalCertificateResponse = partnerService.validateDigitalCertificate(request);
-		
-		// Making Response 
-		
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(digitalCertificateResponse);
@@ -229,10 +225,20 @@ public class PartnerServiceController {
 		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
 		digitalCertificateResponse = partnerService.uploadDigitalCertificate(digitalCertificateRequest);
 		response.setResponse(digitalCertificateResponse);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setMetadata(request.getMetadata());
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/userlogin", method = RequestMethod.POST)
+	/**
+	 * This method is use for userLogin when need to validate the digital certificate 
+	 * @param request this class contains LoginUserRequest
+	 * @return loginUserResponse this class contains LoginUserResponse
+	 * 
+	 */
+	
+	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<LoginUserResponse>> loginUser(
 			@RequestBody RequestWrapper<LoginUserRequest> request){
 		ResponseWrapper<LoginUserResponse> response = new ResponseWrapper<LoginUserResponse>();
@@ -242,7 +248,22 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setMetadata(request.getMetadata());
-		response.setResponsetime(request.getRequesttime());
 		return new ResponseEntity<ResponseWrapper<LoginUserResponse>>(response , HttpStatus.OK);
+	}
+	
+	
+	//for signUser to get user signature and timestamp
+	
+	@RequestMapping(value = "/signUser", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<SignUserResponse>> signUser(
+			@RequestBody RequestWrapper<SignUserRequest> request){
+		ResponseWrapper<SignUserResponse> response = new ResponseWrapper<SignUserResponse>();
+		SignUserResponse signUserResponse=null;
+		signUserResponse = partnerService.signUser(request);
+		response.setResponse(signUserResponse);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setMetadata(request.getMetadata());
+		return new ResponseEntity<ResponseWrapper<SignUserResponse>>(response , HttpStatus.OK);
 	}
 }

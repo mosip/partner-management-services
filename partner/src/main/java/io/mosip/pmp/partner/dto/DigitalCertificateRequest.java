@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DigitalCertificateRequest {
 	
-		public String partnerCertificate;
+		private String partnerCertificate;
 }

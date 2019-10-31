@@ -9,21 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
@@ -35,6 +32,7 @@ import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequestPreparation;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
@@ -46,7 +44,8 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partner.dto.SignResponseDto;
+import io.mosip.pmp.partner.dto.SignUserRequest;
+import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.dto.SignatureRequestDto;
 import io.mosip.pmp.partner.dto.SignatureResponseDto;
 import io.mosip.pmp.partner.entity.AuthPolicy;
@@ -67,6 +66,7 @@ import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
+import io.mosip.pmp.partner.util.HeaderRequestInterceptor;
 import io.mosip.pmp.partner.util.PartnerUtil;
 
 /**
@@ -103,6 +103,9 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	@Autowired
 	RestTemplate restTemplate;
+	
+	String response_cookies = null;
+	String signature_value = null;
 	
 	/* Save Partner which wants to self register */
 
@@ -414,47 +417,66 @@ public class PartnerServiceImpl implements PartnerService {
 		return aPIkeyRequests;
 	}
 
+	// Validation of Partner Digital Certificate which created by MOSIP CA using "kernel-signature-service".
+	
 	@Override
 	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request) {
-		DigitalCertificateResponse response = new DigitalCertificateResponse();
-		System.out.println("****************************************");
-		// Getting the signature from "kernel-signature-service"
+		DigitalCertificateResponse digitalCertificateResponse = new DigitalCertificateResponse();
 		
-		//final String uri = "http://localhost:8092/v1/signature/sign";
-		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/sign";
-		ResponseEntity<SignResponseDto> result = null;
+		//  Request Preparation for DigitalCertificate
 		
-		//String partnerCertificate = request.getPartnerCertificate();
+		LocalDateTime now = LocalDateTime.now();
+		DigitalCertificateRequestPreparation digitalCertificateRequestPreparation = new DigitalCertificateRequestPreparation();
+		digitalCertificateRequestPreparation.setData(request.getRequest().getPartnerCertificate());
+		digitalCertificateRequestPreparation.setSignature(signature_value);
+		digitalCertificateRequestPreparation.setTimestamp(Timestamp.valueOf(now));
+		RequestWrapper<DigitalCertificateRequestPreparation> digital_request = new RequestWrapper<DigitalCertificateRequestPreparation>();
+		digital_request.setId(request.getId());
+		digital_request.setMetadata(request.getMetadata());
+		digital_request.setVersion(request.getVersion());
+		digital_request.setRequesttime(request.getRequesttime());
+		digital_request.setRequest(digitalCertificateRequestPreparation);
 		
-		//SignInputRequest SignInputRequest = new SignInputRequest();
-		HttpHeaders headers = new HttpHeaders(); 
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		System.out.println(digital_request.toString());
 		
-		
-		HttpEntity<RequestWrapper<DigitalCertificateRequest>> certificate_entity = new HttpEntity<RequestWrapper<DigitalCertificateRequest>>(
-			request);
-		result = restTemplate.postForEntity(uri, certificate_entity, SignResponseDto.class);
-		SignResponseDto signResponseDto = result.getBody();
-		
-		System.out.println(signResponseDto + "****************************************");
+		ResponseEntity<Map> response = null;
 
-		// Validation of Partner Digital Certificate which created by MOSIP CA using "kernel-signature-service".
-
-		/*ResponseEntity<ValidatorResponseDto> validate_result = null;
-		TimestampRequestDto timestampRequestDto = new TimestampRequestDto();
-		timestampRequestDto.setData(request.getPartnerCertificate());
-		timestampRequestDto.setSignature(signResponseDto.getSignature());
-		timestampRequestDto.setTimestamp(signResponseDto.getTimestamp());
-		//final String uriv = "http://localhost:8092/v1/signature/validate";
-		final String uriv = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/validate";
-		HttpEntity<TimestampRequestDto> validate_entity = new HttpEntity<TimestampRequestDto>(timestampRequestDto);
-		validate_result = restTemplate.exchange(uriv, HttpMethod.POST, validate_entity, ValidatorResponseDto.class);
-		ValidatorResponseDto validatorResponseDto = validate_result.getBody();
-
-		response.setMessage(validatorResponseDto.getMessage());*/
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
+		restTemplate.setInterceptors(interceptors);
 		
-		response.setMessage("successfully validated partner's digital certificate");
-		return response;
+		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/validate";
+		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparation>> certificate_entity = new HttpEntity<>(digital_request);
+		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		Map map = response.getBody();
+		
+		Object response_map = null;
+		String status_value = null;
+		String message_value = null;
+		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator(); 
+		while(itr.hasNext()) {
+			Map.Entry<Object, Object> entry = itr.next();
+			if(entry.getKey().equals("response")) {
+				response_map = entry.getValue();
+			}
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,String> convertValue = mapper.convertValue(response_map, Map.class);
+		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String> entry = iterator.next();
+			if(entry.getKey().equals("status")) {
+				status_value = entry.getValue();
+			}
+			if(entry.getKey().equals("message")) {
+				message_value = entry.getValue();
+				}
+			}
+		
+		if(status_value!=null && message_value!=null) {
+			digitalCertificateResponse.setMessage("successfully validated partner's digital certificate");
+		}
+		return digitalCertificateResponse;
 	}
 
 	@Override
@@ -485,24 +507,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public LoginUserResponse userLogin(RequestWrapper<LoginUserRequest> request) {
-		// TODO Auto-generated method stub
 		LoginUserResponse loginUserResponse = new LoginUserResponse();
 		ResponseEntity<Map> response = null;
 		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/authmanager/authenticate/useridPwd";
-		
-		HttpHeaders headers = new HttpHeaders(); 
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		
-		//HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<RequestWrapper<LoginUserRequest>>(
-			//request , headers);
-		
-		request.getRequest();
-		LoginUserRequest loginUserRequest = request.getRequest();
-		
-		
-		HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<>(PartnerUtil.createRequest(loginUserRequest));
+		HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<>(request);
 		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		response_cookies = response.getHeaders().getFirst("Authorization");
 		Map map = response.getBody();
 		Object response_map = null;
 		String status_value = null;
@@ -514,7 +524,6 @@ public class PartnerServiceImpl implements PartnerService {
 				response_map = entry.getValue();
 			}
 		}
-		System.out.println(response_map);
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String,String> convertValue = mapper.convertValue(response_map, Map.class);
 		
@@ -531,5 +540,46 @@ public class PartnerServiceImpl implements PartnerService {
 		loginUserResponse.setStatus(status_value);
 		loginUserResponse.setMessage(message_value);
 		return loginUserResponse;
+	}
+
+	@Override
+	public SignUserResponse signUser(RequestWrapper<SignUserRequest> request) {
+		SignUserResponse signUserResponse = new SignUserResponse();
+		ResponseEntity<Map> response = null;
+		
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
+		restTemplate.setInterceptors(interceptors);
+		
+		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/sign";
+		HttpEntity<RequestWrapper<SignUserRequest>> certificate_entity = new HttpEntity<>(request);
+		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		Map map = response.getBody();
+		Object sign_response_map = null;
+		//String signature_value = null;
+		String timestamp_value = null;
+		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator(); 
+		while(itr.hasNext()) {
+			Map.Entry<Object, Object> entry = itr.next();
+			if(entry.getKey().equals("response")) {
+				sign_response_map = entry.getValue();
+			}
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,String> convertValue = mapper.convertValue(sign_response_map, Map.class);
+		
+		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String> entry = iterator.next();
+			if(entry.getKey().equals("signature")) {
+				signature_value = entry.getValue();
+			}
+			if(entry.getKey().equals("timestamp")) {
+				timestamp_value = entry.getValue();
+			}
+		}	
+		signUserResponse.setSignature(signature_value);
+		signUserResponse.setTimestamp(timestamp_value);
+		return signUserResponse;
 	}
 }

@@ -1,6 +1,6 @@
 package io.mosip.pmp.partner.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.text.ParseException;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
@@ -16,6 +16,8 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.SignUserRequest;
+import io.mosip.pmp.partner.dto.SignUserResponse;
 
 /**
  * This interface provides the methods which can be used for PartnerService
@@ -29,6 +31,7 @@ public interface PartnerService {
 	 * @param request this class contains partner details
 	 * @return partnerResponse this class contains status related to partner is registered successfully or not
 	 */
+	
 	public PartnerResponse savePartner(PartnerRequest request);
 	
 	/** This method is used to retrieve Auth/E-KYC Partner details.
@@ -58,6 +61,7 @@ public interface PartnerService {
 	 * @param aPIKeyReqID this is unique id created after partner request for Partner API Key
 	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
 	 */
+	
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID,String aPIKeyReqID);
 	
 	/**
@@ -65,20 +69,30 @@ public interface PartnerService {
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
+	
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	
 	/**
 	 * This method is used to view API key request status and API key (in case request is approved).
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @param aPIKeyReqID this is unique id created after partner request for Partner API Key
-	 * @return this class contains partnerApiKey apiKeyRequestStatus and validity details
+	 * @return aPIkeyRequests this class contains partnerApiKey apiKeyRequestStatus and validity details
 	 */
+	
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 	
 	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
 	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
 	
+	/**
+	 * This method is use for userLogin when need to validate the digital certificate 
+	 * @param request this class contains LoginUserRequest
+	 * @return loginUserResponse this class contains LoginUserResponse
+	 * 
+	 */
 	
 	public LoginUserResponse userLogin(RequestWrapper<LoginUserRequest> request);
+	
+	public SignUserResponse signUser(RequestWrapper<SignUserRequest> request);
 }
