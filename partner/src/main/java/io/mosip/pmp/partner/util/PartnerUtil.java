@@ -17,10 +17,19 @@ public class PartnerUtil {
 	}
 	
 	/**
-	 * @return policyId.
+	 * @return AuthPolicyId.
 	 */
 	
 	public static String createAuthPolicyId(){
+	    int id = (int)(Math.random()*1000000);
+	    return id+"";
+	}
+	
+	/**
+	 * @return PartnerPolicyRequestId.
+	 */
+	
+	public static String createPartnerPolicyRequestId(){
 	    int id = (int)(Math.random()*1000000);
 	    return id+"";
 	}

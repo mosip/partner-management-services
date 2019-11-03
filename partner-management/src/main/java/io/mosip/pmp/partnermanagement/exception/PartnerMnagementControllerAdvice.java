@@ -59,6 +59,31 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * Policy does not belong to the Policy Group of the Partner Manger
+	 * @param httpServletRequest this is contains servlet request
+	 * @param exception this is contains New Policy Id Not Exist Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
+	 */
+	
+	@ExceptionHandler(NewPolicyIdNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNewPolicyIdNotExistExceptionMassage(
+			final HttpServletRequest httpServletRequest, final NewPolicyIdNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = setErrors(httpServletRequest);
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	/**
 	 * @param httpServletRequest this is contains servlet request as a parameter
 	 * @param exception this is contains Policy Not Exist Exception as a parameter

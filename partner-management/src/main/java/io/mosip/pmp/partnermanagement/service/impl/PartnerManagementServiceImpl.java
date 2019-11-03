@@ -7,9 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.mosip.pmp.partnermanagement.constant.NewPolicyIdNotExistConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIDoesNotExistConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIKeyDoesNotExistConstant;
@@ -17,6 +20,7 @@ import io.mosip.pmp.partnermanagement.constant.PartnerApiKeyDoesNotBelongToThePo
 import io.mosip.pmp.partnermanagement.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerIdDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PolicyNotExistConstant;
+import io.mosip.pmp.partnermanagement.controller.PartnerManagementController;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
@@ -29,6 +33,7 @@ import io.mosip.pmp.partnermanagement.entity.Partner;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partnermanagement.entity.PolicyGroup;
+import io.mosip.pmp.partnermanagement.exception.NewPolicyIdNotExistException;
 import io.mosip.pmp.partnermanagement.exception.NoPartnerApiKeyRequestsException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistException;
@@ -52,6 +57,8 @@ import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 @Service
 public class PartnerManagementServiceImpl implements PartnerManagementService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
+	
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
 
@@ -70,26 +77,37 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
 			String partnerID, String PolicyAPIKey) {
-
+		
+		LOGGER.info("Getting details from partner Policy table for given API_KEY and PartnerID :" + PolicyAPIKey +" and "+partnerID);
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(PolicyAPIKey);
 		PartnerPolicy partnerPolicy = null;
+		PolicyGroup policyGroup = null;
 		if (findById.isPresent() && findById != null) {
+			LOGGER.info(PolicyAPIKey + " : Valied PartnerAPIKey");
 			partnerPolicy = findById.get();
 			
 			String auth_pilicy_id = partnerPolicy.getPolicyId();
 			String part_id = partnerPolicy.getPartner().getId();
+			
 			if(auth_pilicy_id!=null && part_id.equalsIgnoreCase(partnerID)) {
+				LOGGER.info("Getting details from auth Policy table");
 				Optional<AuthPolicy> findByAuthId = authPolicyRepository.findById(auth_pilicy_id);
 				if(findByAuthId.isPresent()) {
 					AuthPolicy authPolicy = findByAuthId.get();
-					PolicyGroup policyGroup = null; 
+					 
 					String old_policy_id= authPolicy.getPolicyGroup().getId();
+					LOGGER.info(old_policy_id + " : Existing Policy ID");
 					if(old_policy_id.equalsIgnoreCase(request.getOldPolicyID())) {
+						LOGGER.info(request.getOldPolicyID() + " : This is valied Existing or Old Policy ID");
 						Optional<PolicyGroup> findByGroupId = policyGroupRepository.findById(request.getNewPolicyID());
 						if(findByGroupId.isPresent()) {
+							LOGGER.info(request.getNewPolicyID() + " : This is valied new Policy ID");
 							policyGroup = findByGroupId.get();
 						}else {
-							System.out.println("throw NewPolicyIdIsNotExist");
+							LOGGER.info(request.getNewPolicyID() + " : This is Invalied new Policy ID");
+							throw new NewPolicyIdNotExistException(
+									NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorCode(),
+									NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorMessage());
 						}
 						authPolicy.setPolicyGroup(policyGroup);
 						authPolicyRepository.save(authPolicy);
@@ -98,12 +116,16 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 								PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
 					}
 				}else {
-					System.out.println("Auth Policy Not Exist");
+					LOGGER.info("+++++++++++++++++++Auth Policy Not Exist++++++++++++++++");
 				}
 			}else {
-				System.out.println("Throw Partner Not Exist Exception");
+				LOGGER.info(partnerID+" : Invalied Partner Id");
+				throw new PartnerDoesNotExistException(
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
 		}else {
+			LOGGER.info(PolicyAPIKey + " : Invalied PartnerAPIKey");
 			throw new PartnerAPIKeyDoesNotExistException(
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());	
@@ -369,7 +391,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			// duplicate Partner_API_Key
 		}else {
 			String Partner_API_Key = PartnerUtil.createPartnerApiKey(); 
-			Optional<PartnerPolicy> detail_Partner_API_Key = partnerPolicyRepository.findById(Partner_API_Key);
+ 			Optional<PartnerPolicy> detail_Partner_API_Key = partnerPolicyRepository.findById(Partner_API_Key);
 			if(detail_Partner_API_Key.isPresent()) {
 				//TODO Log info
 				// duplicate Partner_API_Key
@@ -390,7 +412,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				
 				LocalDateTime now = LocalDateTime.now();		
 				partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
-				partnerPolicy.setValidToDatetime(Timestamp.valueOf(now));
+				partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
 				partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
 				partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
 				

@@ -1,7 +1,5 @@
 package io.mosip.pmp.partner.service;
 
-import java.text.ParseException;
-
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
@@ -81,9 +79,15 @@ public interface PartnerService {
 	
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 	
+	
+	/**
+	 * @param DigitalCertificateRequest this class contains digitalCertificate details
+	 * @return DigitalCertificateResponse this class contains massage
+	 */
+	
 	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
-	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
+	//public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
 	
 	/**
 	 * This method is use for userLogin when need to validate the digital certificate 
@@ -92,7 +96,12 @@ public interface PartnerService {
 	 * 
 	 */
 	
-	public LoginUserResponse userLogin(RequestWrapper<LoginUserRequest> request);
+	public LoginUserResponse userLoginInKernal(RequestWrapper<LoginUserRequest> request);
 	
-	public SignUserResponse signUser(RequestWrapper<SignUserRequest> request);
+	/**
+	 * @param SignUserRequest this class contains digitalCertificate details
+	 * @return SignUserResponse this class contains signature and timestamp.
+	 */
+	
+	public SignUserResponse signUserInDigitalCertificates(RequestWrapper<SignUserRequest> request);
 }

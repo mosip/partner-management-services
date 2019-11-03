@@ -1,7 +1,5 @@
 package io.mosip.pmp.partner.controller;
 
-import java.text.ParseException;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -21,6 +19,8 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.LoginUserRequest;
+import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
@@ -30,8 +30,6 @@ import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
-import io.mosip.pmp.partner.dto.LoginUserRequest;
-import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 
 
@@ -61,6 +59,17 @@ public class PartnerServiceController {
 	@Autowired
 	PartnerService partnerService;
 	
+	
+	/**
+	 * This API would be used for testing of partners application up and running
+	 * @return partners application is up and running
+	 */
+	
+	@RequestMapping(value="/test", method = RequestMethod.GET)
+	public String test(){
+		return "partners application is up and running";
+	}
+	
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
 	 * Partners. Partner Management module would be integrating with Kernel IAM
@@ -72,16 +81,17 @@ public class PartnerServiceController {
 	@RequestMapping(value = "partnerReg", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
-		LOGGER.info("sessionId", "idType", "id", "description");
+		LOGGER.info("+++++++++++++++++partner self registration++++++++++++++++++++");
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<PartnerResponse>();
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
+		LOGGER.info("+++++++++++++++++calling savePartner method++++++++++++++++++++");
 		partnerResponse = partnerService.savePartner(partnerRequest);
-		response.setId("mosip.partnermanagement.partners.create");
-		response.setVersion("1.0");
+		LOGGER.info(partnerResponse + " : response of savePartner method");
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
-		LOGGER.info("request", "idType", "id", "request");
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.CREATED);
 	}
 	
@@ -119,8 +129,8 @@ public class PartnerServiceController {
 		PartnerResponse partnerResponse = null;
 		PartnerUpdateRequest partnerRequest = request.getRequest();
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerID);
-		response.setId("mosip.partnermanagement.partners.update");
-		response.setVersion("1.0");
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
 		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.OK);
 	}
@@ -140,8 +150,8 @@ public class PartnerServiceController {
 		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
 		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
 		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerID);
-		response.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
-		response.setVersion("1.0");
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
 		response.setResponse(partnerAPIKeyResponse);
 		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>>(response, HttpStatus.CREATED);
 	}
@@ -202,7 +212,18 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<APIkeyRequests>>(response, HttpStatus.OK);
 	}
 	
+	// validate the Digital Certificate (Certification Authority as a MOSIP) to Partner Management using this API.
 	
+	/**
+	 * As the MOSIP system Partner Management module would integrate with Kernel for validation of partner's digital certificate. 
+	 * In case where MOSIP would act as certification authority for partners, 
+	 * MOSIP would be able to sign and resign partner digital certificates. 
+	 * Partner management module would depend on Kernel services for signing and re-signing of partner digital certificates. 
+	 * Kernel Signature service would be utilized to validate signature : Kernel Signature Service
+	 * 
+	 * @param DigitalCertificateRequest this class contains digitalCertificate details
+	 * @return DigitalCertificateResponse this class contains massage
+	 */
 	@RequestMapping(value = "/validatedigitalcertificate", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificate(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request){
@@ -217,7 +238,7 @@ public class PartnerServiceController {
 	
 	// upload the digital certificates (Certification Authority) to Partner Management using this API.
 	
-	@RequestMapping(value = "/createdigitalcertificate", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/createdigitalcertificate", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> uploadDigitalCertificate(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
 		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
@@ -229,7 +250,7 @@ public class PartnerServiceController {
 		response.setVersion(request.getVersion());
 		response.setMetadata(request.getMetadata());
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
-	}
+	}*/
 	
 	/**
 	 * This method is use for userLogin when need to validate the digital certificate 
@@ -239,11 +260,11 @@ public class PartnerServiceController {
 	 */
 	
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<LoginUserResponse>> loginUser(
+	public ResponseEntity<ResponseWrapper<LoginUserResponse>> userLoginInKernal(
 			@RequestBody RequestWrapper<LoginUserRequest> request){
 		ResponseWrapper<LoginUserResponse> response = new ResponseWrapper<LoginUserResponse>();
 		LoginUserResponse loginUserResponse=null;
-		loginUserResponse = partnerService.userLogin(request);
+		loginUserResponse = partnerService.userLoginInKernal(request);
 		response.setResponse(loginUserResponse);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -251,15 +272,18 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<LoginUserResponse>>(response , HttpStatus.OK);
 	}
 	
-	
-	//for signUser to get user signature and timestamp
+	/**
+	 * This API Use for signUser to get user signature and timestamp.
+	 * @param SignUserRequest this class contains digitalCertificate details
+	 * @return SignUserResponse this class contains signature and timestamp.
+	 */
 	
 	@RequestMapping(value = "/signUser", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<SignUserResponse>> signUser(
+	public ResponseEntity<ResponseWrapper<SignUserResponse>> signUserInDigitalCertificates(
 			@RequestBody RequestWrapper<SignUserRequest> request){
 		ResponseWrapper<SignUserResponse> response = new ResponseWrapper<SignUserResponse>();
 		SignUserResponse signUserResponse=null;
-		signUserResponse = partnerService.signUser(request);
+		signUserResponse = partnerService.signUserInDigitalCertificates(request);
 		response.setResponse(signUserResponse);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());

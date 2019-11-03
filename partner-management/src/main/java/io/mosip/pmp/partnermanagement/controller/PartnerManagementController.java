@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +47,21 @@ import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 @RequestMapping(value = "/pmpartners")
 public class PartnerManagementController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
+	
 	@Autowired
 	PartnerManagementService partnerManagementService;
+	
+	/**
+	 * This API would be used for testing of pmpartners application up and running
+	 * @return partners application is up and running
+	 */
+	
+	@RequestMapping(value="/test", method = RequestMethod.GET)
+	public String test(){
+		LOGGER.info("++++++++++++++++Test API is Up and Running+++++++++++++++++");
+		return "pmpartners application is up and runing";
+	}
 
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
@@ -55,11 +70,13 @@ public class PartnerManagementController {
 	 * @param partnerAPIKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about API key created successfully
 	 */
+	
 	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> PartnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerID,
 			@PathVariable String partnerAPIKey) {
+		LOGGER.info("++++++++++++++++Requesting for updating the Policy Group+++++++++++++++++");
 		PartnersPolicyMappingRequest partnersPolicyMappingRequest = request.getRequest();
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse=null;

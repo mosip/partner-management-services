@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -122,10 +124,11 @@ public class PartnerServiceControllerTest {
     	PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
     	APIkeyRequests aPIkeyRequests = new APIkeyRequests();
     	
+    	LocalDateTime now = LocalDateTime.now();
     	aPIkeyRequests.setApiKeyReqID("345678");
     	aPIkeyRequests.setApiKeyRequestStatus("Active");
     	aPIkeyRequests.setPartnerApiKey("34567895678");
-    	aPIkeyRequests.setValidityTill("456789");
+    	aPIkeyRequests.setValidityTill(Timestamp.valueOf(now));
     	
     	
     	List<APIkeyRequests> list_aPIkeyRequests = new ArrayList<>();
