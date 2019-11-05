@@ -81,7 +81,7 @@ public interface PartnerService {
 	
 	
 	/**
-	 * @param DigitalCertificateRequest this class contains digitalCertificate details
+	 * @param request this class contains digitalCertificate details
 	 * @return DigitalCertificateResponse this class contains massage
 	 */
 	
@@ -99,7 +99,7 @@ public interface PartnerService {
 	public LoginUserResponse userLoginInKernal(RequestWrapper<LoginUserRequest> request);
 	
 	/**
-	 * @param SignUserRequest this class contains digitalCertificate details
+	 * @param request this class contains digitalCertificate details
 	 * @return SignUserResponse this class contains signature and timestamp.
 	 */
 	

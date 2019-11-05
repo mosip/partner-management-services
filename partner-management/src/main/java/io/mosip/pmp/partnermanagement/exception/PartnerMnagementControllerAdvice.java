@@ -61,10 +61,10 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	}
 	
 	/**
-	 * @param httpServletRequest
-	 * @param exception
-	 * @return
-	 * @throws IOException
+	 * @param httpServletRequest this is contains servlet request 
+	 * @param exception this is contains Invalid Input Parameter Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException this class contains Checked Exception
 	 */
 	
 	@ExceptionHandler(InvalidInputParameterException.class)

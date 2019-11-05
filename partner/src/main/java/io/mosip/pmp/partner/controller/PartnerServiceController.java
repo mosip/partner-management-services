@@ -221,7 +221,7 @@ public class PartnerServiceController {
 	 * Partner management module would depend on Kernel services for signing and re-signing of partner digital certificates. 
 	 * Kernel Signature service would be utilized to validate signature : Kernel Signature Service
 	 * 
-	 * @param DigitalCertificateRequest this class contains digitalCertificate details
+	 * @param request this class contains digitalCertificate details
 	 * @return DigitalCertificateResponse this class contains massage
 	 */
 	@RequestMapping(value = "/validatedigitalcertificate", method = RequestMethod.PUT)
@@ -274,7 +274,7 @@ public class PartnerServiceController {
 	
 	/**
 	 * This API Use for signUser to get user signature and timestamp.
-	 * @param SignUserRequest this class contains digitalCertificate details
+	 * @param request this class contains digitalCertificate details
 	 * @return SignUserResponse this class contains signature and timestamp.
 	 */
 	
