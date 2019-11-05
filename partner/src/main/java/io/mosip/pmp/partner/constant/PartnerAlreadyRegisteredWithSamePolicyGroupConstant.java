@@ -1,12 +1,8 @@
-package io.mosip.pmp.partnermanagement.constant;
+package io.mosip.pmp.partner.constant;
 
-/**
- * @author sanjeev.shrivastava
- *
- */
-public enum PolicyNotExistConstant {
-	
-	POLICY_NOT_EXIST_EXCEPTION("PMS_PMP_014","Policy does not exist");
+public enum PartnerAlreadyRegisteredWithSamePolicyGroupConstant {
+		
+	PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP("PMS_PRT_001","Partner is already registered with Same policy Group");
 
 	/**
 	 * The error code.
@@ -26,7 +22,7 @@ public enum PolicyNotExistConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	PolicyNotExistConstant(String errorCode, String errorMessage) {
+	PartnerAlreadyRegisteredWithSamePolicyGroupConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}

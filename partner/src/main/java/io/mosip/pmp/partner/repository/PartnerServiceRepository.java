@@ -17,4 +17,7 @@ import io.mosip.pmp.partner.entity.Partner;
 public interface PartnerServiceRepository extends JpaRepository<Partner, String> {
 
 	public List<Partner> findByName(String name);
+	
+	//@Query(value = "select * from partner ppr where ppr.policy_group_id=?", nativeQuery = true )
+	//public Partner findByPolicyId(String policyGroupId);
 }

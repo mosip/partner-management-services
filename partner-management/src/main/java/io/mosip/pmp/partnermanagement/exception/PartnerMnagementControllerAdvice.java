@@ -1,6 +1,7 @@
 package io.mosip.pmp.partnermanagement.exception;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -46,6 +47,29 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	@ExceptionHandler(PartnerAPIKeyDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerAPIKeyDoesNotExistExceptionMassage(
 			final HttpServletRequest httpServletRequest, final PartnerAPIKeyDoesNotExistException exception)
+			throws IOException {
+		ResponseWrapper<ErrorResponse> response = setErrors(httpServletRequest);
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		
+		List<ErrorResponse> errorlist = new ArrayList<ErrorResponse>();
+		errorlist.add(errorResponse);
+		
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * @param httpServletRequest
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	
+	@ExceptionHandler(InvalidInputParameterException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getInvalidInputParameterExceptionMassage(
+			final HttpServletRequest httpServletRequest, final InvalidInputParameterException exception)
 			throws IOException {
 		ResponseWrapper<ErrorResponse> response = setErrors(httpServletRequest);
 		ErrorResponse errorResponse = new ErrorResponse();

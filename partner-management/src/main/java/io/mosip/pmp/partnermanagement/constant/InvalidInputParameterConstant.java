@@ -1,12 +1,8 @@
 package io.mosip.pmp.partnermanagement.constant;
 
-/**
- * @author sanjeev.shrivastava
- *
- */
-public enum PolicyNotExistConstant {
+public enum InvalidInputParameterConstant {
 	
-	POLICY_NOT_EXIST_EXCEPTION("PMS_PMP_014","Policy does not exist");
+	INVALIED_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter");
 
 	/**
 	 * The error code.
@@ -26,7 +22,7 @@ public enum PolicyNotExistConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	PolicyNotExistConstant(String errorCode, String errorMessage) {
+	InvalidInputParameterConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}

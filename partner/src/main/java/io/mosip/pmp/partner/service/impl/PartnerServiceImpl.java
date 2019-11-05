@@ -3,6 +3,7 @@ package io.mosip.pmp.partner.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyReqDoesNotExistConstant;
+import io.mosip.pmp.partner.constant.PartnerAlreadyRegisteredWithSamePolicyGroupConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
@@ -44,7 +46,6 @@ import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
-import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
@@ -53,6 +54,7 @@ import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
+import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredWithSamePolicyGroupException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
@@ -235,13 +237,6 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		
 		LOGGER.info(request.getPolicyName() + " : this is valied Policy Group ");
-		
-		LOGGER.info("+++++++++++++Preparing request for partner_Policy_Request+++++++++++++");
-		
-		partnerPolicyRequest = new PartnerPolicyRequest();
-		String Partner_Policy_Request_Id = PartnerUtil.createPartnerPolicyRequestId();
-		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
-		partnerPolicyRequest.setStatusCode("in-progress");
 
 		Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID);
 		if (!findByPartnerId.isPresent()) {
@@ -250,10 +245,40 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		LOGGER.info(partnerID + " : Valied partnerID");
 		
+		LOGGER.info(partnerID + " : Valied partnerID");
 		Partner partner = findByPartnerId.get();
-		partnerPolicyRequest.setPolicyId(partner.getPolicyGroupId());
+		
+		LOGGER.info("+++++++++++++fetching all record from partner_Policy_Request by given partnerId +++++++++++++");
+		Map<String,String> policy_map = new HashMap<>();
+		String existing_policy_id = null;
+		List<PartnerPolicyRequest> list_partner_policy_request = partnerPolicyRequestRepository.findByPartnerId(partnerID);
+		PartnerPolicyRequest partnerPolicyRequest1 = null;
+		Iterator<PartnerPolicyRequest> it = list_partner_policy_request.iterator();
+		while (it.hasNext()) {
+			partnerPolicyRequest1 = it.next();
+			existing_policy_id = partnerPolicyRequest1.getPolicyId();
+			
+			policy_map.put(partnerID, existing_policy_id);
+		}
+		System.out.println(policy_map);
+		Iterator<Map.Entry<String, String>> itr = policy_map.entrySet().iterator();
+		while(itr.hasNext()) {
+			Map.Entry<String, String> entry = itr.next();
+			if(entry.getValue().equals(policyGroup.getId())) {
+				throw new PartnerAlreadyRegisteredWithSamePolicyGroupException(
+						PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP.getErrorCode(),
+						PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP.getErrorMessage());
+			}
+		}
+		
+		LOGGER.info("+++++++++++++Preparing request for partner_Policy_Request+++++++++++++");
+		partnerPolicyRequest = new PartnerPolicyRequest();
+		String Partner_Policy_Request_Id = PartnerUtil.createPartnerPolicyRequestId();
+		partnerPolicyRequest.setId(Partner_Policy_Request_Id);
+		partnerPolicyRequest.setStatusCode("in-progress");
+		
+		partnerPolicyRequest.setPolicyId(policyGroup.getId());
 		partnerPolicyRequest.setPartner(partner);
 		partnerPolicyRequest.setCrDtimes(partner.getCrDtimes());
 
@@ -265,30 +290,6 @@ public class PartnerServiceImpl implements PartnerService {
 		LOGGER.info("+++++++++++++Saving request for partner_Policy_Request+++++++++++++");
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
-		// Creating Data for Mapping policy_id into auth_policy table
-		// In case Auth_Policy Creation API will come that time we need to remove the below Auth_policy Code.
-		
-		LOGGER.info("+++++++++++++Preparing request for auth_policy+++++++++++++");
-				AuthPolicy authPolicy =new AuthPolicy();
-				
-				String auth_policy_id = PartnerUtil.createAuthPolicyId();
-				Optional<AuthPolicy> findByAuthId = authPolicyRepository.findById(auth_policy_id);
-				if(findByAuthId.isPresent()) {
-					LOGGER.info(auth_policy_id + ": duplicate auth_policy_id");
-				}else {
-					authPolicy.setId(auth_policy_id);
-					authPolicy.setPolicyGroup(policyGroup);
-					authPolicy.setName(policyGroup.getName());
-					authPolicy.setDescr(policyGroup.getDescr());
-					authPolicy.setPolicyFileId("PolicyFileId-101");
-					authPolicy.setIsActive(policyGroup.getIsActive());
-					authPolicy.setCrBy(policyGroup.getCrBy());
-					authPolicy.setCrDtimes(policyGroup.getCrDtimes());
-					
-					LOGGER.info("+++++++++++++Saving request for auth_policy+++++++++++++");
-					authPolicyRepository.save(authPolicy);
-				}
-				
 		LOGGER.info("+++++++++++++Preparing Response for Partner_APIKey_Response+++++++++++++");
 		
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();

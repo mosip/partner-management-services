@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NewPolicyIdNotExistConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIDoesNotExistConstant;
@@ -33,6 +34,7 @@ import io.mosip.pmp.partnermanagement.entity.Partner;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partnermanagement.entity.PolicyGroup;
+import io.mosip.pmp.partnermanagement.exception.InvalidInputParameterException;
 import io.mosip.pmp.partnermanagement.exception.NewPolicyIdNotExistException;
 import io.mosip.pmp.partnermanagement.exception.NoPartnerApiKeyRequestsException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIDoesNotExistException;
@@ -77,59 +79,66 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
 			String partnerID, String PolicyAPIKey) {
-		
-		LOGGER.info("Getting details from partner Policy table for given API_KEY and PartnerID :" + PolicyAPIKey +" and "+partnerID);
+
+		LOGGER.info("Getting details from partner Policy for given API_KEY and PartnerID :" + PolicyAPIKey
+				+ " and " + partnerID);
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(PolicyAPIKey);
 		PartnerPolicy partnerPolicy = null;
-		PolicyGroup policyGroup = null;
+		PolicyGroup new_policyGroup = null;
+		AuthPolicy new_authPolicy = null;
 		if (findById.isPresent() && findById != null) {
 			LOGGER.info(PolicyAPIKey + " : Valied PartnerAPIKey");
 			partnerPolicy = findById.get();
-			
-			String auth_pilicy_id = partnerPolicy.getPolicyId();
+
+			String old_auth_pilicy_id = partnerPolicy.getPolicyId();
 			String part_id = partnerPolicy.getPartner().getId();
-			
-			if(auth_pilicy_id!=null && part_id.equalsIgnoreCase(partnerID)) {
+
+			if (old_auth_pilicy_id != null && part_id.equalsIgnoreCase(partnerID)) {
+				LOGGER.info(partnerID +" : Valied PartnerID");
 				LOGGER.info("Getting details from auth Policy table");
-				Optional<AuthPolicy> findByAuthId = authPolicyRepository.findById(auth_pilicy_id);
-				if(findByAuthId.isPresent()) {
-					AuthPolicy authPolicy = findByAuthId.get();
-					 
-					String old_policy_id= authPolicy.getPolicyGroup().getId();
-					LOGGER.info(old_policy_id + " : Existing Policy ID");
-					if(old_policy_id.equalsIgnoreCase(request.getOldPolicyID())) {
-						LOGGER.info(request.getOldPolicyID() + " : This is valied Existing or Old Policy ID");
-						Optional<PolicyGroup> findByGroupId = policyGroupRepository.findById(request.getNewPolicyID());
-						if(findByGroupId.isPresent()) {
-							LOGGER.info(request.getNewPolicyID() + " : This is valied new Policy ID");
-							policyGroup = findByGroupId.get();
-						}else {
-							LOGGER.info(request.getNewPolicyID() + " : This is Invalied new Policy ID");
-							throw new NewPolicyIdNotExistException(
-									NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorCode(),
-									NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorMessage());
-						}
-						authPolicy.setPolicyGroup(policyGroup);
-						authPolicyRepository.save(authPolicy);
-					}else {
-						throw new PolicyNotExistException(PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
-								PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+				Optional<AuthPolicy> old_findByAuthId = authPolicyRepository.findById(old_auth_pilicy_id);
+
+				AuthPolicy old_authPolicy = old_findByAuthId.get();
+
+				String old_policy_id = old_authPolicy.getPolicyGroup().getId();
+				LOGGER.info(old_policy_id + " : Existing Policy ID");
+				if (old_policy_id.equalsIgnoreCase(request.getOldPolicyID())) {
+					LOGGER.info(request.getOldPolicyID() + " : This is valied Existing or Old Policy ID");
+					Optional<PolicyGroup> new_findByGroupId = policyGroupRepository.findById(request.getNewPolicyID());
+					if (new_findByGroupId.isPresent()) {
+						LOGGER.info(request.getNewPolicyID() + " : This is valied new Policy ID");
+						new_policyGroup = new_findByGroupId.get();
+						
+						new_authPolicy = authPolicyRepository.findByPolicyId(new_policyGroup.getId());
+						
+					} else {
+						LOGGER.info(request.getNewPolicyID() + " : This is Invalied new Policy ID");
+						throw new NewPolicyIdNotExistException(
+								NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorCode(),
+								NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorMessage());
 					}
-				}else {
-					LOGGER.info("+++++++++++++++++++Auth Policy Not Exist++++++++++++++++");
+					
+					partnerPolicy.setPolicyId(new_authPolicy.getId());
+					partnerPolicyRepository.save(partnerPolicy);
+					LOGGER.info(partnerPolicy.getPolicyApiKey() + " : Updated Successfully");
+				} else {
+					LOGGER.info(request.getOldPolicyID() + " : This is Invalied Existing or Old Policy ID");
+					throw new PolicyNotExistException(PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
+							PolicyNotExistConstant.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
 				}
-			}else {
-				LOGGER.info(partnerID+" : Invalied Partner Id");
+
+			} else {
+				LOGGER.info(partnerID + " : Invalied Partner Id");
 				throw new PartnerDoesNotExistException(
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
-		}else {
+		} else {
 			LOGGER.info(PolicyAPIKey + " : Invalied PartnerAPIKey");
 			throw new PartnerAPIKeyDoesNotExistException(
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());	
-		} 
+					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Partner api key to Policy Mappings updated successfully");
 		return partnersPolicyMappingResponse;
@@ -140,16 +149,28 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			ActivateDeactivatePartnerRequest request) {
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
+		LocalDateTime now = LocalDateTime.now();
 		if (findById.isPresent() && findById != null) {
 			Partner partner = findById.get();
 			String partner_status = request.getStatus();
+			
+			if(partner_status.equalsIgnoreCase("Active") || partner_status.equalsIgnoreCase("De-Active")) {
 				if(partner_status.equalsIgnoreCase("Active")) {
 					partner.setIsActive(true);
 				} else if (partner_status.equalsIgnoreCase("De-Active")) {
 					partner.setIsActive(false);
 				}
+			}else {
+				LOGGER.info(partner_status + " : is Invalid Input Parameter, it should be (Active/De-Active)");
+				throw new InvalidInputParameterException(
+						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
+						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
+			}
+				partner.setUpdBy("Partner_Manager");	
+				partner.setUpdDtimes(Timestamp.valueOf(now));	
 			partnerRepository.save(partner);
 		} else {
+			LOGGER.info(partnerID + " : Partner Id Does Not Exist");
 			throw new PartnerIdDoesNotExistException(
 					PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
@@ -167,18 +188,28 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			PartnerPolicy partnerPolicy = findById.get();
 			if (partnerPolicy.getPartner().getId().equals(partnerID)) {
 				
-				if(request.getStatus().equalsIgnoreCase("Active")) {
-					partnerPolicy.setIsActive(true);
-				}else if(request.getStatus().equalsIgnoreCase("De-Active")){
-					partnerPolicy.setIsActive(false);
+				if(request.getStatus().equalsIgnoreCase("Active") || request.getStatus().equalsIgnoreCase("De-Active")) {
+					if(request.getStatus().equalsIgnoreCase("Active")) {
+						partnerPolicy.setIsActive(true);
+					}else if(request.getStatus().equalsIgnoreCase("De-Active")){
+						partnerPolicy.setIsActive(false);
+					}
+				}else {
+					LOGGER.info("Invalid Input Parameter, it should be (Active/De-Active)");
+					throw new InvalidInputParameterException(
+							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
+							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage()); 
 				}
 				partnerPolicyRepository.save(partnerPolicy);
+				LOGGER.info(partnerAPIKey + " : API KEY Status Updated Successfully");
 			} else {
+				LOGGER.info(partnerID + " : Partner Id Does Not Exist");
 				throw new PartnerDoesNotExistException(
 						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
 		} else {
+			LOGGER.info(partnerAPIKey + " : partnerAPIKey Does Not Exist");
 			throw new PartnerAPIKeyDoesNotExistException(
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
@@ -269,12 +300,16 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 									.getErrorMessage());
 				}
 			} else {
-				System.err.println("Partner Not Exist Exception");
+				LOGGER.info(partnerID + " : Partner Not Exist Exception");
+				throw new PartnerIdDoesNotExistException(
+						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
 		} else {
+			LOGGER.info(PartnerAPIKey + " : Partner API KEY Not Exist");
 			throw new PartnerAPIDoesNotExistException(
-					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		return response;
 	}
@@ -366,6 +401,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			ActivateDeactivatePartnerRequest request, String partnerKeyReqId) {
 		PartnerPolicyRequest partnerPolicyRequest=null;
 		String partner_id = null;
+		LocalDateTime now = LocalDateTime.now();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(partnerKeyReqId);
 		
@@ -376,47 +412,54 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		
 		partnerPolicyRequest = findById.get();
-		partnerPolicyRequest.setStatusCode(request.getStatus());
+		if(request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Reject")) {
+			partnerPolicyRequest.setStatusCode(request.getStatus());
+		}else {
+			LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Reject)");
+			throw new InvalidInputParameterException(
+					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
+					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
+		}
+		partnerPolicyRequest.setUpdBy("Partner_Manager");
+		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		// Creating Partner_API_Key and Inserting Policy_Id and Partner_Id in the Same 
 		
-		//Partner_API_Key should be unique for same partner.
+		LOGGER.info("++++++++++++++++++++++Creating Partner_API_Key+++++++++++++++++++++++++");
+		
+		LOGGER.info("Partner_API_Key should be unique for same partner");
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
 		partner_id = partnerPolicyRequest.getPartner().getId();
 		PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partner_id);
 		
 		if(findByPartnerId!=null) {
-			//TODO Log info
-			// partnerKeyReqId already have Partner_API_Key.
-			// duplicate Partner_API_Key
+			LOGGER.info(partnerKeyReqId + " : this partnerKeyReqId already have PartnerAPIKey");
 		}else {
 			String Partner_API_Key = PartnerUtil.createPartnerApiKey(); 
  			Optional<PartnerPolicy> detail_Partner_API_Key = partnerPolicyRepository.findById(Partner_API_Key);
 			if(detail_Partner_API_Key.isPresent()) {
-				//TODO Log info
-				// duplicate Partner_API_Key
+				LOGGER.info(Partner_API_Key + " : this is duplicate PartnerAPIKey");
 			}else {
 				partnerPolicy.setPolicyApiKey(Partner_API_Key);
 				partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 				
-				// need to update auth_policy_id
+				LOGGER.info("+++++++++++++++++++++Need to check auth_policy_id++++++++++++++++++++++");
 				String policy_id = partnerPolicyRequest.getPolicyId();
 				
 				AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policy_id);
 				if(findByPolicyId == null) {
-					System.out.println("throw the error AuthPolicyNotFoundException");
+					LOGGER.info(policy_id + "Invalied Policy Id");
 				}
 				
 				partnerPolicy.setPolicyId(findByPolicyId.getId());
 				partnerPolicy.setIsActive(true);
 				
-				LocalDateTime now = LocalDateTime.now();		
 				partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
 				partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
 				partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
 				partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
 				
 				partnerPolicyRepository.save(partnerPolicy);
+				LOGGER.info(Partner_API_Key + " : APIKEY Successfully created");
 			}
 		}
 		partnersPolicyMappingResponse.setMessage("PartnerAPIKey approved successfully");
