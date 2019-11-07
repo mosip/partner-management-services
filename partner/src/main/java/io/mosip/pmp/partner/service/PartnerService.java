@@ -14,6 +14,7 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
 
@@ -37,6 +38,9 @@ public interface PartnerService {
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
+	
+	
+	public RetrievePartnerDetailsWithNameResponse getPartnerDetailsWithName(String partnerName);
 	
 	/**This method is used to update Auth/E-KYC Partner's details
 	 * @param partnerUpdateRequest this class contains updated partner details

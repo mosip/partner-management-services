@@ -28,6 +28,7 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
@@ -92,7 +93,7 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
-		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.CREATED);
+		return new ResponseEntity<ResponseWrapper<PartnerResponse>>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -112,6 +113,20 @@ public class PartnerServiceController {
 		response.setVersion("1.0");
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/findbyname/{partnerName}", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>> retrievePartnerDetailsWithName(
+			@PathVariable String partnerName) {
+		//TODO
+		ResponseWrapper<RetrievePartnerDetailsWithNameResponse> response = new ResponseWrapper<RetrievePartnerDetailsWithNameResponse>();
+		RetrievePartnerDetailsWithNameResponse retrievePartnerDetailsWithNameResponse = null;
+		retrievePartnerDetailsWithNameResponse = partnerService.getPartnerDetailsWithName(partnerName);
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
+		response.setResponse(retrievePartnerDetailsWithNameResponse);
+		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>>(response, HttpStatus.OK);
 	}
 
 	

@@ -3,7 +3,6 @@ package io.mosip.pmp.partner.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,7 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.entity.Partner;
@@ -107,57 +107,48 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
-		Partner partner = new Partner();
-		partner.setId(PartnerUtil.createPartnerId());
-		//TODO
-		//partner.setId(partnerIdGenerator.generateId());
-		PolicyGroup policyGroup = null;
 		
-		LOGGER.info("***************validating the policy group********************");
-		
-		policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
-		
-		if (policyGroup != null) {
-			LOGGER.info(request.getPolicyGroup() + " : Policy Group is availavle for the partner");
-			
-			partner.setPolicyGroupId(policyGroup.getId());
-			partner.setName(request.getOrganizationName());
-			partner.setAddress(request.getAddress());
-			partner.setContactNo(request.getContactNumber());
-			partner.setEmailId(request.getEmailId());
-
-			partner.setIsActive(policyGroup.getIsActive());
-			partner.setUserId(policyGroup.getUserId());
-			partner.setCrBy(policyGroup.getCrBy());
-			partner.setCrDtimes(policyGroup.getCrDtimes());
-		} else {
-			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
-			
-			throw new PolicyGroupDoesNotExistException(
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
-		}
-		
-		LOGGER.error(" +++++++++++++++++++++Checking the duplicate partner+++++++++++++++++++++++ ");
-
-		PartnerResponse partnerResponse = new PartnerResponse();
-		List<Partner> list = partnerRepository.findByName(partner.getName());
-
-		if (list.isEmpty()) {
-			LOGGER.error(partner.getName() +" : this is unique partner");
-			LOGGER.error(" +++++++++++++++++++++Saving the partner+++++++++++++++++++++++ ");
-			partnerRepository.save(partner);
-			partnerResponse.setPartnerID(partner.getId());
-			Boolean bul = partner.getIsActive();
-			if (bul) {
-				partnerResponse.setStatus("Active");
+		Partner partner_name = partnerRepository.findByName(request.getOrganizationName());
+		String part_id = PartnerUtil.createPartnerId();
+		if(partner_name == null) {
+			Partner partner = new Partner();
+			partner.setId(part_id);
+			//partner.setId(partnerIdGenerator.generateId());
+			PolicyGroup policyGroup = null;
+			LOGGER.info("***************validating the policy group********************");
+			policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
+			LocalDateTime now = LocalDateTime.now();
+			if (policyGroup != null) {
+				LOGGER.info(request.getPolicyGroup() + " : Policy Group is availavle for the partner");
+				partner.setPolicyGroupId(policyGroup.getId());
+				partner.setName(request.getOrganizationName());
+				partner.setAddress(request.getAddress());
+				partner.setContactNo(request.getContactNumber());
+				partner.setEmailId(request.getEmailId());
+				partner.setIsActive(true);
+				partner.setUserId("110083");
+				partner.setCrBy("Partner Service");
+				partner.setCrDtimes(Timestamp.valueOf(now));
+				
+				LOGGER.info(request.getOrganizationName() +" : this is unique partner");
+				LOGGER.info(" +++++++++++++++++++++Saving the partner+++++++++++++++++++++++ ");
+				partnerRepository.save(partner);
+			} else {
+				LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
+				throw new PolicyGroupDoesNotExistException(
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 			}
-		} else {
-			LOGGER.error(partner.getName() +" : this is duplicate partner");
+		}else {
+			LOGGER.error(request.getOrganizationName() +" : this is duplicate partner");
 			throw new PartnerAlreadyRegisteredException(
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
 		}
+		PartnerResponse partnerResponse = new PartnerResponse();
+		partnerResponse.setPartnerId(part_id);
+		partnerResponse.setStatus("Active");
+		
 		return partnerResponse;
 	}
 	
@@ -194,6 +185,39 @@ public class PartnerServiceImpl implements PartnerService {
 
 
 	@Override
+	public RetrievePartnerDetailsWithNameResponse getPartnerDetailsWithName(String partnerName) {
+		RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
+		Partner Partner_ByName = partnerRepository.findByName(partnerName);
+		Optional<PolicyGroup> findByIdpolicyGroup = null;
+		PolicyGroup policyGroup = null;
+		if(Partner_ByName!=null) {
+			response.setId(Partner_ByName.getId());
+			response.setAddress(Partner_ByName.getAddress());
+			response.setContactNo(Partner_ByName.getContactNo());
+			response.setCrBy(Partner_ByName.getCrBy());
+			response.setCrDtimes(Partner_ByName.getCrDtimes());
+			response.setEmailId(Partner_ByName.getEmailId());
+			response.setIsActive(Partner_ByName.getIsActive());
+			response.setName(Partner_ByName.getName());
+			response.setUpdBy(Partner_ByName.getUpdBy());
+			response.setUpdDtimes(Partner_ByName.getUpdDtimes());
+			response.setUserId(Partner_ByName.getUserId());
+			
+			LOGGER.info("++++++++++++Retriving the name of policy group+++++++++++++");
+			findByIdpolicyGroup = policyGroupRepository.findById(Partner_ByName.getPolicyGroupId());
+			policyGroup = findByIdpolicyGroup.get();
+			
+			response.setPolicyGroupName(policyGroup.getName());
+		}else {
+			LOGGER.info(partnerName +": Partner is not available");
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		return response;
+	}
+	
+	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		Partner partner = null;
@@ -208,7 +232,7 @@ public class PartnerServiceImpl implements PartnerService {
 			LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
 			partnerRepository.save(partner);
 			PartnerResponse partnerResponse = new PartnerResponse();
-			partnerResponse.setPartnerID(partner.getId());
+			partnerResponse.setPartnerId(partner.getId());
 			Boolean bul = partner.getIsActive();
 			if (bul) {
 				partnerResponse.setStatus("Active");
@@ -250,22 +274,22 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = findByPartnerId.get();
 		
 		LOGGER.info("+++++++++++++fetching all record from partner_Policy_Request by given partnerId +++++++++++++");
-		Map<String,String> policy_map = new HashMap<>();
+		List<String> policy_list = new ArrayList<>();
 		String existing_policy_id = null;
 		List<PartnerPolicyRequest> list_partner_policy_request = partnerPolicyRequestRepository.findByPartnerId(partnerID);
-		PartnerPolicyRequest partnerPolicyRequest1 = null;
+		PartnerPolicyRequest partnerPolicyRequest_obj = null;
 		Iterator<PartnerPolicyRequest> it = list_partner_policy_request.iterator();
 		while (it.hasNext()) {
-			partnerPolicyRequest1 = it.next();
-			existing_policy_id = partnerPolicyRequest1.getPolicyId();
+			partnerPolicyRequest_obj = it.next();
+			existing_policy_id = partnerPolicyRequest_obj.getPolicyId();
 			
-			policy_map.put(partnerID, existing_policy_id);
+			policy_list.add(existing_policy_id);
 		}
-		System.out.println(policy_map);
-		Iterator<Map.Entry<String, String>> itr = policy_map.entrySet().iterator();
-		while(itr.hasNext()) {
-			Map.Entry<String, String> entry = itr.next();
-			if(entry.getValue().equals(policyGroup.getId())) {
+		
+		Iterator<String> it_policy = policy_list.iterator();
+		while (it_policy.hasNext()) {
+			
+			if(it_policy.next().equals(policyGroup.getId())) {
 				throw new PartnerAlreadyRegisteredWithSamePolicyGroupException(
 						PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP.getErrorCode(),
 						PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP.getErrorMessage());
@@ -581,4 +605,5 @@ public class PartnerServiceImpl implements PartnerService {
 		signUserResponse.setTimestamp(timestamp_value);
 		return signUserResponse;
 	}
+	
 }

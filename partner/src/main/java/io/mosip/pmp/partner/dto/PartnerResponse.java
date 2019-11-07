@@ -10,6 +10,6 @@ import lombok.Data;
 @Data
 public class PartnerResponse {
 	
-	public String partnerID;
+	public String partnerId;
 	public String status;
 }

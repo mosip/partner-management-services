@@ -13,7 +13,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -80,7 +79,7 @@ public class PartnerServiceControllerTest {
     public void updatePartnerDetailsTest() throws Exception{
     	String partnerId = "12345";
     	PartnerResponse response = new PartnerResponse();
-    	response.setPartnerID(partnerId);
+    	response.setPartnerId(partnerId);
     	response.setStatus("true");
     	
     	Mockito.when(partnerService.updatePartnerDetail(Mockito.any(), Mockito.any())).thenReturn(response);

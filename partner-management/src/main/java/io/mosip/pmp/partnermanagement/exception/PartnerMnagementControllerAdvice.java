@@ -1,7 +1,6 @@
 package io.mosip.pmp.partnermanagement.exception;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
