@@ -119,7 +119,7 @@ public class PartnerServiceImpl implements PartnerService {
 			policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
 			LocalDateTime now = LocalDateTime.now();
 			if (policyGroup != null) {
-				LOGGER.info(request.getPolicyGroup() + " : Policy Group is availavle for the partner");
+				LOGGER.info(request.getPolicyGroup() + " : Policy Group is available for the partner");
 				partner.setPolicyGroupId(policyGroup.getId());
 				partner.setName(request.getOrganizationName());
 				partner.setAddress(request.getAddress());
@@ -225,17 +225,40 @@ public class PartnerServiceImpl implements PartnerService {
 		if (findById.isPresent() && findById != null) {
 			LOGGER.info(partnerID +": Partner is available");
 			partner = findById.get();
-			partner.setAddress(request.getAddress());
-			partner.setContactNo(request.getContactNumber());
-			partner.setEmailId(request.getEmailId());
-			partner.setName(request.getOrganizationName());
-			LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
-			partnerRepository.save(partner);
+			if(partner.getName().equalsIgnoreCase(request.getOrganizationName())) {
+				partner.setAddress(request.getAddress());
+				partner.setContactNo(request.getContactNumber());
+				partner.setEmailId(request.getEmailId());
+				partner.setName(request.getOrganizationName());
+				LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
+				partnerRepository.save(partner);
+			}else {
+				LOGGER.info("++++++++++++++++Checking Name about duplicate/Unique++++++++++++++++++++++");
+				Partner findByName = partnerRepository.findByName(request.getOrganizationName());
+				
+				if(findByName == null) {
+					LOGGER.info(request.getOrganizationName() +" : this is Unique name");
+					partner.setAddress(request.getAddress());
+					partner.setContactNo(request.getContactNumber());
+					partner.setEmailId(request.getEmailId());
+					partner.setName(request.getOrganizationName());
+					LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
+					partnerRepository.save(partner);
+				}else {
+					LOGGER.info(request.getOrganizationName() +" : this is duplicate name");
+					throw new PartnerAlreadyRegisteredException(
+							PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
+							PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
+				}
+			}
+			
 			PartnerResponse partnerResponse = new PartnerResponse();
 			partnerResponse.setPartnerId(partner.getId());
 			Boolean bul = partner.getIsActive();
 			if (bul) {
 				partnerResponse.setStatus("Active");
+			}else {
+				partnerResponse.setStatus("De-Active");
 			}
 			return partnerResponse;
 		} else {
