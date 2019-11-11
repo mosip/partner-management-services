@@ -424,45 +424,45 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
-		LOGGER.info("++++++++++++++++++++++Creating Partner_API_Key+++++++++++++++++++++++++");
-		
-		LOGGER.info("Partner_API_Key should be unique for same partner");
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partner_id = partnerPolicyRequest.getPartner().getId();
-		PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partner_id);
-		
-		if(findByPartnerId!=null) {
-			LOGGER.info(partnerKeyReqId + " : this partnerKeyReqId already have PartnerAPIKey");
-		}else {
-			String Partner_API_Key = PartnerUtil.createPartnerApiKey(); 
- 			Optional<PartnerPolicy> detail_Partner_API_Key = partnerPolicyRepository.findById(Partner_API_Key);
-			if(detail_Partner_API_Key.isPresent()) {
-				LOGGER.info(Partner_API_Key + " : this is duplicate PartnerAPIKey");
+		if(request.getStatus().equalsIgnoreCase("Approved")) {
+			LOGGER.info("++++++++++++++++++++++Creating Partner_API_Key+++++++++++++++++++++++++");
+			LOGGER.info("Partner_API_Key should be unique for same partner");
+			PartnerPolicy partnerPolicy = new PartnerPolicy();
+			partner_id = partnerPolicyRequest.getPartner().getId();
+			PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partner_id);
+			
+			if(findByPartnerId!=null) {
+				LOGGER.info(partnerKeyReqId + " : this partnerKeyReqId already have PartnerAPIKey");
 			}else {
-				partnerPolicy.setPolicyApiKey(Partner_API_Key);
-				partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-				
-				LOGGER.info("+++++++++++++++++++++Need to check auth_policy_id++++++++++++++++++++++");
-				String policy_id = partnerPolicyRequest.getPolicyId();
-				
-				AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policy_id);
-				if(findByPolicyId == null) {
-					LOGGER.info(policy_id + "Invalied Policy Id");
+				String Partner_API_Key = PartnerUtil.createPartnerApiKey(); 
+	 			Optional<PartnerPolicy> detail_Partner_API_Key = partnerPolicyRepository.findById(Partner_API_Key);
+				if(detail_Partner_API_Key.isPresent()) {
+					LOGGER.info(Partner_API_Key + " : this is duplicate PartnerAPIKey");
+				}else {
+					partnerPolicy.setPolicyApiKey(Partner_API_Key);
+					partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
+					
+					LOGGER.info("+++++++++++++++++++++Need to check auth_policy_id++++++++++++++++++++++");
+					String policy_id = partnerPolicyRequest.getPolicyId();
+					
+					AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policy_id);
+					if(findByPolicyId == null) {
+						LOGGER.info(policy_id + "Invalied Policy Id");
+					}
+					
+					partnerPolicy.setPolicyId(findByPolicyId.getId());
+					partnerPolicy.setIsActive(true);
+					partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
+					partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
+					partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
+					partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
+					partnerPolicyRepository.save(partnerPolicy);
+					LOGGER.info(Partner_API_Key + " : APIKEY Successfully created");
 				}
-				
-				partnerPolicy.setPolicyId(findByPolicyId.getId());
-				partnerPolicy.setIsActive(true);
-				
-				partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
-				partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
-				partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
-				partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
-				
-				partnerPolicyRepository.save(partnerPolicy);
-				LOGGER.info(Partner_API_Key + " : APIKEY Successfully created");
 			}
 		}
-		partnersPolicyMappingResponse.setMessage("PartnerAPIKey approved successfully");
+		
+		partnersPolicyMappingResponse.setMessage("PartnerAPIKey Updated successfully");
 		return partnersPolicyMappingResponse;
 	}
 }

@@ -1,5 +1,7 @@
 package io.mosip.pmp.partner.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -26,7 +28,6 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
-import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
@@ -129,6 +130,13 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>>(response, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/findbypolicyname/{policyName}", method = RequestMethod.GET)
+	public ResponseEntity<String> retrievePolicyIdByPolicyName(
+			@PathVariable String policyName){
+		String policyId = null;
+		policyId = partnerService.getPolicyId(policyName);
+		return new ResponseEntity<String>(policyId, HttpStatus.OK);
+	}
 	
 	/**
 	 * This API would be used to update Auth/E-KYC Partner's details.
@@ -196,7 +204,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
 			@PathVariable String partnerID) {
 		ResponseWrapper<PartnersRetrieveApiKeyRequests> response = new ResponseWrapper<PartnersRetrieveApiKeyRequests>();
@@ -206,6 +214,19 @@ public class PartnerServiceController {
 		response.setVersion("1.0");
 		response.setResponse(partnersRetrieveApiKeyRequests);
 		return new ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>>(response, HttpStatus.OK);
+	}*/
+	
+	
+	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
+			@PathVariable String partnerID) {
+		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<List<APIkeyRequests>>();
+		List<APIkeyRequests> APIkeyRequests_list = null;
+		APIkeyRequests_list = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
+		response.setId("mosip.partnermanagement.partners.retrieve.apiKeyRequests");
+		response.setVersion("1.0");
+		response.setResponse(APIkeyRequests_list);
+		return new ResponseEntity<ResponseWrapper<List<APIkeyRequests>>>(response, HttpStatus.OK);
 	}
 
 	/**

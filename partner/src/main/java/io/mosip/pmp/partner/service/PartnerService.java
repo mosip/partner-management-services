@@ -1,5 +1,7 @@
 package io.mosip.pmp.partner.service;
 
+import java.util.List;
+
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
@@ -72,7 +74,10 @@ public interface PartnerService {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
 	
-	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
+	//public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
+	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
+	
+	public String getPolicyId(String PolicyName);
 	
 	/**
 	 * This method is used to view API key request status and API key (in case request is approved).

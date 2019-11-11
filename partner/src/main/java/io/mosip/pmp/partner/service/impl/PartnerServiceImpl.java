@@ -41,7 +41,6 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
-import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
@@ -104,6 +103,20 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	String response_cookies = null;
 	String signature_value = null;
+	
+	
+	@Override
+	public String getPolicyId(String PolicyName) {
+		
+		String policyId = null;
+		PolicyGroup policyGroup = policyGroupRepository.findByName(PolicyName);
+		if(policyGroup!=null) {
+			policyId = policyGroup.getId();
+		}else {
+			LOGGER.info("Invalied Policy Name : "+ PolicyName);
+		}
+		return policyId;
+	}
 	
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
@@ -221,7 +234,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		Partner partner = null;
-
+		LocalDateTime now = LocalDateTime.now(); 
 		if (findById.isPresent() && findById != null) {
 			LOGGER.info(partnerID +": Partner is available");
 			partner = findById.get();
@@ -230,6 +243,8 @@ public class PartnerServiceImpl implements PartnerService {
 				partner.setContactNo(request.getContactNumber());
 				partner.setEmailId(request.getEmailId());
 				partner.setName(request.getOrganizationName());
+				partner.setUpdBy("Partner Service");
+				partner.setUpdDtimes(Timestamp.valueOf(now));
 				LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
 				partnerRepository.save(partner);
 			}else {
@@ -242,6 +257,8 @@ public class PartnerServiceImpl implements PartnerService {
 					partner.setContactNo(request.getContactNumber());
 					partner.setEmailId(request.getEmailId());
 					partner.setName(request.getOrganizationName());
+					partner.setUpdBy("Partner Service");
+					partner.setUpdDtimes(Timestamp.valueOf(now));
 					LOGGER.info("++++++++++++++++Saving the updated Partner++++++++++++++++++++++");
 					partnerRepository.save(partner);
 				}else {
@@ -381,7 +398,7 @@ public class PartnerServiceImpl implements PartnerService {
 		return downloadPartnerAPIkeyResponse;
 	}
 
-	@Override
+	/*@Override
 	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
 
 		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
@@ -421,6 +438,46 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		return response;
+	}*/
+	
+	
+	@Override
+	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
+		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
+		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<APIkeyRequests>();
+		PartnerPolicyRequest partnerPolicyRequest = null;
+		if (!findByPartnerId.isEmpty() && findByPartnerId != null) {
+			
+			LOGGER.info(partnerID +" : Valied PartnerId");
+			LOGGER.info(findByPartnerId.size() +" : Number of recods found");
+			
+			Iterator<PartnerPolicyRequest> it = findByPartnerId.iterator();
+			while (it.hasNext()) {
+				partnerPolicyRequest = it.next();
+				if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase("approved")) {
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
+					
+					PartnerPolicy findByPartner_Id = partnerPolicyRepository.findByPartnerId(partnerID);
+					
+					approvedRequest.setPartnerApiKey(findByPartner_Id.getPolicyApiKey());
+					approvedRequest.setValidityTill(findByPartner_Id.getValidToDatetime());
+					listAPIkeyRequests.add(approvedRequest);
+				} else {
+					APIkeyRequests approvedRequest = new APIkeyRequests();
+					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
+					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
+					listAPIkeyRequests.add(approvedRequest);
+				}
+			}
+		} else {
+			LOGGER.info(partnerID +" : Invalied PartnerId");
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		return listAPIkeyRequests;
 	}
 
 	@Override
