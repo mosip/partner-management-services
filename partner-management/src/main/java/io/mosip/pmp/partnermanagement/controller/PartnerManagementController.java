@@ -85,7 +85,7 @@ public class PartnerManagementController {
 		partnersPolicyMappingResponse = partnerManagementService
 				.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerID, partnerAPIKey);
 		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.CREATED);
+		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -159,8 +159,6 @@ public class PartnerManagementController {
 		response.setResponse(partnersPolicyMappingResponse);
 		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
 	}
-	
-
 	
 	/** 
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
@@ -246,7 +244,6 @@ public class PartnerManagementController {
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
 			@PathVariable String APIKeyReqID) {
-		
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<ApikeyRequests>();
 		ApikeyRequests apikeyRequests=null;
 		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(APIKeyReqID);

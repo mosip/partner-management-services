@@ -183,7 +183,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	public PartnersPolicyMappingResponse activateDeactivatePartnerAPIKeyGivenPartner(String partnerID,
 			ActivateDeactivatePartnerRequest request, String partnerAPIKey) {
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(partnerAPIKey);
-
+		LocalDateTime now = LocalDateTime.now();
 		if (findById.isPresent() && findById != null) {
 			PartnerPolicy partnerPolicy = findById.get();
 			if (partnerPolicy.getPartner().getId().equals(partnerID)) {
@@ -200,6 +200,8 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
 							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage()); 
 				}
+				partnerPolicy.setUpdBy("Partner_Manager");
+				partnerPolicy.setUpdDtimes(Timestamp.valueOf(now));
 				partnerPolicyRepository.save(partnerPolicy);
 				LOGGER.info(partnerAPIKey + " : API KEY Status Updated Successfully");
 			} else {
@@ -227,24 +229,22 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		List<Partner> list_part = null;
 		list_part = partnerRepository.findAll();
 		Partner partner = null;
+		if(list_part == null) {
+			throw new PartnerDoesNotExistException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
 		Iterator<Partner> partner_iterat = list_part.iterator();
-
 		while (partner_iterat.hasNext()) {
 			RetrievePartnersDetails retrievePartnersDetails = new RetrievePartnersDetails();
 			partner = partner_iterat.next();
 
 			retrievePartnersDetails.setPartnerID(partner.getId());
-			if(partner.getIsActive()) {
-				retrievePartnersDetails.setStatus("Active");
-			}else {
-				retrievePartnersDetails.setStatus("De-Active");
-			}
-			//retrievePartnersDetails.setStatus(partner.getIsActive()== true ? "Active" : "De-Active");
+			retrievePartnersDetails.setStatus(partner.getIsActive()== true ? "Active" : "De-Active");
 			retrievePartnersDetails.setOrganizationName(partner.getName());
 			retrievePartnersDetails.setContactNumber(partner.getContactNo());
 			retrievePartnersDetails.setEmailId(partner.getEmailId());
 			retrievePartnersDetails.setAddress(partner.getAddress());
-
 			partners.add(retrievePartnersDetails);
 		}
 		partnersResponse.setPartners(partners);
@@ -259,11 +259,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			Partner partner = findById.get();
 
 			retrievePartnersDetails.setPartnerID(partner.getId());
-			if(partner.getIsActive()) {
-				retrievePartnersDetails.setStatus("Active");
-			}else {
-				retrievePartnersDetails.setStatus("De-Active");
-			}
+			retrievePartnersDetails.setStatus(partner.getIsActive()== true ? "Active" : "De-Active");
 			retrievePartnersDetails.setOrganizationName(partner.getName());
 			retrievePartnersDetails.setContactNumber(partner.getContactNo());
 			retrievePartnersDetails.setEmailId(partner.getEmailId());
@@ -461,7 +457,6 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				}
 			}
 		}
-		
 		partnersPolicyMappingResponse.setMessage("PartnerAPIKey Updated successfully");
 		return partnersPolicyMappingResponse;
 	}

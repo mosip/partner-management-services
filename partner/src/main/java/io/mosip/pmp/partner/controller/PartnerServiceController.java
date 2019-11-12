@@ -28,6 +28,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
+import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
@@ -120,7 +121,6 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/findbyname/{partnerName}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>> retrievePartnerDetailsWithName(
 			@PathVariable String partnerName) {
-		//TODO
 		ResponseWrapper<RetrievePartnerDetailsWithNameResponse> response = new ResponseWrapper<RetrievePartnerDetailsWithNameResponse>();
 		RetrievePartnerDetailsWithNameResponse retrievePartnerDetailsWithNameResponse = null;
 		retrievePartnerDetailsWithNameResponse = partnerService.getPartnerDetailsWithName(partnerName);
@@ -129,13 +129,17 @@ public class PartnerServiceController {
 		response.setResponse(retrievePartnerDetailsWithNameResponse);
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>>(response, HttpStatus.OK);
 	}
-
+	
 	@RequestMapping(value = "/findbypolicyname/{policyName}", method = RequestMethod.GET)
-	public ResponseEntity<String> retrievePolicyIdByPolicyName(
+	public ResponseEntity<ResponseWrapper<PolicyIdResponse>> retrievePolicyIdByPolicyName(
 			@PathVariable String policyName){
-		String policyId = null;
-		policyId = partnerService.getPolicyId(policyName);
-		return new ResponseEntity<String>(policyId, HttpStatus.OK);
+		ResponseWrapper<PolicyIdResponse> response = new ResponseWrapper<PolicyIdResponse>();
+		PolicyIdResponse policyIdResponse = null;
+		policyIdResponse = partnerService.getPolicyId(policyName);
+		response.setId("mosip.partnermanagement.partners.policy");
+		response.setVersion("1.0");
+		response.setResponse(policyIdResponse);
+		return new ResponseEntity<ResponseWrapper<PolicyIdResponse>>(response, HttpStatus.OK);
 	}
 	
 	/**

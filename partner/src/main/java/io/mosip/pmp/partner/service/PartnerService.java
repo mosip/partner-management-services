@@ -14,7 +14,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
-import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
+import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
@@ -77,7 +77,7 @@ public interface PartnerService {
 	//public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	
-	public String getPolicyId(String PolicyName);
+	public PolicyIdResponse getPolicyId(String PolicyName);
 	
 	/**
 	 * This method is used to view API key request status and API key (in case request is approved).

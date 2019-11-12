@@ -41,6 +41,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
+import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
@@ -106,16 +107,16 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	
 	@Override
-	public String getPolicyId(String PolicyName) {
+	public PolicyIdResponse getPolicyId(String PolicyName) {
 		
-		String policyId = null;
+		PolicyIdResponse policyIdResponse = new PolicyIdResponse();
 		PolicyGroup policyGroup = policyGroupRepository.findByName(PolicyName);
 		if(policyGroup!=null) {
-			policyId = policyGroup.getId();
+			policyIdResponse.setPolicyId(policyGroup.getId());
 		}else {
 			LOGGER.info("Invalied Policy Name : "+ PolicyName);
 		}
-		return policyId;
+		return policyIdResponse;
 	}
 	
 	@Override
@@ -439,7 +440,6 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		return response;
 	}*/
-	
 	
 	@Override
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
