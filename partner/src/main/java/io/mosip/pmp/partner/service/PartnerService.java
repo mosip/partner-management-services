@@ -42,6 +42,11 @@ public interface PartnerService {
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
 	
 	
+	/**
+	 * This API would be used to retrieve Partner details by Partner Name
+	 * @param partnerName this is unique Partner Name
+	 * @return retrievePartnerDetailsWithNameResponse this class contains partner details
+	 */
 	public RetrievePartnerDetailsWithNameResponse getPartnerDetailsWithName(String partnerName);
 	
 	/**This method is used to update Auth/E-KYC Partner's details
@@ -73,10 +78,14 @@ public interface PartnerService {
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
-	
 	//public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID);
 	
+	/**
+	 * This API would be used to retrieve Policy details by Policy Name
+	 * @param PolicyName this is unique Policy Name
+	 * @return PolicyIdResponse this class contains PolicyId
+	 */
 	public PolicyIdResponse getPolicyId(String PolicyName);
 	
 	/**

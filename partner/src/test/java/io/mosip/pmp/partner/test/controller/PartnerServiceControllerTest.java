@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDateTime;	
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class PartnerServiceControllerTest {
         RequestWrapper<PartnerRequest> request = createRequest();
 
         mockMvc.perform(post("/partners/partnerReg").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request))).andExpect(status().isCreated());
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class PartnerServiceControllerTest {
     	RequestWrapper<PartnerAPIKeyRequest> request = createSubmitPartnerApiKeyRequest();
     	
     	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
-                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isCreated());
+                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
     @Test
@@ -134,7 +134,7 @@ public class PartnerServiceControllerTest {
     	list_aPIkeyRequests.add(aPIkeyRequests);
 		response.setAPIkeyRequests(list_aPIkeyRequests);
 		
-       Mockito.when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(response);
+       Mockito.when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(list_aPIkeyRequests);
        mockMvc.perform(MockMvcRequestBuilders.get("/partners/partnerId/partnerAPIKeyRequests")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     

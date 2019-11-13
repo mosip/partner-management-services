@@ -107,7 +107,6 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerID}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerID) {
-
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<RetrievePartnerDetailsResponse>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerID);
@@ -117,6 +116,12 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * This API would be used to retrieve Partner details by Partner Name
+	 * @param partnerName this is unique Partner Name
+	 * @return retrievePartnerDetailsWithNameResponse this class contains partner details
+	 */
 	
 	@RequestMapping(value = "/findbyname/{partnerName}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>> retrievePartnerDetailsWithName(
@@ -130,6 +135,11 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 *  This API would be used to retrieve Policy details by Policy Name
+	 * @param policyName this is unique Policy Name 
+	 * @return policyIdResponse this class contains PolicyId
+	 */
 	@RequestMapping(value = "/findbypolicyname/{policyName}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PolicyIdResponse>> retrievePolicyIdByPolicyName(
 			@PathVariable String policyName){
