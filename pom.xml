@@ -18,7 +18,7 @@
 	
 	<properties>
 		<pmp.core.version>1.0.0</pmp.core.version>
-		<kernel.version>0.12.18</kernel.version>
+		<kernel.version>0.9.1</kernel.version>
 	</properties>
 	
     <modules>
