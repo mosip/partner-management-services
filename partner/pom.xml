@@ -47,9 +47,9 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-keymanager-service</artifactId> 
-			<version>0.12.18</version> </dependency> -->
+			<version>${kernel.version}</version> </dependency> -->
 		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-signature-service</artifactId> 
-			<version>0.12.18</version> </dependency> -->
+			<version>${kernel.version}</version> </dependency> -->
 	</dependencies>
 
 	<build>

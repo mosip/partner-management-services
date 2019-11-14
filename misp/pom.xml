@@ -59,7 +59,8 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-mispid</artifactId>
-			<version>0.12.18</version>
+			<version>${kernel.version}</version>
+			
 			<!-- <exclusions> <exclusion> </exclusion> </exclusions> -->
 		</dependency>
 		<dependency>
@@ -71,7 +72,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-licensekeygenerator-misp</artifactId>
-			<version>0.12.18</version>
+			<version>${kernel.version}</version>
 		</dependency>
 	</dependencies>
 

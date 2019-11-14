@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>0.12.18</version>
+			<version>${kernel.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
