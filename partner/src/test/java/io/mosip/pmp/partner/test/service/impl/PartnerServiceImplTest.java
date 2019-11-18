@@ -2,8 +2,9 @@ package io.mosip.pmp.partner.test.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
@@ -37,7 +39,7 @@ import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
-import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
+import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
@@ -80,36 +82,101 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
 
 	}
+	
+	@Test
+	public void getPartnerDetailsWithName_Test(){
+		RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
+		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<PolicyGroup> findByIdpolicyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Partner par = partner.get();
+		PolicyGroup policyGroup = findByIdpolicyGroup.get();
+		
+		response.setId(par.getId());
+		response.setAddress(par.getAddress());
+		response.setContactNo(par.getContactNo());
+		response.setCrBy(par.getCrBy());
+		response.setCrDtimes(par.getCrDtimes());
+		response.setEmailId(par.getEmailId());
+		response.setIsActive(par.getIsActive());
+		response.setName(par.getName());
+		response.setUpdBy(par.getUpdBy());
+		response.setUpdDtimes(par.getUpdDtimes());
+		response.setUserId(par.getUserId());
+		
+		Mockito.when(partnerRepository.findByName(par.getName())).thenReturn(par);
+		Mockito.when(policyGroupRepository.findById(par.getPolicyGroupId())).thenReturn(findByIdpolicyGroup);
+		response.setPolicyGroupName(policyGroup.getName());
+		pserviceImpl.getPartnerDetailsWithName(par.getName());
+	}
+	
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void getPartnerDetailsWithName_Null_Test(){
+		RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
+		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<PolicyGroup> findByIdpolicyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Partner par = partner.get();
+		PolicyGroup policyGroup = findByIdpolicyGroup.get();
+		
+		response.setId(par.getId());
+		response.setAddress(par.getAddress());
+		response.setContactNo(par.getContactNo());
+		response.setCrBy(par.getCrBy());
+		response.setCrDtimes(par.getCrDtimes());
+		response.setEmailId(par.getEmailId());
+		response.setIsActive(par.getIsActive());
+		response.setName(par.getName());
+		response.setUpdBy(par.getUpdBy());
+		response.setUpdDtimes(par.getUpdDtimes());
+		response.setUserId(par.getUserId());
+		
+		Mockito.when(partnerRepository.findByName(par.getName())).thenReturn(null);
+		Mockito.when(policyGroupRepository.findById(par.getPolicyGroupId())).thenReturn(findByIdpolicyGroup);
+		response.setPolicyGroupName(policyGroup.getName());
+		pserviceImpl.getPartnerDetailsWithName(par.getName());
+	}
+	
+	@Test
+	public void getPolicyId_Test(){
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
+		Mockito.when(policyGroupRepository.findByName(policyGroup.getName())).thenReturn(policyGroup);
+		pserviceImpl.getPolicyId(policyGroup.getName());
+	}
+	
 
-	/*@Test
+	@Test
+	public void getPolicyId_Null_Test(){
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
+		Mockito.when(policyGroupRepository.findByName(policyGroup.getName())).thenReturn(null);
+		pserviceImpl.getPolicyId(policyGroup.getName());
+	}
+
+	@Test
 	public void savePartnerTest() {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
 		PartnerRequest partnerRequest = createPartnerRequest();
-		List<Partner> list = new ArrayList<>();
+		Partner partner = new Partner();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
-		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(list);
+		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
 		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
 		assertNotNull(savePartner);
 
-	}*/
+	}
 
 	@Test(expected = PolicyGroupDoesNotExistException.class)
 	public void throwExceptionWhenPartnerPolicyGroupIsNullTest() {
 		PartnerRequest partnerRequest = createPartnerRequest();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
 		pserviceImpl.savePartner(partnerRequest);
-
 	}
 
-	/*@Test(expected = PartnerAlreadyRegisteredException.class)
+	@Test(expected = PartnerAlreadyRegisteredException.class)
 	public void throwExceptionWhenPartnerNameAlreadyRegisteredTest() {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
-		Mockito.when(partnerRepository.findByName(Mockito.anyString())).thenReturn(createlistOfPartner(new Partner()));
+		Mockito.when(partnerRepository.findByName(Mockito.anyString())).thenReturn(new Partner());
 		pserviceImpl.savePartner(partnerRequest);
-
-	}*/
+	}
 
 	/*@Test
 	public void savePartnerWhenPartnerListIsEmptyTest() {
@@ -145,6 +212,7 @@ public class PartnerServiceImplTest {
 	public void updatePartnerDetailsTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
@@ -164,13 +232,13 @@ public class PartnerServiceImplTest {
 		assertNull(updatePartnerDetail.getStatus());
 	}*/
 
-	@Test(expected = PartnerDoesNotExistException.class)
+	/*@Test(expected = PartnerAlreadyRegisteredException.class)
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
-	}
+	}*/
 
 	@Test
 	public void submitPartnerApiKeyReqTest() {
@@ -378,6 +446,7 @@ public class PartnerServiceImplTest {
 	}
 
 	private Partner createPartner(Boolean isActive) {
+		LocalDateTime now = LocalDateTime.now();
 		Partner partner = new Partner();
 		partner.setId("id");
 		partner.setAddress("address");
@@ -386,13 +455,9 @@ public class PartnerServiceImplTest {
 		partner.setName("name");
 		partner.setPolicyGroupId("policyGroupId");
 		partner.setIsActive(isActive);
+		partner.setUpdBy("Partner Service");
+		partner.setUpdDtimes(Timestamp.valueOf(now));
 		return partner;
-	}
-
-	private List<Partner> createlistOfPartner(Partner partner) {
-		List<Partner> list = new ArrayList<>();
-		list.add(partner);
-		return list;
 	}
 
 	private PartnerRequest createPartnerRequest() {

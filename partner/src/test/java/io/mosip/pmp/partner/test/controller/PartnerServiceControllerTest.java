@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;	
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -39,7 +39,9 @@ import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
+import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
  
@@ -57,6 +59,11 @@ public class PartnerServiceControllerTest {
     private PartnerService partnerService;
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Test
+    public void test_Test() throws Exception{
+    	 mockMvc.perform(MockMvcRequestBuilders.get("/partners/test")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
     @Test
     public void partnerSelfRegistrationTest() throws Exception {
@@ -73,6 +80,20 @@ public class PartnerServiceControllerTest {
         RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
         Mockito.when(partnerService.getPartnerDetails("12345")).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test
+    public void retrievePartnerDetailsWithName_Test()throws Exception{
+    	 RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
+         Mockito.when(partnerService.getPartnerDetailsWithName("Airtel")).thenReturn(response);
+         mockMvc.perform(MockMvcRequestBuilders.get("/partners/findbyname/Airtel")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test
+    public void retrievePolicyIdByPolicyName_Test() throws Exception{
+    	PolicyIdResponse response = new PolicyIdResponse();
+        Mockito.when(partnerService.getPolicyId("Banking")).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/findbypolicyname/Banking")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
@@ -139,8 +160,42 @@ public class PartnerServiceControllerTest {
     }
     
     @Test
-    public void viewApiKeyRequestStatusAndApiKeyTest(){
+    public void viewApiKeyRequestStatusAndApiKey_Test() throws Exception{
+    	APIkeyRequests response = new APIkeyRequests();
+        Mockito.when(partnerService.viewApiKeyRequestStatusApiKey("12345","123456")).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    /*@Test
+    public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
+    	DigitalCertificateResponse response = new DigitalCertificateResponse();
+    	response.setMessage("DigitalCertificateResponse");
+    	Mockito.when(partnerService.validateDigitalCertificate(Mockito.any())).thenReturn(response);
+    	RequestWrapper<PartnerUpdateRequest> request = createvalidateDigitalCertificateRequest();
     	
+    	mockMvc.perform(put("/partners/validatedigitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk())
+    	        .andExpect(jsonPath("$.response.[status]", is("true")));
+    }*/
+    
+    public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
+    	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
+    	
+    	
+    	PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
+    	
+    	partnerUpdateRequest.setAddress("Bangalore");
+    	partnerUpdateRequest.setContactNumber("45678678");
+    	partnerUpdateRequest.setEmailId("abc@gmail.com");
+    	partnerUpdateRequest.setOrganizationName("Mosip");
+    	
+    	
+    	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
+    	request.setMetadata("{}");
+    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+    	request.setVersion("1.0");
+    	request.setRequest(partnerUpdateRequest);
+    	return request;
     }
     
     private RequestWrapper<PartnerAPIKeyRequest> createSubmitPartnerApiKeyRequest(){
@@ -152,6 +207,7 @@ public class PartnerServiceControllerTest {
     	request.setVersion("1.0");
     	return request;
     }
+    
     
     private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
     	PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();

@@ -81,7 +81,7 @@ public class PartnerServiceController {
 	 * @return response this class contains partner response
 	 */
 
-	@RequestMapping(value = "partnerReg", method = RequestMethod.POST)
+	@RequestMapping(value = "/partnerReg", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
 		LOGGER.info("+++++++++++++++++partner self registration++++++++++++++++++++");
@@ -200,12 +200,12 @@ public class PartnerServiceController {
 	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{aPIKeyReqID}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> downloadPartnerAPIkey(
-			@PathVariable String partnerID, @PathVariable String aPIKeyReqID) {
+			@PathVariable String partnerID, @PathVariable String APIKeyReqID) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<DownloadPartnerAPIkeyResponse>();
 		DownloadPartnerAPIkeyResponse resp = null;
-		resp = partnerService.downloadPartnerAPIkey(partnerID, aPIKeyReqID);
+		resp = partnerService.downloadPartnerAPIkey(partnerID, APIKeyReqID);
 		response.setId("mosip.partnermanagement.partnerAPIKey.download");
 		response.setVersion("1.0");
 		response.setResponse(resp);
@@ -250,12 +250,12 @@ public class PartnerServiceController {
 	 * @return response this class contains partnerApiKey apiKeyRequestStatus and validity details 
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{aPIKeyReqID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<APIkeyRequests>> viewApiKeyRequestStatusAndApiKey(
-			@PathVariable String partnerID, @PathVariable String aPIKeyReqID) {
+			@PathVariable String partnerID, @PathVariable String APIKeyReqID) {
 		ResponseWrapper<APIkeyRequests> response = new ResponseWrapper<APIkeyRequests>();
 		APIkeyRequests aPIkeyRequests = null;
-		aPIkeyRequests = partnerService.viewApiKeyRequestStatusApiKey(partnerID, aPIKeyReqID);
+		aPIkeyRequests = partnerService.viewApiKeyRequestStatusApiKey(partnerID, APIKeyReqID);
 		response.setId("mosip.partnermanagement.partners.apikey.status");
 		response.setVersion("1.0");
 		response.setResponse(aPIkeyRequests);
