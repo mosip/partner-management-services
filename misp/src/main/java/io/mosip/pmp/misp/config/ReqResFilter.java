@@ -19,12 +19,11 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
  * @version 1.0
  *
  */
+
 public class ReqResFilter implements Filter {
 
-	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// init method overriding
 	}
 
 	/**
@@ -51,14 +50,13 @@ public class ReqResFilter implements Filter {
 		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
 		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
 		
-		chain.doFilter(requestWrapper, responseWrapper);
+		//MispLogger.info("Request : " + request.getReader().lines().collect(Collectors.joining(System.lineSeparator())));
 		
-
+		chain.doFilter(requestWrapper, responseWrapper);
 		responseWrapper.copyBodyToResponse();
 	}
 
 	@Override
 	public void destroy() {
-		// Auto-generated method stub
 	}	
 }

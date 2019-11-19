@@ -32,6 +32,7 @@ import io.mosip.pmp.misp.entity.MISPEntity;
 import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
+import io.mosip.pmp.misp.utils.MispLogger;
 import io.swagger.annotations.Api;
 
 /**
@@ -77,10 +78,13 @@ public class MispController {
 	public ResponseWrapper<MISPCreateResponseDto> registerMISP(@RequestBody @Valid RequestWrapper<MISPCreateRequestDto> mispCreateRequestDto)
 			throws Exception{		
 
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPCreateResponseDto> response = mispManagementService.createMISP(mispCreateRequestDto.getRequest());
 		
 		response.setId(mispCreateRequestDto.getId());
 		response.setVersion(mispCreateRequestDto.getVersion());
+		
+		MispLogger.info("Returning misp registration response from MispController.");
 		
 		return response;
 	}
@@ -97,6 +101,8 @@ public class MispController {
 	public ResponseWrapper<MISPUpdateResponseDto> updateMISP(@RequestBody @Valid RequestWrapper<MISPUpdateRequestDto> mispUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
+		
 		MISPUpdateRequestDto updateRequest = mispUpdateRequestDto.getRequest(); 
 		updateRequest.setMispID(mispId);
 		
@@ -104,7 +110,7 @@ public class MispController {
 
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
-		
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 		
@@ -124,6 +130,7 @@ public class MispController {
 			@PathVariable String mispId) throws Exception
 	{
 		
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPValidatelKeyResponseDto> response = new ResponseWrapper<>();
 		
 		MISPValidatelKeyResponseDto message = new MISPValidatelKeyResponseDto();
@@ -136,7 +143,7 @@ public class MispController {
 		response.setResponse(message);
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 		
@@ -152,6 +159,7 @@ public class MispController {
 	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(@RequestBody RequestWrapper<MISPStatusUpdateRequestDto> mispStatusUpdateRequestDto,
 			@PathVariable String mispId) throws Exception
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		MISPStatusUpdateRequestDto requestDto = mispStatusUpdateRequestDto.getRequest();
 		
 		requestDto.setMispId(mispId);
@@ -159,7 +167,7 @@ public class MispController {
 		
 		response.setId(mispStatusUpdateRequestDto.getId());
 		response.setVersion(mispStatusUpdateRequestDto.getVersion());
-		
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 	
@@ -174,6 +182,7 @@ public class MispController {
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMISPlKeyStatus(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId)
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();
 		
 		request.setMispId(mispId);
@@ -182,7 +191,7 @@ public class MispController {
 		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 	
@@ -195,6 +204,7 @@ public class MispController {
 	@GetMapping(value = "/misps")
 	public ResponseWrapper<MISPGroupResponseDto> getAllMISPDetails()
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPGroupResponseDto> response = new ResponseWrapper<>();
 		MISPGroupResponseDto responseDto = new MISPGroupResponseDto();		
 		List<MISPEntity> mispDetails =  new ArrayList<MISPEntity>();
@@ -203,7 +213,7 @@ public class MispController {
 		
 		responseDto.setMispList(mispDetails);		
 		response.setResponse(responseDto);
-		
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 	
@@ -216,13 +226,14 @@ public class MispController {
 	@GetMapping(value = "/misps/{mispId}")
 	public ResponseWrapper<MISPEntity> getMISPDeatils(@PathVariable String mispId)
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPEntity> response = new ResponseWrapper<>();
 		MISPEntity mispDetails =  new MISPEntity();
 		
 		mispDetails = mispManagementService.getMISPDeatils(mispId);
 		
 		response.setResponse(mispDetails);
-		
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 	
@@ -235,6 +246,7 @@ public class MispController {
 	@GetMapping(value ="/misps/misp/{orgName}")
 	public List<MISPEntity> getOrgWiseMISPDeatils(@PathVariable String orgName )
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		return mispManagementService.getMispsByOrganization(orgName);
 	}
 	
@@ -252,6 +264,7 @@ public class MispController {
 	public ResponseWrapper<MISPLiceneseDto> downloadMispLicenseKey(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId)
 	{
+		MispLogger.info("Calling MISPManagementService from MispController.");
 		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();
 		
 		request.setMispId(mispId);
@@ -260,7 +273,7 @@ public class MispController {
 		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-
+		MispLogger.info("Returning misp registration response from MispController.");
 		return response;
 	}
 

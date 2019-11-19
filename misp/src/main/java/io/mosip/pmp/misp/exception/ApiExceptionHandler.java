@@ -29,6 +29,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pmp.misp.utils.MispLogger;
 
 
 /**
@@ -57,6 +58,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         FieldError fieldError = fieldErrors.get(0);		
         ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
         		ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + fieldError.getField());
+        MispLogger.error(serviceError.getErrorCode(), serviceError.getMessage());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
 			errorResponse = setErrors(request);
@@ -113,9 +115,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(HttpServletRequest httpServletRequest,
 			Exception exception) throws IOException {
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
-		ServiceError error = new ServiceError(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+		ServiceError serviceError = new ServiceError(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
 				ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		errorResponse.getErrors().add(error);
+		MispLogger.error(serviceError.getErrorCode(), serviceError.getMessage());
+		errorResponse.getErrors().add(serviceError);
 		ExceptionUtils.logRootCause(exception);
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -142,6 +145,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		JsonNode reqNode = objectMapper.readTree(requestBody);
 		responseWrapper.setId(reqNode.path("id").asText());
 		responseWrapper.setVersion(reqNode.path("version").asText());
+		MispLogger.info("Response " + responseWrapper.getResponse());
+		
 		return responseWrapper;
 	}
 
