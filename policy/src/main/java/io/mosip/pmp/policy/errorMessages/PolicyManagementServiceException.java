@@ -21,17 +21,19 @@ public class PolicyManagementServiceException extends BaseUncheckedException {
 
 	public PolicyManagementServiceException(String errorCode, String errorMessage, Throwable cause) {
 		super(errorCode, errorMessage, cause);
+		PolicyServiceLogger.error(errorCode,errorMessage);
+		PolicyServiceLogger.error(cause.getMessage());
 		
 	}
 
 	public PolicyManagementServiceException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
-		
+		PolicyServiceLogger.error(errorCode,errorMessage);
 	}
 
 	public PolicyManagementServiceException(String errorMessage) {
 		super(errorMessage);
-		
+		PolicyServiceLogger.error(errorMessage);
 	}
 	
 }

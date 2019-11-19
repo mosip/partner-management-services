@@ -110,7 +110,7 @@ public class MispController {
 
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp registration response from MispController.");
+		MispLogger.info("Returning misp update response from MispController.");
 		return response;
 	}
 		
@@ -143,7 +143,7 @@ public class MispController {
 		response.setResponse(message);
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp registration response from MispController.");
+		MispLogger.info("Returning misp validate licensekey response from MispController.");
 		return response;
 	}
 		
@@ -167,7 +167,7 @@ public class MispController {
 		
 		response.setId(mispStatusUpdateRequestDto.getId());
 		response.setVersion(mispStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp registration response from MispController.");
+		MispLogger.info("Returning update misp status response from MispController.");
 		return response;
 	}
 	
@@ -191,7 +191,7 @@ public class MispController {
 		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp registration response from MispController.");
+		MispLogger.info("Returning update misp license key status update response from MispController.");
 		return response;
 	}
 	
@@ -213,7 +213,7 @@ public class MispController {
 		
 		responseDto.setMispList(mispDetails);		
 		response.setResponse(responseDto);
-		MispLogger.info("Returning misp registration response from MispController.");
+		
 		return response;
 	}
 	
@@ -233,7 +233,7 @@ public class MispController {
 		mispDetails = mispManagementService.getMISPDeatils(mispId);
 		
 		response.setResponse(mispDetails);
-		MispLogger.info("Returning misp registration response from MispController.");
+		
 		return response;
 	}
 	
@@ -273,7 +273,7 @@ public class MispController {
 		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp registration response from MispController.");
+		
 		return response;
 	}
 
