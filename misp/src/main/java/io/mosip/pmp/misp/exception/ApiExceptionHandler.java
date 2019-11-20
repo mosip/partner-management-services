@@ -137,6 +137,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		if (httpServletRequest instanceof ContentCachingRequestWrapper) {
 			requestBody = new String(((ContentCachingRequestWrapper) httpServletRequest).getContentAsByteArray());
 		}
+		
+		if (httpServletRequest instanceof ContentCachingRequestWrapper) {
+			requestBody = new String(((ContentCachingRequestWrapper) httpServletRequest).getContentAsByteArray());
+		}
+		
 		if (EmptyCheckUtils.isNullEmpty(requestBody)) {			
 			return responseWrapper;
 		}		

@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import io.mosip.pmp.misp.utils.MispLogger;
+
 /**
  * @author Nagarjuna Kuchi
  * @version 1.0
@@ -32,9 +34,13 @@ public class ReqResFilter implements Filter {
 	 *  Filter to pass on the request and response to the next entity in the chain.
 	 *    
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		
+		RequestWrapper myRequestWrapper = new RequestWrapper((HttpServletRequest) request);
+		ResponseWrapper myResponseWrapper = new ResponseWrapper((HttpServletResponse)response);
 		
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -50,9 +56,14 @@ public class ReqResFilter implements Filter {
 		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
 		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
 		
-		//MispLogger.info("Request : " + request.getReader().lines().collect(Collectors.joining(System.lineSeparator())));
+		MispLogger.info("ClientIP : " + myRequestWrapper.getRemoteHost() + " clientPort : " + request.getRemotePort() + "Uri :" +myRequestWrapper.getRequestURI());
+		MispLogger.info("RequestBody: " + myRequestWrapper.getBody());
 		
-		chain.doFilter(requestWrapper, responseWrapper);
+		chain.doFilter(myRequestWrapper, responseWrapper);
+//		byte[] bytes = myResponseWrapper.getByteArray();
+//
+//		myResponseWrapper.getOutputStream().write(bytes);
+		
 		responseWrapper.copyBodyToResponse();
 	}
 
