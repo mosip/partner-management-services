@@ -1,13 +1,16 @@
 package io.mosip.pmp.partner.service.impl;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,7 @@ import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequestPreparation;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequestPreparationWithPublicKey;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
@@ -74,6 +78,7 @@ import io.mosip.pmp.partner.util.PartnerUtil;
 
 @Service
 @Transactional
+@SuppressWarnings({"rawtypes", "unchecked" , "unused"})
 public class PartnerServiceImpl implements PartnerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
@@ -96,15 +101,11 @@ public class PartnerServiceImpl implements PartnerService {
 	//@Autowired
 	//PartnerIdGenerator<String>  partnerIdGenerator;
 	
-	//@Autowired
-	//KeymanagerService keymanagerService;
-	
 	@Autowired
 	RestTemplate restTemplate;
 	
 	String response_cookies = null;
 	String signature_value = null;
-	
 	
 	@Override
 	public PolicyIdResponse getPolicyId(String PolicyName) {
@@ -399,47 +400,6 @@ public class PartnerServiceImpl implements PartnerService {
 		return downloadPartnerAPIkeyResponse;
 	}
 
-	/*@Override
-	public PartnersRetrieveApiKeyRequests retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
-
-		List<PartnerPolicyRequest> findByPartnerId = partnerPolicyRequestRepository.findByPartnerId(partnerID);
-		PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
-		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<APIkeyRequests>();
-		PartnerPolicyRequest partnerPolicyRequest = null;
-		if (!findByPartnerId.isEmpty() && findByPartnerId != null) {
-			
-			LOGGER.info(partnerID +" : Valied PartnerId");
-			LOGGER.info(findByPartnerId.size() +" : Number of recods found");
-			
-			Iterator<PartnerPolicyRequest> it = findByPartnerId.iterator();
-			while (it.hasNext()) {
-				partnerPolicyRequest = it.next();
-				if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase("approved")) {
-					APIkeyRequests approvedRequest = new APIkeyRequests();
-					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
-					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
-					
-					PartnerPolicy findByPartner_Id = partnerPolicyRepository.findByPartnerId(partnerID);
-					
-					approvedRequest.setPartnerApiKey(findByPartner_Id.getPolicyApiKey());
-					approvedRequest.setValidityTill(findByPartner_Id.getValidToDatetime());
-					listAPIkeyRequests.add(approvedRequest);
-				} else {
-					APIkeyRequests approvedRequest = new APIkeyRequests();
-					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
-					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
-					listAPIkeyRequests.add(approvedRequest);
-				}
-				response.setAPIkeyRequests(listAPIkeyRequests);
-			}
-		} else {
-			LOGGER.info(partnerID +" : Invalied PartnerId");
-			throw new PartnerDoesNotExistsException(
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		return response;
-	}*/
 	
 	@Override
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerID) {
@@ -528,19 +488,19 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		LOGGER.info("Request Preparation for DigitalCertificate");
 		
-		LocalDateTime now = LocalDateTime.now();
-		DigitalCertificateRequestPreparation digitalCertificateRequestPreparation = new DigitalCertificateRequestPreparation();
-		digitalCertificateRequestPreparation.setData(request.getRequest().getPartnerCertificate());
-		digitalCertificateRequestPreparation.setSignature(signature_value);
-		digitalCertificateRequestPreparation.setTimestamp(Timestamp.valueOf(now));
-		RequestWrapper<DigitalCertificateRequestPreparation> digital_request = new RequestWrapper<DigitalCertificateRequestPreparation>();
+		//LocalDateTime now = LocalDateTime.now();
+		DigitalCertificateRequestPreparationWithPublicKey digitalCertificateRequestPreparationWithPublicKey 
+			= new DigitalCertificateRequestPreparationWithPublicKey();
+		digitalCertificateRequestPreparationWithPublicKey.setData(request.getRequest().getPartnerCertificate());
+		digitalCertificateRequestPreparationWithPublicKey.setSignature(signature_value);
+		digitalCertificateRequestPreparationWithPublicKey.setPublickey(getPublicKey("KERNEL"));
+		RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey> digital_request = new RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey>();
 		digital_request.setId(request.getId());
 		digital_request.setMetadata(request.getMetadata());
 		digital_request.setVersion(request.getVersion());
 		digital_request.setRequesttime(request.getRequesttime());
-		digital_request.setRequest(digitalCertificateRequestPreparation);
+		digital_request.setRequest(digitalCertificateRequestPreparationWithPublicKey);
 		
-		System.out.println(digital_request.toString());
 		
 		ResponseEntity<Map> response = null;
 
@@ -548,9 +508,8 @@ public class PartnerServiceImpl implements PartnerService {
 		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
 		restTemplate.setInterceptors(interceptors);
 		
-		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/validate";
-		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparation>> certificate_entity = new HttpEntity<>(digital_request);
-		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey>> certificate_entity = new HttpEntity<>(digital_request);
+		response = restTemplate.postForEntity(getURL("SIGNATURE_PUBLIC_KEY"), certificate_entity, Map.class);
 		Map map = response.getBody();
 		
 		Object response_map = null;
@@ -582,40 +541,89 @@ public class PartnerServiceImpl implements PartnerService {
 		return digitalCertificateResponse;
 	}
 
-	/*@Override
-	public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request) {
-		DigitalCertificateResponse response = new DigitalCertificateResponse();
-
-		//TODO
-		// doing sign-in using "kernel-keymanager-service"
-
-		ResponseEntity<SignatureResponseDto> validate_result = null;
-		SignatureRequestDto signatureRequestDto = new SignatureRequestDto();
-		signatureRequestDto.setData(request.getPartnerCertificate());
-		signatureRequestDto.setApplicationId("REGISTRATION");
-		signatureRequestDto.setReferenceId("REF01");
-		signatureRequestDto.setTimeStamp("2018-12-10T06:12:52.994Z");
-		final String uriv = "http://localhost:8092/v1/signature/validate";
-		HttpEntity<SignatureRequestDto> validate_entity = new HttpEntity<SignatureRequestDto>(signatureRequestDto);
-		validate_result = restTemplate.exchange(uriv, HttpMethod.POST, validate_entity, SignatureResponseDto.class);
-
-		SignatureResponseDto signatureResponseDto = validate_result.getBody();
-		String data = signatureResponseDto.getData();
+	@Override
+	public DigitalCertificateResponse uploadDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request) {
+		DigitalCertificateResponse digitalCertificateResponse = new DigitalCertificateResponse();
 		
-		if(data.equalsIgnoreCase(request.getPartnerCertificate())) {
-			response.setMessage("successfully uploaded partner's digital certificate");
+		LOGGER.info("Request Preparation for DigitalCertificate");
+		
+		LocalDateTime now = LocalDateTime.now();
+		DigitalCertificateRequestPreparation digitalCertificateRequestPreparation = new DigitalCertificateRequestPreparation();
+		digitalCertificateRequestPreparation.setData(request.getRequest().getPartnerCertificate());
+		
+		if(signature_value!=null){
+			digitalCertificateRequestPreparation.setSignature(signature_value);
+		}else {
+			LOGGER.info("Decryption error, Sign Require");
+			//TODO
+			//"errorCode": "KER-CSS-102"
+			//"message": "KER-FSE-003 --> data not valid (currupted,length is not valid etc.); \nnested exception is javax.crypto.BadPaddingException: Decryption error"
+			//throw the exception
+		}
+		digitalCertificateRequestPreparation.setTimestamp(Timestamp.valueOf(now));
+		RequestWrapper<DigitalCertificateRequestPreparation> digital_request = new RequestWrapper<DigitalCertificateRequestPreparation>();
+		digital_request.setId(request.getId());
+		digital_request.setMetadata(request.getMetadata());
+		digital_request.setVersion(request.getVersion());
+		digital_request.setRequesttime(request.getRequesttime());
+		digital_request.setRequest(digitalCertificateRequestPreparation);
+		
+		
+		ResponseEntity<Map> response = null;
+
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
+
+		if(response_cookies!=null) {
+			restTemplate.setInterceptors(interceptors);
+		}else {
+			LOGGER.info("Authentication Failed");
+			//TODO 
+			//throw the exception 
+			//errorCode": "KER-ATH-401
+			//message": "Authentication Failed
 		}
 		
-		return response;
-	}*/
+		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparation>> certificate_entity = new HttpEntity<>(digital_request);
+		response = restTemplate.postForEntity(getURL("SIGNATURE_KEY"), certificate_entity, Map.class);
+		Map map = response.getBody();
+		
+		Object response_map = null;
+		String status_value = null;
+		String message_value = null;
+		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator(); 
+		while(itr.hasNext()) {
+			Map.Entry<Object, Object> entry = itr.next();
+			if(entry.getKey().equals("response")) {
+				response_map = entry.getValue();
+			}
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,String> convertValue = mapper.convertValue(response_map, Map.class);
+		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String> entry = iterator.next();
+			if(entry.getKey().equals("status")) {
+				status_value = entry.getValue();
+			}
+			if(entry.getKey().equals("message")) {
+				message_value = entry.getValue();
+				}
+			}
+		
+		if(status_value!=null && message_value!=null) {
+			digitalCertificateResponse.setMessage("successfully validated partner's digital certificate");
+		}
+		return digitalCertificateResponse;
+	}
 
 	@Override
 	public LoginUserResponse userLoginInKernal(RequestWrapper<LoginUserRequest> request) {
 		LoginUserResponse loginUserResponse = new LoginUserResponse();
 		ResponseEntity<Map> response = null;
-		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/authmanager/authenticate/useridPwd";
+		
 		HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		response = restTemplate.postForEntity(getURL("USER_PWD_KEY"), certificate_entity, Map.class);
 		response_cookies = response.getHeaders().getFirst("Authorization");
 		Map map = response.getBody();
 		Object response_map = null;
@@ -648,6 +656,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public SignUserResponse signUserInDigitalCertificates(RequestWrapper<SignUserRequest> request) {
+		
 		SignUserResponse signUserResponse = new SignUserResponse();
 		ResponseEntity<Map> response = null;
 		
@@ -655,9 +664,8 @@ public class PartnerServiceImpl implements PartnerService {
 		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
 		restTemplate.setInterceptors(interceptors);
 		
-		final String uri = "https://nginxtf.southeastasia.cloudapp.azure.com/v1/signature/sign";
 		HttpEntity<RequestWrapper<SignUserRequest>> certificate_entity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(uri, certificate_entity, Map.class);
+		response = restTemplate.postForEntity(getURL("SIGN_KEY"), certificate_entity, Map.class);
 		Map map = response.getBody();
 		Object sign_response_map = null;
 		String timestamp_value = null;
@@ -685,5 +693,67 @@ public class PartnerServiceImpl implements PartnerService {
 		signUserResponse.setTimestamp(timestamp_value);
 		return signUserResponse;
 	}
-	
+
+	public String getPublicKey(String applicationId) {
+		
+		LocalDateTime now = LocalDateTime.now();
+		Timestamp timeStamps = Timestamp.valueOf(now);
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(timeStamps);
+		
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
+		restTemplate.setInterceptors(interceptors);
+		
+		final String uri = 
+				getURL("PUBLIC_KEY") + applicationId + "?timeStamp=" + timeStamp;
+		ResponseEntity<Map> response = null;
+		response = restTemplate.getForEntity(uri, Map.class);
+		Map map = response.getBody();
+		Object key_response_map = null;
+		String publicKey_value = null;
+		String issuedAt_value = null;
+		String expiryAt_value = null;
+		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator(); 
+		while(itr.hasNext()) {
+			Map.Entry<Object, Object> entry = itr.next();
+			if(entry.getKey().equals("response")) {
+				key_response_map = entry.getValue();
+			}
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,String> convertValue = mapper.convertValue(key_response_map, Map.class);
+		
+		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String> entry = iterator.next();
+			if(entry.getKey().equals("publicKey")) {
+				publicKey_value = entry.getValue();
+			}
+			if(entry.getKey().equals("issuedAt")) {
+				issuedAt_value = entry.getValue();
+			}
+			if(entry.getKey().equals("expiryAt")) {
+				expiryAt_value = entry.getValue();
+			}
+		}
+		
+		DateTimeFormatter expiryAt_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		LocalDateTime expiryAt_dateTime = LocalDateTime.parse(expiryAt_value, expiryAt_formatter);
+		
+		DateTimeFormatter issuedAt_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		LocalDateTime issuedAt_dateTime = LocalDateTime.parse(issuedAt_value, issuedAt_formatter);
+		
+		//TODO
+		//need to validate the expiry
+		
+		return publicKey_value;
+	}
+
+	private String getURL(String key) {
+		PartnerUtil partnerUtil = new PartnerUtil();
+		Properties properties = partnerUtil.getProperties("application.properties");
+		String uri = properties.get(key).toString();
+		return uri;
+	}
 }

@@ -105,7 +105,7 @@ public interface PartnerService {
 	
 	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
-	//public DigitalCertificateResponse uploadDigitalCertificate(DigitalCertificateRequest request);
+	public DigitalCertificateResponse uploadDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
 	/**
 	 * This method is use for userLogin when need to validate the digital certificate 
@@ -122,4 +122,5 @@ public interface PartnerService {
 	 */
 	
 	public SignUserResponse signUserInDigitalCertificates(RequestWrapper<SignUserRequest> request);
+	
 }

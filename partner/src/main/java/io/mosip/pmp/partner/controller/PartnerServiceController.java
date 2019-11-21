@@ -218,19 +218,6 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for creation of partner API Key
 	 */
 	
-	/*@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
-			@PathVariable String partnerID) {
-		ResponseWrapper<PartnersRetrieveApiKeyRequests> response = new ResponseWrapper<PartnersRetrieveApiKeyRequests>();
-		PartnersRetrieveApiKeyRequests partnersRetrieveApiKeyRequests = null;
-		partnersRetrieveApiKeyRequests = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
-		response.setId("mosip.partnermanagement.partners.retrieve.apiKeyRequests");
-		response.setVersion("1.0");
-		response.setResponse(partnersRetrieveApiKeyRequests);
-		return new ResponseEntity<ResponseWrapper<PartnersRetrieveApiKeyRequests>>(response, HttpStatus.OK);
-	}*/
-	
-	
 	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
 			@PathVariable String partnerID) {
@@ -262,9 +249,10 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<APIkeyRequests>>(response, HttpStatus.OK);
 	}
 	
-	// validate the Digital Certificate (Certification Authority as a MOSIP) to Partner Management using this API.
 	
 	/**
+	 * Validation of digital certificate with PublicKey
+	 * 
 	 * As the MOSIP system Partner Management module would integrate with Kernel for validation of partner's digital certificate. 
 	 * In case where MOSIP would act as certification authority for partners, 
 	 * MOSIP would be able to sign and resign partner digital certificates. 
@@ -275,7 +263,7 @@ public class PartnerServiceController {
 	 * @return DigitalCertificateResponse this class contains massage
 	 */
 	@RequestMapping(value = "/validatedigitalcertificate", method = RequestMethod.PUT)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificate(
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificateWithPublicKey(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request){
 		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
 		DigitalCertificateResponse digitalCertificateResponse = null;
@@ -286,21 +274,32 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
 	}
 	
-	// upload the digital certificates (Certification Authority) to Partner Management using this API.
 	
-	/*@RequestMapping(value = "/createdigitalcertificate", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> uploadDigitalCertificate(
+	/**
+	 * Validation of digital certificate without PublicKey
+	 * 
+	 * Partners would be procuring digital certificates from Certification Authority (CA), 
+	 * And upload the same to Partner Management using this API.
+	 * Partner Management would depend on Kernel to manage partner certificates, 
+	 * Validation of partner certificates. Appropriate error messages would be sent back to Partners, 
+	 * In cases where digital certificates expires, certificate validation error happens.
+	 * 
+	 * @param request this class contains digitalCertificate details
+	 * @return DigitalCertificateResponse this class contains massage
+	 */
+	
+	@RequestMapping(value = "/uploaddigitalcertificate", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificatewithoutPublicKey(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
 		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<DigitalCertificateResponse>();
 		DigitalCertificateResponse digitalCertificateResponse = null;
-		DigitalCertificateRequest digitalCertificateRequest = request.getRequest();
-		digitalCertificateResponse = partnerService.uploadDigitalCertificate(digitalCertificateRequest);
+		digitalCertificateResponse = partnerService.uploadDigitalCertificate(request);
 		response.setResponse(digitalCertificateResponse);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setMetadata(request.getMetadata());
 		return new ResponseEntity<ResponseWrapper<DigitalCertificateResponse>>(response , HttpStatus.OK);
-	}*/
+	}
 	
 	/**
 	 * This method is use for userLogin when need to validate the digital certificate 
