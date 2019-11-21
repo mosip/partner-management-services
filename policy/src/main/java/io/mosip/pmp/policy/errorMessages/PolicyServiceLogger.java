@@ -22,4 +22,8 @@ public class PolicyServiceLogger {
 	public static void warn(String message){
 		logger.warn("WARN : " + message);
 	}
+	
+	public static void logStackTrace(Exception e){
+		logger.error(e.getMessage(), e.getCause());		
+	}
 }

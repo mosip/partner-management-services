@@ -79,6 +79,7 @@ public class PolicyManagementService {
 		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();		
 		PolicyGroup policyGroupInput = new PolicyGroup();
 		response.setResponse(null);
+		
 		PolicyServiceLogger.info("Validating the policy name " + request.getName());
 		PolicyGroup policyGroupName = policyGroupRepository.findByName(request.getName());	
 		if(policyGroupName != null){
@@ -86,11 +87,13 @@ public class PolicyManagementService {
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + request.getName());			
 		}		
+		
 		if (request != null) {
 			policyGroupInput.setName(request.getName());
 			policyGroupInput.setDescr(request.getDesc());
 			policyGroupInput.setId(policyGroupRepository.count() + "1");
 			policyGroupInput.setCrBy("SYSTEM");
+			policyGroupInput.setUserId("SYSTEM");
 			policyGroupInput.setCrDtimes(LocalDateTime.now());
 			policyGroupInput.setIsActive(true);
 			PolicyServiceLogger.info("Inserting data into policy group table");
@@ -100,10 +103,12 @@ public class PolicyManagementService {
 			catch (Exception e) {
 				PolicyServiceLogger.error("Error occurred while inserting data into policy group table");
 				PolicyServiceLogger.error(e.getMessage());
+				PolicyServiceLogger.logStackTrace(e);
 				throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
 						ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
 			}
 		}		
+		
 		responseDto.setIs_Active(policyGroupInput.getIsActive());
 		responseDto.setId(policyGroupInput.getId());
 		responseDto.setName(policyGroupInput.getName());
@@ -136,7 +141,9 @@ public class PolicyManagementService {
 			throws PolicyManagementServiceException, Exception {		
 		ResponseWrapper<AuthPolicyCreateResponseDto> response = new ResponseWrapper<>();	
 		AuthPolicyCreateResponseDto responseDto = new AuthPolicyCreateResponseDto();
+		
 		String policyId = request.getPolicyId();		
+		
 		PolicyServiceLogger.info("Validating the policy group id " + policyId);
 		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(policyId);
 		if(!policyGroupDetails.isPresent()){
@@ -144,6 +151,7 @@ public class PolicyManagementService {
            throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
         		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 		}			
+		
 		PolicyServiceLogger.info("Validating the auth policy name " + request.getName());
 		AuthPolicy authPolicyByName = authPolicyRepository.findByName(request.getName());		
 		if(authPolicyByName != null){
@@ -151,8 +159,9 @@ public class PolicyManagementService {
 			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + " " + request.getName());			
 		}		
+		
 		AuthPolicy authPolicy = new AuthPolicy();		
-		authPolicy.setCrBy("SYSTEM");
+		authPolicy.setCrBy("SYSTEM");		
 		authPolicy.setId(authPolicyRepository.count() + "1");
 		authPolicy.setCrDtimes(LocalDateTime.now());
 		authPolicy.setDescr(request.getDescr());
@@ -161,12 +170,14 @@ public class PolicyManagementService {
 		authPolicy.setIsDeleted(false);		
 		authPolicy.setPolicyFileId(createPolicyFile(request,request.getName()));
 		authPolicy.setPolicyGroup(policyGroupDetails.get());
+		
 		PolicyServiceLogger.info("Saving the auth policy details into auth_policy table");
 		try {
 			authPolicy = authPolicyRepository.save(authPolicy);
 		}catch (Exception e) {
 			PolicyServiceLogger.error("Error occurred while saving the details into auth_policy table");
 			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
 			throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
 					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
 		}		
@@ -208,6 +219,7 @@ public class PolicyManagementService {
            throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
         		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 		}		
+		
 		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<>();	
 		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
 		PolicyGroup policyGroupFromDb = null;
@@ -256,8 +268,10 @@ public class PolicyManagementService {
 	 */
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(PolicyStatusUpdateRequestDto statusUpdateRequest) {
 		Boolean status = statusUpdateRequest.getStatus().contains("De-Active") ? false : true;
+		
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
+		
 		PolicyServiceLogger.info("Validating the policy group id " + statusUpdateRequest.getId());
 		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(statusUpdateRequest.getId());
         if(!policyGroupDetails.isPresent()){
@@ -276,6 +290,7 @@ public class PolicyManagementService {
 			}catch(Exception e){
 				PolicyServiceLogger.error("Error occurred while saving the updated policy group details to table.");
 				PolicyServiceLogger.error(e.getMessage());
+				PolicyServiceLogger.logStackTrace(e);
 	        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
 	        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());				
 			}
@@ -293,8 +308,10 @@ public class PolicyManagementService {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public List<PoliciesDto> getPolicyDetails(String policyId) throws FileNotFoundException, IOException, ParseException {
+	public List<PoliciesDto> getPolicyDetails(String policyId) throws FileNotFoundException, 
+	IOException, ParseException {
 		List<PolicyGroup> policies = new ArrayList<PolicyGroup>();		
+	
 		PolicyServiceLogger.info("Validating the policy group id " + policyId);
 		if(policyId != "") {			
 			Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId);			
@@ -307,6 +324,7 @@ public class PolicyManagementService {
 		} else {
 			policies = policyGroupRepository.findAll();			
 		}
+		
 		if(policies.isEmpty()){
 			PolicyServiceLogger.error("No policy details exists in database");
         	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
@@ -338,7 +356,6 @@ public class PolicyManagementService {
 	}
 
 	private PolicyCreateResponseDto setPolicyGroup(PolicyGroup policy) {
-
 		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();
 		responseDto.setIs_Active(policy.getIsActive());
 		responseDto.setId(policy.getId());
@@ -360,7 +377,8 @@ public class PolicyManagementService {
 	 * @throws IOException
 	 */
 	@SuppressWarnings({ "unchecked", "resource" })
-	private String createPolicyFile(PolicyDto policy, String name) throws PolicyManagementServiceException,Exception {
+	private String createPolicyFile(PolicyDto policy, String name) throws PolicyManagementServiceException,
+	Exception {
 		PolicyServiceLogger.info("Creating policy file with name " + name + ".json");
 		String fileName = name + ".json";
 		JSONObject obj = new JSONObject();
@@ -382,23 +400,24 @@ public class PolicyManagementService {
 		obj.put("authPolicies", authPolicies);
 		obj.put("allowedKycAttributes", allowedKycAttributes);
 		
-		try {
-			FileWriter file = new FileWriter(filePath + fileName);
+		try (FileWriter file = new FileWriter(filePath + fileName)) {
 			file.write(obj.toJSONString());
 		}catch(Exception e){
 			PolicyServiceLogger.error("Error occured while creating the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
 		}
 		
 		return fileName;
 	}
 	
-	private PolicyDto readPolicyFile(String fileName) throws FileNotFoundException, IOException, ParseException
-	{
+	private PolicyDto readPolicyFile(String fileName)
+			throws FileNotFoundException, IOException, ParseException {
 		PolicyDto authKycDto = new PolicyDto();
 		List<AllowedKycDto> authList = new ArrayList<AllowedKycDto>();
 		List<AuthPolicyDto> authDtoList = new ArrayList<AuthPolicyDto>();
 		JSONParser jsonParser = new JSONParser();		
+		
 		PolicyServiceLogger.info("Reading policy file " + filePath + fileName);
 		try(FileReader reader = new FileReader(filePath + fileName)){			
 			Object obj = jsonParser.parse(reader);
@@ -422,13 +441,16 @@ public class PolicyManagementService {
             }
 		}catch (FileNotFoundException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
-			PolicyServiceLogger.error(e.getMessage());            
+			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
         } catch (IOException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
         } catch (ParseException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
         }
 		
 		authKycDto.setAllowedKycAttributes(authList);

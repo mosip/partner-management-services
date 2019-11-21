@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
+
 /**
  * @author Nagarjuna Kuchi
  * @version 1.0
@@ -37,9 +39,11 @@ public class ReqResFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
+		RequestWrapper myRequestWrapper = new RequestWrapper((HttpServletRequest) request);
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		
+		@SuppressWarnings("unused")
 		ContentCachingRequestWrapper requestWrapper = null;
 		ContentCachingResponseWrapper responseWrapper = null;	
 
@@ -51,8 +55,10 @@ public class ReqResFilter implements Filter {
 		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
 		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
 		
-		chain.doFilter(requestWrapper, responseWrapper);
+		PolicyServiceLogger.info("ClientIP : " + myRequestWrapper.getRemoteHost() + " clientPort : " + request.getRemotePort() + "Uri :" +myRequestWrapper.getRequestURI());
+		PolicyServiceLogger.info("RequestBody: " + myRequestWrapper.getBody());
 		
+		chain.doFilter(myRequestWrapper, responseWrapper);
 
 		responseWrapper.copyBodyToResponse();
 	}
