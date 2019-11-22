@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -108,6 +108,24 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	String response_cookies = null;
 	String signature_value = null;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.appid}")
+	private String appid;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.public.key}")
+	private String public_key;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.sign.key}")
+	private String sign_key;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.user.pwd.key}")
+	private String user_pwd_key;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.signature.key}")
+	private String signature_key;
+	
+	@Value("${mosip.pmp.partnerservice.certificate.validate.signature.public.key}")
+	private String signature_public_key;
 	
 	@Override
 	public PolicyIdResponse getPolicyId(String PolicyName) {
@@ -494,7 +512,7 @@ public class PartnerServiceImpl implements PartnerService {
 			= new DigitalCertificateRequestPreparationWithPublicKey();
 		digitalCertificateRequestPreparationWithPublicKey.setData(request.getRequest().getPartnerCertificate());
 		digitalCertificateRequestPreparationWithPublicKey.setSignature(signature_value);
-		digitalCertificateRequestPreparationWithPublicKey.setPublickey(getPublicKey("KERNEL"));
+		digitalCertificateRequestPreparationWithPublicKey.setPublickey(getPublicKey(appid));
 		RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey> digital_request = new RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey>();
 		digital_request.setId(request.getId());
 		digital_request.setMetadata(request.getMetadata());
@@ -518,7 +536,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		
 		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey>> certificate_entity = new HttpEntity<>(digital_request);
-		response = restTemplate.postForEntity(getURL("SIGNATURE_PUBLIC_KEY"), certificate_entity, Map.class);
+		response = restTemplate.postForEntity(signature_public_key, certificate_entity, Map.class);
 		Map map = response.getBody();
 		
 		Object response_map = null;
@@ -594,7 +612,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		
 		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparation>> certificate_entity = new HttpEntity<>(digital_request);
-		response = restTemplate.postForEntity(getURL("SIGNATURE_KEY"), certificate_entity, Map.class);
+		response = restTemplate.postForEntity(signature_key, certificate_entity, Map.class);
 		Map map = response.getBody();
 		
 		Object response_map = null;
@@ -632,7 +650,7 @@ public class PartnerServiceImpl implements PartnerService {
 		ResponseEntity<Map> response = null;
 		
 		HttpEntity<RequestWrapper<LoginUserRequest>> certificate_entity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(getURL("USER_PWD_KEY"), certificate_entity, Map.class);
+		response = restTemplate.postForEntity(user_pwd_key, certificate_entity, Map.class);
 		response_cookies = response.getHeaders().getFirst("Authorization");
 		Map map = response.getBody();
 		Object response_map = null;
@@ -681,7 +699,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		
 		HttpEntity<RequestWrapper<SignUserRequest>> certificate_entity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(getURL("SIGN_KEY"), certificate_entity, Map.class);
+		response = restTemplate.postForEntity(sign_key, certificate_entity, Map.class);
 		Map map = response.getBody();
 		Object sign_response_map = null;
 		String timestamp_value = null;
@@ -721,7 +739,7 @@ public class PartnerServiceImpl implements PartnerService {
 		restTemplate.setInterceptors(interceptors);
 		
 		final String uri = 
-				getURL("PUBLIC_KEY") + applicationId + "?timeStamp=" + timeStamp;
+				public_key + applicationId + "?timeStamp=" + timeStamp;
 		ResponseEntity<Map> response = null;
 		response = restTemplate.getForEntity(uri, Map.class);
 		Map map = response.getBody();
@@ -764,12 +782,5 @@ public class PartnerServiceImpl implements PartnerService {
 		//need to validate the expiry
 		
 		return publicKey_value;
-	}
-
-	private String getURL(String key) {
-		PartnerUtil partnerUtil = new PartnerUtil();
-		Properties properties = partnerUtil.getProperties("application.properties");
-		String uri = properties.get(key).toString();
-		return uri;
 	}
 }
