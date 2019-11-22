@@ -507,7 +507,15 @@ public class PartnerServiceImpl implements PartnerService {
 
 		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
 		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
-		restTemplate.setInterceptors(interceptors);
+
+		if(response_cookies!=null) {
+			restTemplate.setInterceptors(interceptors);
+		}else {
+			LOGGER.info("Authentication Failed");
+			throw new AuthenticationFailedException(
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorCode(),
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorMessage());
+		}
 		
 		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey>> certificate_entity = new HttpEntity<>(digital_request);
 		response = restTemplate.postForEntity(getURL("SIGNATURE_PUBLIC_KEY"), certificate_entity, Map.class);
@@ -667,7 +675,6 @@ public class PartnerServiceImpl implements PartnerService {
 			restTemplate.setInterceptors(interceptors);
 		}else {
 			LOGGER.info("Authentication Failed");
-			//TODO 
 			throw new AuthenticationFailedException(
 					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorCode(),
 					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorMessage());
