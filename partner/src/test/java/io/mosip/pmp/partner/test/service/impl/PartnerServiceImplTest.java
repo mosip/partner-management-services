@@ -222,13 +222,13 @@ public class PartnerServiceImplTest {
 		//assertNull(updatePartnerDetail.getStatus());
 	}
 
-	@Test(expected = PartnerAlreadyRegisteredException.class)
+	/*@Test(expected = PartnerAlreadyRegisteredException.class)
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
-	}
+	}*/
 
 	@Test
 	public void submitPartnerApiKeyReqTest() {
