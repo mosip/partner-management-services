@@ -2,10 +2,12 @@ package io.mosip.pmp.policy.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.hibernate.mapping.Array;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PoliciesDto;
+import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -51,7 +54,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping(value = "/pmp")
 @Api(tags = { " Partner Management : Policy Management Controller " })
-public class PolicyManageController {
+public class PolicyManagementController {
 
 	@Autowired
 	private PolicyManagementService policyManagementService;
@@ -154,7 +157,7 @@ public class PolicyManageController {
 	/**
 	 * <p> This API would be used to get details for the policies in the policy group he belongs to.</p>
 	 * 
-	 * @return response {@link PoliciesDto}  policy group associated with his auth policies.
+	 * @return response {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws ParseException  
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
@@ -162,9 +165,11 @@ public class PolicyManageController {
 	@GetMapping(value = "/policies")
 	public ResponseWrapper<PoliciesDto> getPolicyDetails() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
+		PoliciesDto dto = new PoliciesDto();
 		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
-		List<PoliciesDto> policies = policyManagementService.getPolicyDetails("");
-		response.setResponse(policies.get(0));
+		List<PolicyWithAuthPolicyDto> policies = policyManagementService.getPolicyDetails("");
+		dto.setPolicies(policies);
+		response.setResponse(dto);
 		PolicyServiceLogger.info("Returning response from MispController.");
 		return response;
 	}
@@ -173,14 +178,14 @@ public class PolicyManageController {
 	 * <p> This API would be used to retrieve existing policy for a policy group based on the policy id.</p>
 	 * 
 	 * @param policyID policy id.
-	 * @return response  {@link PoliciesDto}  policy group associated with his auth policies.
+	 * @return response  {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/policies/{policyID}")
-	public ResponseWrapper<PoliciesDto> getPolicyDetails(@PathVariable String policyID) throws Exception {
-		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
+	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyDetails(@PathVariable String policyID) throws Exception {
+		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
 		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
-		PoliciesDto policyGroup = policyManagementService.getPolicyDetails(policyID).get(0);
+		PolicyWithAuthPolicyDto policyGroup = policyManagementService.getPolicyDetails(policyID).get(0);
 		response.setResponse(policyGroup);
 		PolicyServiceLogger.info("Returning response from MispController.");
 		return response;

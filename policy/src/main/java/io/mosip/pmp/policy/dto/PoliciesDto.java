@@ -4,17 +4,8 @@ import java.util.List;
 
 import lombok.Data;
 
-/**
- * <p>This class contains objects of policyCreateResponseDto @link {@link PolicyCreateResponseDto}</p>
- * <p> list of auth policies {@link PolicyDto}.</p>
- * 
- * @author Nagarjuna Kuchi
- *
- */
 @Data
 public class PoliciesDto {
 
-	public PolicyCreateResponseDto policy;
-	
-	public List<PolicyDto> authPolicies;
+	public List<PolicyWithAuthPolicyDto> policies;
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
-import io.mosip.pmp.policy.dto.PoliciesDto;
+import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -308,7 +308,7 @@ public class PolicyManagementService {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public List<PoliciesDto> getPolicyDetails(String policyId) throws FileNotFoundException, 
+	public List<PolicyWithAuthPolicyDto> getPolicyDetails(String policyId) throws FileNotFoundException, 
 	IOException, ParseException {
 		List<PolicyGroup> policies = new ArrayList<PolicyGroup>();		
 	
@@ -330,8 +330,8 @@ public class PolicyManagementService {
         	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
         			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
 		}		
-		List<PoliciesDto> allPolicies = new ArrayList<PoliciesDto>();		
-		PoliciesDto policiesDto = new PoliciesDto();		
+		List<PolicyWithAuthPolicyDto> allPolicies = new ArrayList<PolicyWithAuthPolicyDto>();		
+		PolicyWithAuthPolicyDto policiesDto = new PolicyWithAuthPolicyDto();		
 		for(PolicyGroup policy : policies){
 			boolean isAuthPolicyExist = false;			
 			policiesDto.setPolicy(setPolicyGroup(policy));			
@@ -376,7 +376,7 @@ public class PolicyManagementService {
 	 * @return
 	 * @throws IOException
 	 */
-	@SuppressWarnings({ "unchecked", "resource" })
+	@SuppressWarnings({ "unchecked" })
 	private String createPolicyFile(PolicyDto policy, String name) throws PolicyManagementServiceException,
 	Exception {
 		PolicyServiceLogger.info("Creating policy file with name " + name + ".json");
