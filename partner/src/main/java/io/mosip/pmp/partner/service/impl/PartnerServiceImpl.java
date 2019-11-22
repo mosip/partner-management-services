@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
+import io.mosip.pmp.partner.constant.AuthenticationFailedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyReqDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PartnerAlreadyRegisteredWithSamePolicyGroupConstant;
@@ -55,6 +56,7 @@ import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
+import io.mosip.pmp.partner.exception.AuthenticationFailedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
@@ -488,7 +490,6 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		LOGGER.info("Request Preparation for DigitalCertificate");
 		
-		//LocalDateTime now = LocalDateTime.now();
 		DigitalCertificateRequestPreparationWithPublicKey digitalCertificateRequestPreparationWithPublicKey 
 			= new DigitalCertificateRequestPreparationWithPublicKey();
 		digitalCertificateRequestPreparationWithPublicKey.setData(request.getRequest().getPartnerCertificate());
@@ -555,6 +556,7 @@ public class PartnerServiceImpl implements PartnerService {
 			digitalCertificateRequestPreparation.setSignature(signature_value);
 		}else {
 			LOGGER.info("Decryption error, Sign Require");
+			LOGGER.info("+++++++++++++signature Require++++++++++++++++++");
 			//TODO
 			//"errorCode": "KER-CSS-102"
 			//"message": "KER-FSE-003 --> data not valid (currupted,length is not valid etc.); \nnested exception is javax.crypto.BadPaddingException: Decryption error"
@@ -578,10 +580,9 @@ public class PartnerServiceImpl implements PartnerService {
 			restTemplate.setInterceptors(interceptors);
 		}else {
 			LOGGER.info("Authentication Failed");
-			//TODO 
-			//throw the exception 
-			//errorCode": "KER-ATH-401
-			//message": "Authentication Failed
+			throw new AuthenticationFailedException(
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorCode(),
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorMessage());
 		}
 		
 		HttpEntity<RequestWrapper<DigitalCertificateRequestPreparation>> certificate_entity = new HttpEntity<>(digital_request);
@@ -662,7 +663,15 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
 		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + response_cookies));
-		restTemplate.setInterceptors(interceptors);
+		if(response_cookies!=null) {
+			restTemplate.setInterceptors(interceptors);
+		}else {
+			LOGGER.info("Authentication Failed");
+			//TODO 
+			throw new AuthenticationFailedException(
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorCode(),
+					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorMessage());
+		}
 		
 		HttpEntity<RequestWrapper<SignUserRequest>> certificate_entity = new HttpEntity<>(request);
 		response = restTemplate.postForEntity(getURL("SIGN_KEY"), certificate_entity, Map.class);

@@ -178,16 +178,6 @@ public class PartnerServiceImplTest {
 		pserviceImpl.savePartner(partnerRequest);
 	}
 
-	/*@Test
-	public void savePartnerWhenPartnerListIsEmptyTest() {
-		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
-		PartnerRequest partnerRequest = createPartnerRequest();
-		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
-		Mockito.when(partnerRepository.findByName(Mockito.anyString())).thenReturn(Mockito.anyList());
-		pserviceImpl.savePartner(partnerRequest);
-
-	}*/
-
 	@Test
 	public void getPartnerDetailsTest() {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
@@ -221,7 +211,7 @@ public class PartnerServiceImplTest {
 
 	}
 
-	/*@Test
+	@Test
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.FALSE));
@@ -229,16 +219,16 @@ public class PartnerServiceImplTest {
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
 		assertEquals(updatePartnerDetail.getPartnerId(), "id");
-		assertNull(updatePartnerDetail.getStatus());
-	}*/
+		//assertNull(updatePartnerDetail.getStatus());
+	}
 
-	/*@Test(expected = PartnerAlreadyRegisteredException.class)
+	@Test(expected = PartnerAlreadyRegisteredException.class)
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
-	}*/
+	}
 
 	@Test
 	public void submitPartnerApiKeyReqTest() {
