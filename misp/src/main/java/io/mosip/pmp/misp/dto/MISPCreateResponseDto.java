@@ -22,21 +22,6 @@ public class MISPCreateResponseDto {
 	public String mispStatus;
 	
 	/**
-	 *  Carries the misp license key.
-	 */
-	public String mispLicenseKey;
-	
-	/**
-	 * Carries the misp license key expiry date 
-	 */
-	public String mispLicenseKeyExpiry;
-	
-	/**
-	 * Carries the misp license key status(Atcive OR De-Active)
-	 */
-	public String mispLicenseKeyStatus;
-	
-	/**
 	 * Carries the misp id
 	 */
 	public String mispID;

@@ -19,8 +19,8 @@ import lombok.Data;
 @ApiModel(value = "MISPStatusUpdateRequestDto" , description = "MISP Status update request representation")
 public class MISPStatusUpdateRequestDto {
 
-	@Size(min= 1, max = 5)
-	@ApiModelProperty(value ="mispStatus", required = true, dataType = "java.lang.String", allowableValues ="{@Code Ative, De-Active}")
+	@Size(min= 0, max = 20)
+	@ApiModelProperty(value ="mispStatus", required = true, dataType = "java.lang.String")
 	private String mispStatus;
 	
 	private String mispId;

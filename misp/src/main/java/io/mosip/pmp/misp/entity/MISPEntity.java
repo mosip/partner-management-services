@@ -54,7 +54,10 @@ public class MISPEntity extends BaseEntity implements Serializable {
 	public String emailId;
 	
 	@Column(name ="user_id")
-	public String userID; 
+	public String userID;
+	
+	@Column(name ="status_code")
+	public String status_code;
 
 	@OneToOne(cascade = CascadeType.ALL)	
 	@JoinColumns({@JoinColumn(name = "id", insertable = false, updatable = false), })

@@ -8,8 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
--- ------------------------------------------------------------------------------------------
+-- 26-Nov-2019			Nagarjuna Kuchi		Added status code 
+-- -------------------------------------------------------------------------------------------
 
 -- object: pmp.misp | type: TABLE --
 -- DROP TABLE IF EXISTS pmp.misp CASCADE;
@@ -21,6 +21,7 @@ CREATE TABLE pmp.misp(
 	email_id character varying(256),
 	user_id character varying(256) NOT NULL,
 	is_active boolean NOT NULL,
+	status_code character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),

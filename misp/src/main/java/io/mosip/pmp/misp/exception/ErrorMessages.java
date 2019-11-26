@@ -15,7 +15,8 @@ public enum ErrorMessages {
 	MISP_ID_NOT_EXISTS("PMS_MSP_005","MISP ID does not exist"),
 	MISP_LICENSE_KEY_NOT_EXISTS("PMS_MSP_006","MISP License Key does not exis"),
 	MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID("PMS_MSP_007","MISP License key not associated to MISP ID"),
-	NO_MISP_DETAILS("PMS_MSP_012", "No MISP details found");
+	NO_MISP_DETAILS("PMS_MSP_012", "No MISP details found"),
+	MISP_IS_INACTIVE("PMS_MSP_1012", "Misp is not active.");
 
 private final String errorCode;
 private final String errorMessage;
