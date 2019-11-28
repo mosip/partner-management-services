@@ -40,6 +40,7 @@ import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
+import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
@@ -222,14 +223,14 @@ public class PartnerServiceImplTest {
 		//assertNull(updatePartnerDetail.getStatus());
 	}
 
-	/*@Test(expected = PartnerAlreadyRegisteredException.class)
+	@Test(expected = PartnerDoesNotExistException.class)
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
-	}*/
-
+	}
+	
 	@Test
 	public void submitPartnerApiKeyReqTest() {
 		String partnerId = "12345";
@@ -270,6 +271,15 @@ public class PartnerServiceImplTest {
 		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(policyGroupRepository.findByName(request.getPolicyName())).thenReturn(null);
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
+	}*/
+	
+	/*@Test(expected = PolicyGroupDoesNotExistException.class)
+	public void throwExceptionWhenPartnerNotFoundByPartnerIdTest() {
+		String partnerId = "12345";
+		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
+		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
 	}*/
