@@ -1,5 +1,6 @@
 package io.mosip.pmp.policy.service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -400,59 +401,65 @@ public class PolicyManagementService {
 		obj.put("authPolicies", authPolicies);
 		obj.put("allowedKycAttributes", allowedKycAttributes);
 		
+		try{
+			PolicyServiceLogger.info("Validating the filePath. " + filePath);	
+			new File(filePath).mkdir();
+		}catch(Exception e){
+			PolicyServiceLogger.error("Error occured while creating the filePath.");			
+			PolicyServiceLogger.logStackTrace(e);
+		}
 		try (FileWriter file = new FileWriter(filePath + fileName)) {
 			file.write(obj.toJSONString());
 		}catch(Exception e){
-			PolicyServiceLogger.error("Error occured while creating the policy file.");
-			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.error("Error occured while creating the policy file.");			
 			PolicyServiceLogger.logStackTrace(e);
 		}
 		
 		return fileName;
 	}
 	
-	private PolicyDto readPolicyFile(String fileName)
-			throws FileNotFoundException, IOException, ParseException {
+	private PolicyDto readPolicyFile(String fileName) throws FileNotFoundException, IOException, ParseException {
 		PolicyDto authKycDto = new PolicyDto();
 		List<AllowedKycDto> authList = new ArrayList<AllowedKycDto>();
 		List<AuthPolicyDto> authDtoList = new ArrayList<AuthPolicyDto>();
-		JSONParser jsonParser = new JSONParser();		
-		
+		JSONParser jsonParser = new JSONParser();
+
 		PolicyServiceLogger.info("Reading policy file " + filePath + fileName);
-		try(FileReader reader = new FileReader(filePath + fileName)){			
+		try (FileReader reader = new FileReader(filePath + fileName)) {
 			Object obj = jsonParser.parse(reader);
 			JSONObject jsonObject = (JSONObject) obj;
-			JSONArray authData = (JSONArray)jsonObject.get("authPolicies");
-			JSONArray allowedKycData = (JSONArray)jsonObject.get("allowedKycAttributes");			
-			for(Object o: authData){
-				AuthPolicyDto authDto = new AuthPolicyDto();				
+			JSONArray authData = (JSONArray) jsonObject.get("authPolicies");
+			JSONArray allowedKycData = (JSONArray) jsonObject.get("allowedKycAttributes");
+			for (Object o : authData) {
+				AuthPolicyDto authDto = new AuthPolicyDto();
 				JSONObject jsonObject1 = (JSONObject) o;
 				authDto.setAuthType(jsonObject1.get("authType").toString());
-				authDto.setAuthSubType(jsonObject1.get("authSubType") != null ? jsonObject1.get("authSubType").toString() : null);
+				authDto.setAuthSubType(
+						jsonObject1.get("authSubType") != null ? jsonObject1.get("authSubType").toString() : null);
 				authDto.setMandatory(Boolean.parseBoolean(jsonObject1.get("mandatory").toString()));
 				authDtoList.add(authDto);
-            }			
-			for(Object o: allowedKycData){
+			}
+			for (Object o : allowedKycData) {
 				AllowedKycDto auth = new AllowedKycDto();
 				JSONObject jsonObject1 = (JSONObject) o;
 				auth.setAttributeName(jsonObject1.get("attributeName").toString());
 				auth.setRequired(Boolean.parseBoolean(jsonObject1.get("required").toString()));
 				authList.add(auth);
-            }
-		}catch (FileNotFoundException e) {
+			}
+		} catch (FileNotFoundException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
 			PolicyServiceLogger.logStackTrace(e);
-        } catch (IOException e) {
+		} catch (IOException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
 			PolicyServiceLogger.logStackTrace(e);
-        } catch (ParseException e) {
+		} catch (ParseException e) {
 			PolicyServiceLogger.error("Error occured while reading the policy file.");
 			PolicyServiceLogger.error(e.getMessage());
 			PolicyServiceLogger.logStackTrace(e);
-        }
-		
+		}
+
 		authKycDto.setAllowedKycAttributes(authList);
 		authKycDto.setAuthPolicies(authDtoList);
 		return authKycDto;

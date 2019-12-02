@@ -163,7 +163,7 @@ public class PolicyManagementController {
 	 * @throws FileNotFoundException 
 	 */
 	@GetMapping(value = "/policies")
-	public ResponseWrapper<PoliciesDto> getPolicyDetails() throws FileNotFoundException, IOException, ParseException{
+	public ResponseWrapper<PoliciesDto> getPolicies() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
 		PoliciesDto dto = new PoliciesDto();
 		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
@@ -182,7 +182,7 @@ public class PolicyManagementController {
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/policies/{policyID}")
-	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyDetails(@PathVariable String policyID) throws Exception {
+	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
 		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyWithAuthPolicyDto policyGroup = policyManagementService.getPolicyDetails(policyID).get(0);
