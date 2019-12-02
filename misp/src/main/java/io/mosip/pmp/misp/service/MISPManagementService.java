@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
@@ -68,6 +69,9 @@ public class MISPManagementService {
 
 	@Autowired
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
+	
+	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
+	private String mispLicenseExpiryInDays;
 
 	/**
 	 * This method is creating the misp along with license. 
@@ -185,7 +189,7 @@ public class MISPManagementService {
 			}
 			
 			misplEntity.setValidFromDate(LocalDateTime.now());
-			misplEntity.setValidToDate(LocalDateTime.now().plusDays(60));	
+			misplEntity.setValidToDate(LocalDateTime.now().plusDays(Integer.parseInt(mispLicenseExpiryInDays)));	
 			misplEntity.setCreatedDateTime(LocalDateTime.now());		
 			misplEntity.setMisp_id(mispEntity.getID());
 			misplEntity.setIsActive(true);
