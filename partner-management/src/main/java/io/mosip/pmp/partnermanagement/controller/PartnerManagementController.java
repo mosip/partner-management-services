@@ -23,7 +23,9 @@ import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyRequestsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
+import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 
@@ -95,7 +97,7 @@ public class PartnerManagementController {
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateStatus/{partnerID}", method = RequestMethod.PUT)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerID,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
@@ -176,6 +178,18 @@ public class PartnerManagementController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
 	
+	
+	@RequestMapping(value="/getManager", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
+		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<RetrievePartnerManagers>();
+		RetrievePartnerManagers retrievePartnerManagers = null;
+		retrievePartnerManagers = partnerManagementService.getPartnerManager();
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
+		response.setResponse(retrievePartnerManagers);
+		return new ResponseEntity<ResponseWrapper<RetrievePartnerManagers>>(response, HttpStatus.OK);
+	}
+	
 	/**
 	 * This API would be used to retrieve the particular Auth/E-KYC Partner details for given partner id.
 	 * @param partnerID this is unique id created after self registered by partner
@@ -251,5 +265,19 @@ public class PartnerManagementController {
 		response.setVersion("1.0");
 		response.setResponse(apikeyRequests);
 		return new ResponseEntity<ResponseWrapper<ApikeyRequests>>(response , HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/policyname/{PolicyName}" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PolicyIDResponse>> getPolicyID(
+			@PathVariable String PolicyName){
+		ResponseWrapper<PolicyIDResponse> response = new ResponseWrapper<PolicyIDResponse>();
+		PolicyIDResponse policyIDResponse = null;
+		policyIDResponse = partnerManagementService.getPartnerPolicyID(PolicyName);
+		
+		response.setId("mosip.partnermanagement.partners");
+		response.setVersion("1.0");
+		response.setResponse(policyIDResponse);
+
+		return new ResponseEntity<ResponseWrapper<PolicyIDResponse>>(response , HttpStatus.OK);
 	}
 }

@@ -23,5 +23,4 @@ public class PartnerserviceApplication{
 		
 		return new RestTemplate();
 	}
-
 }

@@ -7,6 +7,7 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
 import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
@@ -41,6 +42,7 @@ public interface PartnerService {
 	 */
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
 	
+	public GetPartnerDetailsResponse getPartnerDetails();
 	
 	/**
 	 * This API would be used to retrieve Partner details by Partner Name

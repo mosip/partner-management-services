@@ -39,6 +39,7 @@ import io.mosip.pmp.partner.dto.DigitalCertificateRequestPreparation;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequestPreparationWithPublicKey;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
 import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
@@ -46,6 +47,7 @@ import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
+import io.mosip.pmp.partner.dto.PartnersDetails;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
@@ -162,7 +164,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partner.setEmailId(request.getEmailId());
 				partner.setIsActive(true);
 				partner.setUserId("110083");
-				partner.setCrBy("Partner Service");
+				partner.setCrBy("System Admin");
 				partner.setCrDtimes(Timestamp.valueOf(now));
 				
 				LOGGER.info(request.getOrganizationName() +" : this is unique partner");
@@ -372,7 +374,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(now));
 		partnerPolicyRequest.setRequestDetail(request.getUseCaseDescription());
 		partnerPolicyRequest.setCrBy(partner.getCrBy());
-
+		
 		LOGGER.info("+++++++++++++Saving request for partner_Policy_Request+++++++++++++");
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
@@ -782,5 +784,62 @@ public class PartnerServiceImpl implements PartnerService {
 		//need to validate the expiry
 		
 		return publicKey_value;
+	}
+
+	@Override
+	public GetPartnerDetailsResponse getPartnerDetails() {
+		GetPartnerDetailsResponse partnersResponse = new GetPartnerDetailsResponse();
+		List<PartnersDetails> partners = new ArrayList<PartnersDetails>();
+
+		List<Partner> list_part = null;
+		list_part = partnerRepository.findAll();
+		Partner partner = null;
+		if(list_part == null) {
+			throw new PartnerDoesNotExistException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		Iterator<Partner> partner_iterat = list_part.iterator();
+		while (partner_iterat.hasNext()) {
+			PartnersDetails partnersDetails = new PartnersDetails();
+			partner = partner_iterat.next();
+
+			partnersDetails.setPartnerID(partner.getId());
+			partnersDetails.setStatus(partner.getIsActive()== true ? "Active" : "De-Active");
+			partnersDetails.setOrganizationName(partner.getName());
+			partnersDetails.setContactNumber(partner.getContactNo());
+			partnersDetails.setEmailId(partner.getEmailId());
+			partnersDetails.setAddress(partner.getAddress());
+			
+			partnersDetails.setCreatedBy(partner.getCrBy());
+			partnersDetails.setCreatedDateTime(partner.getCrDtimes().toString());
+			partnersDetails.setUpdatedBy(partner.getUpdBy());
+			
+			
+			//partnersDetails.setUpdatedDateTime(partner.getUpdDtimes()==null ? "NOT YET UPDATED" : partner.getUpdDtimes().toString());
+			
+			partnersDetails.setUpdatedDateTime(partner.getUpdDtimes() + "");
+			
+			String status_code = null;
+			
+			if(!partnerPolicyRequestRepository.findByPartnerId(partner.getId()).isEmpty()) {
+				status_code = partnerPolicyRequestRepository.findByPartnerId(partner.getId()).get(0).getStatusCode();
+				
+			}else {
+				status_code = "YET TO SUBMIT";
+			}
+			
+			partnersDetails.setApiKeyRequestStatus(status_code);
+			
+			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
+			
+			if(findByIdpolicyGroup!=null) {
+				partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
+			}
+			
+			partners.add(partnersDetails);
+		}
+		partnersResponse.setPartners(partners);
+		return partnersResponse;
 	}
 }

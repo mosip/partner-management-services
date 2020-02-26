@@ -21,6 +21,7 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
 import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
@@ -34,6 +35,7 @@ import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.dto.SignUserRequest;
 import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
+import io.swagger.annotations.ApiOperation;
 
 
 /**
@@ -69,6 +71,7 @@ public class PartnerServiceController {
 	 */
 	
 	@RequestMapping(value="/test", method = RequestMethod.GET)
+	@ApiOperation(value= "it is using for testing purpose")
 	public String test(){
 		return "partners application is up and running";
 	}
@@ -116,6 +119,18 @@ public class PartnerServiceController {
 		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
 	}
 	
+	// for Partner-UI
+	
+	@RequestMapping(value = "/getpartners", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<GetPartnerDetailsResponse>> getAllPartnerDetails() {
+		ResponseWrapper<GetPartnerDetailsResponse> response = new ResponseWrapper<GetPartnerDetailsResponse>();
+		GetPartnerDetailsResponse getPartnerDetailsResponse = null;
+		getPartnerDetailsResponse = partnerService.getPartnerDetails();
+		response.setId("mosip.partnerservice.partners.get");
+		response.setVersion("1.0");
+		response.setResponse(getPartnerDetailsResponse);
+		return new ResponseEntity<ResponseWrapper<GetPartnerDetailsResponse>>(response, HttpStatus.OK);
+	}
 	
 	/**
 	 * This API would be used to retrieve Partner details by Partner Name
@@ -179,7 +194,7 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse this class contains partner request id and massage details 
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.POST)
+	@RequestMapping(value = "/submit/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
 			@PathVariable String partnerID, 
 			@RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {

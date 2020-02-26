@@ -13,5 +13,5 @@ import io.mosip.pmp.partnermanagement.entity.PolicyGroup;
 @Repository
 public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String> {
 
- 
+	public PolicyGroup findByName(String policyName);
 }

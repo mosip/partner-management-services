@@ -7,7 +7,9 @@ import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
+import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 
 /**
@@ -99,4 +101,8 @@ public interface PartnerManagementService {
 	 */
 	public PartnersPolicyMappingResponse approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			ActivateDeactivatePartnerRequest request, String partnerAPIKey);
+	
+	public RetrievePartnerManagers getPartnerManager();
+	
+	public PolicyIDResponse getPartnerPolicyID(String PolicyName);
 }
