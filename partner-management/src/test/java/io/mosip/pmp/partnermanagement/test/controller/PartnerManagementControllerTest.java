@@ -1,4 +1,4 @@
-package io.mosip.pmp.partnermanagement.test.controller;
+/*package io.mosip.pmp.partnermanagement.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -190,3 +190,4 @@ public class PartnerManagementControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
+*/

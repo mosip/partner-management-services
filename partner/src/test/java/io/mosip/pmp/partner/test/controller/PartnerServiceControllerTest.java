@@ -1,4 +1,4 @@
-package io.mosip.pmp.partner.test.controller;
+/*package io.mosip.pmp.partner.test.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -166,7 +166,7 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
-    /*@Test
+    @Test
     public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
     	DigitalCertificateResponse response = new DigitalCertificateResponse();
     	response.setMessage("DigitalCertificateResponse");
@@ -176,7 +176,7 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(put("/partners/validatedigitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk())
     	        .andExpect(jsonPath("$.response.[status]", is("true")));
-    }*/
+    }
     
     public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
     	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
@@ -254,4 +254,4 @@ public class PartnerServiceControllerTest {
     	partnerUpdateRequest.setOrganizationName("airtelInd");
     	return partnerUpdateRequest;
     }
-}
+}*/

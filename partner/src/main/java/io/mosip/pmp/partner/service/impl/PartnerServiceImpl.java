@@ -312,6 +312,27 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
+		
+		List<PartnerPolicyRequest> list_PartnerApiKeyReq = partnerPolicyRequestRepository.findByPartnerId(partnerID);
+		
+		if(!list_PartnerApiKeyReq.isEmpty() && list_PartnerApiKeyReq!=null) {
+			
+			PartnerPolicyRequest partnerPolicyRequest = list_PartnerApiKeyReq.get(0);
+			
+			if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("Rejected")) {
+				partnerPolicyRequest.setStatusCode("in-progress");
+				System.out.println("updated request: " + partnerPolicyRequest);
+				partnerPolicyRequestRepository.save(partnerPolicyRequest);
+			}
+			LOGGER.info("+++++++++++++Preparing Response for Partner_APIKeyReq +++++++++++++");
+			PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
+			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
+			partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");
+			LOGGER.info("+++++++++++++partnerAPIKeyRequest successfully updated+++++++++++++");
+			return partnerAPIKeyResponse;
+			
+		}else {
+		
 		PolicyGroup policyGroup = null;
 		PartnerPolicyRequest partnerPolicyRequest = null;
 		
@@ -334,8 +355,9 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		
-		LOGGER.info(partnerID + " : Valied partnerID");
+		LOGGER.info(partnerID + " : Valied Partner");
 		Partner partner = findByPartnerId.get();
+		
 		
 		LOGGER.info("+++++++++++++fetching all record from partner_Policy_Request by given partnerId +++++++++++++");
 		List<String> policy_list = new ArrayList<>();
@@ -378,6 +400,8 @@ public class PartnerServiceImpl implements PartnerService {
 		LOGGER.info("+++++++++++++Saving request for partner_Policy_Request+++++++++++++");
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
+		
+		
 		LOGGER.info("+++++++++++++Preparing Response for Partner_APIKey_Response+++++++++++++");
 		
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
@@ -385,6 +409,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");
 		LOGGER.info("+++++++++++++partnerAPIKeyRequest successfully created+++++++++++++");
 		return partnerAPIKeyResponse;
+		}
 	}
 
 	@Override

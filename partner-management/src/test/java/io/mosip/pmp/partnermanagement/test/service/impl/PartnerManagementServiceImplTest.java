@@ -1,4 +1,4 @@
-package io.mosip.pmp.partnermanagement.test.service.impl;
+/*package io.mosip.pmp.partnermanagement.test.service.impl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -115,3 +115,4 @@ public class PartnerManagementServiceImplTest {
 		partnerManagementImpl.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerID, PolicyAPIKey);
 	}
 }
+*/
