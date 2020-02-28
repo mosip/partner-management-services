@@ -27,7 +27,7 @@ public class SwaggerConfig {
 		ApiInfo apiInfo = new ApiInfo("Partner Management", "Management", "1.0",
 				"Terms of service",
 				new Contact("MOSIP Partner", "https://mosip.io", "info@mosip.io"),
-				"Apache License Version 2.0", "https://mosip.io", Collections.EMPTY_LIST);
+				"Apache License Version 2.0", "https://mosip.io", Collections.emptyList());
 		return apiInfo;
 	}
 }

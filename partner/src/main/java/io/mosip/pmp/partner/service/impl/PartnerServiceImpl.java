@@ -315,6 +315,28 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		List<PartnerPolicyRequest> list_PartnerApiKeyReq = partnerPolicyRequestRepository.findByPartnerId(partnerID);
 		
+		
+		Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID);
+		if (!findByPartnerId.isPresent()) {
+			LOGGER.info(partnerID + " : Invalied partnerID");
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		
+		LOGGER.info(partnerID + " : Valied Partner");
+		Partner partner = findByPartnerId.get();
+		
+		System.out.println(partner.getIsActive());
+		if(partner.getIsActive() == false) {
+			
+			//TODO Need to implement Partner De-Activate Exception
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		
+		
 		if(!list_PartnerApiKeyReq.isEmpty() && list_PartnerApiKeyReq!=null) {
 			
 			PartnerPolicyRequest partnerPolicyRequest = list_PartnerApiKeyReq.get(0);
@@ -347,7 +369,7 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		LOGGER.info(request.getPolicyName() + " : this is valied Policy Group ");
 
-		Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID);
+		/*Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID);
 		if (!findByPartnerId.isPresent()) {
 			LOGGER.info(partnerID + " : Invalied partnerID");
 			throw new PartnerDoesNotExistsException(
@@ -358,6 +380,14 @@ public class PartnerServiceImpl implements PartnerService {
 		LOGGER.info(partnerID + " : Valied Partner");
 		Partner partner = findByPartnerId.get();
 		
+		System.out.println(partner.getIsActive());
+		if(partner.getIsActive() == false) {
+			
+			//TODO Need to implement Partner De-Activate Exception
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}*/
 		
 		LOGGER.info("+++++++++++++fetching all record from partner_Policy_Request by given partnerId +++++++++++++");
 		List<String> policy_list = new ArrayList<>();

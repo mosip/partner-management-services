@@ -295,6 +295,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	@Override
 	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID,
 			String PartnerAPIKey) {
+		
+		//TODO Partner API Key pattern, validate expiry for Partner API Key and status
+		
 		AuthPolicy authPolicy = null;
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(PartnerAPIKey);
 		PartnerAPIKeyToPolicyMappingsResponse response = new PartnerAPIKeyToPolicyMappingsResponse();
@@ -427,7 +430,8 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		
 		partnerPolicyRequest = findById.get();
-		if(request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected")) {
+		
+		if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("in-progress") && (request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
 			partnerPolicyRequest.setStatusCode(request.getStatus());
 		}else {
 			LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
