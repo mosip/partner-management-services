@@ -1,4 +1,4 @@
-package io.mosip.pmp.partner;
+package io.mosip.pmp.misp;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +19,14 @@ public class SwaggerConfig {
 	@Bean
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("io.mosip.pmp.partner"))
-				.paths(regex("/partners.*")).build().apiInfo(metaData());
+				.apis(RequestHandlerSelectors.basePackage("io.mosip.pmp.misp"))
+				.paths(regex("/pmp.*")).build().apiInfo(metaData());
 	}
 
 	private ApiInfo metaData() {
-		ApiInfo apiInfo = new ApiInfo("Partner Services", "Partner Regitration ", "1.0",
-				"Terms of service",
-				new Contact("MOSIP Partner", "https://mosip.io", "info@mosip.io"),
+		ApiInfo apiInfo = new ApiInfo("MISP Services", "MISP", "1.0",
+				"MISP of service",
+				new Contact("MISP", "https://mosip.io", "info@mosip.io"),
 				"Apache License Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
 		return apiInfo;
 	}

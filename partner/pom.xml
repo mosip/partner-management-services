@@ -47,22 +47,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Swagger dependency -->
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-
-
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-
 		<!-- log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -74,6 +58,7 @@
 			<version>${kernel.version}</version> </dependency> -->
 		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-signature-service</artifactId> 
 			<version>${kernel.version}</version> </dependency> -->
+
 	</dependencies>
 
 	<build>
@@ -85,5 +70,16 @@
 		</plugins>
 	</build>
 
+	<!-- <profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.host.url>http://localhost:9000</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles> -->
 
 </project>

@@ -1,31 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.8.RELEASE</version>
-		<relativePath/>
+		<relativePath />
 	</parent>
 
-    <groupId>io.mosip.pmp</groupId>
-    <artifactId>pmp-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>${pmp.core.version}</version>
-	
+	<groupId>io.mosip.pmp</groupId>
+	<artifactId>pmp-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>${pmp.core.version}</version>
+
 	<properties>
 		<pmp.core.version>1.0.0</pmp.core.version>
 		<kernel.version>0.12.18</kernel.version>
 	</properties>
-	
-    <modules>
+
+	<modules>
 		<module>misp</module>
-        <module>policy</module>
+		<module>policy</module>
 		<module>partner-management</module>
-        <module>partner</module>
-    </modules>
-	
+		<module>partner</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.host.url>http://localhost:9000</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.sonarsource.sonarqube/sonar-scanner-engine -->
+		<dependency>
+			<groupId>org.sonarsource.sonarqube</groupId>
+			<artifactId>sonar-scanner-engine</artifactId>
+			<version>7.0</version>
+		</dependency>
+
+		<!-- Swagger dependency -->
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+	</dependencies>
+
 </project>
