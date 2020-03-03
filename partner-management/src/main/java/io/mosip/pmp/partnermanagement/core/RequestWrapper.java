@@ -18,14 +18,14 @@ import lombok.Data;
 
 @Data
 public class RequestWrapper<T> {
-	public String id;
-	public String version;
+	private String id;
+	private String version;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	public LocalDateTime requesttime;
+	private LocalDateTime requesttime;
 
-	public Object metadata;
+	private Object metadata;
 
 	@NotNull
 	@Valid
-	public T request;
+	private T request;
 }

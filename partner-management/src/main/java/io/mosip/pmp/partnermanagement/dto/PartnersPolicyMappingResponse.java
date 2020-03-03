@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class PartnersPolicyMappingResponse {
 		
-	public String message;
+	private String message;
 }

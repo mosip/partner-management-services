@@ -37,7 +37,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 	       try {
 	         bufferedReader.close();
 	       } catch (IOException ex) {
-	         throw ex;
+	         //throw ex;
 	       }
 	     }
 	   }

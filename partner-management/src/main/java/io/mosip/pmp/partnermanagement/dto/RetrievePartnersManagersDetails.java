@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 public class RetrievePartnersManagersDetails {
 	
-	public String partnerID;
-	public String partnerStatus;
-	public String policyID;
-	public String policyName;
-	public String apikeyReqID;
-	public String apikeyReqIDStatus;
-	public String partnerAPIKey;
-	public String partnerAPIKeyStatus;
+	private String partnerID;
+	private String partnerStatus;
+	private String policyID;
+	private String policyName;
+	private String apikeyReqID;
+	private String apikeyReqIDStatus;
+	private String partnerAPIKey;
+	private String partnerAPIKeyStatus;
 
 }

@@ -224,7 +224,7 @@ public class PolicyManagementService {
 		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<>();	
 		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
 		PolicyGroup policyGroupFromDb = null;
-		if (policyGroupDetails != null && policyGroupDetails.get() != null){
+		if (policyGroupDetails.get() != null){
 			policyGroupFromDb = policyGroupDetails.get();
 			policyGroupFromDb.setName(updateRequestDto.getName());
 			policyGroupFromDb.setDescr(updateRequestDto.getDesc());
@@ -243,21 +243,21 @@ public class PolicyManagementService {
 		        		   ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
 			}
 		}
-		updateRequestDto.getPolicies().setPolicyId(policyGroupFromDb.getId());
-		updateRequestDto.getPolicies().setName(policyGroupFromDb.getName());
-		updateRequestDto.getPolicies().setDescr(policyGroupFromDb.getName());
-		
-		PolicyServiceLogger.info("Creating auth policies for policy group.");
-		createAuthPolicies(updateRequestDto.getPolicies());
-		
-		responseDto.set_Active(policyGroupFromDb.getIsActive());
-		responseDto.setId(policyGroupFromDb.getId());
-		responseDto.setName(policyGroupFromDb.getName());
-		responseDto.setDesc(policyGroupFromDb.getDescr());
-		responseDto.setCr_by(policyGroupFromDb.getCrBy());
-		responseDto.setCr_dtimes(policyGroupFromDb.getCrDtimes());
-		responseDto.setUp_by(policyGroupFromDb.getUpdBy());
-		responseDto.setUpd_dtimes(policyGroupFromDb.getUpdDtimes());
+		if(policyGroupFromDb!=null) {
+			updateRequestDto.getPolicies().setPolicyId(policyGroupFromDb.getId());
+			updateRequestDto.getPolicies().setName(policyGroupFromDb.getName());
+			updateRequestDto.getPolicies().setDescr(policyGroupFromDb.getName());
+			PolicyServiceLogger.info("Creating auth policies for policy group.");
+			createAuthPolicies(updateRequestDto.getPolicies());
+			responseDto.set_Active(policyGroupFromDb.getIsActive());
+			responseDto.setId(policyGroupFromDb.getId());
+			responseDto.setName(policyGroupFromDb.getName());
+			responseDto.setDesc(policyGroupFromDb.getDescr());
+			responseDto.setCr_by(policyGroupFromDb.getCrBy());
+			responseDto.setCr_dtimes(policyGroupFromDb.getCrDtimes());
+			responseDto.setUp_by(policyGroupFromDb.getUpdBy());
+			responseDto.setUpd_dtimes(policyGroupFromDb.getUpdDtimes());
+		}
 		response.setResponse(responseDto);
 		
 		return response;
@@ -281,7 +281,7 @@ public class PolicyManagementService {
         			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
         }
 		PolicyGroup policyGroupFromDb = null;
-		if (policyGroupDetails != null && policyGroupDetails.get() != null) {
+		if (policyGroupDetails.get() != null) {
 			policyGroupFromDb = policyGroupDetails.get();
 			policyGroupFromDb.setIsActive(status);
 			policyGroupFromDb.setUpdBy("SYSTEM");

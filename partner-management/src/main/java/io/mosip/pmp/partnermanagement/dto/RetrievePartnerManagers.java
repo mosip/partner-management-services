@@ -12,5 +12,5 @@ import lombok.Data;
 @Data
 public class RetrievePartnerManagers {
 	
-	public List<RetrievePartnersManagersDetails> partners; 
+	private List<RetrievePartnersManagersDetails> partners; 
 }

@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class RetrievePartnersDetails {
 	
-	public String partnerID;
-	public String status;
-	public String organizationName;
-	public String contactNumber;
-	public String emailId;
-	public String address;
+	private String partnerID;
+	private String status;
+	private String organizationName;
+	private String contactNumber;
+	private String emailId;
+	private String address;
 
 }

@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class PartnerAPIKeyToPolicyMappingsResponse {
 		
-	public String partnerID;
-	public String policyId;
+	private String partnerID;
+	private String policyId;
 }

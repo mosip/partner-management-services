@@ -197,7 +197,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<PolicyGroup> findByIdpolicyGroup = null;
 		PolicyGroup policyGroup = null;
 
-		if (findByIdPartner.isPresent() && findByIdPartner != null) {
+		if (findByIdPartner.isPresent()) {
 			LOGGER.info(partnerID +": Partner is available");
 			partner = findByIdPartner.get();
 			response.setPartnerID(partner.getId());
@@ -208,9 +208,15 @@ public class PartnerServiceImpl implements PartnerService {
 
 			LOGGER.info("++++++++++++Retriving the name of policy group+++++++++++++");
 			findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-			policyGroup = findByIdpolicyGroup.get();
 			
-			response.setPolicyGroup(policyGroup.getName());
+			if(findByIdpolicyGroup.isPresent()) {
+				policyGroup = findByIdpolicyGroup.get();
+			}
+			
+			if(policyGroup!=null) {
+				response.setPolicyGroup(policyGroup.getName());
+			}
+			
 			return response;
 		} else {
 			LOGGER.info(partnerID +": Partner is not available");
@@ -242,9 +248,12 @@ public class PartnerServiceImpl implements PartnerService {
 			
 			LOGGER.info("++++++++++++Retriving the name of policy group+++++++++++++");
 			findByIdpolicyGroup = policyGroupRepository.findById(Partner_ByName.getPolicyGroupId());
-			policyGroup = findByIdpolicyGroup.get();
-			
-			response.setPolicyGroupName(policyGroup.getName());
+			if(findByIdpolicyGroup.isPresent()) {
+				policyGroup = findByIdpolicyGroup.get();
+			}
+			if(policyGroup!=null) {
+				response.setPolicyGroupName(policyGroup.getName());
+			}
 		}else {
 			LOGGER.info(partnerName +": Partner is not available");
 			throw new PartnerDoesNotExistsException(
@@ -259,7 +268,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<Partner> findById = partnerRepository.findById(partnerID);
 		Partner partner = null;
 		LocalDateTime now = LocalDateTime.now(); 
-		if (findById.isPresent() && findById != null) {
+		if (findById.isPresent()) {
 			LOGGER.info(partnerID +": Partner is available");
 			partner = findById.get();
 			if(partner.getName().equalsIgnoreCase(request.getOrganizationName())) {
@@ -448,7 +457,7 @@ public class PartnerServiceImpl implements PartnerService {
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
 		Optional<PartnerPolicyRequest> partner_request = partnerPolicyRequestRepository.findById(aPIKeyReqID);
 
-		if (partner_request.isPresent() && partner_request != null) {
+		if (partner_request.isPresent()) {
 			LOGGER.info(aPIKeyReqID +" : Valied APIKeyReqID");
 			PartnerPolicyRequest partnerPolicyRequest = partner_request.get();
 			if (partnerPolicyRequest.getPartner().getId().equals(partnerID)) {
@@ -522,7 +531,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicy partnerPolicy = null;
 		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(aPIKeyReqID);
 		APIkeyRequests aPIkeyRequests = new APIkeyRequests();
-		if (findById.isPresent() && findById != null) {
+		if (findById.isPresent()) {
 			LOGGER.info(aPIKeyReqID +" : Valied APIKeyReqID");
 			PartnerPolicyRequest partnerPolicyRequest = findById.get();
 
@@ -887,11 +896,8 @@ public class PartnerServiceImpl implements PartnerService {
 			partnersDetails.setApiKeyRequestStatus(status_code);
 			
 			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-			
-			if(findByIdpolicyGroup!=null) {
-				partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
-			}
-			
+			partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
+
 			partners.add(partnersDetails);
 		}
 		partnersResponse.setPartners(partners);

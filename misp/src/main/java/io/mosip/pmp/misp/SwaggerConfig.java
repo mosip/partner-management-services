@@ -24,10 +24,9 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo metaData() {
-		ApiInfo apiInfo = new ApiInfo("MISP Services", "MISP", "1.0",
+		return new ApiInfo("MISP Services", "MISP", "1.0",
 				"MISP of service",
 				new Contact("MISP", "https://mosip.io", "info@mosip.io"),
-				"Apache License Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
-		return apiInfo;
+				"Apache License Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());	
 	}
 }

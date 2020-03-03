@@ -60,10 +60,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
 			errorResponse = setErrors(request);
+			errorResponse.getErrors().add(serviceError);
 		} catch (IOException e) {
 			//
 		}
-		errorResponse.getErrors().add(serviceError);
 		return new ResponseEntity<>(errorResponse, status);        
     }
 	
