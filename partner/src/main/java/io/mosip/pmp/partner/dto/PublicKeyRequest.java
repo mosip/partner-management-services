@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PublicKeyRequest {
 	
-	public String applicationId;
-	public String timestamp;
-	public String referenceId;
+	private String applicationId;
+	private String timestamp;
+	private String referenceId;
 }

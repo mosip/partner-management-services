@@ -10,5 +10,5 @@ import lombok.Data;
 @Data
 public class DownloadPartnerAPIkeyResponse {
 		
-		public String partnerAPIKey;
+		private String partnerAPIKey;
 }

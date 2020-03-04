@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class GetPartnerDetailsResponse {
 	
-	public List<PartnersDetails> partners;
+	private List<PartnersDetails> partners;
 }

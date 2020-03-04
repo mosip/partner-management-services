@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class DigitalCertificateResponse {
 	
-	//public String status;
-	public String message;
+	//private String status;
+	private String message;
 }

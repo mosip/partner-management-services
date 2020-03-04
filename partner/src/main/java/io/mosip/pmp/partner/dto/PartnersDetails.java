@@ -5,17 +5,17 @@ import lombok.Data;
 @Data
 public class PartnersDetails {
 	
-	public String partnerID;      
-	public String organizationName; 
-	public String contactNumber;
-	public String policyName;
-	public String emailId;
-	public String status;
-	public String address;
-	public String createdBy;
-	public String createdDateTime;
-	public String updatedBy;
-	public String updatedDateTime;
-	public String apiKeyRequestStatus;
+	private String partnerID;      
+	private String organizationName; 
+	private String contactNumber;
+	private String policyName;
+	private String emailId;
+	private String status;
+	private String address;
+	private String createdBy;
+	private String createdDateTime;
+	private String updatedBy;
+	private String updatedDateTime;
+	private String apiKeyRequestStatus;
 	
 }

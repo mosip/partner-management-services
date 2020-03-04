@@ -896,8 +896,9 @@ public class PartnerServiceImpl implements PartnerService {
 			partnersDetails.setApiKeyRequestStatus(status_code);
 			
 			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-			partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
-
+			if(findByIdpolicyGroup.isPresent()) {
+				partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
+			}
 			partners.add(partnersDetails);
 		}
 		partnersResponse.setPartners(partners);

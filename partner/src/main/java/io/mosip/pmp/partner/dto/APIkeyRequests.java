@@ -14,11 +14,11 @@ import lombok.Data;
 @Data
 public class APIkeyRequests {
 	
-	public String apiKeyReqID;
-	public String apiKeyRequestStatus;
-	public String partnerApiKey;
+	private String apiKeyReqID;
+	private String apiKeyRequestStatus;
+	private String partnerApiKey;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	public Timestamp validityTill;
+	private Timestamp validityTill;
 	
 	
 	
