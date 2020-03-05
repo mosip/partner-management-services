@@ -18,17 +18,17 @@ public class MISPWithLicenseDto implements Serializable {
 
 	public static final long serialVersionUID = 6670743917275798523L;
 	
-	public String id;
+	private String id;
 	
-	public String organizationName;
+	private String organizationName;
 	
-	public String contactNumber;
+	private String contactNumber;
 	
-	public String emailID;
+	private String emailID;
 	
-	public String address;
+	private String address;
 	
-	public String status;
+	private String status;
 
-	public List<MISPLiceneseDto> licenses;
+	private List<MISPLiceneseDto> licenses;
 }

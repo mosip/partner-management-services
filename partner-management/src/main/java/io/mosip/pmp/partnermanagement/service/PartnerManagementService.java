@@ -73,7 +73,7 @@ public interface PartnerManagementService {
 	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
 	 * @return partnerAPIKeyToPolicyMappingsResponse this class contains partnerID and policyId
 	 */
-	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID, String PartnerAPIKey);
+	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID, String partnerAPIKey);
 	
 	/**
 	 * This method would be used to retrieve all Partner API Key requests as received by partner manager.
@@ -86,7 +86,7 @@ public interface PartnerManagementService {
 	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
 	 * @return apikeyRequests this class contains details relared to Partner API key to Policy Mappings
 	 */
-	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String APIKeyReqID);
+	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String apiKeyReqID);
 	
 	/**
 	 *  Partner Manager would be using this API to approve OR reject partner API key
@@ -104,5 +104,5 @@ public interface PartnerManagementService {
 	
 	public RetrievePartnerManagers getPartnerManager();
 	
-	public PolicyIDResponse getPartnerPolicyID(String PolicyName);
+	public PolicyIDResponse getPartnerPolicyID(String policyName);
 }

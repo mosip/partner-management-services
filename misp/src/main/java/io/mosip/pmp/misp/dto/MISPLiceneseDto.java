@@ -17,10 +17,10 @@ public class MISPLiceneseDto implements Serializable{
 
 	public static final long serialVersionUID = 671785832679079663L;
 	
-	public String licenseKey;
+	private String licenseKey;
 	
-	public String licenseKeyExpiry;
+	private String licenseKeyExpiry;
 	
-	public String licenseKeyStatus;
+	private String licenseKeyStatus;
 
 }

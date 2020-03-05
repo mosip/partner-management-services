@@ -16,12 +16,12 @@ public class PolicyUpdateResponseDto {
 	/**
 	 * policy group id.
 	 */
-	public String id;
+	private String id;
 	
 	/**
 	 * policy group name
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * policy group description.
@@ -41,16 +41,16 @@ public class PolicyUpdateResponseDto {
 	/**
 	 * created date and times.
 	 */
-	public LocalDateTime cr_dtimes;
+	private LocalDateTime cr_dtimes;
 	
 	/**
 	 * updated by
 	 */
-	public String up_by;
+	private String up_by;
 	
 	/**
 	 * updated date and times.
 	 */
-	public LocalDateTime upd_dtimes;
+	private LocalDateTime upd_dtimes;
 
 }

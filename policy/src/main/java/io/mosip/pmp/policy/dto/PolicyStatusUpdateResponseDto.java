@@ -15,5 +15,5 @@ public class PolicyStatusUpdateResponseDto {
 	/**
 	 * Contains information regarding the policy update.(Active or DeActive).
 	 */
-	public String message;
+	private String message;
 }

@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class PoliciesDto {
 
-	public List<PolicyWithAuthPolicyDto> policies;
+	private List<PolicyWithAuthPolicyDto> policies;
 }

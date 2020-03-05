@@ -16,41 +16,41 @@ public class PolicyCreateResponseDto {
 	/**
 	 * policy group id.
 	 */
-	public String id;
+	private String id;
 	
 	/**
 	 * policy group name
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * policy group description.
 	 */
-	public String desc;
+	private String desc;
 	
 	/**
 	 * policy group status(Active or De-Active)
 	 */
-	public Boolean is_Active;
+	private Boolean is_Active;
 	
 	/**
 	 * Created By
 	 */
-	public String cr_by;	
+	private String cr_by;	
 	
 	/**
 	 * Created date and time
 	 */
-	public LocalDateTime cr_dtimes;
+	private LocalDateTime cr_dtimes;
 	
 	/**
 	 * Updated by
 	 */
-	public String up_by;
+	private String up_by;
 	
 	/**
 	 * Updated date and time
 	 */
-	public LocalDateTime upd_dtimes;
+	private LocalDateTime upd_dtimes;
 
 }

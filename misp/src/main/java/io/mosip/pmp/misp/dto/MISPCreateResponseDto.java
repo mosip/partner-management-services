@@ -19,10 +19,10 @@ public class MISPCreateResponseDto {
 	/**
 	 *  Carries the misp status(Active OR De-Active) 
 	 */
-	public String mispStatus;
+	private String mispStatus;
 	
 	/**
 	 * Carries the misp id
 	 */
-	public String mispID;
+	private String mispID;
 }

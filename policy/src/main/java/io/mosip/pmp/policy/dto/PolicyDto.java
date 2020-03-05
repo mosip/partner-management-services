@@ -19,27 +19,27 @@ public class PolicyDto {
 	/**
 	 * policy Id
 	 */
-	public String policyId;
+	private String policyId;
 	
 	/**
 	 * policy name
 	 */
 	@NotNull
-	public String name;
+	private String name;
 	
 	/**
 	 * policy description.
 	 */
 	@NotNull
-	public String descr;
+	private String descr;
 	
 	/**
 	 * list of auth policy dto's.
 	 */
-	public List<AuthPolicyDto> authPolicies;
+	private List<AuthPolicyDto> authPolicies;
 	
 	/**
 	 * list of allowed Kyc dto's
 	 */
-	public List<AllowedKycDto> allowedKycAttributes;
+	private List<AllowedKycDto> allowedKycAttributes;
 }

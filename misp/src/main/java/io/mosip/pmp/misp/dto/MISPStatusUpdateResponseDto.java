@@ -14,6 +14,6 @@ import lombok.Data;
 @Data
 public class MISPStatusUpdateResponseDto {
 	
-	public String message;
+	private String message;
 
 }

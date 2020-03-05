@@ -19,35 +19,35 @@ public class MISPStatusUpdateResponse {
 	/**
 	 *  Carries the misp status(Active OR De-Active) 
 	 */
-	public String mispStatus;
+	private String mispStatus;
 	
 	/**
 	 *  Carries the misp license key.
 	 */
-	public String mispLicenseKey;
+	private String mispLicenseKey;
 	
 	/**
 	 * Carries the misp license key expiry date 
 	 */
-	public String mispLicenseKeyExpiry;
+	private String mispLicenseKeyExpiry;
 	
 	/**
 	 * Carries the misp license key status(Atcive OR De-Active)
 	 */
-	public String mispLicenseKeyStatus;
+	private String mispLicenseKeyStatus;
 	
 	/**
 	 * Carries the misp id
 	 */
-	public String mispID;
+	private String mispID;
 
 	/**
 	 * Carries the misp Status
 	 */
-	public String mispStatusCode;
+	private String mispStatusCode;
 	/**
 	 * Carries the status message
 	 */	
-	public String message;
+	private String message;
 
 }

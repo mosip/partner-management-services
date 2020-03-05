@@ -54,6 +54,9 @@ public class PartnerManagementController {
 	@Autowired
 	PartnerManagementService partnerManagementService;
 	
+	String msg = "mosip.partnermanagement.partners.retrieve";
+	String version = "1.0";
+	
 	/**
 	 * This API would be used for testing of pmpartners application up and running
 	 * @return partners application is up and running
@@ -61,33 +64,33 @@ public class PartnerManagementController {
 	
 	@RequestMapping(value="/test", method = RequestMethod.GET)
 	public String test(){
-		LOGGER.info("++++++++++++++++Test API is Up and Running+++++++++++++++++");
+		LOGGER.info("Test API is Up and Running");
 		return "pmpartners application is up and runing";
 	}
 
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
-	 * @param request this class cintains oldPolicyID and newPolicyID
+	 * @param request this class contain oldPolicyID and newPolicyID
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @param partnerAPIKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about API key created successfully
 	 */
 	
 	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> PartnerApiKeyToPolicyMappings(
+	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerID,
 			@PathVariable String partnerAPIKey) {
-		LOGGER.info("++++++++++++++++Requesting for updating the Policy Group+++++++++++++++++");
+		LOGGER.info("Requesting for updating the Policy Group");
 		PartnersPolicyMappingRequest partnersPolicyMappingRequest = request.getRequest();
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
+		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse=null;
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		partnersPolicyMappingResponse = partnerManagementService
 				.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerID, partnerAPIKey);
 		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -101,7 +104,7 @@ public class PartnerManagementController {
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerID,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
+		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -109,7 +112,7 @@ public class PartnerManagementController {
 		partnersPolicyMappingResponse = partnerManagementService
 				.activateDeactivateAuthEKYCPartner(partnerID,activateDeactivatePartnerRequest);
 		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	 }
 	
 	/**
@@ -124,16 +127,16 @@ public class PartnerManagementController {
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerID,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
-			@PathVariable String PartnerAPIKey){
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
+			@PathVariable String partnerAPIKey){
+		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		partnersPolicyMappingResponse = partnerManagementService
-				.activateDeactivatePartnerAPIKeyGivenPartner(partnerID,activateDeactivatePartnerRequest,PartnerAPIKey);
+				.activateDeactivatePartnerAPIKeyGivenPartner(partnerID,activateDeactivatePartnerRequest,partnerAPIKey);
 		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -150,16 +153,16 @@ public class PartnerManagementController {
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
-			@PathVariable String APIKeyReqID){
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<PartnersPolicyMappingResponse>();
+			@PathVariable String apiKeyReqId){
+		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		partnersPolicyMappingResponse = partnerManagementService
-				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,APIKeyReqID);
+				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,apiKeyReqId);
 		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/** 
@@ -169,25 +172,25 @@ public class PartnerManagementController {
 	
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(){
-		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<RetrievePartnerDetailsResponse>();
+		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup();
-		response.setId("mosip.partnermanagement.partners.retrieve");
-		response.setVersion("1.0");
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(retrievePartnerDetailsResponse);
-		return new ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
-		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<RetrievePartnerManagers>();
+		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();
 		RetrievePartnerManagers retrievePartnerManagers = null;
 		retrievePartnerManagers = partnerManagementService.getPartnerManager();
-		response.setId("mosip.partnermanagement.partners.retrieve");
-		response.setVersion("1.0");
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(retrievePartnerManagers);
-		return new ResponseEntity<ResponseWrapper<RetrievePartnerManagers>>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -199,13 +202,13 @@ public class PartnerManagementController {
 	@RequestMapping(value="/{partnerID}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnersDetails>> getparticularAuthEKYCPartnerDetailsForGivenPartnerId(
 			@PathVariable String partnerID){
-		ResponseWrapper<RetrievePartnersDetails> response = new ResponseWrapper<RetrievePartnersDetails>();
+		ResponseWrapper<RetrievePartnersDetails> response = new ResponseWrapper<>();
 		RetrievePartnersDetails retrievePartnersDetails = null;
 		retrievePartnersDetails = partnerManagementService.getparticularAuthEKYCPartnerDetailsForGivenPartnerId(partnerID);
-		response.setId("mosip.partnermanagement.partners.retrieve");
-		response.setVersion("1.0");
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(retrievePartnersDetails);
-		return new ResponseEntity<ResponseWrapper<RetrievePartnersDetails>>(response , HttpStatus.OK);
+		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 	
 	/**
@@ -222,14 +225,14 @@ public class PartnerManagementController {
 	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getValidatPartnerAPIKeyPatternAndExpiry(
 			@PathVariable String partnerID,
-			@PathVariable String PartnerAPIKey){
-		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>();
+			@PathVariable String partnerAPIKey){
+		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyToPolicyMappingsResponse partnerAPIKeyToPolicyMappingsResponse = null;
-		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerID,PartnerAPIKey);
-		response.setId("mosip.partnermanagement.partners.retrieve.policy");
-		response.setVersion("1.0");
+		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerID,partnerAPIKey);
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(partnerAPIKeyToPolicyMappingsResponse);
-		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>>(response , HttpStatus.OK);
+		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 	
 	/**
@@ -240,44 +243,44 @@ public class PartnerManagementController {
 	@RequestMapping(value = "/PartnerAPIKeyRequests" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager(){
 		List<ApikeyRequests> apikeyRequests = null;
-		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<PartnerAPIKeyRequestsResponse>();
+		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyRequestsResponse partnerAPIKeyRequestsResponse = new PartnerAPIKeyRequestsResponse();
 		apikeyRequests = partnerManagementService.getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();
 		partnerAPIKeyRequestsResponse.setApikeyRequests(apikeyRequests);
-		response.setId("mosip.partnermanagement.partners.apikey.request.retrieve");
-		response.setVersion("1.0");
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(partnerAPIKeyRequestsResponse);
-		return new ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>>(response , HttpStatus.OK);
+		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 	
 	/**
 	 * This API would be used to retrieve the request for Partner API key to Policy Mappings for given request id.
 	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
-	 * @return response this class contains details relared to Partner API key to Policy Mappings
+	 * @return response this class contains details related to Partner API key to Policy Mappings
 	 */
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
-			@PathVariable String APIKeyReqID) {
-		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<ApikeyRequests>();
+			@PathVariable String apiKeyReqId) {
+		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();
 		ApikeyRequests apikeyRequests=null;
-		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(APIKeyReqID);
-		response.setId("mosip.partnermanagement.partners.apikey.requests.retrieve");
-		response.setVersion("1.0");
+		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(apiKeyReqId);
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(apikeyRequests);
-		return new ResponseEntity<ResponseWrapper<ApikeyRequests>>(response , HttpStatus.OK);
+		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/policyname/{PolicyName}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PolicyIDResponse>> getPolicyID(
-			@PathVariable String PolicyName){
-		ResponseWrapper<PolicyIDResponse> response = new ResponseWrapper<PolicyIDResponse>();
+			@PathVariable String policyName){
+		ResponseWrapper<PolicyIDResponse> response = new ResponseWrapper<>();
 		PolicyIDResponse policyIDResponse = null;
-		policyIDResponse = partnerManagementService.getPartnerPolicyID(PolicyName);
+		policyIDResponse = partnerManagementService.getPartnerPolicyID(policyName);
 		
-		response.setId("mosip.partnermanagement.partners");
-		response.setVersion("1.0");
+		response.setId(msg);
+		response.setVersion(version);
 		response.setResponse(policyIDResponse);
 
-		return new ResponseEntity<ResponseWrapper<PolicyIDResponse>>(response , HttpStatus.OK);
+		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 }

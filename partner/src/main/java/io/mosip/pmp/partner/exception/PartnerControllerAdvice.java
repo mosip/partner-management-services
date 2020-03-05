@@ -33,15 +33,21 @@ import io.mosip.pmp.partner.core.ResponseWrapper;
 
 @RestControllerAdvice
 public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	String msg = "mosip.partnermanagement";
+	String version = "1.0";
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Partner already registered exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Partner already registered exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerAlreadyRegisteredException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassage(
@@ -66,10 +72,48 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(PartnerAlreadyRegisteredWithSamePolicyGroupException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerAlreadyRegisteredWithSamePolicyGroupExceptionMassage(
-			final HttpServletRequest httpServletRequest, final PartnerAlreadyRegisteredWithSamePolicyGroupException exception)
+			final HttpServletRequest httpServletRequest,
+			final PartnerAlreadyRegisteredWithSamePolicyGroupException exception) throws IOException {
+		ResponseWrapper<ErrorResponse> responseError = setErrors(httpServletRequest);
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("timestamp", new Date());
+		body.put("status", status.value());
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(PartnerInputExceptionConstant.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
+		errorResponse.setMessage(PartnerInputExceptionConstant.MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		List<ErrorResponse> errors = new ArrayList<>();
+		errors.add(errorResponse);
+
+		body.put("errors", errors);
+		return new ResponseEntity<>(body, headers, status);
+	}
+
+	/**
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Partner Does Not Exist Exception
+	 * @return this class contains errorCode and message
+	 * @throws IOException
+	 *             this class contains Checked Exception
+	 */
+
+	@ExceptionHandler(PartnerDoesNotExistException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
+			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistException exception)
 			throws IOException {
 		ResponseWrapper<ErrorResponse> responseError = setErrors(httpServletRequest);
 		ErrorResponse errorResponse = new ErrorResponse();
@@ -78,173 +122,149 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
-	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		 Map<String, Object> body = new LinkedHashMap<>(); 
-		 body.put("timestamp", new Date()); 
-		 body.put("status", status.value());
-		 ErrorResponse errorResponse =new ErrorResponse();
-		 errorResponse.setErrorCode(PartnerInputExceptionConstant.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
-		 errorResponse.setMessage(PartnerInputExceptionConstant.MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
-		 List<ErrorResponse> errors = new ArrayList<ErrorResponse>();
-		 errors.add(errorResponse);
-		 
-		body.put("errors", errors);
-		return new ResponseEntity<>(body, headers, status);
-	}
-	
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Partner Does Not Exist Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Policy Group Does Not Exist Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
-	 */
-	
-	@ExceptionHandler(PartnerDoesNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
-			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  setErrors(httpServletRequest);
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(exception.getErrorCode());
-		errorResponse.setMessage(exception.getErrorText());
-		responseError.setErrors(errorResponse);
-		return new ResponseEntity<>(responseError, HttpStatus.OK);
-	}
-	
-	
-	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Policy Group Does Not Exist Exception
-	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PolicyGroupDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PolicyGroupDoesNotExistException exception)
 			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  setErrors(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = setErrors(httpServletRequest);
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Partner API Key Is Not Created Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Partner API Key Is Not Created Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerAPIKeyIsNotCreatedException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
-			final HttpServletRequest httpServletRequest, final PartnerAPIKeyIsNotCreatedException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+			final HttpServletRequest httpServletRequest, final PartnerAPIKeyIsNotCreatedException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.setErrors(errorResponse);
-		responseError.setId("mosip.partnermanagement.partnerAPIKey.download");
-		responseError.setVersion("1.0");
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains APIKeyReqId Status In Progress Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains APIKeyReqId Status In Progress Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(APIKeyReqIdStatusInProgressException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
-			final HttpServletRequest httpServletRequest, final APIKeyReqIdStatusInProgressException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+			final HttpServletRequest httpServletRequest, final APIKeyReqIdStatusInProgressException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.setErrors(errorResponse);
-		responseError.setId("mosip.partnermanagement.partners.apikey.status");
-		responseError.setVersion("1.0");
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Partner APIKeyReqID Does Not Exist Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Partner APIKeyReqID Does Not Exist Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerAPIKeyReqIDDoesNotExistException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerAPIKEYExcepionMassages(
-			final HttpServletRequest httpServletRequest, final PartnerAPIKeyReqIDDoesNotExistException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+			final HttpServletRequest httpServletRequest, final PartnerAPIKeyReqIDDoesNotExistException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Partner Does Not Exists Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Partner Does Not Exists Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerDoesNotExistsException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
-			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception)
-			throws IOException {
-		ResponseWrapper<ErrorResponse> responseError =  new ResponseWrapper<ErrorResponse>();
+			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
-		responseError.setId("mosip.partnermanagement");
-		responseError.setVersion("1.0");
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
-	 * @param exception this class contains Checked Exception
+	 * @param httpServletRequest
+	 *            this class contains servlet request
+	 * @param exception
+	 *            this class contains Checked Exception
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
-	
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getAllExcepionMassage(
-			final HttpServletRequest httpServletRequest, final Exception exception) throws IOException {
-		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<ErrorResponse>();
+			final HttpServletRequest httpServletRequest, final Exception exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setMessage(exception.getMessage());
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
-	
-	
+
 	/**
-	 * @param httpServletRequest this class contains servlet request
+	 * @param httpServletRequest
+	 *            this class contains servlet request
 	 * @return this class contains errorCode and message
-	 * @throws IOException this class contains Checked Exception
+	 * @throws IOException
+	 *             this class contains Checked Exception
 	 */
-	
+
 	private ResponseWrapper<ErrorResponse> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ErrorResponse> responseWrapper = new ResponseWrapper<>();
 		String requestBody = null;
 		if (httpServletRequest instanceof ContentCachingRequestWrapper) {
 			requestBody = new String(((ContentCachingRequestWrapper) httpServletRequest).getContentAsByteArray());
 		}
-		
+
 		JsonNode reqNode = objectMapper.readTree(requestBody);
 		responseWrapper.setId(reqNode.path("id").asText());
 		responseWrapper.setVersion(reqNode.path("version").asText());

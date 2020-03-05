@@ -32,14 +32,14 @@ public class MISPLicenseEntity extends BaseEntity implements Serializable {
 	
 	@Id
 	@Column(insertable= false, updatable = false)
-	public String misp_id;	
+	private String misp_id;	
 	
-	public String license_key;
+	private String license_key;
 	
 	@Column(name = "valid_from_date")
-	public LocalDateTime validFromDate;	
+	private LocalDateTime validFromDate;	
 
 	@Column(name = "valid_to_date")	
-	public LocalDateTime validToDate;
+	private LocalDateTime validToDate;
 	
 }

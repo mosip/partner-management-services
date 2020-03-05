@@ -18,17 +18,17 @@ import lombok.Data;
 @ApiModel(value = "MISPlKeyStatusUpdateResponse", description = "MISP license key request representation")
 public class MISPlKeyStatusUpdateRequestDto {
 	
-	public String mispId;
+	private String mispId;
 	
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value ="mispStatus", required = true, dataType = "java.lang.String")	
-	public String mispStatus;
+	private String mispStatus;
 
 	@Size(min = 1, max = 128)
 	@ApiModelProperty(value ="mispLicenseKey", required = true, dataType = "java.lang.String")	
-	public String mispLicenseKey;
+	private String mispLicenseKey;
 	
 	@Size(min = 1, max = 128)
 	@ApiModelProperty(value ="mispLicenseKeyStatus", required = true, dataType = "java.lang.String")	
-	public String mispLicenseKeyStatus;
+	private String mispLicenseKeyStatus;
 }

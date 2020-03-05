@@ -25,18 +25,18 @@ import lombok.Data;
 @Data
 public class ResponseWrapper<T> {
 	
-	public String id;
+	private String id;
 	
-	public String version;
+	private String version;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	public LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
+	private LocalDateTime responsetime = LocalDateTime.now(ZoneId.of("UTC"));
 	
-	public Object metadata;
+	private Object metadata;
 	
 	@NotNull
 	@Valid
-	public T response;	
+	private T response;	
 	
-	public List<ServiceError> errors = new ArrayList<>();
+	private List<ServiceError> errors = new ArrayList<>();
 
 }

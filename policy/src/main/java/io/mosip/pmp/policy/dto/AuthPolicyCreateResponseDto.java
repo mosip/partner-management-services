@@ -17,41 +17,41 @@ public class AuthPolicyCreateResponseDto {
 	 * Auth policy id
 	 * 
 	 */
-	public String id;
+	private String id;
 	
 	/**
 	 * Auth policy name.
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * Auth policy description.
 	 */
-	public String desc;
+	private String desc;
 	
 	/**
 	 * Auth policy Status
 	 */
-	public boolean is_Active;
+	private boolean is_Active;
 	
 	/**
 	 * Created By
 	 */
-	public String cr_by;	
+	private String cr_by;	
 	
 	/**
 	 * Created date and time.
 	 */
-	public LocalDateTime cr_dtimes;
+	private LocalDateTime cr_dtimes;
 	
 	/**
 	 * Updated By
 	 */
-	public String up_by;
+	private String up_by;
 	
 	/**
 	 * Updated date and time
 	 */
-	public LocalDateTime upd_dtimes;
+	private LocalDateTime upd_dtimes;
 
 }

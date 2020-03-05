@@ -16,12 +16,12 @@ public class PolicyStatusUpdateRequestDto {
 	/**
 	 * policy group id.
 	 */
-	public String Id;
+	private String Id;
 	
 	/**
 	 * status ( "Active" Or "De-Active")
 	 * 
 	 */
-	public String Status;
+	private String Status;
 
 }

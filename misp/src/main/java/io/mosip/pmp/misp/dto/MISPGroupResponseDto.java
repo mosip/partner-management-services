@@ -19,5 +19,5 @@ public class MISPGroupResponseDto {
 	/**
 	 * Provide multiple misp details.{@link MISPEntity}
 	 */
-	public List<MISPEntity> mispList;
+	private List<MISPEntity> mispList;
 }

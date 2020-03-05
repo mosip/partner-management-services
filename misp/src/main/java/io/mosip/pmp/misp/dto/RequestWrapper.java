@@ -21,17 +21,17 @@ import lombok.Data;
 
 @Data
 public class RequestWrapper<T> {
-	public String id;
+	private String id;
 	
-	public String version;
+	private String version;
 
 	@ApiModelProperty(notes = "Request Timestamp", example = "2018-12-10T06:12:52.994Z", required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	public LocalDateTime requesttime;
+	private LocalDateTime requesttime;
 
-	public Object metadata;
+	private Object metadata;
 
 	@NotNull
 	@Valid
-	public T request;
+	private T request;
 }

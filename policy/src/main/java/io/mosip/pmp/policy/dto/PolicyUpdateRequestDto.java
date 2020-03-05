@@ -17,21 +17,21 @@ public class PolicyUpdateRequestDto {
 	/**
 	 *  policy id
 	 */
-	public String Id;
+	private String Id;
 	
 	/**
 	 * policy name
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * policy description
 	 */
-	public String desc;
+	private String desc;
 	
 	/**
 	 * Object of Auth and kyc attributes
 	 */
-	public PolicyDto policies;
+	private PolicyDto policies;
 
 }

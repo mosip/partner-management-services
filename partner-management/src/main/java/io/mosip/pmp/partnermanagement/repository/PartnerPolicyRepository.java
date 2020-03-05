@@ -16,6 +16,6 @@ import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
 public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, String> {
 
 	@Query(value = "select * from partner_policy ppr where ppr.part_id=?", nativeQuery = true )
-	public PartnerPolicy findByPartnerId(String part_id);
+	public PartnerPolicy findByPartnerId(String partId);
  
 }

@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class PolicyWithAuthPolicyDto {
 
-	public PolicyCreateResponseDto policy;
+	private PolicyCreateResponseDto policy;
 	
-	public List<PolicyDto> authPolicies;
+	private List<PolicyDto> authPolicies;
 }

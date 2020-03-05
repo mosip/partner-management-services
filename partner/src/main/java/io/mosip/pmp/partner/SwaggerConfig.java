@@ -12,22 +12,19 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 import java.util.Collections;
 
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 	@Bean
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("io.mosip.pmp.partner"))
-				.paths(regex("/partners.*")).build().apiInfo(metaData());
+				.apis(RequestHandlerSelectors.basePackage("io.mosip.pmp.partner")).paths(regex("/partners.*")).build()
+				.apiInfo(metaData());
 	}
 
 	private ApiInfo metaData() {
-		ApiInfo apiInfo = new ApiInfo("Partner Services", "Partner Regitration ", "1.0",
-				"Terms of service",
-				new Contact("MOSIP Partner", "https://mosip.io", "info@mosip.io"),
-				"Apache License Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
-		return apiInfo;
+		return new ApiInfo("Partner Services", "Partner Regitration ", "1.0", "Terms of service",
+				new Contact("MOSIP Partner", "https://mosip.io", "info@mosip.io"), "Apache License Version 2.0",
+				"https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
 	}
 }

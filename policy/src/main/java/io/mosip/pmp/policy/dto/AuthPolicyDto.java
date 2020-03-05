@@ -21,10 +21,10 @@ import lombok.Data;
 public class AuthPolicyDto {
 
 	@NotBlank(message = "authType should not be empty.")
-	public String authType;
+	private String authType;
 	
-	public String authSubType;
+	private String authSubType;
 	
 	@NotBlank(message = "mandatory should contain 'true' or 'false' values")
-	public boolean mandatory;
+	private boolean mandatory;
 }
