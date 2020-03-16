@@ -123,7 +123,7 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerID,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
