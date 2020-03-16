@@ -71,16 +71,16 @@ public class PartnerManagementController {
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
 	 * @param request this class contain oldPolicyID and newPolicyID
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @param partnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @param partnerId this is unique id created after self registered by partner
+	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about API key created successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
-			@PathVariable String partnerID,
-			@PathVariable String partnerAPIKey) {
+			@PathVariable String partnerId,
+			@PathVariable String partnerApiKey) {
 		LOGGER.info("Requesting for updating the Policy Group");
 		PartnersPolicyMappingRequest partnersPolicyMappingRequest = request.getRequest();
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
@@ -88,21 +88,21 @@ public class PartnerManagementController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		partnersPolicyMappingResponse = partnerManagementService
-				.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerID, partnerAPIKey);
+				.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerId, partnerApiKey);
 		response.setResponse(partnersPolicyMappingResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**
 	 * This API would be used to activate/deactivate Auth/E-KYC Partners
-	 * @param partnerID this is unique id created after self registered by partner
+	 * @param partnerId this is unique id created after self registered by partner
 	 * @param request this class contains the status of activate/deactivate Auth/E-KYC Partners
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
 	
-	@RequestMapping(value = "/updateStatus/{partnerID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateStatus/{partnerId}", method = RequestMethod.PUT)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
-			 @PathVariable String partnerID,
+			 @PathVariable String partnerId,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
@@ -110,31 +110,31 @@ public class PartnerManagementController {
 		response.setVersion(request.getVersion());
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		partnersPolicyMappingResponse = partnerManagementService
-				.activateDeactivateAuthEKYCPartner(partnerID,activateDeactivatePartnerRequest);
+				.activateDeactivateAuthEKYCPartner(partnerId,activateDeactivatePartnerRequest);
 		response.setResponse(partnersPolicyMappingResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	 }
 	
 	/**
 	 * Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
-	 * @param partnerID this is unique id created after self registered by partner
+	 * @param partnerId this is unique id created after self registered by partner
 	 * @param request this class contains the status about activate OR de-activate PartnerAPIKey for given partner
-	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/{partnerAPIKey}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
-			@PathVariable String partnerID,
+			@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
-			@PathVariable String partnerAPIKey){
+			@PathVariable String partnerApiKey){
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		partnersPolicyMappingResponse = partnerManagementService
-				.activateDeactivatePartnerAPIKeyGivenPartner(partnerID,activateDeactivatePartnerRequest,partnerAPIKey);
+				.activateDeactivatePartnerAPIKeyGivenPartner(partnerId,activateDeactivatePartnerRequest,partnerApiKey);
 		response.setResponse(partnersPolicyMappingResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -147,10 +147,10 @@ public class PartnerManagementController {
 	 * status, expiry of which would configurable.
 	 * 
 	 * @param request this class contains the status about approve OR reject partner API key requests
-	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains massage about PartnerAPIKey approved successfully
 	 */
-	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
 			@PathVariable String apiKeyReqId){
@@ -199,12 +199,12 @@ public class PartnerManagementController {
 	 * @return response this class contains Auth/E-KYC Partner details for given partner id
 	 */
 	
-	@RequestMapping(value="/{partnerID}", method = RequestMethod.GET)
+	@RequestMapping(value="/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnersDetails>> getparticularAuthEKYCPartnerDetailsForGivenPartnerId(
-			@PathVariable String partnerID){
+			@PathVariable String partnerId){
 		ResponseWrapper<RetrievePartnersDetails> response = new ResponseWrapper<>();
 		RetrievePartnersDetails retrievePartnersDetails = null;
-		retrievePartnersDetails = partnerManagementService.getparticularAuthEKYCPartnerDetailsForGivenPartnerId(partnerID);
+		retrievePartnersDetails = partnerManagementService.getparticularAuthEKYCPartnerDetailsForGivenPartnerId(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(retrievePartnersDetails);
@@ -217,18 +217,18 @@ public class PartnerManagementController {
 	 * Partner API Key pattern, validate expiry for Partner API Key and status
 	 * details in background, while fetching Policy to Partner API mappings.
 	 * 
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
+	 * @param partnerId this is unique id created after self registered by partner
+	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains partnerID and policyId
 	 */
 	
-	@RequestMapping(value = "/{partnerID}/{PartnerAPIKey}" , method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/{partnerApiKey}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getValidatPartnerAPIKeyPatternAndExpiry(
-			@PathVariable String partnerID,
-			@PathVariable String partnerAPIKey){
+			@PathVariable String partnerId,
+			@PathVariable String partnerApiKey){
 		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyToPolicyMappingsResponse partnerAPIKeyToPolicyMappingsResponse = null;
-		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerID,partnerAPIKey);
+		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerId,partnerApiKey);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(partnerAPIKeyToPolicyMappingsResponse);
@@ -255,10 +255,10 @@ public class PartnerManagementController {
 	
 	/**
 	 * This API would be used to retrieve the request for Partner API key to Policy Mappings for given request id.
-	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
+	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains details related to Partner API key to Policy Mappings
 	 */
-	@RequestMapping(value = "/PartnerAPIKeyRequests/{APIKeyReqID}" , method = RequestMethod.GET)
+	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
 			@PathVariable String apiKeyReqId) {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();
@@ -270,7 +270,12 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response , HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/policyname/{PolicyName}" , method = RequestMethod.GET)
+	/**
+	 * @param policyName this is unique policy name of partner.
+	 * @return it will return corresponding policy Id.
+	 */
+	
+	@RequestMapping(value = "/policyname/{policyName}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PolicyIDResponse>> getPolicyID(
 			@PathVariable String policyName){
 		ResponseWrapper<PolicyIDResponse> response = new ResponseWrapper<>();

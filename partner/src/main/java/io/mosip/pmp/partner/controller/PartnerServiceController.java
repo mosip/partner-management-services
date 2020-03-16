@@ -115,17 +115,17 @@ public class PartnerServiceController {
 	/**
 	 * This API would be used to retrieve Auth/E-KYC Partner details
 	 * 
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
 
-	@RequestMapping(value = "/{partnerID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
-			@PathVariable String partnerID) {
+			@PathVariable String partnerId) {
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
-		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerID);
+		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(retrievePartnerDetailsResponse);
@@ -137,7 +137,7 @@ public class PartnerServiceController {
 	 * 
 	 * @return List of Partner Details
 	 */
-	
+
 	@RequestMapping(value = "/getpartners", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<GetPartnerDetailsResponse>> getAllPartnerDetails() {
 		ResponseWrapper<GetPartnerDetailsResponse> response = new ResponseWrapper<>();
@@ -194,18 +194,18 @@ public class PartnerServiceController {
 	 * 
 	 * @param request
 	 *            this class contains partner updated details
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
 	 * @return partnerResponse this class contains updated partner details
 	 */
 
-	@RequestMapping(value = "/{partnerID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
-			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerID) {
+			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerId) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerUpdateRequest partnerRequest = request.getRequest();
-		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerID);
+		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
@@ -215,7 +215,7 @@ public class PartnerServiceController {
 	/**
 	 * This API would be used to submit Partner api key request.
 	 * 
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
 	 * @param request
 	 *            this class contains partner policy and policy description details
@@ -223,13 +223,13 @@ public class PartnerServiceController {
 	 *         massage details
 	 */
 
-	@RequestMapping(value = "/submit/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.POST)
+	@RequestMapping(value = "/submit/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
-			@PathVariable String partnerID, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
+			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
 		ResponseWrapper<PartnerAPIKeyResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
 		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
-		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerID);
+		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerAPIKeyResponse);
@@ -239,21 +239,21 @@ public class PartnerServiceController {
 	/**
 	 * This API would be used to download Partner API key for the given APIKeyReqID.
 	 * 
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
-	 * @param aPIKeyReqID
+	 * @param apiKeyReqId
 	 *            this is unique id created after partner request for Partner API
 	 *            Key
 	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner
 	 *         manager approved the partner API request
 	 */
 
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> downloadPartnerAPIkey(
-			@PathVariable String partnerID, @PathVariable String apiKeyReqID) {
+			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
 		DownloadPartnerAPIkeyResponse resp = null;
-		resp = partnerService.downloadPartnerAPIkey(partnerID, apiKeyReqID);
+		resp = partnerService.downloadPartnerAPIkey(partnerId, apiKeyReqId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(resp);
@@ -264,18 +264,18 @@ public class PartnerServiceController {
 	 * This API would be used to retrieve all API key requests submitted by partner
 	 * till date.
 	 * 
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
 
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
-			@PathVariable String partnerID) {
+			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
 		List<APIkeyRequests> apikeyRequestsList = null;
-		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
+		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(apikeyRequestsList);
@@ -286,21 +286,21 @@ public class PartnerServiceController {
 	 * This API would be used to view API key request status and API key (in case
 	 * request is approved).
 	 * 
-	 * @param partnerID
+	 * @param partnerId
 	 *            this is unique id created after self registered by partner
-	 * @param aPIKeyReqID
+	 * @param apiKeyReqId
 	 *            this is unique id created after partner request for Partner API
 	 *            Key
 	 * @return response this class contains partnerApiKey apiKeyRequestStatus and
 	 *         validity details
 	 */
 
-	@RequestMapping(value = "/{partnerID}/partnerAPIKeyRequests/{APIKeyReqID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<APIkeyRequests>> viewApiKeyRequestStatusAndApiKey(
-			@PathVariable String partnerID, @PathVariable String apiKeyReqID) {
+			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {
 		ResponseWrapper<APIkeyRequests> response = new ResponseWrapper<>();
 		APIkeyRequests aPIkeyRequests = null;
-		aPIkeyRequests = partnerService.viewApiKeyRequestStatusApiKey(partnerID, apiKeyReqID);
+		aPIkeyRequests = partnerService.viewApiKeyRequestStatusApiKey(partnerId, apiKeyReqId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);
