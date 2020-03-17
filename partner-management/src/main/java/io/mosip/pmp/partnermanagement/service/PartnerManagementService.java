@@ -102,7 +102,16 @@ public interface PartnerManagementService {
 	public PartnersPolicyMappingResponse approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			ActivateDeactivatePartnerRequest request, String partnerAPIKey);
 	
+	/**
+	 * @return retrievePartnerManagers
+	 */
+	
 	public RetrievePartnerManagers getPartnerManager();
+	
+	/**
+	 * @param policyName 
+	 * @return policyIDResponse
+	 */
 	
 	public PolicyIDResponse getPartnerPolicyID(String policyName);
 }

@@ -1,4 +1,4 @@
-/*package io.mosip.pmp.partnermanagement.test.controller;
+package io.mosip.pmp.partnermanagement.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -31,7 +31,9 @@ import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
+import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 import io.mosip.pmp.partnermanagement.test.PartnermanagementApplicationTest;
@@ -96,7 +98,7 @@ public class PartnerManagementControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
 
-		mockMvc.perform(put("/pmpartners/partnerID").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/pmpartners/updateStatus/partnerID").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -159,6 +161,23 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/partnerID"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+	
+	@Test
+	public void getPartnerManagerTest() throws Exception {
+		RetrievePartnerManagers retrievePartnerManagers = new RetrievePartnerManagers();
+		Mockito.when(partnerManagementService.getPartnerManager()).thenReturn(retrievePartnerManagers);
+		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/getManager"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void getPolicyIDTest()  throws Exception{
+		String policyName = "Banking";
+		PolicyIDResponse policyIDResponse = new PolicyIDResponse();
+		Mockito.when(partnerManagementService.getPartnerPolicyID(Mockito.anyString())).thenReturn(policyIDResponse);
+		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/policyname/" + policyName))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 
 	@Test
 	public void getPartnerAPIKeyToPolicyMappingsTest() throws Exception {
@@ -190,4 +209,3 @@ public class PartnerManagementControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
-*/

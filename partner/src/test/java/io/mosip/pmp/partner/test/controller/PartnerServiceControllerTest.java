@@ -1,4 +1,4 @@
-/*package io.mosip.pmp.partner.test.controller;
+package io.mosip.pmp.partner.test.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
@@ -63,6 +64,13 @@ public class PartnerServiceControllerTest {
     @Test
     public void test_Test() throws Exception{
     	 mockMvc.perform(MockMvcRequestBuilders.get("/partners/test")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test
+    public void getAllPartnerDetailsTest() throws Exception {
+    	GetPartnerDetailsResponse response = new GetPartnerDetailsResponse();
+        Mockito.when(partnerService.getPartnerDetails()).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/getpartners")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -121,7 +129,7 @@ public class PartnerServiceControllerTest {
     	Mockito.when(partnerService.submitPartnerApiKeyReq(Mockito.any(), Mockito.any())).thenReturn(response);
     	RequestWrapper<PartnerAPIKeyRequest> request = createSubmitPartnerApiKeyRequest();
     	
-    	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(post("/partners/submit/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
                  .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -166,7 +174,7 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
-    @Test
+   /* @Test
     public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
     	DigitalCertificateResponse response = new DigitalCertificateResponse();
     	response.setMessage("DigitalCertificateResponse");
@@ -176,7 +184,7 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(put("/partners/validatedigitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk())
     	        .andExpect(jsonPath("$.response.[status]", is("true")));
-    }
+    }*/
     
     public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
     	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
@@ -254,4 +262,4 @@ public class PartnerServiceControllerTest {
     	partnerUpdateRequest.setOrganizationName("airtelInd");
     	return partnerUpdateRequest;
     }
-}*/
+}
