@@ -182,6 +182,11 @@ public class PartnerManagementController {
 	}
 	
 	
+	/**
+	 *   This API would be used to retrieve all Partner Details as per UI. 
+	 * @return response this class contains List of Partner.
+	 */
+	
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
 		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();
