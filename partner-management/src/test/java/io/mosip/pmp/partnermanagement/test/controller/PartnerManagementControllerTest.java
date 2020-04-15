@@ -1,6 +1,5 @@
 package io.mosip.pmp.partnermanagement.test.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,6 +28,7 @@ import io.mosip.pmp.partnermanagement.core.RequestWrapper;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
 import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
@@ -78,10 +78,10 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.partnerApiKeyPolicyMappings(partnersPolicyMappingRequest, partnerID,
 				partnerAPIKey)).thenReturn(partnersPolicyMappingResponse);
 
-		mockMvc.perform(post("/pmpartners/partnerID/partnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/pmpartners/partnerID/partnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
-
+	
 	@Test
 	public void activateDeactivateAuthEKYCPartnersTest() throws Exception {
 		String partnerID = "67899";
@@ -98,7 +98,7 @@ public class PartnerManagementControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
 
-		mockMvc.perform(put("/pmpartners/updateStatus/partnerID").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/pmpartners/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -119,7 +119,7 @@ public class PartnerManagementControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
 
-		mockMvc.perform(put("/pmpartners/partnerID/PartnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/pmpartners/partnerID/PartnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -139,7 +139,7 @@ public class PartnerManagementControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
 
-		mockMvc.perform(put("/pmpartners/PartnerAPIKeyRequests/APIKeyReqID")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/pmpartners/PartnerAPIKeyRequests/APIKeyReqID")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(request)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -207,5 +207,13 @@ public class PartnerManagementControllerTest {
 				.thenReturn(apikeyRequests);
 		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/PartnerAPIKeyRequests/APIKeyReqID"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void validateAndGetPartnerPolicyFile() throws Exception {
+		PartnerPolicyResponse res = new PartnerPolicyResponse();
+		Mockito.when(partnerManagementService.getPartnerMappedPolicyFile("1234","asdsa","adfdsasd")).thenReturn(res);
+		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/validatePartnerMisp/partnerId/12345/partnerApiKey/adsaASD/mispLicenseKey/QWETREWWEFG"))
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

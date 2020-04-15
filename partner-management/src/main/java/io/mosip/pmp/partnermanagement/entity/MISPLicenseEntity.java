@@ -1,4 +1,4 @@
-package io.mosip.pmp.misp.entity;
+package io.mosip.pmp.partnermanagement.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ public class MISPLicenseEntity extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = -8541947597557590399L;	
 	
 	@EmbeddedId
-	public MISPlKeyUniqueKeyEntity mispLicenseUniqueKey;	
+	public MISPlKeyUniqueKeyEntity mispUniqueEntity;	
 	
 	@Column(name = "valid_from_date")
 	private LocalDateTime validFromDate;	

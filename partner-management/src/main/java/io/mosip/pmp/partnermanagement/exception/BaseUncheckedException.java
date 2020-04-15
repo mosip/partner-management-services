@@ -79,8 +79,7 @@ public class BaseUncheckedException extends RuntimeException {
 	 */
 	@Override
 	public String getMessage() {
-		//return ExceptionUtils.buildMessage(super.getMessage(), getCause());
-		return "HelloException";
+		return buildMessage(super.getMessage(), getCause());		
 	}
 
 	/**
@@ -142,5 +141,18 @@ public class BaseUncheckedException extends RuntimeException {
 	public String getErrorText() {
 		return infoItems.get(0).errorText;
 	}
-
+	
+	public static String buildMessage(String message, Throwable cause) {
+		if (cause != null) {
+			StringBuilder sb = new StringBuilder();
+			if (message != null) {
+				sb.append(message).append("; ");
+			}
+			sb.append("\n");
+			sb.append("nested exception is ").append(cause);
+			return sb.toString();
+		} else {
+			return message;
+		}
+		}
 }

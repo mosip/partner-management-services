@@ -2,8 +2,6 @@ package io.mosip.pmp.misp.dto;
 
 import java.time.LocalDateTime;
 
-import io.mosip.pmp.misp.validator.FilterType;
-import io.mosip.pmp.misp.validator.FilterTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,8 +21,7 @@ import lombok.Data;
 @ApiModel(value = "base dto", description = "this class will contains metadata")
 public class BaseDto  {
 
-	//isActive
-	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
+	//isActive	
 	@ApiModelProperty(value = "isActive", required = true, dataType = "java.lang.Boolean")
 	public Boolean isActive;
 
@@ -33,8 +30,7 @@ public class BaseDto  {
 	@ApiModelProperty(value = "createdBy", required = true, dataType = "java.lang.String")
 	public String createdBy;
 
-	// createdDateTime
-	@FilterType(types = { FilterTypeEnum.BETWEEN})
+	// createdDateTime	
 	@ApiModelProperty(value = "createdBy", required = true, dataType = "java.time.LocalDateTime")
 	public LocalDateTime createdDateTime;
 

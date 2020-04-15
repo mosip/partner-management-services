@@ -5,13 +5,13 @@ package io.mosip.pmp.partnermanagement.exception;
  *
  */
 
-public class PartnerDoesNotExistException extends BaseUncheckedException{
+public class PartnerValidationException extends BaseUncheckedException{
 	
 	private static final long serialVersionUID = 1L;
 
-	public PartnerDoesNotExistException() {}
+	public PartnerValidationException() {}
 	
-	public PartnerDoesNotExistException(String errorCode, String errorMessage) {
+	public PartnerValidationException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 }

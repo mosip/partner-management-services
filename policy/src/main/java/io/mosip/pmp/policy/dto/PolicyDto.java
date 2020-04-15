@@ -2,8 +2,6 @@ package io.mosip.pmp.policy.dto;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -15,23 +13,6 @@ import lombok.Data;
  */
 @Data
 public class PolicyDto {
-
-	/**
-	 * policy Id
-	 */
-	private String policyId;
-	
-	/**
-	 * policy name
-	 */
-	@NotNull
-	private String name;
-	
-	/**
-	 * policy description.
-	 */
-	@NotNull
-	private String descr;
 	
 	/**
 	 * list of auth policy dto's.

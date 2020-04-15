@@ -44,4 +44,7 @@ public class MISPUpdateRequestDto {
 	@Size(min = 1, max= 2000)
 	@ApiModelProperty(value = "address", required = false, dataType = "java.lang.String")
 	public String address;
+	
+	@ApiModelProperty(value = "status_code", required = false, dataType = "java.lang.String")
+	public String status_code;
 }

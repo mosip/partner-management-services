@@ -94,7 +94,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(InvalidInputParameterException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getInvalidInputParameterExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getInvalidInputParameterExceptionMessage(
 			final HttpServletRequest httpServletRequest, final InvalidInputParameterException exception)
 			throws IOException {
 
@@ -114,7 +114,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(NewPolicyIdNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNewPolicyIdNotExistExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNewPolicyIdNotExistExceptionMessage(
 			final HttpServletRequest httpServletRequest, final NewPolicyIdNotExistException exception)
 			throws IOException {
 		return getErrorMassage(httpServletRequest, exception);
@@ -131,7 +131,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(PolicyNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPolicyNotExistExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPolicyNotExistExceptionMessage(
 			final HttpServletRequest httpServletRequest, final PolicyNotExistException exception) throws IOException {
 		return getErrorMassage(httpServletRequest, exception);
 	}
@@ -146,9 +146,9 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 *             this class contains Checked Exception
 	 */
 
-	@ExceptionHandler(PartnerDoesNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerDoesNotExistExceptionMassage(
-			final PartnerDoesNotExistException exception) {
+	@ExceptionHandler(PartnerValidationException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerDoesNotExistExceptionMessage(
+			final PartnerValidationException exception) {
 		return getErrorMsg(exception);
 	}
 
@@ -164,7 +164,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(PartnerIdDoesNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerIdDoesNotExistExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerIdDoesNotExistExceptionMessage(
 			final PartnerIdDoesNotExistException exception) {
 		return getErrorMsg(exception);
 	}
@@ -181,7 +181,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(NoPartnerApiKeyRequestsException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNoPartnerApiKeyRequestExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getNoPartnerApiKeyRequestExceptionMessage(
 			final NoPartnerApiKeyRequestsException exception) {
 		return getErrorMsg(exception);
 	}
@@ -198,7 +198,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 */
 
 	@ExceptionHandler(PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiKeyDoesNotBelongToThePolicyGroupExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiKeyDoesNotBelongToThePolicyGroupExceptionMessage(
 			final PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException exception) {
 		return getErrorMsg(exception);
 	}
@@ -214,11 +214,10 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 	 *             this class contains Checked Exception
 	 */
 	@ExceptionHandler(PartnerAPIDoesNotExistException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiDoesNotExistExceptionMassage(
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiDoesNotExistExceptionMessage(
 			final PartnerAPIDoesNotExistException exception) {
 		return getErrorMsg(exception);
 	}
-
 	/**
 	 * @param httpServletRequest
 	 *            this is contains servlet request as a parameter

@@ -1,12 +1,13 @@
-package io.mosip.pmp.misp.repository;
+package io.mosip.pmp.partnermanagement.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
-import io.mosip.pmp.misp.entity.MISPLicenseEntity;
+import io.mosip.pmp.partnermanagement.entity.MISPEntity;
+import io.mosip.pmp.partnermanagement.entity.MISPLicenseEntity;
 
 /**
  * 
@@ -16,7 +17,7 @@ import io.mosip.pmp.misp.entity.MISPLicenseEntity;
  * Defines an object to provide misp license data base related operations.
  */
 @Repository
-public interface MispLicenseKeyRepository extends BaseRepository<MISPLicenseEntity, String> {
+public interface MispLicenseKeyRepository extends JpaRepository<MISPLicenseEntity, String> {
 
 	@Query(value = "select * from pmp.misp_license ml where ml.license_key=?", nativeQuery = true)
 	MISPLicenseEntity findByLicensekey(String licenseKey);

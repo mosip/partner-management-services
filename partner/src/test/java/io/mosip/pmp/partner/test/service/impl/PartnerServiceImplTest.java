@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +18,17 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.pmp.partner.PartnerserviceApplication;
+import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
+import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerRequest;
@@ -30,12 +36,12 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
-import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
+import io.mosip.pmp.partner.exception.AuthenticationFailedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
@@ -70,6 +76,9 @@ public class PartnerServiceImplTest {
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 	@Mock
 	PartnerPolicyRepository partnerPolicyRepository;
+	
+	@Mock
+	RestTemplate restTemplate;
 
 	@Before
 	public void setUp() {
@@ -80,6 +89,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "authPolicyRepository", authPolicyRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "restTemplate", restTemplate);
 
 	}
 	
@@ -199,7 +209,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
-	public void updatePartnerDetailsTest() {
+	public void updatePartnerDetailsTest_S1() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		
@@ -210,6 +220,40 @@ public class PartnerServiceImplTest {
 		assertEquals(updatePartnerDetail.getStatus(), "Active");
 
 	}
+	
+	@Test(expected = PartnerDoesNotExistException.class)
+	public void updatePartnerDetailTest_S2() {
+		PartnerUpdateRequest req = createPartnerUpdateRequest();
+		String partnerId = "12345";
+		pserviceImpl.updatePartnerDetail(req, partnerId);
+	}
+	
+	@Test
+	public void updatePartnerDetailTest_S3() {
+		PartnerUpdateRequest req = createPartnerUpdateRequest();
+		String partnerId = "12345";
+		req.setOrganizationName("name");
+		Partner part = createPartner(Boolean.TRUE);
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		pserviceImpl.updatePartnerDetail(req, partnerId);
+	}
+	
+	@Test(expected = PartnerAlreadyRegisteredException.class)
+	public void updatePartnerDetailTest_S4() {
+		PartnerUpdateRequest req = createPartnerUpdateRequest();
+		String partnerId = "12345";
+		req.setOrganizationName("airtel");
+		Partner part = createPartner(Boolean.TRUE);
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Partner partnerSameName = updatePartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findByName(req.getOrganizationName())).thenReturn(partnerSameName);
+		pserviceImpl.updatePartnerDetail(req, partnerId);
+	}
+	
 
 	@Test
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
@@ -421,6 +465,151 @@ public class PartnerServiceImplTest {
 		
 	}
 
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void submitPartnerApiKeyReqTest_S1() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		pserviceImpl.submitPartnerApiKeyReq(req, "12345");
+	}
+	
+	@Test(expected = PolicyGroupDoesNotExistException.class)
+	public void submitPartnerApiKeyReqTest_S2() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		String partnerId = "12345";
+		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
+	}
+	
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void submitPartnerApiKeyReqTest_S3() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		String partnerId = "12345";
+		Optional<Partner> partner = Optional.of(createPartner(false));		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
+	}
+	
+	@Test
+	public void submitPartnerApiKeyReqTest_S4() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		String partnerId = "12345";
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
+		PartnerPolicyRequest request = createPartnerPolicyRequest("Approved");
+		requests.add(request);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
+		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
+	}
+	
+	@Test
+	public void submitPartnerApiKeyReqTest_S5() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		String partnerId = "12345";
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
+		PartnerPolicyRequest request = createPartnerPolicyRequest("Rejected");
+		requests.add(request);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
+		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
+	}
+	
+	@Test
+	public void submitPartnerApiKeyReqTest_S6() {
+		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		String partnerId = "12345";
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
+		PartnerPolicyRequest request = createPartnerPolicyRequest("in-progress");
+		requests.add(request);
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
+		Mockito.when(policyGroupRepository.findByName(policyGroup.getName())).thenReturn(policyGroup);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(new ArrayList<PartnerPolicyRequest>());
+		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
+	}
+	
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S1() {
+		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner("12345");
+	}	
+	
+	@Test
+	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S2() {
+		String partnerId = "12345";
+		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
+		PartnerPolicyRequest request = createPartnerPolicyRequest("Rejected");
+		requests.add(request);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
+		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
+	}
+	
+	@Test
+	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S3() {
+		String partnerId = "12345";
+		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
+		PartnerPolicyRequest request = createPartnerPolicyRequest("Approved");
+		requests.add(request);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
+		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerId)).thenReturn(createPartnerPolicy());
+		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
+	}
+	
+	@Test(expected = AuthenticationFailedException.class)
+	public void uploadDigitalCertificateTest_S1() {
+		RequestWrapper<DigitalCertificateRequest> req =  new RequestWrapper<DigitalCertificateRequest>();		
+		DigitalCertificateRequest request = new DigitalCertificateRequest();
+		request.setPartnerCertificate("wqertyuioplkjhgvfdretyuhjbvftyh");
+		req.setRequest(request);		
+		pserviceImpl.uploadDigitalCertificate(req);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void uploadDigitalCertificateTest_S2() {
+		RequestWrapper<DigitalCertificateRequest> req =  new RequestWrapper<DigitalCertificateRequest>();		
+		DigitalCertificateRequest request = new DigitalCertificateRequest();
+		request.setPartnerCertificate("wqertyuioplkjhgvfdretyuhjbvftyh");
+		req.setRequest(request);
+		pserviceImpl.responseCookies = "qwefghgfdsasdfgh";
+		Mockito.when(restTemplate.postForEntity(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(new ResponseEntity<>(getResponse(),HttpStatus.OK));
+		pserviceImpl.uploadDigitalCertificate(req);
+	}
+	
+	@Test(expected = AuthenticationFailedException.class)
+	public void validateDigitalCertificateTest_S1() {
+		RequestWrapper<DigitalCertificateRequest> req =  new RequestWrapper<DigitalCertificateRequest>();		
+		DigitalCertificateRequest request = new DigitalCertificateRequest();
+		request.setPartnerCertificate("wqertyuioplkjhgvfdretyuhjbvftyh");
+		req.setRequest(request);		
+		pserviceImpl.validateDigitalCertificate(req);
+	}
+	private HashMap<String, Object> getResponse(){		
+		HashMap<String, Object> object = new HashMap<String, Object>();  
+		Object obj = "{\r\n" + 
+				"  \"id\": \"string\",\r\n" + 
+				"  \"version\": \"string\",\r\n" + 
+				"  \"responsetime\": \"2020-04-14T11:38:40.184Z\",\r\n" + 
+				"  \"metadata\": null,\r\n" + 
+				"  \"response\": {\r\n" + 
+				"    \"status\": \"success\",\r\n" + 
+				"    \"message\": \"Username and password combination had been validated successfully\"\r\n" + 
+				"  },\r\n" + 
+				"  \"errors\": null\r\n" + 
+				"}";
+		
+		object.put("response", obj);
+		return object;
+		
+	}
+	
+	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
+		PartnerAPIKeyRequest req = new PartnerAPIKeyRequest();
+		req.setPolicyName("Banking");
+		req.setUseCaseDescription("Banking Policy Description");
+		return req;
+	}
+
 	private PartnerPolicy createPartnerPolicy() {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
 		partnerPolicy.setPolicyApiKey("partnerAPIKey_1");
@@ -434,19 +623,19 @@ public class PartnerServiceImplTest {
 		return partnerPolicyRequest;
 	}
 
-	private AuthPolicy createAuthPolicy() {
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setName("name");
-		return authPolicy;
-
-	}
-
-	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
-		PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
-		partnerAPIKeyRequest.setPolicyName("policyName");
-		partnerAPIKeyRequest.setUseCaseDescription("useCaseDescription");
-		return partnerAPIKeyRequest;
-	}
+//	private AuthPolicy createAuthPolicy() {
+//		AuthPolicy authPolicy = new AuthPolicy();
+//		authPolicy.setName("name");
+//		return authPolicy;
+//
+//	}
+//
+//	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
+//		PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
+//		partnerAPIKeyRequest.setPolicyName("policyName");
+//		partnerAPIKeyRequest.setUseCaseDescription("useCaseDescription");
+//		return partnerAPIKeyRequest;
+//	}
 
 	private PartnerUpdateRequest createPartnerUpdateRequest() {
 		PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
@@ -471,6 +660,21 @@ public class PartnerServiceImplTest {
 		partner.setUpdDtimes(Timestamp.valueOf(now));
 		return partner;
 	}
+	
+	private Partner updatePartner(Boolean isActive) {
+		LocalDateTime now = LocalDateTime.now();
+		Partner partner = new Partner();
+		partner.setId("id");
+		partner.setAddress("address");
+		partner.setContactNo("47384384");
+		partner.setEmailId("xyz@hotmail.com");
+		partner.setName("airtel");
+		partner.setPolicyGroupId("policyGroupId");
+		partner.setIsActive(isActive);
+		partner.setUpdBy("Partner Service");
+		partner.setUpdDtimes(Timestamp.valueOf(now));
+		return partner;
+	}
 
 	private PartnerRequest createPartnerRequest() {
 		PartnerRequest prequest = new PartnerRequest();
@@ -484,7 +688,7 @@ public class PartnerServiceImplTest {
 
 	private PolicyGroup createPolicyGroup(Boolean isActive) {
 		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setName("Name");
+		policyGroup.setName("Banking");
 		policyGroup.setId("12133");
 		policyGroup.setIsActive(isActive);
 		policyGroup.setUserId("UserId");

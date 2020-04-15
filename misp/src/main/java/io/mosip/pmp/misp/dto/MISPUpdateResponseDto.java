@@ -22,8 +22,8 @@ public class MISPUpdateResponseDto {
 
 	@NotBlank
 	@Size(min = 1, max = 36)
-	@ApiModelProperty(value ="organizationName", required = false, dataType = "java.lang.String")	
-	private String organizationName;	
+	@ApiModelProperty(value ="name", required = false, dataType = "java.lang.String")	
+	private String name;	
 	
 
 	@Size(min = 0, max = 16)
@@ -41,8 +41,6 @@ public class MISPUpdateResponseDto {
 	private String address;
 	
 	private String mispID;
-	
-	private String name;
 
 }
 

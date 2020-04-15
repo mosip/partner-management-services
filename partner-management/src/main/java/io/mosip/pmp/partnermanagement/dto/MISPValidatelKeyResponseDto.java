@@ -1,4 +1,4 @@
-package io.mosip.pmp.misp.dto;
+package io.mosip.pmp.partnermanagement.dto;
 
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;

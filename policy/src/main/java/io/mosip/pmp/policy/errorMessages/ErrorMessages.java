@@ -19,7 +19,8 @@ public enum ErrorMessages {
 	AUTH_POLICY_NAME_DUPLICATE_EXCEPTION("PMS_POL_009","Auth policy Name already exists in the auth policy Group.Name : "),
 	MISSING_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter - "),
 	INVALID_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - "),
-	INTERNAL_SERVER_ERROR("PMS_COR_003","Could not process the request");
+	INTERNAL_SERVER_ERROR("PMS_COR_003","Could not process the request"),
+	AUTH_POLICIES_NOT_DEFINED("PMS_POL_009", "Auth Policies are not defined against to policy");
 	
 	private final String errorCode;
 	private final String errorMessage;

@@ -5,19 +5,12 @@ package io.mosip.pmp.policy.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -36,9 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.policy.dto.AllowedKycDto;
-import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
-import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -46,6 +37,7 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
+import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.RequestWrapper;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
@@ -79,17 +71,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.createPolicyGroup(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyCreateRequestDto> request = createRequest();
 		
-		mockMvc.perform(post("/pmp/policies").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
-	}
-
-	@Test
-	public void authPolicyCreationTest() throws PolicyManagementServiceException, Exception{
-		ResponseWrapper<AuthPolicyCreateResponseDto> response = new ResponseWrapper<AuthPolicyCreateResponseDto>();
-		Mockito.when(policyManagementService.createAuthPolicies(Mockito.any())).thenReturn(response);
-		RequestWrapper<PolicyDto> request = createAuthPolicyRequest();
-		
-		mockMvc.perform(post("/pmp/policies/12345/authPolicies").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/policies").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -99,7 +81,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.update(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyUpdateRequestDto> request = createPolicyUpdateRequest();
 		
-		mockMvc.perform(post("/pmp/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -109,28 +91,25 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.updatePolicyStatus(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyStatusUpdateRequestDto> request = createPolicyStatusUpateRequest();
 		
-		mockMvc.perform(put("/pmp/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
 	
 	@Test
 	public void getPoliciesTest() throws Exception{
-		List<PolicyWithAuthPolicyDto> response = new ArrayList<PolicyWithAuthPolicyDto>();
-		Mockito.when(policyManagementService.getPolicyDetails(Mockito.any())).thenReturn(response);
-		
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/policies")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/policies")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
-//	@Test
-//	public void getPolicyTest() throws Exception{
-//		List<PolicyWithAuthPolicyDto> response = new ArrayList<PolicyWithAuthPolicyDto>();
-//		Mockito.when(policyManagementService.getPolicyDetails(Mockito.any())).thenReturn(response);
-//		
-//		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/policies/12345")).
-//		andExpect(MockMvcResultMatchers.status().isOk());		
-//	}
+	@Test
+	public void getPolicyTest() throws Exception{
+		PolicyWithAuthPolicyDto response = new PolicyWithAuthPolicyDto();
+		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/policies/12345")).
+		andExpect(MockMvcResultMatchers.status().isOk());		
+	}
 	
 	private RequestWrapper<PolicyStatusUpdateRequestDto> createPolicyStatusUpateRequest() {
 		RequestWrapper<PolicyStatusUpdateRequestDto> request = new RequestWrapper<PolicyStatusUpdateRequestDto>();
@@ -169,21 +148,8 @@ public class PolicyManagementControllerTest {
 		return request;
 	}
 
-	private RequestWrapper<PolicyDto> createAuthPolicyRequest() {
-		RequestWrapper<PolicyDto> request = new RequestWrapper<PolicyDto>();
-		request.setRequest(createAuthPolicyInput());
-        request.setId("mosip.partnermanagement.policies.authPolicies.create");
-        request.setVersion("1.0");
-        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        request.setMetadata("{}");
-        return request;
-	}
-
 	private PolicyDto createAuthPolicyInput() {
 		PolicyDto policy = new PolicyDto();
-		policy.setName("AuthPolicy");
-		policy.setDescr("AuthPolicyDescr");
-		policy.setPolicyId("12345");
 		policy.setAllowedKycAttributes(getAllowedKycAttributes());
 		policy.setAuthPolicies(getAuthPolicies());
 		return policy;

@@ -24,8 +24,7 @@ public class AllowedKycDto {
 	 * <p> A piece of information which determines the properties of a field or tag in a display. </p>
 	 */
 	@NotBlank(message = "attributeName should not be empty in allowedKyc.")
-	public String attributeName;
-	
+	public String attributeName;	
 	/**
 	 * Tells feature enable or disable.
 	 */

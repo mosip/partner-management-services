@@ -101,15 +101,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
-
-	// @Autowired
-	// PartnerIdGenerator<String> partnerIdGenerator;
-
+	
 	@Autowired
 	RestTemplate restTemplate;
 
-	String responseCookies = null;
-	String signatureValue = null;
+	public String responseCookies = null;
+	public String signatureValue = null;
 
 	@Value("${mosip.pmp.partnerservice.certificate.validate.appid}")
 	private String appid;
@@ -195,7 +192,6 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<Partner> findByIdPartner = partnerRepository.findById(partnerID);
 		Partner partner = null;
 		Optional<PolicyGroup> findByIdpolicyGroup = null;
-		PolicyGroup policyGroup = null;
 
 		if (findByIdPartner.isPresent()) {
 			LOGGER.info(partnerID + ": Partner is available");
@@ -209,14 +205,9 @@ public class PartnerServiceImpl implements PartnerService {
 			LOGGER.info("Retriving the name of policy group");
 			findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
 
-			if (findByIdpolicyGroup.isPresent()) {
-				policyGroup = findByIdpolicyGroup.get();
+			if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() !=null) {
+				response.setPolicyGroup(findByIdpolicyGroup.get().getName());
 			}
-
-			if (policyGroup != null) {
-				response.setPolicyGroup(policyGroup.getName());
-			}
-
 			return response;
 		} else {
 			LOGGER.info(partnerID + ": Partner is not available");
@@ -247,11 +238,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 			LOGGER.info("Retriving the name of policy group");
 			findByIdpolicyGroup = policyGroupRepository.findById(partnerByName.getPolicyGroupId());
-			if (findByIdpolicyGroup.isPresent()) {
-				policyGroup = findByIdpolicyGroup.get();
-			}
-			if (policyGroup != null) {
-				response.setPolicyGroupName(policyGroup.getName());
+			if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() != null) {
+				response.setPolicyGroupName(findByIdpolicyGroup.get().getName());
 			}
 		} else {
 			LOGGER.info(partnerName + ": Partner is not available");
@@ -320,9 +308,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
-
-		List<PartnerPolicyRequest> listPartnerApiKeyReq = partnerPolicyRequestRepository.findByPartnerId(partnerID);
-
 		Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID);
 		if (!findByPartnerId.isPresent()) {
 			LOGGER.info(partnerID + " : Invalied partnerID");
@@ -330,22 +315,16 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-
 		LOGGER.info(partnerID + " : Valied Partner");
 		Partner partner = findByPartnerId.get();
-
 		if (partner.getIsActive() == false) {
-
-			// TODO Need to implement Partner De-Activate Exception
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-
+		List<PartnerPolicyRequest> listPartnerApiKeyReq = partnerPolicyRequestRepository.findByPartnerId(partnerID);
 		if (!listPartnerApiKeyReq.isEmpty()) {
-
 			PartnerPolicyRequest partnerPolicyRequest = listPartnerApiKeyReq.get(0);
-
 			if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase("Rejected")) {
 				partnerPolicyRequest.setStatusCode("in-progress");
 				partnerPolicyRequestRepository.save(partnerPolicyRequest);
@@ -354,16 +333,12 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setMessage("partnerAPIKeyRequest successfully created");
-			LOGGER.info("partnerAPIKeyRequest successfully updated");
+			LOGGER.info("partnerAPIKeyRequest successfully updated"); 
 			return partnerAPIKeyResponse;
-
 		} else {
-
 			PolicyGroup policyGroup = null;
 			PartnerPolicyRequest partnerPolicyRequest = null;
-
 			policyGroup = policyGroupRepository.findByName(request.getPolicyName());
-
 			if (policyGroup == null) {
 				LOGGER.info(request.getPolicyName() + ": Invalied Policy Group");
 				throw new PolicyGroupDoesNotExistException(
@@ -371,57 +346,9 @@ public class PartnerServiceImpl implements PartnerService {
 						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 			}
 
-			LOGGER.info(request.getPolicyName() + " : this is valied Policy Group ");
+			LOGGER.info(request.getPolicyName() + " : this is valied Policy Group ");			
 
-			/*
-			 * Optional<Partner> findByPartnerId = partnerRepository.findById(partnerID); if
-			 * (!findByPartnerId.isPresent()) { LOGGER.info(partnerID +
-			 * " : Invalied partnerID"); throw new PartnerDoesNotExistsException(
-			 * PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.
-			 * getErrorCode(),
-			 * PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.
-			 * getErrorMessage()); }
-			 * 
-			 * LOGGER.info(partnerID + " : Valied Partner"); Partner partner =
-			 * findByPartnerId.get();
-			 * 
-			 * System.out.println(partner.getIsActive()); if(partner.getIsActive() == false)
-			 * {
-			 * 
-			 * //TODO Need to implement Partner De-Activate Exception throw new
-			 * PartnerDoesNotExistsException(
-			 * PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.
-			 * getErrorCode(),
-			 * PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.
-			 * getErrorMessage()); }
-			 */
-
-			LOGGER.info("fetching all record from partnerPolicyRequest by given partnerId");
-			List<String> policyList = new ArrayList<>();
-			String existingPolicyId = null;
-			List<PartnerPolicyRequest> listPartnerPolicyRequest = partnerPolicyRequestRepository
-					.findByPartnerId(partnerID);
-			PartnerPolicyRequest partnerPolicyRequestObj = null;
-			Iterator<PartnerPolicyRequest> it = listPartnerPolicyRequest.iterator();
-			while (it.hasNext()) {
-				partnerPolicyRequestObj = it.next();
-				existingPolicyId = partnerPolicyRequestObj.getPolicyId();
-
-				policyList.add(existingPolicyId);
-			}
-
-			Iterator<String> itPolicy = policyList.iterator();
-			while (itPolicy.hasNext()) {
-
-				if (itPolicy.next().equals(policyGroup.getId())) {
-					throw new PartnerAlreadyRegisteredWithSamePolicyGroupException(
-							PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP
-									.getErrorCode(),
-							PartnerAlreadyRegisteredWithSamePolicyGroupConstant.PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP
-									.getErrorMessage());
-				}
-			}
-
+			LOGGER.info("fetching all record from partnerPolicyRequest by given partnerId");			
 			LOGGER.info("Preparing request for partnerPolicyRequest");
 			partnerPolicyRequest = new PartnerPolicyRequest();
 			String partnerPolicyRequestId = PartnerUtil.createPartnerPolicyRequestId();
@@ -576,7 +503,8 @@ public class PartnerServiceImpl implements PartnerService {
 		DigitalCertificateRequestPreparationWithPublicKey digitalCertificateRequestPreparationWithPublicKey = new DigitalCertificateRequestPreparationWithPublicKey();
 		digitalCertificateRequestPreparationWithPublicKey.setData(request.getRequest().getPartnerCertificate());
 		digitalCertificateRequestPreparationWithPublicKey.setSignature(signatureValue);
-		digitalCertificateRequestPreparationWithPublicKey.setPublickey(getPublicKey(appid));
+		//To do
+		digitalCertificateRequestPreparationWithPublicKey.setPublickey("");
 		RequestWrapper<DigitalCertificateRequestPreparationWithPublicKey> digitalRequest = new RequestWrapper<>();
 		digitalRequest.setId(request.getId());
 		digitalRequest.setMetadata(request.getMetadata());
@@ -645,13 +573,7 @@ public class PartnerServiceImpl implements PartnerService {
 			digitalCertificateRequestPreparation.setSignature(signatureValue);
 		} else {
 			LOGGER.info("Decryption error, Sign Require");
-			LOGGER.info("Signature Require");
-			// TODO
-			// "errorCode": "KER-CSS-102"
-			// "message": "KER-FSE-003 --> data not valid (currupted,length is not valid
-			// etc.); \nnested exception is javax.crypto.BadPaddingException: Decryption
-			// error"
-			// throw the exception
+			LOGGER.info("Signature Require");			
 		}
 		digitalCertificateRequestPreparation.setTimestamp(Timestamp.valueOf(now));
 		RequestWrapper<DigitalCertificateRequestPreparation> digitalRequest = new RequestWrapper<>();
@@ -706,198 +628,5 @@ public class PartnerServiceImpl implements PartnerService {
 			digitalCertificateResponse.setMessage("successfully validated partner's digital certificate");
 		}
 		return digitalCertificateResponse;
-	}
-
-	@Override
-	public LoginUserResponse userLoginInKernal(RequestWrapper<LoginUserRequest> request) {
-		LoginUserResponse loginUserResponse = new LoginUserResponse();
-		ResponseEntity<Map> response = null;
-
-		HttpEntity<RequestWrapper<LoginUserRequest>> certificateEntity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(userPwdKey, certificateEntity, Map.class);
-		responseCookies = response.getHeaders().getFirst("Authorization");
-		Map map = response.getBody();
-		Object responseMap = null;
-		String statusValue = null;
-		String messageValue = null;
-		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator();
-		while (itr.hasNext()) {
-			Map.Entry<Object, Object> entry = itr.next();
-			if (entry.getKey().equals("response")) {
-				responseMap = entry.getValue();
-			}
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> convertValue = mapper.convertValue(responseMap, Map.class);
-
-		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, String> entry = iterator.next();
-			if (entry.getKey().equals("status")) {
-				statusValue = entry.getValue();
-			}
-			if (entry.getKey().equals("message")) {
-				statusValue = entry.getValue();
-			}
-		}
-		loginUserResponse.setStatus(statusValue);
-		loginUserResponse.setMessage(messageValue);
-		return loginUserResponse;
-	}
-
-	@Override
-	public SignUserResponse signUserInDigitalCertificates(RequestWrapper<SignUserRequest> request) {
-
-		SignUserResponse signUserResponse = new SignUserResponse();
-		ResponseEntity<Map> response = null;
-
-		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + responseCookies));
-		if (responseCookies != null) {
-			restTemplate.setInterceptors(interceptors);
-		} else {
-			LOGGER.info("Authentication Failed");
-			throw new AuthenticationFailedException(AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorCode(),
-					AuthenticationFailedConstant.AUTHENTICATION_FAILED.getErrorMessage());
-		}
-
-		HttpEntity<RequestWrapper<SignUserRequest>> certificateEntity = new HttpEntity<>(request);
-		response = restTemplate.postForEntity(signKey, certificateEntity, Map.class);
-		Map map = response.getBody();
-		Object signResponseMap = null;
-		String timestampValue = null;
-		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator();
-		while (itr.hasNext()) {
-			Map.Entry<Object, Object> entry = itr.next();
-			if (entry.getKey().equals("response")) {
-				signResponseMap = entry.getValue();
-			}
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> convertValue = mapper.convertValue(signResponseMap, Map.class);
-
-		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, String> entry = iterator.next();
-			if (entry.getKey().equals("signature")) {
-				signatureValue = entry.getValue();
-			}
-			if (entry.getKey().equals("timestamp")) {
-				timestampValue = entry.getValue();
-			}
-		}
-		signUserResponse.setSignature(signatureValue);
-		signUserResponse.setTimestamp(timestampValue);
-		return signUserResponse;
-	}
-
-	public String getPublicKey(String applicationId) {
-
-		LocalDateTime now = LocalDateTime.now();
-		Timestamp timeStamps = Timestamp.valueOf(now);
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(timeStamps);
-
-		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-		interceptors.add(new HeaderRequestInterceptor("Cookie", "Authorization=" + responseCookies));
-		restTemplate.setInterceptors(interceptors);
-
-		final String uri = publicKey + applicationId + "?timeStamp=" + timeStamp;
-		ResponseEntity<Map> response = null;
-		response = restTemplate.getForEntity(uri, Map.class);
-		Map map = response.getBody();
-		Object keyResponseMap = null;
-		String publicKeyValue = null;
-		String issuedAtValue = null;
-		String expiryAtValue = null;
-		Iterator<Map.Entry<Object, Object>> itr = map.entrySet().iterator();
-		while (itr.hasNext()) {
-			Map.Entry<Object, Object> entry = itr.next();
-			if (entry.getKey().equals("response")) {
-				keyResponseMap = entry.getValue();
-			}
-		}
-
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> convertValue = mapper.convertValue(keyResponseMap, Map.class);
-
-		Iterator<Entry<String, String>> iterator = convertValue.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, String> entry = iterator.next();
-			if (entry.getKey().equals("publicKey")) {
-				publicKeyValue = entry.getValue();
-			}
-			if (entry.getKey().equals("issuedAt")) {
-				issuedAtValue = entry.getValue();
-			}
-			if (entry.getKey().equals("expiryAt")) {
-				expiryAtValue = entry.getValue();
-			}
-		}
-
-		DateTimeFormatter expiryAtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		//LocalDateTime expiryAtDateTime = LocalDateTime.parse(expiryAtValue, expiryAtFormatter);
-
-		DateTimeFormatter issuedAtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		//LocalDateTime issuedAtDateTime = LocalDateTime.parse(issuedAtValue, issuedAtFormatter);
-
-		// TODO
-		// need to validate the expiry
-
-		return publicKeyValue;
-	}
-
-	@Override
-	public GetPartnerDetailsResponse getPartnerDetails() {
-		GetPartnerDetailsResponse partnersResponse = new GetPartnerDetailsResponse();
-		List<PartnersDetails> partners = new ArrayList<>();
-
-		List<Partner> listPart = null;
-		listPart = partnerRepository.findAll();
-		Partner partner = null;
-		if (listPart == null) {
-			throw new PartnerDoesNotExistException(
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		Iterator<Partner> partnerIterat = listPart.iterator();
-		while (partnerIterat.hasNext()) {
-			PartnersDetails partnersDetails = new PartnersDetails();
-			partner = partnerIterat.next();
-
-			partnersDetails.setPartnerID(partner.getId());
-			partnersDetails.setStatus(partner.getIsActive() == true ? "Active" : "De-Active");
-			partnersDetails.setOrganizationName(partner.getName());
-			partnersDetails.setContactNumber(partner.getContactNo());
-			partnersDetails.setEmailId(partner.getEmailId());
-			partnersDetails.setAddress(partner.getAddress());
-
-			partnersDetails.setCreatedBy(partner.getCrBy());
-			partnersDetails.setCreatedDateTime(partner.getCrDtimes().toString());
-			partnersDetails.setUpdatedBy(partner.getUpdBy());
-
-			// partnersDetails.setUpdatedDateTime(partner.getUpdDtimes()==null ? "NOT YET
-			// UPDATED" : partner.getUpdDtimes().toString());
-
-			partnersDetails.setUpdatedDateTime(partner.getUpdDtimes() + "");
-
-			String statusCode = null;
-
-			if (!partnerPolicyRequestRepository.findByPartnerId(partner.getId()).isEmpty()) {
-				statusCode = partnerPolicyRequestRepository.findByPartnerId(partner.getId()).get(0).getStatusCode();
-
-			} else {
-				statusCode = "YET TO SUBMIT";
-			}
-
-			partnersDetails.setApiKeyRequestStatus(statusCode);
-
-			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-			if (findByIdpolicyGroup.isPresent()) {
-				partnersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
-			}
-			partners.add(partnersDetails);
-		}
-		partnersResponse.setPartners(partners);
-		return partnersResponse;
-	}
+	}	
 }

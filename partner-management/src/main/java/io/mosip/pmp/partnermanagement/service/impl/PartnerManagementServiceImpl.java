@@ -1,16 +1,22 @@
 package io.mosip.pmp.partnermanagement.service.impl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NewPolicyIdNotExistConstant;
@@ -20,19 +26,27 @@ import io.mosip.pmp.partnermanagement.constant.PartnerAPIKeyDoesNotExistConstant
 import io.mosip.pmp.partnermanagement.constant.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerIdDoesNotExistExceptionConstant;
+import io.mosip.pmp.partnermanagement.constant.PartnerValidationsConstants;
 import io.mosip.pmp.partnermanagement.constant.PolicyNotExistConstant;
 import io.mosip.pmp.partnermanagement.controller.PartnerManagementController;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
+import io.mosip.pmp.partnermanagement.dto.AuthPolicyAttributes;
+import io.mosip.pmp.partnermanagement.dto.KYCAttributes;
+import io.mosip.pmp.partnermanagement.dto.MISPValidatelKeyResponseDto;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
+import io.mosip.pmp.partnermanagement.dto.Policies;
+import io.mosip.pmp.partnermanagement.dto.PolicyDTO;
 import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersManagersDetails;
 import io.mosip.pmp.partnermanagement.entity.AuthPolicy;
+import io.mosip.pmp.partnermanagement.entity.MISPLicenseEntity;
 import io.mosip.pmp.partnermanagement.entity.Partner;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicyRequest;
@@ -43,10 +57,12 @@ import io.mosip.pmp.partnermanagement.exception.NoPartnerApiKeyRequestsException
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException;
-import io.mosip.pmp.partnermanagement.exception.PartnerDoesNotExistException;
+import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
+import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PolicyNotExistException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
+import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerRepository;
@@ -63,6 +79,9 @@ import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 public class PartnerManagementServiceImpl implements PartnerManagementService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
+	
+	@Autowired
+	private MispLicenseKeyRepository misplKeyRepository;	
 	
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
@@ -143,7 +162,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 			} else {
 				LOGGER.info(partnerID + " : Invalied Partner Id");
-				throw new PartnerDoesNotExistException(
+				throw new PartnerValidationException(
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
@@ -169,7 +188,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			partnerRepository.save(partner);
 		}else {
 			LOGGER.info(partnerID + " : Invalied Partner Id");
-			throw new PartnerDoesNotExistException(
+			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -192,7 +211,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			if(partnerStatus.equalsIgnoreCase("Active") || partnerStatus.equalsIgnoreCase("De-Active")) {
 				if(partnerStatus.equalsIgnoreCase("Active")) {
 					partner.setIsActive(true);
-				} else if (partnerStatus.equalsIgnoreCase("De-Active")) {
+				} else {
 					partner.setIsActive(false);
 				}
 			}else {
@@ -226,7 +245,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				if(request.getStatus().equalsIgnoreCase("Active") || request.getStatus().equalsIgnoreCase("De-Active")) {
 					if(request.getStatus().equalsIgnoreCase("Active")) {
 						partnerPolicy.setIsActive(true);
-					}else if(request.getStatus().equalsIgnoreCase("De-Active")){
+					}else {
 						partnerPolicy.setIsActive(false);
 					}
 				}else {
@@ -241,7 +260,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				LOGGER.info(partnerAPIKey + " : API KEY Status Updated Successfully");
 			} else {
 				LOGGER.info(partnerID + " : Partner Id Does Not Exist");
-				throw new PartnerDoesNotExistException(
+				throw new PartnerValidationException(
 						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerIdDoesNotExistExceptionConstant.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
@@ -261,11 +280,10 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		RetrievePartnerDetailsResponse partnersResponse = new RetrievePartnerDetailsResponse();
 		List<RetrievePartnersDetails> partners = new ArrayList<RetrievePartnersDetails>();
 
-		List<Partner> listPart = null;
-		listPart = partnerRepository.findAll();
+		List<Partner> listPart = partnerRepository.findAll();
 		Partner partner = null;
-		if(listPart == null) {
-			throw new PartnerDoesNotExistException(
+		if(listPart.isEmpty()) {
+			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -301,7 +319,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			retrievePartnersDetails.setAddress(partner.getAddress());
 
 		} else {
-			throw new PartnerDoesNotExistException(
+			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -310,10 +328,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	@Override
 	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID,
-			String PartnerAPIKey) {
-		
-		//TODO Partner API Key pattern, validate expiry for Partner API Key and status
-		
+			String PartnerAPIKey) {	
 		AuthPolicy authPolicy = null;
 		Optional<PartnerPolicy> findById = partnerPolicyRepository.findById(PartnerAPIKey);
 		PartnerAPIKeyToPolicyMappingsResponse response = new PartnerAPIKeyToPolicyMappingsResponse();
@@ -359,8 +374,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		
 		String parnerId = null;
 		PolicyGroup policyGroup = null;
-		if(!findAll.isEmpty() && findAll!=null) {
-			
+		if(!findAll.isEmpty()) {			
 			Iterator<PartnerPolicyRequest> partnerPolicyRequestIterat = findAll.iterator();
 			while (partnerPolicyRequestIterat.hasNext()) {
 				ApikeyRequests apikeyRequests = new ApikeyRequests();
@@ -372,7 +386,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				Optional<Partner> findByPartnerId = partnerRepository.findById(parnerId);
 				
 				if(!findByPartnerId.isPresent()) {
-					throw new PartnerDoesNotExistException(
+					throw new PartnerValidationException(
 							PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 							PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 				}
@@ -485,9 +499,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			}else {
 				String partnerAPIKey = PartnerUtil.createPartnerApiKey(); 
 	 			Optional<PartnerPolicy> detailPartnerAPIKey = partnerPolicyRepository.findById(partnerAPIKey);
-				if(detailPartnerAPIKey.isPresent()) {
-					LOGGER.info(partnerAPIKey + " : this is duplicate PartnerAPIKey");
-				}else {
+				if(!detailPartnerAPIKey.isPresent()) {
 					partnerPolicy.setPolicyApiKey(partnerAPIKey);
 					partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 					
@@ -522,7 +534,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		listPart = partnerRepository.findAll();
 		Partner partner = null;
 		if(listPart == null) {
-			throw new PartnerDoesNotExistException(
+			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -594,5 +606,145 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			policyIDResponse.setPolicyID(policyGroup.getId());
 		}
 		return policyIDResponse;
+	}
+	
+	/**
+	 * (One Partner will have only one policy)
+	 * This method retrieves the policy json file for a partner.
+	 * 1. Validated the partner
+	 * 2. Checks the json file.
+	 */
+	@Override
+	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId) {		
+		LOGGER.info("Getting the partner from db.");
+		MISPValidatelKeyResponseDto LicenseKeyresponse = validateLicenseKey(mispLicenseKey);
+		if(LicenseKeyresponse.isValid()) {			
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
+					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
+		}
+		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(policy_api_key);
+		if(partnerPolicy == null) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
+		}		
+		if(!partnerPolicy.getIsActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}		
+		if(partnerPolicy.getValidToDatetime().before(new Timestamp(System.currentTimeMillis()))){
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());			
+		}		
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
+		if(!authPolicy.isPresent()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
+		}
+		if(!authPolicy.get().getIsActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
+		
+		if(authPolicy.get().getPolicyGroup() == null) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+					PartnerValidationsConstants.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+		}
+		
+		if(!authPolicy.get().getPolicyGroup().getIsActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
+		}
+		
+		PartnerPolicyResponse response = new PartnerPolicyResponse();
+		response.setPolicyId(partnerPolicy.getPolicyId());
+		response.setPolicyDescription(authPolicy.get().getPolicyGroup().getDescr());
+		response.setPolicy(getAuthPolicies(authPolicy.get().getPolicyFileId(), authPolicy.get().getId()));
+		response.setPolicyStatus(authPolicy.get().getIsActive());
+		response.setPartnerId(partnerPolicy.getPartner().getId());
+		response.setPartnerName(partnerPolicy.getPartner().getName());
+		
+		return response;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private PolicyDTO getAuthPolicies(String policeFileId,String authPolicyId) {
+		Policies policies = new Policies();		
+		PolicyDTO authPolicies = new PolicyDTO();		
+		Map<?, ?> readValue = null;
+		try {
+			readValue = new ObjectMapper().readValue(policeFileId, Map.class);
+		} catch (Exception e) {
+			LOGGER.info("Error occured while parsing the policy file" + e.getStackTrace());
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
+		}
+		
+		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("authPolicies"));
+		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
+		authPolicies.setPolicies(policies);
+		authPolicies.setPolicyId(authPolicyId);
+		return authPolicies;
+		
+		
+	}
+	/**
+	 * This method validates the license key.
+	 * @param licenseKey
+	 * @return
+	 */
+	public MISPValidatelKeyResponseDto validateLicenseKey(String licenseKey) {
+		MISPValidatelKeyResponseDto response = new MISPValidatelKeyResponseDto();
+		LOGGER.info("Getting the misp license key " + licenseKey);
+		MISPLicenseEntity mispLicense = getLicenseDetails(licenseKey);
+		
+		response.setActive(mispLicense.getIsActive());
+		response.setLicenseKey(mispLicense.getMispUniqueEntity().getLicense_key());
+		response.setValid(mispLicense.getValidToDate().isAfter(LocalDateTime.now()));
+		response.setValidFrom(mispLicense.getValidFromDate());
+		response.setValidTo(mispLicense.getValidToDate());
+		response.setMisp_id(mispLicense.getMispUniqueEntity().getMisp_id());
+		String message ;
+		if(response.isValid()) {
+			message = "Valid";
+		}else {
+			message = "Expired";
+		}
+		response.setMessage("MISP " + mispLicense.getMispUniqueEntity().getMisp_id() + " with license key " 
+		+ mispLicense.getMispUniqueEntity().getLicense_key() + "  is " + message);
+		return response;
+	}
+	
+	/**
+	 * This method retrieves the license details with license key.
+	 * @param licenseKey
+	 * @return
+	 */
+	private MISPLicenseEntity getLicenseDetails(String licenseKey) {
+		LOGGER.info("Retrieving the misp license key " + licenseKey);
+		MISPLicenseEntity mispLicense = null;
+		try {
+		mispLicense = misplKeyRepository.findByLicensekey(licenseKey);
+		if(mispLicense == null){
+			LOGGER.warn("No details found for license key " + licenseKey);
+			throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
+					PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
+		}
+		}catch(Exception e) {
+			LOGGER.warn("No details found for license key " + licenseKey + e.getStackTrace());
+			throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
+					PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
+		}
+		
+		
+		return mispLicense;		
 	}
 }

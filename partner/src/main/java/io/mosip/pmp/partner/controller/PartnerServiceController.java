@@ -20,20 +20,12 @@ import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
-import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
-import io.mosip.pmp.partner.dto.LoginUserRequest;
-import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
-import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
-import io.mosip.pmp.partner.dto.SignUserRequest;
-import io.mosip.pmp.partner.dto.SignUserResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.swagger.annotations.ApiOperation;
 
@@ -95,7 +87,7 @@ public class PartnerServiceController {
 	 * @return response this class contains partner response
 	 */
 
-	@RequestMapping(value = "/partnerReg", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
 		LOGGER.info("partner self registration");
@@ -113,82 +105,57 @@ public class PartnerServiceController {
 	}
 
 	/**
-	 * This API would be used to retrieve Auth/E-KYC Partner details
+	 * This API would be used to submit Partner api key request.
 	 * 
 	 * @param partnerId
 	 *            this is unique id created after self registered by partner
-	 * @return retrievePartnerDetailsResponse this class contains partner details
+	 * @param request
+	 *            this class contains partner policy and policy description details
+	 * @return partnerAPIKeyResponse this class contains partner request id and
+	 *         massage details
 	 */
 
-	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
-			@PathVariable String partnerId) {
-		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
-		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
-		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(retrievePartnerDetailsResponse);
+	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.PATCH)
+	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
+			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
+		ResponseWrapper<PartnerAPIKeyResponse> response = new ResponseWrapper<>();
+		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
+		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
+		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerId);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setResponse(partnerAPIKeyResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
+	}	
+	
 	/**
-	 * This Api written for Partner-UI
+	 * Validation of digital certificate without PublicKey
 	 * 
-	 * @return List of Partner Details
+	 * Partners would be procuring digital certificates from Certification Authority
+	 * (CA), And upload the same to Partner Management using this API. Partner
+	 * Management would depend on Kernel to manage partner certificates, Validation
+	 * of partner certificates. Appropriate error messages would be sent back to
+	 * Partners, In cases where digital certificates expires, certificate validation
+	 * error happens.
+	 * 
+	 * @param request
+	 *            this class contains digitalCertificate details
+	 * @return DigitalCertificateResponse this class contains massage
 	 */
 
-	@RequestMapping(value = "/getpartners", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<GetPartnerDetailsResponse>> getAllPartnerDetails() {
-		ResponseWrapper<GetPartnerDetailsResponse> response = new ResponseWrapper<>();
-		GetPartnerDetailsResponse getPartnerDetailsResponse = null;
-		getPartnerDetailsResponse = partnerService.getPartnerDetails();
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(getPartnerDetailsResponse);
+	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificatewithoutPublicKey(
+			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
+		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
+		DigitalCertificateResponse digitalCertificateResponse = null;
+		digitalCertificateResponse = partnerService.uploadDigitalCertificate(request);
+		response.setResponse(digitalCertificateResponse);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setMetadata(request.getMetadata());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-	/**
-	 * This API would be used to retrieve Partner details by Partner Name
-	 * 
-	 * @param partnerName
-	 *            this is unique Partner Name
-	 * @return retrievePartnerDetailsWithNameResponse this class contains partner
-	 *         details
-	 */
-
-	@RequestMapping(value = "/findbyname/{partnerName}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsWithNameResponse>> retrievePartnerDetailsWithName(
-			@PathVariable String partnerName) {
-		ResponseWrapper<RetrievePartnerDetailsWithNameResponse> response = new ResponseWrapper<>();
-		RetrievePartnerDetailsWithNameResponse retrievePartnerDetailsWithNameResponse = null;
-		retrievePartnerDetailsWithNameResponse = partnerService.getPartnerDetailsWithName(partnerName);
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(retrievePartnerDetailsWithNameResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * This API would be used to retrieve Policy details by Policy Name
-	 * 
-	 * @param policyName
-	 *            this is unique Policy Name
-	 * @return policyIdResponse this class contains PolicyId
-	 */
-	@RequestMapping(value = "/findbypolicyname/{policyName}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<PolicyIdResponse>> retrievePolicyIdByPolicyName(
-			@PathVariable String policyName) {
-		ResponseWrapper<PolicyIdResponse> response = new ResponseWrapper<>();
-		PolicyIdResponse policyIdResponse = null;
-		policyIdResponse = partnerService.getPolicyId(policyName);
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(policyIdResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
+	
 	/**
 	 * This API would be used to update Auth/E-KYC Partner's details.
 	 * 
@@ -211,54 +178,53 @@ public class PartnerServiceController {
 		response.setResponse(partnerResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
+	
 	/**
-	 * This API would be used to submit Partner api key request.
+	 * Validation of digital certificate with PublicKey
 	 * 
-	 * @param partnerId
-	 *            this is unique id created after self registered by partner
+	 * As the MOSIP system Partner Management module would integrate with Kernel for
+	 * validation of partner's digital certificate. In case where MOSIP would act as
+	 * certification authority for partners, MOSIP would be able to sign and resign
+	 * partner digital certificates. Partner management module would depend on
+	 * Kernel services for signing and re-signing of partner digital certificates.
+	 * Kernel Signature service would be utilized to validate signature : Kernel
+	 * Signature Service
+	 * 
 	 * @param request
-	 *            this class contains partner policy and policy description details
-	 * @return partnerAPIKeyResponse this class contains partner request id and
-	 *         massage details
+	 *            this class contains digitalCertificate details
+	 * @return DigitalCertificateResponse this class contains massage
 	 */
-
-	@RequestMapping(value = "/submit/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
-			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
-		ResponseWrapper<PartnerAPIKeyResponse> response = new ResponseWrapper<>();
-		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
-		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
-		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerId);
+	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificateWithPublicKey(
+			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
+		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
+		DigitalCertificateResponse digitalCertificateResponse = null;
+		digitalCertificateResponse = partnerService.validateDigitalCertificate(request);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
-		response.setResponse(partnerAPIKeyResponse);
+		response.setResponse(digitalCertificateResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
+	
 	/**
-	 * This API would be used to download Partner API key for the given APIKeyReqID.
+	 * This API would be used to retrieve Auth/E-KYC Partner details
 	 * 
 	 * @param partnerId
 	 *            this is unique id created after self registered by partner
-	 * @param apiKeyReqId
-	 *            this is unique id created after partner request for Partner API
-	 *            Key
-	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner
-	 *         manager approved the partner API request
+	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
 
-	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> downloadPartnerAPIkey(
-			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {
-		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
-		DownloadPartnerAPIkeyResponse resp = null;
-		resp = partnerService.downloadPartnerAPIkey(partnerId, apiKeyReqId);
+	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
+			@PathVariable String partnerId) {
+		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
+		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
+		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
-		response.setResponse(resp);
+		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	}			
 
 	/**
 	 * This API would be used to retrieve all API key requests submitted by partner
@@ -305,104 +271,5 @@ public class PartnerServiceController {
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * Validation of digital certificate with PublicKey
-	 * 
-	 * As the MOSIP system Partner Management module would integrate with Kernel for
-	 * validation of partner's digital certificate. In case where MOSIP would act as
-	 * certification authority for partners, MOSIP would be able to sign and resign
-	 * partner digital certificates. Partner management module would depend on
-	 * Kernel services for signing and re-signing of partner digital certificates.
-	 * Kernel Signature service would be utilized to validate signature : Kernel
-	 * Signature Service
-	 * 
-	 * @param request
-	 *            this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
-	 */
-	@RequestMapping(value = "/validatedigitalcertificate", method = RequestMethod.PUT)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificateWithPublicKey(
-			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
-		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
-		DigitalCertificateResponse digitalCertificateResponse = null;
-		digitalCertificateResponse = partnerService.validateDigitalCertificate(request);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setResponse(digitalCertificateResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * Validation of digital certificate without PublicKey
-	 * 
-	 * Partners would be procuring digital certificates from Certification Authority
-	 * (CA), And upload the same to Partner Management using this API. Partner
-	 * Management would depend on Kernel to manage partner certificates, Validation
-	 * of partner certificates. Appropriate error messages would be sent back to
-	 * Partners, In cases where digital certificates expires, certificate validation
-	 * error happens.
-	 * 
-	 * @param request
-	 *            this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
-	 */
-
-	@RequestMapping(value = "/uploaddigitalcertificate", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificatewithoutPublicKey(
-			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
-		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
-		DigitalCertificateResponse digitalCertificateResponse = null;
-		digitalCertificateResponse = partnerService.uploadDigitalCertificate(request);
-		response.setResponse(digitalCertificateResponse);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setMetadata(request.getMetadata());
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * This method is use for userLogin when need to validate the digital
-	 * certificate
-	 * 
-	 * @param request
-	 *            this class contains LoginUserRequest
-	 * @return loginUserResponse this class contains LoginUserResponse
-	 * 
-	 */
-
-	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<LoginUserResponse>> userLoginInKernal(
-			@RequestBody RequestWrapper<LoginUserRequest> request) {
-		ResponseWrapper<LoginUserResponse> response = new ResponseWrapper<>();
-		LoginUserResponse loginUserResponse = null;
-		loginUserResponse = partnerService.userLoginInKernal(request);
-		response.setResponse(loginUserResponse);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setMetadata(request.getMetadata());
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * This API Use for signUser to get user signature and timestamp.
-	 * 
-	 * @param request
-	 *            this class contains digitalCertificate details
-	 * @return SignUserResponse this class contains signature and timestamp.
-	 */
-
-	@RequestMapping(value = "/signUser", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<SignUserResponse>> signUserInDigitalCertificates(
-			@RequestBody RequestWrapper<SignUserRequest> request) {
-		ResponseWrapper<SignUserResponse> response = new ResponseWrapper<>();
-		SignUserResponse signUserResponse = null;
-		signUserResponse = partnerService.signUserInDigitalCertificates(request);
-		response.setResponse(signUserResponse);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setMetadata(request.getMetadata());
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	}		
 }

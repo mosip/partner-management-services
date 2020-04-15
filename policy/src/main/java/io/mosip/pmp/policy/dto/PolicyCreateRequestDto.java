@@ -26,4 +26,6 @@ public class PolicyCreateRequestDto {
 	@NotBlank(message = "Policy desc should not be blank.")
 	@Size(min = 1, max = 128, message = "Policy desc length should be in between 1 and 128 chars")	
 	public String desc;	
+	
+	public PolicyDto policies;
 }

@@ -1,7 +1,6 @@
 package io.mosip.pmp.policy.dto;
 
-import java.util.List;
-
+import io.mosip.pmp.policy.entity.PolicyGroup;
 import lombok.Data;
 
 /**
@@ -14,7 +13,7 @@ import lombok.Data;
 @Data
 public class PolicyWithAuthPolicyDto {
 
-	private PolicyCreateResponseDto policy;
+	private PolicyGroup policy;
 	
-	private List<PolicyDto> authPolicies;
+	private PolicyDto policies;
 }

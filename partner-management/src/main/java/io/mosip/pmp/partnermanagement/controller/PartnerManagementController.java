@@ -21,6 +21,7 @@ import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyRequestsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
 import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
@@ -76,7 +77,7 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about API key created successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerId,
@@ -100,7 +101,7 @@ public class PartnerManagementController {
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
 	
-	@RequestMapping(value = "/updateStatus/{partnerId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PATCH)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerId,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
@@ -123,7 +124,7 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
 	
-	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
@@ -140,6 +141,27 @@ public class PartnerManagementController {
 	}
 	
 	/**
+	 * 
+	 * @param partnerId
+	 * @param partner_api_key
+	 * @param misp_license_key
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/validatePartnerMisp/partnerId/{partnerId}/partnerApiKey/{partner_api_key}/mispLicenseKey/{misp_license_key}", 
+			method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
+			@PathVariable String partnerId, @PathVariable String partner_api_key,
+			@PathVariable String misp_license_key){
+		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();
+		
+		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misp_license_key,partner_api_key,partnerId);	
+		
+		response.setResponse(responseFromService);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
 	 * Partner Manager would be using this API to approve OR reject partner API key
 	 * requests based on API key request id. During approval process of the request
 	 * unique PartnerAPI Key is generated in Partner Management module, which is
@@ -150,7 +172,7 @@ public class PartnerManagementController {
 	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains massage about PartnerAPIKey approved successfully
 	 */
-	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
 			@PathVariable String apiKeyReqId){

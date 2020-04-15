@@ -1,4 +1,4 @@
-package io.mosip.pmp.misp.entity;
+package io.mosip.pmp.partnermanagement.entity;
 
 import java.io.Serializable;
 

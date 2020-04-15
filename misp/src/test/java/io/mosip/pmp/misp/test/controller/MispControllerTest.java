@@ -26,18 +26,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
+import io.mosip.pmp.misp.dto.MISPDetailsDto;
+import io.mosip.pmp.misp.dto.MISPLiceneseDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateResponse;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.MISPUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPUpdateResponseDto;
 import io.mosip.pmp.misp.dto.MISPValidatelKeyRequestDto;
+import io.mosip.pmp.misp.dto.MISPValidatelKeyResponseDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPEntity;
 import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
+import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
 
@@ -66,18 +69,18 @@ public class MispControllerTest {
 		Mockito.when(mispManagementService.createMISP(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPCreateRequestDto> request = formCreateRequest();
 		
-		mockMvc.perform(post("/pmp/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void mispRequestStatusTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPStatusUpdateResponse> response = new ResponseWrapper<MISPStatusUpdateResponse>();
-		Mockito.when(mispManagementService.updateMispRequestStatus(Mockito.any())).thenReturn(response);
+		Mockito.when(mispManagementService.processRequest(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPStatusUpdateRequestDto> request = formRequestStatusRequest();
 		
-		mockMvc.perform(post("/pmp/misps/12345/status").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misps/12345/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 	
 	@Test
@@ -86,22 +89,21 @@ public class MispControllerTest {
 		Mockito.when(mispManagementService.update(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPUpdateRequestDto> request = formUpdateMispRequest();
 
-		mockMvc.perform(post("/pmp/misps/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/misps/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
 	
-//	@Test
-//	public void validateLkeyTest() throws JsonProcessingException, Exception{	
-//		ResponseWrapper<MISPValidatelKeyResponseDto> response = new ResponseWrapper<MISPValidatelKeyResponseDto>();
-//		MISPLicenseReadEntity serviceResponse = new MISPLicenseReadEntity();
-//		Mockito.when(mispManagementService.getMispLicense(Mockito.any())).thenReturn(serviceResponse);
-//		
-//		RequestWrapper<MISPValidatelKeyRequestDto> request = formValidateLkeyRequest();
-//		mockMvc.perform(post("/pmp/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
-//
-//	}
+	@Test
+	public void validateLkeyTest() throws JsonProcessingException, Exception{
+		MISPValidatelKeyResponseDto serviceResponse = new MISPValidatelKeyResponseDto();
+		Mockito.when(mispManagementService.validateLicenseKey(new MISPlKeyUniqueKeyEntity())).thenReturn(serviceResponse);
+		
+		RequestWrapper<MISPValidatelKeyRequestDto> request = formValidateLkeyRequest();
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+
+	}
 	
 	@Test
 	public void updateMispStatusTest() throws JsonProcessingException, Exception{
@@ -109,7 +111,7 @@ public class MispControllerTest {
 		Mockito.when(mispManagementService.updateMISPStatus(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPStatusUpdateRequestDto> request = formUpdateMispStatusRequest();
 		
-    	mockMvc.perform(put("/pmp/misps/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/misps/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
 	
@@ -119,47 +121,47 @@ public class MispControllerTest {
 		Mockito.when(mispManagementService.updateMisplkeyStatus(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPlKeyStatusUpdateRequestDto> request = formLicenseKeyUpdateRequest();
 
-		mockMvc.perform(put("/pmp/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
 	
 	@Test
 	public void getMispsTest() throws Exception{		
-		List<MISPEntity> response = new ArrayList<MISPEntity>();
+		List<MISPDetailsDto> response = new ArrayList<MISPDetailsDto>();
 		Mockito.when(mispManagementService.getMisps()).thenReturn(response);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/misps")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void getMispTest() throws Exception{
-		MISPEntity response =  new MISPEntity();
+		MISPDetailsDto response =  new MISPDetailsDto();
 		Mockito.when(mispManagementService.getMisp(Mockito.any())).thenReturn(response);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/misps/12345")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps/mispId/12345")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void getMispByOrgTest() throws Exception{
-		List<MISPEntity> response = new ArrayList<>();
+		List<MISPDetailsDto> response = new ArrayList<>();
 		Mockito.when(mispManagementService.getMispsByOrg(Mockito.any())).thenReturn(response);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/misps/misp/airtel")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps/name/airtel")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 		
 	}
 	
-//	@Test
-//	public void downloadLkeyTest() throws Exception{
-//		ResponseWrapper<MISPLiceneseDto> response = new ResponseWrapper<MISPLiceneseDto>();
-//		Mockito.when(mispManagementService.getLicense(Mockito.any())).thenReturn(response);
-//		
-//		mockMvc.perform(MockMvcRequestBuilders.get("/pmp/misps/12345/licenseKey")).
-//		andExpect(MockMvcResultMatchers.status().isOk());
-//	}
+	@Test
+	public void downloadLkeyTest() throws Exception{
+		ResponseWrapper<MISPLiceneseDto> response = new ResponseWrapper<MISPLiceneseDto>();
+		Mockito.when(mispManagementService.retriveLicense(Mockito.any())).thenReturn(response);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps/12345/licenseKey")).
+		andExpect(MockMvcResultMatchers.status().isOk());
+	}
 	
 	private RequestWrapper<MISPlKeyStatusUpdateRequestDto> formLicenseKeyUpdateRequest() {
 		RequestWrapper<MISPlKeyStatusUpdateRequestDto> request = new RequestWrapper<MISPlKeyStatusUpdateRequestDto>();
@@ -227,7 +229,7 @@ public class MispControllerTest {
 		request.setVersion("0.9.1");
 		MISPStatusUpdateRequestDto dto = new MISPStatusUpdateRequestDto();
 		dto.setMispId("12345");
-		dto.setMispStatus("approve");
+		dto.setMispStatus("approved");
 		request.setRequest(dto);
 		
 		return request;
@@ -249,4 +251,6 @@ public class MispControllerTest {
 		
 		return request;
 	}
+	
+	
 }

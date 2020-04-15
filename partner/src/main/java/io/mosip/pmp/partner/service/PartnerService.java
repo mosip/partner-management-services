@@ -7,7 +7,6 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.LoginUserRequest;
 import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
@@ -41,8 +40,6 @@ public interface PartnerService {
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerID);
-	
-	public GetPartnerDetailsResponse getPartnerDetails();
 	
 	/**
 	 * This API would be used to retrieve Partner details by Partner Name
@@ -108,21 +105,4 @@ public interface PartnerService {
 	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 	
 	public DigitalCertificateResponse uploadDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
-	
-	/**
-	 * This method is use for userLogin when need to validate the digital certificate 
-	 * @param request this class contains LoginUserRequest
-	 * @return loginUserResponse this class contains LoginUserResponse
-	 * 
-	 */
-	
-	public LoginUserResponse userLoginInKernal(RequestWrapper<LoginUserRequest> request);
-	
-	/**
-	 * @param request this class contains digitalCertificate details
-	 * @return SignUserResponse this class contains signature and timestamp.
-	 */
-	
-	public SignUserResponse signUserInDigitalCertificates(RequestWrapper<SignUserRequest> request);
-	
 }

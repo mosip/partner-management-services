@@ -32,17 +32,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
-import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pmp.partner.dto.GetPartnerDetailsResponse;
+import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PartnersRetrieveApiKeyRequests;
-import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
  
@@ -50,7 +47,7 @@ import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
-@EnableWebMvc
+@EnableWebMvc 
 public class PartnerServiceControllerTest {
 
     @Autowired
@@ -67,19 +64,12 @@ public class PartnerServiceControllerTest {
     }
     
     @Test
-    public void getAllPartnerDetailsTest() throws Exception {
-    	GetPartnerDetailsResponse response = new GetPartnerDetailsResponse();
-        Mockito.when(partnerService.getPartnerDetails()).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/getpartners")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void partnerSelfRegistrationTest() throws Exception {
         PartnerResponse response = new PartnerResponse();
         Mockito.when(partnerService.savePartner(Mockito.any())).thenReturn(response);
         RequestWrapper<PartnerRequest> request = createRequest();
 
-        mockMvc.perform(post("/partners/partnerReg").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
@@ -88,20 +78,6 @@ public class PartnerServiceControllerTest {
         RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
         Mockito.when(partnerService.getPartnerDetails("12345")).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-    @Test
-    public void retrievePartnerDetailsWithName_Test()throws Exception{
-    	 RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
-         Mockito.when(partnerService.getPartnerDetailsWithName("Airtel")).thenReturn(response);
-         mockMvc.perform(MockMvcRequestBuilders.get("/partners/findbyname/Airtel")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-    @Test
-    public void retrievePolicyIdByPolicyName_Test() throws Exception{
-    	PolicyIdResponse response = new PolicyIdResponse();
-        Mockito.when(partnerService.getPolicyId("Banking")).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/findbypolicyname/Banking")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
@@ -129,21 +105,8 @@ public class PartnerServiceControllerTest {
     	Mockito.when(partnerService.submitPartnerApiKeyReq(Mockito.any(), Mockito.any())).thenReturn(response);
     	RequestWrapper<PartnerAPIKeyRequest> request = createSubmitPartnerApiKeyRequest();
     	
-    	mockMvc.perform(post("/partners/submit/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/12345/partnerAPIKeyRequests").contentType(MediaType.APPLICATION_JSON_VALUE)
                  .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
-    }
-    
-    @Test
-    public void downloadPartnerAPIkeyTest() throws Exception{
-    	DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-    	String partnerAPIKey = "fa604-affcd-33201-04770";
-    	response.setPartnerAPIKey(partnerAPIKey);
-    	
-    	Mockito.when(partnerService.downloadPartnerAPIkey(Mockito.any(), Mockito.any())).thenReturn(response);
-    	
-    	mockMvc.perform(post("/partners/12345/partnerAPIKeyRequests/partnerAPIKey").contentType(MediaType.APPLICATION_JSON_VALUE))
-                 .andExpect(status().isOk());
-    	
     }
     
     @Test
@@ -174,18 +137,27 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
-   /* @Test
+   @Test
     public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
     	DigitalCertificateResponse response = new DigitalCertificateResponse();
     	response.setMessage("DigitalCertificateResponse");
     	Mockito.when(partnerService.validateDigitalCertificate(Mockito.any())).thenReturn(response);
     	RequestWrapper<PartnerUpdateRequest> request = createvalidateDigitalCertificateRequest();
     	
-    	mockMvc.perform(put("/partners/validatedigitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk())
-    	        .andExpect(jsonPath("$.response.[status]", is("true")));
-    }*/
+    	mockMvc.perform(put("/partners/digitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    }
     
+   @Test
+   public void validateDigitalCertificatewithoutPublicKey_Test() throws JsonProcessingException, Exception {
+	   DigitalCertificateResponse response = new DigitalCertificateResponse();
+   	response.setMessage("DigitalCertificateResponse");
+   	Mockito.when(partnerService.validateDigitalCertificate(Mockito.any())).thenReturn(response);
+   	RequestWrapper<PartnerUpdateRequest> request = createvalidateDigitalCertificateRequest();
+   	
+   	mockMvc.perform(post("/partners/digitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+   			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+   }
     public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
     	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
     	

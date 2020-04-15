@@ -54,15 +54,7 @@ public class PolicyGroup implements Serializable {
 	private LocalDateTime updDtimes;
 
 	@Column(name="user_id")
-	private String userId;
-
-	//bi-directional many-to-one association to AuthPolicy
-//	@OneToMany(mappedBy="policyGroup")
-//	private List<AuthPolicy> authPolicies;
-
-	//bi-directional many-to-one association to AuthPolicyH
-//	@OneToMany(mappedBy="policyGroup")
-//	private List<AuthPolicyH> authPolicyHs;
+	private String userId;	
 
 	public PolicyGroup() {
 	}

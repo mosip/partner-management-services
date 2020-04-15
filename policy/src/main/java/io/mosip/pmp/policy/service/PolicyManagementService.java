@@ -1,27 +1,26 @@
 package io.mosip.pmp.policy.service;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
-import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -29,6 +28,7 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
+import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.PolicyGroup;
@@ -42,7 +42,7 @@ import io.mosip.pmp.policy.repository.PolicyGroupRepository;
  * <p>This class manages business logic before or after performing database operations.</p>
  * This class is performing following operations.</br>
  * 1. Creating the policy group {@link #createPolicyGroup(PolicyCreateRequestDto)} </br>
- * 2. Creating the auth policies {@link #createAuthPolicies(PolicyDto)} </br>
+ * 2. Creating the auth policies {@link #createAuthPoliciesRequest(PolicyDto)} </br>
  * 3. Updating the policy group {@link #update(PolicyUpdateRequestDto)} </br>
  * 4. Updating the policy status {@link #updatePolicyStatus(PolicyStatusUpdateRequestDto)} </br>
  * 5. Reading/Getting the policy details {@link #getPolicyDetails(String)} </br>
@@ -60,9 +60,6 @@ public class PolicyManagementService {
 	@Autowired
 	private PolicyGroupRepository policyGroupRepository;
 	
-	@Value("${pmp.policy.file.storage.path}")
-	private String filePath;
-	
 
 	/**
 	 * <p> This function inserts the policy group data into policy group table.</p>
@@ -79,7 +76,12 @@ public class PolicyManagementService {
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<>();		
 		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();		
 		PolicyGroup policyGroupInput = new PolicyGroup();
-		response.setResponse(null);
+		AuthPolicy authPolicy = new AuthPolicy();
+		if(request.getPolicies() == null) {
+			PolicyServiceLogger.error("No details found with policy name " + request.getName());
+			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICIES_NOT_DEFINED.getErrorCode(),
+					ErrorMessages.AUTH_POLICIES_NOT_DEFINED.getErrorMessage());
+		}
 		
 		PolicyServiceLogger.info("Validating the policy name " + request.getName());
 		PolicyGroup policyGroupName = policyGroupRepository.findByName(request.getName());	
@@ -87,28 +89,32 @@ public class PolicyManagementService {
 			PolicyServiceLogger.warn("No details found with policy name " + request.getName());
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + request.getName());			
-		}		
+		}
+		policyGroupInput.setName(request.getName());
+		policyGroupInput.setDescr(request.getDesc());
+		policyGroupInput.setId(policyGroupRepository.count() + "1");
+		policyGroupInput.setCrBy("SYSTEM");
+		policyGroupInput.setUserId("SYSTEM");
+		policyGroupInput.setCrDtimes(LocalDateTime.now());
+		policyGroupInput.setIsActive(true);
 		
-		if (request != null) {
-			policyGroupInput.setName(request.getName());
-			policyGroupInput.setDescr(request.getDesc());
-			policyGroupInput.setId(policyGroupRepository.count() + "1");
-			policyGroupInput.setCrBy("SYSTEM");
-			policyGroupInput.setUserId("SYSTEM");
-			policyGroupInput.setCrDtimes(LocalDateTime.now());
-			policyGroupInput.setIsActive(true);
-			PolicyServiceLogger.info("Inserting data into policy group table");
-			try {
-				policyGroupInput = policyGroupRepository.save(policyGroupInput);
-			}			
-			catch (Exception e) {
-				PolicyServiceLogger.error("Error occurred while inserting data into policy group table");
-				PolicyServiceLogger.error(e.getMessage());
-				PolicyServiceLogger.logStackTrace(e);
-				throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-						ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-			}
-		}		
+		PolicyDto dto = new PolicyDto();
+		dto.setAllowedKycAttributes(request.getPolicies().getAllowedKycAttributes());
+		dto.setAuthPolicies(request.getPolicies().getAuthPolicies());
+		authPolicy = createAuthPoliciesRequest(dto,request.getName(),request.getDesc(),policyGroupInput.getId());
+		
+		PolicyServiceLogger.info("Inserting data into policy group table");	
+		try {
+			policyGroupRepository.save(policyGroupInput);
+			authPolicyRepository.save(authPolicy);
+		}			
+		catch (Exception e) {
+			PolicyServiceLogger.error("Error occurred while inserting data into policy group table");
+			PolicyServiceLogger.error(e.getMessage());
+			PolicyServiceLogger.logStackTrace(e);
+			throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+		}
 		
 		responseDto.setIs_Active(policyGroupInput.getIsActive());
 		responseDto.setId(policyGroupInput.getId());
@@ -138,61 +144,21 @@ public class PolicyManagementService {
 	 * @throws PolicyManagementServiceException Compile time exceptions
 	 * @throws Exception runtime exceptions.
 	 */
-	public ResponseWrapper<AuthPolicyCreateResponseDto> createAuthPolicies(PolicyDto request) 
-			throws PolicyManagementServiceException, Exception {		
-		ResponseWrapper<AuthPolicyCreateResponseDto> response = new ResponseWrapper<>();	
-		AuthPolicyCreateResponseDto responseDto = new AuthPolicyCreateResponseDto();
-		
-		String policyId = request.getPolicyId();		
-		
-		PolicyServiceLogger.info("Validating the policy group id " + policyId);
-		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(policyId);
-		if(!policyGroupDetails.isPresent()){
-		   PolicyServiceLogger.error("No details found for policy id " + policyId);
-           throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
-		}			
-		
-		PolicyServiceLogger.info("Validating the auth policy name " + request.getName());
-		AuthPolicy authPolicyByName = authPolicyRepository.findByName(request.getName());		
-		if(authPolicyByName != null){
-			PolicyServiceLogger.warn("Auth policy exists with name : " + request.getName());
-			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
-					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + " " + request.getName());			
-		}		
+	private AuthPolicy createAuthPoliciesRequest(PolicyDto request, String policyName, String policyDesc, String policyId) 
+			throws PolicyManagementServiceException, Exception {
 		
 		AuthPolicy authPolicy = new AuthPolicy();		
 		authPolicy.setCrBy("SYSTEM");		
 		authPolicy.setId(authPolicyRepository.count() + "1");
 		authPolicy.setCrDtimes(LocalDateTime.now());
-		authPolicy.setDescr(request.getDescr());
-		authPolicy.setName(request.getName());
+		authPolicy.setDescr(policyDesc);
+		authPolicy.setName(policyName);
 		authPolicy.setIsActive(true);
-		authPolicy.setIsDeleted(false);		
-		authPolicy.setPolicyFileId(createPolicyFile(request,request.getName()));
-		authPolicy.setPolicyGroup(policyGroupDetails.get());
+		authPolicy.setIsDeleted(false);	
+		authPolicy.setPolicy_group_id(policyId);
+		authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
 		
-		PolicyServiceLogger.info("Saving the auth policy details into auth_policy table");
-		try {
-			authPolicy = authPolicyRepository.save(authPolicy);
-		}catch (Exception e) {
-			PolicyServiceLogger.error("Error occurred while saving the details into auth_policy table");
-			PolicyServiceLogger.error(e.getMessage());
-			PolicyServiceLogger.logStackTrace(e);
-			throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-		}		
-		responseDto.set_Active(authPolicy.getIsActive());
-		responseDto.setId(authPolicy.getId());
-		responseDto.setName(authPolicy.getName());
-		responseDto.setDesc(authPolicy.getDescr());
-		responseDto.setCr_by(authPolicy.getCrBy());
-		responseDto.setCr_dtimes(authPolicy.getCrDtimes());
-		responseDto.setUp_by(authPolicy.getUpdBy());
-		responseDto.setUpd_dtimes(authPolicy.getUpdDtimes());
-		
-		response.setResponse(responseDto);
-		return response;
+		return authPolicy;
 	}
 
 	/**
@@ -223,32 +189,34 @@ public class PolicyManagementService {
 		
 		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<>();	
 		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
+		AuthPolicy authPolicy = new AuthPolicy();
 		PolicyGroup policyGroupFromDb = null;
+		
 		if (policyGroupDetails.get() != null){
 			policyGroupFromDb = policyGroupDetails.get();
 			policyGroupFromDb.setName(updateRequestDto.getName());
 			policyGroupFromDb.setDescr(updateRequestDto.getDesc());
 			policyGroupFromDb.setId(policyGroupDetails.get().getId());
-			policyGroupFromDb.setCrBy("SYSTEM");
 			policyGroupFromDb.setCrDtimes(LocalDateTime.now());
 			policyGroupFromDb.setIsActive(true);
 			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
 			policyGroupFromDb.setUpdBy("SYSTEM");
+			
+			PolicyServiceLogger.info("Creating auth policies for policy group.");
+			authPolicy = createAuthPoliciesRequest(updateRequestDto.getPolicies(),policyGroupFromDb.getName(),
+					policyGroupFromDb.getDescr(),policyGroupFromDb.getId());
 			try{
-			policyGroupFromDb = policyGroupRepository.save(policyGroupFromDb);
-			}catch(Exception e){
-				PolicyServiceLogger.error("Error occurred while updating the policy group details");
-				PolicyServiceLogger.error(e.getMessage());
-		        throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-		        		   ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-			}
+				policyGroupRepository.save(policyGroupFromDb);
+				authPolicyRepository.save(authPolicy);
+				}catch(Exception e){
+					PolicyServiceLogger.error("Error occurred while updating the policy group details");
+					PolicyServiceLogger.error(e.getMessage());
+			        throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
+			        		   ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+				}
 		}
 		if(policyGroupFromDb!=null) {
-			updateRequestDto.getPolicies().setPolicyId(policyGroupFromDb.getId());
-			updateRequestDto.getPolicies().setName(policyGroupFromDb.getName());
-			updateRequestDto.getPolicies().setDescr(policyGroupFromDb.getName());
-			PolicyServiceLogger.info("Creating auth policies for policy group.");
-			createAuthPolicies(updateRequestDto.getPolicies());
+			
 			responseDto.set_Active(policyGroupFromDb.getIsActive());
 			responseDto.setId(policyGroupFromDb.getId());
 			responseDto.setName(policyGroupFromDb.getName());
@@ -258,6 +226,7 @@ public class PolicyManagementService {
 			responseDto.setUp_by(policyGroupFromDb.getUpdBy());
 			responseDto.setUpd_dtimes(policyGroupFromDb.getUpdDtimes());
 		}
+		
 		response.setResponse(responseDto);
 		
 		return response;
@@ -286,6 +255,13 @@ public class PolicyManagementService {
 			policyGroupFromDb.setIsActive(status);
 			policyGroupFromDb.setUpdBy("SYSTEM");
 			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
+			List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyId(statusUpdateRequest.getId());
+			for(AuthPolicy authPolicy:authPolicies) {
+				authPolicy.setIsActive(status);
+				authPolicy.setUpdBy("SYSTEM");
+				authPolicy.setUpdDtimes(LocalDateTime.now());
+				authPolicyRepository.save(authPolicy);
+			}
 			try{
 			policyGroupRepository.save(policyGroupFromDb);
 			}catch(Exception e){
@@ -309,65 +285,58 @@ public class PolicyManagementService {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public List<PolicyWithAuthPolicyDto> getPolicyDetails(String policyId) throws FileNotFoundException, 
-	IOException, ParseException {
-		List<PolicyGroup> policies = new ArrayList<PolicyGroup>();		
-	
-		PolicyServiceLogger.info("Validating the policy group id " + policyId);
-		if(policyId != "") {			
-			Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId);			
-			if(!policyFromDb.isPresent()){
-				PolicyServiceLogger.error("No details exists for policy group id " + policyId);
-	        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-	        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
-			}
-			policies.add(policyFromDb.get());
-		} else {
-			policies = policyGroupRepository.findAll();			
-		}
-		
-		if(policies.isEmpty()){
-			PolicyServiceLogger.error("No policy details exists in database");
+	public PolicyWithAuthPolicyDto findPolicy(String policyId) throws FileNotFoundException, 
+	IOException, ParseException {		
+		Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId);			
+		if(!policyFromDb.isPresent()){
+			PolicyServiceLogger.error("No details exists for policy group id " + policyId);
         	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
         			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
-		}		
-		List<PolicyWithAuthPolicyDto> allPolicies = new ArrayList<PolicyWithAuthPolicyDto>();		
-		PolicyWithAuthPolicyDto policiesDto = new PolicyWithAuthPolicyDto();		
-		for(PolicyGroup policy : policies){
-			boolean isAuthPolicyExist = false;			
-			policiesDto.setPolicy(setPolicyGroup(policy));			
-			List<AuthPolicy> authPolicies = authPolicyRepository.findAll();
-			List<PolicyDto> policyDtos = new ArrayList<PolicyDto>();			
-			for(AuthPolicy authPolicy : authPolicies){				
-				if(policy.getId() == authPolicy.getPolicyGroup().getId()){						
-					isAuthPolicyExist = true;
-					PolicyDto authPolicyDto = readPolicyFile(authPolicy.getName() +".json");
-					authPolicyDto.setName(authPolicy.getName());
-					authPolicyDto.setDescr(authPolicy.getDescr());	
-					policyDtos.add(authPolicyDto);
-				}	
-			}			
-			if(isAuthPolicyExist){
-			policiesDto.setAuthPolicies(policyDtos);
-			}			
-			allPolicies.add(policiesDto);
+		}
+		PolicyWithAuthPolicyDto authPolicy = new PolicyWithAuthPolicyDto();
+		List<PolicyDto> authPolicies = getAuthPolicies(policyFromDb.get().getId());
+		if(!authPolicies.isEmpty()) {
+		authPolicy.setPolicies(authPolicies.get(0));
+		authPolicy.setPolicy(policyFromDb.get());
+		}
+		return authPolicy;
+	}
+	
+	public List<PolicyWithAuthPolicyDto> findAllPolicies() throws JsonParseException, JsonMappingException, IOException{
+		List<PolicyGroup> policies = policyGroupRepository.findAll();
+		if(policies.isEmpty()){
+			PolicyServiceLogger.error("No details exists");
+        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+		}
+		List<PolicyWithAuthPolicyDto> allPolicies = new ArrayList<PolicyWithAuthPolicyDto>();
+		for(PolicyGroup policy : policies) {
+			PolicyWithAuthPolicyDto authPolicy = new PolicyWithAuthPolicyDto();
+			List<PolicyDto> authPolicies = getAuthPolicies(policy.getId());
+			if(!authPolicies.isEmpty()) {
+			authPolicy.setPolicies(authPolicies.get(0));
+			authPolicy.setPolicy(policy);
+			allPolicies.add(authPolicy);
+			}		
 		}
 		
 		return allPolicies;
 	}
-
-	private PolicyCreateResponseDto setPolicyGroup(PolicyGroup policy) {
-		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();
-		responseDto.setIs_Active(policy.getIsActive());
-		responseDto.setId(policy.getId());
-		responseDto.setName(policy.getName());
-		responseDto.setDesc(policy.getDescr());
-		responseDto.setCr_by(policy.getCrBy());
-		responseDto.setCr_dtimes(policy.getCrDtimes());
-		responseDto.setUp_by(policy.getUpdBy());
-		responseDto.setUpd_dtimes(policy.getUpdDtimes());
+	
+	@SuppressWarnings("unchecked")
+	private List<PolicyDto> getAuthPolicies(String policyGroupId) throws JsonParseException, JsonMappingException, IOException{
+		List<AuthPolicy> authPolicies= authPolicyRepository.findByPolicyId(policyGroupId);
+		List<PolicyDto> policies = new ArrayList<PolicyDto>();
+		for(AuthPolicy authPolicy:authPolicies) {	
+			PolicyDto dto = new PolicyDto();
+			Map<?, ?> readValue = new ObjectMapper().readValue(authPolicy.getPolicyFileId(), Map.class);
+			dto.setAuthPolicies((List<AuthPolicyDto>) readValue.get("authPolicies"));
+			dto.setAllowedKycAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
+			policies.add(dto);
+		}
+		return policies;
 		
-		return responseDto;
+		
 	}
 
 
@@ -378,10 +347,9 @@ public class PolicyManagementService {
 	 * @throws IOException
 	 */
 	@SuppressWarnings({ "unchecked" })
-	private String createPolicyFile(PolicyDto policy, String name) throws PolicyManagementServiceException,
+	private JSONObject generatePolicyJson(PolicyDto policy, String name) throws PolicyManagementServiceException,
 	Exception {
-		PolicyServiceLogger.info("Creating policy file with name " + name + ".json");
-		String fileName = name + ".json";
+		PolicyServiceLogger.info("Creating policy document");
 		JSONObject obj = new JSONObject();
 		JSONArray authPolicies = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
@@ -399,69 +367,9 @@ public class PolicyManagementService {
 			allowedKycAttributes.add(allowedKycObj);
 		}
 		obj.put("authPolicies", authPolicies);
-		obj.put("allowedKycAttributes", allowedKycAttributes);
+		obj.put("allowedKycAttributes", allowedKycAttributes);		
 		
-		try{
-			PolicyServiceLogger.info("Validating the filePath. " + filePath);	
-			new File(filePath).mkdir();
-		}catch(Exception e){
-			PolicyServiceLogger.error("Error occured while creating the filePath.");			
-			PolicyServiceLogger.logStackTrace(e);
-		}
-		try (FileWriter file = new FileWriter(filePath + fileName)) {
-			file.write(obj.toJSONString());
-		}catch(Exception e){
-			PolicyServiceLogger.error("Error occured while creating the policy file.");			
-			PolicyServiceLogger.logStackTrace(e);
-		}
-		
-		return fileName;
+		return obj;
 	}
 	
-	private PolicyDto readPolicyFile(String fileName) throws FileNotFoundException, IOException, ParseException {
-		PolicyDto authKycDto = new PolicyDto();
-		List<AllowedKycDto> authList = new ArrayList<AllowedKycDto>();
-		List<AuthPolicyDto> authDtoList = new ArrayList<AuthPolicyDto>();
-		JSONParser jsonParser = new JSONParser();
-
-		PolicyServiceLogger.info("Reading policy file " + filePath + fileName);
-		try (FileReader reader = new FileReader(filePath + fileName)) {
-			Object obj = jsonParser.parse(reader);
-			JSONObject jsonObject = (JSONObject) obj;
-			JSONArray authData = (JSONArray) jsonObject.get("authPolicies");
-			JSONArray allowedKycData = (JSONArray) jsonObject.get("allowedKycAttributes");
-			for (Object o : authData) {
-				AuthPolicyDto authDto = new AuthPolicyDto();
-				JSONObject jsonObject1 = (JSONObject) o;
-				authDto.setAuthType(jsonObject1.get("authType").toString());
-				authDto.setAuthSubType(
-						jsonObject1.get("authSubType") != null ? jsonObject1.get("authSubType").toString() : null);
-				authDto.setMandatory(Boolean.parseBoolean(jsonObject1.get("mandatory").toString()));
-				authDtoList.add(authDto);
-			}
-			for (Object o : allowedKycData) {
-				AllowedKycDto auth = new AllowedKycDto();
-				JSONObject jsonObject1 = (JSONObject) o;
-				auth.setAttributeName(jsonObject1.get("attributeName").toString());
-				auth.setRequired(Boolean.parseBoolean(jsonObject1.get("required").toString()));
-				authList.add(auth);
-			}
-		} catch (FileNotFoundException e) {
-			PolicyServiceLogger.error("Error occured while reading the policy file.");
-			PolicyServiceLogger.error(e.getMessage());
-			PolicyServiceLogger.logStackTrace(e);
-		} catch (IOException e) {
-			PolicyServiceLogger.error("Error occured while reading the policy file.");
-			PolicyServiceLogger.error(e.getMessage());
-			PolicyServiceLogger.logStackTrace(e);
-		} catch (ParseException e) {
-			PolicyServiceLogger.error("Error occured while reading the policy file.");
-			PolicyServiceLogger.error(e.getMessage());
-			PolicyServiceLogger.logStackTrace(e);
-		}
-
-		authKycDto.setAllowedKycAttributes(authList);
-		authKycDto.setAuthPolicies(authDtoList);
-		return authKycDto;
-	}
 }

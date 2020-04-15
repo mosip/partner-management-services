@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -56,11 +54,9 @@ public class AuthPolicy implements Serializable {
 
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
-
-	//bi-directional many-to-one association to PolicyGroup
-	@ManyToOne
-	@JoinColumn(name="policy_group_id")
-	private PolicyGroup policyGroup;
+	
+	@Column(name="policy_group_id")
+	private String policy_group_id;
 
 	public AuthPolicy() {
 	}
@@ -132,6 +128,10 @@ public class AuthPolicy implements Serializable {
 	public String getPolicyFileId() {
 		return this.policyFileId;
 	}
+	
+	public String getPolicy_group_id() {
+		return this.policy_group_id;
+	}
 
 	public void setPolicyFileId(String policyFileId) {
 		this.policyFileId = policyFileId;
@@ -152,13 +152,9 @@ public class AuthPolicy implements Serializable {
 	public void setUpdDtimes(LocalDateTime updDtimes) {
 		this.updDtimes = updDtimes;
 	}
-
-	public PolicyGroup getPolicyGroup() {
-		return this.policyGroup;
-	}
-
-	public void setPolicyGroup(PolicyGroup policyGroup) {
-		this.policyGroup = policyGroup;
+	
+	public void setPolicy_group_id(String policy_group_id) {
+		this.policy_group_id = policy_group_id;
 	}
 
 }
