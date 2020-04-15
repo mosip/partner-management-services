@@ -591,7 +591,7 @@ public class PartnerManagementServiceImplTest {
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy",apiKey,"");
 	}
 	
-	@Test(expected = PartnerValidationException.class)
+	@Test
 	public void getPartnerMappedPolicyFileTest_S10() {
 		MISPLicenseEntity license = mispLicense();
 		String apiKey ="2345";	

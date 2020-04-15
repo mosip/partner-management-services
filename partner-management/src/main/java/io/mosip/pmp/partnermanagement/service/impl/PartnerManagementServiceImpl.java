@@ -618,7 +618,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId) {		
 		LOGGER.info("Getting the partner from db.");
 		MISPValidatelKeyResponseDto LicenseKeyresponse = validateLicenseKey(mispLicenseKey);
-		if(LicenseKeyresponse.isValid()) {			
+		if(!LicenseKeyresponse.isValid()) {			
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
