@@ -107,7 +107,7 @@ public class PolicyManagementControllerTest {
 		PolicyWithAuthPolicyDto response = new PolicyWithAuthPolicyDto();
 		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/policies/12345")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/policies/policyId/12345")).
 		andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 	

@@ -153,7 +153,7 @@ public class PolicyManagementController {
 	 * @return response  {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
-	@GetMapping(value = "/policies/{policyID}")
+	@GetMapping(value = "/policies/policyId/{policyID}")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
 		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
