@@ -37,6 +37,7 @@ import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
+import io.mosip.pmp.policy.util.PolicyUtil;
 
 /**
  * <p>This class manages business logic before or after performing database operations.</p>
@@ -92,7 +93,7 @@ public class PolicyManagementService {
 		}
 		policyGroupInput.setName(request.getName());
 		policyGroupInput.setDescr(request.getDesc());
-		policyGroupInput.setId(policyGroupRepository.count() + "1");
+		policyGroupInput.setId(PolicyUtil.generateId());
 		policyGroupInput.setCrBy("SYSTEM");
 		policyGroupInput.setUserId("SYSTEM");
 		policyGroupInput.setCrDtimes(LocalDateTime.now());
@@ -149,7 +150,7 @@ public class PolicyManagementService {
 		
 		AuthPolicy authPolicy = new AuthPolicy();		
 		authPolicy.setCrBy("SYSTEM");		
-		authPolicy.setId(authPolicyRepository.count() + "1");
+		authPolicy.setId(PolicyUtil.generateId());
 		authPolicy.setCrDtimes(LocalDateTime.now());
 		authPolicy.setDescr(policyDesc);
 		authPolicy.setName(policyName);

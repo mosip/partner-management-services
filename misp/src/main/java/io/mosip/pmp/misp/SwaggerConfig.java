@@ -20,7 +20,7 @@ public class SwaggerConfig {
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("io.mosip.pmp.misp"))
-				.paths(regex("/pmp.*")).build().apiInfo(metaData());
+				.paths(regex("/.*")).build().apiInfo(metaData());
 	}
 
 	private ApiInfo metaData() {
