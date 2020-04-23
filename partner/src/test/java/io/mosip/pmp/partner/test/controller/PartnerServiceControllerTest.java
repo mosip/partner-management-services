@@ -1,9 +1,7 @@
 package io.mosip.pmp.partner.test.controller;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -21,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -47,7 +46,6 @@ import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
-@EnableWebMvc 
 public class PartnerServiceControllerTest {
 
     @Autowired
@@ -59,11 +57,7 @@ public class PartnerServiceControllerTest {
     private ObjectMapper objectMapper;
     
     @Test
-    public void test_Test() throws Exception{
-    	 mockMvc.perform(MockMvcRequestBuilders.get("/partners/test")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-    @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void partnerSelfRegistrationTest() throws Exception {
         PartnerResponse response = new PartnerResponse();
         Mockito.when(partnerService.savePartner(Mockito.any())).thenReturn(response);
@@ -74,6 +68,7 @@ public class PartnerServiceControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerDetailsTest() throws Exception {
         RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
         Mockito.when(partnerService.getPartnerDetails("12345")).thenReturn(response);
@@ -81,6 +76,7 @@ public class PartnerServiceControllerTest {
     }
     
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void updatePartnerDetailsTest() throws Exception{
     	String partnerId = "12345";
     	PartnerResponse response = new PartnerResponse();
@@ -91,11 +87,11 @@ public class PartnerServiceControllerTest {
     	RequestWrapper<PartnerUpdateRequest> request = updateRequest();
     	
     	mockMvc.perform(put("/partners/partnerId").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk())
-    	        .andExpect(jsonPath("$.response.status", is("true")));
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void submitPartnerApiKeyRequestTest() throws JsonProcessingException, Exception {
     	String apiRequestId = "873276828663";
     	PartnerAPIKeyResponse response = new PartnerAPIKeyResponse();
@@ -110,6 +106,7 @@ public class PartnerServiceControllerTest {
     }
     
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void retrieveAllApiKeyRequestsSubmittedByPartnerTillDateTest()throws Exception{
     	String partnerId = "345678";
     	PartnersRetrieveApiKeyRequests response = new PartnersRetrieveApiKeyRequests();
@@ -131,6 +128,7 @@ public class PartnerServiceControllerTest {
     }
     
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void viewApiKeyRequestStatusAndApiKey_Test() throws Exception{
     	APIkeyRequests response = new APIkeyRequests();
         Mockito.when(partnerService.viewApiKeyRequestStatusApiKey("12345","123456")).thenReturn(response);
@@ -138,6 +136,7 @@ public class PartnerServiceControllerTest {
     }
     
    @Test
+   @WithMockUser(roles = {"PARTNER"})
     public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
     	DigitalCertificateResponse response = new DigitalCertificateResponse();
     	response.setMessage("DigitalCertificateResponse");
@@ -149,6 +148,7 @@ public class PartnerServiceControllerTest {
     }
     
    @Test
+   @WithMockUser(roles = {"PARTNER"})
    public void validateDigitalCertificatewithoutPublicKey_Test() throws JsonProcessingException, Exception {
 	   DigitalCertificateResponse response = new DigitalCertificateResponse();
    	response.setMessage("DigitalCertificateResponse");
@@ -158,6 +158,7 @@ public class PartnerServiceControllerTest {
    	mockMvc.perform(post("/partners/digitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
    }
+   
     public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
     	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
     	

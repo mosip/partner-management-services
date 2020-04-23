@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +63,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyCreateResponseDto} this contains all the response parameters for created policy.
 	 * @throws Exception  
 	 */
-	
+	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
 	@PostMapping(value = "/policies")	
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
@@ -85,6 +86,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
+	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
 	@PutMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyUpdateResponseDto> updatePolicyDetails(
 			@RequestBody RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
@@ -109,6 +111,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyStatusUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
+	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
 	@PatchMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto,
 			@PathVariable String policyID) throws Exception {
@@ -134,6 +137,7 @@ public class PolicyManagementController {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
+	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
 	@GetMapping(value = "/policies")
 	public ResponseWrapper<PoliciesDto> getPolicies() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
@@ -153,6 +157,7 @@ public class PolicyManagementController {
 	 * @return response  {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
+	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
 	@GetMapping(value = "/policies/policyId/{policyID}")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();

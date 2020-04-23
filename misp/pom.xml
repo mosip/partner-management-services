@@ -62,10 +62,20 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-mispid</artifactId>
 			<version>${kernel.version}</version>
 			<!-- <exclusions> <exclusion> </exclusion> </exclusions> -->
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-auth-adapter</artifactId>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>

@@ -11,16 +11,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,7 +52,6 @@ import io.mosip.pmp.misp.test.MispServiceTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
 @AutoConfigureMockMvc
-@EnableWebMvc
 public class MispControllerTest {
 
 	@Autowired
@@ -64,6 +67,7 @@ public class MispControllerTest {
 	private ObjectMapper objectMapper;	
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void mispCreationTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPCreateResponseDto> response = new ResponseWrapper<MISPCreateResponseDto>();
 		Mockito.when(mispManagementService.createMISP(Mockito.any())).thenReturn(response);
@@ -74,6 +78,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void mispRequestStatusTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPStatusUpdateResponse> response = new ResponseWrapper<MISPStatusUpdateResponse>();
 		Mockito.when(mispManagementService.processRequest(Mockito.any())).thenReturn(response);
@@ -84,6 +89,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void updateMispTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPUpdateResponseDto> response = new ResponseWrapper<MISPUpdateResponseDto>();
 		Mockito.when(mispManagementService.update(Mockito.any())).thenReturn(response);
@@ -95,6 +101,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void validateLkeyTest() throws JsonProcessingException, Exception{
 		MISPValidatelKeyResponseDto serviceResponse = new MISPValidatelKeyResponseDto();
 		Mockito.when(mispManagementService.validateLicenseKey(new MISPlKeyUniqueKeyEntity())).thenReturn(serviceResponse);
@@ -106,6 +113,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void updateMispStatusTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPStatusUpdateResponseDto> response = new ResponseWrapper<MISPStatusUpdateResponseDto>();
 		Mockito.when(mispManagementService.updateMISPStatus(Mockito.any())).thenReturn(response);
@@ -116,17 +124,19 @@ public class MispControllerTest {
     }
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void updateMispLkeyStatusTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<MISPlKeyStatusUpdateResponseDto>();
 		Mockito.when(mispManagementService.updateMisplkeyStatus(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPlKeyStatusUpdateRequestDto> request = formLicenseKeyUpdateRequest();
 
-		mockMvc.perform(put("/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void getMispsTest() throws Exception{		
 		List<MISPDetailsDto> response = new ArrayList<MISPDetailsDto>();
 		Mockito.when(mispManagementService.getMisps()).thenReturn(response);
@@ -136,6 +146,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void getMispTest() throws Exception{
 		MISPDetailsDto response =  new MISPDetailsDto();
 		Mockito.when(mispManagementService.getMisp(Mockito.any())).thenReturn(response);
@@ -145,6 +156,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void getMispByOrgTest() throws Exception{
 		List<MISPDetailsDto> response = new ArrayList<>();
 		Mockito.when(mispManagementService.getMispsByOrg(Mockito.any())).thenReturn(response);
@@ -155,6 +167,7 @@ public class MispControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"MISP"})
 	public void downloadLkeyTest() throws Exception{
 		ResponseWrapper<MISPLiceneseDto> response = new ResponseWrapper<MISPLiceneseDto>();
 		Mockito.when(mispManagementService.retriveLicense(Mockito.any())).thenReturn(response);

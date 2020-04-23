@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,14 +53,9 @@ public class PartnerManagementControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
+	
 	@Test
-	public void test_Test() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/test"))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-
-	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
 		String partnerID = "67899";
 		String partnerAPIKey = "45678";
@@ -83,6 +79,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void activateDeactivateAuthEKYCPartnersTest() throws Exception {
 		String partnerID = "67899";
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
@@ -103,6 +100,7 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest() throws Exception {
 		String PartnerAPIKey = "45678";
 		String partnerID = "67899";
@@ -124,6 +122,7 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest() throws Exception {
 		String partnerAPIKey = "45678";
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
@@ -145,6 +144,7 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getAllAuthEKYCPartnersForThePolicyGroupTest() throws Exception {
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = new RetrievePartnerDetailsResponse();
 		Mockito.when(partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup())
@@ -153,6 +153,7 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getparticularAuthEKYCPartnerDetailsForGivenPartnerIdTest() throws Exception {
 		String partnerID = "67899";
 		RetrievePartnersDetails retrievePartnersDetails = new RetrievePartnersDetails();
@@ -163,6 +164,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getPartnerManagerTest() throws Exception {
 		RetrievePartnerManagers retrievePartnerManagers = new RetrievePartnerManagers();
 		Mockito.when(partnerManagementService.getPartnerManager()).thenReturn(retrievePartnerManagers);
@@ -171,6 +173,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getPolicyIDTest()  throws Exception{
 		String policyName = "Banking";
 		PolicyIDResponse policyIDResponse = new PolicyIDResponse();
@@ -180,6 +183,7 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getPartnerAPIKeyToPolicyMappingsTest() throws Exception {
 		String partnerID = "67899";
 		String PartnerAPIKey = "56789";
@@ -191,6 +195,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagerTest() throws Exception {
 		List<ApikeyRequests> apikeyRequests = new ArrayList<ApikeyRequests>();
 		Mockito.when(partnerManagementService.getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers())
@@ -200,6 +205,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestIdTest() throws Exception {
 		String APIKeyReqID = "56789";
 		ApikeyRequests apikeyRequests = new ApikeyRequests();
@@ -210,6 +216,7 @@ public class PartnerManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void validateAndGetPartnerPolicyFile() throws Exception {
 		PartnerPolicyResponse res = new PartnerPolicyResponse();
 		Mockito.when(partnerManagementService.getPartnerMappedPolicyFile("1234","asdsa","adfdsasd")).thenReturn(res);

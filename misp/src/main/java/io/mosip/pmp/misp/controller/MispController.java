@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,7 +72,7 @@ public class MispController {
 	 * @return mispCreateResponseDto this class conatins all the parameters that response should have
 	 * @throws Exception unhandle exceptions 
 	 */
-	
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PostMapping(value = "/misps")
 	public ResponseWrapper<MISPCreateResponseDto> registerMISP(@RequestBody @Valid RequestWrapper<MISPCreateRequestDto> mispCreateRequestDto)
 			throws Exception{		
@@ -87,6 +88,7 @@ public class MispController {
 	 * 
 	 * @return
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value="/misps/{mispId}/status")
 	public ResponseWrapper<MISPStatusUpdateResponse> processRequest(@RequestBody @Valid RequestWrapper<MISPStatusUpdateRequestDto> mispUpdateRequestDto,
 			@PathVariable String mispId){
@@ -108,6 +110,7 @@ public class MispController {
 	 * @return mispUpdateResponseDto this is the response 
 	 * @throws Exception if any exceptions
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PutMapping(value = "/misps/{mispId}")
 	public ResponseWrapper<MISPUpdateResponseDto> updateMISP(@RequestBody @Valid RequestWrapper<MISPUpdateRequestDto> mispUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception {
@@ -132,6 +135,7 @@ public class MispController {
 	 * @throws Exception if any exception
 	 * 	 
 	 */	
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPValidatelKeyResponseDto> validateLicenseKey(@RequestBody RequestWrapper<MISPValidatelKeyRequestDto> misplKeyStatusUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception{		
@@ -154,6 +158,7 @@ public class MispController {
 	 * @return mispStatusUpdateResponseDto this class contains all the response fields.
 	 * @throws Exception if any exceptions
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value="/misps/{mispId}")
 	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(@RequestBody RequestWrapper<MISPStatusUpdateRequestDto> mispStatusUpdateRequestDto,
 			@PathVariable String mispId) throws Exception {
@@ -174,6 +179,7 @@ public class MispController {
 	 * @param mispId this value coming as path variable.
 	 * @return misplKeyStatusUpdateResponseDto this class contains all the response fields.
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@PutMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMISPlKeyStatus(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId) {
@@ -193,6 +199,7 @@ public class MispController {
 	 * </br>
 	 * @return MISPGroupResponseDto  list of misps
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps")
 	public List<MISPDetailsDto> getMisps(){
 		MispLogger.info("Calling MISPManagementService from MispController.");
@@ -205,6 +212,7 @@ public class MispController {
 	 * @param mispId this value coming as path variable.
 	 * @return mispEntity specific misp details.
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/mispId/{mispId}")
 	public ResponseWrapper<MISPDetailsDto> getMisp(@PathVariable String mispId){
 		MispLogger.info("Calling MISPManagementService from MispController.");
@@ -221,6 +229,7 @@ public class MispController {
 	 * @param orgName
 	 * @return list of misp's which are starts with given name.
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value ="/misps/name/{orgName}")
 	public List<MISPDetailsDto> getMispsByOrg(@PathVariable String orgName ){
 		MispLogger.info("Calling MISPManagementService from MispController.");
@@ -237,6 +246,7 @@ public class MispController {
 	 * @param mispId
 	 * @return misp license details.
 	 */
+	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLiceneseDto> downloadLicenseKey(@PathVariable @Valid String mispId){
 		MispLogger.info("Calling MISPManagementService from MispController.");	

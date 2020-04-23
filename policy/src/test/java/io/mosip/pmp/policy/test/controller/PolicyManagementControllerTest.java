@@ -19,6 +19,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -66,6 +68,7 @@ public class PolicyManagementControllerTest {
 	private ObjectMapper objectMapper;	
 	
 	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
 	public void policyGroupCreationTest() throws PolicyManagementServiceException, Exception{
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		Mockito.when(policyManagementService.createPolicyGroup(Mockito.any())).thenReturn(response);
@@ -76,16 +79,18 @@ public class PolicyManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
 	public void updatePolicyTest() throws Exception{
 		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<PolicyUpdateResponseDto>();
 		Mockito.when(policyManagementService.update(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyUpdateRequestDto> request = createPolicyUpdateRequest();
 		
-		mockMvc.perform(put("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/policies/12345").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
 	public void updatePolicyStatus() throws JsonProcessingException, Exception{
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		Mockito.when(policyManagementService.updatePolicyStatus(Mockito.any())).thenReturn(response);
@@ -97,12 +102,14 @@ public class PolicyManagementControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
 	public void getPoliciesTest() throws Exception{
 		mockMvc.perform(MockMvcRequestBuilders.get("/policies")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
 	public void getPolicyTest() throws Exception{
 		PolicyWithAuthPolicyDto response = new PolicyWithAuthPolicyDto();
 		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);

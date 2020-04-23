@@ -81,7 +81,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final MISPException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
+		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
 	}
 
 		
