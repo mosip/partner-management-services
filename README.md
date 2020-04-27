@@ -1,6 +1,5 @@
-# mosip-partner-portal-api
+# partner-management-services
 
-This is the proposed repository for MOSIP eKYC partner portal API. This is very much work in progress. 
 
 ## Building Blocks
 1. [Keycloak](https://www.keycloak.org/) auth integration.
