@@ -10,8 +10,8 @@
 	</parent>
 
 
-	<artifactId>pmp-misp</artifactId>
-	<name>pmp-misp</name>
+	<artifactId>pmp-misp-service</artifactId>
+	<name>pmp-misp-service</name>
 
 	<properties>
 		<java.version>1.8</java.version>

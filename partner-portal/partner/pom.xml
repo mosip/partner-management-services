@@ -9,7 +9,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>partnerservice</artifactId>
+	<artifactId>pmp-partner-service</artifactId>
+	<name>pmp-partner-service</name>
 
 	<properties>
 		<java.version>1.8</java.version>
