@@ -22,10 +22,10 @@
 	</properties>
 
 	<modules>
-		<module>misp</module>
-		<module>policy</module>
-		<module>partner-management</module>
-		<module>partner</module>
+		<module>pmp-misp-service</module>
+		<module>pmp-policy-management-service</module>
+		<module>pmp-partner-management-service</module>
+		<module>pmp-partner-service</module>
 	</modules>
 
 	<profiles>
