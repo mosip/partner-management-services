@@ -1,4 +1,4 @@
-# mosip-partner-portal-api
+# partner-management-services
 
 This repository contains the source code and design documents for MOSIP partner management. To know more about MOSIP, its architecture, external integrations, releases, etc., please check the [Platform Documentation](https://github.com/mosip/mosip-docs/wiki)
 
