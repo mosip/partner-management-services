@@ -9,7 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-
+	<version>1.0.0</version>
 	<artifactId>pmp-misp-service</artifactId>
 	<name>pmp-misp-service</name>
 
