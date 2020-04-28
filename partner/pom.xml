@@ -14,13 +14,63 @@
 	<artifactId>pmp-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>${pmp.core.version}</version>
+	
+	<name>partner-management-services</name>
+	<description>Parent project of MOSIP partner-management-services</description>
+	<url>https://github.com/mosip/partner-management-services</url>
+	
+	<licenses>
+          <license>
+                <name>MPL 2.0</name>
+                <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+          </license>
+        </licenses>
+	
+	<scm>
+                <connection>scm:git:git://github.com/mosip/partner-management-services.git</connection>
+                <developerConnection>scm:git:ssh://github.com:mosip/partner-management-services.git</developerConnection>
+                <url>https://github.com/mosip/partner-management-services</url>
+                <tag>HEAD</tag>
+        </scm>
+	
+	<developers>
+                <developer>
+                  <name>Mosip</name>
+                  <email>mosip.emailnotifier@gmail.com</email>
+                  <organization>io.mosip</organization>
+                  <organizationUrl>https://github.com/mosip/partner-management-services</organizationUrl>
+                </developer>
+        </developers>
+	
+	<distributionManagement>
+                <snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+	</distributionManagement>
+	
+	<repositories>
+		<repository>
+		  <id>ossrh</id>
+		  <name>Central Repository</name>
+		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		  <layout>default</layout>
+		  <snapshots>
+			<enabled>true</enabled>
+		  </snapshots>
+		</repository>
+	</repositories>
 
 	<properties>
 		<pmp.core.version>1.0.0</pmp.core.version>
 		<kernel.version>1.0.6</kernel.version>
 		<sonar.host>http://localhost:9000</sonar.host>
 	</properties>
-
+	
 	<modules>
 		<module>pmp-misp-service</module>
 		<module>pmp-policy-management-service</module>
@@ -70,4 +120,106 @@
 		</dependency>
 
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+					 	<id>attach-javadocs</id>
+					  	<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+                         		<additionalJOption>-Xdoclint:none</additionalJOption>
+                	  	</configuration>
+                	</plugin>
+	
+			<plugin>
+				  <groupId>org.sonatype.plugins</groupId>
+				  <artifactId>nexus-staging-maven-plugin</artifactId>
+				  <version>1.6.7</version>
+				  <extensions>true</extensions>
+				  <configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+				  </configuration>
+			</plugin>
+		 	<plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-source-plugin</artifactId>
+				  <version>2.2.1</version>
+				  <executions>
+					<execution>
+						<id>attach-sources</id>
+					  	<goals>
+							<goal>jar-no-fork</goal>
+					  	</goals>
+					</execution>
+				  </executions>
+			</plugin>
+		
+	                <plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-gpg-plugin</artifactId>
+				  <version>1.5</version>
+				  <executions>
+					<execution>
+						  <id>sign-artifacts</id>
+						  <phase>verify</phase>
+						  <goals>
+							<goal>sign</goal>
+						  </goals>
+						  <configuration>
+                					<gpgArguments>
+                    						<arg>--pinentry-mode</arg>
+                    						<arg>loopback</arg>
+                					</gpgArguments>
+            					  </configuration>
+					</execution>
+				  </executions>
+        		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar.plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Project-Name>${project.name}</Project-Name>
+							<Project-Version>${project.version}</Project-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven.war.plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Project-Name>${project.name}</Project-Name>
+							<Project-Version>${project.version}</Project-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
