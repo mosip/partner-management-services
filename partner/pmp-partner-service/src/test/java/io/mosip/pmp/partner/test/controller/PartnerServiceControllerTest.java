@@ -46,6 +46,7 @@ import io.mosip.pmp.partner.test.PartnerserviceApplicationTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
+@EnableWebMvc
 public class PartnerServiceControllerTest {
 
     @Autowired
@@ -53,6 +54,7 @@ public class PartnerServiceControllerTest {
 
     @MockBean
     private PartnerService partnerService;
+   
     @Autowired
     private ObjectMapper objectMapper;
     

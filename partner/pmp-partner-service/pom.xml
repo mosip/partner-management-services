@@ -63,12 +63,6 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-
-		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-keymanager-service</artifactId> 
-			<version>${kernel.version}</version> </dependency> -->
-		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-signature-service</artifactId> 
-			<version>${kernel.version}</version> </dependency> -->
-
 	</dependencies>
 
 	<build>

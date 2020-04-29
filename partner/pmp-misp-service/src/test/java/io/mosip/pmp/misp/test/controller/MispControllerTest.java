@@ -7,20 +7,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,6 +28,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
+import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
+import io.mosip.pmp.misp.PmpMispApplication;
+import io.mosip.pmp.misp.controller.MispController;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -43,8 +47,9 @@ import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
 
@@ -52,16 +57,14 @@ import io.mosip.pmp.misp.test.MispServiceTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
 @AutoConfigureMockMvc
-public class MispControllerTest {
 
+public class MispControllerTest {
+	
 	@Autowired
     private MockMvc mockMvc;
 	
 	@MockBean
-	private MISPManagementService mispManagementService;
-	
-	@MockBean
-	private MISPLicenseReadEntity mispLicenseReadEntity;
+	private MISPManagementService mispManagementService;	
 	
 	@Autowired
 	private ObjectMapper objectMapper;	
@@ -74,8 +77,10 @@ public class MispControllerTest {
 		RequestWrapper<MISPCreateRequestDto> request = formCreateRequest();
 		
 		mockMvc.perform(post("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+                .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());	
+		
 	}
+	
 	
 	@Test
 	@WithMockUser(roles = {"MISP"})
@@ -264,6 +269,6 @@ public class MispControllerTest {
 		
 		return request;
 	}
-	
+//	
 	
 }

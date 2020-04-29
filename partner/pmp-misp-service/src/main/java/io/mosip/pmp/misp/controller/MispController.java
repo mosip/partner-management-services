@@ -59,7 +59,7 @@ import io.swagger.annotations.Api;
 public class MispController {
 
 	@Autowired
-	private MISPManagementService mispManagementService;
+	private MISPManagementService mispManagementService;	
 	
 	/**
 	 * <p>MOSIP Admin would be able to create MISP using this API. At the time of creation of MISP, MISP ID and</p> 

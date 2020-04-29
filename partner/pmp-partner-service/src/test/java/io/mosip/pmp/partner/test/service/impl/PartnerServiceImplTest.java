@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.core.RequestWrapper;
@@ -61,7 +62,9 @@ import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerserviceApplication.class })
 @AutoConfigureMockMvc
+@EnableWebMvc
 public class PartnerServiceImplTest {
+	
 	private PartnerServiceImpl pserviceImpl;
 
 	@Mock
