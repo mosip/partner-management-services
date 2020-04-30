@@ -8,6 +8,6 @@
 \ir ddl/pmp-partner.sql
 \ir ddl/pmp-partner_policy.sql
 \ir ddl/pmp-partner_policy_request.sql
-\ir ddl/pmp-partner_master_tspid_seq.sql
+\ir ddl/pmp-tspid_seq.sql
 
 \ir ddl/pmp-fk.sql

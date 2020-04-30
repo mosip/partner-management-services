@@ -3,5 +3,5 @@
 CREATE ROLE pmpuser WITH 
 	INHERIT
 	LOGIN
-	PASSWORD 'postgres';
+	PASSWORD :dbuserpwd;
 -- ddl-end --

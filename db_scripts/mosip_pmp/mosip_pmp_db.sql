@@ -20,13 +20,6 @@ ALTER SCHEMA pmp OWNER TO sysadmin;
 -- ddl-end --
 
 
--- object: master | type: SCHEMA --
-DROP SCHEMA IF EXISTS master CASCADE;
-CREATE SCHEMA master;
--- ddl-end --
-ALTER SCHEMA master OWNER TO sysadmin;
--- ddl-end --
-
 ALTER DATABASE mosip_pmp SET search_path TO pmp,pg_catalog,public;
 -- ddl-end --
 
