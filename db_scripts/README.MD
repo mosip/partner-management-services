@@ -104,7 +104,7 @@ Once we complete with sourcing the database files, we need to follow the below D
 
 **Note - Make sure, There is a single empty line at end of the .properties files content and No spaces in beggining and end of the parameter values**
 
-## DB Deployment for all common module databases with single click deployment:
+## DB Deployment for all Partner Management Services module databases with single click deployment:
 		
 **Step 1** -> Make prior modification to all the respective database properties files **(mosip_<schema_name>_deploy.properties)** in the respective database directories. Path of properties file and variables list remains same as explained above. Once the properties files are ready then access the directory where the deployment script is kept.
 
