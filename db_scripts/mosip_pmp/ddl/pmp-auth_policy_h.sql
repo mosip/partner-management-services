@@ -29,7 +29,7 @@ CREATE TABLE pmp.auth_policy_h(
 	policy_group_id character varying(36),
 	name character varying(128) NOT NULL,
 	descr character varying(256) NOT NULL,
-	policy_file_id character varying(500) NOT NULL,
+	policy_file_id character varying(5120) NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,

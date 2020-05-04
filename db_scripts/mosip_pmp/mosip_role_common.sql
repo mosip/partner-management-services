@@ -7,7 +7,7 @@ CREATE ROLE sysadmin WITH
 	INHERIT
 	LOGIN
 	REPLICATION
-	PASSWORD 'postgres';
+	PASSWORD :sysadminpwd;
 -- ddl-end --
 
 -- object: dbadmin | type: ROLE --
@@ -18,7 +18,7 @@ CREATE ROLE dbadmin WITH
 	INHERIT
 	LOGIN
 	REPLICATION
-	PASSWORD 'postgres';
+	PASSWORD :dbadminpwd;
 -- ddl-end --
 
 -- object: appadmin | type: ROLE --
@@ -26,6 +26,6 @@ CREATE ROLE dbadmin WITH
 CREATE ROLE appadmin WITH 
 	INHERIT
 	LOGIN
-	PASSWORD 'postgres';
+	PASSWORD :appadminpwd;
 -- ddl-end --
 
