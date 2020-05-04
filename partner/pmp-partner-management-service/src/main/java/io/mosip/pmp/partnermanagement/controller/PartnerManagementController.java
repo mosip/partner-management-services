@@ -67,7 +67,7 @@ public class PartnerManagementController {
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about API key created successfully
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
@@ -91,7 +91,7 @@ public class PartnerManagementController {
 	 * @param request this class contains the status of activate/deactivate Auth/E-KYC Partners
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PATCH)
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
 			 @PathVariable String partnerId,
@@ -114,7 +114,7 @@ public class PartnerManagementController {
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/{partnerId}/{partnerApiKey}", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
 			@PathVariable String partnerId,
@@ -163,7 +163,7 @@ public class PartnerManagementController {
 	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains massage about PartnerAPIKey approved successfully
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
@@ -183,7 +183,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -200,7 +200,7 @@ public class PartnerManagementController {
 	 *   This API would be used to retrieve all Partner Details as per UI. 
 	 * @return response this class contains List of Partner.
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
 		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();
@@ -217,7 +217,7 @@ public class PartnerManagementController {
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @return response this class contains Auth/E-KYC Partner details for given partner id
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value="/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnersDetails>> getparticularAuthEKYCPartnerDetailsForGivenPartnerId(
 			@PathVariable String partnerId){
@@ -240,7 +240,7 @@ public class PartnerManagementController {
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains partnerID and policyId
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/{partnerId}/{partnerApiKey}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getValidatPartnerAPIKeyPatternAndExpiry(
 			@PathVariable String partnerId,
@@ -258,7 +258,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Partner API Key requests as received by partner manager
 	 * @return response this class contains all Partner API Key requests as received by partner manager
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/PartnerAPIKeyRequests" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager(){
 		List<ApikeyRequests> apikeyRequests = null;
@@ -277,7 +277,7 @@ public class PartnerManagementController {
 	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains details related to Partner API key to Policy Mappings
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
 			@PathVariable String apiKeyReqId) {
@@ -294,7 +294,7 @@ public class PartnerManagementController {
 	 * @param policyName this is unique policy name of partner.
 	 * @return it will return corresponding policy Id.
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value = "/policyname/{policyName}" , method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PolicyIDResponse>> getPolicyID(
 			@PathVariable String policyName){

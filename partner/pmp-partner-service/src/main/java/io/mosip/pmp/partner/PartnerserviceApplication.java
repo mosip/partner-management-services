@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 
 /**
  * @author sanjeev.shrivastava
@@ -14,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @ComponentScan({ "io.mosip.pmp.partner.*", "io.mosip.kernel.auth.adapter.*" })
+@EnableSwagger2
 public class PartnerserviceApplication{
 
 	public static void main(String[] args) {

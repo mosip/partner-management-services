@@ -7,17 +7,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NewPolicyIdNotExistConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
@@ -183,7 +186,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		if(partnerFindById.isPresent()) {
 			Partner partner = partnerFindById.get();
 			partner.setPolicyGroupId(newPolicyGroup.getId());
-			partner.setUpdBy("Partner Manager");
+			partner.setUpdBy(getUser());
 			partner.setUpdDtimes(Timestamp.valueOf(now));
 			partnerRepository.save(partner);
 		}else {
@@ -220,7 +223,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
 						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
 			}
-				partner.setUpdBy("Partner_Manager");	
+				partner.setUpdBy(getUser());	
 				partner.setUpdDtimes(Timestamp.valueOf(now));	
 			partnerRepository.save(partner);
 		} else {
@@ -254,7 +257,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
 							InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage()); 
 				}
-				partnerPolicy.setUpdBy("Partner_Manager");
+				partnerPolicy.setUpdBy(getUser());
 				partnerPolicy.setUpdDtimes(Timestamp.valueOf(now));
 				partnerPolicyRepository.save(partnerPolicy);
 				LOGGER.info(partnerAPIKey + " : API KEY Status Updated Successfully");
@@ -475,7 +478,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		
 		partnerPolicyRequest = findById.get();
 		
-		if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("in-progress") && (request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
+		if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("In-Progress") && (request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
 			partnerPolicyRequest.setStatusCode(request.getStatus());
 		}else {
 			LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
@@ -483,7 +486,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
 					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
 		}
-		partnerPolicyRequest.setUpdBy("Partner_Manager");
+		partnerPolicyRequest.setUpdBy(getUser());
 		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		
@@ -746,5 +749,21 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		
 		
 		return mispLicense;		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUser() {
+		if (Objects.nonNull(SecurityContextHolder.getContext())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
+			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getUserId();
+		} else {
+			return null;
+		}
 	}
 }

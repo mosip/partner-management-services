@@ -63,7 +63,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyCreateResponseDto} this contains all the response parameters for created policy.
 	 * @throws Exception  
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PostMapping(value = "/policies")	
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
@@ -86,7 +86,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PutMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyUpdateResponseDto> updatePolicyDetails(
 			@RequestBody RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
@@ -111,7 +111,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyStatusUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PatchMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto,
 			@PathVariable String policyID) throws Exception {
@@ -137,7 +137,7 @@ public class PolicyManagementController {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies")
 	public ResponseWrapper<PoliciesDto> getPolicies() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PoliciesDto> response = new ResponseWrapper<>();
@@ -157,7 +157,7 @@ public class PolicyManagementController {
 	 * @return response  {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies/policyId/{policyID}")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();

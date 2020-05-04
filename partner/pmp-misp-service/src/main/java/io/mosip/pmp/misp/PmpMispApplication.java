@@ -5,8 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 @SpringBootApplication
 @ComponentScan({ "io.mosip.pmp.misp.*","io.mosip.kernel.auth.adapter.*" })
+@EnableSwagger2
 public class PmpMispApplication extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {

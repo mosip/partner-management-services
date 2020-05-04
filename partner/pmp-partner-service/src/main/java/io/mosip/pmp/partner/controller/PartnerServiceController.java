@@ -75,7 +75,7 @@ public class PartnerServiceController {
 	 *            this class contains partner details
 	 * @return response this class contains partner response
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
@@ -103,7 +103,7 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse this class contains partner request id and
 	 *         massage details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
 			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
@@ -131,7 +131,7 @@ public class PartnerServiceController {
 	 *            this class contains digitalCertificate details
 	 * @return DigitalCertificateResponse this class contains massage
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificatewithoutPublicKey(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
@@ -154,7 +154,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return partnerResponse this class contains updated partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerId) {
@@ -183,7 +183,7 @@ public class PartnerServiceController {
 	 *            this class contains digitalCertificate details
 	 * @return DigitalCertificateResponse this class contains massage
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificateWithPublicKey(
 			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
@@ -203,7 +203,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerId) {
@@ -225,7 +225,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
-	@PreAuthorize("hasAnyRole('partner')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
 			@PathVariable String partnerId) {
@@ -250,7 +250,7 @@ public class PartnerServiceController {
 	 * @return response this class contains partnerApiKey apiKeyRequestStatus and
 	 *         validity details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<APIkeyRequests>> viewApiKeyRequestStatusAndApiKey(
 			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {

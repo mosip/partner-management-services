@@ -6,18 +6,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
@@ -94,8 +97,8 @@ public class PolicyManagementService {
 		policyGroupInput.setName(request.getName());
 		policyGroupInput.setDescr(request.getDesc());
 		policyGroupInput.setId(PolicyUtil.generateId());
-		policyGroupInput.setCrBy("SYSTEM");
-		policyGroupInput.setUserId("SYSTEM");
+		policyGroupInput.setCrBy(getUser());
+		policyGroupInput.setUserId(getUser());
 		policyGroupInput.setCrDtimes(LocalDateTime.now());
 		policyGroupInput.setIsActive(true);
 		
@@ -149,7 +152,7 @@ public class PolicyManagementService {
 			throws PolicyManagementServiceException, Exception {
 		
 		AuthPolicy authPolicy = new AuthPolicy();		
-		authPolicy.setCrBy("SYSTEM");		
+		authPolicy.setCrBy(getUser());		
 		authPolicy.setId(PolicyUtil.generateId());
 		authPolicy.setCrDtimes(LocalDateTime.now());
 		authPolicy.setDescr(policyDesc);
@@ -201,7 +204,7 @@ public class PolicyManagementService {
 			policyGroupFromDb.setCrDtimes(LocalDateTime.now());
 			policyGroupFromDb.setIsActive(true);
 			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
-			policyGroupFromDb.setUpdBy("SYSTEM");
+			policyGroupFromDb.setUpdBy(getUser());
 			
 			PolicyServiceLogger.info("Creating auth policies for policy group.");
 			authPolicy = createAuthPoliciesRequest(updateRequestDto.getPolicies(),policyGroupFromDb.getName(),
@@ -254,12 +257,12 @@ public class PolicyManagementService {
 		if (policyGroupDetails.get() != null) {
 			policyGroupFromDb = policyGroupDetails.get();
 			policyGroupFromDb.setIsActive(status);
-			policyGroupFromDb.setUpdBy("SYSTEM");
+			policyGroupFromDb.setUpdBy(getUser());
 			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
 			List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyId(statusUpdateRequest.getId());
 			for(AuthPolicy authPolicy:authPolicies) {
 				authPolicy.setIsActive(status);
-				authPolicy.setUpdBy("SYSTEM");
+				authPolicy.setUpdBy(getUser());
 				authPolicy.setUpdDtimes(LocalDateTime.now());
 				authPolicyRepository.save(authPolicy);
 			}
@@ -336,8 +339,6 @@ public class PolicyManagementService {
 			policies.add(dto);
 		}
 		return policies;
-		
-		
 	}
 
 
@@ -373,4 +374,19 @@ public class PolicyManagementService {
 		return obj;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUser() {
+		if (Objects.nonNull(SecurityContextHolder.getContext())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
+			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getUserId();
+		} else {
+			return null;
+		}
+	}
 }

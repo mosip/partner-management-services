@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -18,12 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.AuthenticationFailedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
@@ -160,8 +163,8 @@ public class PartnerServiceImpl implements PartnerService {
 				partner.setContactNo(request.getContactNumber());
 				partner.setEmailId(request.getEmailId());
 				partner.setIsActive(true);
-				partner.setUserId("110083");
-				partner.setCrBy("System Admin");
+				partner.setUserId(getUser());
+				partner.setCrBy(getUser());
 				partner.setCrDtimes(Timestamp.valueOf(now));
 
 				LOGGER.info(request.getOrganizationName() + " : this is unique partner");
@@ -232,7 +235,7 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setEmailId(partnerByName.getEmailId());
 			response.setIsActive(partnerByName.getIsActive());
 			response.setName(partnerByName.getName());
-			response.setUpdBy(partnerByName.getUpdBy());
+			response.setUpdBy(getUser());
 			response.setUpdDtimes(partnerByName.getUpdDtimes());
 			response.setUserId(partnerByName.getUserId());
 
@@ -263,7 +266,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partner.setContactNo(request.getContactNumber());
 				partner.setEmailId(request.getEmailId());
 				partner.setName(request.getOrganizationName());
-				partner.setUpdBy("Partner Service");
+				partner.setUpdBy(getUser());
 				partner.setUpdDtimes(Timestamp.valueOf(now));
 				LOGGER.info("Saving the updated Partner");
 				partnerRepository.save(partner);
@@ -277,7 +280,7 @@ public class PartnerServiceImpl implements PartnerService {
 					partner.setContactNo(request.getContactNumber());
 					partner.setEmailId(request.getEmailId());
 					partner.setName(request.getOrganizationName());
-					partner.setUpdBy("Partner Service");
+					partner.setUpdBy(getUser());
 					partner.setUpdDtimes(Timestamp.valueOf(now));
 					LOGGER.info("Saving the updated Partner");
 					partnerRepository.save(partner);
@@ -353,7 +356,7 @@ public class PartnerServiceImpl implements PartnerService {
 			partnerPolicyRequest = new PartnerPolicyRequest();
 			String partnerPolicyRequestId = PartnerUtil.createPartnerPolicyRequestId();
 			partnerPolicyRequest.setId(partnerPolicyRequestId);
-			partnerPolicyRequest.setStatusCode("in-progress");
+			partnerPolicyRequest.setStatusCode("In-Progress");
 
 			partnerPolicyRequest.setPolicyId(policyGroup.getId());
 			partnerPolicyRequest.setPartner(partner);
@@ -362,7 +365,7 @@ public class PartnerServiceImpl implements PartnerService {
 			LocalDateTime now = LocalDateTime.now();
 			partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(now));
 			partnerPolicyRequest.setRequestDetail(request.getUseCaseDescription());
-			partnerPolicyRequest.setCrBy(partner.getCrBy());
+			partnerPolicyRequest.setCrBy(getUser());
 
 			LOGGER.info("Saving request for partnerPolicyRequest");
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
@@ -629,4 +632,20 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		return digitalCertificateResponse;
 	}	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUser() {
+		if (Objects.nonNull(SecurityContextHolder.getContext())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
+			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getUserId();
+		} else {
+			return null;
+		}
+	}
 }

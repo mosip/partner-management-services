@@ -3,12 +3,15 @@ package io.mosip.pmp.misp.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
@@ -118,8 +121,8 @@ public class MISPManagementService {
 		mispEntity.setAddress(mispCreateRequest.getAddress());
 		mispEntity.setStatus_code("Inprogress");
 		mispEntity.setCreatedDateTime(LocalDateTime.now());
-		mispEntity.setUserID("SYSTEM");
-		mispEntity.setCreatedBy("SYSTEM");
+		mispEntity.setUserID(getUser());
+		mispEntity.setCreatedBy(getUser());
 		
 		MispLogger.info("Data insertion stated into misp table");
 		try{
@@ -171,7 +174,7 @@ public class MISPManagementService {
 		}
 		misp.setStatus_code(request.getMispStatus().toLowerCase());
 		misp.setUpdatedDateTime(LocalDateTime.now());
-		misp.setUpdatedBy("SYSTEM");
+		misp.setUpdatedBy(getUser());
 		
 		try{
 			MispLogger.info("Updating the misp request status");	
@@ -229,7 +232,7 @@ public class MISPManagementService {
 		misplEntity.setCreatedDateTime(LocalDateTime.now());		
 		misplEntity.setMispLicenseUniqueKey(uniqueKey);
 		misplEntity.setIsActive(true);
-		misplEntity.setCreatedBy("SYSTEM");			
+		misplEntity.setCreatedBy(getUser());			
 		MispLogger.info("Data insertion stated into misp_license table");
 		try{
 			misplKeyRepository.save(misplEntity);
@@ -356,7 +359,7 @@ public class MISPManagementService {
 					license.setIsActive(false);
 				}
 				license.setUpdatedDateTime(LocalDateTime.now());
-				license.setUpdatedBy("SYSTEM");
+				license.setUpdatedBy(getUser());
 				misplKeyRepository.save(license);
 			}
 		}
@@ -365,7 +368,7 @@ public class MISPManagementService {
 			for(MISPLicenseEntity license : licenses) {
 				license.setIsActive(false);
 				license.setUpdatedDateTime(LocalDateTime.now());
-				license.setUpdatedBy("SYSTEM");
+				license.setUpdatedBy(getUser());
 				misplKeyRepository.save(license);
 			}
 		}
@@ -404,7 +407,7 @@ public class MISPManagementService {
 		}		
 		mispLicense.setIsActive(status);
 		mispLicense.setUpdatedDateTime(LocalDateTime.now());
-		mispLicense.setUpdatedBy("SYSTEM");
+		mispLicense.setUpdatedBy(getUser());
 
 		MispLogger.info("Updating the misp license status.");
 		try{
@@ -596,6 +599,22 @@ public class MISPManagementService {
 		return mispDetails;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUser() {
+		if (Objects.nonNull(SecurityContextHolder.getContext())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
+			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getUserId();
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * <p> This method retrieves the misp license key details for given misp id.</p>
 	 *  
