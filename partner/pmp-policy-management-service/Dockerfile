@@ -34,7 +34,7 @@ ENV spring_config_url_env=${spring_config_url}
 
 COPY ./target/pmp-policy-management-service-*.jar pmp-policy-management-service.jar
 
-EXPOSE 8080
+EXPOSE 9101
 
 
 

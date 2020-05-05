@@ -34,6 +34,6 @@ ENV spring_config_url_env=${spring_config_url}
 
 COPY ./target/pmp-misp-service-*.jar pmp-misp-service.jar
 
-EXPOSE 8888
+EXPOSE 9100
 
 CMD ["java","-jar","-Dspring.cloud.config.label=${spring_config_label_env}","-Dspring.profiles.active=${active_profile_env}","-Dspring.cloud.config.uri=${spring_config_url_env}","pmp-misp-service.jar"]
