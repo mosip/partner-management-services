@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-mispid</artifactId>
-			<version>${kernel.version}</version>
+			<version>1.0.7</version>
 			<!-- <exclusions> <exclusion> </exclusion> </exclusions> -->
 		</dependency>
 		<dependency>
