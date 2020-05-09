@@ -1,14 +1,14 @@
-
 name: Release maven packages and docker upon a release
 
 on:
   release: 
     types: [published]
-  
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -36,21 +36,15 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-${{ env.BRANCH_NAME }}
-    - name: Remove snapshots and build with maven
-      run: |
-        cd partner
-        mvn versions:set -DremoveSnapshot
-        mvn -B package --file pom.xml
     
     - name: Setup the settings file for ossrh server
       run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
     
-    - name: Publish the maven package
+    - name: Build with Maven
       run: |
         cd partner
-        mvn deploy -DskipTests -s $GITHUB_WORKSPACE/settings.xml
-      env:
-        GPG_TTY: $(tty)  
+        mvn -B package --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+
     - name: Ready the springboot artifacts
       run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
@@ -59,8 +53,58 @@ jobs:
       with:
         name: release
         path: ./release.zip
+
+    
+  publish_to_nexus:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        ref: ${{ github.ref }}
+        java-version: 1.8
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+    - name: Setup branch and GPG public key 
+      run: |
+        # Strip git ref prefix from version
+        echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+        echo ${{ env.BRANCH_NAME }}
+        echo "::set-env name=GPG_TTY::$(tty)"
+        echo ${{ env.GPG_TTY }}
+        sudo apt-get --yes install gnupg2
+        gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
+        gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg 
+     
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ env.BRANCH_NAME }}
+    
+    - name: Setup the settings file for ossrh server
+      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
+
+    - name: Install xmllint
+      run: |
+        sudo apt-get update
+        sudo apt-get install libxml2-utils
+
+    - name: Build with Maven
+      run: cd partner && mvn -B package --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+
+    - name: Publish the maven package
+      run: |
+        chmod +x ./deploy.sh
+        ./deploy.sh partner $GITHUB_WORKSPACE/settings.xml .*
+      env:
+        GPG_TTY: $(tty)
   
-   #TODO: We need to use a different docker namespace for release builds
   docker-pmp-misp-service:
     needs: build
 
