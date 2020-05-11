@@ -1,6 +1,5 @@
 package io.mosip.pmp.partnermanagement.service.impl;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
@@ -62,7 +59,6 @@ import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistExcepti
 import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
-import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PolicyNotExistException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
@@ -625,6 +621,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
+		}		
+		Optional<Partner> partner = partnerRepository.findById(partnerId);
+		if(!partner.isPresent()) {
+			throw new PartnerValidationException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(policy_api_key);
 		if(partnerPolicy == null) {
