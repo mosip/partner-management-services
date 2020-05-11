@@ -35,7 +35,6 @@ import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistExcepti
 import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
-import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
@@ -591,7 +590,7 @@ public class PartnerManagementServiceImplTest {
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy",apiKey,"");
 	}
 	
-	@Test
+	@Test(expected = PartnerValidationException.class)
 	public void getPartnerMappedPolicyFileTest_S10() {
 		MISPLicenseEntity license = mispLicense();
 		String apiKey ="2345";	
