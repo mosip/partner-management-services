@@ -138,7 +138,7 @@ public class PartnerManagementController {
 	 * @param misp_license_key
 	 * @return
 	 */
-	
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION')")
 	@RequestMapping(value = "/validatePartnerMisp/partnerId/{partnerId}/partnerApiKey/{partner_api_key}/mispLicenseKey/{misp_license_key}", 
 			method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
