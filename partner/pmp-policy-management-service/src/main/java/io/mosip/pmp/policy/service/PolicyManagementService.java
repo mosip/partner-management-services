@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,10 +35,12 @@ import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.entity.AuthPolicy;
+import io.mosip.pmp.policy.entity.AuthPolicyH;
 import io.mosip.pmp.policy.entity.PolicyGroup;
 import io.mosip.pmp.policy.errorMessages.ErrorMessages;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
+import io.mosip.pmp.policy.repository.AuthPolicyHRepository;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.util.PolicyUtil;
@@ -63,6 +66,9 @@ public class PolicyManagementService {
 
 	@Autowired
 	private PolicyGroupRepository policyGroupRepository;
+	
+	@Autowired
+	private AuthPolicyHRepository authPolicyHRepository;
 	
 
 	/**
@@ -111,6 +117,7 @@ public class PolicyManagementService {
 		try {
 			policyGroupRepository.save(policyGroupInput);
 			authPolicyRepository.save(authPolicy);
+			InsertIntoAuthPolicyH(authPolicy);
 		}			
 		catch (Exception e) {
 			PolicyServiceLogger.error("Error occurred while inserting data into policy group table");
@@ -151,18 +158,51 @@ public class PolicyManagementService {
 	private AuthPolicy createAuthPoliciesRequest(PolicyDto request, String policyName, String policyDesc, String policyId) 
 			throws PolicyManagementServiceException, Exception {
 		
-		AuthPolicy authPolicy = new AuthPolicy();		
-		authPolicy.setCrBy(getUser());		
-		authPolicy.setId(PolicyUtil.generateId());
-		authPolicy.setCrDtimes(LocalDateTime.now());
-		authPolicy.setDescr(policyDesc);
-		authPolicy.setName(policyName);
-		authPolicy.setIsActive(true);
-		authPolicy.setIsDeleted(false);	
-		authPolicy.setPolicy_group_id(policyId);
-		authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
-		
-		return authPolicy;
+		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyId, policyName);
+		if(authPolicy != null) {
+			authPolicy.setCrBy(getUser());		
+			authPolicy.setId(authPolicy.getId());
+			authPolicy.setCrDtimes(LocalDateTime.now());
+			authPolicy.setDescr(policyDesc);
+			authPolicy.setName(policyName);
+			authPolicy.setIsActive(true);
+			authPolicy.setIsDeleted(false);	
+			authPolicy.setPolicy_group_id(policyId);
+			authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
+			return authPolicy;
+		}else {		
+			authPolicy = new AuthPolicy();		
+			authPolicy.setCrBy(getUser());		
+			authPolicy.setId(PolicyUtil.generateId());
+			authPolicy.setCrDtimes(LocalDateTime.now());
+			authPolicy.setDescr(policyDesc);
+			authPolicy.setName(policyName);
+			authPolicy.setIsActive(true);
+			authPolicy.setIsDeleted(false);	
+			authPolicy.setPolicy_group_id(policyId);
+			authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
+			return authPolicy;
+		}
+	}
+	
+	/**
+	 * This function inserts the records into auth history table
+	 * @param authPolicy
+	 */
+	private void InsertIntoAuthPolicyH(AuthPolicy authPolicy) {
+		AuthPolicyH authPolicyH = new AuthPolicyH();		
+		authPolicyH.setEffDtimes(new Date());
+		authPolicyH.setCrBy(getUser());
+		authPolicyH.setCrDtimes(LocalDateTime.now());
+		authPolicyH.setDescr(authPolicy.getDescr());
+		authPolicyH.setId(PolicyUtil.generateId());
+		authPolicyH.setIsActive(authPolicy.getIsActive());
+		authPolicyH.setName(authPolicy.getName());
+		authPolicyH.setPolicyFileId(authPolicy.getName());
+		authPolicyH.setUpdBy(authPolicy.getUpdBy());
+		authPolicyH.setUpdDtimes(LocalDateTime.now());
+		authPolicyH.setPolicy_group_id(authPolicy.getPolicy_group_id());
+		authPolicyHRepository.save(authPolicyH);
 	}
 
 	/**
@@ -212,6 +252,7 @@ public class PolicyManagementService {
 			try{
 				policyGroupRepository.save(policyGroupFromDb);
 				authPolicyRepository.save(authPolicy);
+				InsertIntoAuthPolicyH(authPolicy);
 				}catch(Exception e){
 					PolicyServiceLogger.error("Error occurred while updating the policy group details");
 					PolicyServiceLogger.error(e.getMessage());

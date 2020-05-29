@@ -31,6 +31,7 @@ import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.PolicyGroup;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
+import io.mosip.pmp.policy.repository.AuthPolicyHRepository;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.service.PolicyManagementService;
@@ -49,12 +50,16 @@ public class PolicyServiceTest {
 	@Mock
 	private PolicyGroupRepository policyGroupRepository;
 	
+	@Mock
+	private AuthPolicyHRepository authPolicyHRepository;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		service = new PolicyManagementService();
 		ReflectionTestUtils.setField(service, "authPolicyRepository", authPolicyRepository);
 		ReflectionTestUtils.setField(service, "policyGroupRepository", policyGroupRepository);
+		ReflectionTestUtils.setField(service, "authPolicyHRepository", authPolicyHRepository);
 	}
 	
 	@Test

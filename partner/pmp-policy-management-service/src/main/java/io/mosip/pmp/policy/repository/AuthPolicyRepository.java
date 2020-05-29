@@ -18,4 +18,7 @@ public interface AuthPolicyRepository extends JpaRepository<AuthPolicy, String>{
 	
 	@Query(value = "select * from pmp.auth_policy ap where ap.policy_group_id=?", nativeQuery = true)
 	List<AuthPolicy> findByPolicyId(String policyId);
+	
+	@Query(value = "select * from pmp.auth_policy ap where ap.policy_group_id=?1 and ap.name = ?2",nativeQuery = true)
+	AuthPolicy findByPolicyGroupAndName(String policyGroupId, String name);
 }
