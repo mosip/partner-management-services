@@ -198,7 +198,7 @@ public class PolicyManagementService {
 		authPolicyH.setId(PolicyUtil.generateId());
 		authPolicyH.setIsActive(authPolicy.getIsActive());
 		authPolicyH.setName(authPolicy.getName());
-		authPolicyH.setPolicyFileId(authPolicy.getName());
+		authPolicyH.setPolicyFileId(authPolicy.getPolicyFileId());
 		authPolicyH.setUpdBy(authPolicy.getUpdBy());
 		authPolicyH.setUpdDtimes(LocalDateTime.now());
 		authPolicyH.setPolicy_group_id(authPolicy.getPolicy_group_id());
