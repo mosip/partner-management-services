@@ -317,12 +317,17 @@ public class MISPManagementService {
 		MISPEntity mispEntity = findById(mispUpdateRequestDto.getMispID());	
 		
 		MispLogger.info("Validating misp name " + mispUpdateRequestDto.getName());		
-		validateName(mispUpdateRequestDto.getName());	
+		MISPEntity mispByName = mispRepository.findByName(mispUpdateRequestDto.getName());
+		if(mispByName != null && !mispEntity.getID().equals(mispByName.getID())) {
+			MispLogger.error("Misp details found with misp name : " + mispUpdateRequestDto.getName() + "Can't create misp with same name.");
+			throw new MISPException(ErrorMessages.MISP_EXISTS.getErrorCode(), 
+					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + mispUpdateRequestDto.getName());
+		}
 		
 		mispEntity.setName(mispUpdateRequestDto.getName());
 		mispEntity.setAddress(mispUpdateRequestDto.getAddress());
 		mispEntity.setContactNumber(mispUpdateRequestDto.getContactNumber());
-		mispEntity.setEmailId(mispUpdateRequestDto.getEmailID());		
+		mispEntity.setEmailId(mispUpdateRequestDto.getEmailId());		
 		mispEntity.setUpdatedDateTime(LocalDateTime.now());
 		mispEntity.setUpdatedBy(mispEntity.getCreatedBy());	
 		

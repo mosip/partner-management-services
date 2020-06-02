@@ -205,13 +205,22 @@ public class MISPServiceTest {
 		Mockito.when(misplKeyRepository.findByMispId("12345")).thenReturn(license);
 		Mockito.when(mispRepository.findById(request.getMispId())).thenReturn(misp);
 		service.updateMISPStatus(request);
-	}
+	}	
 	
-	@Test(expected = MISPException.class)
-	public void updateMISP_NameExistsTest() {
+	public void updateMISP_updateTest() {
 		MISPUpdateRequestDto request = updateRequest();
 		Optional<MISPEntity> misp = Optional.of(misp("Inprogress",false));
 		MISPEntity mispName = misp.get();
+		Mockito.when(mispRepository.findById(request.getMispID())).thenReturn(misp);
+		Mockito.when(mispRepository.findByName(request.getName())).thenReturn(mispName);
+		service.update(request);
+	}
+	
+	@Test(expected = MISPException.class)
+	public void updateMISP_NameExistsTest_01() {
+		MISPUpdateRequestDto request = updateRequest();
+		Optional<MISPEntity> misp = Optional.of(misp("Inprogress",false));
+		MISPEntity mispName = misp_update("Inprogress",false);
 		Mockito.when(mispRepository.findById(request.getMispID())).thenReturn(misp);
 		Mockito.when(mispRepository.findByName(request.getName())).thenReturn(mispName);
 		service.update(request);
@@ -431,7 +440,7 @@ public class MISPServiceTest {
 		MISPUpdateRequestDto dto = new MISPUpdateRequestDto();
 		dto.setAddress("Banaglore");
 		dto.setContactNumber("9902344554");
-		dto.setEmailID("India@gmail.com");
+		dto.setEmailId("India@gmail.com");
 		dto.setMispID("12345");
 		dto.setName("Huwai");		
 		
@@ -508,6 +517,19 @@ public class MISPServiceTest {
 		dto.setEmailId("airtel@gmail.com");
 		dto.setName("Airtel");
 		dto.setID("100");;
+		dto.setStatus_code(status_code);
+		dto.setIsActive(isActive);
+		return dto;
+	}
+	
+	
+	private MISPEntity misp_update(String status_code, boolean isActive) {
+		MISPEntity dto = new MISPEntity();
+		dto.setAddress("Bangalore");
+		dto.setContactNumber("1234567890");
+		dto.setEmailId("airtel@gmail.com");
+		dto.setName("Airtel");
+		dto.setID("101");;
 		dto.setStatus_code(status_code);
 		dto.setIsActive(isActive);
 		return dto;
