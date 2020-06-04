@@ -20,7 +20,8 @@ public enum ErrorMessages {
 	MISSING_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter - "),
 	INVALID_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - "),
 	INTERNAL_SERVER_ERROR("PMS_COR_003","Could not process the request"),
-	AUTH_POLICIES_NOT_DEFINED("PMS_POL_009", "Auth Policies are not defined against to policy");
+	AUTH_POLICIES_NOT_DEFINED("PMS_POL_009", "Auth Policies are not defined against to policy"),
+	NO_POLICY_AGAINST_APIKEY("PMS_POL_013","No policy available for given PartnerAPIKey");
 	
 	private final String errorCode;
 	private final String errorMessage;
