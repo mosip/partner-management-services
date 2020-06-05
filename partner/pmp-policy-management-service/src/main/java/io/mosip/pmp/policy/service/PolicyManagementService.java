@@ -405,8 +405,8 @@ public class PolicyManagementService {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
 		if(partnerPolicy == null) {
 			PolicyServiceLogger.error("Partner api key not found");
-        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+        	throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
+        			ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
 		}
 		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
 		if(!authPolicy.isPresent()) {
