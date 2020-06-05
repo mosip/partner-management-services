@@ -116,7 +116,7 @@ public class PolicyManagementService {
 		PolicyDto dto = new PolicyDto();
 		dto.setAllowedKycAttributes(request.getPolicies().getAllowedKycAttributes());
 		dto.setAuthPolicies(request.getPolicies().getAuthPolicies());
-		authPolicy = createAuthPoliciesRequest(dto,request.getName(),request.getDesc(),policyGroupInput.getId());
+		authPolicy = createAuthPoliciesRequest(dto,request.getName(),request.getName(),request.getDesc(),policyGroupInput.getId());
 		
 		PolicyServiceLogger.info("Inserting data into policy group table");	
 		try {
@@ -160,20 +160,20 @@ public class PolicyManagementService {
 	 * @throws PolicyManagementServiceException Compile time exceptions
 	 * @throws Exception runtime exceptions.
 	 */
-	private AuthPolicy createAuthPoliciesRequest(PolicyDto request, String policyName, String policyDesc, String policyId) 
+	private AuthPolicy createAuthPoliciesRequest(PolicyDto request, String oldPolicyName, String newPolicyName, String policyDesc, String policyId) 
 			throws PolicyManagementServiceException, Exception {
 		
-		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyId, policyName);
+		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyId, oldPolicyName);
 		if(authPolicy != null) {
 			authPolicy.setCrBy(getUser());		
 			authPolicy.setId(authPolicy.getId());
 			authPolicy.setCrDtimes(LocalDateTime.now());
 			authPolicy.setDescr(policyDesc);
-			authPolicy.setName(policyName);
+			authPolicy.setName(newPolicyName);
 			authPolicy.setIsActive(true);
 			authPolicy.setIsDeleted(false);	
 			authPolicy.setPolicy_group_id(policyId);
-			authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
+			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName).toJSONString());
 			return authPolicy;
 		}else {		
 			authPolicy = new AuthPolicy();		
@@ -181,11 +181,11 @@ public class PolicyManagementService {
 			authPolicy.setId(PolicyUtil.generateId());
 			authPolicy.setCrDtimes(LocalDateTime.now());
 			authPolicy.setDescr(policyDesc);
-			authPolicy.setName(policyName);
+			authPolicy.setName(newPolicyName);
 			authPolicy.setIsActive(true);
 			authPolicy.setIsDeleted(false);	
 			authPolicy.setPolicy_group_id(policyId);
-			authPolicy.setPolicyFileId(generatePolicyJson(request,policyName).toJSONString());
+			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName).toJSONString());
 			return authPolicy;
 		}
 	}
@@ -240,6 +240,7 @@ public class PolicyManagementService {
 		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
 		AuthPolicy authPolicy = new AuthPolicy();
 		PolicyGroup policyGroupFromDb = null;
+		String existingPolicyName = policyGroupDetails.get().getName();
 		
 		if (policyGroupDetails.get() != null){
 			policyGroupFromDb = policyGroupDetails.get();
@@ -252,7 +253,7 @@ public class PolicyManagementService {
 			policyGroupFromDb.setUpdBy(getUser());
 			
 			PolicyServiceLogger.info("Creating auth policies for policy group.");
-			authPolicy = createAuthPoliciesRequest(updateRequestDto.getPolicies(),policyGroupFromDb.getName(),
+			authPolicy = createAuthPoliciesRequest(updateRequestDto.getPolicies(),existingPolicyName,policyGroupFromDb.getName(),
 					policyGroupFromDb.getDescr(),policyGroupFromDb.getId());
 			try{
 				policyGroupRepository.save(policyGroupFromDb);
