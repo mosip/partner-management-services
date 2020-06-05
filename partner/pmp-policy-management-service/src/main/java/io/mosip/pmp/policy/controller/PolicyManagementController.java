@@ -170,6 +170,20 @@ public class PolicyManagementController {
 	
 	/**
 	 * <p>This API would be used to retrieve the partner policy details for given PartnerAPIKey.</p>
+	 * @throws ParseException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	@GetMapping(value = "/policies/partnerApiKey/{partnerApiKey}")
+	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyAgainstApiKey(@PathVariable String partnerApiKey) throws FileNotFoundException, IOException, ParseException{
+		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
+		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		PolicyWithAuthPolicyDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(partnerApiKey);
+		response.setResponse(policyGroup);
+		PolicyServiceLogger.info("Returning response from MispController.");
+		return response;		
+	}
+	
 
 }

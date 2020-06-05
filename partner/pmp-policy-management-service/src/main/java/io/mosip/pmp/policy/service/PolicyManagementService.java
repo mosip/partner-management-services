@@ -36,12 +36,14 @@ import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.AuthPolicyH;
+import io.mosip.pmp.policy.entity.PartnerPolicy;
 import io.mosip.pmp.policy.entity.PolicyGroup;
 import io.mosip.pmp.policy.errorMessages.ErrorMessages;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
 import io.mosip.pmp.policy.repository.AuthPolicyHRepository;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
+import io.mosip.pmp.policy.repository.PartnerPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.util.PolicyUtil;
 
@@ -69,6 +71,9 @@ public class PolicyManagementService {
 	
 	@Autowired
 	private AuthPolicyHRepository authPolicyHRepository;
+	
+	@Autowired
+	PartnerPolicyRepository partnerPolicyRepository;
 	
 
 	/**
@@ -260,8 +265,7 @@ public class PolicyManagementService {
 			        		   ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
 				}
 		}
-		if(policyGroupFromDb!=null) {
-			
+		if(policyGroupFromDb!=null) {			
 			responseDto.set_Active(policyGroupFromDb.getIsActive());
 			responseDto.setId(policyGroupFromDb.getId());
 			responseDto.setName(policyGroupFromDb.getName());
@@ -347,6 +351,13 @@ public class PolicyManagementService {
 		return authPolicy;
 	}
 	
+	/**
+	 * This method is used to fetch all policies available in system.
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public List<PolicyWithAuthPolicyDto> findAllPolicies() throws JsonParseException, JsonMappingException, IOException{
 		List<PolicyGroup> policies = policyGroupRepository.findAll();
 		if(policies.isEmpty()){
@@ -382,6 +393,29 @@ public class PolicyManagementService {
 		return policies;
 	}
 
+	/**
+	 * This method is used to find policy mapped to partner api key.
+	 * @throws ParseException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * 
+	 */
+	public PolicyWithAuthPolicyDto getAuthPolicyWithApiKey(String partnerApiKey) throws FileNotFoundException, IOException, ParseException {
+		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
+		if(partnerPolicy == null) {
+			PolicyServiceLogger.error("Partner api key not found");
+        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
+		if(!authPolicy.isPresent()) {
+			throw new PolicyManagementServiceException(
+					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
+					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
+		}
+		
+		return findPolicy(authPolicy.get().getPolicy_group_id());		
+	}
 
 	/**
 	 * @param policy
