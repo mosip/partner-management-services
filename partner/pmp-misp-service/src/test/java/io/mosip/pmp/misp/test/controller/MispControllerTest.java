@@ -7,15 +7,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,10 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
-import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
-import io.mosip.pmp.misp.PmpMispApplication;
-import io.mosip.pmp.misp.controller.MispController;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -48,8 +39,6 @@ import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
-import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
 
@@ -232,7 +221,7 @@ public class MispControllerTest {
 		MISPUpdateRequestDto dto = new MISPUpdateRequestDto();
 		dto.setAddress("Bangalore");
 		dto.setContactNumber("1234567890");
-		dto.setEmailID("vodafone@gmail.com");
+		dto.setEmailId("vodafone@gmail.com");
 		dto.setName("Vodafone");		
 		request.setRequest(dto);
 

@@ -1,13 +1,15 @@
 package io.mosip.pmp.policy.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 /**
@@ -25,17 +27,21 @@ public class AuthPolicyH implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private AuthPolicyHPK id;
+	@Id	
+	@Column(name ="id")	
+	public String id;
 
+	@Column(name="policy_group_id")
+	private String policy_group_id;
+	
 	@Column(name="cr_by")
 	private String crBy;
 
 	@Column(name="cr_dtimes")
-	private Timestamp crDtimes;
+	private LocalDateTime crDtimes;
 
 	@Column(name="del_dtimes")
-	private Timestamp delDtimes;
+	private LocalDateTime delDtimes;
 
 	private String descr;
 
@@ -54,21 +60,21 @@ public class AuthPolicyH implements Serializable {
 	private String updBy;
 
 	@Column(name="upd_dtimes")
-	private Timestamp updDtimes;
+	private LocalDateTime updDtimes;
 
-	//bi-directional many-to-one association to PolicyGroup
-//	@ManyToOne
-//	@JoinColumn(name="policy_group_id")
-//	private PolicyGroup policyGroup;
-
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="eff_dtimes")
+	private java.util.Date effDtimes;
+	
+	
 	public AuthPolicyH() {
 	}
 
-	public AuthPolicyHPK getId() {
+	public String getId() {
 		return this.id;
 	}
 
-	public void setId(AuthPolicyHPK id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -80,19 +86,19 @@ public class AuthPolicyH implements Serializable {
 		this.crBy = crBy;
 	}
 
-	public Timestamp getCrDtimes() {
+	public LocalDateTime getCrDtimes() {
 		return this.crDtimes;
 	}
 
-	public void setCrDtimes(Timestamp crDtimes) {
+	public void setCrDtimes(LocalDateTime crDtimes) {
 		this.crDtimes = crDtimes;
 	}
 
-	public Timestamp getDelDtimes() {
+	public LocalDateTime getDelDtimes() {
 		return this.delDtimes;
 	}
 
-	public void setDelDtimes(Timestamp delDtimes) {
+	public void setDelDtimes(LocalDateTime delDtimes) {
 		this.delDtimes = delDtimes;
 	}
 
@@ -128,6 +134,14 @@ public class AuthPolicyH implements Serializable {
 		this.name = name;
 	}
 
+	public java.util.Date getEffDtimes() {
+		return this.effDtimes;
+	}
+	
+	public void setEffDtimes(java.util.Date effDtimes) {
+		this.effDtimes = effDtimes;
+	}
+	
 	public String getPolicyFileId() {
 		return this.policyFileId;
 	}
@@ -136,6 +150,14 @@ public class AuthPolicyH implements Serializable {
 		this.policyFileId = policyFileId;
 	}
 
+	public String getPolicy_group_id() {
+		return this.policy_group_id;
+	}
+	
+	public void setPolicy_group_id(String policy_group_id) {
+		this.policy_group_id = policy_group_id;
+	}
+	
 	public String getUpdBy() {
 		return this.updBy;
 	}
@@ -144,20 +166,11 @@ public class AuthPolicyH implements Serializable {
 		this.updBy = updBy;
 	}
 
-	public Timestamp getUpdDtimes() {
+	public LocalDateTime getUpdDtimes() {
 		return this.updDtimes;
 	}
 
-	public void setUpdDtimes(Timestamp updDtimes) {
+	public void setUpdDtimes(LocalDateTime updDtimes) {
 		this.updDtimes = updDtimes;
 	}
-
-//	public PolicyGroup getPolicyGroup() {
-//		return this.policyGroup;
-//	}
-//
-//	public void setPolicyGroup(PolicyGroup policyGroup) {
-//		this.policyGroup = policyGroup;
-//	}
-
 }

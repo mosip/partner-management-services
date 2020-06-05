@@ -38,7 +38,7 @@ public class MISPUpdateRequestDto {
 	
 	@Size(min = 1, max = 256)
 	@ApiModelProperty(value = "emailID", required = false, dataType = "java.lang.String")
-	public String emailID;
+	public String emailId;
 	
 	
 	@Size(min = 1, max= 2000)

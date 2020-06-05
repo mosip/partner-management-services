@@ -1,6 +1,3 @@
-/**
- * 
- */
 package io.mosip.pmp.policy.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -115,6 +111,15 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/policies/policyId/12345")).
+		andExpect(MockMvcResultMatchers.status().isOk());		
+	}
+	
+	@Test
+	@WithMockUser(roles = {"POLICYMANAGER"})
+	public void getPolicyWithApiKeyTest() throws Exception{
+		PolicyWithAuthPolicyDto response = new PolicyWithAuthPolicyDto();
+		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);		
+		mockMvc.perform(MockMvcRequestBuilders.get("/policies/partnerApiKey/12345")).
 		andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 	
