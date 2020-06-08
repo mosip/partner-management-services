@@ -14,7 +14,8 @@ public enum PartnerValidationsConstants {
 	MISP_LICENSE_KEY_EXPIRED("PMS_PMP_021","MISP license key is expired."),
 	POLICY_GROUP_NOT_EXISTS("PMS_PMP_022","Policy not exists."),
 	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy not exists."),
-	POLICY_FILE_PARSING_ERROR("PMS_PMP_024","Policy file is corrupted.");
+	POLICY_FILE_PARSING_ERROR("PMS_PMP_024","Policy file is corrupted."),
+	MISP_IS_BLOCKED("IDA-MPA-017","License key of MISP is blocked");
 	
 	/**
 	 * The error code.
