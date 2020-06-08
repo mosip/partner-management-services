@@ -46,6 +46,7 @@ import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersManagersDetails;
 import io.mosip.pmp.partnermanagement.entity.AuthPolicy;
+import io.mosip.pmp.partnermanagement.entity.MISPEntity;
 import io.mosip.pmp.partnermanagement.entity.MISPLicenseEntity;
 import io.mosip.pmp.partnermanagement.entity.Partner;
 import io.mosip.pmp.partnermanagement.entity.PartnerPolicy;
@@ -62,6 +63,7 @@ import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PolicyNotExistException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.partnermanagement.repository.MispServiceRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerRepository;
@@ -97,6 +99,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
 
+	@Autowired
+	MispServiceRepository mispRepository;
+	
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
 			String partnerID, String policyAPIKey) {
@@ -616,11 +621,23 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	@Override
 	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId) {		
 		LOGGER.info("Getting the partner from db.");
-		MISPValidatelKeyResponseDto LicenseKeyresponse = validateLicenseKey(mispLicenseKey);
-		if(!LicenseKeyresponse.isValid()) {			
+		MISPValidatelKeyResponseDto licenseKeyresponse = validateLicenseKey(mispLicenseKey);		
+		if(!licenseKeyresponse.isActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorCode(),
+					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());
+			
+		}
+		if(!licenseKeyresponse.isValid()) {			
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
+		}
+		Optional<MISPEntity> mispFromDb = mispRepository.findById(licenseKeyresponse.getMisp_id());
+		if(!mispFromDb.get().getIsActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorCode(),
+					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());			
 		}
 		Optional<Partner> partner = partnerRepository.findById(partnerId);
 		if(!partner.isPresent()) {
@@ -709,8 +726,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	public MISPValidatelKeyResponseDto validateLicenseKey(String licenseKey) {
 		MISPValidatelKeyResponseDto response = new MISPValidatelKeyResponseDto();
 		LOGGER.info("Getting the misp license key " + licenseKey);
-		MISPLicenseEntity mispLicense = getLicenseDetails(licenseKey);
-		
+		MISPLicenseEntity mispLicense = getLicenseDetails(licenseKey);		
 		response.setActive(mispLicense.getIsActive());
 		response.setLicenseKey(mispLicense.getMispUniqueEntity().getLicense_key());
 		response.setValid(mispLicense.getValidToDate().isAfter(LocalDateTime.now()));
