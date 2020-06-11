@@ -13,7 +13,7 @@ public enum PartnerValidationsConstants {
 	MISP_LICENSE_KEY_NOT_EXISTS("PMS_PMP_020","MISP license key not exists."),
 	MISP_LICENSE_KEY_EXPIRED("PMS_PMP_021","MISP license key is expired."),
 	POLICY_GROUP_NOT_EXISTS("PMS_PMP_022","Policy not exists."),
-	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy not exists."),
+	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy is not active."),
 	POLICY_FILE_PARSING_ERROR("PMS_PMP_024","Policy file is corrupted."),
 	MISP_IS_BLOCKED("PMS_PMP_025","License key of MISP is blocked");
 	
