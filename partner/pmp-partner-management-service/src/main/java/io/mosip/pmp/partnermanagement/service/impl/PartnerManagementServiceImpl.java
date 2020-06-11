@@ -625,8 +625,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		if(!licenseKeyresponse.isActive()) {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorCode(),
-					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());
-			
+					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());			
 		}
 		if(!licenseKeyresponse.isValid()) {			
 			throw new PartnerValidationException(
@@ -644,13 +643,24 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}		
+		}
+		if(!partner.get().getIsActive()) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(policy_api_key);
 		if(partnerPolicy == null) {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
 					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
-		}		
+		}
+		if(!partnerPolicy.getPartner().getId().equals(partner.get().getId())) {
+			throw new PartnerValidationException(
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
+					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
+			
+		}
 		if(!partnerPolicy.getIsActive()) {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
@@ -671,14 +681,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-		}
-		
+		}		
 		if(authPolicy.get().getPolicyGroup() == null) {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-		}
-		
+		}		
 		if(!authPolicy.get().getPolicyGroup().getIsActive()) {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
