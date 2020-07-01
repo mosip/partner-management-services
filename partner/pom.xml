@@ -13,7 +13,7 @@
 	<groupId>io.mosip.pmp</groupId>
 	<artifactId>pmp-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.0.0-rc1</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
