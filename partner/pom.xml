@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.8.RELEASE</version>
-		<relativePath />
-	</parent>
-
+	<modelVersion>4.0.0</modelVersion>	
 	<groupId>io.mosip.pmp</groupId>
 	<artifactId>pmp-parent</artifactId>
 	<packaging>pom</packaging>
@@ -18,7 +10,7 @@
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
 	<url>https://github.com/mosip/partner-management-services</url>
-	
+		
 	<licenses>
           <license>
                 <name>MPL 2.0</name>
@@ -68,9 +60,12 @@
 	<properties>
 		<pmp.core.version>1.0.0</pmp.core.version>
 		<kernel.version>1.0.6</kernel.version>
-		<sonar.host>http://localhost:9000</sonar.host>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.version>3.7.0</maven.compiler.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 	
 	<modules>
@@ -92,39 +87,36 @@
 		</profile>
 	</profiles>
 
-	<dependencies>
-
-		<!-- https://mvnrepository.com/artifact/org.sonarsource.sonarqube/sonar-scanner-engine -->
-		<dependency>
-			<groupId>org.sonarsource.sonarqube</groupId>
-			<artifactId>sonar-scanner-engine</artifactId>
-			<version>7.0</version>
-		</dependency>
-
-		<!-- Swagger dependency -->
-
+	<dependencies>		
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
+		</dependency>		
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>20.0</version>
-		</dependency>
-
 	</dependencies>
 	
-	<build>
+	<build>	
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
