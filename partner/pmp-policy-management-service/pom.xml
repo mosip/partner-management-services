@@ -13,7 +13,6 @@
 	<name>pmp-policy-management-service</name>
 
 	<properties>
-		<java.version>1.8</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<maven.jacoco.version>0.8.2</maven.jacoco.version>
 	</properties>
@@ -45,7 +44,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
-			<version>1.16.18</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>

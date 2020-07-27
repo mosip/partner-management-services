@@ -56,7 +56,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-			<version>1.16.18</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		
 	</dependencies>
