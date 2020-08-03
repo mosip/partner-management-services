@@ -147,7 +147,7 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
-          VERSION=${{steps.getPomVersion.outputs.info}}
+          VERSION=$BRANCH_NAME
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -192,7 +192,7 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
-          VERSION=${{steps.getPomVersion.outputs.info}}
+          VERSION=$BRANCH_NAME
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -237,7 +237,7 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
-          VERSION=${{steps.getPomVersion.outputs.info}}
+          VERSION=$BRANCH_NAME
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -282,7 +282,7 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
-          VERSION=${{steps.getPomVersion.outputs.info}}
+          VERSION=$BRANCH_NAME
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
