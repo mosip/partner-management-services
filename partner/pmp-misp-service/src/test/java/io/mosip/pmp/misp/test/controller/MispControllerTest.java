@@ -46,7 +46,6 @@ import io.mosip.pmp.misp.test.MispServiceTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
 @AutoConfigureMockMvc
-
 public class MispControllerTest {
 	
 	@Autowired
