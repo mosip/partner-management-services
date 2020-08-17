@@ -8,18 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Aug-2020             Sadanndegowda       Added policy_type, version, schema and validity   
 -- ------------------------------------------------------------------------------------------
-
--- NOTE: the code below contains the SQL for the selected object
--- as well for its dependencies and children (if applicable).
--- 
--- This feature is only a convinience in order to permit you to test
--- the whole object's SQL definition at once.
--- 
--- When exporting or generating the SQL for the whole database model
--- all objects will be placed at their original positions.
-
 
 -- object: pmp.auth_policy_h | type: TABLE --
 -- DROP TABLE IF EXISTS pmp.auth_policy_h CASCADE;
@@ -30,6 +20,11 @@ CREATE TABLE pmp.auth_policy_h(
 	name character varying(128) NOT NULL,
 	descr character varying(256) NOT NULL,
 	policy_file_id character varying(5120) NOT NULL,
+	policy_type character varying(36) NOT NULL,
+	version character varying(8) NOT NULL,
+	policy_schema character varying(5120),
+	valid_from_date timestamp NOT NULL,
+	valid_to_date timestamp NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -56,6 +51,16 @@ COMMENT ON COLUMN pmp.auth_policy_h.name IS 'Name: Name of the policy';
 COMMENT ON COLUMN pmp.auth_policy_h.descr IS 'Description: Description of the policy';
 -- ddl-end --
 COMMENT ON COLUMN pmp.auth_policy_h.policy_file_id IS 'Policy File ID: Policy are defined by Policy / Partner manager are stored in file system or key based storages like CEPH. The policy file details (location / id / key) is stored here.';
+-- ddl-end --
+COMMENT ON COLUMN pmp.auth_policy_h.policy_type IS 'Policy Type: Type of the policy for example authentication, Data_Share, Credential_Issuance...etc.';
+-- ddl-end --
+COMMENT ON COLUMN pmp.auth_policy_h.version IS 'Policy Version : Version number of the policy, Version to be upgraded based on changes to the policy';
+-- ddl-end --
+COMMENT ON COLUMN pmp.auth_policy_h.policy_schema IS 'Policy Schema: Policy schema, schema is populated based on policy type';
+-- ddl-end --
+COMMENT ON COLUMN pmp.auth_policy_h.valid_from_date IS 'Policy Valid From Date: Date and time from when the policy is valid';
+-- ddl-end --
+COMMENT ON COLUMN pmp.auth_policy_h.valid_to_date IS 'Valid To Date: Date and time till when the policy is valid';
 -- ddl-end --
 COMMENT ON COLUMN pmp.auth_policy_h.is_active IS 'IS_Active : Flag to mark whether the record is Active or In-active';
 -- ddl-end --

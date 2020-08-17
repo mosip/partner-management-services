@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,276" last-zoom="0.65"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,131" last-zoom="0.4"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -299,6 +299,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="5120"/>
 		<comment><![CDATA[Policy File ID: Policy are defined by Policy / Partner manager are stored in file system or key based storages like CEPH. The policy file details (location / id / key) is stored here.]]></comment>
 	</column>
+	<column name="policy_type" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Policy Type: Type of the policy for example authentication, Data_Share, Credential_Issuance...etc.]]></comment>
+	</column>
+	<column name="version" not-null="true">
+		<type name="character varying" length="8"/>
+		<comment><![CDATA[Policy Version : Version number of the policy, Version to be upgraded based on changes to the policy]]></comment>
+	</column>
+	<column name="policy_schema">
+		<type name="character varying" length="5120"/>
+		<comment><![CDATA[Policy Schema: Policy schema, schema is populated based on policy type]]></comment>
+	</column>
+	<column name="valid_from_date" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Policy Valid From Date: Date and time from when the policy is valid]]></comment>
+	</column>
+	<column name="valid_to_date" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Valid To Date: Date and time till when the policy is valid ]]></comment>
+	</column>
 	<column name="is_active" not-null="true">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
@@ -400,7 +420,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="pmp"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Policy Group: Authentication policies are categorized into different groups/domains. These policy groups are defined and maintained in this table.]]></comment>
-	<position x="560" y="100"/>
+	<position x="400" y="140"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: A unique id generated / assigned for a policy group.]]></comment>
@@ -541,6 +561,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="policy_file_id" alias="polf" not-null="true">
 		<type name="character varying" length="5120"/>
 		<comment><![CDATA[Policy File ID: Policy are defined by Policy / Partner manager are stored in file system or key based storages like CEPH. The policy file details (location / id / key) is stored here.]]></comment>
+	</column>
+	<column name="policy_type" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Policy Type: Type of the policy for example authentication, Data_Share, Credential_Issuance...etc.]]></comment>
+	</column>
+	<column name="version" not-null="true">
+		<type name="character varying" length="8"/>
+		<comment><![CDATA[Policy Version : Version number of the policy, Version to be upgraded based on changes to the policy]]></comment>
+	</column>
+	<column name="policy_schema">
+		<type name="character varying" length="5120"/>
+		<comment><![CDATA[Policy Schema: Policy schema, schema is populated based on policy type]]></comment>
+	</column>
+	<column name="valid_from_date" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Policy Valid From Date: Date and time from when the policy is valid]]></comment>
+	</column>
+	<column name="valid_to_date" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Valid To Date: Date and time till when the policy is valid]]></comment>
 	</column>
 	<column name="is_active" not-null="true">
 		<type name="boolean" length="0"/>
