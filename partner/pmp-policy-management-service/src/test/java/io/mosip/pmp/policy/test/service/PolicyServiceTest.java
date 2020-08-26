@@ -8,24 +8,26 @@ import java.util.Optional;
 
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
+import io.mosip.pmp.policy.dto.DataShareDto;
+import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
-import io.mosip.pmp.policy.dto.PolicyDto;
+import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
+import io.mosip.pmp.policy.dto.PolicyGroupUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.entity.AuthPolicy;
@@ -39,9 +41,7 @@ import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PolicyServiceTest.class)
-@AutoConfigureMockMvc
-@EnableWebMvc
+@SpringBootTest
 public class PolicyServiceTest {
 
 	PolicyManagementService service;
@@ -56,7 +56,7 @@ public class PolicyServiceTest {
 	private AuthPolicyHRepository authPolicyHRepository;
 	
 	@Mock
-	PartnerPolicyRepository partnerPolicyRepository;
+	PartnerPolicyRepository partnerPolicyRepository;	
 	
 	@Before
 	public void setUp() {
@@ -68,109 +68,359 @@ public class PolicyServiceTest {
 		ReflectionTestUtils.setField(service, "partnerPolicyRepository", partnerPolicyRepository);
 	}
 	
+	//Success Test
 	@Test
-	public void createPolicyTest() throws PolicyManagementServiceException, Exception {
-		PolicyCreateRequestDto request = createPolicyGroupRequest();
-		 service.createPolicyGroup(request);
+	public void createPolicyGroupTest_S001() {
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroupData());
+		service.createPolicyGroup(createPolicyGroupRequest());
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
-	public void createPolicy_NameExistsException() throws PolicyManagementServiceException, Exception {
-		PolicyCreateRequestDto request = createPolicyGroupRequest();
-		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroupData());
-		 service.createPolicyGroup(request);
+	public void createPolicyGroupTest_S002() {		
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
+		service.createPolicyGroup(createPolicyGroupRequest());
+	}
+	
+	//success
+	@Test
+	public void updatePolicyGroupTest_S001() {
+		Optional<PolicyGroup> policyGroupFromDb = Optional.of(policyGroupData());
+		Mockito.when(policyGroupRepository.findById("1234")).thenReturn(policyGroupFromDb);
+		service.updatePolicyGroup(updatePolicygroupRequest(),"1234");
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
-	public void createPolicy_AuthNotDefined() throws PolicyManagementServiceException, Exception {
-		PolicyCreateRequestDto request = createPolicyGroupRequest();
-		request.setPolicies(null);
-		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroupData());
-		 service.createPolicyGroup(request);
+	public void updatePolicyGroupTest_S002() {
+		Optional<PolicyGroup> policyGroupFromDb = Optional.of(policyGroupData());
+		Mockito.when(policyGroupRepository.findById("12")).thenReturn(policyGroupFromDb);
+		service.updatePolicyGroup(updatePolicygroupRequest(),"1234");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicyGroupTest_S003() {
+		Optional<PolicyGroup> policyGroupFromDb = Optional.of(policyGroupData());
+		Mockito.when(policyGroupRepository.findById("1234")).thenReturn(policyGroupFromDb);
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
+		service.updatePolicyGroup(updatePolicygroupRequest(),"1234");
 	}
 	
 	@Test
-	public void updatePolicy_IDNotExistsTest() throws Exception {
+	public void updatePolicyGroupTest_S004() {
+		PolicyGroupUpdateRequestDto updateRequest = updatePolicygroupRequest();
+		updateRequest.setActive(false);
+		Optional<PolicyGroup> policyGroupFromDb = Optional.of(policyGroupData());
+		Mockito.when(policyGroupRepository.findById("1234")).thenReturn(policyGroupFromDb);
+		service.updatePolicyGroup(updateRequest,"1234");
+	}
+	
+	@Test
+	@Ignore
+	public void createPoliciesTest_S001() throws PolicyManagementServiceException, Exception {
+		PolicyCreateRequestDto request = createPoliciesRequest();
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
+		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(null);
+		service.createPolicies(request);
+	}
+	
+	@Test
+	@Ignore
+	public void createPoliciesTest_S002() throws PolicyManagementServiceException, Exception {
+		PolicyCreateRequestDto request = createPoliciesRequest();
+		request.setPolicyType("DataShare");
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
+		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(null);
+		service.createPolicies(request);
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void createPoliciesTest_S003() throws PolicyManagementServiceException, Exception {
+		PolicyCreateRequestDto request = createPoliciesRequest();
+		request.setPolicyType("Data_Share");
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(null);
+		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
+		service.createPolicies(request);
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void createPoliciesTest_S004() throws PolicyManagementServiceException, Exception {
+		PolicyCreateRequestDto request = createPoliciesRequest();
+		request.setPolicyType("Data_Share");
+		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","Test_001")).thenReturn(getAuthPolicy());
+		service.createPolicies(request);
+	}
+	
+	private PolicyCreateRequestDto createPoliciesRequest() {
+		PolicyCreateRequestDto request= new PolicyCreateRequestDto();
+		request.setDesc("Test_001");
+		request.setName("Test_001");
+		request.setPolicyGroupName("Test_Policy_Group_001");
+		request.setPolicyType("Auth");
+		request.setPolicies(createAuthPolicyInput());
+		return request;
+	}
+
+	private PolicyGroupUpdateRequestDto updatePolicygroupRequest() {
+		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
+		updateRequest.setName("Test_Policy_Group_001");
+		updateRequest.setDesc("Test_Policy_Group_001");
+		return updateRequest;
+	}
+	private PolicyGroupCreateRequestDto createPolicyGroupRequest() {
+		PolicyGroupCreateRequestDto request = new PolicyGroupCreateRequestDto();
+		request.setDesc("Test_Policy_Group_001");
+		request.setName("Test_Policy_Group_001");
+		return request;
+	}
+	
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicyStatus_PolicyGroupIDNotExistsTest() {
+		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
+		service.updatePolicyStatus(request,"1234","3456");		
+	}
+
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicyStatus_PolicIDNotExistsTest() {
+		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
 		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
-		PolicyUpdateRequestDto request = createPolicyUpdateRequestDto();
-		service.update(request);
-	}
-	
-	@Test
-	public void updatePolicy() throws Exception {
-		Optional<PolicyGroup> policy = Optional.of(policyGroupData());
-		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(policy.get().getId(),policy.get().getName())).thenReturn(getAuthPolicy());
-		PolicyUpdateRequestDto request = createPolicyUpdateRequestDto();
-		service.update(request);
+		service.updatePolicyStatus(request,"12345","3456");		
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
-	public void updatePolicy_Test() throws Exception {
-		PolicyGroup policy = policyGroupData();
-		policy.setName("Policy");
-		policy.setId("2345");
-		Mockito.when(policyGroupRepository.findByName("Policy")).thenReturn(policy);
-		PolicyUpdateRequestDto request = createPolicyUpdateRequestDto();
-		service.update(request);
-	}
-	
-	@Test(expected = PolicyManagementServiceException.class)
-	public void updatePolicyStatus_PolicyIDNotExistsTest() {
+	public void updatePolicyStatus_NotMappedTest() {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
-		service.updatePolicyStatus(request);
-		
-	}
-	
-	@Test//(expected = PolicyManagementServiceException.class)
-	public void updatePolicyStatusTest() {
-		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
-		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("5678");
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
-		service.updatePolicyStatus(request);
-		
+		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(getAuthPolicy()));
+		service.updatePolicyStatus(request,"12345","3456");
 	}
 	
 	@Test
 	public void updatePolicyStatus_AuthPoliccy_Test() {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
-		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
-		Mockito.when(authPolicyRepository.findByPolicyId("12345")).thenReturn(getAuthPolicies());
-		service.updatePolicyStatus(request);
-		
+		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(getAuthPolicy()));
+		service.updatePolicyStatus(request,"12345","3456");	
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicies_PolicyGroupNotExistsTest() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test_01")).thenReturn(policyGroup);
+		service.updatePolicies(request, "12345");
 	}
 
 	@Test(expected = PolicyManagementServiceException.class)
-	public void findPolicyTest_PolicyId_NotExists() throws FileNotFoundException, IOException, ParseException {
-		service.findPolicy("12345");
+	public void updatePolicies_AuthPolicyNotExistsTest() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(getAuthPolicy()));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);	
+		service.updatePolicies(request, "12345");
 	}
 	
-	@Test//(expected = PolicyManagementServiceException.class)
-	public void findPolicyTest () throws FileNotFoundException, IOException, ParseException {
-		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicies_PolicyGroupNotMappingTest() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setPolicy_group_id("8976");
+		authPolicy.setId("12345");
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);		
+		service.updatePolicies(request, "12345");
+	}
+	
+	@Test
+	@Ignore
+	public void updatePoliciesTest() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		request.setPolicies(createAuthPolicyInput());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setPolicy_group_id("12345");
+		authPolicy.setName("Test");
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
-		Mockito.when(authPolicyRepository.findByPolicyId("12345")).thenReturn(getAuthPolicies());
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		service.updatePolicies(request, "12345");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePolicies_PolicyNameDuplicateTest() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		request.setPolicies(createAuthPolicyInput());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setPolicy_group_id("12345");
+		authPolicy.setName("Test");
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
+		AuthPolicy authPolicyName = getAuthPolicy();
+		authPolicyName.setPolicy_group_id("12345");
+		authPolicyName.setName("Test_01");
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
+		service.updatePolicies(request, "12345");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void publishPolicy_PolicyPublishedTest() throws JsonParseException, JsonMappingException, IOException {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		request.setPolicies(createAuthPolicyInput());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setPolicy_group_id("12345");
+		authPolicy.setName("Test");
+		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(authPolicy);
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policy.get());
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		service.publishPolicy("Test", "Test");
+	}
+	
+	@Test
+	public void publishPolicyTest() throws JsonParseException, JsonMappingException, IOException {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		request.setPolicies(createAuthPolicyInput());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setPolicy_group_id("12345");
+		authPolicy.setName("Test");
+		authPolicy.setIsActive(false);
+		Mockito.when(authPolicyRepository.findById("Test")).thenReturn(Optional.of(authPolicy));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById("Test")).thenReturn(policy);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
+		service.publishPolicy("Test", "Test");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void findPolicy_policyIdNotExistsTest() throws FileNotFoundException, IOException, ParseException {
+		service.findPolicy("1234");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void findPolicy_policyGroupIdNotExistsTest() throws FileNotFoundException, IOException, ParseException {		
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(Optional.empty());
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.findPolicy("12345");
 	}
 	
 	@Test
-	public void findAllPolicies() throws JsonParseException, JsonMappingException, IOException {
+	public void findPolicyTest_001() throws FileNotFoundException, IOException, ParseException {
 		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
-		List<PolicyGroup> policyGroups = new ArrayList<PolicyGroup>();
-		policyGroups.add(policy.get());
-		Mockito.when(policyGroupRepository.findAll()).thenReturn(policyGroups);
+		policy.get().setId("12345");
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		service.findPolicy("12345");
+	}	
+		
+	@Test
+	public void findAllPoliciesTest_001() throws FileNotFoundException, IOException, ParseException {
+		service.findAllPolicies();
+	}
+	
+	@Test
+	public void findAllPoliciesTest_002() throws FileNotFoundException, IOException, ParseException {
+		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
+		policy.get().setId("12345");
+		Mockito.when(authPolicyRepository.findAll()).thenReturn(getAuthPolicies());
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.findAllPolicies();
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
-	public void findAllPolicies_NoRecords() throws JsonParseException, JsonMappingException, IOException {
-		List<PolicyGroup> policyGroups = new ArrayList<PolicyGroup>();
-		//policyGroups.add(policy.get());
-		Mockito.when(authPolicyRepository.findByPolicyId("12345")).thenReturn(getAuthPolicies());
-		Mockito.when(policyGroupRepository.findAll()).thenReturn(policyGroups);
-		service.findAllPolicies();
+	public void getPartnerMappedPolicy_NoPolicyTest() throws JsonParseException, JsonMappingException, IOException {
+		Mockito.when(partnerPolicyRepository.findByPartnerId("2345")).thenReturn(null);		
+		service.getPartnerMappedPolicy("12345", "12345");
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void getPartnerMappedPolicy_NoAuthPolicyTest() throws JsonParseException, JsonMappingException, IOException {
+		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
+		policy.get().setPartner("12345");
+		policy.get().setPolicyId("12345");
+		policy.get().setPolicyApiKey("12345");
+		Mockito.when(partnerPolicyRepository.findByPartnerId("12345")).thenReturn(policy.get());		
+		service.getPartnerMappedPolicy("12345", "12345");
+	}
+
+	@Test(expected = PolicyManagementServiceException.class)
+	public void getPartnerMappedPolicy_PartnerPolicyNotMappedTest() throws JsonParseException, JsonMappingException, IOException {
+		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
+		policy.get().setPartner("12345");
+		policy.get().setPolicyId("2345");
+		policy.get().setPolicyApiKey("12345");
+		Mockito.when(partnerPolicyRepository.findByPartnerId("12345")).thenReturn(policy.get());
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		service.getPartnerMappedPolicy("12345", "12345");
+	}
+	
+	@Test
+	public void getPartnerMappedPolicyTest_001() throws JsonParseException, JsonMappingException, IOException {
+		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
+		policy.get().setPartner("12345");
+		policy.get().setPolicyId("12345");
+		policy.get().setPolicyApiKey("12345");
+		Optional<PolicyGroup> policyGroup = Optional.of(new PolicyGroup());
+		policyGroup.get().setId("12345");		
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policyGroup);
+		Mockito.when(partnerPolicyRepository.findByPartnerId("12345")).thenReturn(policy.get());
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
 	@Test
@@ -179,14 +429,14 @@ public class PolicyServiceTest {
 		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
 		policy.get().setId("12345");
 		policyGroups.add(policy.get());
-		Mockito.when(authPolicyRepository.findByPolicyId("12345")).thenReturn(getAuthPolicies());
+		Mockito.when(authPolicyRepository.findByPolicyGroupId("12345")).thenReturn(getAuthPolicies());
 		Mockito.when(policyGroupRepository.findAll()).thenReturn(policyGroups);
-		service.findAllPolicies();
+		//service.findAllPolicies();
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void findPolicyAgainstApiKey_S001() throws FileNotFoundException, IOException, ParseException {
-		Mockito.when(authPolicyRepository.findByPolicyId("12345")).thenReturn(getAuthPolicies());
+		Mockito.when(authPolicyRepository.findByPolicyGroupId("12345")).thenReturn(getAuthPolicies());
 		Mockito.when(partnerPolicyRepository.findByApiKey("2345")).thenReturn(getPartnerPolicy());
 		service.getAuthPolicyWithApiKey("2345");
 	}
@@ -222,8 +472,10 @@ public class PolicyServiceTest {
 		List<AuthPolicy> policies = new ArrayList<AuthPolicy>();
 		policy.setName("Test");
 		policy.setDescr("Policy Desc");
+		policy.setPolicy_group_id("12345");
+		policy.setId("12345");
 		policy.setIsActive(true);
-		policy.setPolicyFileId("{\"authPolicies\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"demo\",\"authSubType\":null,\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"IRIS\",\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FACE\",\"mandatory\":false},{\"authType\":\"kyc\",\"authSubType\":null,\"mandatory\":false}],\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"required\":true},{\"attributeName\":\"dateOfBirth\",\"required\":true},{\"attributeName\":\"gender\",\"required\":true},{\"attributeName\":\"phone\",\"required\":true},{\"attributeName\":\"email\",\"required\":true},{\"attributeName\":\"addressLine1\",\"required\":true},{\"attributeName\":\"addressLine2\",\"required\":true},{\"attributeName\":\"addressLine3\",\"required\":true},{\"attributeName\":\"location1\",\"required\":true},{\"attributeName\":\"location2\",\"required\":true},{\"attributeName\":\"location3\",\"required\":true},{\"attributeName\":\"postalCode\",\"required\":false},{\"attributeName\":\"photo\",\"required\":true}]}");
+		policy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\"}}");
 		policies.add(policy);
 		return policies;
 		
@@ -235,45 +487,29 @@ public class PolicyServiceTest {
 		policy.setDescr("Policy Desc");
 		policy.setPolicy_group_id("12345");
 		policy.setIsActive(true);
-		policy.setPolicyFileId("{\"authPolicies\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"demo\",\"authSubType\":null,\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"IRIS\",\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FACE\",\"mandatory\":false},{\"authType\":\"kyc\",\"authSubType\":null,\"mandatory\":false}],\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"required\":true},{\"attributeName\":\"dateOfBirth\",\"required\":true},{\"attributeName\":\"gender\",\"required\":true},{\"attributeName\":\"phone\",\"required\":true},{\"attributeName\":\"email\",\"required\":true},{\"attributeName\":\"addressLine1\",\"required\":true},{\"attributeName\":\"addressLine2\",\"required\":true},{\"attributeName\":\"addressLine3\",\"required\":true},{\"attributeName\":\"location1\",\"required\":true},{\"attributeName\":\"location2\",\"required\":true},{\"attributeName\":\"location3\",\"required\":true},{\"attributeName\":\"postalCode\",\"required\":false},{\"attributeName\":\"photo\",\"required\":true}]}");		
+		policy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\"}}");		
 		return policy;
 		
 	}
 	private PolicyStatusUpdateRequestDto createUpdatePolicyStatusRequest() {
 		PolicyStatusUpdateRequestDto req = new PolicyStatusUpdateRequestDto();
-		req.setId("12345");
 		req.setStatus("Active");
 		return req;
-	}
-
-	private PolicyUpdateRequestDto createPolicyUpdateRequestDto() {
-		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
-		request.setDesc("Policy Test");
-		request.setName("Policy");
-		request.setId("12345");
-		request.setPolicies(createAuthPolicyInput());
-		return request;
-	}
-
-	private PolicyCreateRequestDto createPolicyGroupRequest() {
-		PolicyCreateRequestDto request = new PolicyCreateRequestDto();
-		request.setDesc("Test Policy");
-		request.setName("Test");
-		request.setPolicies(createAuthPolicyInput());
-		return request;
 	}
 	
 	private PolicyGroup policyGroupData() {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Policy");
+		policyGroup.setIsActive(true);
 		return policyGroup;
 	}
 	
-	private PolicyDto createAuthPolicyInput() {
-		PolicyDto policy = new PolicyDto();
-		policy.setAllowedKycAttributes(getAllowedKycAttributes());
-		policy.setAuthPolicies(getAuthPoliciesDto());
+	private PolicyAttributesDto createAuthPolicyInput() {
+		PolicyAttributesDto policy = new PolicyAttributesDto();
+		policy.setShareableAttributes(getAllowedKycAttributes());
+		policy.setAllowedAuthTypes(getAuthPoliciesDto());
+		policy.setDataSharePolicies(getDataSharableAttributes());
 		return policy;
 	}
 
@@ -291,8 +527,18 @@ public class PolicyServiceTest {
 		List<AllowedKycDto> allowedKycList = new ArrayList<AllowedKycDto>();
 		AllowedKycDto dto =  new AllowedKycDto();
 		dto.setAttributeName("Name");
-		dto.setRequired(true);
+		dto.setEncrypted(true);
+		dto.setFormat("yyyy");
 		allowedKycList.add(dto);
 		return allowedKycList;
+	}
+	
+	private DataShareDto getDataSharableAttributes() {
+		DataShareDto dataShareDto = new DataShareDto();
+		dataShareDto.setEncryptionType("encrtion Type");
+		dataShareDto.setShareDomain("mosip.io");
+		dataShareDto.setTransactionsAllowed("2");
+		dataShareDto.setValidForInMinutes("30");
+		return dataShareDto;
 	}
 }

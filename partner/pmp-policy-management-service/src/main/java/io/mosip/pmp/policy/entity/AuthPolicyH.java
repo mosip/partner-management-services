@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name="auth_policy_h")
+@Table(name="auth_policy_h", schema = "pmp")
 @NamedQuery(name="AuthPolicyH.findAll", query="SELECT a FROM AuthPolicyH a")
 public class AuthPolicyH implements Serializable {
 	
@@ -43,8 +43,23 @@ public class AuthPolicyH implements Serializable {
 	@Column(name="del_dtimes")
 	private LocalDateTime delDtimes;
 
+	@Column(name = "valid_from_date")
+	private LocalDateTime validFromDate;	
+
+	@Column(name = "valid_to_date")	
+	private LocalDateTime validToDate;
+	
+	@Column(name="version")
+	private String version;
+	
+	@Column(name="policy_schema")
+	private String schema;
+
 	private String descr;
 
+	@Column(name="policy_type")
+	private String policyType;
+	
 	@Column(name="is_active")
 	private Boolean isActive;
 
@@ -172,5 +187,45 @@ public class AuthPolicyH implements Serializable {
 
 	public void setUpdDtimes(LocalDateTime updDtimes) {
 		this.updDtimes = updDtimes;
+	}
+	
+	public void setPolicy_type(String policyType) {
+		this.policyType = policyType;
+	}
+	
+	public String getPolicy_type(String policyType) {
+		return this.policyType;
+	}
+	
+	public void SetPolicySchema(String schema) {
+		this.schema = schema;
+	}
+	
+	public String getPolicySchema() {
+		return this.schema;
+	}
+	
+	public void SetVersion(String version) {
+		this.version = version;
+	}
+	
+	public String getVersion() {
+		return this.version;
+	}
+	
+	public LocalDateTime getValidFromDate() {
+		return this.validFromDate;
+	}
+
+	public void setValidFromDate(LocalDateTime validFromDate) {
+		this.validFromDate=validFromDate;
+	}
+
+	public LocalDateTime getValidToDate() {
+		return this.validToDate;
+	}
+
+	public void setValidToDate(LocalDateTime validToDate) {
+		this.validToDate=validToDate;
 	}
 }

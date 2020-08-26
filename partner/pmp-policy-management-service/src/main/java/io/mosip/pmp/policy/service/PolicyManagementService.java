@@ -4,16 +4,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +25,21 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.pmp.policy.constant.PolicyCommonConstants;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
-import io.mosip.pmp.policy.dto.AuthPolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
+import io.mosip.pmp.policy.dto.DataShareDto;
+import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
+import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
+import io.mosip.pmp.policy.dto.PolicyGroupCreateResponseDto;
+import io.mosip.pmp.policy.dto.PolicyGroupUpdateRequestDto;
+import io.mosip.pmp.policy.dto.PolicyResponseDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.entity.AuthPolicy;
@@ -50,11 +58,11 @@ import io.mosip.pmp.policy.util.PolicyUtil;
 /**
  * <p>This class manages business logic before or after performing database operations.</p>
  * This class is performing following operations.</br>
- * 1. Creating the policy group {@link #createPolicyGroup(PolicyCreateRequestDto)} </br>
- * 2. Creating the auth policies {@link #createAuthPoliciesRequest(PolicyDto)} </br>
- * 3. Updating the policy group {@link #update(PolicyUpdateRequestDto)} </br>
- * 4. Updating the policy status {@link #updatePolicyStatus(PolicyStatusUpdateRequestDto)} </br>
- * 5. Reading/Getting the policy details {@link #getPolicyDetails(String)} </br>
+ * 1. Creating the policy group  </br>
+ * 2. Creating the auth policies </br>
+ * 3. Updating the policy group </br>
+ * 4. Updating the policy status </br>
+ * 5. Reading/Getting the policy details</br>
  * 
  * @author Nagarjuna Kuchi
  * @version 1.0
@@ -68,113 +76,269 @@ public class PolicyManagementService {
 
 	@Autowired
 	private PolicyGroupRepository policyGroupRepository;
-	
+
 	@Autowired
 	private AuthPolicyHRepository authPolicyHRepository;
-	
+
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
-	
+
+	@Value("${pmp.policy.expiry.period.indays:180 }")
+	private int policyExpiryPeriodInDays;
+
+	@Value("${pmp.policy.allowed.authtokens.types}")
+	private String allowedAuthTokenTypes;
+
+	@Value("${pmp.policy.schema.url}")
+	private String policySchemaUrl;
+	/**
+	 * 
+	 * @param requestDto
+	 * @return
+	 */
+	public PolicyGroupCreateResponseDto createPolicyGroup(PolicyGroupCreateRequestDto requestDto) {		
+		validatePolicyGroupName(requestDto.getName(),true);	
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setCrBy(getUser());
+		policyGroup.setCrDtimes(LocalDateTime.now());
+		policyGroup.setIsActive(true);
+		policyGroup.setName(requestDto.getName());
+		policyGroup.setDescr(requestDto.getDesc());
+		policyGroup.setUserId(getUser());	
+		policyGroup.setId(PolicyUtil.generateId());
+		return savePolicyGroup(policyGroup);
+	}
 
 	/**
-	 * <p> This function inserts the policy group data into policy group table.</p>
-	 * <p> Checks the database for uniqueness of policy group name.</p>
-	 * <p> If policy group name exists throws the exception saying policy group name exists.</p>
-	 * <p> else will insert the data into policy group table.</p>
-	 * <p> and returns the response;
-	 * @param request {@link PolicyCreateRequestDto } Contains input request details.
-	 * @return response {@link PolicyCreateResponseDto } Contains response details.
+	 * 
+	 * @param Id
+	 * @param name
+	 * @param descr
+	 * @param is_active
+	 * @return
+	 */
+	public PolicyGroupCreateResponseDto updatePolicyGroup(PolicyGroupUpdateRequestDto requestDto, String policyGroupId) {
+		Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
+		if(policyGroupFromDb.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage()); 
+		}		
+		PolicyGroup policyGroup = policyGroupFromDb.get();
+		if(!policyGroupFromDb.get().getName().equals(requestDto.getName())) {
+			validatePolicyGroupName(requestDto.getName(),true);
+			policyGroup.setName(requestDto.getName());
+		}
+		if(policyGroup.getIsActive() != requestDto.isActive()) {
+			updatePoicyGroupPolicies(policyGroupFromDb.get().getId(),requestDto.isActive());
+			policyGroup.setIsActive(requestDto.isActive());
+		}
+		policyGroup.setDescr(requestDto.getDesc());
+		policyGroup.setUpdBy(getUser());
+		policyGroup.setUpdDtimes(LocalDateTime.now());
+		policyGroup.setUserId(getUser());		
+		return savePolicyGroup(policyGroup);
+	}
+
+	/**
+	 * 
+	 * @param policyGroupId
+	 * @param status
+	 */
+	private void updatePoicyGroupPolicies(String policyGroupId, boolean status) {
+		List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyGroupId(policyGroupId);
+		for (AuthPolicy authPolicy : authPolicies) {
+			if(!status) {
+				authPolicy.setIsActive(status);
+				authPolicy.setUpdBy(getUser());
+				authPolicy.setUpdDtimes(LocalDateTime.now());
+				authPolicyRepository.save(authPolicy);
+				insertIntoAuthPolicyH(authPolicy);
+			}else {
+				if(!authPolicy.getValidToDate().isBefore(LocalDateTime.now())){
+					authPolicy.setIsActive(status);
+				}
+				authPolicy.setUpdBy(getUser());
+				authPolicy.setUpdDtimes(LocalDateTime.now());				
+				authPolicyRepository.save(authPolicy);
+				insertIntoAuthPolicyH(authPolicy);
+			}
+		}
+	}
+	/**
+	 * 
+	 * @param requestDto
+	 * @throws PolicyManagementServiceException
 	 * @throws Exception
-	 */	
-	public ResponseWrapper<PolicyCreateResponseDto> createPolicyGroup(PolicyCreateRequestDto request)
-			throws PolicyManagementServiceException,Exception {			
-		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<>();		
-		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();		
-		PolicyGroup policyGroupInput = new PolicyGroup();
-		AuthPolicy authPolicy = new AuthPolicy();
-		if(request.getPolicies() == null) {
-			PolicyServiceLogger.error("No details found with policy name " + request.getName());
-			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICIES_NOT_DEFINED.getErrorCode(),
-					ErrorMessages.AUTH_POLICIES_NOT_DEFINED.getErrorMessage());
+	 */
+	public PolicyCreateResponseDto createPolicies(PolicyCreateRequestDto requestDto) throws PolicyManagementServiceException, Exception {
+		validatePolicyTypes(requestDto.getPolicyType());
+		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
+		validateAuthPolicyName(policyGroup.getId(),requestDto.getName());
+		return savePolicy(requestDto.getPolicies(),requestDto.getName(),requestDto.getName(),requestDto.getDesc(),
+				policyGroup.getId(), requestDto.getPolicyType(), requestDto.getPolicyGroupName());
+	}
+
+	/**
+	 * 
+	 * @param requestDto
+	 * @throws Exception 
+	 * @throws PolicyManagementServiceException 
+	 */
+	public PolicyCreateResponseDto updatePolicies(PolicyUpdateRequestDto requestDto, String policyId) throws PolicyManagementServiceException, Exception {
+		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
+		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false);		
+		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroup.getId(), requestDto.getName());
+		if(mappedPolicy != null && !mappedPolicy.getName().equals(authPolicy.getName())) {
+			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
+					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + requestDto.getName());
 		}
-		
-		PolicyServiceLogger.info("Validating the policy name " + request.getName());
-		PolicyGroup policyGroupName = policyGroupRepository.findByName(request.getName());	
-		if(policyGroupName != null){
-			PolicyServiceLogger.warn("No details found with policy name " + request.getName());
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
-					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + request.getName());			
+		return savePolicy(requestDto.getPolicies(),authPolicy.getName(),requestDto.getName(),
+				requestDto.getDesc(),policyGroup.getId(),authPolicy.getPolicy_type(),requestDto.getPolicyGroupName());
+	}
+
+	/**
+	 * 
+	 * @param policy_group_name
+	 */
+	private PolicyGroup validatePolicyGroupName(String policy_group_name, boolean isExists) {
+		PolicyGroup policy_group_by_name = policyGroupRepository.findByName(policy_group_name);
+		if(policy_group_by_name == null && !isExists) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorMessage());			
 		}
-		policyGroupInput.setName(request.getName());
-		policyGroupInput.setDescr(request.getDesc());
-		policyGroupInput.setId(PolicyUtil.generateId());
-		policyGroupInput.setCrBy(getUser());
-		policyGroupInput.setUserId(getUser());
-		policyGroupInput.setCrDtimes(LocalDateTime.now());
-		policyGroupInput.setIsActive(true);
-		
-		PolicyDto dto = new PolicyDto();
-		dto.setAllowedKycAttributes(request.getPolicies().getAllowedKycAttributes());
-		dto.setAuthPolicies(request.getPolicies().getAuthPolicies());
-		authPolicy = createAuthPoliciesRequest(dto,request.getName(),request.getName(),request.getDesc(),policyGroupInput.getId());
-		
-		PolicyServiceLogger.info("Inserting data into policy group table");	
-		try {
-			policyGroupRepository.save(policyGroupInput);
-			authPolicyRepository.save(authPolicy);
-			InsertIntoAuthPolicyH(authPolicy);
-		}			
-		catch (Exception e) {
-			PolicyServiceLogger.error("Error occurred while inserting data into policy group table");
-			PolicyServiceLogger.error(e.getMessage());
-			PolicyServiceLogger.logStackTrace(e);
-			throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+		if(policy_group_by_name != null && isExists) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NAME_DUPLICATE.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NAME_DUPLICATE.getErrorMessage() + policy_group_name);
+		}		
+		return policy_group_by_name;
+	}			
+
+	/**
+	 * 
+	 * @param policyGroup
+	 * @return
+	 */
+	private PolicyGroupCreateResponseDto savePolicyGroup(PolicyGroup policyGroup) {
+		policyGroupRepository.save(policyGroup);
+		PolicyGroupCreateResponseDto responseDto = new PolicyGroupCreateResponseDto();
+		responseDto.setCr_by(policyGroup.getCrBy());
+		responseDto.setCr_dtimes(policyGroup.getCrDtimes());
+		responseDto.setDesc(policyGroup.getDescr());
+		responseDto.setName(policyGroup.getName());
+		responseDto.setId(policyGroup.getId());
+		responseDto.setIs_Active(policyGroup.getIsActive());
+		responseDto.setUp_by(policyGroup.getUpdBy());
+		responseDto.setUpd_dtimes(policyGroup.getUpdDtimes());
+		return responseDto;		
+	}
+
+	/**
+	 * 
+	 * @param auth_policy_name
+	 * @param isExists
+	 * @return
+	 */
+	private void validateAuthPolicyName(String policyGroupId ,String auth_policy_name) {
+		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, auth_policy_name);
+		if(auth_policy_by_name != null) {
+			throw new PolicyManagementServiceException(ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
+					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + auth_policy_name);
 		}
-		
-		responseDto.setIs_Active(policyGroupInput.getIsActive());
-		responseDto.setId(policyGroupInput.getId());
-		responseDto.setName(policyGroupInput.getName());
-		responseDto.setDesc(policyGroupInput.getDescr());
-		responseDto.setCr_by(policyGroupInput.getCrBy());
-		responseDto.setCr_dtimes(policyGroupInput.getCrDtimes());
-		responseDto.setUp_by(policyGroupInput.getUpdBy());
-		responseDto.setUpd_dtimes(policyGroupInput.getUpdDtimes());
-		response.setResponse(responseDto);
-		
+	}
+
+	/**
+	 * 
+	 * @param policyGroupName
+	 * @param policyName
+	 * @return
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	public PolicyResponseDto publishPolicy(String policyGroupName, String policyName) throws JsonParseException, JsonMappingException, IOException {
+		AuthPolicy authPolicy = checkMappingExists(policyGroupName, policyName,false);
+		if(authPolicy.getIsActive()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_PUBLISHED.getErrorCode(),
+					ErrorMessages.POLICY_PUBLISHED.getErrorMessage());
+		}
+		authPolicy.setPolicySchema(policySchemaUrl);
+		authPolicy.setIsActive(true);
+		authPolicy.setUpdBy(getUser());
+		authPolicy.setValidToDate(LocalDateTime.now().plusDays(policyExpiryPeriodInDays));
+		authPolicy.setUpdDtimes(LocalDateTime.now());
+		authPolicyRepository.save(authPolicy);
+		insertIntoAuthPolicyH(authPolicy);
+
+		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.getPolicy_group_id());
+		return mapPolicyAndPolicyGroup(policyGroup.get(),authPolicy);
+	}
+
+	/**
+	 * 
+	 * @param policyGroup
+	 * @param authPolicy
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private PolicyResponseDto mapPolicyAndPolicyGroup(PolicyGroup policyGroup, AuthPolicy authPolicy) throws JsonParseException, JsonMappingException, IOException {
+		PolicyResponseDto response = new PolicyResponseDto();
+		response.setCr_by(authPolicy.getCrBy());
+		response.setCr_dtimes(authPolicy.getCrDtimes());
+		response.setIs_Active(authPolicy.getIsActive());
+		response.setPolicyDesc(authPolicy.getDescr());
+		response.setPolicyGroupDesc(policyGroup.getDescr());
+		response.setPolicyGroupId(policyGroup.getId());
+		response.setPolicyGroupName(policyGroup.getName());
+		response.setPolicyGroupStatus(policyGroup.getIsActive());
+		response.setPolicyGroup_cr_by(policyGroup.getCrBy());
+		response.setPolicyGroup_cr_dtimes(policyGroup.getCrDtimes());
+		response.setPolicyGroup_up_by(policyGroup.getUpdBy());
+		response.setPolicyGroup_upd_dtimes(policyGroup.getUpdDtimes());
+		response.setPolicyId(authPolicy.getId());
+		response.setPolicyName(authPolicy.getName());
+		response.setPolicyType(authPolicy.getPolicy_type());
+		response.setPublishDate(authPolicy.getValidFromDate());
+		response.setValidTill(authPolicy.getValidToDate());
+		response.setSchema(authPolicy.getPolicySchema());
+		response.setStatus(authPolicy.getIsActive() == true ? "PUBLISHED":"DRAFTED");
+		response.setUp_by(authPolicy.getUpdBy());
+		response.setUpd_dtimes(authPolicy.getUpdDtimes());	
+		response.setVersion(authPolicy.getVersion());		
+		response.setPolicies(mapPolicyAttributes(authPolicy.getPolicyFileId()));
 		return response;
 	}
-	
+
 	/**
-	 * <p> This function creates auth policies for policy group.</p>
-	 * <p> Validates the policy group id.</p>
-	 * <p> If policy details not found for policy id, then throws exception.</p>
-	 * <p> Validates the auth policy name.</p>
-	 * <p> If name exists then throws exception saying duplicate name.</p>
-	 * <p> With input data will create policy document and stores in configured path.</p>
-	 * <p> Saves the data into auth policy table.</p>
-	 * <p> And returns the response</p>
 	 * 
-	 * @param request {@link PolicyDto} Contains input information regarding auth policies. 
-	 * @return response {@link AuthPolicyCreateResponseDto} Contains auth policies information.
-	 * @throws PolicyManagementServiceException Compile time exceptions
-	 * @throws Exception runtime exceptions.
+	 * @param request
+	 * @param oldPolicyName
+	 * @param newPolicyName
+	 * @param policyDesc
+	 * @param policyGroupId
+	 * @param policyType
+	 * @param policyGroupName
+	 * @return
+	 * @throws PolicyManagementServiceException
+	 * @throws Exception
 	 */
-	private AuthPolicy createAuthPoliciesRequest(PolicyDto request, String oldPolicyName, String newPolicyName, String policyDesc, String policyId) 
-			throws PolicyManagementServiceException, Exception {
-		
-		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyId, oldPolicyName);
-		if(authPolicy != null) {
-			authPolicy.setCrBy(getUser());		
-			authPolicy.setId(authPolicy.getId());
-			authPolicy.setCrDtimes(LocalDateTime.now());
+	private PolicyCreateResponseDto savePolicy(PolicyAttributesDto request, String oldPolicyName, String newPolicyName, String policyDesc, 
+			String policyGroupId, String policyType, String policyGroupName) 
+					throws PolicyManagementServiceException, Exception {		
+		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, oldPolicyName);
+		if(authPolicy != null) {			
+			authPolicy.setId(authPolicy.getId());			
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
 			authPolicy.setIsActive(true);
 			authPolicy.setIsDeleted(false);	
-			authPolicy.setPolicy_group_id(policyId);
-			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName).toJSONString());
-			return authPolicy;
+			authPolicy.setPolicy_group_id(policyGroupId);
+			authPolicy.setPolicy_type(policyType);
+			authPolicy.SetVersion("1.0");
+			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName,policyType).toJSONString());
+			authPolicy.setUpdBy(getUser());
+			authPolicy.setUpdDtimes(LocalDateTime.now());
 		}else {		
 			authPolicy = new AuthPolicy();		
 			authPolicy.setCrBy(getUser());		
@@ -182,19 +346,37 @@ public class PolicyManagementService {
 			authPolicy.setCrDtimes(LocalDateTime.now());
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
-			authPolicy.setIsActive(true);
-			authPolicy.setIsDeleted(false);	
-			authPolicy.setPolicy_group_id(policyId);
-			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName).toJSONString());
-			return authPolicy;
+			authPolicy.setIsActive(false);
+			authPolicy.setPolicy_type(policyType);
+			authPolicy.setIsDeleted(false);
+			authPolicy.SetVersion("1.0");
+			authPolicy.setValidFromDate(LocalDateTime.now());
+			authPolicy.setValidToDate(LocalDateTime.now().plusDays(60));
+			authPolicy.setPolicy_group_id(policyGroupId);
+			authPolicy.setPolicyFileId(generatePolicyJson(request,newPolicyName,policyType).toJSONString());
 		}
+
+		authPolicyRepository.save(authPolicy);
+		insertIntoAuthPolicyH(authPolicy);
+
+		PolicyCreateResponseDto responseDto = new PolicyCreateResponseDto();
+		responseDto.setIs_Active(authPolicy.getIsActive());
+		responseDto.setId(authPolicy.getId());
+		responseDto.setName(authPolicy.getName());
+		responseDto.setDesc(authPolicy.getDescr());
+		responseDto.setCr_by(authPolicy.getCrBy());
+		responseDto.setCr_dtimes(authPolicy.getCrDtimes());
+		responseDto.setUp_by(authPolicy.getUpdBy());
+		responseDto.setUpd_dtimes(authPolicy.getUpdDtimes());
+		responseDto.setPolicyGroupName(policyGroupName);
+		return responseDto;	
 	}
-	
+
 	/**
 	 * This function inserts the records into auth history table
 	 * @param authPolicy
 	 */
-	private void InsertIntoAuthPolicyH(AuthPolicy authPolicy) {
+	private void insertIntoAuthPolicyH(AuthPolicy authPolicy) {
 		AuthPolicyH authPolicyH = new AuthPolicyH();		
 		authPolicyH.setEffDtimes(new Date());
 		authPolicyH.setCrBy(getUser());
@@ -207,125 +389,66 @@ public class PolicyManagementService {
 		authPolicyH.setUpdBy(authPolicy.getUpdBy());
 		authPolicyH.setUpdDtimes(LocalDateTime.now());
 		authPolicyH.setPolicy_group_id(authPolicy.getPolicy_group_id());
+		authPolicyH.setPolicy_type(authPolicy.getPolicy_type());
+		authPolicyH.SetVersion(authPolicy.getVersion());
+		authPolicyH.setValidFromDate(authPolicy.getValidFromDate());
+		authPolicyH.setValidToDate(authPolicy.getValidToDate());
+		authPolicyH.SetPolicySchema(authPolicy.getPolicySchema());		
 		authPolicyHRepository.save(authPolicyH);
 	}
 
-	/**
-	 * <p>This function updates the policy group details along with auth policies.</p>
-	 * <p> </p>
-	 * @param updateRequestDto
-	 * @return
-	 * @throws Exception
-	 */
-	
-	public ResponseWrapper<PolicyUpdateResponseDto> update(PolicyUpdateRequestDto updateRequestDto) throws Exception {		
-		PolicyServiceLogger.info("Validating the policy group name " + updateRequestDto.getName());
-		PolicyGroup policyGroup = policyGroupRepository.findByName(updateRequestDto.getName());		
-		
-		if(policyGroup!=null && !policyGroup.getId().equals(updateRequestDto.getId())){
-			PolicyServiceLogger.error("Policy name exists with name : " + updateRequestDto.getName());
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
-					ErrorMessages.POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() +" " + updateRequestDto.getName());
-		}
-		
-		PolicyServiceLogger.info("Validating the policy group ID " + updateRequestDto.getId());
-		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(updateRequestDto.getId());
-		if(!policyGroupDetails.isPresent()){
-		   PolicyServiceLogger.error("Policy details not exists for policy id :" + updateRequestDto.getId());	
-           throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        		   ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
-		}		
-		
-		ResponseWrapper<PolicyUpdateResponseDto> response = new ResponseWrapper<>();	
-		PolicyUpdateResponseDto responseDto = new PolicyUpdateResponseDto();
-		AuthPolicy authPolicy = new AuthPolicy();
-		PolicyGroup policyGroupFromDb = null;
-		String existingPolicyName = policyGroupDetails.get().getName();
-		
-		if (policyGroupDetails.get() != null){
-			policyGroupFromDb = policyGroupDetails.get();
-			policyGroupFromDb.setName(updateRequestDto.getName());
-			policyGroupFromDb.setDescr(updateRequestDto.getDesc());
-			policyGroupFromDb.setId(policyGroupDetails.get().getId());
-			policyGroupFromDb.setCrDtimes(LocalDateTime.now());
-			policyGroupFromDb.setIsActive(true);
-			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
-			policyGroupFromDb.setUpdBy(getUser());
-			
-			PolicyServiceLogger.info("Creating auth policies for policy group.");
-			authPolicy = createAuthPoliciesRequest(updateRequestDto.getPolicies(),existingPolicyName,policyGroupFromDb.getName(),
-					policyGroupFromDb.getDescr(),policyGroupFromDb.getId());
-			try{
-				policyGroupRepository.save(policyGroupFromDb);
-				authPolicyRepository.save(authPolicy);
-				InsertIntoAuthPolicyH(authPolicy);
-				}catch(Exception e){
-					PolicyServiceLogger.error("Error occurred while updating the policy group details");
-					PolicyServiceLogger.error(e.getMessage());
-			        throw new PolicyManagementServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-			        		   ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-				}
-		}
-		if(policyGroupFromDb!=null) {			
-			responseDto.set_Active(policyGroupFromDb.getIsActive());
-			responseDto.setId(policyGroupFromDb.getId());
-			responseDto.setName(policyGroupFromDb.getName());
-			responseDto.setDesc(policyGroupFromDb.getDescr());
-			responseDto.setCr_by(policyGroupFromDb.getCrBy());
-			responseDto.setCr_dtimes(policyGroupFromDb.getCrDtimes());
-			responseDto.setUp_by(policyGroupFromDb.getUpdBy());
-			responseDto.setUpd_dtimes(policyGroupFromDb.getUpdDtimes());
-		}
-		
-		response.setResponse(responseDto);
-		
-		return response;
-	}
 
 	/**
 	 * @param statusUpdateRequest
 	 * @return
 	 */
-	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(PolicyStatusUpdateRequestDto statusUpdateRequest) {
-		Boolean status = statusUpdateRequest.getStatus().contains("De-Active") ? false : true;
-		
+	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(PolicyStatusUpdateRequestDto statusUpdateRequest, String policyGroupId, String policyId) {
+		Boolean status = statusUpdateRequest.getStatus().contains("De-Active") ? false : true;		
+		AuthPolicy authPolicy = checkMappingExists(policyGroupId, policyId, false);		
+		authPolicy.setIsActive(status);
+		authPolicy.setUpdBy(getUser());
+		authPolicy.setUpdDtimes(LocalDateTime.now());
+		authPolicyRepository.save(authPolicy);
+		insertIntoAuthPolicyH(authPolicy);		
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
-		
-		PolicyServiceLogger.info("Validating the policy group id " + statusUpdateRequest.getId());
-		Optional<PolicyGroup> policyGroupDetails = policyGroupRepository.findById(statusUpdateRequest.getId());
-        if(!policyGroupDetails.isPresent()){
-        	PolicyServiceLogger.error("No details found for policy group id " + statusUpdateRequest.getId());
-        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
-        }
-		PolicyGroup policyGroupFromDb = null;
-		if (policyGroupDetails.get() != null) {
-			policyGroupFromDb = policyGroupDetails.get();
-			policyGroupFromDb.setIsActive(status);
-			policyGroupFromDb.setUpdBy(getUser());
-			policyGroupFromDb.setUpdDtimes(LocalDateTime.now());
-			List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyId(statusUpdateRequest.getId());
-			for(AuthPolicy authPolicy:authPolicies) {
-				authPolicy.setIsActive(status);
-				authPolicy.setUpdBy(getUser());
-				authPolicy.setUpdDtimes(LocalDateTime.now());
-				authPolicyRepository.save(authPolicy);
-			}
-			try{
-			policyGroupRepository.save(policyGroupFromDb);
-			}catch(Exception e){
-				PolicyServiceLogger.error("Error occurred while saving the updated policy group details to table.");
-				PolicyServiceLogger.error(e.getMessage());
-				PolicyServiceLogger.logStackTrace(e);
-	        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-	        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());				
-			}
-		}
-
 		responseDto.setMessage("status updated successfully");
 		response.setResponse(responseDto);
-	 return response;	
+		return response;	
+	}
+
+	/**
+	 * 
+	 * @param uniquePolicyGroupAttribute
+	 * @param uniquePolicyAttribute
+	 * @param hasToCheckWithName
+	 * @return
+	 */
+	private AuthPolicy checkMappingExists(String uniquePolicyGroupAttribute, String uniquePolicyAttribute, 
+			boolean hasToCheckWithName) {
+		Optional<PolicyGroup> policyGroup = null;
+		Optional<AuthPolicy> authPolicy = null;
+		if(hasToCheckWithName) {
+			policyGroup = Optional.of(policyGroupRepository.findByName(uniquePolicyGroupAttribute));
+			authPolicy = Optional.of(authPolicyRepository.findByName(uniquePolicyAttribute));
+		}
+		if(!hasToCheckWithName) {
+			policyGroup = policyGroupRepository.findById(uniquePolicyGroupAttribute);
+			authPolicy = authPolicyRepository.findById(uniquePolicyAttribute);
+		}		
+		if(policyGroup.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());			
+		}
+		if(authPolicy.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+		}		
+		if(!policyGroup.get().getId().equals(authPolicy.get().getPolicy_group_id())){
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_POLICY_NOT_MAPPED.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_POLICY_NOT_MAPPED.getErrorMessage());
+		}
+		return authPolicy.get();
 	}
 
 	/**
@@ -335,63 +458,57 @@ public class PolicyManagementService {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public PolicyWithAuthPolicyDto findPolicy(String policyId) throws FileNotFoundException, 
+	public PolicyResponseDto findPolicy(String policyId) throws FileNotFoundException, 
 	IOException, ParseException {		
-		Optional<PolicyGroup> policyFromDb =policyGroupRepository.findById(policyId);			
-		if(!policyFromDb.isPresent()){
-			PolicyServiceLogger.error("No details exists for policy group id " + policyId);
-        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
-		}
-		PolicyWithAuthPolicyDto authPolicy = new PolicyWithAuthPolicyDto();
-		List<PolicyDto> authPolicies = getAuthPolicies(policyFromDb.get().getId());
-		if(!authPolicies.isEmpty()) {
-		authPolicy.setPolicies(authPolicies.get(0));
-		authPolicy.setPolicy(policyFromDb.get());
-		}
-		return authPolicy;
+		AuthPolicy authPolicy = getAuthPolicy(policyId);
+		PolicyGroup policyGroup = getPolicyGroup(authPolicy.getPolicy_group_id());		
+		return mapPolicyAndPolicyGroup(policyGroup, authPolicy);
 	}
-	
+
 	/**
-	 * This method is used to fetch all policies available in system.
+	 * 
 	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
+	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParseException
 	 */
-	public List<PolicyWithAuthPolicyDto> findAllPolicies() throws JsonParseException, JsonMappingException, IOException{
-		List<PolicyGroup> policies = policyGroupRepository.findAll();
-		if(policies.isEmpty()){
-			PolicyServiceLogger.error("No details exists");
-        	throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
-        			ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());	
+	public List<PolicyResponseDto> findAllPolicies() throws FileNotFoundException, IOException, ParseException{		
+		List<AuthPolicy> authPolicies = authPolicyRepository.findAll();
+		List<PolicyResponseDto> authPolicesResponse = new ArrayList<PolicyResponseDto>();
+		for (AuthPolicy authPolicy : authPolicies) {
+			authPolicesResponse.add(findPolicy(authPolicy.getId()));
 		}
-		List<PolicyWithAuthPolicyDto> allPolicies = new ArrayList<PolicyWithAuthPolicyDto>();
-		for(PolicyGroup policy : policies) {
-			PolicyWithAuthPolicyDto authPolicy = new PolicyWithAuthPolicyDto();
-			List<PolicyDto> authPolicies = getAuthPolicies(policy.getId());
-			if(!authPolicies.isEmpty()) {
-			authPolicy.setPolicies(authPolicies.get(0));
-			authPolicy.setPolicy(policy);
-			allPolicies.add(authPolicy);
-			}		
-		}
-		
-		return allPolicies;
+		return authPolicesResponse;
 	}
-	
-	@SuppressWarnings("unchecked")
-	private List<PolicyDto> getAuthPolicies(String policyGroupId) throws JsonParseException, JsonMappingException, IOException{
-		List<AuthPolicy> authPolicies= authPolicyRepository.findByPolicyId(policyGroupId);
-		List<PolicyDto> policies = new ArrayList<PolicyDto>();
-		for(AuthPolicy authPolicy:authPolicies) {	
-			PolicyDto dto = new PolicyDto();
-			Map<?, ?> readValue = new ObjectMapper().readValue(authPolicy.getPolicyFileId(), Map.class);
-			dto.setAuthPolicies((List<AuthPolicyDto>) readValue.get("authPolicies"));
-			dto.setAllowedKycAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
-			policies.add(dto);
+
+
+	/**
+	 * 
+	 * @param policyId
+	 * @return
+	 */
+	private AuthPolicy getAuthPolicy(String policyId) {
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
+		if(authPolicy.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+
 		}
-		return policies;
+		return authPolicy.get();
+	}
+
+	/**
+	 * 
+	 * @param policyGroupId
+	 * @return
+	 */
+	private PolicyGroup getPolicyGroup(String policyGroupId) {
+		Optional<PolicyGroup> policyGroup  = policyGroupRepository.findById(policyGroupId);
+		if(policyGroup.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());			
+		}
+		return policyGroup.get();
 	}
 
 	/**
@@ -401,21 +518,14 @@ public class PolicyManagementService {
 	 * @throws FileNotFoundException 
 	 * 
 	 */
-	public PolicyWithAuthPolicyDto getAuthPolicyWithApiKey(String partnerApiKey) throws FileNotFoundException, IOException, ParseException {
+	public PolicyResponseDto getAuthPolicyWithApiKey(String partnerApiKey) throws FileNotFoundException, IOException, ParseException {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
 		if(partnerPolicy == null) {
 			PolicyServiceLogger.error("Partner api key not found");
-        	throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
-        			ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
-		}
-		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
-		if(!authPolicy.isPresent()) {
-			throw new PolicyManagementServiceException(
-					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
+			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
-		}
-		
-		return findPolicy(authPolicy.get().getPolicy_group_id());		
+		}		
+		return findPolicy(partnerPolicy.getPolicyId());		
 	}
 
 	/**
@@ -425,36 +535,174 @@ public class PolicyManagementService {
 	 * @throws IOException
 	 */
 	@SuppressWarnings({ "unchecked" })
-	private JSONObject generatePolicyJson(PolicyDto policy, String name) throws PolicyManagementServiceException,
+	private JSONObject generatePolicyJson(PolicyAttributesDto policy, String name, String policyType) throws PolicyManagementServiceException,
 	Exception {
+		validatePolicyAttributes(policy,policyType);		
 		PolicyServiceLogger.info("Creating policy document");
 		JSONObject obj = new JSONObject();
 		JSONArray authPolicies = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
-		for (AuthPolicyDto authPolicyDto : policy.getAuthPolicies()) {
-			JSONObject authObj = new JSONObject();
-			authObj.put("authType", authPolicyDto.getAuthType());
-			authObj.put("authSubType", authPolicyDto.getAuthSubType());
-			authObj.put("mandatory", authPolicyDto.isMandatory());
-			authPolicies.add(authObj);
+		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
+			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes().stream().filter(m->m.isMandatory()).collect(Collectors.toList())) {
+				JSONObject authObj = new JSONObject();
+				authObj.put("authType", authPolicyDto.getAuthType());
+				authObj.put("authSubType", authPolicyDto.getAuthSubType());
+				authObj.put("mandatory", authPolicyDto.isMandatory());
+				authPolicies.add(authObj);
 			}
-		for (AllowedKycDto allowedKycDto : policy.getAllowedKycAttributes()) {
+			obj.put("allowedAuthTypes", authPolicies);
+			obj.put("authTokenType", policy.getAuthTokenType());
+		}
+
+		for (AllowedKycDto allowedKycDto : policy.getShareableAttributes()) {
 			JSONObject allowedKycObj = new JSONObject();
 			allowedKycObj.put("attributeName", allowedKycDto.getAttributeName());
-			allowedKycObj.put("required", allowedKycDto.isRequired());
+			allowedKycObj.put("encrypted", allowedKycDto.isEncrypted());
+			allowedKycObj.put("format", allowedKycDto.getFormat());
 			allowedKycAttributes.add(allowedKycObj);
 		}
-		obj.put("authPolicies", authPolicies);
-		obj.put("allowedKycAttributes", allowedKycAttributes);		
-		
+		obj.put("shareableAttributes", allowedKycAttributes);
+
+		JSONObject dataShareObj = new JSONObject();
+		dataShareObj.put("validForInMinutes", policy.getDataSharePolicies().getValidForInMinutes());
+		dataShareObj.put("transactionsAllowed", policy.getDataSharePolicies().getTransactionsAllowed());
+		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
+		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());		
+		obj.put("dataSharePolicies", dataShareObj);
+
+
 		return obj;
+	}	
+
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId) throws JsonParseException, JsonMappingException, IOException {
+		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerId);
+		if(partnerPolicy == null) {
+			PolicyServiceLogger.error("Partner is not found");
+			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
+					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
+		if(authPolicy.isEmpty()) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
+
+		}
+		if(!partnerPolicy.getPolicyId().equals(policyId)) {
+			throw new PolicyManagementServiceException(ErrorMessages.PARTNER_POLICY_NOT_MAPPED.getErrorCode(),
+					ErrorMessages.PARTNER_POLICY_NOT_MAPPED.getErrorMessage());
+
+		}		
+		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.get().getPolicy_group_id());
+		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy.get());
 	}
-	
+
+	/**
+	 * 
+	 * @param policyGroupId
+	 * @return
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	public PolicyWithAuthPolicyDto getPolicyGroupPolicy(String policyGroupId) throws JsonParseException, JsonMappingException, IOException {
+		PolicyGroup policyGroup = getPolicyGroup(policyGroupId);		
+		List<AuthPolicy> policies = authPolicyRepository.findByPolicyGroupId(policyGroupId);
+		List<PolicyDto> policyGroupPolicies = new ArrayList<PolicyDto>();
+		for (AuthPolicy authPolicy : policies) {
+			policyGroupPolicies.add(mapPolicyToPolicyDto(authPolicy));
+		}
+		PolicyWithAuthPolicyDto response = new PolicyWithAuthPolicyDto();
+		response.setPolicyGroup(policyGroup);
+		response.setPolicies(policyGroupPolicies);		
+		return response;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public List<PolicyWithAuthPolicyDto> getPolicyGroup() throws JsonParseException, JsonMappingException, IOException{
+		List<PolicyGroup> policyGroups = policyGroupRepository.findAll();		
+		List<PolicyWithAuthPolicyDto> response = new ArrayList<PolicyWithAuthPolicyDto>();
+		for (PolicyGroup policyGroup : policyGroups) {
+			PolicyWithAuthPolicyDto policyGroupWthPolicy = new PolicyWithAuthPolicyDto();
+			List<AuthPolicy> policies = authPolicyRepository.findByPolicyGroupId(policyGroup.getId());
+			List<PolicyDto> policyGroupPolicies = new ArrayList<PolicyDto>();
+			for (AuthPolicy authPolicy : policies) {
+				policyGroupPolicies.add(mapPolicyToPolicyDto(authPolicy));
+			}
+			policyGroupWthPolicy.setPolicyGroup(policyGroup);
+			policyGroupWthPolicy.setPolicies(policyGroupPolicies);
+			response.add(policyGroupWthPolicy);
+		}
+		return response;
+	}
+
+
+	/**
+	 * 
+	 * @param authPolicy
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private PolicyDto mapPolicyToPolicyDto(AuthPolicy authPolicy) throws JsonParseException, JsonMappingException, IOException {
+		PolicyAttributesDto policyAttributes = mapPolicyAttributes(authPolicy.getPolicyFileId());
+		PolicyDto policyDto = new PolicyDto();
+		policyDto.setAllowedAuthTypes(policyAttributes.getAllowedAuthTypes());
+		policyDto.setAuthTokenType("");
+		policyDto.setCr_by(authPolicy.getCrBy());
+		policyDto.setCr_dtimes(authPolicy.getCrDtimes());
+		policyDto.setDataSharePolicies(policyAttributes.getDataSharePolicies());
+		policyDto.setIs_Active(authPolicy.getIsActive());
+		policyDto.setPolicyDesc(authPolicy.getDescr());
+		policyDto.setPolicyId(authPolicy.getId());
+		policyDto.setPolicyName(authPolicy.getName());
+		policyDto.setPublishDate(authPolicy.getValidFromDate());
+		policyDto.setSchema(authPolicy.getPolicySchema());
+		policyDto.setShareableAttributes(policyAttributes.getShareableAttributes());
+		policyDto.setStatus(getPolicyStatus(authPolicy.getIsActive()));
+		policyDto.setUp_by(authPolicy.getUpdBy());
+		policyDto.setUpd_dtimes(authPolicy.getUpdDtimes());
+		policyDto.setValidTill(authPolicy.getValidToDate());
+		policyDto.setVersion(authPolicy.getVersion());
+		return policyDto;
+	}
+
+	private String getPolicyStatus(Boolean isActive) {
+		return isActive == true ? "PUBLISHED":"DRAFTED";
+	}
+	@SuppressWarnings("unchecked")
+	private PolicyAttributesDto mapPolicyAttributes(String policyFile) throws JsonParseException, JsonMappingException, IOException {
+		PolicyAttributesDto dto = new PolicyAttributesDto();
+		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
+		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
+		dto.setShareableAttributes((List<AllowedKycDto>) readValue.get("shareableAttributes"));
+		ObjectMapper mapper = new ObjectMapper();
+		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);
+		dto.setDataSharePolicies(dataShareDto);
+		dto.setAuthTokenType((String)readValue.get("authTokenType"));
+		return dto;
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
-	public String getUser() {
+	private String getUser() {
 		if (Objects.nonNull(SecurityContextHolder.getContext())
 				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
 				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
@@ -462,7 +710,67 @@ public class PolicyManagementService {
 			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 					.getUserId();
 		} else {
-			return null;
+			return "system";
+		}
+	}
+
+	/**
+	 * 
+	 * @param policyAttributesDto
+	 * @param policyType
+	 */
+	private void validatePolicyAttributes(PolicyAttributesDto policyAttributesDto,String policyType) {
+		String[] allowedAuthTokenType = allowedAuthTokenTypes.toString().split(",");
+		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
+			if(policyAttributesDto.getAllowedAuthTypes() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "allowedAuthTypes");
+
+			}
+			if(policyAttributesDto.getAuthTokenType() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "authTokenType");			
+			}
+			if(!(Arrays.stream(allowedAuthTokenType)).anyMatch(policyAttributesDto.getAuthTokenType() :: equals)){
+				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorCode(),
+						ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorMessage());
+			}
+			
+			if(policyAttributesDto.getDataSharePolicies() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "dataSharePolicies");
+
+			}
+			if(policyAttributesDto.getShareableAttributes() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "shareableAttributes");
+			}
+		}else {
+			if(policyAttributesDto.getAllowedAuthTypes() != null) {
+				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TYPES_NOT_REQUIRED.getErrorCode(),
+						ErrorMessages.AUTH_TYPES_NOT_REQUIRED.getErrorMessage() + policyType);
+
+			}
+			if(policyAttributesDto.getDataSharePolicies() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "dataSharePolicies");
+
+			}
+			if(policyAttributesDto.getShareableAttributes() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "shareableAttributes");
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param policyType
+	 */
+	private void validatePolicyTypes(String policyType) {
+		if(!Arrays.stream(PolicyCommonConstants.allowed_Policy_Types.split("/")).anyMatch(policyType::equalsIgnoreCase)){
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_TYPE_NOT_ALLOWED.getErrorCode(),
+					ErrorMessages.POLICY_TYPE_NOT_ALLOWED.getErrorMessage());
 		}
 	}
 }
