@@ -1,5 +1,10 @@
 package io.mosip.pmp.policy.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Type;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
@@ -13,25 +18,21 @@ import lombok.Data;
 @Data
 @ApiModel(value= "PolicyUpdateRequestDto", description = " Policy Update Request Representation")
 public class PolicyUpdateRequestDto {
-
-	/**
-	 *  policy id
-	 */
-	private String Id;
 	
-	/**
-	 * policy name
-	 */
+	@NotBlank(message = "Policy group name should not be empty.")
+	@Size(min = 1, max = 128, message = "Policy group name length should be in between 1 and 128 chars")
+	@Type(type="string")
+	private String policyGroupName;	
+	
+	@NotBlank(message = "Policy name should not be empty.")
+	@Size(min = 1, max = 128, message = "Policy name length should be in between 1 and 128 chars")
+	@Type(type="string")
 	private String name;
 	
-	/**
-	 * policy description
-	 */
-	private String desc;
+	@NotBlank(message = "Policy desc should not be blank.")
+	@Size(min = 1, max = 128, message = "Policy desc length should be in between 1 and 128 chars")	
+	private String desc;	
 	
-	/**
-	 * Object of Auth and kyc attributes
-	 */
-	private PolicyDto policies;
-
+	private PolicyAttributesDto policies;
+	
 }

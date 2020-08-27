@@ -19,6 +19,11 @@ public class PolicyCreateResponseDto {
 	private String id;
 	
 	/**
+	 * policyGroupName
+	 */
+	
+	private String policyGroupName;
+	/**
 	 * policy group name
 	 */
 	private String name;
