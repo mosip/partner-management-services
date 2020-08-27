@@ -14,11 +14,6 @@ import lombok.Data;
 public class PolicyStatusUpdateRequestDto {
 	
 	/**
-	 * policy group id.
-	 */
-	private String Id;
-	
-	/**
 	 * status ( "Active" Or "De-Active")
 	 * 
 	 */

@@ -6,10 +6,10 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<artifactId>pmp-misp-service</artifactId>
 	<name>pmp-misp-service</name>
 
@@ -22,7 +22,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
-		  <version>1.16.18</version>
+		  	<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -88,8 +88,7 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
 			<version>1.0.6</version>
-		</dependency>
-		
+		</dependency>		
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
@@ -111,13 +110,12 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-licensekeygenerator-misp</artifactId>
 			<version>${kernel.version}</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
+		</dependency>		
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
 			<version>2.2</version>
-			</dependency>
+			</dependency>			
 	</dependencies>
 
 	<build>

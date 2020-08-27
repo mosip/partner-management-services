@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 		
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<artifactId>pmp-partner-management-service</artifactId>
 	<name>pmp-partner-management-service</name>
 	
@@ -56,7 +56,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-			<version>1.16.18</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		
 	</dependencies>
