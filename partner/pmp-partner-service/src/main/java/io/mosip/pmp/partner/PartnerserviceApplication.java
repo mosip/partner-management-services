@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 
 @SpringBootApplication
-@ComponentScan({ "io.mosip.pmp.partner.*", "io.mosip.kernel.auth.adapter.*" })
+@ComponentScan({ "io.mosip.pmp.partner.*", "io.mosip.kernel.auth.adapter.*" ,"io.mosip.pmp.authdevice.*"})
 @EnableSwagger2
 public class PartnerserviceApplication{
 

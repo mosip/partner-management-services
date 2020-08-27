@@ -17,5 +17,7 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 	
 	@Query(value = "select * from partner ppr where ppr.name=?", nativeQuery = true)
 	public Partner findByName(String name);
+	@Query(value = "select * from partner ppr where ppr.id=?", nativeQuery = true)
+	public Partner findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String deviceProviderId);
 
 }
