@@ -56,7 +56,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
 		}else {
-			entity.setDeviceDetail(deviceDetail);
+			entity.setDeviceDetailId(deviceDetail.getId());
 		}
 		String id = UUID.randomUUID().toString();
 		entity.setId(id);
@@ -134,7 +134,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
 		}else {
-			entity.setDeviceDetail(deviceDetail);
+			entity.setDeviceDetailId(deviceDetail.getId());
 		}
 		
 		entity.setId(sbiupdateDto.getId());

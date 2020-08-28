@@ -21,8 +21,9 @@ public class RegistrationDeviceSubType implements Serializable {
 	@Id
 	@AttributeOverrides({
 			@AttributeOverride(name = "code", column = @Column(name = "code", nullable = false,length = 36)),
-			@AttributeOverride(name = "deviceType", column = @Column(name = "dtyp_code", nullable = false,length = 36)) })
+			@AttributeOverride(name = "deviceTypeCode", column = @Column(name = "dtyp_code", nullable = false,length = 36)) })
 	private String code;
+	private String deviceTypeCode;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dtyp_code", referencedColumnName = "code", insertable = false, updatable = false)
 	private RegistrationDeviceType deviceType;
@@ -62,12 +63,14 @@ public class RegistrationDeviceSubType implements Serializable {
 		this.code = code;
 	}
 
-	public RegistrationDeviceType getDeviceType() {
-		return deviceType;
+	
+
+	public String getDeviceTypeCode() {
+		return deviceTypeCode;
 	}
 
-	public void setDeviceType(RegistrationDeviceType deviceType) {
-		this.deviceType = deviceType;
+	public void setDeviceTypeCode(String deviceTypeCode) {
+		this.deviceTypeCode = deviceTypeCode;
 	}
 
 	public String getName() {

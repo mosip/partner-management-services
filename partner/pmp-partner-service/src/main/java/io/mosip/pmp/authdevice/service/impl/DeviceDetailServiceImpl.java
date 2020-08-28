@@ -61,7 +61,8 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
 		}else {
-			entity.setDeviceSubType(registrationDeviceSubType);
+			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
+			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
 		if ((partnerRepository
 				.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceProviderId())) == null) {
@@ -146,7 +147,8 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
 		}else {
-			entity.setDeviceSubType(registrationDeviceSubType);
+			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
+			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
 		if ((partnerRepository
 			.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceProviderId())) == null) {

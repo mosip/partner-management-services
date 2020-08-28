@@ -14,7 +14,7 @@ public class RegistrationDeviceType implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
 		@Id
-		@Column(name="code",length=64,nullable=false)
+		@Column(name="code",length=36,nullable=false)
 		private String code;
 		
 		@Column(name="name",length=64,nullable=false)

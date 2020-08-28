@@ -24,6 +24,9 @@ public class SecureBiometricInterface {
 	@Column(name = "sw_version", nullable = false, length = 64)
 	private String swVersion;
 	
+	@Column(name = "device_detail_id", nullable = false, length = 36)
+	private String deviceDetailId;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "device_detail_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private DeviceDetail deviceDetail;
@@ -82,12 +85,14 @@ public class SecureBiometricInterface {
 		this.swVersion = swVersion;
 	}
 
-	public DeviceDetail getDeviceDetail() {
-		return deviceDetail;
+	
+
+	public String getDeviceDetailId() {
+		return deviceDetailId;
 	}
 
-	public void setDeviceDetail(DeviceDetail deviceDetail) {
-		this.deviceDetail = deviceDetail;
+	public void setDeviceDetailId(String deviceDetailId) {
+		this.deviceDetailId = deviceDetailId;
 	}
 
 	public LocalDateTime getSwCreateDateTime() {

@@ -21,6 +21,12 @@ public class DeviceDetail implements Serializable {
 	@Column(name="id",length=36,nullable=false)
 	private String id;
 	
+	@Column(name="dtype_code",length=36,nullable=false)
+	private String deviceTypeCode;
+	
+	@Column(name="dstype_code",length=36,nullable=false)
+	private String deviceSubTypeCode;
+	
 	@Column(name="dprovider_id",length=36,nullable=false)
 	private String deviceProviderId;
 	
@@ -80,12 +86,22 @@ public class DeviceDetail implements Serializable {
 		this.deviceProviderId = deviceProviderId;
 	}
 
-	public RegistrationDeviceSubType getDeviceSubType() {
-		return deviceSubType;
+	
+
+	public String getDeviceTypeCode() {
+		return deviceTypeCode;
 	}
 
-	public void setDeviceSubType(RegistrationDeviceSubType deviceSubType) {
-		this.deviceSubType = deviceSubType;
+	public void setDeviceTypeCode(String deviceTypeCode) {
+		this.deviceTypeCode = deviceTypeCode;
+	}
+
+	public String getDeviceSubTypeCode() {
+		return deviceSubTypeCode;
+	}
+
+	public void setDeviceSubTypeCode(String deviceSubTypeCode) {
+		this.deviceSubTypeCode = deviceSubTypeCode;
 	}
 
 	public String getMake() {
