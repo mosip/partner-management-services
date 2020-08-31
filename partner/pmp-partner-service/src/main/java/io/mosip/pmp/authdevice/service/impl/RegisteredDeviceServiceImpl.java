@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -18,22 +19,37 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.kernel.core.util.StringUtils;
+import io.mosip.kernel.core.util.TokenHandlerUtil;
 import io.mosip.pmp.authdevice.constants.RegisteredDeviceErrorCode;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
 import io.mosip.pmp.authdevice.dto.DeRegisterDeviceReqDto;
@@ -41,16 +57,27 @@ import io.mosip.pmp.authdevice.dto.DeviceData;
 import io.mosip.pmp.authdevice.dto.DeviceDeRegisterResponse;
 import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
+import io.mosip.pmp.authdevice.dto.Metadata;
+import io.mosip.pmp.authdevice.dto.PageResponseDto;
+import io.mosip.pmp.authdevice.dto.Pagination;
+import io.mosip.pmp.authdevice.dto.PasswordRequest;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.SearchFilter;
+import io.mosip.pmp.authdevice.dto.SearchSort;
+import io.mosip.pmp.authdevice.dto.SecretKeyRequest;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
+import io.mosip.pmp.authdevice.dto.TokenRequestDTO;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.entity.RegisteredDeviceHistory;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 import io.mosip.pmp.authdevice.exception.RequestException;
+import io.mosip.pmp.authdevice.exception.TokenGenerationFailedException;
 import io.mosip.pmp.authdevice.exception.ValidationException;
 import io.mosip.pmp.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pmp.authdevice.repository.FoundationalTrustProviderRepository;
@@ -58,12 +85,15 @@ import io.mosip.pmp.authdevice.repository.RegisteredDeviceHistoryRepository;
 import io.mosip.pmp.authdevice.repository.RegisteredDeviceRepository;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
 import io.mosip.pmp.authdevice.util.HeaderRequest;
+import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 
 @Component
 @Transactional
 public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
+	private static final String AUTHORIZATION ="Authorization=";
+
 	@Autowired
 	RegisteredDeviceRepository registeredDeviceRepository;
 
@@ -73,6 +103,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	@Autowired
 	FoundationalTrustProviderRepository ftpRepo;
 
+	@Autowired
+	Environment environment;
 
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
@@ -92,6 +124,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Value("${mosip.kernel.device.search-url}")
+	private String deviceUrl;
+	
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 
@@ -144,7 +179,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			mapEntity = mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData,deviceDetail,
 					digitalId);
 			
-			mapEntity.setCode(UUID.randomUUID().toString());
+			mapEntity.setCode(generateCodeValue( registeredDevicePostDto,  deviceData, digitalId));
 			
 			crtRegisteredDevice = registeredDeviceRepository.save(mapEntity);
 
@@ -174,7 +209,54 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		return response.getResponse();
 	}
 	
-	
+	private String generateCodeValue(RegisteredDevicePostDto registeredDevicePostDto, DeviceData deviceData,
+			DigitalId digitalId) {
+		String code = "";
+		if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.REGISTRATION)) {
+			try {
+			RequestWrapper<SearchDto> request = new RequestWrapper<>();
+			SearchDto searchDto=new SearchDto();
+			searchDto.setLanguageCode("eng");
+			SearchFilter searchFilter=new SearchFilter();
+			searchFilter.setColumnName("serialNum");
+			searchFilter.setType("equals");
+			searchFilter.setValue(digitalId.getSerialNo());
+			searchDto.setFilters(Arrays.asList(searchFilter));
+			Pagination pagination=new Pagination(0, 100);
+			searchDto.setPagination(pagination);
+			SearchSort searchSort=new SearchSort();
+			searchSort.setSortField("name");
+			searchSort.setSortType("ASC");
+			searchDto.setSort(Arrays.asList(searchSort));
+			request.setRequest(searchDto);
+			
+			ResponseEntity<String> response=restTemplate.exchange(deviceUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
+			ResponseWrapper<?> responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
+			PageResponseDto<?> page=mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
+					PageResponseDto.class);
+			for(Object data: page.getData()) {
+				DeviceSearchDto deviceSearchDto=mapper.readValue(mapper.writeValueAsString(data),DeviceSearchDto.class);
+				if(deviceSearchDto.getSerialNum().equals(digitalId.getSerialNo())
+						&&(deviceSearchDto.getIsDeleted()==null || deviceSearchDto.getIsDeleted()==false)) {
+					code=deviceSearchDto.getId();
+				}
+			}
+			if(code==null) {
+				throw new RequestException(RegisteredDeviceErrorCode.SERIALNUM_NOT_EXIST.getErrorCode(), String.format(
+						RegisteredDeviceErrorCode.SERIALNUM_NOT_EXIST.getErrorMessage(), digitalId.getSerialNo()));
+			}
+		} catch ( IOException e) {
+			throw new AuthDeviceServiceException(
+					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
+					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
+							+ e.getMessage());
+		}
+		} else if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.AUTH)) {
+			// should be uniquely randomly generated
+			code = UUID.randomUUID().toString();
+		}
+		return code;
+	}
 
 	private String convertToJWS(String headerString, String registerDevice, String signedResponse) {
 		return CryptoUtil.encodeBase64String(headerString.getBytes()) + "."
@@ -188,13 +270,13 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
 		SignRequestDto signatureRequestDto = new SignRequestDto();
 		SignResponseDto signResponse = new SignResponseDto();
-		HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request, new HttpHeaders());
+		
 		
 		try {
 			signatureRequestDto
 					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
 			request.setRequest(signatureRequestDto);
-			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, httpEntity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
 			ResponseWrapper<?> responseObject;
 					responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
 					signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
@@ -227,7 +309,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			String digitalIdJson, DeviceData deviceData, DeviceDetail deviceDetail, DigitalId digitalId) {
 		RegisteredDevice entity = new RegisteredDevice();
 		entity.setDeviceDetailId(deviceDetail.getId());
-		entity.setStatusCode("REGISTERED");
+		entity.setStatusCode(REGISTERED);
 		entity.setDeviceId(deviceData.getDeviceId());
 		entity.setDeviceSubId(deviceData.getDeviceInfo().getDeviceSubId());
 		entity.setHotlisted(deviceData.getHotlisted());
@@ -455,12 +537,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
 		SignRequestDto signatureRequestDto = new SignRequestDto();
 		SignResponseDto signResponse = new SignResponseDto();
-		HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request, new HttpHeaders());
+		
 		
 			signatureRequestDto
 					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
 			request.setRequest(signatureRequestDto);
-			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, httpEntity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
 			ResponseWrapper<?> responseObject;
 			
 				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
@@ -487,7 +569,97 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 
 	
+	@SuppressWarnings({ "unchecked" })
+	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("Cookie", getToken());
+		if (mediaType != null) {
+			headers.add("Content-Type", mediaType.toString());
+		}
+		if (requestType != null) {
+			try {
+				HttpEntity<Object> httpEntity = (HttpEntity<Object>) requestType;
+				HttpHeaders httpHeader = httpEntity.getHeaders();
+				Iterator<String> iterator = httpHeader.keySet().iterator();
+				while (iterator.hasNext()) {
+					String key = iterator.next();
+					if (!(headers.containsKey("Content-Type") && key == "Content-Type"))
+						headers.add(key, httpHeader.get(key).get(0));
+				}
+				return new HttpEntity<Object>(httpEntity.getBody(), headers);
+			} catch (ClassCastException e) {
+				return new HttpEntity<Object>(requestType, headers);
+			}
+		} else
+			return new HttpEntity<Object>(headers);
+	}
 
+	
+	/**
+	 * This method gets the token for the user details present in config server.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	public String getToken() throws IOException {
+		String token = System.getProperty("token");
+		boolean isValid = false;
+
+		if (StringUtils.isNotEmpty(token)) {
+
+			isValid = TokenHandlerUtil.isValidBearerToken(token, environment.getProperty("token.request.issuerUrl"),
+					environment.getProperty("token.request.clientId"));
+
+
+		}
+		if (!isValid) {
+		TokenRequestDTO<PasswordRequest> tokenRequestDTO = new TokenRequestDTO<PasswordRequest>();
+		tokenRequestDTO.setId(environment.getProperty("token.request.id"));
+		tokenRequestDTO.setMetadata(new Metadata());
+
+		tokenRequestDTO.setRequesttime(DateUtils.getUTCCurrentDateTimeString());
+		 tokenRequestDTO.setRequest(setPasswordRequestDTO());
+		
+		tokenRequestDTO.setVersion(environment.getProperty("token.request.version"));
+
+		Gson gson = new Gson();
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		 HttpPost post = new
+		 HttpPost(environment.getProperty("PASSWORDBASEDTOKENAPI"));
+		
+		try {
+			StringEntity postingString = new StringEntity(gson.toJson(tokenRequestDTO));
+			post.setEntity(postingString);
+			post.setHeader("Content-type", "application/json");
+			HttpResponse response = httpClient.execute(post);
+			org.apache.http.HttpEntity entity = response.getEntity();
+			String responseBody = EntityUtils.toString(entity, "UTF-8");
+			
+			Header[] cookie = response.getHeaders("Set-Cookie");
+			if (cookie.length == 0)
+				throw new TokenGenerationFailedException();
+			token = response.getHeaders("Set-Cookie")[0].getValue();
+			
+				System.setProperty("token", token.substring(14, token.indexOf(';')));
+			return token.substring(0, token.indexOf(';'));
+		} catch (IOException e) {
+			
+			throw e;
+			}
+		}
+		return AUTHORIZATION + token;
+	}
+
+	
+
+	private PasswordRequest setPasswordRequestDTO() {
+
+		PasswordRequest request = new PasswordRequest();
+		request.setAppId(environment.getProperty("token.request.appid"));
+		request.setPassword(environment.getProperty("token.request.password"));
+		request.setUserName(environment.getProperty("token.request.username"));
+		return request;
+	}
 
 	
 

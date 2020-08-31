@@ -14,7 +14,8 @@ public enum RegisteredDeviceErrorCode {
 	DEVICE_DE_REGISTERED_ALREADY("PMS_AUT_016", "device already deregistered"), 
 	DEVICE_REGISTER_DELETED_EXCEPTION("PMS_AUT_017", "error occured while de registering device"),
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_018", "device detail not found"),
-	FTP_NOT_FOUND("PMS_AUT_019", "FTP not found");
+	FTP_NOT_FOUND("PMS_AUT_019", "FTP not found"), 
+	SERIALNUM_NOT_EXIST("PMS_AUT_020", "serial number does not exist");
 	
 
 	private final String errorCode;
