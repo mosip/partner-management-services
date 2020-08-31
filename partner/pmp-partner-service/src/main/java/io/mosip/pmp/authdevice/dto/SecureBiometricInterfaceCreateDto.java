@@ -42,6 +42,18 @@ public class SecureBiometricInterfaceCreateDto {
 	
 	@NotNull
 	private boolean isActive;
+	
+	@NotNull
+	private Boolean isItForRegistrationDevice;
+
+
+	public Boolean getIsItForRegistrationDevice() {
+		return isItForRegistrationDevice;
+	}
+
+	public void setIsItForRegistrationDevice(Boolean isItForRegistrationDevice) {
+		this.isItForRegistrationDevice = isItForRegistrationDevice;
+	}
 
 	public String getSwBinaryHash() {
 		return swBinaryHash;

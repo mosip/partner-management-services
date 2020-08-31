@@ -19,6 +19,7 @@ import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.regdevice.service.RegDeviceDetaillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,8 +31,13 @@ import io.swagger.annotations.ApiResponses;
 public class DeviceDetailController {
 	@Autowired
 	AuditUtil auditUtil;
-	@Autowired
+	
+	@Autowired	
 	DeviceDetaillService deviceDetaillService;
+	
+	@Autowired	
+	RegDeviceDetaillService regDeviceDetaillService;
+	
 	/**
 	 * Post API to insert a new row of MOSIPDeviceService data
 	 * 
@@ -55,8 +61,14 @@ public class DeviceDetailController {
 				AuthDeviceConstant.CREATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				"AUT-001");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
+		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
+			responseWrapper
+			.setResponse(regDeviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
+			
+		}else {
 		responseWrapper
 				.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
+		}
 		auditUtil.auditRequest(
 				String.format(AuthDeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
 				AuthDeviceConstant.AUDIT_SYSTEM,
@@ -89,8 +101,14 @@ public class DeviceDetailController {
 				AuthDeviceConstant.UPDATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
+		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
+			responseWrapper
+			.setResponse(regDeviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
+			
+		}else {
 		responseWrapper
 				.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
+		}
 		auditUtil.auditRequest(
 				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
 				AuthDeviceConstant.AUDIT_SYSTEM,

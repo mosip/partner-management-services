@@ -20,6 +20,7 @@ import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,8 +30,13 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/securebiometricinterface")
 @Api(tags = { "SecureBiometricInterface" })
 public class SecureBiometricInterfaceController {
+	
 	@Autowired
 	SecureBiometricInterfaceService secureBiometricInterface;
+	
+	@Autowired
+	RegSecureBiometricInterfaceService regSecureBiometricInterface;
+	
 	@Autowired
 	AuditUtil auditUtil;
 	@PreAuthorize("hasRole('ZONAL_ADMIN')")
@@ -48,8 +54,14 @@ public class SecureBiometricInterfaceController {
 				AuthDeviceConstant.CREATE_API_IS_CALLED + SecureBiometricInterfaceCreateDto.class.getCanonicalName(),
 				"AUT-011");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper
-				.setResponse(secureBiometricInterface.createSecureBiometricInterface(secureBiometricInterfaceCreateDto.getRequest()));
+		if(secureBiometricInterfaceCreateDto.getRequest().getIsItForRegistrationDevice()) {
+			responseWrapper
+			.setResponse(regSecureBiometricInterface.createSecureBiometricInterface(secureBiometricInterfaceCreateDto.getRequest()));
+			
+		}else {
+			responseWrapper
+			.setResponse(secureBiometricInterface.createSecureBiometricInterface(secureBiometricInterfaceCreateDto.getRequest()));			
+		}
 		auditUtil.auditRequest(
 				String.format(AuthDeviceConstant.SUCCESSFUL_CREATE , SecureBiometricInterfaceCreateDto.class.getCanonicalName()),
 				AuthDeviceConstant.AUDIT_SYSTEM,
@@ -74,14 +86,20 @@ public class SecureBiometricInterfaceController {
 				AuthDeviceConstant.UPDATE_API_IS_CALLED + SecureBiometricInterfaceUpdateDto.class.getCanonicalName(),
 				"AUT-013");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper
-				.setResponse(secureBiometricInterface.updateSecureBiometricInterface(secureBiometricInterfaceUpdateDto.getRequest()));
+		if(secureBiometricInterfaceUpdateDto.getRequest().getIsItForRegistrationDevice()) {
+			responseWrapper
+			.setResponse(regSecureBiometricInterface.updateSecureBiometricInterface(secureBiometricInterfaceUpdateDto.getRequest()));
+			
+		}else {
+			responseWrapper
+			.setResponse(secureBiometricInterface.updateSecureBiometricInterface(secureBiometricInterfaceUpdateDto.getRequest()));
+			
+		}
 		auditUtil.auditRequest(
 				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
 				AuthDeviceConstant.AUDIT_SYSTEM,
 				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
 				"AUT-012");
 		return responseWrapper;
-
 	}
 }

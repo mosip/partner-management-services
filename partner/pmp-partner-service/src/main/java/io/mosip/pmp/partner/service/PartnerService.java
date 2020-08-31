@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
+import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
 import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
@@ -96,13 +97,11 @@ public interface PartnerService {
 	
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 	
-	
 	/**
-	 * @param request this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
+	 * 
+	 * @param request
+	 * @param partnerId
+	 * @return
 	 */
-	
-	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
-	
-	public DigitalCertificateResponse uploadDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
+	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId);
 }

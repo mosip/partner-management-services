@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+
 @Service
 public interface DeviceDetaillService {
 	/**

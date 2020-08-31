@@ -14,6 +14,7 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
+import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.swagger.annotations.Api;
@@ -27,6 +28,9 @@ public class RegisteredDeviceController {
 
 	@Autowired
 	RegisteredDeviceService registeredDeviceService;
+	
+	@Autowired
+	RegRegisteredDeviceService regRegisteredDeviceService;
 
 	/**
 	 * Api to Register Device.
@@ -43,7 +47,12 @@ public class RegisteredDeviceController {
 	public ResponseWrapper<String> signedRegisteredDevice(
 			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
+		if(registeredDevicePostDto.getRequest().getIsItForRegistrationDevice()) {
+			response.setResponse(regRegisteredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
+		}else {
+			response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));			
+		}
+
 		return response;
 	}
 
@@ -61,7 +70,11 @@ public class RegisteredDeviceController {
 	public ResponseWrapper<String> deRegisterDevice(@Valid @RequestBody RequestWrapper<DeRegisterDevicePostDto>
 							deRegisterDevicePostDto) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		response.setResponse(registeredDeviceService.deRegisterDevice(deRegisterDevicePostDto.getRequest()));
+		if(deRegisterDevicePostDto.getRequest().getIsItForRegistrationDevice()) {
+			response.setResponse(regRegisteredDeviceService.deRegisterDevice(deRegisterDevicePostDto.getRequest()));			
+		}else {
+			response.setResponse(registeredDeviceService.deRegisterDevice(deRegisterDevicePostDto.getRequest()));
+		}
 		return response;
 	}
 

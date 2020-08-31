@@ -1,14 +1,12 @@
 package io.mosip.pmp.authdevice.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 @Data
 public class DeRegisterDevicePostDto {
+	
 	@NotBlank
 	private String device;
 
@@ -18,5 +16,17 @@ public class DeRegisterDevicePostDto {
 
 	public void setDevice(String device) {
 		this.device = device;
+	}
+	
+	@NotNull
+	private Boolean isItForRegistrationDevice;
+
+
+	public Boolean getIsItForRegistrationDevice() {
+		return isItForRegistrationDevice;
+	}
+
+	public void setIsItForRegistrationDevice(Boolean isItForRegistrationDevice) {
+		this.isItForRegistrationDevice = isItForRegistrationDevice;
 	}
 }

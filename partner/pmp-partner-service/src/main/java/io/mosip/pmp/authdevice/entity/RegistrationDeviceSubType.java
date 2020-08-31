@@ -19,26 +19,22 @@ public class RegistrationDeviceSubType implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@AttributeOverrides({
-			@AttributeOverride(name = "code", column = @Column(name = "code", nullable = false,length = 36)),
-			@AttributeOverride(name = "deviceTypeCode", column = @Column(name = "dtyp_code", nullable = false,length = 36)) })
-	private String code;
-	private String deviceTypeCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dtyp_code", referencedColumnName = "code", insertable = false, updatable = false)
-	private RegistrationDeviceType deviceType;
+	private String code;	
+	
+	@Column(name = "dtyp_code", nullable = false)
+	private String deviceType;
 	
 	@Column(name="name",length=64,nullable=false)
 	private String name;
 	
-	@Column(name="desc",length=512,nullable=false)
+	@Column(name="descr",length=512,nullable=false)
 	private String desciption;
 	
 	@Column(name="is_active",nullable=false)
 	private boolean isActive;
 	
 	@Column(name="is_deleted")
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	
 	@Column(name="cr_by",length=256,nullable=false)
 	private String crBy;
@@ -66,11 +62,11 @@ public class RegistrationDeviceSubType implements Serializable {
 	
 
 	public String getDeviceTypeCode() {
-		return deviceTypeCode;
+		return deviceType;
 	}
 
 	public void setDeviceTypeCode(String deviceTypeCode) {
-		this.deviceTypeCode = deviceTypeCode;
+		this.deviceType = deviceTypeCode;
 	}
 
 	public String getName() {
@@ -97,11 +93,11 @@ public class RegistrationDeviceSubType implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

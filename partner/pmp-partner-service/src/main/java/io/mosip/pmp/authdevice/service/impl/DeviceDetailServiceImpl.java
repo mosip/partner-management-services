@@ -99,7 +99,7 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 	}
 	
 	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
-		deviceDetail.setId(deviceDetail.getId());
+		deviceDetail.setId(deviceDetailDto.getId());
 		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
 		deviceDetail.setApprovalStatus(deviceDetailDto.getApprovalStatus());
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();

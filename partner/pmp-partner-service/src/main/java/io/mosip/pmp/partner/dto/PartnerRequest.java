@@ -22,4 +22,6 @@ public class PartnerRequest{
 	public String contactNumber;
 	@NotEmpty(message = "Please provide emailId")
 	public String emailId;
+	@NotEmpty(message="Please provide partner Type")
+	public String partnerType;
 }

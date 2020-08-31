@@ -20,7 +20,7 @@ public class RegistrationDeviceType implements Serializable {
 		@Column(name="name",length=64,nullable=false)
 		private String name;
 		
-		@Column(name="desc",length=512,nullable=false)
+		@Column(name="descr",length=512,nullable=false)
 		private String desciption;
 		
 		@Column(name="is_active",nullable=false)
