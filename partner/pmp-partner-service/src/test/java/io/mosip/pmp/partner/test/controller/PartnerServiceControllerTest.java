@@ -136,30 +136,6 @@ public class PartnerServiceControllerTest {
         Mockito.when(partnerService.viewApiKeyRequestStatusApiKey("12345","123456")).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
-    
-   @Test
-   @WithMockUser(roles = {"PARTNER"})
-    public void validateDigitalCertificate_Test() throws JsonProcessingException, Exception{
-    	DigitalCertificateResponse response = new DigitalCertificateResponse();
-    	response.setMessage("DigitalCertificateResponse");
-    	Mockito.when(partnerService.validateDigitalCertificate(Mockito.any())).thenReturn(response);
-    	RequestWrapper<PartnerUpdateRequest> request = createvalidateDigitalCertificateRequest();
-    	
-    	mockMvc.perform(put("/partners/digitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-   @Test
-   @WithMockUser(roles = {"PARTNER"})
-   public void validateDigitalCertificatewithoutPublicKey_Test() throws JsonProcessingException, Exception {
-	   DigitalCertificateResponse response = new DigitalCertificateResponse();
-   	response.setMessage("DigitalCertificateResponse");
-   	Mockito.when(partnerService.validateDigitalCertificate(Mockito.any())).thenReturn(response);
-   	RequestWrapper<PartnerUpdateRequest> request = createvalidateDigitalCertificateRequest();
-   	
-   	mockMvc.perform(post("/partners/digitalcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
-   			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
-   }
    
     public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
     	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
@@ -216,6 +192,7 @@ public class PartnerServiceControllerTest {
         partnerRequest.setEmailId("xyz@gmail.com");
         partnerRequest.setOrganizationName("airtel India");
         partnerRequest.setPolicyGroup("telecom");
+        partnerRequest.setPartnerType("test");
         return partnerRequest;
     }
      
