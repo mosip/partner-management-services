@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.service.DeviceDetaillService;
+import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
@@ -33,17 +34,17 @@ public class DeviceDetailController {
 	AuditUtil auditUtil;
 	
 	@Autowired	
-	DeviceDetaillService deviceDetaillService;
+	DeviceDetailService deviceDetaillService;
 	
 	@Autowired	
 	RegDeviceDetaillService regDeviceDetaillService;
 	
 	/**
-	 * Post API to insert a new row of MOSIPDeviceService data
+	 * Post API to insert a new row of DeviceDetail data
 	 * 
-	 * @param MOSIPDeviceServiceRequestDto input parameter deviceRequestDto
+	 * @param deviceDetailRequestDto input parameter deviceRequestDto
 	 * 
-	 * @return ResponseEntity MOSIPDeviceService which is inserted successfully
+	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
 	@PreAuthorize("hasRole('ZONAL_ADMIN')")
@@ -79,11 +80,11 @@ public class DeviceDetailController {
 	}
 
 	/**
-	 * Put API to update a row of MOSIPDeviceService data
+	 * Put API to update a row of DeviceDetail data
 	 * 
-	 * @param MOSIPDeviceServiceRequestDto input parameter deviceRequestDto
+	 * @param deviceDetailRequestDto input parameter deviceRequestDto
 	 * 
-	 * @return ResponseEntity MOSIPDeviceService which is updated successfully
+	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
 	@PreAuthorize("hasRole('ZONAL_ADMIN')")
@@ -94,7 +95,7 @@ public class DeviceDetailController {
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating DeviceDetail any error occured") })
 	public ResponseWrapper<IdDto> updateDeviceDetail(
-			@Valid @RequestBody RequestWrapper<DeviceDetailDto> deviceDetailRequestDto) {
+			@Valid @RequestBody RequestWrapper<DeviceDetailUpdateDto> deviceDetailRequestDto) {
 		auditUtil.auditRequest(
 				AuthDeviceConstant.UPDATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				AuthDeviceConstant.AUDIT_SYSTEM,

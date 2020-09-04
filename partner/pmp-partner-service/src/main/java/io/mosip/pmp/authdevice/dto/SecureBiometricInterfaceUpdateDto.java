@@ -41,11 +41,6 @@ public class SecureBiometricInterfaceUpdateDto {
 	private LocalDateTime swExpiryDateTime;
 	
 	@NotNull
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "approvalStatus", required = true, dataType = "java.lang.String")
-	private String approvalStatus;
-	
-	@NotNull
 	private boolean isActive;
 	
 	@NotNull
@@ -106,14 +101,6 @@ public class SecureBiometricInterfaceUpdateDto {
 
 	public void setSwExpiryDateTime(LocalDateTime swExpiryDateTime) {
 		this.swExpiryDateTime = swExpiryDateTime;
-	}
-
-	public String getApprovalStatus() {
-		return approvalStatus;
-	}
-
-	public void setApprovalStatus(String approvalStatus) {
-		this.approvalStatus = approvalStatus;
 	}
 
 	public boolean getIsActive() {

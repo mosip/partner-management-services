@@ -3,10 +3,11 @@ package io.mosip.pmp.authdevice.service;
 import org.springframework.stereotype.Service;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 
 @Service
-public interface DeviceDetaillService {
+public interface DeviceDetailService {
 	/**
 	 * Function to save Device  Details to the Database
 	 * 
@@ -28,5 +29,5 @@ public interface DeviceDetaillService {
 	 *                                    device Specification
 	 */
 
-	public IdDto updateDeviceDetails(DeviceDetailDto deviceDetails);
+	public IdDto updateDeviceDetails(DeviceDetailUpdateDto deviceDetails);
 }

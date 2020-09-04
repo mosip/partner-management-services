@@ -35,13 +35,7 @@ public class SecureBiometricInterfaceCreateDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 	
-	@NotNull
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "approvalStatus", required = true, dataType = "java.lang.String")
-	private String approvalStatus;
 	
-	@NotNull
-	private boolean isActive;
 	
 	@NotNull
 	private Boolean isItForRegistrationDevice;
@@ -95,19 +89,5 @@ public class SecureBiometricInterfaceCreateDto {
 		this.swExpiryDateTime = swExpiryDateTime;
 	}
 
-	public String getApprovalStatus() {
-		return approvalStatus;
-	}
-
-	public void setApprovalStatus(String approvalStatus) {
-		this.approvalStatus = approvalStatus;
-	}
-
-	public boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
+	
 }

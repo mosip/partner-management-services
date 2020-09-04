@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
@@ -30,6 +31,8 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 @Transactional
 public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
 	
+	private static final String Pending_Approval = "Pending_Approval";
+
 	@Autowired
 	AuditUtil auditUtil;
 	
@@ -101,8 +104,8 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
 	
 	private RegDeviceDetail getCreateMapping(RegDeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
-		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
-		deviceDetail.setApprovalStatus(deviceDetailDto.getApprovalStatus());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setCrBy(authN.getName());
@@ -117,7 +120,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
 	}
 
 	@Override
-	public IdDto updateDeviceDetails(DeviceDetailDto deviceDetailDto) {
+	public IdDto updateDeviceDetails(DeviceDetailUpdateDto deviceDetailDto) {
 		RegDeviceDetail entity=new RegDeviceDetail();
 		RegDeviceDetail deviceDetail=null;
 		IdDto dto=new IdDto();
@@ -171,10 +174,10 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
 		return dto;
 	}
 	
-	private RegDeviceDetail getUpdateMapping(RegDeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
+	private RegDeviceDetail getUpdateMapping(RegDeviceDetail deviceDetail,DeviceDetailUpdateDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
 		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
-		deviceDetail.setApprovalStatus(deviceDetailDto.getApprovalStatus());
+		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setUpdBy(authN.getName());

@@ -30,6 +30,7 @@ import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 @Component
 @Transactional
 public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
+	private static final String PENDING_APPROVAL = "Pending_Approval";
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
 	@Autowired
@@ -44,7 +45,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface entity=new SecureBiometricInterface();
 		IdDto dto=new IdDto();
 		DeviceDetail deviceDetail =deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(sbiDto.getDeviceDetailId());
-		if (deviceDetail != null) {
+		if (deviceDetail == null) {
 			auditUtil.auditRequest(
 					String.format(
 							AuthDeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -74,8 +75,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	private SecureBiometricInterface getCreateMapping(SecureBiometricInterface entity,SecureBiometricInterfaceCreateDto dto) {
 		
-		entity.setActive(dto.getIsActive());
-		entity.setApprovalStatus(dto.getApprovalStatus());
+		entity.setActive(false);
+		entity.setApprovalStatus(PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
@@ -122,7 +123,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}
 		DeviceDetail deviceDetail =deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(sbiupdateDto.getDeviceDetailId());
-		if (deviceDetail != null) {
+		if (deviceDetail == null) {
 			auditUtil.auditRequest(
 					String.format(
 							AuthDeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -153,7 +154,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	private SecureBiometricInterface getUpdateMapping(SecureBiometricInterface entity,SecureBiometricInterfaceUpdateDto dto) {
 		
 		entity.setActive(dto.getIsActive());
-		entity.setApprovalStatus(dto.getApprovalStatus());
+		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setUpdBy(authN.getName());

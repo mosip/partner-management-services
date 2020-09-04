@@ -29,6 +29,8 @@ import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 @Service
 @Transactional
 public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometricInterfaceService {
+	private static final String Pending_Approval = "Pending_Approval";
+
 	@Autowired
 	RegDeviceDetailRepository deviceDetailRepository;
 	
@@ -77,8 +79,8 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 
 	private RegSecureBiometricInterface getCreateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceCreateDto dto) {
 		
-		entity.setActive(dto.getIsActive());
-		entity.setApprovalStatus(dto.getApprovalStatus());
+		entity.setActive(false);
+		entity.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
@@ -156,7 +158,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	private RegSecureBiometricInterface getUpdateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceUpdateDto dto) {
 		
 		entity.setActive(dto.getIsActive());
-		entity.setApprovalStatus(dto.getApprovalStatus());
+		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setUpdBy(authN.getName());

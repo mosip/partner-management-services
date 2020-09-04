@@ -48,13 +48,7 @@ public class DeviceDetailDto {
 	@ApiModelProperty(value = "partnerOrganizationName", required = true, dataType = "java.lang.String")
 	private String partnerOrganizationName;
 
-	@NotNull
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "approvalStatus", required = true, dataType = "java.lang.String")
-	private String approvalStatus;
-
-	@NotNull
-	private Boolean isActive;
+	
 	
 	@NotNull
 	private Boolean isItForRegistrationDevice;
@@ -124,21 +118,7 @@ public class DeviceDetailDto {
 		this.partnerOrganizationName = partnerOrganizationName;
 	}
 
-	public String getApprovalStatus() {
-		return approvalStatus;
-	}
-
-	public void setApprovalStatus(String approvalStatus) {
-		this.approvalStatus = approvalStatus;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
+	
 
 	public DeviceDetailDto() {
 		super();

@@ -1,4 +1,4 @@
-package io.mosip.pmp.partner.test.controller.config;
+package io.mosip.pmp.partner.test.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,11 +22,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
+	
 
 	@Bean
 	public HttpFirewall defaultHttpFirewall() {
@@ -66,7 +66,8 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 				Arrays.asList(new SimpleGrantedAuthority("POLICYMANAGER"))));
 		users.add(new User("partner", "partner",
 				Arrays.asList(new SimpleGrantedAuthority("PARTNER"))));
-
+		users.add(new User("zonal-admin", "admin",
+				Arrays.asList(new SimpleGrantedAuthority("ZONAL_ADMIN"))));
 		return new InMemoryUserDetailsManager(users);
 	}
 }

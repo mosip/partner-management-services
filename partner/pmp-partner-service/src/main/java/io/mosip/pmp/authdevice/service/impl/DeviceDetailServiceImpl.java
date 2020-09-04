@@ -14,20 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pmp.authdevice.repository.RegistrationDeviceSubTypeRepository;
-import io.mosip.pmp.authdevice.service.DeviceDetaillService;
+import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 @Component
 @Transactional
-public class DeviceDetailServiceImpl implements DeviceDetaillService {
+public class DeviceDetailServiceImpl implements DeviceDetailService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDetailServiceImpl.class);
+
+	private static final String PENDING_APPROVAL = "Pending_Approval";
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -100,8 +103,8 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 	
 	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
-		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
-		deviceDetail.setApprovalStatus(deviceDetailDto.getApprovalStatus());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setApprovalStatus(PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setCrBy(authN.getName());
@@ -116,7 +119,7 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 	}
 
 	@Override
-	public IdDto updateDeviceDetails(DeviceDetailDto deviceDetailDto) {
+	public IdDto updateDeviceDetails(DeviceDetailUpdateDto deviceDetailDto) {
 		DeviceDetail entity=new DeviceDetail();
 		DeviceDetail deviceDetail=null;
 		IdDto dto=new IdDto();
@@ -170,10 +173,10 @@ public class DeviceDetailServiceImpl implements DeviceDetaillService {
 		return dto;
 	}
 	
-	private DeviceDetail getUpdateMapping(DeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
+	private DeviceDetail getUpdateMapping(DeviceDetail deviceDetail,DeviceDetailUpdateDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
 		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
-		deviceDetail.setApprovalStatus(deviceDetailDto.getApprovalStatus());
+		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setUpdBy(authN.getName());
