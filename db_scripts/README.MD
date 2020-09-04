@@ -1,4 +1,4 @@
-## MOSIP Partner Management Services module Databases (**mosip_pmp**) scripts inventory and deployment guidelines on postgresql database. 
+## MOSIP Partner Management Services module Databases (**mosip_pms**) scripts inventory and deployment guidelines on postgresql database. 
 
 #### The details disclosed below gives a clear information on complete database script structure with the instructions for database scripts deployments.
 
@@ -14,7 +14,7 @@
 
 * Database objects related to MOSIP modules are placed in "**mosip_base_directory**>>db_scripts>>mosip_<schema_name> folder on git/repository
 
-**Example:** the Partner Management Services module script folder is /**mosip_base_directory**>>db_scripts>>mosip_pmp where all the database scripts related to partner management portal are available.
+**Example:** the Partner Management Services module script folder is /**mosip_base_directory**>>db_scripts>>mosip_pms where all the database scripts related to partner management portal are available.
 
 * Create a log file directory on DB deployment server before updating the properties file. Please follow the steps to create the same:
  
