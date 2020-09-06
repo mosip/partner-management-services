@@ -183,7 +183,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -200,7 +200,7 @@ public class PartnerManagementController {
 	 *   This API would be used to retrieve all Partner Details as per UI. 
 	 * @return response this class contains List of Partner.
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
 		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();
