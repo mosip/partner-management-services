@@ -1,5 +1,6 @@
 package io.mosip.pmp.partner.service.impl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,10 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
@@ -27,11 +31,18 @@ import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerTypeDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
+import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
@@ -66,9 +77,12 @@ import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.util.PartnerUtil;
+import io.mosip.pmp.partner.util.RestUtil;
 
 /**
  * @author sanjeev.shrivastava
+ * @author Nagarjuna
+ * @since 1.2.0
  *
  */
 
@@ -101,16 +115,20 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerHRepository partnerHRepository;
-
+	
 	@Autowired
-	RestTemplate restTemplate;
+	RestUtil restUtil;
+	
+	@Autowired
+	private Environment environment;
+	
+	@Autowired
+	private ObjectMapper mapper;
 
-	public String responseCookies = null;
-
-	public String signatureValue = null;
 
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
+	
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -566,5 +584,52 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	public  boolean emailValidator(String email) {
 		return email.matches(emailRegex);
+	}
+	
+	@Override
+	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto) {
+		RequestWrapper<CACertificateRequestDto> request = new RequestWrapper<>();
+		request.setRequest(caCertRequestDto);
+		request.setRequesttime(LocalDateTime.now());
+		request.setId("123");
+		String response= restUtil.postApi(environment.getProperty("pmp.ca.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, String.class);
+		try {
+			CACertificateResponseDto responseObject = mapper.readValue(response, CACertificateResponseDto.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto) {
+		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
+		request.setRequest(partnerCertRequesteDto);
+		String response= restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, String.class);
+		try {
+			PartnerCertificateResponseDto responseObject = mapper.readValue(response, PartnerCertificateResponseDto.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) {
+		RequestWrapper<PartnerCertDownloadRequestDto> request = new RequestWrapper<>();
+		request.setRequest(certDownloadRequestDto);
+		String response= restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, String.class);
+		try {
+			PartnerCertDownloadResponeDto responseObject = mapper.readValue(response, PartnerCertDownloadResponeDto.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

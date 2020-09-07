@@ -19,7 +19,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="auth_policy", schema = "pmp")
+@Table(name="auth_policy")
 @NamedQuery(name="AuthPolicy.findAll", query="SELECT a FROM AuthPolicy a")
 public class AuthPolicy implements Serializable {
 	private static final long serialVersionUID = 1L;

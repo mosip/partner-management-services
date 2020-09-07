@@ -20,13 +20,20 @@ import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.service.PartnerService;
+import io.swagger.annotations.ApiParam;
 
 /**
  * <p>
@@ -218,5 +225,52 @@ public class PartnerServiceController {
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}		
+	}
+	
+//	/**
+//	 * To Upload CA/Sub-CA certificates
+//	 * 
+//	 * @param caCertRequestDto {@link CACertificateRequestDto} request
+//	 * @return {@link CACertficateResponseDto} Upload Success
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")	
+//	@RequestMapping(value = "/uploadCACertificate", method = RequestMethod.POST)
+//	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
+//			@ApiParam("Upload CA/Sub-CA certificates.") @RequestBody @Valid RequestWrapper<CACertificateRequestDto> caCertRequestDto) {
+//		ResponseWrapper<CACertificateResponseDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.uploadCACertificate(caCertRequestDto.getRequest()));
+//		return response;
+//    }
+//    
+//    
+//	/**
+//	 * To Upload Partner Certificate.
+//	 * 
+//	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
+//	 * @return {@link PartnerCertificateResponseDto} signed certificate response
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+//	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
+//	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
+//			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) {
+//		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+//		return response;
+//	}
+//
+//    /**
+//	 * To Download Partner Certificate.
+//	 * 
+//	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
+//	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+//	@RequestMapping(value = "/getPartnerCertificate", method = RequestMethod.GET)
+//	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
+//			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) {		
+//		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
+//		return response;
+//    }
+	
 }

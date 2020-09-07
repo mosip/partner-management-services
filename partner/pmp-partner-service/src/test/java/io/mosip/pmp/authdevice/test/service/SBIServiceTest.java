@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
+import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.SecureBiometricInterface;
@@ -135,15 +136,45 @@ public class SBIServiceTest {
 		
 		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }
-	
 
 	@Test
     public void updateDeviceDetailTest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto).getId().equals("1234"));
     }
+	
 	@Test(expected=RequestException.class)
     public void updateDeviceDetailNotFoundTest() throws Exception {
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }
+	
+	@Test
+	public void updateDeviceDetailStatusTest_Approve() {
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("Activate"));
+	}
+	
+	@Test
+	public void updateDeviceDetailStatusTest_Reject() {
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-activate"));
+	}
+	
+	@Test(expected = RequestException.class)
+	public void updateDeviceDetailStatusTest_Status_Exception() {
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-Activate"));
+	}
+	
+	@Test(expected = RequestException.class)
+	public void updateDeviceDetailStatusTest_DeviceDetail_Exception() {
+		SecureBiometricInterfaceStatusUpdateDto request = statusUpdateRequest("De-Activate");
+		request.setId("34567");
+		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(request);
+	}
+	
+	private SecureBiometricInterfaceStatusUpdateDto statusUpdateRequest(String status) {
+		SecureBiometricInterfaceStatusUpdateDto request = new SecureBiometricInterfaceStatusUpdateDto();
+		request.setApprovalStatus(status);
+		request.setId("121");
+		return request;
+	}
 }

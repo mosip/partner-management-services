@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
-import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
+import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.SecureBiometricInterface;
@@ -27,18 +26,25 @@ import io.mosip.pmp.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pmp.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+
 @Component
 @Transactional
 public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
+	
 	private static final String PENDING_APPROVAL = "Pending_Approval";
+	
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
+	
 	@Autowired
 	AuditUtil auditUtil;
+	
 	@Autowired
 	SecureBiometricInterfaceRepository sbiRepository;
+	
 	@Autowired
 	SecureBiometricInterfaceHistoryRepository sbiHistoryRepository;
+	
 	@Override
 	public IdDto createSecureBiometricInterface(SecureBiometricInterfaceCreateDto sbiDto) {
 		SecureBiometricInterface sbi=null;
@@ -182,5 +188,50 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return historyEntity;
 		
 	}
+	
+	@Override
+	public String updateSecureBiometricInterfaceStatus(SecureBiometricInterfaceStatusUpdateDto secureBiometricInterfaceDto) {
+		SecureBiometricInterface entity=sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(secureBiometricInterfaceDto.getId());
+		if(entity==null) {
+			auditUtil.auditRequest(
+					String.format(
+							AuthDeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), secureBiometricInterfaceDto.getId())),
+					"AUT-016");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), secureBiometricInterfaceDto.getId()));
+		}
 
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			entity.setUpdBy(authN.getName());
+			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));			
+		}
+
+		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVE);
+			sbiRepository.save(entity);
+			return "Secure biometric details approved successfully.";
+		}
+		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
+			entity.setApprovalStatus(AuthDeviceConstant.REJECT);	
+			entity.setActive(false);
+			sbiRepository.save(entity);
+			return "Secure biometric details rejected successfully.";
+		}
+
+		auditUtil.auditRequest(
+				String.format(
+						AuthDeviceConstant.STATUS_UPDATE_FAILURE, DeviceDetail.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.FAILURE_DESC,
+						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
+						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage()),
+				"AUT-008");
+		throw new RequestException(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
+				String.format(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage(), secureBiometricInterfaceDto.getId()));
+	}
 }

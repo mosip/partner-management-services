@@ -1,10 +1,7 @@
 package io.mosip.pmp.authdevice.test.service;
 
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
 
@@ -14,16 +11,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pmp.authdevice.exception.RequestException;
@@ -43,7 +38,7 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 public class DeviceDetailServiceTest {
 	
 	@InjectMocks
-	DeviceDetailService DeviceDetaillService=new DeviceDetailServiceImpl();
+	DeviceDetailService deviceDetaillService = new DeviceDetailServiceImpl();
 	
 	@Mock
 	AuditUtil auditUtil;
@@ -110,48 +105,79 @@ public class DeviceDetailServiceTest {
 	@Test
     public void createDeviceDetailTest() throws Exception {
 		Mockito.doReturn(null).when(deviceDetailRepository).findByDeviceDetail(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString());
-		assertTrue(DeviceDetaillService.createDeviceDetails(deviceDetailDto).getId().equals("121"));
+		assertTrue(deviceDetaillService.createDeviceDetails(deviceDetailDto).getId().equals("121"));
     }
 	
 	@Test(expected=RequestException.class)
     public void createDeviceDetailNoPartnerTest() throws Exception {
 		Mockito.doReturn(null).when(partnerRepository).findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
 
-       DeviceDetaillService.createDeviceDetails(deviceDetailDto);
+       deviceDetaillService.createDeviceDetails(deviceDetailDto);
     }
 	
 	@Test(expected=RequestException.class)
     public void updateDeviceDetailNoPartnerTest() throws Exception {
 		Mockito.doReturn(null).when(partnerRepository).findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
 
-	       DeviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
+	       deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
     }
 	
 	@Test(expected=RequestException.class)
     public void createDeviceDetailNoSubtypeTest() throws Exception {
 		Mockito.doReturn(null).when(registrationDeviceSubTypeRepository).findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString(),Mockito.anyString());
-		DeviceDetaillService.createDeviceDetails(deviceDetailDto);
+		deviceDetaillService.createDeviceDetails(deviceDetailDto);
     }
 	
 	@Test(expected=RequestException.class)
     public void updateDeviceDetailNoSubtypeTest() throws Exception {
 		Mockito.doReturn(null).when(registrationDeviceSubTypeRepository).findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString(),Mockito.anyString());
-		DeviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
+		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
     }
 	
 	@Test(expected=RequestException.class)
     public void createDeviceDetailAlreadyExistsTest() throws Exception {
-       DeviceDetaillService.createDeviceDetails(deviceDetailDto);
+       deviceDetaillService.createDeviceDetails(deviceDetailDto);
     }
 	
 
 	@Test
     public void updateDeviceDetailTest() throws Exception {
-       assertTrue(DeviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto).getId().equals("121"));
+       assertTrue(deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto).getId().equals("121"));
     }
+	
 	@Test(expected=RequestException.class)
     public void updateDeviceDetailNotFoundTest() throws Exception {
 		Mockito.doReturn(null).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
-		DeviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
+		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
     }
+	
+	@Test
+	public void updateDeviceDetailStatusTest_Approve() {
+		deviceDetaillService.updateDeviceDetailStatus(statusUpdateRequest("Activate"));
+	}
+	
+	@Test
+	public void updateDeviceDetailStatusTest_Reject() {
+		deviceDetaillService.updateDeviceDetailStatus(statusUpdateRequest("De-activate"));
+	}
+	
+	@Test(expected = RequestException.class)
+	public void updateDeviceDetailStatusTest_Status_Exception() {
+		deviceDetaillService.updateDeviceDetailStatus(statusUpdateRequest("De-Activate"));
+	}
+	
+	@Test(expected = RequestException.class)
+	public void updateDeviceDetailStatusTest_DeviceDetail_Exception() {
+		UpdateDeviceDetailStatusDto request = statusUpdateRequest("De-Activate");
+		request.setId("34567");
+		Mockito.doReturn(null).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
+		deviceDetaillService.updateDeviceDetailStatus(request);
+	}
+	
+	private UpdateDeviceDetailStatusDto statusUpdateRequest(String status) {
+		UpdateDeviceDetailStatusDto request = new UpdateDeviceDetailStatusDto();
+		request.setApprovalStatus(status);
+		request.setId("121");
+		return request;
+	}
 }

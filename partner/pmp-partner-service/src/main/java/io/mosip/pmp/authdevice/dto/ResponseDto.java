@@ -1,9 +1,5 @@
 package io.mosip.pmp.authdevice.dto;
 
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Component;
-
 import lombok.Data;
 
 @Data

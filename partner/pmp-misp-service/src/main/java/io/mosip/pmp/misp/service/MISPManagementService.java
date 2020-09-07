@@ -70,7 +70,10 @@ public class MISPManagementService {
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
 	
 	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
-	private String mispLicenseExpiryInDays ="90";
+	private int mispLicenseExpiryInDays;
+	
+	@Value("${pmp.misp.valid.email.address.regex}")
+	private String emailRegex;
 
 	public static final String APPROVED_STATUS = "approved";
 	public static final String REJECTED_STATUS = "rejected";
@@ -95,7 +98,14 @@ public class MISPManagementService {
 	 * @param mispCreateRequest{@link {@link MISPCreateRequestDto} this class contains all the input/request fields.
 	 * @return MISPCreateResponseDto {@link MISPCreateResponseDto} this class contains all the response fields.
 	 */
-	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){		
+	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){	
+		if(!emailValidator(mispCreateRequest.getEmailId())) {
+			MispLogger.error(mispCreateRequest.getEmailId() + " : this is invalid email");
+			throw new MISPException(
+					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+
+		}
 		ResponseWrapper<MISPCreateResponseDto> response = new ResponseWrapper<>();
 		MISPCreateResponseDto responseDto = new MISPCreateResponseDto();
 		
@@ -104,16 +114,7 @@ public class MISPManagementService {
 		MISPEntity mispEntity = new MISPEntity();
 		
 		MispLogger.info("Generating misp id by using kernel misp id generator");
-		try{			
-			mispEntity.setID(mispIdGenerator.generateId());	
-		}catch(Exception e){
-			MispLogger.error("Error occured while generating misp id. Check kernel misp id generator logs.");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-		
-		
+		mispEntity.setID(mispIdGenerator.generateId());	
 		mispEntity.setIsActive(true);
 		mispEntity.setName(mispCreateRequest.getName());
 		mispEntity.setEmailId(mispCreateRequest.getEmailId());
@@ -125,14 +126,7 @@ public class MISPManagementService {
 		mispEntity.setCreatedBy(getUser());
 		
 		MispLogger.info("Data insertion stated into misp table");
-		try{
-			mispRepository.save(mispEntity);
-		}catch(Exception e){
-			MispLogger.error("Error occured while inserting data into misp table.");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}		
+		mispRepository.save(mispEntity);	
 		responseDto.setMispID(mispEntity.getID());
 		responseDto.setMispStatus("Active");
 		response.setResponse(responseDto);		
@@ -175,20 +169,10 @@ public class MISPManagementService {
 		misp.setStatus_code(request.getMispStatus().toLowerCase());
 		misp.setUpdatedDateTime(LocalDateTime.now());
 		misp.setUpdatedBy(getUser());
-		
-		try{
-			MispLogger.info("Updating the misp request status");	
-			mispRepository.save(misp);
-		}catch(Exception e){
-			MispLogger.error("Error occured while updating the misp request status");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}		
-		MispLogger.info("MISP " + request.getMispStatus().toLowerCase() + " successfully");				
-		
-		MISPStatusUpdateResponse responseDto = new MISPStatusUpdateResponse();		
-		
+		MispLogger.info("Updating the misp request status");
+		mispRepository.save(misp);		
+		MispLogger.info("MISP " + request.getMispStatus().toLowerCase() + " successfully");
+		MISPStatusUpdateResponse responseDto = new MISPStatusUpdateResponse();				
 		if(request.getMispStatus().toLowerCase().equals(APPROVED_STATUS)){
 			MISPLicenseEntity misplEntity = generateLicense(request.getMispId());
 			responseDto.setMispLicenseKey(misplEntity.getMispLicenseUniqueKey().getLicense_key());			
@@ -215,34 +199,16 @@ public class MISPManagementService {
 	protected MISPLicenseEntity generateLicense(String misp_Id) {
 		MispLogger.info("MISP license generation started.");
 		MISPLicenseEntity misplEntity = new MISPLicenseEntity();
-		MISPlKeyUniqueKeyEntity uniqueKey = new MISPlKeyUniqueKeyEntity();
-		try{
-			uniqueKey.setLicense_key(mispLicenseKeyGenerator.generateLicense());
-			uniqueKey.setMisp_id(misp_Id);
-		}catch(Exception e){
-			MispLogger.error("Error occured while generating misp licenseKey. "
-					+ "Check kernel misp licenseKey generator logs.");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-		
+		MISPlKeyUniqueKeyEntity uniqueKey = new MISPlKeyUniqueKeyEntity();		
+		uniqueKey.setLicense_key(mispLicenseKeyGenerator.generateLicense());
+		uniqueKey.setMisp_id(misp_Id);
 		misplEntity.setValidFromDate(LocalDateTime.now());
-		misplEntity.setValidToDate(LocalDateTime.now().plusDays(Integer.parseInt(mispLicenseExpiryInDays)));	
+		misplEntity.setValidToDate(LocalDateTime.now().plusDays(mispLicenseExpiryInDays));	
 		misplEntity.setCreatedDateTime(LocalDateTime.now());		
 		misplEntity.setMispLicenseUniqueKey(uniqueKey);
 		misplEntity.setIsActive(true);
-		misplEntity.setCreatedBy(getUser());			
-		MispLogger.info("Data insertion stated into misp_license table");
-		try{
-			misplKeyRepository.save(misplEntity);
-		}catch(Exception e){
-			MispLogger.error("Error occured while inserting data into misp_license table.");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-		
+		misplEntity.setCreatedBy(getUser());
+		misplKeyRepository.save(misplEntity);
 		return misplEntity;
 	}
 	
@@ -273,24 +239,15 @@ public class MISPManagementService {
 		MISPEntity mispEntity = findById(mispStatusUpdateRequest.getMispId());		
 		
 		mispEntity.setIsActive(status);
-		mispEntity.setUpdatedDateTime(LocalDateTime.now());			
-		try{
-			MispLogger.info("Updating the misp status");	
-			mispRepository.save(mispEntity);
-		}catch(Exception e){
-			MispLogger.error("Error occured while updating the misp status");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-
+		mispEntity.setUpdatedDateTime(LocalDateTime.now());
+		MispLogger.info("Updating the misp status");	
+		mispRepository.save(mispEntity);
 		updateMISPLicenseStatus(mispStatusUpdateRequest.getMispId(),mispStatusUpdateRequest.getMispStatus());
 		if(status){
 			responseDto.setMessage("MISP actived successfully");
 		}else{
 			responseDto.setMessage("MISP de-actived successfully");
-		}
-		
+		}		
 		MispLogger.info(responseDto.getMessage());
 		response.setResponse(responseDto);		
 		MispLogger.info("Cursor back to controller");
@@ -310,6 +267,13 @@ public class MISPManagementService {
 	 * @return mispUpdateResponseDto {@link MISPUpdateResponseDto} this class contains all the required fields for misp update response.
 	 */
 	public ResponseWrapper<MISPUpdateResponseDto> update(MISPUpdateRequestDto mispUpdateRequestDto){
+		if(!emailValidator(mispUpdateRequestDto.getEmailId())) {
+			MispLogger.error(mispUpdateRequestDto.getEmailId() + " : this is invalid email");
+			throw new MISPException(
+					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+
+		}
 		ResponseWrapper<MISPUpdateResponseDto> response = new ResponseWrapper<MISPUpdateResponseDto>();
 		MISPUpdateResponseDto responseDto = new MISPUpdateResponseDto();
 		
@@ -329,27 +293,16 @@ public class MISPManagementService {
 		mispEntity.setContactNumber(mispUpdateRequestDto.getContactNumber());
 		mispEntity.setEmailId(mispUpdateRequestDto.getEmailId());		
 		mispEntity.setUpdatedDateTime(LocalDateTime.now());
-		mispEntity.setUpdatedBy(mispEntity.getCreatedBy());	
-		
+		mispEntity.setUpdatedBy(mispEntity.getCreatedBy());		
 		MispLogger.info("Updating the misp details into misp table");
-		try{
-			mispRepository.save(mispEntity);
-		}catch(Exception e){			
-			MispLogger.error("Error occured  while updating the misp");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-		
+		mispRepository.save(mispEntity);		
 		responseDto.setMispID(mispEntity.getID());
 		responseDto.setAddress(mispEntity.getAddress());
 		responseDto.setContactNumber(mispEntity.getContactNumber());
 		responseDto.setEmailID(mispEntity.getEmailId());
-		responseDto.setName(mispEntity.getName());
-		
+		responseDto.setName(mispEntity.getName());		
 		MispLogger.info("Cursor back to controller");
-		response.setResponse(responseDto);
-		
+		response.setResponse(responseDto);		
 		return response;		
 	}
 
@@ -413,19 +366,9 @@ public class MISPManagementService {
 		mispLicense.setIsActive(status);
 		mispLicense.setUpdatedDateTime(LocalDateTime.now());
 		mispLicense.setUpdatedBy(getUser());
-
 		MispLogger.info("Updating the misp license status.");
-		try{
-			misplKeyRepository.save(mispLicense);
-		}catch(Exception e){
-			MispLogger.error("Error occured while updating the misp license status.");
-			MispLogger.logStackTrace(e);
-			throw new MISPException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
-					ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-		}
-
+		misplKeyRepository.save(mispLicense);
 		responseDto.setMispLicenseKeyStatus(updateRequest.getMispLicenseKeyStatus());
-
 		response.setResponse(responseDto);
 		MispLogger.info("Cursor back to controller");
 		return response;	
@@ -683,5 +626,14 @@ public class MISPManagementService {
 		}
 
 		return response;
+	}
+	
+	/**
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public  boolean emailValidator(String email) {
+		return email.matches(emailRegex);
 	}
 }

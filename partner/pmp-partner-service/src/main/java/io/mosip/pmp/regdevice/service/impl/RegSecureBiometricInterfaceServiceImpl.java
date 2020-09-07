@@ -14,6 +14,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
+import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
@@ -29,6 +30,7 @@ import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 @Service
 @Transactional
 public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometricInterfaceService {
+	
 	private static final String Pending_Approval = "Pending_Approval";
 
 	@Autowired
@@ -185,6 +187,52 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		
 		return historyEntity;
 		
+	}
+	
+	@Override
+	public String updateSecureBiometricInterfaceStatus(SecureBiometricInterfaceStatusUpdateDto secureBiometricInterfaceDto) {
+		RegSecureBiometricInterface entity=sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(secureBiometricInterfaceDto.getId());
+		if(entity==null) {
+			auditUtil.auditRequest(
+					String.format(
+							AuthDeviceConstant.FAILURE_UPDATE, RegSecureBiometricInterface.class.getCanonicalName()),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), secureBiometricInterfaceDto.getId())),
+					"AUT-016");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), secureBiometricInterfaceDto.getId()));
+		}
+
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			entity.setUpdBy(authN.getName());
+			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));			
+		}
+
+		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVE);
+			sbiRepository.save(entity);
+			return "Secure biometric details approved successfully.";
+		}
+		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
+			entity.setApprovalStatus(AuthDeviceConstant.REJECT);	
+			entity.setActive(false);
+			sbiRepository.save(entity);
+			return "Secure biometric details rejected successfully.";
+		}
+
+		auditUtil.auditRequest(
+				String.format(
+						AuthDeviceConstant.STATUS_UPDATE_FAILURE, RegDeviceDetail.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.FAILURE_DESC,
+						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
+						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage()),
+				"AUT-008");
+		throw new RequestException(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
+				String.format(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage(), secureBiometricInterfaceDto.getId()));
 	}
 
 }

@@ -1,11 +1,9 @@
 package io.mosip.pmp.authdevice.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Component;
 
 import lombok.Data;
+
 @Data
 public class IdDto implements Serializable{
 	private static final long serialVersionUID = 1L;

@@ -1,7 +1,5 @@
 package io.mosip.pmp.authdevice.constants;
 
-import org.springframework.stereotype.Component;
-
 
 public enum DeviceDetailExceptionsConstant {
 
@@ -9,7 +7,8 @@ public enum DeviceDetailExceptionsConstant {
 	DEVICE_PROVIDER_NOT_FOUND("PMS_AUT_002","Device provider id not found from the partners list"), 
 	DEVICE_DETAIL_EXIST("PMS_AUT_003","Device Details already exists"),
 	DUPLICATE_REQUEST("PMS_AUT_004","Duplicate request received"), 
-	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_005","Device detail for id %s does not exist");
+	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_005","Device detail for id %s does not exist"),
+	DEVICE_STATUS_CODE("PMS_AUT_025","ApprovalStatus should be Activate / De-activate");
 	
 	/**
 	 * The error code.

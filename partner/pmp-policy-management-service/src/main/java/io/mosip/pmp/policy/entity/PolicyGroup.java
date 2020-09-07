@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name="policy_group", schema = "pmp")
+@Table(name="policy_group")
 @NamedQuery(name="PolicyGroup.findAll", query="SELECT p FROM PolicyGroup p")
 public class PolicyGroup implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -24,7 +24,8 @@ public enum ErrorMessages {
 	MISP_NOT_APPROVED("PMS_MSP_018","misp is not yet approved."),
 	MISP_LICENSE_ARE_NOT_ACTIVE("PMS_MSP_019","misp license all are inactive."),
 	MISPID_FETCH_EXCEPTION("PMP-MSP-001", "Error Occur While Fetching Id"),
-	MISPID_INSERTION_EXCEPTION("PMP-MSP-002", "Error Occur While Inserting Id");
+	MISPID_INSERTION_EXCEPTION("PMP-MSP-002", "Error Occur While Inserting Id"),
+	INVALID_EMAIL_ID_EXCEPTION("PMS_MSP_004","Invalid email id.");
 
 
 private final String errorCode;

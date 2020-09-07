@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +16,13 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
-import io.mosip.pmp.regdevice.service.RegDeviceDetaillService;
+import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,6 +32,7 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
+	
 	@Autowired
 	AuditUtil auditUtil;
 	
@@ -37,7 +40,7 @@ public class DeviceDetailController {
 	DeviceDetailService deviceDetaillService;
 	
 	@Autowired	
-	RegDeviceDetaillService regDeviceDetaillService;
+	RegDeviceDetailService regDeviceDetaillService;
 	
 	/**
 	 * Post API to insert a new row of DeviceDetail data
@@ -116,6 +119,42 @@ public class DeviceDetailController {
 				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
 				"AUT-007");
 		return responseWrapper;
+	}
+	
+	/**
+	 * 
+	 * @param deviceDetailRequestDto
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@ResponseFilter
+	@PatchMapping
+	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
+	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
+			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
+			@ApiResponse(code = 500, message = "While approving/rejecting DeviceDetail any error occured") })
+	public ResponseWrapper<String> approveDeviceDetails(
+			@Valid @RequestBody RequestWrapper<UpdateDeviceDetailStatusDto> deviceDetailRequestDto){
+		auditUtil.auditRequest(
+				AuthDeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				AuthDeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
+				"AUT-006");
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
+			responseWrapper
+			.setResponse(regDeviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
+			
+		}else {
+			responseWrapper
+			.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
+		}
+		auditUtil.auditRequest(
+				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
+				"AUT-007");
 
+		return responseWrapper;
 	}
 }

@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "misp_license", schema = "pmp")
+@Table(name = "misp_license")
 public class MISPLicenseEntity extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = -8541947597557590399L;	

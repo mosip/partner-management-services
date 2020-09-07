@@ -1,6 +1,5 @@
 package io.mosip.pmp.authdevice.entity;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;

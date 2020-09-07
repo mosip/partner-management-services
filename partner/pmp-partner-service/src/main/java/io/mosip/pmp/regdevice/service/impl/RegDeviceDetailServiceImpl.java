@@ -17,19 +17,21 @@ import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
 import io.mosip.pmp.regdevice.repository.RegRegistrationDeviceSubTypeRepository;
-import io.mosip.pmp.regdevice.service.RegDeviceDetaillService;
+import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 
 @Service
 @Transactional
-public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
+public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	
 	private static final String Pending_Approval = "Pending_Approval";
 
@@ -189,6 +191,52 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetaillService {
 		deviceDetail.setPartnerOrganizationName(deviceDetailDto.getPartnerOrganizationName());
 		return deviceDetail;
 		
+	}
+	
+	@Override
+	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails) {
+		RegDeviceDetail entity=deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
+		if (entity == null) {
+			auditUtil.auditRequest(
+					String.format(
+							AuthDeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
+					"AUT-008");
+			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
+					String.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), deviceDetails.getId()));
+		}
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			entity.setUpdBy(authN.getName());
+			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));			
+		}
+		
+		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVE);	
+			entity.setIsActive(true);
+			deviceDetailRepository.save(entity);
+			return "Device details approved successfully.";
+		}
+		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
+			entity.setApprovalStatus(AuthDeviceConstant.REJECT);	
+			entity.setIsActive(false);
+			deviceDetailRepository.save(entity);
+			return "Device details rejected successfully.";
+		}
+		
+		auditUtil.auditRequest(
+				String.format(
+						AuthDeviceConstant.STATUS_UPDATE_FAILURE, RegDeviceDetail.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.FAILURE_DESC,
+						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(),
+						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage()),
+				"AUT-008");
+		throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(),
+				String.format(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage(), deviceDetails.getId()));
 	}
 
 }

@@ -1,7 +1,6 @@
 package io.mosip.pmp.authdevice.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -82,6 +80,30 @@ public class RegisteredDeviceControllerTest {
     	DeRegisterDevicePostDto registeredDevicePostDto=new DeRegisterDevicePostDto();
     	registeredDevicePostDto.setDevice("adcsdcsdcs");
     	registeredDevicePostDto.setIsItForRegistrationDevice(false);
+    	request.setRequest(registeredDevicePostDto);
+    	mockMvc.perform(post("/registereddevices/deregister").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    public void signedregisterTest_regDevice() throws Exception {
+    	RequestWrapper<RegisteredDevicePostDto> request=new RequestWrapper<RegisteredDevicePostDto>();
+    	RegisteredDevicePostDto registeredDevicePostDto=new RegisteredDevicePostDto();
+    	registeredDevicePostDto.setDeviceData("dasfvdfvsf");
+    	registeredDevicePostDto.setIsItForRegistrationDevice(true);
+    	request.setRequest(registeredDevicePostDto);
+        mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    public void derigsterTest_regDevice() throws Exception {
+    	RequestWrapper<DeRegisterDevicePostDto> request=new RequestWrapper<DeRegisterDevicePostDto>();
+    	DeRegisterDevicePostDto registeredDevicePostDto=new DeRegisterDevicePostDto();
+    	registeredDevicePostDto.setDevice("adcsdcsdcs");
+    	registeredDevicePostDto.setIsItForRegistrationDevice(true);
     	request.setRequest(registeredDevicePostDto);
     	mockMvc.perform(post("/registereddevices/deregister").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());

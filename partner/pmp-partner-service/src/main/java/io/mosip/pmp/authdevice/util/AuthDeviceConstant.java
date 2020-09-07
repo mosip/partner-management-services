@@ -92,4 +92,10 @@ public class AuthDeviceConstant {
 	public static final String SUBTYPE = "subType";
 
 	public static final String AUDIT_SYSTEM = "SYSTEM";
+	
+	public static final String PENDING_APPROVAL="Pending_Approval";
+	public static final String APPROVE = "Activate";
+	public static final String REJECT="De-activate";
+	public static final String STATUS_UPDATE_FAILURE = "Status Update %s - Failure";
+	public static final String STATUS_UPDATE_API_IS_CALLED = "Status update API called::";
 }
