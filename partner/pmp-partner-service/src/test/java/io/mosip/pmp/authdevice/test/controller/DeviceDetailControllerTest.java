@@ -9,6 +9,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,6 +45,7 @@ import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 @AutoConfigureMockMvc
 @EnableWebMvc
 //@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
+@Ignore
 public class DeviceDetailControllerTest {
 	
 	@Autowired
