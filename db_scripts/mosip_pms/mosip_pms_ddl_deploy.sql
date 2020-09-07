@@ -1,4 +1,4 @@
-\c mosip_pmp sysadmin
+\c mosip_pms sysadmin
 
 \ir ddl/pms-misp.sql
 \ir ddl/pms-misp_license.sql
