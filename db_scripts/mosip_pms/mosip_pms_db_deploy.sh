@@ -47,7 +47,7 @@ echo `date "+%m/%d/%Y %H:%M:%S"` ": Started sourcing the $MOSIP_DB_NAME Database
 #echo "date:" `date "+%m/%d/%Y %H:%M:%S"`
 echo `date "+%m/%d/%Y %H:%M:%S"` ": Database scripts are sourcing from :$BASEPATH" | tee -a $LOG 2>&1
 
-#========================================DB Deployment process begins on PMP DB SERVER======================================
+#========================================DB Deployment process begins on PMS DB SERVER======================================
 
 echo `date "+%m/%d/%Y %H:%M:%S"` ": Database deployment on $MOSIP_DB_NAME database is started...." | tee -a $LOG 2>&1
 cd /$BASEPATH/$MOSIP_DB_NAME/
@@ -78,14 +78,14 @@ else
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Active connections exist on the database server and active connection will be terminated for DB deployment." | tee -a $LOG 2>&1
 fi 
 
-MASTERCONN=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -t -c "select count(1) from pg_roles where rolname IN('pmpuser')";exit; >> $LOG 2>&1)
+MASTERCONN=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -t -c "select count(1) from pg_roles where rolname IN('pmsuser')";exit; >> $LOG 2>&1)
 
 if [ ${MASTERCONN} == 0 ]
 then
-    echo `date "+%m/%d/%Y %H:%M:%S"` ": Creating pmp database user" | tee -a $LOG 2>&1
+    echo `date "+%m/%d/%Y %H:%M:%S"` ": Creating pms database user" | tee -a $LOG 2>&1
     PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $APP_ROLE_FILENAME -v dbuserpwd=\'$DBUSER_PWD\' >> $LOG 2>&1
 else
-    echo `date "+%m/%d/%Y %H:%M:%S"` ": Pmp user already exist" | tee -a $LOG 2>&1
+    echo `date "+%m/%d/%Y %H:%M:%S"` ": Pms user already exist" | tee -a $LOG 2>&1
 fi
 PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $DB_CREATION_FILENAME >> $LOG 2>&1
 PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $ACCESS_GRANT_FILENAME >> $LOG 2>&1
@@ -109,5 +109,5 @@ else
 fi 	
 
 echo "******************************************"`date "+%m/%d/%Y %H:%M:%S"` "*****************************************************" >> $LOG 2>&1
-#========================================DB Deployment process completes on PMP DB SERVER======================================
+#========================================DB Deployment process completes on PMS DB SERVER======================================
 
