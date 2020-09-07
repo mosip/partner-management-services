@@ -567,7 +567,8 @@ public class PolicyManagementService {
 		dataShareObj.put("validForInMinutes", policy.getDataSharePolicies().getValidForInMinutes());
 		dataShareObj.put("transactionsAllowed", policy.getDataSharePolicies().getTransactionsAllowed());
 		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
-		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());		
+		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
+		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
 		obj.put("dataSharePolicies", dataShareObj);
 
 
