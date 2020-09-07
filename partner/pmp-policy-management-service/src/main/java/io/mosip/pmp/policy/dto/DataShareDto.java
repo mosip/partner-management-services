@@ -17,4 +17,6 @@ public class DataShareDto {
 	private String encryptionType;
 	
 	private String shareDomain;
+	
+	private String typeOfShare;
 }
