@@ -43,7 +43,7 @@ import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
+//@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
 public class DeviceDetailControllerTest {
 	
 	@Autowired
@@ -154,18 +154,21 @@ public class DeviceDetailControllerTest {
     }
     
     @Test    
+    @WithMockUser(roles = {"PARTNER"})
     public void createDeviceDetailTest() throws Exception {
         mockMvc.perform(post("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void updateDeviceDetailsTest() throws Exception {
     	mockMvc.perform(put("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(updaterequest))).andExpect(status().isOk());
     }
     
     @Test
+    @WithMockUser(roles = {"PARTNERMANAGER"})
     public void approveDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<UpdateDeviceDetailStatusDto> createrequest=approvalRequest(false);
     	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -173,6 +176,7 @@ public class DeviceDetailControllerTest {
     }
     
     @Test    
+    @WithMockUser(roles = {"PARTNER"})
     public void createDeviceDetailTest_regdevice() throws Exception {
     	RequestWrapper<DeviceDetailDto> createrequest=createRequest(true);
         mockMvc.perform(post("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -180,6 +184,7 @@ public class DeviceDetailControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void updateDeviceDetailsTest_regdevice() throws Exception {
     	RequestWrapper<DeviceDetailUpdateDto> updaterequest=updateRequest(true);
     	mockMvc.perform(put("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -187,6 +192,7 @@ public class DeviceDetailControllerTest {
     }
     
     @Test
+    @WithMockUser(roles = {"PARTNERMANAGER"})
     public void approveDeviceDetailsTest_regDevice() throws JsonProcessingException, Exception {
     	RequestWrapper<UpdateDeviceDetailStatusDto> createrequest=approvalRequest(true);
     	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)

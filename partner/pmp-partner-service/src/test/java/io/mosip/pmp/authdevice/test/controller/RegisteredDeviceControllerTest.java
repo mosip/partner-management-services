@@ -62,7 +62,7 @@ public class RegisteredDeviceControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void signedregisterTest() throws Exception {
     	RequestWrapper<RegisteredDevicePostDto> request=new RequestWrapper<RegisteredDevicePostDto>();
     	RegisteredDevicePostDto registeredDevicePostDto=new RegisteredDevicePostDto();
@@ -74,7 +74,7 @@ public class RegisteredDeviceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void derigsterTest() throws Exception {
     	RequestWrapper<DeRegisterDevicePostDto> request=new RequestWrapper<DeRegisterDevicePostDto>();
     	DeRegisterDevicePostDto registeredDevicePostDto=new DeRegisterDevicePostDto();
@@ -86,7 +86,7 @@ public class RegisteredDeviceControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void signedregisterTest_regDevice() throws Exception {
     	RequestWrapper<RegisteredDevicePostDto> request=new RequestWrapper<RegisteredDevicePostDto>();
     	RegisteredDevicePostDto registeredDevicePostDto=new RegisteredDevicePostDto();
@@ -98,7 +98,7 @@ public class RegisteredDeviceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void derigsterTest_regDevice() throws Exception {
     	RequestWrapper<DeRegisterDevicePostDto> request=new RequestWrapper<DeRegisterDevicePostDto>();
     	DeRegisterDevicePostDto registeredDevicePostDto=new DeRegisterDevicePostDto();

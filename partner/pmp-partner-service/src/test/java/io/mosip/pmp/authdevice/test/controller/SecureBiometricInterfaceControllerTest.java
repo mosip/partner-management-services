@@ -45,7 +45,7 @@ import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
+//@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
 @Ignore
 public class SecureBiometricInterfaceControllerTest {
 	
@@ -153,7 +153,7 @@ public class SecureBiometricInterfaceControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void createsbiTest() throws Exception {      
 
         mockMvc.perform(post("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -161,14 +161,14 @@ public class SecureBiometricInterfaceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void updatesbiTest() throws Exception {
     	mockMvc.perform(put("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(updateRequest))).andExpect(status().isOk());
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNERMANAGER"})
     public void approveDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<SecureBiometricInterfaceStatusUpdateDto> createrequest=approvalRequest(false);
     	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -176,7 +176,7 @@ public class SecureBiometricInterfaceControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNERMANAGER"})
     public void approveDeviceDetailsTest_regDevice() throws JsonProcessingException, Exception {
     	RequestWrapper<SecureBiometricInterfaceStatusUpdateDto> createrequest=approvalRequest(true);
     	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -184,7 +184,7 @@ public class SecureBiometricInterfaceControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void createsbiTest_regDevice() throws Exception {
     	RequestWrapper<SecureBiometricInterfaceCreateDto> createRequest=createRequest(true);
         mockMvc.perform(post("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -192,7 +192,7 @@ public class SecureBiometricInterfaceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ZONAL_ADMIN"})
+    @WithMockUser(roles = {"PARTNER"})
     public void updatesbiTest_regDevice() throws Exception {
     	RequestWrapper<SecureBiometricInterfaceUpdateDto> updateRequest=updateRequest(true);
     	mockMvc.perform(put("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)

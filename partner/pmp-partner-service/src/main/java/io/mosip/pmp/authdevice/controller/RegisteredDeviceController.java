@@ -42,7 +42,7 @@ public class RegisteredDeviceController {
 	 * @throws Exception
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNER')")
 	@PostMapping
 	public ResponseWrapper<String> signedRegisteredDevice(
 			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
@@ -63,7 +63,7 @@ public class RegisteredDeviceController {
 	 *            the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNER')")
 	@ApiOperation(value = "DeRegister Device")
 	@PostMapping("/deregister")
 	@ResponseFilter

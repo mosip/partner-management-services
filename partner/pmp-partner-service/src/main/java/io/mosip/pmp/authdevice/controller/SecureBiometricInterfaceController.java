@@ -41,7 +41,7 @@ public class SecureBiometricInterfaceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save SecureBiometricInterfaceCreateDto", notes = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
@@ -73,7 +73,7 @@ public class SecureBiometricInterfaceController {
 
 	}
 	
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update SecureBiometricInterface", notes = "Updates SecureBiometricInterface and returns success message")
@@ -105,7 +105,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasRole('PARTNERMANAGER')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject SecureBiometricInterface", notes = "Approve SecureBiometricInterface and returns success message")
