@@ -2,23 +2,23 @@ package io.mosip.pmp.partner.service;
 
 import java.util.List;
 
-import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
-import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
-import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
+import io.mosip.pmp.partner.dto.AddContactRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pmp.partner.dto.LoginUserRequest;
-import io.mosip.pmp.partner.dto.LoginUserResponse;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
-import io.mosip.pmp.partner.dto.SignUserRequest;
-import io.mosip.pmp.partner.dto.SignUserResponse;
 
 /**
  * This interface provides the methods which can be used for PartnerService
@@ -96,13 +96,36 @@ public interface PartnerService {
 	
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID,String aPIKeyReqID);
 	
+	/**
+	 * 
+	 * @param request
+	 * @param partnerId
+	 * @return
+	 */
+	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId);
 	
 	/**
-	 * @param request this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
+	 * Function to Upload CA/Sub-CA certificates
+	 * 
+	 * @param CACertificateRequestDto caCertResponseDto
+	 * @return {@link CACertificateResponseDto} instance
 	 */
+    public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertResponseDto);
+
+    /**
+     * Function to Upload Partner certificates
+     * 
+     * @param PartnerCertificateRequestDto partnerCertResponseDto
+     * @return {@link PartnerCertificateResponseDto} instance
+    */
+    public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertResponseDto);
+
+    /**
+     * Function to Download Partner certificates
+     * 
+     * @param PartnerCertDownloadRequestDto certDownloadRequestDto
+     * @return {@link PartnerCertDownloadResponeDto} instance
+    */
+    public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto);
 	
-	public DigitalCertificateResponse validateDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
-	
-	public DigitalCertificateResponse uploadDigitalCertificate(RequestWrapper<DigitalCertificateRequest> request);
 }

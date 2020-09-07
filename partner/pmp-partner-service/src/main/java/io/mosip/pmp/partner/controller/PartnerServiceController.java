@@ -19,16 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
-import io.mosip.pmp.partner.dto.DigitalCertificateRequest;
-import io.mosip.pmp.partner.dto.DigitalCertificateResponse;
+import io.mosip.pmp.partner.dto.AddContactRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateRequestDto;
+import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.service.PartnerService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * <p>
@@ -115,36 +120,23 @@ public class PartnerServiceController {
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerAPIKeyResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}	
-	
-	/**
-	 * Validation of digital certificate without PublicKey
-	 * 
-	 * Partners would be procuring digital certificates from Certification Authority
-	 * (CA), And upload the same to Partner Management using this API. Partner
-	 * Management would depend on Kernel to manage partner certificates, Validation
-	 * of partner certificates. Appropriate error messages would be sent back to
-	 * Partners, In cases where digital certificates expires, certificate validation
-	 * error happens.
-	 * 
-	 * @param request
-	 *            this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
-	 */
-	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
-	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificatewithoutPublicKey(
-			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
-		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
-		DigitalCertificateResponse digitalCertificateResponse = null;
-		digitalCertificateResponse = partnerService.uploadDigitalCertificate(request);
-		response.setResponse(digitalCertificateResponse);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setMetadata(request.getMetadata());
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param request
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@RequestMapping(value = "/{partnerId}/addcontact", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.createAndUpdateContactDetails(request.getRequest(),partnerId));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	/**
 	 * This API would be used to update Auth/E-KYC Partner's details.
 	 * 
@@ -165,34 +157,6 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	/**
-	 * Validation of digital certificate with PublicKey
-	 * 
-	 * As the MOSIP system Partner Management module would integrate with Kernel for
-	 * validation of partner's digital certificate. In case where MOSIP would act as
-	 * certification authority for partners, MOSIP would be able to sign and resign
-	 * partner digital certificates. Partner management module would depend on
-	 * Kernel services for signing and re-signing of partner digital certificates.
-	 * Kernel Signature service would be utilized to validate signature : Kernel
-	 * Signature Service
-	 * 
-	 * @param request
-	 *            this class contains digitalCertificate details
-	 * @return DigitalCertificateResponse this class contains massage
-	 */
-	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
-	@RequestMapping(value = "/digitalcertificate", method = RequestMethod.PUT)
-	public ResponseEntity<ResponseWrapper<DigitalCertificateResponse>> validateDigitalCertificateWithPublicKey(
-			@RequestBody RequestWrapper<DigitalCertificateRequest> request) {
-		ResponseWrapper<DigitalCertificateResponse> response = new ResponseWrapper<>();
-		DigitalCertificateResponse digitalCertificateResponse = null;
-		digitalCertificateResponse = partnerService.validateDigitalCertificate(request);
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		response.setResponse(digitalCertificateResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
@@ -261,5 +225,52 @@ public class PartnerServiceController {
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}		
+	}
+	
+//	/**
+//	 * To Upload CA/Sub-CA certificates
+//	 * 
+//	 * @param caCertRequestDto {@link CACertificateRequestDto} request
+//	 * @return {@link CACertficateResponseDto} Upload Success
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")	
+//	@RequestMapping(value = "/uploadCACertificate", method = RequestMethod.POST)
+//	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
+//			@ApiParam("Upload CA/Sub-CA certificates.") @RequestBody @Valid RequestWrapper<CACertificateRequestDto> caCertRequestDto) {
+//		ResponseWrapper<CACertificateResponseDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.uploadCACertificate(caCertRequestDto.getRequest()));
+//		return response;
+//    }
+//    
+//    
+//	/**
+//	 * To Upload Partner Certificate.
+//	 * 
+//	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
+//	 * @return {@link PartnerCertificateResponseDto} signed certificate response
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+//	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
+//	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
+//			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) {
+//		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+//		return response;
+//	}
+//
+//    /**
+//	 * To Download Partner Certificate.
+//	 * 
+//	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
+//	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
+//	 */
+//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+//	@RequestMapping(value = "/getPartnerCertificate", method = RequestMethod.GET)
+//	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
+//			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) {		
+//		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
+//		response.setResponse(partnerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
+//		return response;
+//    }
+	
 }

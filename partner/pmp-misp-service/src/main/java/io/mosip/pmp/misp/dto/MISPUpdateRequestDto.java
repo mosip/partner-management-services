@@ -28,23 +28,20 @@ public class MISPUpdateRequestDto {
 	@NotBlank
 	@Size(min = 1, max = 128)
 	@ApiModelProperty(value ="name", required = false, dataType = "java.lang.String")	
-	public String name;	
-	
+	public String name;
 
+	@NotBlank
 	@Size(min = 0, max = 16)
 	@ApiModelProperty(value= "contactNumber", required = false, dataType = "java.lang.String")
 	public String contactNumber;
 	
-	
+	@NotBlank
 	@Size(min = 1, max = 256)
 	@ApiModelProperty(value = "emailID", required = false, dataType = "java.lang.String")
 	public String emailId;
 	
-	
+	@NotBlank
 	@Size(min = 1, max= 2000)
 	@ApiModelProperty(value = "address", required = false, dataType = "java.lang.String")
-	public String address;
-	
-	@ApiModelProperty(value = "status_code", required = false, dataType = "java.lang.String")
-	public String status_code;
+	public String address;	
 }

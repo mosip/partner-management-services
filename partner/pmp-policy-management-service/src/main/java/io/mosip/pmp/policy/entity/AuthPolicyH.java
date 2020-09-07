@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name="auth_policy_h", schema = "pmp")
+@Table(name="auth_policy_h")
 @NamedQuery(name="AuthPolicyH.findAll", query="SELECT a FROM AuthPolicyH a")
 public class AuthPolicyH implements Serializable {
 	

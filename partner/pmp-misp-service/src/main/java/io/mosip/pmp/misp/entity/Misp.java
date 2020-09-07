@@ -17,7 +17,7 @@ import lombok.Data;
  */
 
 @Entity
-@Table(name = "tspid_seq", schema = "pmp")
+@Table(name = "tspid_seq")
 @Data
 public class Misp {
 

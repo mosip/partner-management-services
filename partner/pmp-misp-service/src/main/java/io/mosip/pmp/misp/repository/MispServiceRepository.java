@@ -21,9 +21,9 @@ import io.mosip.pmp.misp.entity.MISPEntity;
 public interface MispServiceRepository extends BaseRepository<MISPEntity, String> {
 
 	
-	@Query(value = "select * from pmp.misp m where m.name=?",nativeQuery = true)
+	@Query(value = "select * from misp m where m.name=?",nativeQuery = true)
 	MISPEntity findByName(String name);
 	
-	@Query(value = "select * from pmp.misp m where m.name like ?%",nativeQuery = true)
+	@Query(value = "select * from misp m where m.name like ?%",nativeQuery = true)
 	List<MISPEntity> findByStartsWithName(String name);
 }

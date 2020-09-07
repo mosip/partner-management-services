@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "misp", schema = "pmp")
+@Table(name = "misp")
 public class MISPEntity extends BaseEntity implements Serializable {
 	
 

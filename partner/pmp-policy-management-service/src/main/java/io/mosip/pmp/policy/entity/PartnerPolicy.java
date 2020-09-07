@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="partner_policy", schema = "pmp")
+@Table(name="partner_policy")
 @NamedQuery(name="PartnerPolicy.findAll", query="SELECT p FROM PartnerPolicy p")
 public class PartnerPolicy implements Serializable {
 	private static final long serialVersionUID = 1L;
