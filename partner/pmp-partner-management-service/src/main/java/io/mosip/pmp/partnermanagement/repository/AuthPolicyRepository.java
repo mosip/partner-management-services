@@ -7,7 +7,7 @@ import io.mosip.pmp.partnermanagement.entity.AuthPolicy;
 
 public interface AuthPolicyRepository extends JpaRepository<AuthPolicy, String>{
 	
-	@Query(value = "select * from auth_policy ppr where ppr.policy_group_id=?", nativeQuery = true )
+	@Query(value = "select * from auth_policy ppr where ppr.id=?", nativeQuery = true )
 	public AuthPolicy findByPolicyId(String policyGroupId);	
 	
 }
