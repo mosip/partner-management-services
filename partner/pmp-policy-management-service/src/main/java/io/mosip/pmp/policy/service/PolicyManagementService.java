@@ -585,7 +585,7 @@ public class PolicyManagementService {
 	 * @throws IOException
 	 */
 	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId) throws JsonParseException, JsonMappingException, IOException {
-		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerId);
+		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerId,policyId);
 		if(partnerPolicy == null) {
 			PolicyServiceLogger.error("Partner is not found");
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
