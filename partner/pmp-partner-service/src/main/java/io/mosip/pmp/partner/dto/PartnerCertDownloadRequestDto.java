@@ -24,7 +24,7 @@ public class PartnerCertDownloadRequestDto {
     /**
 	 * Certificate ID of Partner.
 	 */
-	@ApiModelProperty(notes = "Partner Certificate ID", required = true)
+	@ApiModelProperty(notes = "Partner ID", required = true)
 	@NotBlank
-	String partnerCertId;
+	String partnerId;
 }

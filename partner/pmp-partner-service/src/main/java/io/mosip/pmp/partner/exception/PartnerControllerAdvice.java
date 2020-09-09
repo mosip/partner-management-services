@@ -229,6 +229,19 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
+	
+	@ExceptionHandler(PartnerServiceException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final PartnerServiceException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
 
 	/**
 	 * @param httpServletRequest

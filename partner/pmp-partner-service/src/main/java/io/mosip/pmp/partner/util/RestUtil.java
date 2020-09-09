@@ -40,11 +40,11 @@ import com.google.gson.Gson;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.core.util.TokenHandlerUtil;
-import io.mosip.pmp.partner.constant.ApiNotAccessibleExceptionConstant;
+import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.dto.Metadata;
 import io.mosip.pmp.partner.dto.SecretKeyRequest;
 import io.mosip.pmp.partner.dto.TokenRequestDTO;
-import io.mosip.pmp.partner.exception.ApiNotAccessibleException;
+import io.mosip.pmp.partner.exception.ApiAccessibleException;
 
 public class RestUtil {
 
@@ -86,8 +86,8 @@ public class RestUtil {
 				result = (T) restTemplate.postForObject(builder.toUriString(), setRequestHeader(requestType, mediaType), responseClass);
 
 			} catch (Exception e) {
-				throw new ApiNotAccessibleException(ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 		}
 		return result;
@@ -130,8 +130,8 @@ public class RestUtil {
 				result = (T) restTemplate.exchange(uriComponents.toUri(), HttpMethod.GET, setRequestHeader(null, null), responseType)
 						.getBody();
 			} catch (Exception e) {
-				throw new ApiNotAccessibleException(ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 
 		}
@@ -158,8 +158,8 @@ public class RestUtil {
 				result = (T) restTemplate.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, null), responseType)
 						.getBody();
 			} catch (Exception e) {
-				throw new ApiNotAccessibleException(ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiNotAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 
 		}

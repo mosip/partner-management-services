@@ -1,5 +1,6 @@
 package io.mosip.pmp.partner.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
@@ -227,50 +232,61 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-//	/**
-//	 * To Upload CA/Sub-CA certificates
-//	 * 
-//	 * @param caCertRequestDto {@link CACertificateRequestDto} request
-//	 * @return {@link CACertficateResponseDto} Upload Success
-//	 */
-//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")	
-//	@RequestMapping(value = "/uploadCACertificate", method = RequestMethod.POST)
-//	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
-//			@ApiParam("Upload CA/Sub-CA certificates.") @RequestBody @Valid RequestWrapper<CACertificateRequestDto> caCertRequestDto) {
-//		ResponseWrapper<CACertificateResponseDto> response = new ResponseWrapper<>();
-//		response.setResponse(partnerService.uploadCACertificate(caCertRequestDto.getRequest()));
-//		return response;
-//    }
-//    
-//    
-//	/**
-//	 * To Upload Partner Certificate.
-//	 * 
-//	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
-//	 * @return {@link PartnerCertificateResponseDto} signed certificate response
-//	 */
-//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
-//	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
-//	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
-//			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) {
-//		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
-//		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
-//		return response;
-//	}
-//
-//    /**
-//	 * To Download Partner Certificate.
-//	 * 
-//	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
-//	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
-//	 */
-//	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
-//	@RequestMapping(value = "/getPartnerCertificate", method = RequestMethod.GET)
-//	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
-//			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) {		
-//		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
-//		response.setResponse(partnerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
-//		return response;
-//    }
-	
+	/**
+	 * To Upload CA/Sub-CA certificates
+	 * 
+	 * @param caCertRequestDto {@link CACertificateRequestDto} request
+	 * @return {@link CACertficateResponseDto} Upload Success
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")	
+	@RequestMapping(value = "/uploadCACertificate", method = RequestMethod.POST)
+	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
+			@ApiParam("Upload CA/Sub-CA certificates.") @RequestBody @Valid RequestWrapper<CACertificateRequestDto> caCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		ResponseWrapper<CACertificateResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.uploadCACertificate(caCertRequestDto.getRequest()));
+		return response;
+    }
+    
+    
+	/**
+	 * To Upload Partner Certificate.
+	 * 
+	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
+	 * @return {@link PartnerCertificateResponseDto} signed certificate response
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
+	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
+			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+		return response;
+	}
+
+    /**
+	 * To Download Partner Certificate.
+	 * 
+	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
+	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
+     * @throws IOException 
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@RequestMapping(value = "/getPartnerCertificate", method = RequestMethod.GET)
+	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
+			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
+		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
+		return response;
+    }	
 }
