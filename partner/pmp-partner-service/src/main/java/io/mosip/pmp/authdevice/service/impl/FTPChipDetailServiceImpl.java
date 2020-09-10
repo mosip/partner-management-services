@@ -67,7 +67,7 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		}
 		entity.setCrDtimes(LocalDateTime.now());
 		entity.setId(partnerFromDb.getId());
-		entity.setPartnerOrganizationName(partnerFromDb.getName());
+		//entity.setPartnerOrganizationName(partnerFromDb.getName());
 		foundationalTrustProviderRepository.save(entity);
 		
 		FTPChipDetail chipDetail = new FTPChipDetail();
