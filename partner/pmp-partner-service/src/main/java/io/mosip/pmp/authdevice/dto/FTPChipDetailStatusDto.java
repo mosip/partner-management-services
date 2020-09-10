@@ -14,8 +14,7 @@ public class FTPChipDetailStatusDto {
 	@ApiModelProperty(value = "ftpChipDetailId", required = true, dataType = "java.lang.String")
 	private String ftpChipDetailId;
 	
-	@NotNull
-	@Size(min = 1, max = 36)	
+	@NotNull		
 	private Boolean approvalStatus;
 		
 	@NotNull

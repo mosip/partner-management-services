@@ -2,8 +2,6 @@ package io.mosip.pmp.authdevice.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,10 +11,10 @@ import javax.persistence.Table;
 @Table(name="secure_biometric_interface_h")
 public class SecureBiometricInterfaceHistory {
 	@Id
-	@AttributeOverrides({
-			@AttributeOverride(name = "id", column = @Column(name = "id", nullable = false,length = 36)),
-			@AttributeOverride(name = "effectDateTime", column = @Column(name = "eff_dtimes", nullable = false)) })
+	@Column(name = "id", nullable = false,length = 36)
 	private String id;
+
+	@Column(name = "eff_dtimes", nullable = false)
 	private LocalDateTime effectDateTime;
 	
 	

@@ -1,26 +1,22 @@
 package io.mosip.pmp.regdevice.entity;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="secure_biometric_interface_h")
 public class RegSecureBiometricInterfaceHistory {
-	@Id
-	@AttributeOverrides({
-			@AttributeOverride(name = "id", column = @Column(name = "id", nullable = false,length = 36)),
-			@AttributeOverride(name = "effectDateTime", column = @Column(name = "eff_dtimes", nullable = false)) })
+	@Id	
+	@Column(name = "id", nullable = false,length = 36)
 	private String id;
+	
+	@Column(name = "eff_dtimes", nullable = false)
 	private LocalDateTime effectDateTime;
 	
 	
