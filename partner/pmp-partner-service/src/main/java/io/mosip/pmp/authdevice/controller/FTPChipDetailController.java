@@ -50,7 +50,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	//@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save ftpChipDetail", notes = "Saves ftpChipDetail and return ftpChipDetail id")
@@ -90,7 +90,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	//@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update ftp chip detail", notes = "Updates ftp chip detail and returns success message")
@@ -126,7 +126,7 @@ public class FTPChipDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	//@PreAuthorize("hasRole('PARTNERMANAGER')")
+	@PreAuthorize("hasRole('PARTNERMANAGER')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject ftp chip detail", notes = "Approve ftp chip detail and returns success message")

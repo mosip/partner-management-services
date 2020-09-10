@@ -50,7 +50,7 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	//@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save DeviceDetail", notes = "Saves DeviceDetail and return DeviceDetail id")
@@ -90,7 +90,7 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	//@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('PARTNER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update DeviceDetail", notes = "Updates DeviceDetail and returns success message")
@@ -126,7 +126,7 @@ public class DeviceDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	//@PreAuthorize("hasRole('PARTNERMANAGER')")
+	@PreAuthorize("hasRole('PARTNERMANAGER')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
