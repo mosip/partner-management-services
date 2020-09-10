@@ -303,7 +303,7 @@ public class PartnerServiceControllerTest {
     
     private PartnerCertDownloadRequestDto certDownloadRequest() {
     	PartnerCertDownloadRequestDto dto = new PartnerCertDownloadRequestDto();
-    	dto.setPartnerCertId("12345");
+    	//dto.setPartnerCertId("12345");
     	return dto;
     }
     

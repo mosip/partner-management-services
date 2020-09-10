@@ -1,11 +1,8 @@
-package io.mosip.pmp.partnermanagement.constant;
+package io.mosip.pmp.partner.constant;
 
-public enum InvalidInputParameterConstant {
-	
-	INVALIED_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter"),
-	POLICY_REQUEST_ALREADY_APPROVED("PMS_PM_034","Policy request already approved."),
-  POLICY_REQUEST_ALREADY_REJECTED("PMS_PM_034","Policy request already rejected.");
+public enum PartnerExceptionConstants {
 
+	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the selected partner.");
 	/**
 	 * The error code.
 	 */
@@ -24,7 +21,7 @@ public enum InvalidInputParameterConstant {
 	 * @param errorMessage
 	 *            the errorMessage.
 	 */
-	InvalidInputParameterConstant(String errorCode, String errorMessage) {
+	PartnerExceptionConstants(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}
@@ -46,4 +43,5 @@ public enum InvalidInputParameterConstant {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
+
 }

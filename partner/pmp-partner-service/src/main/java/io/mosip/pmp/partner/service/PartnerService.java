@@ -1,6 +1,11 @@
 package io.mosip.pmp.partner.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
@@ -109,23 +114,35 @@ public interface PartnerService {
 	 * 
 	 * @param CACertificateRequestDto caCertResponseDto
 	 * @return {@link CACertificateResponseDto} instance
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
-    public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertResponseDto);
+    public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
      * Function to Upload Partner certificates
      * 
      * @param PartnerCertificateRequestDto partnerCertResponseDto
      * @return {@link PartnerCertificateResponseDto} instance
+     * @throws IOException 
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
     */
-    public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertResponseDto);
+    public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
      * Function to Download Partner certificates
      * 
      * @param PartnerCertDownloadRequestDto certDownloadRequestDto
      * @return {@link PartnerCertDownloadResponeDto} instance
+     * @throws IOException 
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
     */
-    public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto);
+    public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 	
 }
