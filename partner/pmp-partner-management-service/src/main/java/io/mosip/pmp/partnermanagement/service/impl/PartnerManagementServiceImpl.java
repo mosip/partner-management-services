@@ -78,30 +78,30 @@ import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 
 @Service
 public class PartnerManagementServiceImpl implements PartnerManagementService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
-	
+
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;	
-	
+
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
 
 	@Autowired
 	PartnerRepository partnerRepository;
-	
+
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
-	
+
 	@Autowired
 	PolicyGroupRepository policyGroupRepository;
-	
+
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
 
 	@Autowired
 	MispServiceRepository mispRepository;
-	
+
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
 			String partnerID, String policyAPIKey) {
@@ -129,7 +129,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				LOGGER.info(partnerID +" : Valied PartnerID");
 				LOGGER.info("Getting details from auth Policy table");
 				Optional<AuthPolicy> oldFindByAuthId = authPolicyRepository.findById(oldAuthPolicyId);
-				
+
 				if(oldFindByAuthId.isPresent()) {
 					oldAuthPolicy = oldFindByAuthId.get();
 				}
@@ -137,7 +137,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				if(oldAuthPolicy!=null) {
 					oldPolicyId = oldAuthPolicy.getPolicyGroup().getId();
 				}
-				
+
 				LOGGER.info(oldPolicyId + " : Existing Policy ID");
 				if (oldPolicyId!=null && oldPolicyId.equalsIgnoreCase(request.getOldPolicyID())) {
 					LOGGER.info(request.getOldPolicyID() + " : This is valied Existing or Old Policy ID");
@@ -145,16 +145,16 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					if (newFindByGroupId.isPresent()) {
 						LOGGER.info(request.getNewPolicyID() + " : This is valied new Policy ID");
 						newPolicyGroup = newFindByGroupId.get();
-						
+
 						newAuthPolicy = authPolicyRepository.findByPolicyId(newPolicyGroup.getId());
-						
+
 					} else {
 						LOGGER.info(request.getNewPolicyID() + " : This is Invalied new Policy ID");
 						throw new NewPolicyIdNotExistException(
 								NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorCode(),
 								NewPolicyIdNotExistConstant.NEW_POLICY_ID_NOT_EXIST.getErrorMessage());
 					}
-					
+
 					partnerPolicy.setPolicyId(newAuthPolicy.getId());
 					partnerPolicyRepository.save(partnerPolicy);
 					LOGGER.info(partnerPolicy.getPolicyApiKey() + " : Updated Successfully");
@@ -176,14 +176,14 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIKeyDoesNotExistConstant.PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		
-		
+
+
 		/*
 		 * Updating Partner Policy in Partner Table..!
 		 */
-		
+
 		Optional<Partner> partnerFindById = partnerRepository.findById(partnerID);
-		
+
 		if(partnerFindById.isPresent()) {
 			Partner partner = partnerFindById.get();
 			partner.setPolicyGroupId(newPolicyGroup.getId());
@@ -196,7 +196,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		
+
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Partner api key to Policy Mappings updated successfully");
 		return partnersPolicyMappingResponse;
@@ -211,7 +211,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		if (findById.isPresent()) {
 			Partner partner = findById.get();
 			String partnerStatus = request.getStatus();
-			
+
 			if(partnerStatus.equalsIgnoreCase("Active") || partnerStatus.equalsIgnoreCase("De-Active")) {
 				if(partnerStatus.equalsIgnoreCase("Active")) {
 					partner.setIsActive(true);
@@ -224,8 +224,8 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
 						InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
 			}
-				partner.setUpdBy(getUser());	
-				partner.setUpdDtimes(Timestamp.valueOf(now));	
+			partner.setUpdBy(getUser());	
+			partner.setUpdDtimes(Timestamp.valueOf(now));	
 			partnerRepository.save(partner);
 		} else {
 			LOGGER.info(partnerID + " : Partner Id Does Not Exist");
@@ -236,7 +236,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		partnersPolicyMappingResponse.setMessage("Partner status updated successfully");
 		return partnersPolicyMappingResponse;
 	}
-	
+
 	@Override
 	public PartnersPolicyMappingResponse activateDeactivatePartnerAPIKeyGivenPartner(String partnerID,
 			ActivateDeactivatePartnerRequest request, String partnerAPIKey) {
@@ -245,7 +245,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		if (findById.isPresent()) {
 			PartnerPolicy partnerPolicy = findById.get();
 			if (partnerPolicy.getPartner().getId().equals(partnerID)) {
-				
+
 				if(request.getStatus().equalsIgnoreCase("Active") || request.getStatus().equalsIgnoreCase("De-Active")) {
 					if(request.getStatus().equalsIgnoreCase("Active")) {
 						partnerPolicy.setIsActive(true);
@@ -280,28 +280,32 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	}
 
 	@Override
-	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup() {
+	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup(Optional<String> partnerType) {
 		RetrievePartnerDetailsResponse partnersResponse = new RetrievePartnerDetailsResponse();
 		List<RetrievePartnersDetails> partners = new ArrayList<RetrievePartnersDetails>();
-
-		List<Partner> listPart = partnerRepository.findAll();
+		List<Partner> partnersFromDb = null;
+		if(partnerType.isPresent() && !partnerType.get().trim().isEmpty()) {
+			partnersFromDb = partnerRepository.findByPartnerType(partnerType.get());
+		}else {
+			partnersFromDb = partnerRepository.findAll();
+		}
 		Partner partner = null;
-		if(listPart.isEmpty()) {
+		if(partnersFromDb.isEmpty()) {
 			throw new PartnerValidationException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		Iterator<Partner> partnerIterat = listPart.iterator();
+		Iterator<Partner> partnerIterat = partnersFromDb.iterator();
 		while (partnerIterat.hasNext()) {
 			RetrievePartnersDetails retrievePartnersDetails = new RetrievePartnersDetails();
 			partner = partnerIterat.next();
-
 			retrievePartnersDetails.setPartnerID(partner.getId());
 			retrievePartnersDetails.setStatus(partner.getIsActive()== true ? "Active" : "De-Active");
 			retrievePartnersDetails.setOrganizationName(partner.getName());
 			retrievePartnersDetails.setContactNumber(partner.getContactNo());
 			retrievePartnersDetails.setEmailId(partner.getEmailId());
 			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			partners.add(retrievePartnersDetails);
 		}
 		partnersResponse.setPartners(partners);
@@ -348,9 +352,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				}else {
 					throw new PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException(
 							PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant.PARTNER_API_DOES_NOT_BELONGS_TO_THE_POLICYGROUP_OF_PARTNERMANAGER_EXCEPTION
-									.getErrorCode(),
+							.getErrorCode(),
 							PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerConstant.PARTNER_API_DOES_NOT_BELONGS_TO_THE_POLICYGROUP_OF_PARTNERMANAGER_EXCEPTION
-									.getErrorMessage());
+							.getErrorMessage());
 				}
 			} else {
 				LOGGER.info(partnerID + " : Partner Not Exist Exception");
@@ -369,13 +373,13 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	@Override
 	public List<ApikeyRequests> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers() {
-		
+
 		List<ApikeyRequests> requests = new ArrayList<ApikeyRequests>();
-		
+
 		List<PartnerPolicyRequest> findAll = partnerPolicyRequestRepository.findAll();
-		
+
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		
+
 		String parnerId = null;
 		PolicyGroup policyGroup = null;
 		if(!findAll.isEmpty()) {			
@@ -386,25 +390,25 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				parnerId = partnerPolicyRequest.getPartner().getId();
 				apikeyRequests.setPartnerID(parnerId);
 				apikeyRequests.setStatus(partnerPolicyRequest.getStatusCode());
-				
+
 				Optional<Partner> findByPartnerId = partnerRepository.findById(parnerId);
-				
+
 				if(!findByPartnerId.isPresent()) {
 					throw new PartnerValidationException(
 							PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 							PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 				}
-				
+
 				Partner partner = findByPartnerId.get();
-				
+
 				apikeyRequests.setOrganizationName(partner.getName());
-				
+
 				String policyGroupId = partner.getPolicyGroupId();
 				Optional<PolicyGroup> findById = policyGroupRepository.findById(policyGroupId);
 				if(findById.isPresent()) {
 					policyGroup = findById.get();
 				}
-				
+
 				if(policyGroup!=null) {
 					apikeyRequests.setPolicyName(policyGroup.getName());
 					apikeyRequests.setPolicyDesc(policyGroup.getDescr());
@@ -417,7 +421,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorCode(),
 					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorMessage());
 		}
-		
+
 		return requests;
 	}
 
@@ -429,21 +433,21 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(apiKeyReqID);
 		if(findById.isPresent()) {
 			PartnerPolicyRequest partnerPolicyRequest = findById.get();
-			
+
 			String partnerId = partnerPolicyRequest.getPartner().getId();
 			String policyId = partnerPolicyRequest.getPolicyId();
-			
+
 			Optional<Partner> findByPartnerId = partnerRepository.findById(partnerId);
 			if(findByPartnerId.isPresent()) {
 				partner = findByPartnerId.get();
 			}
-			
+
 			Optional<PolicyGroup> findByPolicyId = policyGroupRepository.findById(policyId);
-			
+
 			if(findByPolicyId.isPresent()) {
 				policyGroup = findByPolicyId.get();
 			}
-			
+
 			if(partner!=null & policyGroup!=null) {
 				apikeyRequests.setPartnerID(partner.getId());
 				apikeyRequests.setStatus(partnerPolicyRequest.getStatusCode());
@@ -452,13 +456,13 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				apikeyRequests.setPolicyDesc(policyGroup.getDescr());
 				apikeyRequests.setApiKeyReqNo(partnerPolicyRequest.getId());
 			}
-			
+
 		}else {
 			throw new NoPartnerApiKeyRequestsException(
 					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorCode(),
 					NoPartnerApiKeyRequestsConstant.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorMessage());
 		}
-		
+
 		return apikeyRequests;
 	}
 
@@ -470,15 +474,15 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		LocalDateTime now = LocalDateTime.now();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(partnerKeyReqId);
-		
+
 		if(!findById.isPresent()) {
 			throw new PartnerAPIDoesNotExistException(
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		
+
 		partnerPolicyRequest = findById.get();
-		
+
 		if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("In-Progress") && (request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
 			partnerPolicyRequest.setStatusCode(request.getStatus());
 		}else {
@@ -490,26 +494,26 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		partnerPolicyRequest.setUpdBy(getUser());
 		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		
+
 		if(request.getStatus().equalsIgnoreCase("Approved")) {
 			LOGGER.info("Creating PartnerAPIKey");
 			LOGGER.info("Partner_API_Key should be unique for same partner");
 			PartnerPolicy partnerPolicy = new PartnerPolicy();
 			partnerId = partnerPolicyRequest.getPartner().getId();
 			PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partnerId);
-			
+
 			if(findByPartnerId!=null) {
 				LOGGER.info(partnerKeyReqId + " : this partnerKeyReqId already have PartnerAPIKey");
 			}else {
 				String partnerAPIKey = PartnerUtil.createPartnerApiKey(); 
-	 			Optional<PartnerPolicy> detailPartnerAPIKey = partnerPolicyRepository.findById(partnerAPIKey);
+				Optional<PartnerPolicy> detailPartnerAPIKey = partnerPolicyRepository.findById(partnerAPIKey);
 				if(!detailPartnerAPIKey.isPresent()) {
 					partnerPolicy.setPolicyApiKey(partnerAPIKey);
 					partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-					
+
 					LOGGER.info("Need to check authPolicyId");
 					String policyId = partnerPolicyRequest.getPolicyId();
-					
+
 					AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policyId);
 					if(findByPolicyId!=null) {
 						partnerPolicy.setPolicyId(findByPolicyId.getId());
@@ -530,7 +534,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	@Override
 	public RetrievePartnerManagers getPartnerManager() {
-		
+
 		RetrievePartnerManagers partnersResponse = new RetrievePartnerManagers();
 		List<RetrievePartnersManagersDetails> partners = new ArrayList<>();
 
@@ -546,38 +550,38 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		while (partnerIterat.hasNext()) {
 			RetrievePartnersManagersDetails retrievePartnersManagersDetails = new RetrievePartnersManagersDetails();
 			partner = partnerIterat.next();
-			
+
 			retrievePartnersManagersDetails.setPartnerID(partner.getId());
 			retrievePartnersManagersDetails.setPartnerStatus(partner.getIsActive()== true ? "Active" : "De-Active");
-			
-			
+
+
 			retrievePartnersManagersDetails.setPolicyID(partner.getPolicyGroupId());
-			
+
 			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-			
+
 			if(findByIdpolicyGroup.isPresent()) {
 				retrievePartnersManagersDetails.setPolicyName(findByIdpolicyGroup.get().getName());
 			}
-			
+
 			String statusCode = null;
 			String aPIKeyReqID = null;
-			
+
 			if(!partnerPolicyRequestRepository.findByPartnerId(partner.getId()).isEmpty()) {
 				statusCode = partnerPolicyRequestRepository.findByPartnerId(partner.getId()).get(0).getStatusCode();
 				aPIKeyReqID = partnerPolicyRequestRepository.findByPartnerId(partner.getId()).get(0).getId();
-				
+
 			}else {
 				statusCode = "YET TO SUBMIT";
 				aPIKeyReqID = "NOT CREATED";
 			}
-			
+
 			retrievePartnersManagersDetails.setApikeyReqIDStatus(statusCode);
 			retrievePartnersManagersDetails.setApikeyReqID(aPIKeyReqID);
-			
-			
+
+
 			String policyId = null;
 			String policyIdStatus = null;
-			
+
 			PartnerPolicy partnerPolicy = null;
 			partnerPolicy = partnerPolicyRepository.findByPartnerId(partner.getId());
 			if(partnerPolicy!=null) {
@@ -587,11 +591,11 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 				policyId = "NOT CREATED";
 				policyIdStatus = "UNDEFINED";
 			}
-			
+
 			retrievePartnersManagersDetails.setPartnerAPIKey(policyId);
 			retrievePartnersManagersDetails.setPartnerAPIKeyStatus(policyIdStatus);
-			
-			
+
+
 			partners.add(retrievePartnersManagersDetails);
 		}
 		partnersResponse.setPartners(partners);
@@ -600,7 +604,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	@Override
 	public PolicyIDResponse getPartnerPolicyID(String policyName) {
-		
+
 		PolicyGroup policyGroup = null;
 		PolicyIDResponse policyIDResponse = new PolicyIDResponse();
 		LOGGER.info("validating the policy group");
@@ -611,7 +615,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		return policyIDResponse;
 	}
-	
+
 	/**
 	 * (One Partner will have only one policy)
 	 * This method retrieves the policy json file for a partner.
@@ -659,7 +663,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
 					PartnerValidationsConstants.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
-			
+
 		}
 		if(!partnerPolicy.getIsActive()) {
 			throw new PartnerValidationException(
@@ -692,7 +696,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
-		
+
 		PartnerPolicyResponse response = new PartnerPolicyResponse();
 		response.setPolicyId(partnerPolicy.getPolicyId());
 		response.setPolicyDescription(authPolicy.get().getPolicyGroup().getDescr());
@@ -700,10 +704,10 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		response.setPolicyStatus(authPolicy.get().getIsActive());
 		response.setPartnerId(partnerPolicy.getPartner().getId());
 		response.setPartnerName(partnerPolicy.getPartner().getName());
-		
+
 		return response;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private PolicyDTO getAuthPolicies(String policeFileId,String authPolicyId) {
 		Policies policies = new Policies();		
@@ -717,14 +721,14 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
-		
+
 		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("authPolicies"));
 		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
 		authPolicies.setPolicies(policies);
 		authPolicies.setPolicyId(authPolicyId);
 		return authPolicies;
-		
-		
+
+
 	}
 	/**
 	 * This method validates the license key.
@@ -748,10 +752,10 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			message = "Expired";
 		}
 		response.setMessage("MISP " + mispLicense.getMispUniqueEntity().getMisp_id() + " with license key " 
-		+ mispLicense.getMispUniqueEntity().getLicense_key() + "  is " + message);
+				+ mispLicense.getMispUniqueEntity().getLicense_key() + "  is " + message);
 		return response;
 	}
-	
+
 	/**
 	 * This method retrieves the license details with license key.
 	 * @param licenseKey
@@ -761,22 +765,22 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		LOGGER.info("Retrieving the misp license key " + licenseKey);
 		MISPLicenseEntity mispLicense = null;
 		try {
-		mispLicense = misplKeyRepository.findByLicensekey(licenseKey);
-		if(mispLicense == null){
-			LOGGER.warn("No details found for license key " + licenseKey);
-			throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
-					PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
-		}
+			mispLicense = misplKeyRepository.findByLicensekey(licenseKey);
+			if(mispLicense == null){
+				LOGGER.warn("No details found for license key " + licenseKey);
+				throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
+						PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
+			}
 		}catch(Exception e) {
 			LOGGER.warn("No details found for license key " + licenseKey + e.getStackTrace());
 			throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
 		}
-		
-		
+
+
 		return mispLicense;		
 	}
-	
+
 	/**
 	 * 
 	 * @return

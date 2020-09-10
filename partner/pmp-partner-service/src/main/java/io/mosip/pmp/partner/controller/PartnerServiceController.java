@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,11 +283,13 @@ public class PartnerServiceController {
      * @throws JsonParseException 
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
-	@RequestMapping(value = "/getPartnerCertificate", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPartnerCertificate/{partnerId}", method = RequestMethod.GET)
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
-			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
+			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
-		response.setResponse(partnerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId(partnerId);		
+		response.setResponse(partnerService.getPartnerCertificate(requestDto));
 		return response;
     }	
 }

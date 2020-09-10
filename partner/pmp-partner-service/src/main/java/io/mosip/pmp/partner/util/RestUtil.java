@@ -138,10 +138,8 @@ public class RestUtil {
 		return result;
 	}
 	@SuppressWarnings("unchecked")
-	public <T> T getApi(String apiName, Map<String, String>  pathsegments,
-			Class<?> responseType)  {
-
-		String apiHostIpPort = environment.getProperty(apiName);
+	public <T> T getApi(String apiHostIpPort, Map<String, String>  pathsegments,
+			Class<?> responseType)  {		
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiHostIpPort != null) {

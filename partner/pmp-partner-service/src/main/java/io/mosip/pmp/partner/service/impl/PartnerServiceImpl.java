@@ -678,8 +678,8 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		PartnerCertDownloadResponeDto responseObject = null;
 		Map<String, String> pathsegments = new HashMap<>();
-		pathsegments.put("partnerId", partnerFromDb.get().getCertificateAlias());
-		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, String.class);
+		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
 		responseObject=mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), PartnerCertDownloadResponeDto.class);
 		if(responseObject == null && getApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(ERRORS);
