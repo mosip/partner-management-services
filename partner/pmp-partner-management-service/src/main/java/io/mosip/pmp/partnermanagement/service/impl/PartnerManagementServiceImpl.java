@@ -470,20 +470,27 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	public PartnersPolicyMappingResponse approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 			ActivateDeactivatePartnerRequest request, String partnerKeyReqId) {
 		PartnerPolicyRequest partnerPolicyRequest=null;
-		String partnerId = null;
 		LocalDateTime now = LocalDateTime.now();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
-		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(partnerKeyReqId);
-
+		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(partnerKeyReqId);		
 		if(!findById.isPresent()) {
 			throw new PartnerAPIDoesNotExistException(
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
+		if(findById.get().getStatusCode().equalsIgnoreCase("Approved")) {
+			throw new InvalidInputParameterException(
+					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_APPROVED.getErrorCode(),
+					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_APPROVED.getErrorMessage());
 
-		partnerPolicyRequest = findById.get();
-
-		if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase("In-Progress") && (request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
+		}
+		if(findById.get().getStatusCode().equalsIgnoreCase("Rejected")) {
+			throw new InvalidInputParameterException(
+					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_REJECTED.getErrorCode(),
+					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_REJECTED.getErrorMessage());
+		}		
+		partnerPolicyRequest = findById.get();		
+		if((request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
 			partnerPolicyRequest.setStatusCode(request.getStatus());
 		}else {
 			LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
@@ -493,43 +500,27 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		partnerPolicyRequest.setUpdBy(getUser());
 		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
-		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-
+		partnerPolicyRequestRepository.save(partnerPolicyRequest);		
 		if(request.getStatus().equalsIgnoreCase("Approved")) {
 			LOGGER.info("Creating PartnerAPIKey");
 			LOGGER.info("Partner_API_Key should be unique for same partner");
-			PartnerPolicy partnerPolicy = new PartnerPolicy();
-			partnerId = partnerPolicyRequest.getPartner().getId();
-			PartnerPolicy findByPartnerId = partnerPolicyRepository.findByPartnerId(partnerId);
-
-			if(findByPartnerId!=null) {
-				LOGGER.info(partnerKeyReqId + " : this partnerKeyReqId already have PartnerAPIKey");
-			}else {
-				String partnerAPIKey = PartnerUtil.createPartnerApiKey(); 
-				Optional<PartnerPolicy> detailPartnerAPIKey = partnerPolicyRepository.findById(partnerAPIKey);
-				if(!detailPartnerAPIKey.isPresent()) {
-					partnerPolicy.setPolicyApiKey(partnerAPIKey);
-					partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-
-					LOGGER.info("Need to check authPolicyId");
-					String policyId = partnerPolicyRequest.getPolicyId();
-
-					AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(policyId);
-					if(findByPolicyId!=null) {
-						partnerPolicy.setPolicyId(findByPolicyId.getId());
-					}
-					partnerPolicy.setIsActive(true);
-					partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
-					partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
-					partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
-					partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
-					partnerPolicyRepository.save(partnerPolicy);
-					LOGGER.info(partnerAPIKey + " : APIKEY Successfully created");
-				}
+			PartnerPolicy partnerPolicy = new PartnerPolicy();			
+			String partnerAPIKey = PartnerUtil.createPartnerApiKey(); 
+			partnerPolicy.setPolicyApiKey(partnerAPIKey);
+			partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
+			AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(findById.get().getPolicyId());
+			if(findByPolicyId!=null) {
+				partnerPolicy.setPolicyId(findByPolicyId.getId());
 			}
+			partnerPolicy.setIsActive(true);
+			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
+			partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(60)));
+			partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
+			partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
+			partnerPolicyRepository.save(partnerPolicy);	
 		}
 		partnersPolicyMappingResponse.setMessage("PartnerAPIKey Updated successfully");
-		return partnersPolicyMappingResponse;
+		return partnersPolicyMappingResponse;	
 	}
 
 	@Override
@@ -670,7 +661,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					PartnerValidationsConstants.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}		
-		if(partnerPolicy.getValidToDatetime().before(new Timestamp(System.currentTimeMillis()))){
+		if(partnerPolicy.getValidToDatetime().before(Timestamp.valueOf(LocalDateTime.now()))){
 			throw new PartnerValidationException(
 					PartnerValidationsConstants.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorCode(),
 					PartnerValidationsConstants.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());			

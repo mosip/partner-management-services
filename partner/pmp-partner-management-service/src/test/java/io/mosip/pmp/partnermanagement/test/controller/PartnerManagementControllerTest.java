@@ -86,7 +86,6 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
-		System.out.println(partnerManagementService);
 		String partnerID = "67899";
 		String partnerAPIKey = "45678";
 
