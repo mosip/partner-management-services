@@ -4,7 +4,7 @@ public enum InvalidInputParameterConstant {
 	
 	INVALIED_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter"),
 	POLICY_REQUEST_ALREADY_APPROVED("PMS_PM_034","Policy request already approved."),
-	POLICY_REQUEST_ALREADY_REJECTED("PMS_PM_034","Policy request already rejected.");
+  POLICY_REQUEST_ALREADY_REJECTED("PMS_PM_034","Policy request already rejected.");
 
 	/**
 	 * The error code.

@@ -140,7 +140,7 @@ public class PartnerManagementController {
 	 * @param misp_license_key
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value = "/validatePartnerMisp/partnerId/{partnerId}/partnerApiKey/{partner_api_key}/mispLicenseKey/{misp_license_key}", 
 			method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
@@ -185,7 +185,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value="", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(
 			@RequestParam("partnerType") Optional<String> partnerType){
@@ -203,7 +203,7 @@ public class PartnerManagementController {
 	 *   This API would be used to retrieve all Partner Details as per UI. 
 	 * @return response this class contains List of Partner.
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
 		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();

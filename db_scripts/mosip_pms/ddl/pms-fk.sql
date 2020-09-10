@@ -12,9 +12,9 @@
 -- ------------------------------------------------------------------------------------------
 
 -- object: fk_apol_polg | type: CONSTRAINT --
--- ALTER TABLE pmp.auth_policy DROP CONSTRAINT IF EXISTS fk_apol_polg CASCADE;
-ALTER TABLE pmp.auth_policy ADD CONSTRAINT fk_apol_polg FOREIGN KEY (policy_group_id)
-REFERENCES pmp.policy_group (id) MATCH FULL
+-- ALTER TABLE pms.auth_policy DROP CONSTRAINT IF EXISTS fk_apol_polg CASCADE;
+ALTER TABLE pms.auth_policy ADD CONSTRAINT fk_apol_polg FOREIGN KEY (policy_group_id)
+REFERENCES pms.policy_group (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
