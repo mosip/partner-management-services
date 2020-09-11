@@ -223,11 +223,22 @@ public class FTPChipDetailController {
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
 		FTPChipCertDownloadRequestDto requestDto = new FTPChipCertDownloadRequestDto();
 		requestDto.setFtpChipDetailId(ftpChipDetailId);
+		auditUtil.auditRequest(
+				AuthDeviceConstant.GET_CERTIFICATE_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				AuthDeviceConstant.GET_CERTIFICATE_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				"AUT-006");
+
 		if(ftpChipDetaillService.getFtpChipDeatils(ftpChipDetailId) != null) {
 			response.setResponse(ftpChipDetaillService.getPartnerCertificate(requestDto));
 		}else {
 			response.setResponse(regFtpChipDetailService.getPartnerCertificate(requestDto));
 		}
+		auditUtil.auditRequest(
+				String.format(AuthDeviceConstant.SUCCESSFUL_DOWNLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.SUCCESSFUL_DOWNLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				"AUT-007");
 		return response;
     }	
 }
