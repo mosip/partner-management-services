@@ -70,7 +70,9 @@ import io.mosip.pmp.authdevice.dto.SearchFilter;
 import io.mosip.pmp.authdevice.dto.SearchSort;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
+import io.mosip.pmp.authdevice.dto.TimestampRequestDto;
 import io.mosip.pmp.authdevice.dto.TokenRequestDTO;
+import io.mosip.pmp.authdevice.dto.ValidatorResponseDto;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
@@ -128,6 +130,9 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
+	
+	@Value("${mosip.kernel.sign-validate-url}")
+	private String signValidateUrl;
 
 	@Value("${spring.profiles.active}")
 	private String activeProfile;
@@ -152,7 +157,8 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		try {
 			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
 			validate(deviceData);
-			digitalId = mapper.readValue(CryptoUtil.decodeBase64(deviceData.getDeviceInfo().getDigitalId()),
+			String digitalIdPayLoad = getPayLoad(deviceData.getDeviceInfo().getDigitalId());
+			digitalId = mapper.readValue(CryptoUtil.decodeBase64(digitalIdPayLoad),
 					DigitalId.class);
 			validate(digitalId);
 			deviceDetail = deviceDetailRepository.findByDeviceDetail(digitalId.getMake(), digitalId.getModel(),
@@ -254,7 +260,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 				throw new RequestException(RegisteredDeviceErrorCode.SERIALNUM_NOT_EXIST.getErrorCode(), String.format(
 						RegisteredDeviceErrorCode.SERIALNUM_NOT_EXIST.getErrorMessage(), digitalId.getSerialNo()));
 			}
-		} catch ( IOException e) {
+		} catch ( Exception e) {
 			throw new AuthDeviceServiceException(
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
@@ -447,8 +453,39 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 
 	private String getPayLoad(String jws) {
 		String[] split = jws.split("\\.");
-		if (split.length >= 2) {
-			return split[1];
+		if (split.length > 2) {
+			RequestWrapper<TimestampRequestDto> request = new RequestWrapper<>();
+			TimestampRequestDto signatureRequestDto = new TimestampRequestDto();
+			ValidatorResponseDto signResponse = new ValidatorResponseDto();
+			
+			
+			try {
+				signatureRequestDto.setData(new String(CryptoUtil.decodeBase64(split[1])));
+				signatureRequestDto.setSignature(new String(CryptoUtil.decodeBase64(split[2])));
+				signatureRequestDto.setTimestamp(LocalDateTime.now(ZoneId.of("UTC")));
+				request.setRequest(signatureRequestDto);
+				ResponseEntity<String> response = restTemplate.exchange(signValidateUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
+				ResponseWrapper<?> responseObject;
+				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
+				if(responseObject.getResponse()!=null) {		
+				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
+								ValidatorResponseDto.class);
+				if(signResponse.getStatus().equals("Success")) {
+					return split[1];
+				}
+				}else if(responseObject.getResponse()==null & responseObject.getErrors()!=null) {
+					throw new AuthDeviceServiceException(
+							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
+							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage() + " "
+									+ responseObject.getErrors().getMessage());
+				}
+			} catch (Exception e) {
+					throw new AuthDeviceServiceException(
+								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorCode(),
+								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorMessage() + " "
+										+ e.getMessage());
+					}
+			
 		}
 		return jws;
 	}

@@ -41,6 +41,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -70,7 +73,9 @@ import io.mosip.pmp.authdevice.dto.SearchFilter;
 import io.mosip.pmp.authdevice.dto.SearchSort;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
+import io.mosip.pmp.authdevice.dto.TimestampRequestDto;
 import io.mosip.pmp.authdevice.dto.TokenRequestDTO;
+import io.mosip.pmp.authdevice.dto.ValidatorResponseDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.entity.RegisteredDeviceHistory;
@@ -129,6 +134,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 
+	@Value("${mosip.kernel.sign-validate-url}")
+	private String signValidateUrl;
+	
 	@Value("${spring.profiles.active}")
 	private String activeProfile;
 
@@ -146,13 +154,15 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		DigitalId digitalId = null;
 		DeviceDetail deviceDetail = null;
 		RegisterDeviceResponse registerDeviceResponse = null;
-		String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
+		
 		String headerString, signedResponse, registerDevice = null;
 
 		try {
+			String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
 			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
 			validate(deviceData);
-			digitalId = mapper.readValue(CryptoUtil.decodeBase64(deviceData.getDeviceInfo().getDigitalId()),
+			String digitalIdPayLoad = getPayLoad(deviceData.getDeviceInfo().getDigitalId());
+			digitalId = mapper.readValue(CryptoUtil.decodeBase64(digitalIdPayLoad),
 					DigitalId.class);
 			validate(digitalId);
 			deviceDetail = deviceDetailRepository.findByDeviceDetail(digitalId.getMake(), digitalId.getModel(),
@@ -445,10 +455,41 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	}
 
-	private String getPayLoad(String jws) {
+	private String getPayLoad(String jws) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		String[] split = jws.split("\\.");
-		if (split.length >= 2) {
-			return split[1];
+		if (split.length > 2) {
+			RequestWrapper<TimestampRequestDto> request = new RequestWrapper<>();
+			TimestampRequestDto signatureRequestDto = new TimestampRequestDto();
+			ValidatorResponseDto signResponse = new ValidatorResponseDto();
+			
+			
+			try {
+				signatureRequestDto.setData(new String(CryptoUtil.decodeBase64(split[1])));
+				signatureRequestDto.setSignature(new String(CryptoUtil.decodeBase64(split[2])));
+				signatureRequestDto.setTimestamp(LocalDateTime.now(ZoneId.of("UTC")));
+				request.setRequest(signatureRequestDto);
+				ResponseEntity<String> response = restTemplate.exchange(signValidateUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
+				ResponseWrapper<?> responseObject;
+				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
+				if(responseObject.getResponse()!=null) {		
+				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
+								ValidatorResponseDto.class);
+				if(signResponse.getStatus().equals("Success")) {
+					return split[1];
+				}
+				}else if(responseObject.getResponse()==null & responseObject.getErrors()!=null) {
+					throw new AuthDeviceServiceException(
+							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
+							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage() + " "
+									+ responseObject.getErrors().getMessage());
+				}
+			} catch (Exception e) {
+					throw new AuthDeviceServiceException(
+								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorCode(),
+								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorMessage() + " "
+										+ e.getMessage());
+					}
+			
 		}
 		return jws;
 	}
@@ -458,8 +499,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RegisteredDevice deviceRegisterEntity = null;
 		RegisteredDeviceHistory deviceRegisterHistory = new RegisteredDeviceHistory();
 		String headerString, signedResponse, deRegisterDevice = null;
-		String devicePayLoad = getPayLoad(deRegisterDevicePostDto.getDevice());
+		
 		try {
+			String devicePayLoad = getPayLoad(deRegisterDevicePostDto.getDevice());
 			DeRegisterDeviceReqDto device = mapper.readValue(CryptoUtil.decodeBase64(devicePayLoad), DeRegisterDeviceReqDto.class);
 			validate(device);
 			deviceRegisterEntity = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(device.getDeviceCode());

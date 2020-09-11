@@ -15,6 +15,8 @@ public enum RegisteredDeviceErrorCode {
 	DEVICE_REGISTER_DELETED_EXCEPTION("PMS_AUT_017", "error occured while de registering device"),
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_018", "device detail not found"),
 	FTP_NOT_FOUND("PMS_AUT_019", "FTP not found"), 
+	REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION("PMS_AUT_021", "error occured while doing signature validation"),
+	REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE("PMS_AUT_022", " signature validation failed -"),
 	SERIALNUM_NOT_EXIST("PMS_AUT_020", "serial number does not exist");
 	
 
