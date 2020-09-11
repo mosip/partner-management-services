@@ -136,7 +136,7 @@ public interface PartnerService {
     /**
      * Function to Download Partner certificates
      * 
-     * @param PartnerCertDownloadRequestDto certDownloadRequestDto
+     * @param FTPChipCertDownloadRequestDto certDownloadRequestDto
      * @return {@link PartnerCertDownloadResponeDto} instance
      * @throws IOException 
      * @throws JsonProcessingException 

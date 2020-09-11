@@ -98,4 +98,8 @@ public class AuthDeviceConstant {
 	public static final String REJECT="De-activate";
 	public static final String STATUS_UPDATE_FAILURE = "Status Update %s - Failure";
 	public static final String STATUS_UPDATE_API_IS_CALLED = "Status update API called::";
+	public static final String CERTIFICATE_UPLOAD_API_IS_CALLED = "Certificate upload API called::";
+	public static final String GET_CERTIFICATE_API_IS_CALLED = "GET Certificate API called::";
+	public static final String SUCCESSFUL_UPLOAD="Upload %s - Success";
+	public static final String SUCCESSFUL_DOWNLOAD="Download %s - Success";
 }
