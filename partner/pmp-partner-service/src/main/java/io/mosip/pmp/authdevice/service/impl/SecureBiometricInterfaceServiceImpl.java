@@ -215,7 +215,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
 			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);
-			sbiRepository.save(entity);
+			entity.setActive(true);
+			sbiRepository.save(entity);			
 			return "Secure biometric details approved successfully.";
 		}
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
