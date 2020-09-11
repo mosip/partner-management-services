@@ -1,6 +1,7 @@
 package io.mosip.pmp.partner.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +22,13 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "Model representing request to upload Partner certificates.")
 public class PartnerCertificateRequestDto {
     
+	/**
+	 * 
+	 */
+	@NotBlank
+	@NotNull
+	String partnerId;
+	
     /**
 	 * Certificate Data of Partner.
 	 */
@@ -41,4 +49,8 @@ public class PartnerCertificateRequestDto {
 	@ApiModelProperty(notes = "Partner Type", required = true)
 	@NotBlank
 	String partnerType;
+	
+	@NotBlank
+	@NotNull
+	String partnerDomain;
 }

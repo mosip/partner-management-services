@@ -1,6 +1,7 @@
 package io.mosip.pmp.partnermanagement.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
@@ -54,7 +55,7 @@ public interface PartnerManagementService {
 	 * This method would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return retrievePartnerDetailsResponse this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup();
+	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup(Optional<String> partnerType);
 	
 	/**
 	 * This method would be used to retrieve the particular Auth/E-KYC Partner details for given partner id.

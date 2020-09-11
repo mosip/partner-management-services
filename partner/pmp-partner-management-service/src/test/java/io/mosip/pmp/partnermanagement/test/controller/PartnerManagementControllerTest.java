@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -85,7 +86,6 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
-		System.out.println(partnerManagementService);
 		String partnerID = "67899";
 		String partnerAPIKey = "45678";
 
@@ -176,7 +176,7 @@ public class PartnerManagementControllerTest {
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getAllAuthEKYCPartnersForThePolicyGroupTest() throws Exception {
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = new RetrievePartnerDetailsResponse();
-		Mockito.when(partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup())
+		Mockito.when(partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty()))
 				.thenReturn(retrievePartnerDetailsResponse);
 		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/")).andExpect(MockMvcResultMatchers.status().isOk());
 	}

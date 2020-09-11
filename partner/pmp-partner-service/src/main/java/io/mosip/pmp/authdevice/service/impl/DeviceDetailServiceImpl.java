@@ -212,13 +212,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		}
 		
 		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
-			entity.setApprovalStatus(AuthDeviceConstant.APPROVE);	
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);	
 			entity.setIsActive(true);
 			deviceDetailRepository.save(entity);
 			return "Device details approved successfully.";
 		}
 		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
-			entity.setApprovalStatus(AuthDeviceConstant.REJECT);	
+			entity.setApprovalStatus(AuthDeviceConstant.REJECTED);	
 			entity.setIsActive(false);
 			deviceDetailRepository.save(entity);
 			return "Device details rejected successfully.";

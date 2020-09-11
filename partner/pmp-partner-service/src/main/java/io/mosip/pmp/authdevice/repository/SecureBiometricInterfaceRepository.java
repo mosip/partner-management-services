@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import io.mosip.pmp.authdevice.entity.SecureBiometricInterface;
 @Repository
 public interface SecureBiometricInterfaceRepository extends JpaRepository<SecureBiometricInterface, String>{
-	@Query("FROM SecureBiometricInterface d where d.id = ?1 AND (d.isDeleted is null or d.isDeleted = false)")
+	@Query(value ="select * from  secure_biometric_interface d where d.id = ?1 AND (d.is_deleted is null or d.is_deleted = false)",nativeQuery = true)
 	SecureBiometricInterface findByIdAndIsDeletedFalseOrIsDeletedIsNull(String id);
 
 }

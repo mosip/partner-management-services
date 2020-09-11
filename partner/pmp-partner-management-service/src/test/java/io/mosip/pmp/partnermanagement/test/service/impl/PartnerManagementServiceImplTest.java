@@ -230,7 +230,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerValidationException.class)
 	public void getAllAuthEKYCPartnersForThePolicyGroupTest_S1() {
-		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup();
+		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty());
 	}
 	
 	@Test
@@ -238,7 +238,7 @@ public class PartnerManagementServiceImplTest {
 		List<Partner> partners = new ArrayList<Partner>();
 		partners.add(getPartner());
 		Mockito.when(partnerRepository.findAll()).thenReturn(partners);
-		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup();
+		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty());
 	}
 	
 	@Test
@@ -249,7 +249,7 @@ public class PartnerManagementServiceImplTest {
 		part.setIsActive(false);
 		partners.add(part);
 		Mockito.when(partnerRepository.findAll()).thenReturn(partners);
-		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup();
+		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty());
 	}
 	
 	@Test

@@ -5,8 +5,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,14 +22,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
+import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.constant.EmailIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyReqDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
+import io.mosip.pmp.partner.constant.PartnerExceptionConstants;
 import io.mosip.pmp.partner.constant.PartnerIdExceptionConstant;
 import io.mosip.pmp.partner.constant.PartnerTypeDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PolicyGroupDoesNotExistConstant;
@@ -59,12 +66,14 @@ import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
+import io.mosip.pmp.partner.exception.ApiAccessibleException;
 import io.mosip.pmp.partner.exception.EmailIdAlreadyExistException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
+import io.mosip.pmp.partner.exception.PartnerServiceException;
 import io.mosip.pmp.partner.exception.PartnerTypeDoesNotExistException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
@@ -115,20 +124,26 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerHRepository partnerHRepository;
-	
+
 	@Autowired
 	RestUtil restUtil;
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Autowired
 	private ObjectMapper mapper;
 
 
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
-	
+
+	private static final String ERRORS = "errors";
+
+	private static final String ERRORCODE = "errorCode";
+
+	private static final String ERRORMESSAGE = "message";
+
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -336,7 +351,6 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new EmailIdAlreadyExistException(
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
-
 		}
 		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId,request.getEmailId());
 		String resultMessage;
@@ -440,7 +454,6 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicy partnerPolicy = null;
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
 		Optional<PartnerPolicyRequest> partnerRequest = partnerPolicyRequestRepository.findById(aPIKeyReqID);
-
 		if (partnerRequest.isPresent()) {
 			LOGGER.info(aPIKeyReqID + " : Valied APIKeyReqID");
 			PartnerPolicyRequest partnerPolicyRequest = partnerRequest.get();
@@ -477,7 +490,6 @@ public class PartnerServiceImpl implements PartnerService {
 		List<APIkeyRequests> listAPIkeyRequests = new ArrayList<>();
 		PartnerPolicyRequest partnerPolicyRequest = null;
 		if (!findByPartnerId.isEmpty()) {
-
 			LOGGER.info(partnerID + " : Valied PartnerId");
 			LOGGER.info(findByPartnerId.size() + " : Number of recods found");
 
@@ -585,51 +597,104 @@ public class PartnerServiceImpl implements PartnerService {
 	public  boolean emailValidator(String email) {
 		return email.matches(emailRegex);
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto) {
+	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		RequestWrapper<CACertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(caCertRequestDto);
 		request.setRequesttime(LocalDateTime.now());
-		request.setId("123");
-		String response= restUtil.postApi(environment.getProperty("pmp.ca.certificaticate.upload.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, String.class);
-		try {
-			CACertificateResponseDto responseObject = mapper.readValue(response, CACertificateResponseDto.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		CACertificateResponseDto responseObject = null;
+		Map<String, Object> uploadApiResponse= restUtil.postApi(environment.getProperty("pmp.ca.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class);
+		LOGGER.info("Calling the upload ca certificate api");
+		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), CACertificateResponseDto.class);		
+		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
+			if(!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			}else {				
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());				
+			}				
 		}
-		return null;
+		if(responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
+
+		return responseObject;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto) {
+	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerCertRequesteDto.getPartnerId());
+		if(partnerFromDb.isEmpty()) {
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(partnerCertRequesteDto);
-		String response= restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, String.class);
-		try {
-			PartnerCertificateResponseDto responseObject = mapper.readValue(response, PartnerCertificateResponseDto.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		PartnerCertificateResponseDto responseObject = null;
+		Map<String, Object> uploadApiResponse = restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class);		
+		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), PartnerCertificateResponseDto.class);
+		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
+			if(!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			}else {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
 		}
-		return null;
+		if(responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
+		}
+		
+		Partner updateObject = partnerFromDb.get();
+		updateObject.setUpdBy(getUser());
+		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		updateObject.setCertificateAlias(responseObject.getCertificateId());
+		partnerRepository.save(updateObject);
+		return responseObject;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) {
-		RequestWrapper<PartnerCertDownloadRequestDto> request = new RequestWrapper<>();
-		request.setRequest(certDownloadRequestDto);
-		String response= restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, String.class);
-		try {
-			PartnerCertDownloadResponeDto responseObject = mapper.readValue(response, PartnerCertDownloadResponeDto.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+		if(partnerFromDb.isEmpty()) {
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
 		}
-		return null;
+		if(partnerFromDb.get().getCertificateAlias() == null) {
+		  throw new PartnerServiceException(PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+				  PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());	
+		}
+		PartnerCertDownloadResponeDto responseObject = null;
+		Map<String, String> pathsegments = new HashMap<>();
+		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
+		responseObject=mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), PartnerCertDownloadResponeDto.class);
+		if(responseObject == null && getApiResponse.containsKey(ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(ERRORS);
+			if(!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			}else {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
+		}
+		if(responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
+		}
+
+		return responseObject;
 	}
 }

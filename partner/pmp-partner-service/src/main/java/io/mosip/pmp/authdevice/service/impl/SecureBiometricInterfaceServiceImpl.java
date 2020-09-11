@@ -106,6 +106,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		historyEntity.setSwVersion(entity.getSwVersion());
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
+		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
 		
 		return historyEntity;
 		
@@ -184,6 +185,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		historyEntity.setSwVersion(entity.getSwVersion());
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
+		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
 		
 		return historyEntity;
 		
@@ -212,12 +214,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		}
 
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
-			entity.setApprovalStatus(AuthDeviceConstant.APPROVE);
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);
 			sbiRepository.save(entity);
 			return "Secure biometric details approved successfully.";
 		}
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
-			entity.setApprovalStatus(AuthDeviceConstant.REJECT);	
+			entity.setApprovalStatus(AuthDeviceConstant.REJECTED);	
 			entity.setActive(false);
 			sbiRepository.save(entity);
 			return "Secure biometric details rejected successfully.";

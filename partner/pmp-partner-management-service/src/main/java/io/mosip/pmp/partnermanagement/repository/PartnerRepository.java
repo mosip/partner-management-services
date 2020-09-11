@@ -3,6 +3,7 @@ package io.mosip.pmp.partnermanagement.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.pmp.partnermanagement.entity.Partner;
@@ -24,4 +25,12 @@ public interface PartnerRepository extends JpaRepository<Partner, String> {
 	 */
 	
 	public List<Partner> findByName(String name);
+	
+	/**
+	 * 
+	 * @param partnerType
+	 * @return
+	 */
+	@Query(value = "select * from partner ppr where ppr.partner_type_code=?", nativeQuery = true)
+	public List<Partner> findByPartnerType(String partnerType);
 }

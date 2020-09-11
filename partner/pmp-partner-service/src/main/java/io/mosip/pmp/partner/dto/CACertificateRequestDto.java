@@ -27,4 +27,11 @@ public class CACertificateRequestDto {
 	@ApiModelProperty(notes = "X509 Certificate Data", required = true)
 	@NotBlank
 	String certificateData;
+	
+	 /**
+	 * Certificate Data of CA or Sub-CA.
+	 */
+	@ApiModelProperty(notes = "Partner Domain", required = true)
+	@NotBlank
+	String partnerDomain;
 }

@@ -11,5 +11,6 @@ public class RetrievePartnersDetails {
 	private String contactNumber;
 	private String emailId;
 	private String address;
+	private String partnerType;
 
 }
