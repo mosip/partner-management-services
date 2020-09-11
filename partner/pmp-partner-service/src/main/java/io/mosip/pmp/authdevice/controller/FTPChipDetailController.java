@@ -1,18 +1,29 @@
 package io.mosip.pmp.authdevice.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.authdevice.dto.FTPChipCertDownloadRequestDto;
+import io.mosip.pmp.authdevice.dto.FTPChipCertificateRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
@@ -22,9 +33,13 @@ import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.regdevice.service.RegFTPChipDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -134,8 +149,7 @@ public class FTPChipDetailController {
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting ftp chip detail any error occured") })
 	public ResponseWrapper<String> approveDeviceDetails(
-			@Valid @RequestBody RequestWrapper<FTPChipDetailStatusDto> chipDetailRequestDto){
-		
+			@Valid @RequestBody RequestWrapper<FTPChipDetailStatusDto> chipDetailRequestDto){		
 		auditUtil.auditRequest(
 				AuthDeviceConstant.STATUS_UPDATE_API_IS_CALLED + FTPChipDetailStatusDto.class.getCanonicalName(),
 				AuthDeviceConstant.AUDIT_SYSTEM,
@@ -158,4 +172,73 @@ public class FTPChipDetailController {
 
 		return responseWrapper;
 	}
+	
+	/**
+	 * To Upload FTP Chip Certificate.
+	 * 
+	 * @param partnerCertRequestDto {@link FTPChipCertificateRequestDto} request
+	 * @return {@link PartnerCertificateResponseDto} signed certificate response
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
+	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
+			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<FTPChipCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		auditUtil.auditRequest(
+				AuthDeviceConstant.CERTIFICATE_UPLOAD_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				AuthDeviceConstant.CERTIFICATE_UPLOAD_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				"AUT-006");
+		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
+		if(partnerCertRequestDto.getRequest().getIsItForRegistrationDevice()) {
+			response.setResponse(regFtpChipDetailService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+		}else {
+		response.setResponse(ftpChipDetaillService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+		}
+		auditUtil.auditRequest(
+				String.format(AuthDeviceConstant.SUCCESSFUL_UPLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.SUCCESSFUL_UPLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				"AUT-007");
+		return response;
+	}
+	
+    /**
+	 * To Download Partner Certificate.
+	 * 
+	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
+	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
+     * @throws IOException 
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
+	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
+			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
+		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
+		FTPChipCertDownloadRequestDto requestDto = new FTPChipCertDownloadRequestDto();
+		requestDto.setFtpChipDetailId(ftpChipDetailId);
+		auditUtil.auditRequest(
+				AuthDeviceConstant.GET_CERTIFICATE_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				AuthDeviceConstant.GET_CERTIFICATE_API_IS_CALLED + FTPChipCertificateRequestDto.class.getCanonicalName(),
+				"AUT-006");
+
+		if(ftpChipDetaillService.getFtpChipDeatils(ftpChipDetailId) != null) {
+			response.setResponse(ftpChipDetaillService.getPartnerCertificate(requestDto));
+		}else {
+			response.setResponse(regFtpChipDetailService.getPartnerCertificate(requestDto));
+		}
+		auditUtil.auditRequest(
+				String.format(AuthDeviceConstant.SUCCESSFUL_DOWNLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				AuthDeviceConstant.AUDIT_SYSTEM,
+				String.format(AuthDeviceConstant.SUCCESSFUL_DOWNLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
+				"AUT-007");
+		return response;
+    }	
 }
