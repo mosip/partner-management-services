@@ -211,12 +211,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				entityHistory.setCode(mapEntity.getCode());
 				entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
 				}
+				entityHistory=mapRegisteredDeviceHistory(entityHistory,mapEntity);
 				crtRegisteredDevice = registeredDeviceRepository.save(mapEntity);
 
-				
-				entityHistory=mapRegisteredDeviceHistory(entityHistory,crtRegisteredDevice);
-				
-				
 				registeredDeviceHistoryRepo.save(entityHistory);
 
 				digitalId = mapper.readValue(digitalIdJson, DigitalId.class);

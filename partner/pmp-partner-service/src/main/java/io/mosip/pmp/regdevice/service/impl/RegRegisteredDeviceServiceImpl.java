@@ -207,11 +207,8 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 				entityHistory.setCode(mapEntity.getCode());
 				entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
 				}
+				entityHistory=mapRegisteredDeviceHistory(entityHistory,mapEntity);
 				crtRegisteredDevice = registeredDeviceRepository.save(mapEntity);
-
-				
-				entityHistory=mapRegisteredDeviceHistory(entityHistory,crtRegisteredDevice);
-				
 				
 				registeredDeviceHistoryRepo.save(entityHistory);
 
