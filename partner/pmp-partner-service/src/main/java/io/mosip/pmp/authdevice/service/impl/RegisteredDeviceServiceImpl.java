@@ -131,7 +131,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 	
-	@Value("${mosip.staging.environment}")
+	@Value("${mosip.stage.environment}")
 	private String activeProfile;
 
 	@Value("${masterdata.registerdevice.timestamp.validate:+5}")
