@@ -215,6 +215,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
 			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);
+			entity.setActive(true);
 			sbiRepository.save(entity);
 			return "Secure biometric details approved successfully.";
 		}

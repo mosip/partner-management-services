@@ -11,13 +11,16 @@ public enum RegisteredDeviceErrorCode {
 	SERIALNO_DEVICEDETAIL_ALREADY_EXIST("PMS_AUT_015", "Serial no and Device detail already exist"),
 	REGISTERED_DEVICE_INSERTION_EXCEPTION("PMS_AUT_016", "error occured while saving data"),
 	DEVICE_REGISTER_NOT_FOUND_EXCEPTION("PMS_AUT_016", "Registered device not found"), 
-	DEVICE_DE_REGISTERED_ALREADY("PMS_AUT_016", "device already deregistered"), 
+	DEVICE_DE_REGISTERED_ALREADY("PMS_AUT_024", "device already deregistered"),
+	DEVICE_CODE_EXCEEDS_LENGTH("PMS_AUT_025", "device code greater than the accepted length"),
+	INVALID_ENV("PMS_AUT_024", "invalid environment"),
 	DEVICE_REGISTER_DELETED_EXCEPTION("PMS_AUT_017", "error occured while de registering device"),
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_018", "device detail not found"),
 	FTP_NOT_FOUND("PMS_AUT_019", "FTP not found"), 
 	REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION("PMS_AUT_021", "error occured while doing signature validation"),
 	REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE("PMS_AUT_022", " signature validation failed -"),
-	SERIALNUM_NOT_EXIST("PMS_AUT_020", "serial number does not exist");
+	SERIALNUM_NOT_EXIST("PMS_AUT_020", "serial number does not exist"),
+	API_RESOURCE_EXCEPTION("PMS_AUT_023","error occured while fetching api resource -->");
 	
 
 	private final String errorCode;

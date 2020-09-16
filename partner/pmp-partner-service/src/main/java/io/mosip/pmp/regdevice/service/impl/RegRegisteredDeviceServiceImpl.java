@@ -7,8 +7,10 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -19,13 +21,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -39,17 +34,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.kernel.core.util.StringUtils;
-import io.mosip.kernel.core.util.TokenHandlerUtil;
+import io.mosip.kernel.crypto.jce.core.CryptoCore;
 import io.mosip.pmp.authdevice.constants.RegisteredDeviceErrorCode;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
 import io.mosip.pmp.authdevice.dto.DeRegisterDeviceReqDto;
@@ -59,10 +54,8 @@ import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
-import io.mosip.pmp.authdevice.dto.Metadata;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.Pagination;
-import io.mosip.pmp.authdevice.dto.PasswordRequest;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
@@ -70,25 +63,23 @@ import io.mosip.pmp.authdevice.dto.SearchFilter;
 import io.mosip.pmp.authdevice.dto.SearchSort;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
-import io.mosip.pmp.authdevice.dto.TimestampRequestDto;
-import io.mosip.pmp.authdevice.dto.TokenRequestDTO;
-import io.mosip.pmp.authdevice.dto.ValidatorResponseDto;
+import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
+import io.mosip.pmp.authdevice.exception.RequestException;
+import io.mosip.pmp.authdevice.exception.ValidationException;
+import io.mosip.pmp.authdevice.util.HeaderRequest;
+import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
+import io.mosip.pmp.keycloak.impl.AccessTokenResponse;
+import io.mosip.pmp.partner.core.RequestWrapper;
+import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.util.RestUtil;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
-import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
-import io.mosip.pmp.authdevice.exception.RequestException;
-import io.mosip.pmp.authdevice.exception.TokenGenerationFailedException;
-import io.mosip.pmp.authdevice.exception.ValidationException;
 import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
 import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
 import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceHistoryRepository;
 import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceRepository;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
-import io.mosip.pmp.authdevice.util.HeaderRequest;
-import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
-import io.mosip.pmp.partner.core.RequestWrapper;
-import io.mosip.pmp.partner.core.ResponseWrapper;
 
 @Component
 @Transactional
@@ -110,8 +101,14 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	@Autowired
 	RegDeviceDetailRepository deviceDetailRepository;
 	
+	@Autowired    
+	private CryptoCore cryptoCore;
+	
 	@Autowired
 	ObjectMapper mapper;
+	
+	@Autowired
+	RestUtil restUtil;
 	
 	/** The registered. */
 	private static String REGISTERED = "Registered";
@@ -131,11 +128,23 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 	
-	@Value("${mosip.kernel.sign-validate-url}")
-	private String signValidateUrl;
-
-	@Value("${spring.profiles.active}")
+	@Value("${mosip.staging.environment}")
 	private String activeProfile;
+	
+	@Value("${mosip.iam.open-id-url}")
+	private String keycloakOpenIdUrl;
+
+	@Value("${mosip.iam.master.realm-id}")
+	private String realmId;
+
+	@Value("${mosip.keycloak.admin.client.id}")
+	private String adminClientID;
+
+	@Value("${mosip.keycloak.admin.user.id}")
+	private String adminUserName;
+
+	@Value("${mosip.keycloak.admin.secret.key}")
+	private String adminSecret;
 
 	@Value("${masterdata.registerdevice.timestamp.validate:+5}")
 	private String registerDeviceTimeStamp;
@@ -145,6 +154,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		
 		RegRegisteredDevice mapEntity = null;
 		RegRegisteredDevice crtRegisteredDevice = null;
+		RegRegisteredDeviceHistory entityHistory = new RegRegisteredDeviceHistory();
 		String digitalIdJson;
 		DeviceResponse response = new DeviceResponse();
 		DeviceData deviceData = null;
@@ -187,14 +197,18 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 				digitalIdJson = mapper.writeValueAsString(digitalId);
 				mapEntity = mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData,deviceDetail,
 						digitalId);
-				
+				if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.AUTH)) {
+					// should be uniquely randomly generated
+					mapEntity.setCode( UUID.randomUUID().toString());
+					entityHistory.setCode(mapEntity.getCode());
+					entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
+				}else if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.REGISTRATION)){
 				mapEntity.setCode(generateCodeValue( registeredDevicePostDto,  deviceData, digitalId));
-				
+				entityHistory.setCode(mapEntity.getCode());
+				entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
+				}
+				entityHistory=mapRegisteredDeviceHistory(entityHistory,mapEntity);
 				crtRegisteredDevice = registeredDeviceRepository.save(mapEntity);
-
-				RegRegisteredDeviceHistory entityHistory = new RegRegisteredDeviceHistory();
-				entityHistory=mapRegisteredDeviceHistory(entityHistory,crtRegisteredDevice);
-				
 				
 				registeredDeviceHistoryRepo.save(entityHistory);
 
@@ -454,38 +468,14 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	private String getPayLoad(String jws) {
 		String[] split = jws.split("\\.");
 		if (split.length > 2) {
-			RequestWrapper<TimestampRequestDto> request = new RequestWrapper<>();
-			TimestampRequestDto signatureRequestDto = new TimestampRequestDto();
-			ValidatorResponseDto signResponse = new ValidatorResponseDto();
+			if(cryptoCore.verifySignature(new String(CryptoUtil.decodeBase64(split[2])))) {
+				return split[1];
 			
-			
-			try {
-				signatureRequestDto.setData(new String(CryptoUtil.decodeBase64(split[1])));
-				signatureRequestDto.setSignature(new String(CryptoUtil.decodeBase64(split[2])));
-				signatureRequestDto.setTimestamp(LocalDateTime.now(ZoneId.of("UTC")));
-				request.setRequest(signatureRequestDto);
-				ResponseEntity<String> response = restTemplate.exchange(signValidateUrl, HttpMethod.POST, setRequestHeader(request, MediaType.APPLICATION_JSON), String.class);
-				ResponseWrapper<?> responseObject;
-				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
-				if(responseObject.getResponse()!=null) {		
-				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
-								ValidatorResponseDto.class);
-				if(signResponse.getStatus().equals("Success")) {
-					return split[1];
-				}
-				}else if(responseObject.getResponse()==null & responseObject.getErrors()!=null) {
-					throw new AuthDeviceServiceException(
-							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
-							RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage() + " "
-									+ responseObject.getErrors().getMessage());
-				}
-			} catch (Exception e) {
-					throw new AuthDeviceServiceException(
-								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorCode(),
-								RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION.getErrorMessage() + " "
-										+ e.getMessage());
-					}
-			
+			}else  {
+				throw new AuthDeviceServiceException(
+						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
+						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage() );
+			}
 		}
 		return jws;
 	}
@@ -511,10 +501,12 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 				if (!EmptyCheckUtils.isNullEmpty(authN)) {
 					deviceRegisterEntity.setCrBy(authN.getName());
 				}
+				deviceRegisterEntity.setActive(false);
 				deviceRegisterEntity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-				registeredDeviceRepository.save(deviceRegisterEntity);
 				deviceRegisterHistory=mapUpdateHistory(deviceRegisterEntity, deviceRegisterHistory);
 				deviceRegisterHistory.setEffectDateTime(deviceRegisterEntity.getUpdDtimes());
+				registeredDeviceRepository.save(deviceRegisterEntity);
+				
 				registeredDeviceHistoryRepo.save(deviceRegisterHistory);
 				DeviceDeRegisterResponse deviceDeRegisterResponse = new DeviceDeRegisterResponse();
 				deviceDeRegisterResponse.setStatus("success");
@@ -557,7 +549,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		history.setHotlisted(entity.isHotlisted());
 		history.setDigitalId(entity.getDigitalId());
 		history.setSerialNo(entity.getSerialNo());
-		
+		history.setCode(entity.getCode());
 		history.setCrBy(entity.getUpdBy());
 		history.setEffectDateTime(entity.getUpdDtimes());
 		history.setCrDtimes(entity.getUpdDtimes());
@@ -604,11 +596,11 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
 		}else if(device.getDeviceCode().length()>36) {
-			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-					RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorCode(),
+					RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorMessage());
 		}else if(!device.getEnv().equals(activeProfile)) {
-			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-					RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+			throw new RequestException(RegisteredDeviceErrorCode.INVALID_ENV.getErrorCode(),
+					RegisteredDeviceErrorCode.INVALID_ENV.getErrorMessage());
 		}
 		
 	}
@@ -618,7 +610,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	@SuppressWarnings({ "unchecked" })
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add("Cookie", AUTHORIZATION+System.getProperty("token"));
+		headers.add("Cookie", AUTHORIZATION+getAdminToken());
 		if (mediaType != null) {
 			headers.add("Content-Type", mediaType.toString());
 		}
@@ -640,8 +632,39 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 			return new HttpEntity<Object>(headers);
 	}
 
-	
-	
+	private String getAdminToken() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> tokenRequestBody = null;
+		Map<String, String> pathParams = new HashMap<>();
+		pathParams.put("realmId", realmId);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
+		
+			tokenRequestBody = getAdminValueMap();
+		
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
+		ResponseEntity<AccessTokenResponse> response=null;
+		try {
+		 response = restTemplate.postForEntity(
+				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
+		}catch(HttpServerErrorException | HttpClientErrorException ex) {
+			throw new AuthDeviceServiceException(
+					RegisteredDeviceErrorCode.API_RESOURCE_EXCEPTION.getErrorCode(),
+					RegisteredDeviceErrorCode.API_RESOURCE_EXCEPTION.getErrorMessage()+ex.getMessage());
+		}
+		
+		return response.getBody().getAccess_token();
+	}
+
+	private MultiValueMap<String, String> getAdminValueMap() {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("grant_type", "password");
+		map.add("username", adminUserName);
+		map.add("password", adminSecret);
+		map.add("client_id", adminClientID);
+		return map;
+	}
 	
 
 }
