@@ -233,7 +233,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				signedResponse = getSignedResponse(registerDeviceResponse);
 				registerDevice = mapper.writeValueAsString(registerDeviceResponse);
 				response.setResponse(convertToJWS(headerString, registerDevice, signedResponse));
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new AuthDeviceServiceException(
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
@@ -535,7 +535,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 						RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
 
-		} catch ( Exception e) {
+		} catch ( IOException e) {
 			throw new AuthDeviceServiceException(
 					RegisteredDeviceErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorMessage() + " "
