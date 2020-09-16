@@ -21,13 +21,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -47,14 +40,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.kernel.core.util.StringUtils;
-import io.mosip.kernel.core.util.TokenHandlerUtil;
 import io.mosip.kernel.crypto.jce.core.CryptoCore;
 import io.mosip.pmp.authdevice.constants.RegisteredDeviceErrorCode;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
@@ -65,10 +54,8 @@ import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
-import io.mosip.pmp.authdevice.dto.Metadata;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.Pagination;
-import io.mosip.pmp.authdevice.dto.PasswordRequest;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
@@ -76,27 +63,23 @@ import io.mosip.pmp.authdevice.dto.SearchFilter;
 import io.mosip.pmp.authdevice.dto.SearchSort;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
-import io.mosip.pmp.authdevice.dto.TimestampRequestDto;
-import io.mosip.pmp.authdevice.dto.TokenRequestDTO;
-import io.mosip.pmp.authdevice.dto.ValidatorResponseDto;
-import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
-import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
-import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 import io.mosip.pmp.authdevice.exception.RequestException;
-import io.mosip.pmp.authdevice.exception.TokenGenerationFailedException;
 import io.mosip.pmp.authdevice.exception.ValidationException;
-import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
-import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
-import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceHistoryRepository;
-import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceRepository;
-import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 import io.mosip.pmp.authdevice.util.HeaderRequest;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.keycloak.impl.AccessTokenResponse;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.util.RestUtil;
+import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
+import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
+import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
+import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
+import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
+import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceHistoryRepository;
+import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceRepository;
+import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 
 @Component
 @Transactional
@@ -145,9 +128,6 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 	
-	@Value("${mosip.kernel.sign-validate-url}")
-	private String signValidateUrl;
-
 	@Value("${mosip.staging.environment}")
 	private String activeProfile;
 	
