@@ -2,8 +2,6 @@ package io.mosip.pmp.authdevice.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,11 +10,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "registered_device_master_h")
 public class RegisteredDeviceHistory {
-	@Id
-	@AttributeOverrides({
-			@AttributeOverride(name = "code", column = @Column(name = "id", nullable = false,length = 36)),
-			@AttributeOverride(name = "effectDateTime", column = @Column(name = "eff_dtimes", nullable = false)) })
+	@Id	
+	@Column(name = "code", nullable = false,length = 36)
 	private String code;
+	
+	@Column(name = "eff_dtimes", nullable = false)
 	private LocalDateTime effectDateTime;
 	
 	@Column(name = "status_code", length = 64,nullable=false)
