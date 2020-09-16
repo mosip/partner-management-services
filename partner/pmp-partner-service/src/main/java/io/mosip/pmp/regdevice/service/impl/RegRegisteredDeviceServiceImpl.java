@@ -128,7 +128,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
 	
-	@Value("${mosip.staging.environment}")
+	@Value("${mosip.stage.environment}")
 	private String activeProfile;
 	
 	@Value("${mosip.iam.open-id-url}")
