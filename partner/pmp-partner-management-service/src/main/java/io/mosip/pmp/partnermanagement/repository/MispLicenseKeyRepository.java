@@ -19,10 +19,10 @@ import io.mosip.pmp.partnermanagement.entity.MISPLicenseEntity;
 @Repository
 public interface MispLicenseKeyRepository extends JpaRepository<MISPLicenseEntity, String> {
 
-	@Query(value = "select * from pmp.misp_license ml where ml.license_key=?", nativeQuery = true)
+	@Query(value = "select * from misp_license ml where ml.license_key=?", nativeQuery = true)
 	MISPLicenseEntity findByLicensekey(String licenseKey);
 	
-	@Query(value = "select * from pmp.misp_license ml where ml.misp_id=?", nativeQuery = true)
+	@Query(value = "select * from misp_license ml where ml.misp_id=?", nativeQuery = true)
 	List<MISPLicenseEntity> findByMispId(String mispId);
 
 }

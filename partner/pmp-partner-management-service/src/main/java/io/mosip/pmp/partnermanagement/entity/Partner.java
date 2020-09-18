@@ -1,16 +1,17 @@
 package io.mosip.pmp.partnermanagement.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.*;
 
 /**
  * The persistent class for the partner database table.
  * 
  */
 @Entity
+@Table(name="partner")
 @NamedQuery(name="Partner.findAll", query="SELECT p FROM Partner p")
 public class Partner implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +19,7 @@ public class Partner implements Serializable {
 	@Id
 	private String id;
 
+	@Column(name="address")
 	private String address;
 
 	@Column(name="contact_no")
@@ -41,14 +43,21 @@ public class Partner implements Serializable {
 	@Column(name="is_deleted")
 	private Boolean isDeleted;
 
+	@Column(name="name")
 	private String name;
 
 	@Column(name="policy_group_id")
 	private String policyGroupId;
 
-	@Column(name="public_key")
-	private String publicKey;
+	@Column(name="certificate_alias")
+	private String certificateAlias;
 
+	@Column(name = "partner_type_code")
+	private String partnerTypeCode;
+	
+	@Column(name="approval_status")
+	private String approvalStatus;
+	
 	@Column(name="upd_by")
 	private String updBy;
 
@@ -148,6 +157,22 @@ public class Partner implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public void setPartnerTypeCode(String partnerTypeCode) {
+		this.partnerTypeCode = partnerTypeCode;
+	}
+	
+	public String getPartnerTypeCode() {
+		return this.partnerTypeCode;
+	}
+	
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+	
+	public String getApprovalStatus() {
+		return this.approvalStatus;
+	}
 
 	public String getPolicyGroupId() {
 		return this.policyGroupId;
@@ -157,12 +182,12 @@ public class Partner implements Serializable {
 		this.policyGroupId = policyGroupId;
 	}
 
-	public String getPublicKey() {
-		return this.publicKey;
+	public String getCertificateAlias() {
+		return this.certificateAlias;
 	}
 
-	public void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
+	public void setCertificateAlias(String certificateAlias) {
+		this.certificateAlias = certificateAlias;
 	}
 
 	public String getUpdBy() {
@@ -229,7 +254,6 @@ public class Partner implements Serializable {
 	public PartnerPolicyRequest removePartnerPolicyRequest(PartnerPolicyRequest partnerPolicyRequest) {
 		getPartnerPolicyRequests().remove(partnerPolicyRequest);
 		partnerPolicyRequest.setPartner(null);
-
 		return partnerPolicyRequest;
 	}
 

@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -42,6 +43,7 @@ import io.mosip.pmp.misp.test.MispServiceTest;
 @EnableWebMvc
 public class MISPServiceTest {
 
+	@Autowired
 	MISPManagementService service;
 	
 	@Mock
@@ -59,7 +61,6 @@ public class MISPServiceTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new MISPManagementService();
 		ReflectionTestUtils.setField(service, "mispRepository", mispRepository);
 		ReflectionTestUtils.setField(service, "misplKeyRepository", misplKeyRepository);
 		ReflectionTestUtils.setField(service, "mispIdGenerator", mispIdGenerator);

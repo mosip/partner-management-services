@@ -11,25 +11,17 @@
 	<version>1.0.1-SNAPSHOT</version>
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
-
-	<properties>
-		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
-		<maven.jacoco.version>0.8.2</maven.jacoco.version>
-	</properties>
-
-<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<sonar.host.url>http://localhost:9000</sonar.host.url>
-			</properties>
-		</profile>
-	</profiles>
-	
 	<dependencies>		
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>1.4.2</version>
+		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
@@ -84,7 +76,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 			<version>2.0.2.RELEASE</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
@@ -94,8 +86,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-		</dependency>
-
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>
