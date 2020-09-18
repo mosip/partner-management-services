@@ -173,7 +173,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@PreAuthorize("hasAnyRole('PARTNER','partners','partner','RESIDENT')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerId) {
