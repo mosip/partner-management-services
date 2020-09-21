@@ -281,13 +281,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
-		if(!emailValidator(request.getEmailId())) {
-			LOGGER.error(request.getEmailId() + " : this is invalid email");
-			throw new EmailIdAlreadyExistException(
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
-
-		}
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerID);
 		if(partnerFromDb.isEmpty()) {
 			LOGGER.info(partnerID + ": Partner is not available");
@@ -297,32 +290,9 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		Partner partner = partnerFromDb.get();
-		LocalDateTime now = LocalDateTime.now();
-		if (!partner.getName().equalsIgnoreCase(request.getOrganizationName())) {
-			Partner findPartnerByName = partnerRepository.findByName(request.getOrganizationName());
-			if(findPartnerByName != null) {
-				LOGGER.info(request.getOrganizationName() + " : this is duplicate name");
-				throw new PartnerAlreadyRegisteredException(
-						PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
-						PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());				
-			}
-		}
-
-		if(!partner.getEmailId().equalsIgnoreCase(request.getEmailId())) {
-			Partner partnerByEmail = findPartnerByEmail(request.getEmailId());
-			if(partnerByEmail != null) {
-				LOGGER.error(request.getEmailId() + " : this is duplicate email");
-				throw new EmailIdAlreadyExistException(
-						EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
-						EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
-
-			}
-		}
-
+		LocalDateTime now = LocalDateTime.now();		
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-		partner.setEmailId(request.getEmailId());
-		partner.setName(request.getOrganizationName());
 		partner.setUpdBy(getUser());
 		partner.setUpdDtimes(Timestamp.valueOf(now));
 		partnerRepository.save(partner);

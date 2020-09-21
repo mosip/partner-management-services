@@ -187,8 +187,6 @@ public class PartnerServiceControllerTest {
     	
     	partnerUpdateRequest.setAddress("Bangalore");
     	partnerUpdateRequest.setContactNumber("45678678");
-    	partnerUpdateRequest.setEmailId("abc@gmail.com");
-    	partnerUpdateRequest.setOrganizationName("Mosip");
     	
     	
     	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
@@ -252,8 +250,6 @@ public class PartnerServiceControllerTest {
     	PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
     	partnerUpdateRequest.setAddress("Bangalore,INDIA");
     	partnerUpdateRequest.setContactNumber("9886779980");
-    	partnerUpdateRequest.setEmailId("airtelInd@gmail.com");
-    	partnerUpdateRequest.setOrganizationName("airtelInd");
     	return partnerUpdateRequest;
     }
     
@@ -291,7 +287,8 @@ public class PartnerServiceControllerTest {
     	return dto;
     }
     
-    private RequestWrapper<PartnerCertDownloadRequestDto> partnerCertificateDownloadRequest() {
+    @SuppressWarnings("unused")
+	private RequestWrapper<PartnerCertDownloadRequestDto> partnerCertificateDownloadRequest() {
         RequestWrapper<PartnerCertDownloadRequestDto> request = new RequestWrapper<PartnerCertDownloadRequestDto>();
         request.setRequest(certDownloadRequest());
         request.setId("mosip.partnermanagement.partners.create");

@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.pmp.partner.PartnerserviceApplication;
@@ -229,8 +228,7 @@ public class PartnerServiceImplTest {
 	@Ignore
 	public void updatePartnerDetailTest_S3() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
-		String partnerId = "12345";
-		req.setOrganizationName("name");
+		String partnerId = "12345";		
 		Partner part = createPartner(Boolean.TRUE);
 		part.setName("name");
 		Optional<Partner> partner = Optional.of(part);		
@@ -243,13 +241,11 @@ public class PartnerServiceImplTest {
 	public void updatePartnerDetailTest_S4() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
 		String partnerId = "12345";
-		req.setOrganizationName("airtel");
 		Partner part = createPartner(Boolean.TRUE);
 		part.setName("name");
 		Optional<Partner> partner = Optional.of(part);		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Partner partnerSameName = updatePartner(Boolean.TRUE);
-		Mockito.when(partnerRepository.findByName(req.getOrganizationName())).thenReturn(partnerSameName);
+		updatePartner(Boolean.TRUE);		
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
@@ -598,8 +594,6 @@ public class PartnerServiceImplTest {
 		PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
 		partnerUpdateRequest.setAddress("address");
 		partnerUpdateRequest.setContactNumber("87878787");
-		partnerUpdateRequest.setEmailId("xyz@facebook.com");
-		partnerUpdateRequest.setOrganizationName("airtel");
 		return partnerUpdateRequest;
 	}
 
