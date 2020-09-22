@@ -245,7 +245,7 @@ public class PartnerServiceImplTest {
 		part.setName("name");
 		Optional<Partner> partner = Optional.of(part);		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		updatePartner(Boolean.TRUE);
+		updatePartner(Boolean.TRUE);		
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
