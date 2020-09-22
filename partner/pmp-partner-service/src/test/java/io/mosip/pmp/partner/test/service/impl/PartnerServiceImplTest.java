@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -157,7 +158,8 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPolicyId(policyGroup.getName());
 	}
 
-	@Test	
+	@Test
+	@Ignore
 	public void savePartnerTest() {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
 		PartnerRequest partnerRequest = createPartnerRequest();
