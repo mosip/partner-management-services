@@ -38,12 +38,12 @@ import io.mosip.pmp.authdevice.dto.Role;
 import io.mosip.pmp.authdevice.dto.Roles;
 import io.mosip.pmp.authdevice.dto.RolesListDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.partner.constant.PartnerExceptionConstants;
+import io.mosip.pmp.partner.exception.PartnerServiceException;
 
 @Service
 public class KeycloakImpl{
-
-	private static final String INDIVIDUAL = "INDIVIDUAL";
-
+	
 	@Value("${mosip.iam.realm.operations.base-url}")
 	private String keycloakBaseUrl;
 
@@ -97,8 +97,8 @@ public class KeycloakImpl{
 				rolesList.add(role);
 			}
 		} catch (IOException e) {
-//			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
-//					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+			throw new PartnerServiceException(PartnerExceptionConstants.IO_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.IO_EXCEPTION.getErrorMessage());
 		}
 		RolesListDto rolesListDto = new RolesListDto();
 		rolesListDto.setRoles(rolesList);
@@ -116,9 +116,9 @@ public class KeycloakImpl{
 		if (!isUserAlreadyPresent(userId.getUserName(), realm)) {
 			callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(), HttpMethod.POST,
 					httpEntity);
-			if (keycloakRequestDto.getRealmRoles().contains("PARTNER")) {
+			if (keycloakRequestDto.getRealmRoles().contains(userId.getRole())) {
 				String userID = getIDfromUserID(userId.getUserName(), realm);
-				roleMapper(userID, realm);
+				roleMapper(userID, realm,userId.getRole());
 			}
 		}
 
@@ -128,19 +128,19 @@ public class KeycloakImpl{
 
 	}
 
-	private void roleMapper(String userID, String realmId) {
+	private void roleMapper(String userID, String realmId, String roleId) {
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("realmId", realmId);
 		pathParams.put("userID", userID);
 		try {			
-			individualRoleID = getRoleId(INDIVIDUAL,realmId);
+			individualRoleID = getRoleId(roleId,realmId);
 		}
 		catch(Exception ex){
-			LOGGER.error("Role " + INDIVIDUAL + " not found in " + realmId + " for user " + userID);
+			LOGGER.error("Role " + roleId + " not found in " + realmId + " for user " + userID);
 		}
 		
-		Roles role = new Roles(individualRoleID, INDIVIDUAL);
+		Roles role = new Roles(individualRoleID, roleId);
 		List<Roles> roles = new ArrayList<>();
 		roles.add(role);
 		pathParams.put("realmId", realmId);
@@ -164,8 +164,8 @@ public class KeycloakImpl{
 			}
 			jsonNodes = objectMapper.readTree(response);
 		} catch (IOException e) {
-//			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
-//					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+			throw new PartnerServiceException(PartnerExceptionConstants.IO_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.IO_EXCEPTION.getErrorMessage());
 		}
 		if (jsonNodes.size() > 0) {
 			for (JsonNode jsonNode : jsonNodes) {
@@ -201,8 +201,8 @@ public class KeycloakImpl{
 			}
 			jsonNodes = objectMapper.readTree(response);
 		} catch (IOException e) {
-//			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
-//					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+			throw new PartnerServiceException(PartnerExceptionConstants.IO_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.IO_EXCEPTION.getErrorMessage());
 		}
 		if (jsonNodes.size() > 0) {
 			for (JsonNode jsonNode : jsonNodes) {
@@ -221,8 +221,8 @@ public class KeycloakImpl{
 		List<KeycloakPasswordDTO> credentialObject = null;
 		KeycloakPasswordDTO dto = null;
 		
-		if (userRegDto.getAppId().equalsIgnoreCase("partner")) {
-			roles.add("PARTNER");
+		if (userRegDto.getAppId().equalsIgnoreCase("PARTNER_MANAGEMENT")) {
+			roles.add(userRegDto.getRole());
 			credentialObject = new ArrayList<>();
 			dto = new KeycloakPasswordDTO();
 			dto.setType("password");
@@ -284,8 +284,8 @@ public class KeycloakImpl{
 				}
 			}
 
-//			throw new AuthManagerException(AuthErrorCode.SERVER_ERROR.getErrorCode(),
-//					AuthErrorCode.SERVER_ERROR.getErrorMessage());
+			throw new PartnerServiceException(PartnerExceptionConstants.SERVER_ERROR.getErrorCode(),
+					PartnerExceptionConstants.SERVER_ERROR.getErrorMessage());
 
 		}
 		if (responseEntity != null && responseEntity.hasBody() && responseEntity.getStatusCode() == HttpStatus.OK) {

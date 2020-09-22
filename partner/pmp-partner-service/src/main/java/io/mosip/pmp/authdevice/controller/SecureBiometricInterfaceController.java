@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -41,7 +43,7 @@ public class SecureBiometricInterfaceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-	@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save SecureBiometricInterfaceCreateDto", notes = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
@@ -73,7 +75,7 @@ public class SecureBiometricInterfaceController {
 
 	}
 	
-	@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update SecureBiometricInterface", notes = "Updates SecureBiometricInterface and returns success message")
@@ -105,7 +107,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasRole('PARTNERMANAGER')")
+	@PreAuthorize("hasRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject SecureBiometricInterface", notes = "Approve SecureBiometricInterface and returns success message")
@@ -135,5 +137,10 @@ public class SecureBiometricInterfaceController {
 				"AUT-007");
 
 		return responseWrapper;
+	}
+	
+	@GetMapping
+	public void getSecureBiometricInterfaceDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		
 	}
 }

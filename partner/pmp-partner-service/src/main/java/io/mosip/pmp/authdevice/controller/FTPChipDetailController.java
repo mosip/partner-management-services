@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.service.FTPChipDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
@@ -65,7 +67,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save ftpChipDetail", notes = "Saves ftpChipDetail and return ftpChipDetail id")
@@ -105,7 +107,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('PARTNER')")
+	@PreAuthorize("hasRole('FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update ftp chip detail", notes = "Updates ftp chip detail and returns success message")
@@ -141,7 +143,7 @@ public class FTPChipDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasRole('PARTNERMANAGER')")
+	@PreAuthorize("hasRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject ftp chip detail", notes = "Approve ftp chip detail and returns success message")
@@ -183,7 +185,7 @@ public class FTPChipDetailController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@PreAuthorize("hasAnyRole('FTM_PROVIDER')")
 	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<FTPChipCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -216,7 +218,7 @@ public class FTPChipDetailController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','partners','partner')")
+	@PreAuthorize("hasAnyRole('FTM_PROVIDER')")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
@@ -240,5 +242,10 @@ public class FTPChipDetailController {
 				String.format(AuthDeviceConstant.SUCCESSFUL_DOWNLOAD , FTPChipDetailStatusDto.class.getCanonicalName()),
 				"AUT-007");
 		return response;
-    }	
+    }
+	
+	@GetMapping
+	public void getFTPChipDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		
+	}
 }

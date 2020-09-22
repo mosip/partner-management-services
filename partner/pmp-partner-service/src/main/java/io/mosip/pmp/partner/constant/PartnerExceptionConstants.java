@@ -2,7 +2,11 @@ package io.mosip.pmp.partner.constant;
 
 public enum PartnerExceptionConstants {
 
-	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the selected partner.");
+	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the selected partner."),
+	PARTNER_ID_LENGTH_EXCEPTION("PMS_PRT_052","PartnerId max length should be "),
+	IO_EXCEPTION("PMS_ATH_053", "IO Exception occured while passing paging request"),
+	USER_NOT_FOUND("PMS_ATH_054", "User not found"),
+	SERVER_ERROR("PMS_ATH_500", "Server error occured,Please check the logs ");
 	/**
 	 * The error code.
 	 */

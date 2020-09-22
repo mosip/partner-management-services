@@ -28,6 +28,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.pmp.authdevice.dto.MosipUserDto;
+import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.constant.EmailIdExceptionConstant;
@@ -127,6 +130,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	RestUtil restUtil;
+	
+	@Autowired
+	KeycloakImpl keycloakImpl;
 
 	@Autowired
 	private Environment environment;
@@ -134,16 +140,17 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	private ObjectMapper mapper;
 
-
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
+	
+	@Value("${pmp.partner.partnerId.max.length}")
+	private int partnerIdMaxLength;
 
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
-
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -165,6 +172,19 @@ public class PartnerServiceImpl implements PartnerService {
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 
+		}		
+		if(request.getPartnerId().length() > partnerIdMaxLength) {
+			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
+		}
+		Optional<Partner> partnerById = partnerRepository.findById(request.getPartnerId());
+		if(!partnerById.isEmpty()) {
+			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
+			throw new PartnerAlreadyRegisteredException(
+					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
+					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());			
 		}
 		Partner partnerFromDb = partnerRepository.findByName(request.getOrganizationName());
 		if(partnerFromDb != null) {
@@ -197,10 +217,8 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());			
 		}
-
 		Partner partner = new Partner();
-		partner.setId(PartnerUtil.createPartnerId());
-		LocalDateTime now = LocalDateTime.now();
+		partner.setId(request.getPartnerId());
 		partner.setPolicyGroupId(policyGroup.getId());
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
@@ -208,16 +226,29 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setPartnerTypeCode(request.getPartnerType());
 		partner.setEmailId(request.getEmailId());		
 		partner.setIsActive(true);
-		partner.setUserId(getUser());
+		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getUser());
 		partner.setApprovalStatus("Activated");
-		partner.setCrDtimes(Timestamp.valueOf(now));
+		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		RegisterUser(partner);
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
 		partnerResponse.setStatus("Active");
 		return partnerResponse;
+	}
+	
+	private MosipUserDto RegisterUser(Partner partner) {
+		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
+		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
+		userRegistrationRequestDto.setContactNo(partner.getContactNo());
+		userRegistrationRequestDto.setEmailID(partner.getEmailId());
+		userRegistrationRequestDto.setFirstName(partner.getName());
+		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
+		userRegistrationRequestDto.setUserPassword(partner.getId());
+		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
+		return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
 	@Override
@@ -281,13 +312,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
-		if(!emailValidator(request.getEmailId())) {
-			LOGGER.error(request.getEmailId() + " : this is invalid email");
-			throw new EmailIdAlreadyExistException(
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
-
-		}
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerID);
 		if(partnerFromDb.isEmpty()) {
 			LOGGER.info(partnerID + ": Partner is not available");
@@ -298,31 +322,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 		Partner partner = partnerFromDb.get();
 		LocalDateTime now = LocalDateTime.now();
-		if (!partner.getName().equalsIgnoreCase(request.getOrganizationName())) {
-			Partner findPartnerByName = partnerRepository.findByName(request.getOrganizationName());
-			if(findPartnerByName != null) {
-				LOGGER.info(request.getOrganizationName() + " : this is duplicate name");
-				throw new PartnerAlreadyRegisteredException(
-						PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
-						PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());				
-			}
-		}
-
-		if(!partner.getEmailId().equalsIgnoreCase(request.getEmailId())) {
-			Partner partnerByEmail = findPartnerByEmail(request.getEmailId());
-			if(partnerByEmail != null) {
-				LOGGER.error(request.getEmailId() + " : this is duplicate email");
-				throw new EmailIdAlreadyExistException(
-						EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
-						EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
-
-			}
-		}
-
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-		partner.setEmailId(request.getEmailId());
-		partner.setName(request.getOrganizationName());
 		partner.setUpdBy(getUser());
 		partner.setUpdDtimes(Timestamp.valueOf(now));
 		partnerRepository.save(partner);

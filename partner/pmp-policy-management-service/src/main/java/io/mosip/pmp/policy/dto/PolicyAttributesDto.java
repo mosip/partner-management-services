@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * <p> It holds the objects of auth policy {@link AuthPolicyDto} and </p>
- * <p> allowed kyc {@link AllowedKycDto} </p>
+ * <p> allowed kyc {@link ShareableAttributesDto} </p>
  *  
  * @author Nagarjuna Kuchi
  * @version 1.0
@@ -22,7 +22,12 @@ public class PolicyAttributesDto {
 	/**
 	 * list of allowed Kyc dto's
 	 */
-	private List<AllowedKycDto> shareableAttributes;
+	private List<ShareableAttributesDto> shareableAttributes;
+	 
+	/**
+	 * allowedKYCAttributes
+	 */
+	private List<AllowedKycDto> allowedKYCAttributes;
 	
 	/**
 	 *  Data share policies

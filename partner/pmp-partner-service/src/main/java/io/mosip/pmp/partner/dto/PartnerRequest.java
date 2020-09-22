@@ -11,7 +11,9 @@ import lombok.Data;
 
 @Data
 public class PartnerRequest{
-	
+		
+	@NotEmpty(message="Please provide partnerId")
+	public String partnerId;
 	@NotEmpty(message = "Please provide policyGroup")
 	public String policyGroup;
 	@NotEmpty(message = "Please provide organizationName")

@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 import io.mosip.pmp.partner.core.RequestWrapper;
@@ -42,7 +44,7 @@ public class RegisteredDeviceController {
 	 * @throws Exception
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@PostMapping
 	public ResponseWrapper<String> signedRegisteredDevice(
 			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
@@ -63,7 +65,7 @@ public class RegisteredDeviceController {
 	 *            the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ApiOperation(value = "DeRegister Device")
 	@PostMapping("/deregister")
 	@ResponseFilter
@@ -78,7 +80,10 @@ public class RegisteredDeviceController {
 		return response;
 	}
 
-	
+	@GetMapping
+	public void getRegisteredDeviceDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		
+	}
 
 }
 

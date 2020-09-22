@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.constant.PolicyCommonConstants;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.DataShareDto;
@@ -541,6 +542,7 @@ public class PolicyManagementService {
 		PolicyServiceLogger.info("Creating policy document");
 		JSONObject obj = new JSONObject();
 		JSONArray authPolicies = new JSONArray();
+		JSONArray shareableAttributes = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
 		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
 			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes().stream().filter(m->m.isMandatory()).collect(Collectors.toList())) {
@@ -550,19 +552,25 @@ public class PolicyManagementService {
 				authObj.put("mandatory", authPolicyDto.isMandatory());
 				authPolicies.add(authObj);
 			}
+			for (AllowedKycDto allowedKycDto : policy.getAllowedKYCAttributes()) {
+				JSONObject allowedKycObj = new JSONObject();
+				allowedKycObj.put("attributeName", allowedKycDto.getAttributeName());
+				allowedKycObj.put("required", allowedKycDto.isRequired());
+				allowedKycAttributes.add(allowedKycObj);
+			}
 			obj.put("allowedAuthTypes", authPolicies);
 			obj.put("authTokenType", policy.getAuthTokenType());
+			obj.put("allowedKycAttributes", allowedKycAttributes);		
+			return obj;
 		}
 
-		for (AllowedKycDto allowedKycDto : policy.getShareableAttributes()) {
+		for (ShareableAttributesDto allowedKycDto : policy.getShareableAttributes()) {
 			JSONObject allowedKycObj = new JSONObject();
 			allowedKycObj.put("attributeName", allowedKycDto.getAttributeName());
 			allowedKycObj.put("encrypted", allowedKycDto.isEncrypted());
 			allowedKycObj.put("format", allowedKycDto.getFormat());
-			allowedKycAttributes.add(allowedKycObj);
+			shareableAttributes.add(allowedKycObj);
 		}
-		obj.put("shareableAttributes", allowedKycAttributes);
-
 		JSONObject dataShareObj = new JSONObject();
 		dataShareObj.put("validForInMinutes", policy.getDataSharePolicies().getValidForInMinutes());
 		dataShareObj.put("transactionsAllowed", policy.getDataSharePolicies().getTransactionsAllowed());
@@ -570,8 +578,7 @@ public class PolicyManagementService {
 		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
 		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
 		obj.put("dataSharePolicies", dataShareObj);
-
-
+		obj.put("shareableAttributes", shareableAttributes);
 		return obj;
 	}	
 
@@ -664,10 +671,11 @@ public class PolicyManagementService {
 		PolicyAttributesDto policyAttributes = mapPolicyAttributes(authPolicy.getPolicyFileId());
 		PolicyDto policyDto = new PolicyDto();
 		policyDto.setAllowedAuthTypes(policyAttributes.getAllowedAuthTypes());
-		policyDto.setAuthTokenType("");
+		policyDto.setAuthTokenType(policyAttributes.getAuthTokenType());
 		policyDto.setCr_by(authPolicy.getCrBy());
 		policyDto.setCr_dtimes(authPolicy.getCrDtimes());
 		policyDto.setDataSharePolicies(policyAttributes.getDataSharePolicies());
+		policyDto.setAllowedKYCAttributes(policyAttributes.getAllowedKYCAttributes());
 		policyDto.setIs_Active(authPolicy.getIsActive());
 		policyDto.setPolicyDesc(authPolicy.getDescr());
 		policyDto.setPolicyId(authPolicy.getId());
@@ -691,7 +699,8 @@ public class PolicyManagementService {
 		PolicyAttributesDto dto = new PolicyAttributesDto();
 		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
 		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
-		dto.setShareableAttributes((List<AllowedKycDto>) readValue.get("shareableAttributes"));
+		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKYCAttributes"));
+		dto.setShareableAttributes((List<ShareableAttributesDto>) readValue.get("shareableAttributes"));
 		ObjectMapper mapper = new ObjectMapper();
 		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);
 		dto.setDataSharePolicies(dataShareDto);
@@ -745,6 +754,10 @@ public class PolicyManagementService {
 			if(policyAttributesDto.getShareableAttributes() == null) {
 				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
 						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "shareableAttributes");
+			}
+			if(policyAttributesDto.getShareableAttributes() == null) {
+				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "allowedKYCAttributes");
 			}
 		}else {
 			if(policyAttributesDto.getAllowedAuthTypes() != null) {

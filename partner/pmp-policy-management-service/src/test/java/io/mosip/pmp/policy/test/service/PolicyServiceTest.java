@@ -21,7 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.pmp.policy.dto.AllowedKycDto;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.DataShareDto;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
@@ -523,9 +523,9 @@ public class PolicyServiceTest {
 		return authPolicies;
 	}
 
-	private List<AllowedKycDto> getAllowedKycAttributes() {
-		List<AllowedKycDto> allowedKycList = new ArrayList<AllowedKycDto>();
-		AllowedKycDto dto =  new AllowedKycDto();
+	private List<ShareableAttributesDto> getAllowedKycAttributes() {
+		List<ShareableAttributesDto> allowedKycList = new ArrayList<ShareableAttributesDto>();
+		ShareableAttributesDto dto =  new ShareableAttributesDto();
 		dto.setAttributeName("Name");
 		dto.setEncrypted(true);
 		dto.setFormat("yyyy");
