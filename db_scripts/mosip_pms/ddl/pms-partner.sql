@@ -3,19 +3,19 @@
 -- Table Name : pms.partner
 -- Purpose    : Partner: Registered external partners use the authentication services provided by MOSIP. The auth services are channeled through MISPs. This table stores the master list of partners who can self register themselves and use auth services.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- Aug-2020             Sadanndegowda       Updated Schema name and added additional Attributes
+-- 
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.partner | type: TABLE --
 -- DROP TABLE IF EXISTS pms.partner CASCADE;
 CREATE TABLE pms.partner(
 	id character varying(36) NOT NULL,
-	policy_group_id character varying(36) NOT NULL,
+	policy_group_id character varying(36),
 	name character varying(128) NOT NULL,
 	address character varying(2000),
 	contact_no character varying(16),
@@ -31,8 +31,7 @@ CREATE TABLE pms.partner(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT pk_part PRIMARY KEY (id),
-	CONSTRAINT uk_part UNIQUE (policy_group_id,name)
+	CONSTRAINT pk_part PRIMARY KEY (id)
 
 );
 -- ddl-end --

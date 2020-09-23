@@ -3,13 +3,12 @@
 -- Table Name : pms.misp
 -- Purpose    : MISP: MISP, acronym for MOSIP Identity Service Provider, stores the master list of MISPs.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 26-Nov-2019			Nagarjuna Kuchi		Added status code 
--- Aug-2020             Sadanndegowda       Updated Schema name 
+
 -- -------------------------------------------------------------------------------------------
 
 -- object: pms.misp | type: TABLE --

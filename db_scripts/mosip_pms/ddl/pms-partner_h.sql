@@ -3,8 +3,8 @@
 -- Table Name : pms.partner_h
 -- Purpose    : Partner History: Registered external partners use the authentication services provided by MOSIP. The auth services are channeled through MISPs. This table stores the master list of partners who can self register themselves and use auth services.
 --           
--- Create By   : Sadanandegowda DM
--- Created Date:  Aug-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 CREATE TABLE pms.partner_h(
 	id character varying(36) NOT NULL,
 	eff_dtimes timestamp NOT NULL,
-	policy_group_id character varying(36) NOT NULL,
+	policy_group_id character varying(36),
 	name character varying(128) NOT NULL,
 	address character varying(2000),
 	contact_no character varying(16),
@@ -32,9 +32,8 @@ CREATE TABLE pms.partner_h(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT pk_parth PRIMARY KEY (id,eff_dtimes),
-	CONSTRAINT uk_parth UNIQUE (policy_group_id,name,eff_dtimes)
-
+	CONSTRAINT pk_parth PRIMARY KEY (id,eff_dtimes)
+	
 );
 -- ddl-end --
 COMMENT ON TABLE pms.partner_h IS 'Partner History: This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer pmp.auth_policy table description for details.   ';

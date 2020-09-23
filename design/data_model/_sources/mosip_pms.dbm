@@ -208,7 +208,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID : Unique ID generated / assigned for partner]]></comment>
 	</column>
-	<column name="policy_group_id" not-null="true">
+	<column name="policy_group_id">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Policy Group ID: Policy group to which the partner registers for to avail the auth services.]]></comment>
 	</column>
@@ -274,9 +274,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="pk_part" type="pk-constr" table="pms.partner">
 		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="uk_part" type="uq-constr" table="pms.partner">
-		<columns names="policy_group_id,name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -729,6 +726,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="partner_description" alias="pardes" not-null="true">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Partner Description : Description of the partner type]]></comment>
+	</column>
+	<column name="is_policy_required" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Is Policy Required: This attribute gives detail of the type of the partner for which policy is required or not]]></comment>
 	</column>
 	<column name="is_active" not-null="true">
 		<type name="boolean" length="0"/>
