@@ -593,6 +593,7 @@ public class PolicyManagementService {
 		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
 		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
 		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
+		dataShareObj.put("source", policy.getDataSharePolicies().getSource());
 		obj.put("dataSharePolicies", dataShareObj);
 		obj.put("shareableAttributes", shareableAttributes);
 		return obj;
