@@ -175,7 +175,8 @@ public class PartnerServiceImplTest {
 	@Test(expected = PolicyGroupDoesNotExistException.class)
 	public void throwExceptionWhenPartnerPolicyGroupIsNullTest() {
 		PartnerRequest partnerRequest = createPartnerRequest();
-		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
+		Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);		
 		pserviceImpl.savePartner(partnerRequest);
 	}
 
@@ -653,6 +654,7 @@ public class PartnerServiceImplTest {
 		PartnerType partnerType = new PartnerType();
 		partnerType.setCode("Auth");
 		partnerType.setPartnerDescription("Auth");
+		partnerType.setIsPolicyRequired(true);
 		return partnerType;
 	}
 

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.pmp.policy.dto.PoliciesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;

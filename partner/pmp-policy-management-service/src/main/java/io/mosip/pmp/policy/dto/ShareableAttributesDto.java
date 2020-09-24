@@ -1,5 +1,7 @@
 package io.mosip.pmp.policy.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
@@ -25,6 +27,10 @@ public class ShareableAttributesDto {
 	 */
 	@NotBlank(message = "attributeName should not be empty in shareableAttributes.")
 	public String attributeName;	
+	
+	public String group;
+	
+	public List<SourceDto> source;
 	/**
 	 * Tells feature enable or disable.
 	 */

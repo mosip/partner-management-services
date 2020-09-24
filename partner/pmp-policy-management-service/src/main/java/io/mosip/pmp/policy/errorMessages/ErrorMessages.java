@@ -31,7 +31,11 @@ public enum ErrorMessages {
 	POLICY_PUBLISHED("PMS_POL_020","Can not publish the published policy"),
 	AUTH_TYPES_NOT_REQUIRED("PMS_POL_021","allowed auth types are not required for authType "),
 	AUTH_TOKEN_TYPE_NOT_ALLOWED("PMS_POL_022","Given auth token type is not allowed"),
-	POLICY_TYPE_NOT_ALLOWED("PMS_POL_023","Given policy type is not allowed ");
+	POLICY_TYPE_NOT_ALLOWED("PMS_POL_023","Given policy type is not allowed "),
+	POLICY_STATUS_CODE_EXCEPTION("PMS_POL_045","Policy Status either Active or De-active."),
+	DATASHARE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_046","Datashare attributes are not required for given authType "),
+	SHAREABLE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","Shareable attributes are not required for given authType "),
+	ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","AllowedKYC attributes are not required for given authType ");
 	
 	private final String errorCode;
 	private final String errorMessage;

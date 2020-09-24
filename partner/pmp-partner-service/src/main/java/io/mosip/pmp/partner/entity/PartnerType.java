@@ -1,9 +1,13 @@
 package io.mosip.pmp.partner.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -42,6 +46,9 @@ public class PartnerType implements Serializable {
 
 	@Column(name="upd_dtimes")
 	private Timestamp updDtimes;
+	
+	@Column(name="is_policy_required")
+	private Boolean isPolicyRequired;
 	
 	public PartnerType() {
 	}
@@ -84,6 +91,14 @@ public class PartnerType implements Serializable {
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public Boolean getIsPolicyRequired() {
+		return this.isPolicyRequired;
+	}
+
+	public void setIsPolicyRequired(Boolean isPolicyRequired) {
+		this.isPolicyRequired = isPolicyRequired;
 	}
 
 	public Boolean getIsDeleted() {

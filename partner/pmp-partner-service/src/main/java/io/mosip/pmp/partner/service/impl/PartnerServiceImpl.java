@@ -202,14 +202,6 @@ public class PartnerServiceImpl implements PartnerService {
 					EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 
 		}
-		LOGGER.info("Validating the policy group");
-		PolicyGroup policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
-		if(policyGroup == null) {
-			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
-			throw new PolicyGroupDoesNotExistException(
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
-		}
 		Optional<PartnerType> partnerType = partnerTypeRepository.findById(request.getPartnerType());
 		if(partnerType.isEmpty()) {
 			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
@@ -217,9 +209,20 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());			
 		}
+		PolicyGroup policyGroup = null;
+		if(partnerType.get().getIsPolicyRequired()) {
+			LOGGER.info("Validating the policy group");
+			policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
+			if(policyGroup == null) {
+				LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
+				throw new PolicyGroupDoesNotExistException(
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
+			}
+		}
 		Partner partner = new Partner();
 		partner.setId(request.getPartnerId());
-		partner.setPolicyGroupId(policyGroup.getId());
+		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
