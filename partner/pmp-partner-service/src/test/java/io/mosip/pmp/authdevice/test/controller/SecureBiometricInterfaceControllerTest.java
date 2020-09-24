@@ -45,7 +45,6 @@ import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 @SpringBootTest(classes = PartnerserviceApplicationTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-//@WithMockUser(roles = {"ZONAL_ADMIN"},username="zonal-admin",password="admin")
 @Ignore
 public class SecureBiometricInterfaceControllerTest {
 	

@@ -28,6 +28,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.pmp.authdevice.dto.MosipUserDto;
+import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.constant.EmailIdExceptionConstant;
@@ -127,6 +130,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	RestUtil restUtil;
+	
+	@Autowired
+	KeycloakImpl keycloakImpl;
 
 	@Autowired
 	private Environment environment;
@@ -134,16 +140,17 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	private ObjectMapper mapper;
 
-
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
+	
+	@Value("${pmp.partner.partnerId.max.length}")
+	private int partnerIdMaxLength;
 
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
-
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -165,6 +172,19 @@ public class PartnerServiceImpl implements PartnerService {
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 
+		}		
+		if(request.getPartnerId().length() > partnerIdMaxLength) {
+			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
+		}
+		Optional<Partner> partnerById = partnerRepository.findById(request.getPartnerId());
+		if(!partnerById.isEmpty()) {
+			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
+			throw new PartnerAlreadyRegisteredException(
+					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
+					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());			
 		}
 		Partner partnerFromDb = partnerRepository.findByName(request.getOrganizationName());
 		if(partnerFromDb != null) {
@@ -182,14 +202,6 @@ public class PartnerServiceImpl implements PartnerService {
 					EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 
 		}
-		LOGGER.info("Validating the policy group");
-		PolicyGroup policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
-		if(policyGroup == null) {
-			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
-			throw new PolicyGroupDoesNotExistException(
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
-		}
 		Optional<PartnerType> partnerType = partnerTypeRepository.findById(request.getPartnerType());
 		if(partnerType.isEmpty()) {
 			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
@@ -197,27 +209,49 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());			
 		}
-
+		PolicyGroup policyGroup = null;
+		if(partnerType.get().getIsPolicyRequired()) {
+			LOGGER.info("Validating the policy group");
+			policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
+			if(policyGroup == null) {
+				LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
+				throw new PolicyGroupDoesNotExistException(
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
+			}
+		}
 		Partner partner = new Partner();
-		partner.setId(PartnerUtil.createPartnerId());
-		LocalDateTime now = LocalDateTime.now();
-		partner.setPolicyGroupId(policyGroup.getId());
+		partner.setId(request.getPartnerId());
+		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
 		partner.setPartnerTypeCode(request.getPartnerType());
 		partner.setEmailId(request.getEmailId());		
 		partner.setIsActive(true);
-		partner.setUserId(getUser());
+		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getUser());
 		partner.setApprovalStatus("Activated");
-		partner.setCrDtimes(Timestamp.valueOf(now));
+		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		RegisterUser(partner);
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
 		partnerResponse.setStatus("Active");
 		return partnerResponse;
+	}
+	
+	private MosipUserDto RegisterUser(Partner partner) {
+		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
+		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
+		userRegistrationRequestDto.setContactNo(partner.getContactNo());
+		userRegistrationRequestDto.setEmailID(partner.getEmailId());
+		userRegistrationRequestDto.setFirstName(partner.getName());
+		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
+		userRegistrationRequestDto.setUserPassword(partner.getId());
+		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
+		return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
 	@Override
@@ -290,7 +324,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		Partner partner = partnerFromDb.get();
-		LocalDateTime now = LocalDateTime.now();		
+		LocalDateTime now = LocalDateTime.now();
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
 		partner.setUpdBy(getUser());

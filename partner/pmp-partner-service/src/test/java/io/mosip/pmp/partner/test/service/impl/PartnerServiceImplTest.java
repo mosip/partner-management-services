@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,9 +32,11 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
+import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
+import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
@@ -46,6 +49,7 @@ import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
+import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
 
@@ -59,6 +63,7 @@ import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
 @EnableWebMvc
 public class PartnerServiceImplTest {
 	
+	@Autowired
 	private PartnerServiceImpl pserviceImpl;
 
 	@Mock
@@ -71,16 +76,18 @@ public class PartnerServiceImplTest {
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 	@Mock
 	PartnerPolicyRepository partnerPolicyRepository;
+	@Mock
+	PartnerTypeRepository partnerTypeRepository;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		pserviceImpl = new PartnerServiceImpl();
 		ReflectionTestUtils.setField(pserviceImpl, "policyGroupRepository", policyGroupRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerRepository", partnerRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "authPolicyRepository", authPolicyRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
 
 	}
 	
@@ -159,21 +166,21 @@ public class PartnerServiceImplTest {
 		Partner partner = new Partner();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
 		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
+		Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
 		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
 		assertNotNull(savePartner);
 
 	}
-
-	@Ignore
+	
 	@Test(expected = PolicyGroupDoesNotExistException.class)
 	public void throwExceptionWhenPartnerPolicyGroupIsNullTest() {
 		PartnerRequest partnerRequest = createPartnerRequest();
-		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
+		Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);		
 		pserviceImpl.savePartner(partnerRequest);
 	}
 
-	@Test(expected = PartnerAlreadyRegisteredException.class)
-	@Ignore
+	@Test(expected = PartnerAlreadyRegisteredException.class)	
 	public void throwExceptionWhenPartnerNameAlreadyRegisteredTest() {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();
@@ -202,8 +209,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerDetails("12345");
 	}
 
-	@Test
-	@Ignore
+	@Test	
 	public void updatePartnerDetailsTest_S1() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
@@ -216,7 +222,6 @@ public class PartnerServiceImplTest {
 
 	}
 	
-	@Ignore
 	@Test(expected = PartnerDoesNotExistException.class)
 	public void updatePartnerDetailTest_S2() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
@@ -224,11 +229,10 @@ public class PartnerServiceImplTest {
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
-	@Test
-	@Ignore
+	@Test	
 	public void updatePartnerDetailTest_S3() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
-		String partnerId = "12345";		
+		String partnerId = "12345";
 		Partner part = createPartner(Boolean.TRUE);
 		part.setName("name");
 		Optional<Partner> partner = Optional.of(part);		
@@ -236,8 +240,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
-	@Test(expected = PartnerAlreadyRegisteredException.class)
-	@Ignore
+	@Test
 	public void updatePartnerDetailTest_S4() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
 		String partnerId = "12345";
@@ -251,7 +254,6 @@ public class PartnerServiceImplTest {
 	
 
 	@Test
-	@Ignore
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.FALSE));
@@ -263,7 +265,6 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test(expected = PartnerDoesNotExistException.class)
-	@Ignore
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.empty();
@@ -487,12 +488,12 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
-	@Ignore
 	public void submitPartnerApiKeyReqTest_S4() {
 		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
 		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
 		PartnerPolicyRequest request = createPartnerPolicyRequest("Approved");
 		requests.add(request);
@@ -501,12 +502,12 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
-	@Ignore
 	public void submitPartnerApiKeyReqTest_S5() {
 		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
 		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
 		PartnerPolicyRequest request = createPartnerPolicyRequest("Rejected");
 		requests.add(request);
@@ -515,12 +516,12 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
-	@Ignore
 	public void submitPartnerApiKeyReqTest_S6() {
 		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
 		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
 		PartnerPolicyRequest request = createPartnerPolicyRequest("in-progress");
 		requests.add(request);
@@ -576,12 +577,12 @@ public class PartnerServiceImplTest {
 		return partnerPolicyRequest;
 	}
 
-//	private AuthPolicy createAuthPolicy() {
-//		AuthPolicy authPolicy = new AuthPolicy();
-//		authPolicy.setName("name");
-//		return authPolicy;
-//
-//	}
+	private AuthPolicy createAuthPolicy() {
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setName("name");
+		return authPolicy;
+
+	}
 //
 //	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
 //		PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
@@ -634,6 +635,8 @@ public class PartnerServiceImplTest {
 		prequest.setEmailId("xyz@gmail.com");
 		prequest.setOrganizationName("airtel India");
 		prequest.setPolicyGroup("Telecom sector");
+		prequest.setPartnerId("abc1234");
+		prequest.setPartnerType("Auth");
 		return prequest;
 	}
 
@@ -645,6 +648,14 @@ public class PartnerServiceImplTest {
 		policyGroup.setUserId("UserId");
 		policyGroup.setCrBy("CreatedBy");
 		return policyGroup;
+	}
+	
+	private PartnerType getPartnerType() {
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Auth");
+		partnerType.setPartnerDescription("Auth");
+		partnerType.setIsPolicyRequired(true);
+		return partnerType;
 	}
 
 }

@@ -38,7 +38,9 @@ public class PolicyDto {
 	
 	private List<AuthPolicyDto> allowedAuthTypes;
 	
-	private List<AllowedKycDto> shareableAttributes;
+	private List<ShareableAttributesDto> shareableAttributes;
+	
+	private List<AllowedKycDto> allowedKYCAttributes;
 	
 	private DataShareDto dataSharePolicies;
 }

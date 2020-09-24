@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pmp.policy.dto.AllowedKycDto;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -180,9 +180,9 @@ public class PolicyManagementControllerTest {
 		return authPolicies;
 	}
 
-	private List<AllowedKycDto> getAllowedKycAttributes() {
-		List<AllowedKycDto> allowedKycList = new ArrayList<AllowedKycDto>();
-		AllowedKycDto dto =  new AllowedKycDto();
+	private List<ShareableAttributesDto> getAllowedKycAttributes() {
+		List<ShareableAttributesDto> allowedKycList = new ArrayList<ShareableAttributesDto>();
+		ShareableAttributesDto dto =  new ShareableAttributesDto();
 		dto.setAttributeName("Name");
 		dto.setEncrypted(true);
 		allowedKycList.add(dto);
