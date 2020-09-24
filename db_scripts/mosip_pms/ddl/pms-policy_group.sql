@@ -3,8 +3,8 @@
 -- Table Name : pms.policy_group
 -- Purpose    : Policy Group: Authentication policies are categorized into different groups/domains. These policy groups are defined and maintained in this table.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------

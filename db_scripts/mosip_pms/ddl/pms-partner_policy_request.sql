@@ -3,12 +3,12 @@
 -- Table Name : pms.partner_policy_request
 -- Purpose    : Partner Policy Request: Partner can self register themselves to use the auth services provided by MOSIP. The registeration requests are stored and processed through here. Once the request is approved and processed a partner is created.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- Aug-2020             Sadanndegowda       Updated Schema name 
+--
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.partner_policy_request | type: TABLE --

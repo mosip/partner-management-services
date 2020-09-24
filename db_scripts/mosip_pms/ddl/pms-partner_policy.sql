@@ -3,8 +3,8 @@
 -- Table Name : pms.partner_policy
 -- Purpose    : Partner Policy: Authentication policies assigned to a partner once the policy creation request is approved. An Policy API Key is generated and provided to the partner that will be used as part of auth requests.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------

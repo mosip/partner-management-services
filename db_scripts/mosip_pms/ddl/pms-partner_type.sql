@@ -16,6 +16,7 @@
 CREATE TABLE pms.partner_type(
 	code character varying(36) NOT NULL,
 	partner_description character varying(128) NOT NULL,
+	is_policy_required boolean NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -32,6 +33,8 @@ COMMENT ON TABLE pms.partner_type IS 'Partner Type: List of different partnet ar
 COMMENT ON COLUMN pms.partner_type.code IS 'Partner ID : Unique ID generated / assigned for partner';
 -- ddl-end --
 COMMENT ON COLUMN pms.partner_type.partner_description IS 'Partner Description : Description of the partner type';
+-- ddl-end --
+COMMENT ON COLUMN pms.partner_type.is_policy_required IS 'Is Policy Required: This attribute gives detail of the type of the partner for which policy is required or not';
 -- ddl-end --
 COMMENT ON COLUMN pms.partner_type.is_active IS 'IS_Active : Flag to mark whether the record is Active or In-active';
 -- ddl-end --

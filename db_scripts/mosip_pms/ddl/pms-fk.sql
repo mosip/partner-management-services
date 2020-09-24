@@ -3,8 +3,8 @@
 -- Table Name : 
 -- Purpose    : All the FKs are created separately, not part of create table scripts to ease the deployment process
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------

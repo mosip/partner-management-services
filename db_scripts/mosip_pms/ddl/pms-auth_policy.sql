@@ -3,8 +3,8 @@
 -- Table Name : pms.auth_policy
 -- Purpose    : Authentication Policy: The authentication policy is defined in this table. An authentication policy can be of single or a group of authentication types supported by the auth services of MOSIP application.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------

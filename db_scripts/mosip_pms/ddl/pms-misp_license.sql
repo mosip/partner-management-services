@@ -3,8 +3,8 @@
 -- Table Name : pms.misp_license
 -- Purpose    : MISP License: License key issued to MISP, using which an individual''s authentication request that is initiated from partners are authenticated.
 --           
--- Create By   : Nasir Khan / Sadanandegowda
--- Created Date: 15-Jul-2019
+-- Create By   	: Sadanandegowda DM
+-- Created Date	: Aug-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
