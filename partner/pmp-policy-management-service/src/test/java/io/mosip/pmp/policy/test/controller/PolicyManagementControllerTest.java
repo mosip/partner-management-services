@@ -31,14 +31,11 @@ import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
-import io.mosip.pmp.policy.dto.PolicyDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyResponseDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
-import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.RequestWrapper;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
@@ -170,6 +167,7 @@ public class PolicyManagementControllerTest {
 //		return policy;
 //	}
 
+	@SuppressWarnings("unused")
 	private List<AuthPolicyDto> getAuthPolicies() {
 		List<AuthPolicyDto> authPolicies = new ArrayList<AuthPolicyDto>();
 		AuthPolicyDto dto = new AuthPolicyDto();		
@@ -180,6 +178,7 @@ public class PolicyManagementControllerTest {
 		return authPolicies;
 	}
 
+	@SuppressWarnings("unused")
 	private List<ShareableAttributesDto> getAllowedKycAttributes() {
 		List<ShareableAttributesDto> allowedKycList = new ArrayList<ShareableAttributesDto>();
 		ShareableAttributesDto dto =  new ShareableAttributesDto();

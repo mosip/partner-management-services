@@ -676,8 +676,8 @@ public class PolicyServiceTest {
 		dto.setAttributeName("Name");
 		dto.setEncrypted(true);
 		dto.setFormat("yyyy");
-		dto.setSource(getSourceAttributes());
-		dto.setGroup("CBEFF");
+		//dto.setSource(getSourceAttributes());
+		//dto.setGroup("CBEFF");
 		allowedKycList.add(dto);
 		return allowedKycList;
 	}
@@ -689,10 +689,11 @@ public class PolicyServiceTest {
 		dataShareDto.setTransactionsAllowed("2");
 		dataShareDto.setValidForInMinutes("30");
 		dataShareDto.setTypeOfShare("URL");
-		dataShareDto.setSource("mosip");		
+		//dataShareDto.setSource("mosip");		
 		return dataShareDto;
 	}
 	
+	@SuppressWarnings("unused")
 	private List<SourceDto> getSourceAttributes(){
 		List<SourceDto> sourceAttributes = new ArrayList<SourceDto>();
 		SourceDto sourceDto = new SourceDto();

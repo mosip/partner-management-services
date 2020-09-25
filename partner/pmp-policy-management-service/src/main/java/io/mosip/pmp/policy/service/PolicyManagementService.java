@@ -581,10 +581,10 @@ public class PolicyManagementService {
 			if(shareableAttribute.getFormat() != null) {
 				shareableAttributeObj.put("format", shareableAttribute.getFormat());
 			}
-			if(shareableAttribute.getGroup() != null) {
-				shareableAttributeObj.put("group", shareableAttribute.getGroup());
-			}
-			shareableAttributeObj.put("source", getSourceJson(shareableAttribute.getSource()));
+//			if(shareableAttribute.getGroup() != null) {
+//				shareableAttributeObj.put("group", shareableAttribute.getGroup());
+//			}
+//			shareableAttributeObj.put("source", getSourceJson(shareableAttribute.getSource()));
 			shareableAttributes.add(shareableAttributeObj);			
 		}
 		JSONObject dataShareObj = new JSONObject();
@@ -593,13 +593,13 @@ public class PolicyManagementService {
 		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
 		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
 		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
-		dataShareObj.put("source", policy.getDataSharePolicies().getSource());
+		//dataShareObj.put("source", policy.getDataSharePolicies().getSource());
 		obj.put("dataSharePolicies", dataShareObj);
 		obj.put("shareableAttributes", shareableAttributes);
 		return obj;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private JSONArray getSourceJson(List<SourceDto> sourceDto) {
 		JSONArray sourceAttributes = new JSONArray();
 		for(SourceDto source : sourceDto) {

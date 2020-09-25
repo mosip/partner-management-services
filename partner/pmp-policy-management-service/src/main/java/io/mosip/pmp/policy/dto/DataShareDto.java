@@ -20,5 +20,5 @@ public class DataShareDto {
 	
 	private String typeOfShare;
 	
-	private String source;
+	//private String source;
 }
