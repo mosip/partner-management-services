@@ -556,7 +556,7 @@ public class PolicyManagementService {
 		JSONArray shareableAttributes = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
 		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
-			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes().stream().filter(m->m.isMandatory()).collect(Collectors.toList())) {
+			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes()) {
 				JSONObject authObj = new JSONObject();
 				authObj.put("authType", authPolicyDto.getAuthType());
 				authObj.put("authSubType", authPolicyDto.getAuthSubType());
