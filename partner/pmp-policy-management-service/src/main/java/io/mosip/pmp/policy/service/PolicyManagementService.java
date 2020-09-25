@@ -753,7 +753,7 @@ public class PolicyManagementService {
 		PolicyAttributesDto dto = new PolicyAttributesDto();
 		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
 		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
-		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKYCAttributes"));
+		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
 		dto.setShareableAttributes((List<ShareableAttributesDto>) readValue.get("shareableAttributes"));
 		ObjectMapper mapper = new ObjectMapper();
 		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);

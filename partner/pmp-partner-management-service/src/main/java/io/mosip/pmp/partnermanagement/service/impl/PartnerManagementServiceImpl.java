@@ -717,15 +717,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
-
 		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("allowedAuthTypes"));
-		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKYCAttributes"));
+    policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
 		policies.setAuthTokenType((String)readValue.get("authTokenType"));
 		authPolicies.setPolicies(policies);
 		authPolicies.setPolicyId(authPolicyId);
 		return authPolicies;
-
-
 	}
 	/**
 	 * This method validates the license key.
