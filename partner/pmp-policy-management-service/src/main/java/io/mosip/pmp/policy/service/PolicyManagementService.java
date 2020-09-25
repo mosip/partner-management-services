@@ -799,10 +799,6 @@ public class PolicyManagementService {
 				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorCode(),
 						ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorMessage());
 			}
-			if(policyAttributesDto.getAllowedKYCAttributes() == null) {
-				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
-						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "allowedKYCAttributes");
-			}
 			if(policyAttributesDto.getDataSharePolicies() != null) {
 				throw new PolicyManagementServiceException(ErrorMessages.DATASHARE_ATTRIBUTES_NOT_REQUIRED.getErrorCode(),
 						ErrorMessages.DATASHARE_ATTRIBUTES_NOT_REQUIRED.getErrorMessage() + "dataSharePolicies");
