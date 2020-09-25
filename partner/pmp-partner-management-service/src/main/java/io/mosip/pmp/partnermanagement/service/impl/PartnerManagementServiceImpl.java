@@ -719,7 +719,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 
 		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("allowedAuthTypes"));
-		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKYCAttributes"));
+		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
 		policies.setAuthTokenType((String)readValue.get("authTokenType"));
 		authPolicies.setPolicies(policies);
 		authPolicies.setPolicyId(authPolicyId);
