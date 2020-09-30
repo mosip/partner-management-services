@@ -130,7 +130,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	RestUtil restUtil;
-	
+
 	@Autowired
 	KeycloakImpl keycloakImpl;
 
@@ -142,7 +142,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
-	
+
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
@@ -241,7 +241,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerResponse.setStatus("Active");
 		return partnerResponse;
 	}
-	
+
 	private MosipUserDto RegisterUser(Partner partner) {
 		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
 		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
@@ -269,12 +269,13 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setContactNumber(partner.getContactNo());
 			response.setEmailId(partner.getEmailId());
 			response.setOrganizationName(partner.getName());
+			if(findByIdPartner.get().getPolicyGroupId() != null) {
+				LOGGER.info("Retriving the name of policy group");
+				findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
 
-			LOGGER.info("Retriving the name of policy group");
-			findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
-
-			if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() !=null) {
-				response.setPolicyGroup(findByIdpolicyGroup.get().getName());
+				if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() !=null) {
+					response.setPolicyGroup(findByIdpolicyGroup.get().getName());
+				}
 			}
 			return response;
 		} else {
@@ -295,7 +296,11 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
 		}
-		Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partnerByName.getPolicyGroupId());		
+		String policyGroupName = null;
+		if(partnerByName.getPolicyGroupId() != null) {
+			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partnerByName.getPolicyGroupId());
+			policyGroupName = findByIdpolicyGroup.get().getName();
+		}
 		if (partnerByName != null) {
 			response.setId(partnerByName.getId());
 			response.setAddress(partnerByName.getAddress());
@@ -308,7 +313,7 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setUpdBy(getUser());
 			response.setUpdDtimes(partnerByName.getUpdDtimes());
 			response.setUserId(partnerByName.getUserId());
-			response.setPolicyGroupName(findByIdpolicyGroup.get().getName());
+			response.setPolicyGroupName(policyGroupName);
 		} 
 		return response;
 	}
@@ -658,7 +663,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
 		}
-		
+
 		Partner updateObject = partnerFromDb.get();
 		updateObject.setUpdBy(getUser());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -677,8 +682,8 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
 		}
 		if(partnerFromDb.get().getCertificateAlias() == null) {
-		  throw new PartnerServiceException(PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
-				  PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());	
+			throw new PartnerServiceException(PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());	
 		}
 		PartnerCertDownloadResponeDto responseObject = null;
 		Map<String, String> pathsegments = new HashMap<>();

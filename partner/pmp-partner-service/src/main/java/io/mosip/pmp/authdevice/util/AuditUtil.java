@@ -91,11 +91,11 @@ public class AuditUtil {
 
 	public void auditRequest(String eventName, String eventType, String description) {
 		String eventId = "ADM-" + eventCounter.incrementAndGet();
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		//setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		//setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 
 	/**
