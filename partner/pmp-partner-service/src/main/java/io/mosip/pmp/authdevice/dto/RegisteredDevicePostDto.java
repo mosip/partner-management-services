@@ -4,9 +4,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+
 @Data
 public class RegisteredDevicePostDto {
-	
+
+	@NotNull
 	@NotBlank
 	private String deviceData;
 
@@ -16,17 +18,5 @@ public class RegisteredDevicePostDto {
 
 	public void setDeviceData(String deviceData) {
 		this.deviceData = deviceData;
-	}
-	
-	@NotNull
-	private Boolean isItForRegistrationDevice;
-
-
-	public Boolean getIsItForRegistrationDevice() {
-		return isItForRegistrationDevice;
-	}
-
-	public void setIsItForRegistrationDevice(Boolean isItForRegistrationDevice) {
-		this.isItForRegistrationDevice = isItForRegistrationDevice;
 	}
 }

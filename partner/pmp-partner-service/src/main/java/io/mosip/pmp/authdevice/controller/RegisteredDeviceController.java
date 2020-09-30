@@ -44,17 +44,12 @@ public class RegisteredDeviceController {
 	 * @throws Exception
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@PostMapping
 	public ResponseWrapper<String> signedRegisteredDevice(
 			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		if(registeredDevicePostDto.getRequest().getIsItForRegistrationDevice()) {
-			response.setResponse(regRegisteredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
-		}else {
-			response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));			
-		}
-
+		response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
 		return response;
 	}
 
@@ -65,7 +60,7 @@ public class RegisteredDeviceController {
 	 *            the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ApiOperation(value = "DeRegister Device")
 	@PostMapping("/deregister")
 	@ResponseFilter
