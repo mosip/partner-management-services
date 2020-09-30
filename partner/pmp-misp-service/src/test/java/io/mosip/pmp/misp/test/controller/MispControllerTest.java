@@ -120,7 +120,7 @@ public class MispControllerTest {
 	@WithMockUser(roles = {"MISP"})
 	public void updateMispLkeyStatusTest() throws JsonProcessingException, Exception{
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<MISPlKeyStatusUpdateResponseDto>();
-		Mockito.when(mispManagementService.updateMisplkeyStatus(Mockito.any())).thenReturn(response);
+		Mockito.when(mispManagementService.updateMisplkeyStatus(Mockito.any(),Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPlKeyStatusUpdateRequestDto> request = formLicenseKeyUpdateRequest();
 
 		mockMvc.perform(put("/misps/12345/licenseKey").contentType(MediaType.APPLICATION_JSON)
@@ -176,10 +176,8 @@ public class MispControllerTest {
 		request.setRequesttime(LocalDateTime.now());
 		request.setVersion("0.9.1");
 		MISPlKeyStatusUpdateRequestDto dto = new MISPlKeyStatusUpdateRequestDto();
-		dto.setMispId("12345");
 		dto.setMispLicenseKey("121hjgdwgdhjgdyhdwgdwhghdghd");
 		dto.setMispLicenseKeyStatus("Active");
-		dto.setMispStatus("Active");
 		request.setRequest(dto);
 		return request;
 	}
@@ -251,7 +249,6 @@ public class MispControllerTest {
 		dto.setAddress("Bangalore");
 		dto.setContactNumber("1234567890");
 		dto.setEmailId("airtel@gmail.com");
-		dto.setName("Airtel");
 		dto.setOrganizationName("Airtel");
 		request.setRequest(dto);
 		

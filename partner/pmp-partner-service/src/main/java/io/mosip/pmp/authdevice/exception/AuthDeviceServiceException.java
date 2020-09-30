@@ -1,7 +1,5 @@
 package io.mosip.pmp.authdevice.exception;
 
-import org.springframework.stereotype.Component;
-
 import io.mosip.pmp.partner.exception.BaseUncheckedException;
 
 public class AuthDeviceServiceException extends BaseUncheckedException {
