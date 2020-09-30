@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pmp</groupId>
 	<artifactId>pmp-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
