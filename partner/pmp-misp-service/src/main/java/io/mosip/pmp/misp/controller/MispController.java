@@ -200,9 +200,11 @@ public class MispController {
 	 */
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps")
-	public List<MISPDetailsDto> getMisps(){
+	public ResponseWrapper<List<MISPDetailsDto>> getMisps(){
+		ResponseWrapper<List<MISPDetailsDto>> response = new ResponseWrapper<>();
 		MispLogger.info("Calling MISPManagementService from MispController.");
-		return mispManagementService.getMisps();
+		response.setResponse(mispManagementService.getMisps());
+		return response;
 	}
 	
 	/**
@@ -230,9 +232,11 @@ public class MispController {
 	 */
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value ="/misps/name/{orgName}")
-	public List<MISPDetailsDto> getMispsByOrg(@PathVariable String orgName ){
+	public ResponseWrapper<List<MISPDetailsDto>> getMispsByOrg(@PathVariable String orgName ){
+		ResponseWrapper<List<MISPDetailsDto>> responseWrapper = new ResponseWrapper<>();
 		MispLogger.info("Calling MISPManagementService from MispController.");
-		return mispManagementService.getMispsByOrg(orgName);
+		responseWrapper.setResponse(mispManagementService.getMispsByOrg(orgName));
+		return responseWrapper;
 	}
 	
 	/**
