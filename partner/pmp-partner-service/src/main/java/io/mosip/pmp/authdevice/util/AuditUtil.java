@@ -46,10 +46,10 @@ import io.mosip.pmp.partner.core.ResponseWrapper;
 public class AuditUtil {
 
 	/** The Constant APPLICATION_ID. */
-	private static final String APPLICATION_ID = "10015";
+	private static final String APPLICATION_ID = "MOSIP_7";
 
 	/** The Constant APPLICATION_NAME. */
-	private static final String APPLICATION_NAME = "PARTNER-MANAGEMENT";
+	private static final String APPLICATION_NAME = "PARTNER_MANAGEMENT";
 
 	/** The Constant UNKNOWN_HOST. */
 	private static final String UNKNOWN_HOST = "Unknown Host";
@@ -90,13 +90,11 @@ public class AuditUtil {
 	}
 
 	public void auditRequest(String eventName, String eventType, String description) {
-
 		String eventId = "ADM-" + eventCounter.incrementAndGet();
 		//setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
-
 		//setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 

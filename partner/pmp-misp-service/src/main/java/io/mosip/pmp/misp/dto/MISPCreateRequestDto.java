@@ -55,14 +55,4 @@ public class MISPCreateRequestDto {
 	@Size(min = 1, max= 2000)
 	@ApiModelProperty(value = "address", required = true, dataType = "java.lang.String")
 	public String address;
-	
-	/**
-	 *  name carries the domain of the misp.
-	 */
-	@NotBlank
-	@NotNull
-	@Size(min = 1, max= 2000)
-	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
-	public String name;
-
 }

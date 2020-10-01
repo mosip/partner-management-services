@@ -556,7 +556,7 @@ public class PolicyManagementService {
 		JSONArray shareableAttributes = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
 		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
-			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes().stream().filter(m->m.isMandatory()).collect(Collectors.toList())) {
+			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes()) {
 				JSONObject authObj = new JSONObject();
 				authObj.put("authType", authPolicyDto.getAuthType());
 				authObj.put("authSubType", authPolicyDto.getAuthSubType());
@@ -581,10 +581,10 @@ public class PolicyManagementService {
 			if(shareableAttribute.getFormat() != null) {
 				shareableAttributeObj.put("format", shareableAttribute.getFormat());
 			}
-			if(shareableAttribute.getGroup() != null) {
-				shareableAttributeObj.put("group", shareableAttribute.getGroup());
-			}
-			shareableAttributeObj.put("source", getSourceJson(shareableAttribute.getSource()));
+//			if(shareableAttribute.getGroup() != null) {
+//				shareableAttributeObj.put("group", shareableAttribute.getGroup());
+//			}
+//			shareableAttributeObj.put("source", getSourceJson(shareableAttribute.getSource()));
 			shareableAttributes.add(shareableAttributeObj);			
 		}
 		JSONObject dataShareObj = new JSONObject();
@@ -593,13 +593,13 @@ public class PolicyManagementService {
 		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
 		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
 		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
-		dataShareObj.put("source", policy.getDataSharePolicies().getSource());
+		//dataShareObj.put("source", policy.getDataSharePolicies().getSource());
 		obj.put("dataSharePolicies", dataShareObj);
 		obj.put("shareableAttributes", shareableAttributes);
 		return obj;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private JSONArray getSourceJson(List<SourceDto> sourceDto) {
 		JSONArray sourceAttributes = new JSONArray();
 		for(SourceDto source : sourceDto) {
@@ -753,7 +753,7 @@ public class PolicyManagementService {
 		PolicyAttributesDto dto = new PolicyAttributesDto();
 		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
 		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
-		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKYCAttributes"));
+		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
 		dto.setShareableAttributes((List<ShareableAttributesDto>) readValue.get("shareableAttributes"));
 		ObjectMapper mapper = new ObjectMapper();
 		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);
@@ -798,10 +798,6 @@ public class PolicyManagementService {
 			if(!(Arrays.stream(allowedAuthTokenType)).anyMatch(policyAttributesDto.getAuthTokenType() :: equals)){
 				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorCode(),
 						ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorMessage());
-			}
-			if(policyAttributesDto.getAllowedKYCAttributes() == null) {
-				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
-						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "allowedKYCAttributes");
 			}
 			if(policyAttributesDto.getDataSharePolicies() != null) {
 				throw new PolicyManagementServiceException(ErrorMessages.DATASHARE_ATTRIBUTES_NOT_REQUIRED.getErrorCode(),

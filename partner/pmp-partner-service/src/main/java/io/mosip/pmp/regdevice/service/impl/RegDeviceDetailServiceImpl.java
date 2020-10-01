@@ -3,12 +3,9 @@ package io.mosip.pmp.regdevice.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +16,15 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
-import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
-import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
 import io.mosip.pmp.authdevice.exception.RequestException;
-import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
-import io.mosip.pmp.regdevice.repository.RegRegistrationDeviceSubTypeRepository;
-import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
+import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
+import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
+import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
+import io.mosip.pmp.regdevice.repository.RegRegistrationDeviceSubTypeRepository;
+import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 
 @Service
 @Transactional

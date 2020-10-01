@@ -23,5 +23,7 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 	
 	@Query(value ="select * from partner ppr where ppr.email_id=?",nativeQuery = true)
 	public Partner findByEmailId(String emailId);
+	
+	Partner findByIdAndIsActiveIsTrue(String id);
 
 }
