@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
