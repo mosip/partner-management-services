@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.0.9</version>
+			<version>${kernel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel-auth-adapter.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
