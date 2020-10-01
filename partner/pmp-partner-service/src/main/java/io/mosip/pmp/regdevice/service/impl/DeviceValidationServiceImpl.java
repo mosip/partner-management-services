@@ -1,5 +1,7 @@
 package io.mosip.pmp.regdevice.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,30 +26,41 @@ import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
+import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
+import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
 import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
+import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceHistoryRepository;
 import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceRepository;
+import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceHistoryRepository;
 import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.regdevice.service.DeviceValidationService;
 
 @Component
 @Transactional
 public class DeviceValidationServiceImpl implements DeviceValidationService {
+	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	
 	private static final String REGISTERED = "Registered";
-	
+
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
 	private RegRegisteredDeviceRepository registeredDeviceRepository;
 	
+	@Autowired
+	private RegRegisteredDeviceHistoryRepository registeredDeviceHistoryRepository;
+
 	@Autowired
 	private PartnerServiceRepository deviceProviderRepository;
 
 	@Autowired
 	private RegSecureBiometricInterfaceRepository deviceServiceRepository;	
 	
+	@Autowired
+	private RegSecureBiometricInterfaceHistoryRepository deviceServiceHistoryRepository;
+
 	@Autowired
 	private RegDeviceDetailRepository deviceDetailRepository;
 
@@ -60,7 +73,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
 			isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
 			validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
-			responseDto.setStatus("Valid");
+			responseDto.setStatus(AuthDeviceConstant.VALID);
 			responseDto.setMessage("Device  details validated successfully");
 		} else {
 			responseDto = validateDeviceProviderHistory(validateDeviceDto);
@@ -69,13 +82,24 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 	}
 
 	private ResponseDto validateDeviceProviderHistory(ValidateDeviceDto validateDeviceDto) {
-		
-		return null;
+		ResponseDto responseDto = new ResponseDto();
+		responseDto.setStatus(AuthDeviceConstant.INVALID);
+		responseDto.setMessage("Device details history is invalid");
+		LocalDateTime effTimes = parseToLocalDateTime(validateDeviceDto.getTimeStamp());
+		RegRegisteredDeviceHistory registeredDeviceHistory = isRegisteredDeviceHistory(validateDeviceDto.getDeviceCode(),
+				effTimes, validateDeviceDto.getPurpose());
+		isValidServiceVersionFromHistory(validateDeviceDto.getDeviceServiceVersion(), effTimes);
+		validateDigitalIdWithRegisteredDeviceHistory(registeredDeviceHistory, validateDeviceDto.getDigitalId());
+		responseDto.setStatus(AuthDeviceConstant.VALID);
+		responseDto.setMessage("Device details history validated successfully");
+		return responseDto;
+
 	}
 
-	private void validateDeviceCodeAndDigitalId(RegRegisteredDevice registeredDevice, DigitalIdDto digitalIdDto) {
+	private void validateDigitalIdWithRegisteredDeviceHistory(RegRegisteredDeviceHistory registeredDeviceHistory,
+			DigitalIdDto digitalIdDto) {
 		List<ServiceError> serviceErrors = new ArrayList<>();
-		RegDeviceDetail deviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(registeredDevice.getDeviceDetailId());
+		RegDeviceDetail deviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(registeredDeviceHistory.getDeviceDetailId());
 		if (!deviceDetail.getMake().equals(digitalIdDto.getMake())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
@@ -103,15 +127,6 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					AuthDeviceConstant.DP_ID));
 			serviceErrors.add(serviceError);
 		}
-		if (!registeredDevice.getSerialNo().equals(digitalIdDto.getSerialNo())) {
-			ServiceError serviceError = new ServiceError();
-			serviceError
-					.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
-			serviceError.setMessage(String.format(
-					DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					AuthDeviceConstant.SERIAL_NO));
-			serviceErrors.add(serviceError);
-		}
 		if (!deviceDetail.getDeviceTypeCode().equals(digitalIdDto.getType())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
@@ -123,6 +138,156 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			ServiceError serviceError = new ServiceError();
 			serviceError
 					.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(DeviceValidationErrorCode.PROVIDER_AND_SUBTYPE_MAPPED.getErrorMessage());
+			serviceErrors.add(serviceError);
+		}
+		if (!serviceErrors.isEmpty()) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC, "PMS-ADM-999", serviceErrors.toString()), "ADM-613");
+			throw new ValidationException(serviceErrors);
+		} else {
+			serviceErrors = null;
+		}
+	}
+	
+	private boolean isValidServiceVersionFromHistory(String deviceServiceVersion, LocalDateTime effTimes) {
+		List<RegSecureBiometricInterfaceHistory> deviceServiceHistory = null;
+		try {
+			deviceServiceHistory = deviceServiceHistoryRepository
+					.findByIdAndIsActiveIsTrueAndByEffectiveTimes(deviceServiceVersion, effTimes);
+		} catch (DataAccessException | DataAccessLayerException e) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+							DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage()),
+					"ADM-614");
+			throw new AuthDeviceServiceException(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
+							AuthDeviceConstant.ERROR_OCCURED_MOSIP_DEVICE_SERVICE_HISTORY));
+		}
+		if (deviceServiceHistory.isEmpty()) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+							DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage()),
+					"ADM-619");
+			throw new RequestException(DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+					DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage());
+		}
+
+		return true;
+	}
+
+	private LocalDateTime parseToLocalDateTime(String timeStamp) {
+		return LocalDateTime.parse(timeStamp, DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN));	
+	}
+
+	private RegRegisteredDeviceHistory isRegisteredDeviceHistory(String deviceCode, LocalDateTime effTimes,
+			String purpose) {
+		RegRegisteredDeviceHistory registeredDeviceHistory = null;
+		try {
+			if (StringUtils.isBlank(purpose)) {
+			registeredDeviceHistory = registeredDeviceHistoryRepository
+					.findRegisteredDeviceHistoryByIdAndEffTimes(deviceCode, effTimes);
+			} else {
+				registeredDeviceHistory = registeredDeviceHistoryRepository
+						.findRegisteredDeviceHistoryByIdAndEffTimesAndPurpose(deviceCode, effTimes,
+								purpose.toUpperCase());
+			}
+		} catch (DataAccessException | DataAccessLayerException e) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+							DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage()),
+					"ADM-615");
+			throw new RequestException(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
+							AuthDeviceConstant.ERROR_OCCURED_REGISTERED_DEVICE_HISTORY));
+		}
+
+		if (registeredDeviceHistory == null) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorCode(),
+							DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorMessage()),
+					"ADM-616");
+			throw new RequestException(DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorCode(),
+					DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorMessage());
+		}
+		if (!registeredDeviceHistory.getStatusCode().equalsIgnoreCase(REGISTERED)) {
+			auditUtil.auditRequest(
+					AuthDeviceConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorCode(),
+							DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorMessage()),
+					"ADM-617");
+			throw new RequestException(DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorCode(),
+					DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorMessage());
+		}
+		return registeredDeviceHistory;
+	}
+
+	private void validateDeviceCodeAndDigitalId(RegRegisteredDevice registeredDevice, DigitalIdDto digitalIdDto) {
+		List<ServiceError> serviceErrors = new ArrayList<>();
+		RegDeviceDetail deviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(registeredDevice.getDeviceDetailId());
+		if (!deviceDetail.getMake().equals(digitalIdDto.getMake())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(String.format(
+					DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
+					AuthDeviceConstant.MAKE));
+			serviceErrors.add(serviceError);
+		}
+		if (!deviceDetail.getModel().equals(digitalIdDto.getModel())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(String.format(
+					DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
+					AuthDeviceConstant.MODEL));
+			serviceErrors.add(serviceError);
+		}
+		if (!deviceDetail.getDeviceProviderId().equals(digitalIdDto.getDpId())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(String.format(
+					DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
+					AuthDeviceConstant.DP_ID));
+			serviceErrors.add(serviceError);
+		}
+		if (!registeredDevice.getSerialNo().equals(digitalIdDto.getSerialNo())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(String.format(
+					DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
+					AuthDeviceConstant.SERIAL_NO));
+			serviceErrors.add(serviceError);
+		}
+		if (!deviceDetail.getDeviceTypeCode().equals(digitalIdDto.getType())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
+			serviceError.setMessage(DeviceValidationErrorCode.PROVIDER_AND_TYPE_MAPPED.getErrorMessage());
+			serviceErrors.add(serviceError);
+		}
+		if (!deviceDetail.getDeviceSubTypeCode().equals(digitalIdDto.getDeviceSubType())) {
+			ServiceError serviceError = new ServiceError();
+			serviceError
+			.setErrorCode(DeviceValidationErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(DeviceValidationErrorCode.PROVIDER_AND_SUBTYPE_MAPPED.getErrorMessage());
 			serviceErrors.add(serviceError);
 		}
@@ -170,7 +335,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 
 	private boolean isDeviceProviderPresent(String dpId) {
 		Partner deviceProvider = null;
-		
+
 		try {
 			deviceProvider = deviceProviderRepository.findByIdAndIsActiveIsTrue(dpId);
 		} catch (DataAccessException | DataAccessLayerException e) {

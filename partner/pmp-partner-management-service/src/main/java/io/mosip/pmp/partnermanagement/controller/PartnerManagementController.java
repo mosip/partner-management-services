@@ -203,6 +203,7 @@ public class PartnerManagementController {
 	 *   This API would be used to retrieve all Partner Details as per UI. 
 	 * @return response this class contains List of Partner.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value="/getManager", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
