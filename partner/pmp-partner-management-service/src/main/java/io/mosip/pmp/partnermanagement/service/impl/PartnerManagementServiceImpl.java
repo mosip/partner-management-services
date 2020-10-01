@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
+import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIDoesNotExistConstant;
@@ -56,8 +56,8 @@ import io.mosip.pmp.partnermanagement.exception.NoPartnerApiKeyRequestsException
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException;
-import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
+import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispServiceRepository;
