@@ -212,16 +212,22 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 			entity.setUpdBy(authN.getName());
 			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));			
 		}
-
+		
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
 			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);
 			entity.setActive(true);
+			RegSecureBiometricInterfaceHistory history=new RegSecureBiometricInterfaceHistory();
+			history=getUpdateHistoryMapping(history,entity);
+			sbiHistoryRepository.save(history);
 			sbiRepository.save(entity);
 			return "Secure biometric details approved successfully.";
 		}
 		if(secureBiometricInterfaceDto.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
 			entity.setApprovalStatus(AuthDeviceConstant.REJECTED);	
 			entity.setActive(false);
+			RegSecureBiometricInterfaceHistory history=new RegSecureBiometricInterfaceHistory();
+			history=getUpdateHistoryMapping(history,entity);
+			sbiHistoryRepository.save(history);
 			sbiRepository.save(entity);
 			return "Secure biometric details rejected successfully.";
 		}
