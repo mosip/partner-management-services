@@ -186,6 +186,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
 		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
+		historyEntity.setDeviceDetailId(entity.getDeviceDetailId());
 		
 		return historyEntity;
 		
