@@ -14,16 +14,13 @@ public class FoundationalTrustProvider implements Serializable {
 
 	@Id
 	@Column(name="id",length=36,nullable=false)
-	private String id;
-	
-//	@Column(name="partner_org_name",length=128)
-//	private String partnerOrganizationName;
+	private String id;	
 	
 	@Column(name="is_active",nullable=false)
 	private boolean isActive;
 	
 	@Column(name="is_deleted")
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	
 	@Column(name="cr_by",length=256,nullable=false)
 	private String crBy;
@@ -48,14 +45,6 @@ public class FoundationalTrustProvider implements Serializable {
 		this.id = id;
 	}
 
-//	public String getPartnerOrganizationName() {
-//		return partnerOrganizationName;
-//	}
-//
-//	public void setPartnerOrganizationName(String partnerOrganizationName) {
-//		this.partnerOrganizationName = partnerOrganizationName;
-//	}
-
 	public boolean isActive() {
 		return isActive;
 	}
@@ -64,11 +53,11 @@ public class FoundationalTrustProvider implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
