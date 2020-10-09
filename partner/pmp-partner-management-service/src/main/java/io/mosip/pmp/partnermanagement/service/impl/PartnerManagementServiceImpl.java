@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIDoesNotExistConstant;
