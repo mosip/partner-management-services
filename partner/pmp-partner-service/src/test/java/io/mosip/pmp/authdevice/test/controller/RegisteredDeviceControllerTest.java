@@ -59,8 +59,7 @@ public class RegisteredDeviceControllerTest {
         Mockito.when(registeredDeviceService.signedRegisteredDevice(Mockito.any())).thenReturn(response);
         Mockito.when(registeredDeviceService.deRegisterDevice(Mockito.any())).thenReturn(response);
         Mockito.when(regRegisteredDeviceService.signedRegisteredDevice(Mockito.any())).thenReturn(response);
-        Mockito.when(regRegisteredDeviceService.deRegisterDevice(Mockito.any())).thenReturn(response);
-        
+        Mockito.when(regRegisteredDeviceService.deRegisterDevice(Mockito.any())).thenReturn(response);        
     }
     
     @Test
@@ -69,7 +68,6 @@ public class RegisteredDeviceControllerTest {
     	RequestWrapper<RegisteredDevicePostDto> request=new RequestWrapper<RegisteredDevicePostDto>();
     	RegisteredDevicePostDto registeredDevicePostDto=new RegisteredDevicePostDto();
     	registeredDevicePostDto.setDeviceData("dasfvdfvsf");
-    	registeredDevicePostDto.setIsItForRegistrationDevice(false);
     	request.setRequest(registeredDevicePostDto);
         mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
@@ -93,7 +91,6 @@ public class RegisteredDeviceControllerTest {
     	RequestWrapper<RegisteredDevicePostDto> request=new RequestWrapper<RegisteredDevicePostDto>();
     	RegisteredDevicePostDto registeredDevicePostDto=new RegisteredDevicePostDto();
     	registeredDevicePostDto.setDeviceData("dasfvdfvsf");
-    	registeredDevicePostDto.setIsItForRegistrationDevice(true);
     	request.setRequest(registeredDevicePostDto);
         mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());

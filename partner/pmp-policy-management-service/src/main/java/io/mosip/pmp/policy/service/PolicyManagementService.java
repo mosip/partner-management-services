@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,11 +23,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.constant.PolicyCommonConstants;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.DataShareDto;
+import io.mosip.pmp.policy.dto.FilterDto;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -42,6 +42,8 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
+import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.AuthPolicyH;
 import io.mosip.pmp.policy.entity.PartnerPolicy;
@@ -91,6 +93,10 @@ public class PolicyManagementService {
 
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
+	
+	public static final String ACTIVE_STATUS = "active";
+	public static final String NOTACTIVE_STATUS = "de-active";
+	
 	/**
 	 * 
 	 * @param requestDto
@@ -141,11 +147,11 @@ public class PolicyManagementService {
 
 	/**
 	 * 
-	 * @param policyGroupId
+	 * @param policyId
 	 * @param status
 	 */
-	private void updatePoicyGroupPolicies(String policyGroupId, boolean status) {
-		List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyGroupId(policyGroupId);
+	private void updatePoicyGroupPolicies(String policyId, boolean status) {
+		List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyGroupId(policyId);
 		for (AuthPolicy authPolicy : authPolicies) {
 			if(!status) {
 				authPolicy.setIsActive(status);
@@ -403,6 +409,11 @@ public class PolicyManagementService {
 	 * @return
 	 */
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(PolicyStatusUpdateRequestDto statusUpdateRequest, String policyGroupId, String policyId) {
+		if(!(statusUpdateRequest.getStatus().toLowerCase().equals(ACTIVE_STATUS) || 
+				statusUpdateRequest.getStatus().toLowerCase().equals(NOTACTIVE_STATUS))) {
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_STATUS_CODE_EXCEPTION.getErrorCode(),
+					ErrorMessages.POLICY_STATUS_CODE_EXCEPTION.getErrorMessage());
+		}
 		Boolean status = statusUpdateRequest.getStatus().contains("De-Active") ? false : true;		
 		AuthPolicy authPolicy = checkMappingExists(policyGroupId, policyId, false);		
 		authPolicy.setIsActive(status);
@@ -541,39 +552,88 @@ public class PolicyManagementService {
 		PolicyServiceLogger.info("Creating policy document");
 		JSONObject obj = new JSONObject();
 		JSONArray authPolicies = new JSONArray();
+		JSONArray shareableAttributes = new JSONArray();
 		JSONArray allowedKycAttributes = new JSONArray();
 		if(policyType.toUpperCase().equals(PolicyCommonConstants.AUTH_TYPE)) {
-			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes().stream().filter(m->m.isMandatory()).collect(Collectors.toList())) {
+			for (AuthPolicyDto authPolicyDto : policy.getAllowedAuthTypes()) {
 				JSONObject authObj = new JSONObject();
 				authObj.put("authType", authPolicyDto.getAuthType());
 				authObj.put("authSubType", authPolicyDto.getAuthSubType());
 				authObj.put("mandatory", authPolicyDto.isMandatory());
 				authPolicies.add(authObj);
 			}
+			for (AllowedKycDto allowedKycDto : policy.getAllowedKYCAttributes()) {
+				JSONObject allowedKycObj = new JSONObject();
+				allowedKycObj.put("attributeName", allowedKycDto.getAttributeName());
+				allowedKycAttributes.add(allowedKycObj);
+			}
 			obj.put("allowedAuthTypes", authPolicies);
 			obj.put("authTokenType", policy.getAuthTokenType());
+			obj.put("allowedKycAttributes", allowedKycAttributes);		
+			return obj;
 		}
 
-		for (AllowedKycDto allowedKycDto : policy.getShareableAttributes()) {
-			JSONObject allowedKycObj = new JSONObject();
-			allowedKycObj.put("attributeName", allowedKycDto.getAttributeName());
-			allowedKycObj.put("encrypted", allowedKycDto.isEncrypted());
-			allowedKycObj.put("format", allowedKycDto.getFormat());
-			allowedKycAttributes.add(allowedKycObj);
+		for (ShareableAttributesDto shareableAttribute : policy.getShareableAttributes()) {
+			JSONObject shareableAttributeObj = new JSONObject();
+			shareableAttributeObj.put("attributeName", shareableAttribute.getAttributeName());
+			shareableAttributeObj.put("encrypted", shareableAttribute.isEncrypted());
+			if(shareableAttribute.getFormat() != null) {
+				shareableAttributeObj.put("format", shareableAttribute.getFormat());
+			}
+//			if(shareableAttribute.getGroup() != null) {
+//				shareableAttributeObj.put("group", shareableAttribute.getGroup());
+//			}
+//			shareableAttributeObj.put("source", getSourceJson(shareableAttribute.getSource()));
+			shareableAttributes.add(shareableAttributeObj);			
 		}
-		obj.put("shareableAttributes", allowedKycAttributes);
-
 		JSONObject dataShareObj = new JSONObject();
 		dataShareObj.put("validForInMinutes", policy.getDataSharePolicies().getValidForInMinutes());
 		dataShareObj.put("transactionsAllowed", policy.getDataSharePolicies().getTransactionsAllowed());
 		dataShareObj.put("encryptionType", policy.getDataSharePolicies().getEncryptionType());
 		dataShareObj.put("shareDomain", policy.getDataSharePolicies().getShareDomain());	
 		dataShareObj.put("typeOfShare", policy.getDataSharePolicies().getTypeOfShare());
+		//dataShareObj.put("source", policy.getDataSharePolicies().getSource());
 		obj.put("dataSharePolicies", dataShareObj);
-
-
+		obj.put("shareableAttributes", shareableAttributes);
 		return obj;
-	}	
+	}
+
+	@SuppressWarnings({ "unchecked", "unused" })
+	private JSONArray getSourceJson(List<SourceDto> sourceDto) {
+		JSONArray sourceAttributes = new JSONArray();
+		for(SourceDto source : sourceDto) {
+			JSONObject sourceObj = new JSONObject();
+			sourceObj.put("attribute", source.getAttribute());
+			JSONArray filter = getFilterJson(source.getFilter());
+			if(filter != null) {			
+				sourceObj.put("filter", filter);
+			}
+			sourceAttributes.add(sourceObj);
+		}
+		return sourceAttributes;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONArray getFilterJson(List<FilterDto> filter) {
+		JSONArray filterAttributes = new JSONArray();
+		if(filter != null) {
+			for(FilterDto filterDto : filter) {
+				JSONObject filterObj = new JSONObject();
+				JSONArray subTypeArray = new JSONArray();
+				filterObj.put("type", filterDto.getType());
+				if(filterDto.getSubType() != null) {
+					for(String subType : filterDto.getSubType()) {
+						subTypeArray.add(subType);
+					}
+					filterObj.put("subType", subTypeArray);
+				}
+				filterAttributes.add(filterObj);
+			}		
+			return filterAttributes;
+		}
+
+		return null;
+	}
 
 	/**
 	 * 
@@ -664,10 +724,11 @@ public class PolicyManagementService {
 		PolicyAttributesDto policyAttributes = mapPolicyAttributes(authPolicy.getPolicyFileId());
 		PolicyDto policyDto = new PolicyDto();
 		policyDto.setAllowedAuthTypes(policyAttributes.getAllowedAuthTypes());
-		policyDto.setAuthTokenType("");
+		policyDto.setAuthTokenType(policyAttributes.getAuthTokenType());
 		policyDto.setCr_by(authPolicy.getCrBy());
 		policyDto.setCr_dtimes(authPolicy.getCrDtimes());
 		policyDto.setDataSharePolicies(policyAttributes.getDataSharePolicies());
+		policyDto.setAllowedKYCAttributes(policyAttributes.getAllowedKYCAttributes());
 		policyDto.setIs_Active(authPolicy.getIsActive());
 		policyDto.setPolicyDesc(authPolicy.getDescr());
 		policyDto.setPolicyId(authPolicy.getId());
@@ -691,7 +752,8 @@ public class PolicyManagementService {
 		PolicyAttributesDto dto = new PolicyAttributesDto();
 		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
 		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
-		dto.setShareableAttributes((List<AllowedKycDto>) readValue.get("shareableAttributes"));
+		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
+		dto.setShareableAttributes((List<ShareableAttributesDto>) readValue.get("shareableAttributes"));
 		ObjectMapper mapper = new ObjectMapper();
 		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);
 		dto.setDataSharePolicies(dataShareDto);
@@ -711,7 +773,7 @@ public class PolicyManagementService {
 			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 					.getUserId();
 		} else {
-			return "system";
+			return null;
 		}
 	}
 
@@ -736,20 +798,24 @@ public class PolicyManagementService {
 				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorCode(),
 						ErrorMessages.AUTH_TOKEN_TYPE_NOT_ALLOWED.getErrorMessage());
 			}
-			
-			if(policyAttributesDto.getDataSharePolicies() == null) {
-				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
-						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "dataSharePolicies");
+			if(policyAttributesDto.getDataSharePolicies() != null) {
+				throw new PolicyManagementServiceException(ErrorMessages.DATASHARE_ATTRIBUTES_NOT_REQUIRED.getErrorCode(),
+						ErrorMessages.DATASHARE_ATTRIBUTES_NOT_REQUIRED.getErrorMessage() + "dataSharePolicies");
 
 			}
-			if(policyAttributesDto.getShareableAttributes() == null) {
-				throw new PolicyManagementServiceException(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
-						ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + "shareableAttributes");
+			if(policyAttributesDto.getShareableAttributes() != null) {
+				throw new PolicyManagementServiceException(ErrorMessages.SHAREABLE_ATTRIBUTES_NOT_REQUIRED.getErrorCode(),
+						ErrorMessages.SHAREABLE_ATTRIBUTES_NOT_REQUIRED.getErrorMessage() + "shareableAttributes");
 			}
 		}else {
 			if(policyAttributesDto.getAllowedAuthTypes() != null) {
 				throw new PolicyManagementServiceException(ErrorMessages.AUTH_TYPES_NOT_REQUIRED.getErrorCode(),
 						ErrorMessages.AUTH_TYPES_NOT_REQUIRED.getErrorMessage() + policyType);
+
+			}
+			if(policyAttributesDto.getAllowedKYCAttributes() != null) {
+				throw new PolicyManagementServiceException(ErrorMessages.ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED.getErrorCode(),
+						ErrorMessages.ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED.getErrorMessage() + policyType);
 
 			}
 			if(policyAttributesDto.getDataSharePolicies() == null) {

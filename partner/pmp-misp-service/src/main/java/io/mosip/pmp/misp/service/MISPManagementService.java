@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
@@ -109,14 +109,14 @@ public class MISPManagementService {
 		ResponseWrapper<MISPCreateResponseDto> response = new ResponseWrapper<>();
 		MISPCreateResponseDto responseDto = new MISPCreateResponseDto();
 		
-		MispLogger.info("Validating misp name " + mispCreateRequest.getName());
-		validateName(mispCreateRequest.getName());	
+		MispLogger.info("Validating misp name " + mispCreateRequest.getOrganizationName());
+		validateName(mispCreateRequest.getOrganizationName());	
 		MISPEntity mispEntity = new MISPEntity();
 		
 		MispLogger.info("Generating misp id by using kernel misp id generator");
 		mispEntity.setID(mispIdGenerator.generateId());	
 		mispEntity.setIsActive(true);
-		mispEntity.setName(mispCreateRequest.getName());
+		mispEntity.setName(mispCreateRequest.getOrganizationName());
 		mispEntity.setEmailId(mispCreateRequest.getEmailId());
 		mispEntity.setContactNumber(mispCreateRequest.getContactNumber());
 		mispEntity.setAddress(mispCreateRequest.getAddress());
@@ -345,20 +345,25 @@ public class MISPManagementService {
 	 * @param misplKeyStatusUpdateRequest {@link MISPlKeyStatusUpdateRequestDto} this class contains all the required fields for misp license key status update request.
 	 * @return MISPlKeyStatusUpdateResponseDto {@link MISPlKeyStatusUpdateResponseDto} this class contains all the required fields for misp license key status update response.
 	 */
-	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto updateRequest){		
+	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto updateRequest, String mispId){	
+		if(!(updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(ACTIVE_STATUS) || 
+				updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(NOTACTIVE_STATUS))) {
+			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorCode(),
+					ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorMessage());
+		}
 		Boolean status = updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		MISPlKeyStatusUpdateResponseDto responseDto = new MISPlKeyStatusUpdateResponseDto();		
 		MispLogger.info("Validating the misp license along with misp id.");
 		MISPLicenseEntity mispLicense = getLicenseDetails(updateRequest.getMispLicenseKey());
-		if(!mispLicense.getMispLicenseUniqueKey().getMisp_id().equals(updateRequest.getMispId())) {
+		if(!mispLicense.getMispLicenseUniqueKey().getMisp_id().equals(mispId)) {
 			MispLogger.warn("No details found for combination of misp license key " + updateRequest.getMispLicenseKey() + 
-					" and misp id" + "." + updateRequest.getMispId());
+					" and misp id" + "." + mispId);
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  
-			+ updateRequest.getMispId() + ", LicenseKey: " + updateRequest.getMispLicenseKey());
+			+ mispId + ", LicenseKey: " + updateRequest.getMispLicenseKey());
 		}	
-		mispLicense.getMispLicenseUniqueKey().setMisp_id(updateRequest.getMispId());
+		mispLicense.getMispLicenseUniqueKey().setMisp_id(mispId);
 		if(status && mispLicense.getValidToDate().isBefore(LocalDateTime.now())) {
 			throw new MISPException(ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorMessage());

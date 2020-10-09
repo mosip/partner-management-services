@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -7,22 +8,18 @@
 		<groupId>io.mosip.pmp</groupId>
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
-		
+
 	<version>1.0.1-SNAPSHOT</version>
 	<artifactId>pmp-partner-management-service</artifactId>
 	<name>pmp-partner-management-service</name>
-	
+
 	<dependencies>
-	<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>1.0.6</version>
-		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.0.6</version>
+			<artifactId>kernel-dataaccess-hibernate</artifactId>
+			<version>${kernel-dataaccess-hibernate.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -58,7 +55,14 @@
 			<optional>true</optional>
 			<version>${lombok.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -67,6 +71,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+				 <layout>ZIP</layout>
 					<executable>true</executable>
 				</configuration>
 				<executions>

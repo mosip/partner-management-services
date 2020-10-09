@@ -185,8 +185,7 @@ public class MispController {
 			@PathVariable String mispId) {
 		MispLogger.info("Calling MISPManagementService from MispController.");
 		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();		
-		request.setMispId(mispId);		
-		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = mispManagementService.updateMisplkeyStatus(request);		
+		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = mispManagementService.updateMisplkeyStatus(request,mispId);		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
 		MispLogger.info("Returning update misp license key status update response from MispController.");

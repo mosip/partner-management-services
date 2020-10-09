@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NewPolicyIdNotExistConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
@@ -59,8 +59,8 @@ import io.mosip.pmp.partnermanagement.exception.NoPartnerApiKeyRequestsException
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException;
-import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
+import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.exception.PolicyNotExistException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
@@ -699,6 +699,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		response.setPolicyStatus(authPolicy.get().getIsActive());
 		response.setPartnerId(partnerPolicy.getPartner().getId());
 		response.setPartnerName(partnerPolicy.getPartner().getName());
+		response.setPolicyName(authPolicy.get().getName());
 
 		return response;
 	}
@@ -716,14 +717,12 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
-
-		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("authPolicies"));
-		policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
+		policies.setAuthPolicies((List<AuthPolicyAttributes>) readValue.get("allowedAuthTypes"));
+    policies.setAllowedKycAttributes((List<KYCAttributes>) readValue.get("allowedKycAttributes"));
+		policies.setAuthTokenType((String)readValue.get("authTokenType"));
 		authPolicies.setPolicies(policies);
 		authPolicies.setPolicyId(authPolicyId);
 		return authPolicies;
-
-
 	}
 	/**
 	 * This method validates the license key.
