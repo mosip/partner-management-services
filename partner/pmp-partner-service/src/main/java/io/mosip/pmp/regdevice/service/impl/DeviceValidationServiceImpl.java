@@ -335,7 +335,6 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 
 	private boolean isDeviceProviderPresent(String dpId) {
 		Partner deviceProvider = null;
-
 		try {
 			deviceProvider = deviceProviderRepository.findByIdAndIsActiveIsTrue(dpId);
 		} catch (DataAccessException | DataAccessLayerException e) {

@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 
 @SpringBootApplication
-@ComponentScan({ "io.mosip.pmp.*", "io.mosip.kernel.auth.adapter.*"})
+@ComponentScan({ "io.mosip.pmp.*", "${mosip.auth.adapter.impl.basepackage}"})
 @EnableSwagger2
 public class PartnerserviceApplication{
 
