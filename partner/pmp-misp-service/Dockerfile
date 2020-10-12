@@ -26,8 +26,6 @@ ENV spring_config_label_env=${spring_config_label}
 
 ENV spring_config_url_env=${spring_config_url}
 
-
-
 COPY ./target/pmp-misp-service-*.jar pmp-misp-service.jar
 
 EXPOSE 9100
