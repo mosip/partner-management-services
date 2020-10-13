@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.constant.PolicyCommonConstants;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
@@ -773,7 +773,7 @@ public class PolicyManagementService {
 			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 					.getUserId();
 		} else {
-			return "system";
+			return null;
 		}
 	}
 
