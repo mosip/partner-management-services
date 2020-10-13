@@ -76,6 +76,7 @@
 		<module>pmp-policy-management-service</module>
 		<module>pmp-partner-management-service</module>
 		<module>pmp-partner-service</module>
+		<module>pmp-policy-validator</module>
 	</modules>
 
 	<profiles>
