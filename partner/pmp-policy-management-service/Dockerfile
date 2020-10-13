@@ -32,6 +32,4 @@ COPY ./target/pmp-policy-management-service-*.jar pmp-policy-management-service.
 
 EXPOSE 9101
 
-
-
 CMD ["java","-jar","-Dspring.cloud.config.label=${spring_config_label_env}","-Dspring.profiles.active=${active_profile_env}","-Dspring.cloud.config.uri=${spring_config_url_env}","pmp-policy-management-service.jar"]
