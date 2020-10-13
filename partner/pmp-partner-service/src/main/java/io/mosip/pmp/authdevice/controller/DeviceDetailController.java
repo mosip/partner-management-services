@@ -128,7 +128,7 @@ public class DeviceDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasRole('DEVICE_PROVIDER')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
