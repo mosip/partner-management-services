@@ -9,7 +9,7 @@
 		<version>1.1.2-SNAPSHOT</version>
 	</parent>
 
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<artifactId>pmp-partner-management-service</artifactId>
 	<name>pmp-partner-management-service</name>
 
@@ -75,7 +75,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-				 <layout>ZIP</layout>
+					<layout>ZIP</layout>
 					<executable>true</executable>
 				</configuration>
 				<executions>
