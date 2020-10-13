@@ -8,7 +8,6 @@
 		<groupId>io.mosip.pmp</groupId>
 		<version>1.1.2-SNAPSHOT</version>
 	</parent>
-	
 	<version>1.1.2-SNAPSHOT</version>
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
@@ -67,7 +66,6 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>

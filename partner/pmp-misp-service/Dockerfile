@@ -26,6 +26,13 @@ ENV spring_config_label_env=${spring_config_label}
 
 ENV spring_config_url_env=${spring_config_url}
 
+# environment variable to pass iam_adapter url, at docker runtime
+ENV iam_adapter_url_env=${iam_adapter_url}
+
+
+    
+  
+
 COPY ./target/pmp-misp-service-*.jar pmp-misp-service.jar
 
 EXPOSE 9100
