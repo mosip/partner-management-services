@@ -23,7 +23,7 @@ public class RegFoundationalTrustProvider implements Serializable {
 	private boolean isActive;
 	
 	@Column(name="is_deleted")
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	
 	@Column(name="cr_by",length=256,nullable=false)
 	private String crBy;
@@ -64,11 +64,11 @@ public class RegFoundationalTrustProvider implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

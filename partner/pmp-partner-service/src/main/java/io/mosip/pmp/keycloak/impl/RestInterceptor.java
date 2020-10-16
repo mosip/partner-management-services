@@ -63,10 +63,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 			throws IOException {
 		AccessTokenResponse accessTokenResponse = null;
-		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
-		} else {
-			accessTokenResponse = getAdminToken(false, null);
-		}
+		accessTokenResponse = getAdminToken(false, null);
 		memoryCache.put("adminToken", accessTokenResponse);
 		request.getHeaders().add("Authorization", "Bearer " + accessTokenResponse.getAccess_token());
 		return execution.execute(request, body);

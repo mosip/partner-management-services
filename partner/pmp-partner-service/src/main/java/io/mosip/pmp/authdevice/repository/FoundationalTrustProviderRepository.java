@@ -8,7 +8,7 @@ import io.mosip.pmp.authdevice.entity.FoundationalTrustProvider;
 @Component
 public interface FoundationalTrustProviderRepository extends JpaRepository<FoundationalTrustProvider, String> {
 
-	@Query("FROM FoundationalTrustProvider where id=?1  and isActive=true and (isDeleted is null or isDeleted = false)")
+	@Query(value="select * from foundational_trust_provider where id=?1  and is_active=true and (is_deleted is null or is_deleted = false)",nativeQuery = true)
 	FoundationalTrustProvider findByIdAndIsActiveTrue(String id);
 
 }

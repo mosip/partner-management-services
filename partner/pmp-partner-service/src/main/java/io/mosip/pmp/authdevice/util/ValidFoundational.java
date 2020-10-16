@@ -1,15 +1,15 @@
 package io.mosip.pmp.authdevice.util;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import javax.validation.Constraint;
+import java.lang.annotation.Target;
+
 import javax.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = FoundationalValidator.class)
+//@Constraint(validatedBy = FoundationalValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidFoundational {

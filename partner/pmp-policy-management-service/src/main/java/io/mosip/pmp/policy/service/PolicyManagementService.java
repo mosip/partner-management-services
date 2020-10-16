@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,8 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.constant.PolicyCommonConstants;
-import io.mosip.pmp.policy.dto.ShareableAttributesDto;
-import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.dto.AllowedKycDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.DataShareDto;
@@ -45,6 +42,8 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
+import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.AuthPolicyH;
 import io.mosip.pmp.policy.entity.PartnerPolicy;
