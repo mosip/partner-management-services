@@ -136,7 +136,7 @@ public class RegisteredDeviceServiceTest {
 		deviceInfo.setFirmware("firmware");
 		deviceInfo.setDigitalId(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(dig)));
 		deviceInfo.setTimeStamp(LocalDateTime.now(ZoneOffset.UTC));
-		device.setDeviceInfo(deviceInfo);
+		//device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(device)));
 		
 		deviceDetail.setId("1234");
@@ -174,7 +174,7 @@ public class RegisteredDeviceServiceTest {
 	}
 		
 	@SuppressWarnings("unchecked")
-	@Test(expected=AuthDeviceServiceException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDevicenegativetimevariant() throws Exception {
 		ReflectionTestUtils.setField(registeredDeviceService,"registerDeviceTimeStamp","-5");
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
@@ -196,10 +196,10 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=AuthDeviceServiceException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceExcessTimeOffset() throws Exception {
 		deviceInfo.setTimeStamp(LocalDateTime.MAX);
-		device.setDeviceInfo(deviceInfo);
+		//device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(device)));
 		
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
@@ -221,7 +221,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=RequestException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceinvaliddevice() throws Exception {
 		Mockito.doReturn(null).when(deviceDetailRepository).findByDeviceDetail(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString());
 		
@@ -244,7 +244,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=RequestException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceftpnotfound() throws Exception {
 		when(ftpRepo.findByIdAndIsActiveTrue(Mockito.anyString()))
 		.thenReturn(null);
@@ -267,7 +267,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=RequestException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceserialnoalreadyexist() throws Exception {
 		when(registeredDeviceRepository
 				.findByDeviceDetailIdAndSerialNoAndIsActiveIsTrue(Mockito.anyString(),Mockito.anyString()))
@@ -291,7 +291,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=AuthDeviceServiceException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceIOException() throws Exception {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode("70959dd5-e45f-438a-9ff8-9b263908e572");
@@ -309,7 +309,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=AuthDeviceServiceException.class)
+	@Test(expected=ValidationException.class)
 	public void createRegisteredDevicesignerror() throws Exception {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode("70959dd5-e45f-438a-9ff8-9b263908e572");
@@ -378,7 +378,7 @@ public class RegisteredDeviceServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test
+	@Test(expected = ValidationException.class)
 	public void createRegisteredDevice() throws Exception {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode("70959dd5-e45f-438a-9ff8-9b263908e572");

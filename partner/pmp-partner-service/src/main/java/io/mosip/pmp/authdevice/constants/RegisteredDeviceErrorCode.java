@@ -20,7 +20,8 @@ public enum RegisteredDeviceErrorCode {
 	REGISTERED_DEVICE_SIGN_VALIDATION_EXCEPTION("PMS_AUT_021", "error occured while doing signature validation"),
 	REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE("PMS_AUT_022", " signature validation failed -"),
 	SERIALNUM_NOT_EXIST("PMS_AUT_020", "serial number does not exist"),
-	API_RESOURCE_EXCEPTION("PMS_AUT_023","error occured while fetching api resource -->");
+	API_RESOURCE_EXCEPTION("PMS_AUT_023","error occured while fetching api resource -->"),
+	FOUNDATIONAL_ID_MANDATORY("PMS_AUT_030","If certification level received is L1 then foundationalTrustProviderId should not be null or empty");
 	
 
 	private final String errorCode;

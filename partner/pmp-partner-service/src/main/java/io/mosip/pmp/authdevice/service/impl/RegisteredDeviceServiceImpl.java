@@ -26,9 +26,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.exception.ServiceError;
@@ -129,6 +126,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		DeviceResponse response = new DeviceResponse();
 		DeviceData deviceData = null;
 		DigitalId digitalId = null;
+		DeviceInfo deviceInfo = null;
 		DeviceDetail deviceDetail = null;
 		RegisterDeviceResponse registerDeviceResponse = null;
 		String headerString, signedResponse, registerDevice = null;
@@ -139,7 +137,10 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.REGISTRATION)) {
 				return regRegisteredDeviceService.signedRegisteredDevice(registeredDevicePostDto);
 			}
-			String digitalIdPayLoad = getPayLoad(deviceData.getDeviceInfo().getDigitalId());
+			String deviceInfoPayLoad = getPayLoad(deviceData.getDeviceInfo());
+			deviceInfo = mapper.readValue(CryptoUtil.decodeBase64(deviceInfoPayLoad), DeviceInfo.class);
+			validate(deviceData, deviceInfo);
+			String digitalIdPayLoad = getPayLoad(deviceInfo.getDigitalId());
 			digitalId = mapper.readValue(CryptoUtil.decodeBase64(digitalIdPayLoad), DigitalId.class);
 			validate(digitalId);
 			deviceDetail = deviceDetailRepository.findByDeviceDetail(digitalId.getMake(), digitalId.getModel(),
@@ -171,8 +172,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			}
 
 			digitalIdJson = mapper.writeValueAsString(digitalId);
-			mapEntity = mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData, deviceDetail,
-					digitalId);
+			mapEntity = mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData, deviceInfo,
+					deviceDetail, digitalId);
 			mapEntity.setCode(UUID.randomUUID().toString());
 			entityHistory.setCode(mapEntity.getCode());
 			entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
@@ -183,7 +184,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			digitalId = mapper.readValue(digitalIdJson, DigitalId.class);
 
-			registerDeviceResponse = mapRegisteredDeviceResponse(crtRegisteredDevice, deviceData);
+			registerDeviceResponse = mapRegisteredDeviceResponse(crtRegisteredDevice, deviceData, deviceInfo);
 			registerDeviceResponse
 					.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
 			registerDeviceResponse.setEnv(activeProfile);
@@ -253,11 +254,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 * @param deviceData
 	 * @return
 	 */
-	private RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity, DeviceData deviceData) {
+	private RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity, DeviceData deviceData,
+			DeviceInfo deviceInfo) {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(deviceData.getDeviceInfo().getTimeStamp());
+		registerDeviceResponse.setTimeStamp(deviceInfo.getTimeStamp());
 		return registerDeviceResponse;
 	}
 
@@ -271,12 +273,13 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 * @return
 	 */
 	private RegisteredDevice mapRegisteredDeviceDto(RegisteredDevicePostDto registeredDevicePostDto,
-			String digitalIdJson, DeviceData deviceData, DeviceDetail deviceDetail, DigitalId digitalId) {
+			String digitalIdJson, DeviceData deviceData, DeviceInfo deviceInfo, DeviceDetail deviceDetail,
+			DigitalId digitalId) {
 		RegisteredDevice entity = new RegisteredDevice();
 		entity.setDeviceDetailId(deviceDetail.getId());
 		entity.setStatusCode(REGISTERED);
 		entity.setDeviceId(deviceData.getDeviceId());
-		entity.setDeviceSubId(deviceData.getDeviceInfo().getDeviceSubId());
+		entity.setDeviceSubId(deviceInfo.getDeviceSubId());
 		entity.setHotlisted(false);
 		entity.setDigitalId(digitalIdJson);
 		entity.setSerialNo(digitalId.getSerialNo());
@@ -287,9 +290,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		entity.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		entity.setActive(true);
 		entity.setPurpose(deviceData.getPurpose());
-		entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
-		entity.setExpiryDate(deviceData.getDeviceInfo().getDeviceExpiry());
-		entity.setCertificationLevel(deviceData.getDeviceInfo().getCertification());
+		entity.setFirmware(deviceInfo.getFirmware());
+		entity.setExpiryDate(deviceInfo.getDeviceExpiry());
+		entity.setCertificationLevel(deviceInfo.getCertification());
 		entity.setFoundationalTPId(deviceData.getFoundationalTrustProviderId());
 		/*
 		 * entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
@@ -357,47 +360,6 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			throw new ValidationException(errors);
 		}
-
-		if (deviceData.getDeviceInfo() != null) {
-			LocalDateTime timeStamp = deviceData.getDeviceInfo().getTimeStamp();
-			String prefix = registerDeviceTimeStamp.substring(0, 1);
-			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
-			boolean isBetween = timeStamp
-					.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
-					&& timeStamp.isBefore(
-							LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
-			if (prefix.equals("+")) {
-				if (!isBetween) {
-					throw new AuthDeviceServiceException(
-							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
-							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
-									timeString));
-				}
-			} else if (prefix.equals("-")) {
-				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
-					throw new AuthDeviceServiceException(
-							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
-							String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
-									timeString));
-				}
-			}
-		}
-		Set<ConstraintViolation<DeviceInfo>> deviceInfoSet = validator.validate(deviceData.getDeviceInfo());
-		for (ConstraintViolation<DeviceInfo> d : deviceInfoSet) {
-			if (d.getPropertyPath().toString().equalsIgnoreCase("certification")) {
-				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
-						d.getMessage()));
-			} else {
-				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
-						d.getPropertyPath() + " " + d.getMessage()));
-			}
-		}
-		if (!errors.isEmpty()) {
-
-			throw new ValidationException(errors);
-		}
-
 	}
 
 	/**
@@ -424,27 +386,31 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 * 
 	 * @param jws
 	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws JsonProcessingException
-	 * @throws IOException
 	 */
-	private String getPayLoad(String jws)
-			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	private String getPayLoad(String jws) {
 		String[] split = jws.split("\\.");
 		if (split.length > 2) {
-
-			if (cryptoCore.verifySignature(new String(CryptoUtil.decodeBase64(split[2])))) {
-				return split[1];
-
-			} else {
+			if (!verifySignature(jws)) {
 				throw new AuthDeviceServiceException(
 						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
 						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage());
 			}
-
+			return split[1];
 		}
 		return jws;
+	}
+
+	/**
+	 * 
+	 * @param jwsSignature
+	 * @return
+	 */
+	protected boolean verifySignature(String jwsSignature) {
+		try {
+			return cryptoCore.verifySignature(jwsSignature);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
@@ -574,5 +540,65 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 					RegisteredDeviceErrorCode.INVALID_ENV.getErrorMessage());
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param deviceData
+	 * @param deviceInfo
+	 */
+	private void validate(DeviceData deviceData, DeviceInfo deviceInfo) {
+		List<ServiceError> errors = new ArrayList<>();
+		if (deviceInfo == null || deviceInfo.getCertification() == null) {
+			errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+					RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorMessage()));
+		}
+		if (deviceInfo.getCertification().equals(RegisteredDeviceConstant.L1)) {
+			if (EmptyCheckUtils.isNullEmpty(deviceData.getFoundationalTrustProviderId())) {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.FOUNDATIONAL_ID_MANDATORY.getErrorCode(),
+						RegisteredDeviceErrorCode.FOUNDATIONAL_ID_MANDATORY.getErrorMessage()));
+			}
+		}
+
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		if (deviceInfo != null) {
+			LocalDateTime timeStamp = deviceInfo.getTimeStamp();
+			String prefix = registerDeviceTimeStamp.substring(0, 1);
+			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
+			boolean isBetween = timeStamp
+					.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
+					&& timeStamp.isBefore(
+							LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
+			if (prefix.equals("+")) {
+				if (!isBetween) {
+					throw new AuthDeviceServiceException(
+							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
+							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
+									timeString));
+				}
+			} else if (prefix.equals("-")) {
+				if (LocalDateTime.now(ZoneOffset.UTC)
+						.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+					throw new AuthDeviceServiceException(
+							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
+							String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
+									timeString));
+				}
+			}
+		}
+		Set<ConstraintViolation<DeviceInfo>> deviceInfoSet = validator.validate(deviceInfo);
+		for (ConstraintViolation<DeviceInfo> d : deviceInfoSet) {
+			if (d.getPropertyPath().toString().equalsIgnoreCase("certification")) {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						d.getMessage()));
+			} else {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						d.getPropertyPath() + " " + d.getMessage()));
+			}
+		}
+		if (!errors.isEmpty()) {
+			throw new ValidationException(errors);
+		}
 	}
 }

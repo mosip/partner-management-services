@@ -1,6 +1,5 @@
 package io.mosip.pmp.authdevice.dto;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,9 +17,9 @@ public class DeviceData {
 
 	@ValidPurpose(message = "Invalid Purpose received")
 	private String purpose;
-
-	@Valid
-	private DeviceInfo deviceInfo;
+	
 	@NotNull
+	private String deviceInfo;	
+	
 	private String foundationalTrustProviderId;
 }
