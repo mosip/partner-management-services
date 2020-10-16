@@ -436,7 +436,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				deviceRegisterEntity.setStatusCode("Retired");
 				Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 				if (!EmptyCheckUtils.isNullEmpty(authN)) {
-					deviceRegisterEntity.setCrBy(authN.getName());
+					deviceRegisterEntity.setUpdBy(authN.getName());
 				}
 				deviceRegisterEntity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 				deviceRegisterHistory.setCode(deviceRegisterEntity.getCode());

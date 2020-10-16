@@ -479,12 +479,13 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 				deviceRegisterEntity.setStatusCode("Retired");
 				Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 				if (!EmptyCheckUtils.isNullEmpty(authN)) {
-					deviceRegisterEntity.setCrBy(authN.getName());
+					deviceRegisterEntity.setUpdBy(authN.getName());
 				}
 				deviceRegisterEntity.setActive(false);
 				deviceRegisterEntity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 				deviceRegisterHistory = mapUpdateHistory(deviceRegisterEntity, deviceRegisterHistory);
 				deviceRegisterHistory.setEffectDateTime(deviceRegisterEntity.getUpdDtimes());
+				deviceRegisterHistory.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 				registeredDeviceRepository.save(deviceRegisterEntity);
 				registeredDeviceHistoryRepo.save(deviceRegisterHistory);
 				DeviceDeRegisterResponse deviceDeRegisterResponse = new DeviceDeRegisterResponse();
@@ -540,6 +541,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		history.setExpiryDate(entity.getExpiryDate());
 		history.setCertificationLevel(entity.getCertificationLevel());
 		history.setFoundationalTPId(entity.getFoundationalTPId());
+		
 		/*
 		 * entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
 		 * entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate())
