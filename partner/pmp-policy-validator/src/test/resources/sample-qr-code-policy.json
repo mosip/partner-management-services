@@ -1,0 +1,36 @@
+{
+	"dataSharePolicies": {
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed":"2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "mosip.io",
+		"source": "Packet Manager"
+	},
+	"shareableAttributes": [
+		{
+			"attributeName": "biometrics",
+			"group": "CBEFF",
+			"source": [
+				{
+					"attribute": "registration-client/NEW/individualBiometrics",
+					"filter": [
+						{
+							"type": "Iris"
+						}
+					]
+				},
+				{
+					"attribute": "CNIE/verification/biometrics",
+					"filter": [
+						{
+							"type": "Finger"
+						}
+					]
+				}
+			],
+			"encrypted": true,
+			"format": "extraction"
+		}
+	]
+}
