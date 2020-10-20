@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,14 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
-import io.mosip.pmp.policy.dto.AllowedKycDto;
-import io.mosip.pmp.policy.dto.AuthPolicyDto;
-import io.mosip.pmp.policy.dto.DataShareDto;
-import io.mosip.pmp.policy.dto.FilterDto;
-import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -44,8 +36,6 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
-import io.mosip.pmp.policy.dto.ShareableAttributesDto;
-import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.entity.AuthPolicy;
 import io.mosip.pmp.policy.entity.AuthPolicyH;
 import io.mosip.pmp.policy.entity.PartnerPolicy;
@@ -353,13 +343,7 @@ public class PolicyManagementService {
 		response.setUp_by(authPolicy.getUpdBy());
 		response.setUpd_dtimes(authPolicy.getUpdDtimes());
 		response.setVersion(authPolicy.getVersion());
-		JSONParser parser = new JSONParser();
-		try {
-			response.setPolicies((JSONObject) parser.parse(authPolicy.getPolicyFileId()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // mapPolicyAttributes(authPolicy.getPolicyFileId()));
+		response.setPolicies(getPolicyObject(authPolicy.getPolicyFileId()));
 		return response;
 	}
 
@@ -587,43 +571,6 @@ public class PolicyManagementService {
 		return findPolicy(partnerPolicy.getPolicyId());
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
-	private JSONArray getSourceJson(List<SourceDto> sourceDto) {
-		JSONArray sourceAttributes = new JSONArray();
-		for (SourceDto source : sourceDto) {
-			JSONObject sourceObj = new JSONObject();
-			sourceObj.put("attribute", source.getAttribute());
-			JSONArray filter = getFilterJson(source.getFilter());
-			if (filter != null) {
-				sourceObj.put("filter", filter);
-			}
-			sourceAttributes.add(sourceObj);
-		}
-		return sourceAttributes;
-	}
-
-	@SuppressWarnings("unchecked")
-	private JSONArray getFilterJson(List<FilterDto> filter) {
-		JSONArray filterAttributes = new JSONArray();
-		if (filter != null) {
-			for (FilterDto filterDto : filter) {
-				JSONObject filterObj = new JSONObject();
-				JSONArray subTypeArray = new JSONArray();
-				filterObj.put("type", filterDto.getType());
-				if (filterDto.getSubType() != null) {
-					for (String subType : filterDto.getSubType()) {
-						subTypeArray.add(subType);
-					}
-					filterObj.put("subType", subTypeArray);
-				}
-				filterAttributes.add(filterObj);
-			}
-			return filterAttributes;
-		}
-
-		return null;
-	}
-
 	/**
 	 * 
 	 * @param partnerId
@@ -712,46 +659,43 @@ public class PolicyManagementService {
 	 */
 	private PolicyDto mapPolicyToPolicyDto(AuthPolicy authPolicy)
 			throws JsonParseException, JsonMappingException, IOException {
-		PolicyAttributesDto policyAttributes = mapPolicyAttributes(authPolicy.getPolicyFileId());
 		PolicyDto policyDto = new PolicyDto();
-		policyDto.setAllowedAuthTypes(policyAttributes.getAllowedAuthTypes());
-		policyDto.setAuthTokenType(policyAttributes.getAuthTokenType());
 		policyDto.setCr_by(authPolicy.getCrBy());
 		policyDto.setCr_dtimes(authPolicy.getCrDtimes());
-		policyDto.setDataSharePolicies(policyAttributes.getDataSharePolicies());
-		policyDto.setAllowedKYCAttributes(policyAttributes.getAllowedKYCAttributes());
 		policyDto.setIs_Active(authPolicy.getIsActive());
 		policyDto.setPolicyDesc(authPolicy.getDescr());
 		policyDto.setPolicyId(authPolicy.getId());
 		policyDto.setPolicyName(authPolicy.getName());
 		policyDto.setPublishDate(authPolicy.getValidFromDate());
 		policyDto.setSchema(authPolicy.getPolicySchema());
-		policyDto.setShareableAttributes(policyAttributes.getShareableAttributes());
 		policyDto.setStatus(getPolicyStatus(authPolicy.getIsActive()));
 		policyDto.setUp_by(authPolicy.getUpdBy());
 		policyDto.setUpd_dtimes(authPolicy.getUpdDtimes());
 		policyDto.setValidTill(authPolicy.getValidToDate());
 		policyDto.setVersion(authPolicy.getVersion());
+		policyDto.setPolicies(getPolicyObject(authPolicy.getPolicyFileId()));
 		return policyDto;
 	}
 
-	private String getPolicyStatus(Boolean isActive) {
-		return isActive == true ? "PUBLISHED" : "DRAFTED";
+	private JSONObject getPolicyObject(String policy) {
+		JSONParser parser = new JSONParser();
+		String error = null;
+		try {
+			return ((JSONObject) parser.parse(policy));
+		} catch (ParseException e) {
+			error = e.getMessage();
+		}
+		throw new PolicyManagementServiceException(ErrorMessages.POLICY_PARSING_ERROR.getErrorCode(),
+				ErrorMessages.POLICY_PARSING_ERROR.getErrorMessage() + error);
 	}
 
-	@SuppressWarnings("unchecked")
-	private PolicyAttributesDto mapPolicyAttributes(String policyFile)
-			throws JsonParseException, JsonMappingException, IOException {
-		PolicyAttributesDto dto = new PolicyAttributesDto();
-		Map<?, ?> readValue = new ObjectMapper().readValue(policyFile, Map.class);
-		dto.setAllowedAuthTypes((List<AuthPolicyDto>) readValue.get("allowedAuthTypes"));
-		dto.setAllowedKYCAttributes((List<AllowedKycDto>) readValue.get("allowedKycAttributes"));
-		dto.setShareableAttributes((List<ShareableAttributesDto>) readValue.get("shareableAttributes"));
-		ObjectMapper mapper = new ObjectMapper();
-		DataShareDto dataShareDto = mapper.convertValue(readValue.get("dataSharePolicies"), DataShareDto.class);
-		dto.setDataSharePolicies(dataShareDto);
-		dto.setAuthTokenType((String) readValue.get("authTokenType"));
-		return dto;
+	/**
+	 * 
+	 * @param isActive
+	 * @return
+	 */
+	private String getPolicyStatus(Boolean isActive) {
+		return isActive == true ? "PUBLISHED" : "DRAFTED";
 	}
 
 	/**
