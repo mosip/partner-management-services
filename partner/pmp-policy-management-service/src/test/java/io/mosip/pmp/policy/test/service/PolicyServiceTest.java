@@ -127,7 +127,7 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S100() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAllowedAuthTypes(null);
+		////request.getPolicies().setAllowedAuthTypes(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -136,7 +136,7 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S101() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAuthTokenType(null);
+		////request.getPolicies().setAuthTokenType(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -145,7 +145,7 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S102() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAuthTokenType("Test");
+		////request.getPolicies().setAuthTokenType("Test");
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -154,7 +154,7 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S103() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -163,8 +163,8 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S104() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
-		request.getPolicies().setDataSharePolicies(null);
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		//request.getPolicies().setDataSharePolicies(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -173,8 +173,8 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)	
 	public void createPoliciesTest_S105() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
-		request.getPolicies().setDataSharePolicies(null);
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		//request.getPolicies().setDataSharePolicies(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -202,8 +202,8 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S108() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("DataShare");
-		request.getPolicies().setAllowedAuthTypes(null);
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		////request.getPolicies().setAllowedAuthTypes(null);
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -213,9 +213,9 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S109() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("DataShare");
-		request.getPolicies().setAllowedAuthTypes(null);
-		request.getPolicies().setAllowedKYCAttributes(null);
-		request.getPolicies().setShareableAttributes(null);
+		////request.getPolicies().setAllowedAuthTypes(null);
+		//request.getPolicies().setAllowedKYCAttributes(null);
+		//request.getPolicies().setShareableAttributes(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -225,9 +225,9 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S110() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("DataShare");
-		request.getPolicies().setAllowedAuthTypes(null);
-		request.getPolicies().setAllowedKYCAttributes(null);
-		request.getPolicies().setDataSharePolicies(null);
+		////request.getPolicies().setAllowedAuthTypes(null);
+		//request.getPolicies().setAllowedKYCAttributes(null);
+		//request.getPolicies().setDataSharePolicies(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -237,9 +237,9 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S111() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("DataShare");
-		request.getPolicies().setAllowedAuthTypes(null);
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
-		request.getPolicies().setDataSharePolicies(null);
+		////request.getPolicies().setAllowedAuthTypes(null);
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		//request.getPolicies().setDataSharePolicies(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -249,7 +249,7 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S002() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("DataShare");
-		request.getPolicies().setAllowedAuthTypes(null);
+		////request.getPolicies().setAllowedAuthTypes(null);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(null);
 		service.createPolicies(request);
@@ -279,7 +279,7 @@ public class PolicyServiceTest {
 		request.setName("Test_001");
 		request.setPolicyGroupName("Test_Policy_Group_001");
 		request.setPolicyType("Auth");
-		request.setPolicies(createAuthPolicyInput());
+		////request.setPolicies(createAuthPolicyInput());
 		return request;
 	}
 
@@ -385,10 +385,10 @@ public class PolicyServiceTest {
 		request.setPolicyGroupName("Test");
 		request.setDesc("Test");
 		request.setName("Test");
-		request.setPolicies(createAuthPolicyInput());
-		request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
-		request.getPolicies().setDataSharePolicies(null);
-		request.getPolicies().setShareableAttributes(null);
+		//request.setPolicies(createAuthPolicyInput());
+		//request.getPolicies().setAllowedKYCAttributes(getAllowedKYCAttributes());
+		//request.getPolicies().setDataSharePolicies(null);
+		//request.getPolicies().setShareableAttributes(null);
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
@@ -410,7 +410,7 @@ public class PolicyServiceTest {
 		request.setPolicyGroupName("Test");
 		request.setDesc("Test");
 		request.setName("Test");
-		request.setPolicies(createAuthPolicyInput());
+		//request.setPolicies(createAuthPolicyInput());
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
@@ -434,7 +434,7 @@ public class PolicyServiceTest {
 		request.setPolicyGroupName("Test");
 		request.setDesc("Test");
 		request.setName("Test");
-		request.setPolicies(createAuthPolicyInput());
+		//request.setPolicies(createAuthPolicyInput());
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
@@ -455,7 +455,7 @@ public class PolicyServiceTest {
 		request.setPolicyGroupName("Test");
 		request.setDesc("Test");
 		request.setName("Test");
-		request.setPolicies(createAuthPolicyInput());
+		//request.setPolicies(createAuthPolicyInput());
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
@@ -644,13 +644,13 @@ public class PolicyServiceTest {
 		return policyGroup;
 	}
 	
-	private PolicyAttributesDto createAuthPolicyInput() {
+	private String createAuthPolicyInput() {
 		PolicyAttributesDto policy = new PolicyAttributesDto();
 		policy.setShareableAttributes(getAllowedKycAttributes());
 		policy.setAllowedAuthTypes(getAuthPoliciesDto());
 		policy.setDataSharePolicies(getDataSharableAttributes());		
 		policy.setAuthTokenType("partner");
-		return policy;
+		return "";
 	}
 
 	private List<AllowedKycDto> getAllowedKYCAttributes(){

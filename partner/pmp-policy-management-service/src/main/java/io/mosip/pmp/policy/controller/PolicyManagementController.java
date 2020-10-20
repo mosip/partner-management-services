@@ -61,7 +61,7 @@ public class PolicyManagementController {
 	@Autowired
 	private PolicyManagementService policyManagementService;
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PostMapping(value = "/policies/policyGroup")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest){	
@@ -74,7 +74,7 @@ public class PolicyManagementController {
 		return response;		
 	}
 	
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PutMapping(value = "/policies/policyGroup/{policyGroupId}")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(
 			@PathVariable String policyGroupId,@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest){	
@@ -95,7 +95,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyCreateResponseDto} this contains all the response parameters for created policy.
 	 * @throws Exception  
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PostMapping(value = "/policies")	
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
@@ -121,7 +121,7 @@ public class PolicyManagementController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PostMapping(value = "/policies/publishPolicy/policyGroupId/{policyGroupId}/policyId/{policyId}")
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policyGroupId, @PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();
@@ -138,7 +138,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PutMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
 			@RequestBody RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
@@ -161,7 +161,7 @@ public class PolicyManagementController {
 	 * @return response {@link PolicyStatusUpdateResponseDto} contains all response details.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PatchMapping(value = "/policies/policyGroupId/{policyGroupId}/policyId/{policyID}")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto,
 			@PathVariable String policyGroupId, @PathVariable String policyID) throws Exception {		
@@ -184,7 +184,7 @@ public class PolicyManagementController {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies")
 	public ResponseWrapper<List<PolicyResponseDto>> getPolicies() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
@@ -201,7 +201,7 @@ public class PolicyManagementController {
 	 * @return response  {@link PolicyWithAuthPolicyDto}  policy group associated with his auth policies.
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies/policyId/{policyID}")
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -218,7 +218,7 @@ public class PolicyManagementController {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies/partnerApiKey/{partnerApiKey}")
 	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String partnerApiKey) throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -238,7 +238,7 @@ public class PolicyManagementController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager','CREDENTIAL_ISSUANCE')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager','CREDENTIAL_ISSUANCE')")
 	@GetMapping(value="/policies/partnerId/{partnerId}/policyId/{policyId}")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId, @PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -257,7 +257,7 @@ public class PolicyManagementController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value = "/policies/policyGroupId/{policyGroupId}")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policyGroupId) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
@@ -272,7 +272,7 @@ public class PolicyManagementController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@GetMapping(value ="/policies/policyGroups")
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
