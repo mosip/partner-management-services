@@ -1,5 +1,7 @@
 package io.mosip.pmp.partner.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
@@ -68,7 +70,7 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping(value = "/partners")
 public class PartnerServiceController {
 
-	//private static final //LOGGER //LOGGER = //LOGGERFactory.get//LOGGER(PartnerServiceController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceController.class);
 
 	@Autowired
 	PartnerService partnerService;
@@ -89,14 +91,14 @@ public class PartnerServiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
-		//LOGGER.info("partner self registration");
+		LOGGER.info("partner self registration");
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
-		//LOGGER.info("calling savePartner method");
+		LOGGER.info("calling savePartner method");
 		partnerResponse = partnerService.savePartner(partnerRequest);
-		//LOGGER.info(partnerResponse + " : response of savePartner method");
+		LOGGER.info(partnerResponse + " : response of savePartner method");
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
