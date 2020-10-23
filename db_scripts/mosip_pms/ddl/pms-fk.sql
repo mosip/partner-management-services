@@ -60,5 +60,19 @@ REFERENCES pms.partner (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
+-- object: fk_ppbe_part | type: CONSTRAINT --
+-- ALTER TABLE pms.partner_policy_bioextract DROP CONSTRAINT IF EXISTS fk_ppbe_part CASCADE;
+ALTER TABLE pms.partner_policy_bioextract ADD CONSTRAINT fk_ppbe_part FOREIGN KEY (part_id)
+REFERENCES pms.partner (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: fk_ppbe_pol | type: CONSTRAINT --
+-- ALTER TABLE pms.partner_policy_bioextract DROP CONSTRAINT IF EXISTS fk_ppbe_pol CASCADE;
+ALTER TABLE pms.partner_policy_bioextract ADD CONSTRAINT fk_ppbe_pol FOREIGN KEY (policy_id)
+REFERENCES pms.auth_policy (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
 
 
