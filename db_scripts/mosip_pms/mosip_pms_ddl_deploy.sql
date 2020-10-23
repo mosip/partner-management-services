@@ -13,5 +13,6 @@
 \ir ddl/pms-partner_type.sql
 \ir ddl/pms-tspid_seq.sql
 \ir ddl/pms-otp_transaction.sql
+\ir ddl/pms-partner_policy_bioextract.sql
 
 \ir ddl/pms-fk.sql
