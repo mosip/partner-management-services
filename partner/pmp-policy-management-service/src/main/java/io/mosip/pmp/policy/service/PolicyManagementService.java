@@ -50,6 +50,11 @@ import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.util.PolicyUtil;
 import io.mosip.pmp.policy.validator.spi.PolicyValidator;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * <p>
  * This class manages business logic before or after performing database
@@ -98,6 +103,10 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
+
+	/** The mapper. */
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Autowired
 	Environment environment;
@@ -724,8 +733,14 @@ public class PolicyManagementService {
 	 * 
 	 * @param version
 	 * @return
+	 * @throws IOException
+	 * @throws MalformedURLException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	private String getPolicySchema(String policyType) {
-		return environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema");
+	private String getPolicySchema(String policyType)
+			throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
+		return mapper.readValue(new URL(environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema")),
+				JsonNode.class).toString();
 	}
 }
