@@ -2,6 +2,8 @@ package io.mosip.pmp.policy.dto;
 
 import java.time.LocalDateTime;
 
+import org.json.simple.JSONObject;
+
 import lombok.Data;
 
 @Data
@@ -51,5 +53,5 @@ public class PolicyResponseDto {
 	
 	private LocalDateTime upd_dtimes;
 	
-	private PolicyAttributesDto policies;
+	private JSONObject policies;
 }

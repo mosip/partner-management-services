@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
+import org.json.simple.JSONObject;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,5 +40,8 @@ public class PolicyCreateRequestDto {
 	@Size(min = 1, max = 128, message = "Policy desc length should be in between 1 and 128 chars")	
 	public String desc;	
 	
-	public PolicyAttributesDto policies;
+	@NotBlank(message = "version should not be blank")
+	public String version;
+	
+	public JSONObject policies;
 }

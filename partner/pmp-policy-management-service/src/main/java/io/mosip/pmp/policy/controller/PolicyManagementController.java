@@ -238,7 +238,7 @@ public class PolicyManagementController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager','CREDENTIAL_ISSUANCE')")
+	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@GetMapping(value="/policies/partnerId/{partnerId}/policyId/{policyId}")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId, @PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
