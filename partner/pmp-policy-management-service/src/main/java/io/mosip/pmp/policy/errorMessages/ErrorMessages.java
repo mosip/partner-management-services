@@ -35,7 +35,11 @@ public enum ErrorMessages {
 	POLICY_STATUS_CODE_EXCEPTION("PMS_POL_045","Policy Status either Active or De-active."),
 	DATASHARE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_046","Datashare attributes are not required for given policyType "),
 	SHAREABLE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","Shareable attributes are not required for given policyType "),
-	ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","AllowedKYC attributes are not required for given policyType ");
+	ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED("PMS_POL_048","AllowedKYC attributes are not required for given policyType "),
+	VERSION_NOT_ALLOWED("PMS_POL_050","The given version is not available.Allowed versions are : "),
+	SCHEMA_POLICY_NOT_MATCHING("PMS_POL_051","Policy Schema and policy are not matching"),
+	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object");
+	
 	
 	private final String errorCode;
 	private final String errorMessage;

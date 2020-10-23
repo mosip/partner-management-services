@@ -6,19 +6,16 @@
   <parent>
     <groupId>io.mosip.pmp</groupId>
     <artifactId>pmp-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
-  </parent>
- 
+    <version>1.2.0-SNAPSHOT</version>
+  </parent>   
   <artifactId>pmp-policy-validator</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <name>pmp-policy-validator</name>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
     <jackson.datatype.version>2.9.8</jackson.datatype.version>
-     <json.version>20180813</json.version>
-     <kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+    <json.version>20180813</json.version>     
   </properties>
   <dependencies>
     <dependency>
@@ -49,7 +46,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${kernel.core.version}</version>
+			<version>${kernel.version}</version>
 		</dependency>	
   </dependencies>
 </project>

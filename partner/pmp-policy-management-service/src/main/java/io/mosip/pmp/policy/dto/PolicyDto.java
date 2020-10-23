@@ -1,7 +1,8 @@
 package io.mosip.pmp.policy.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import org.json.simple.JSONObject;
 
 import lombok.Data;
 
@@ -34,13 +35,5 @@ public class PolicyDto {
 	
 	private LocalDateTime upd_dtimes;
 	
-	private String authTokenType;
-	
-	private List<AuthPolicyDto> allowedAuthTypes;
-	
-	private List<ShareableAttributesDto> shareableAttributes;
-	
-	private List<AllowedKycDto> allowedKYCAttributes;
-	
-	private DataShareDto dataSharePolicies;
+	private JSONObject policies;
 }
