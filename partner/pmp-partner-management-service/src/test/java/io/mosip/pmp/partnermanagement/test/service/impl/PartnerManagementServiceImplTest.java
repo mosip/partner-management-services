@@ -767,6 +767,7 @@ public class PartnerManagementServiceImplTest {
 		part.setIsActive(true);
 		part.setId("123456");
 		part.setPolicyGroupId("234");
+		part.setPartnerTypeCode("Auth");
 		return part;
 	}
 }

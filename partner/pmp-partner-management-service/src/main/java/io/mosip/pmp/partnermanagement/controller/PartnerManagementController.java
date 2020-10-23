@@ -311,5 +311,5 @@ public class PartnerManagementController {
 		response.setResponse(policyIDResponse);
 
 		return new ResponseEntity<>(response , HttpStatus.OK);
-	}
+	}	
 }

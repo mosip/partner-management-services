@@ -35,6 +35,9 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateResponseDto;
+import io.mosip.pmp.partner.dto.ExtractorDto;
+import io.mosip.pmp.partner.dto.ExtractorProviderDto;
+import io.mosip.pmp.partner.dto.ExtractorsDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
@@ -65,7 +68,7 @@ public class PartnerServiceControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @Ignore
+    
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void partnerSelfRegistrationTest() throws Exception {
@@ -84,7 +87,48 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(post("/partners/12345/addcontact").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(addContactRequestWrapper()))).andExpect(status().isOk());
     }
-
+    
+    @Test
+    @WithMockUser(roles = {"PARTNERMANAGER"})
+    public void uploadCACertificateTest() throws Exception{
+    	CACertificateResponseDto response = new CACertificateResponseDto();
+        Mockito.when(partnerService.uploadCACertificate(cACertificateRequest())).thenReturn(response);
+        mockMvc.perform(post("/partners/uploadCACertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createCACertificateRequest()))).andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void uploadPartnerCertificateTest() throws Exception{
+    	PartnerCertificateResponseDto response = new PartnerCertificateResponseDto();
+        Mockito.when(partnerService.uploadPartnerCertificate(Mockito.any())).thenReturn(response);
+        mockMvc.perform(post("/partners/uploadPartnerCertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(partnerCertificateRequest()))).andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void addBiometricExtractorsTest() throws JsonProcessingException, Exception {
+    	Mockito.when(partnerService.addBiometricExtractors("123456", "12345", getExtractorsInput())).thenReturn(new String());
+    	mockMvc.perform(post("/partners/partnerId/123456/policyId/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getBiometricExtractorsTest() throws JsonProcessingException, Exception {
+    	Mockito.when(partnerService.getBiometricExtractors("123456", "12345")).thenReturn(new ExtractorsDto());
+    	mockMvc.perform(MockMvcRequestBuilders.get("/partners/partnerId/123456/policyId/12345")).andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void retrievePartnerCertificateTest() throws Exception {
+        Mockito.when(partnerService.getPartnerCertificate(Mockito.any())).thenReturn(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/getPartnerCertificate/12345")).andExpect(MockMvcResultMatchers.status().isOk());
+    }    
+    
+    
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerDetailsTest() throws Exception {
@@ -153,51 +197,6 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
-    @Ignore
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void uploadCACertificateTest() throws Exception{
-    	CACertificateResponseDto response = new CACertificateResponseDto();
-        Mockito.when(partnerService.uploadCACertificate(cACertificateRequest())).thenReturn(response);
-        mockMvc.perform(post("/partners/uploadCACertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(createCACertificateRequest()))).andExpect(status().isOk());
-    }
-
-    @Ignore
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void uploadPartnerCertificateTest() throws Exception{
-    	PartnerCertificateResponseDto response = new PartnerCertificateResponseDto();
-        Mockito.when(partnerService.uploadPartnerCertificate(createPartnerCertificateRequest())).thenReturn(response);
-        mockMvc.perform(post("/partners/uploadPartnerCertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(partnerCertificateRequest()))).andExpect(status().isOk());
-    }
-
-//    @Test
-//    @WithMockUser(roles = {"PARTNER"})
-//    public void getPartnerCertificateTest() throws Exception{
-//    	PartnerCertDownloadResponeDto response = new PartnerCertDownloadResponeDto();
-//        Mockito.when(partnerService.getPartnerCertificate(certDownloadRequest())).thenReturn(response);
-//        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/partnerAPIKeyRequests/123456")).andExpect(MockMvcResultMatchers.status().isOk());
-//    }    
-    
-    
-    public RequestWrapper<PartnerUpdateRequest> createvalidateDigitalCertificateRequest(){
-    	RequestWrapper<PartnerUpdateRequest> request = new RequestWrapper<PartnerUpdateRequest>();
-    	
-    	
-    	PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
-    	
-    	partnerUpdateRequest.setAddress("Bangalore");
-    	partnerUpdateRequest.setContactNumber("9902355445");    	
-    	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
-    	request.setMetadata("{}");
-    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-    	request.setVersion("1.0");
-    	request.setRequest(partnerUpdateRequest);
-    	return request;
-    }
-    
     private RequestWrapper<PartnerAPIKeyRequest> createSubmitPartnerApiKeyRequest(){
     	RequestWrapper<PartnerAPIKeyRequest> request = new RequestWrapper<PartnerAPIKeyRequest>();
     	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
@@ -234,6 +233,7 @@ public class PartnerServiceControllerTest {
         partnerRequest.setOrganizationName("airtel India");
         partnerRequest.setPolicyGroup("telecom");
         partnerRequest.setPartnerType("test");
+        partnerRequest.setPartnerId("1001");
         return partnerRequest;
     }
      
@@ -264,10 +264,36 @@ public class PartnerServiceControllerTest {
         return request;
     }
     
+    private RequestWrapper<ExtractorsDto> createAddBiometricExtractorRequest() {
+        RequestWrapper<ExtractorsDto> request = new RequestWrapper<ExtractorsDto>();
+        request.setRequest(getExtractorsInput());
+        request.setId("mosip.partnermanagement.partners.create");
+        request.setVersion("1.0");
+        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+        request.setMetadata("{}");
+        return request;
+    }
+    
     private CACertificateRequestDto cACertificateRequest() {
     	CACertificateRequestDto dto = new CACertificateRequestDto();
     	dto.setCertificateData("qwertyui");
+    	dto.setPartnerDomain("Auth");
     	return dto;
+    }
+    
+    private ExtractorsDto getExtractorsInput() {
+    	ExtractorsDto request = new ExtractorsDto();
+    	List<ExtractorDto> extractors = new ArrayList<>();
+    	ExtractorDto dto = new ExtractorDto();
+    	dto.setAttributeName("face");
+    	dto.setBiometric("face");
+    	ExtractorProviderDto provider = new ExtractorProviderDto();
+    	provider.setProvider("t5");
+    	provider.setVersion("1.1");
+    	dto.setExtractor(provider);
+    	extractors.add(dto);
+    	request.setExtractors(extractors);
+    	return request;
     }
     
     private RequestWrapper<PartnerCertificateRequestDto> partnerCertificateRequest() {
@@ -280,11 +306,23 @@ public class PartnerServiceControllerTest {
         return request;
     }
     
+    private RequestWrapper<AddContactRequestDto> addContactRequestWrapper() {
+        RequestWrapper<AddContactRequestDto> request = new RequestWrapper<AddContactRequestDto>();
+        request.setRequest(addContactRequestDto());
+        request.setId("mosip.partnermanagement.partners.create");
+        request.setVersion("1.0");
+        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+        request.setMetadata("{}");
+        return request;
+    }
+    
     private PartnerCertificateRequestDto createPartnerCertificateRequest() {
     	PartnerCertificateRequestDto dto = new PartnerCertificateRequestDto();
     	dto.setCertificateData("qweryre");
     	dto.setOrganizationName("MOSIP");
     	dto.setPartnerType("Test");
+    	dto.setPartnerDomain("Auth");
+    	dto.setPartnerId("1001");
     	return dto;
     }
     
@@ -303,17 +341,8 @@ public class PartnerServiceControllerTest {
     	PartnerCertDownloadRequestDto dto = new PartnerCertDownloadRequestDto();
     	//dto.setPartnerCertId("12345");
     	return dto;
-    }
-    
-    private RequestWrapper<AddContactRequestDto> addContactRequestWrapper() {
-        RequestWrapper<AddContactRequestDto> request = new RequestWrapper<AddContactRequestDto>();
-        request.setRequest(addContactRequestDto());
-        request.setId("mosip.partnermanagement.partners.create");
-        request.setVersion("1.0");
-        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        request.setMetadata("{}");
-        return request;
-    }
+    }   
+
     
     private AddContactRequestDto addContactRequestDto() {
     	AddContactRequestDto dto = new AddContactRequestDto();
