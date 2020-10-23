@@ -6,8 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +26,7 @@ import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateResponseDto;
+import io.mosip.pmp.partner.dto.ExtractorsDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
@@ -69,7 +68,7 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping(value = "/partners")
 public class PartnerServiceController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceController.class);
+	//private static final //LOGGER //LOGGER = //LOGGERFactory.get//LOGGER(PartnerServiceController.class);
 
 	@Autowired
 	PartnerService partnerService;
@@ -90,14 +89,14 @@ public class PartnerServiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
-		LOGGER.info("partner self registration");
+		//LOGGER.info("partner self registration");
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
-		LOGGER.info("calling savePartner method");
+		//LOGGER.info("calling savePartner method");
 		partnerResponse = partnerService.savePartner(partnerRequest);
-		LOGGER.info(partnerResponse + " : response of savePartner method");
+		//LOGGER.info(partnerResponse + " : response of savePartner method");
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
@@ -128,6 +127,38 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @param request
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}", method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.addBiometricExtractors(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);		
+	}
+	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<ExtractorsDto>> getBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId){
+		ResponseWrapper<ExtractorsDto> response = new ResponseWrapper<>();
+		ExtractorsDto extractors = partnerService.getBiometricExtractors(partnerId, policyId);
+		response.setResponse(extractors);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	/**
 	 * 
 	 * @param partnerId
@@ -263,7 +294,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -282,7 +313,7 @@ public class PartnerServiceController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@RequestMapping(value = "/getPartnerCertificate/{partnerId}", method = RequestMethod.GET)
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		

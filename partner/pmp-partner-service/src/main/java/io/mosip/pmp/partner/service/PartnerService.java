@@ -12,6 +12,7 @@ import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.ExtractorsDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
@@ -144,5 +145,22 @@ public interface PartnerService {
      * @throws JsonParseException 
     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+    
+    /**
+     * Function to add biometric extractors 
+     * @param partnerId
+     * @param policyId
+     * @param extractors
+     * @return
+     */
+    public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors);
+    
+    /**
+     * Function to get biometric extractors of partner and policy
+     * @param partnerId
+     * @param policyId
+     * @return
+     */
+    public ExtractorsDto getBiometricExtractors(String partnerId, String policyId);
 	
 }

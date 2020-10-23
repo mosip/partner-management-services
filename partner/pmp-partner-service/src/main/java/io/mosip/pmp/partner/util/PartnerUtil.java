@@ -27,6 +27,15 @@ public class PartnerUtil {
 	}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public static String generateId(){
+	    int id = (int)(Math.random()*1000000);
+	    return id +"";
+	}
+	
+	/**
 	 * @return AuthPolicyId.
 	 */
 	
