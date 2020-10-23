@@ -93,9 +93,6 @@ public class PolicyManagementService {
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
 
-	@Value("${pmp.policy.schema.supported.versions}")
-	private String policySupportedVersions;
-
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
 
@@ -188,11 +185,10 @@ public class PolicyManagementService {
 	 */
 	public PolicyCreateResponseDto createPolicies(PolicyCreateRequestDto requestDto)
 			throws PolicyManagementServiceException, Exception {
-		validatePolicyVersion(requestDto.getVersion());
 		validatePolicyTypes(requestDto.getPolicyType());
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
-		if (!policyValidator.validatePolicies(getPolicySchema(requestDto.getVersion(), requestDto.getPolicyType()),
+		if (!policyValidator.validatePolicies(getPolicySchema(requestDto.getPolicyType()),
 				IOUtils.toString(requestDto.getPolicies().toString().getBytes(), "UTF-8"))) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
@@ -210,7 +206,6 @@ public class PolicyManagementService {
 	 */
 	public PolicyCreateResponseDto updatePolicies(PolicyUpdateRequestDto requestDto, String policyId)
 			throws PolicyManagementServiceException, Exception {
-		validatePolicyVersion(requestDto.getVersion());
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
 		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false);
 		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroup.getId(),
@@ -220,7 +215,7 @@ public class PolicyManagementService {
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + requestDto.getName());
 		}
-		if (!policyValidator.validatePolicies(getPolicySchema(requestDto.getVersion(), authPolicy.getPolicy_type()),
+		if (!policyValidator.validatePolicies(getPolicySchema(authPolicy.getPolicy_type()),
 				IOUtils.toString(requestDto.getPolicies().toString().getBytes(), "UTF-8"))) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
@@ -727,21 +722,10 @@ public class PolicyManagementService {
 
 	/**
 	 * 
-	 * @param policyVersion
-	 */
-	private void validatePolicyVersion(String policyVersion) {
-		if (!Arrays.stream(policySupportedVersions.split(",")).anyMatch(policyVersion::equalsIgnoreCase)) {
-			throw new PolicyManagementServiceException(ErrorMessages.VERSION_NOT_ALLOWED.getErrorCode(),
-					ErrorMessages.VERSION_NOT_ALLOWED.getErrorMessage() + policySupportedVersions);
-		}
-	}
-
-	/**
-	 * 
 	 * @param version
 	 * @return
 	 */
-	private String getPolicySchema(String version, String policyType) {
-		return environment.getProperty("pmp." + policyType.toLowerCase() + ".policy." + version + "." + "schema");
+	private String getPolicySchema(String policyType) {
+		return environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema");
 	}
 }

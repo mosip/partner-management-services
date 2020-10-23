@@ -115,7 +115,7 @@ public class PolicyServiceTest {
 	}	
 	
 	
-	@Test(expected = PolicyManagementServiceException.class)	
+	@Test	
 	public void createPoliciesTest_S001() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setVersion("0.10");
