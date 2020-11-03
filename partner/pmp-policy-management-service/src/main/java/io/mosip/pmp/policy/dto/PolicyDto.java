@@ -1,26 +1,46 @@
 package io.mosip.pmp.policy.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Data;
 
-/**
- * <p> It holds the objects of auth policy {@link AuthPolicyDto} and </p>
- * <p> allowed kyc {@link AllowedKycDto} </p>
- *  
- * @author Nagarjuna Kuchi
- * @version 1.0
- */
 @Data
 public class PolicyDto {
 	
-	/**
-	 * list of auth policy dto's.
-	 */
-	private List<AuthPolicyDto> authPolicies;
+	private String policyId;
 	
-	/**
-	 * list of allowed Kyc dto's
-	 */
-	private List<AllowedKycDto> allowedKycAttributes;
+	private String policyName;
+	
+	private String policyDesc;
+	
+	private LocalDateTime publishDate;
+	
+	private LocalDateTime validTill;
+	
+	private String status;
+	
+	private String version;
+	
+	private String schema;
+	
+	private Boolean is_Active;
+	
+	private String cr_by;
+	
+	private LocalDateTime cr_dtimes;
+	
+	private String up_by;
+	
+	private LocalDateTime upd_dtimes;
+	
+	private String authTokenType;
+	
+	private List<AuthPolicyDto> allowedAuthTypes;
+	
+	private List<ShareableAttributesDto> shareableAttributes;
+	
+	private List<AllowedKycDto> allowedKYCAttributes;
+	
+	private DataShareDto dataSharePolicies;
 }

@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -42,6 +43,7 @@ import io.mosip.pmp.misp.test.MispServiceTest;
 @EnableWebMvc
 public class MISPServiceTest {
 
+	@Autowired
 	MISPManagementService service;
 	
 	@Mock
@@ -59,7 +61,6 @@ public class MISPServiceTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new MISPManagementService();
 		ReflectionTestUtils.setField(service, "mispRepository", mispRepository);
 		ReflectionTestUtils.setField(service, "misplKeyRepository", misplKeyRepository);
 		ReflectionTestUtils.setField(service, "mispIdGenerator", mispIdGenerator);
@@ -69,8 +70,8 @@ public class MISPServiceTest {
 	@Test
 	public void createMISPTest() {
 		MISPCreateRequestDto mispCreateRequest = serviceCreateRequest();
-		Mockito.when(mispRepository.findByName(mispCreateRequest.getName())).thenReturn(null);
-		Mockito.when(mispRepository.findByName(mispCreateRequest.getName())).thenReturn(null);
+		Mockito.when(mispRepository.findByName(mispCreateRequest.getOrganizationName())).thenReturn(null);
+		Mockito.when(mispRepository.findByName(mispCreateRequest.getOrganizationName())).thenReturn(null);
 		Mockito.when(mispIdGenerator.generateId()).thenReturn("100");			
 		ResponseWrapper<MISPCreateResponseDto> response = service.createMISP(mispCreateRequest);
 		assertNotNull(response);
@@ -240,7 +241,7 @@ public class MISPServiceTest {
 	@Test(expected = MISPException.class)
 	public void UpdateMISPLkeyStatus_InputExceptionTest() {
 		
-		service.updateMisplkeyStatus(LkeyStatusUpdateRequest("activated","active"));
+		service.updateMisplkeyStatus(LkeyStatusUpdateRequest("activated","active"),"12345");
 	}
 	
 	@Test(expected = MISPException.class)
@@ -248,7 +249,7 @@ public class MISPServiceTest {
 		MISPLicenseEntity license = mispLicense();
 		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
 		MISPlKeyStatusUpdateRequestDto dto = LkeyStatusUpdateRequest("active","active");
-		service.updateMisplkeyStatus(dto);
+		service.updateMisplkeyStatus(dto,"12345");
 	}
 	
 	@Test(expected = MISPException.class)
@@ -257,7 +258,7 @@ public class MISPServiceTest {
 		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
 		MISPlKeyStatusUpdateRequestDto dto = LkeyStatusUpdateRequest("active","active");
 		dto.setMispLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		service.updateMisplkeyStatus(dto);
+		service.updateMisplkeyStatus(dto,"12345");
 	}
 	
 	@Test(expected = MISPException.class)
@@ -267,8 +268,7 @@ public class MISPServiceTest {
 		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
 		MISPlKeyStatusUpdateRequestDto dto = LkeyStatusUpdateRequest("active","active");
 		dto.setMispLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		dto.setMispId("100");
-		service.updateMisplkeyStatus(dto);
+		service.updateMisplkeyStatus(dto,"100");
 	}
 	
 	@Test
@@ -277,8 +277,7 @@ public class MISPServiceTest {
 		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
 		MISPlKeyStatusUpdateRequestDto dto = LkeyStatusUpdateRequest("active","active");
 		dto.setMispLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		dto.setMispId("100");
-		service.updateMisplkeyStatus(dto);
+		service.updateMisplkeyStatus(dto,"100");
 	}
 	
 	@Test
@@ -430,10 +429,8 @@ public class MISPServiceTest {
 	}
 	private MISPlKeyStatusUpdateRequestDto LkeyStatusUpdateRequest(String lStatus, String mispSatus) {
 		MISPlKeyStatusUpdateRequestDto dto = new MISPlKeyStatusUpdateRequestDto();
-		dto.setMispId("12345");
 		dto.setMispLicenseKey("asdfghjkkiuytrewqHF");
 		dto.setMispLicenseKeyStatus(lStatus);
-		dto.setMispStatus(mispSatus);
 		return dto;
 	}
 	private MISPUpdateRequestDto updateRequest() {
@@ -493,7 +490,6 @@ public class MISPServiceTest {
 		dto.setAddress("Bangalore");
 		dto.setContactNumber("1234567890");
 		dto.setEmailId("airtel@gmail.com");
-		dto.setName("Airtel");
 		dto.setOrganizationName("Airtel");
 		
 		return dto;

@@ -16,12 +16,26 @@ public enum ErrorMessages {
 	UNSUPPORTED_AUTH_TYPE("PMS_POL_006","Unsupported Authentication Type in the Policy File"),
 	EKYC_ATTRIBUTE_MISSING("PMS_POL_007","eKYC attribute missing in the policy file"),
 	POLICY_ID_NOT_EXISTS("PMS_POL_008","Policy ID does not exist"),
-	AUTH_POLICY_NAME_DUPLICATE_EXCEPTION("PMS_POL_009","Auth policy Name already exists in the auth policy Group.Name : "),
+	AUTH_POLICY_NAME_DUPLICATE_EXCEPTION("PMS_POL_009","Auth policy exists with name : "),
 	MISSING_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter - "),
 	INVALID_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - "),
 	INTERNAL_SERVER_ERROR("PMS_COR_003","Could not process the request"),
 	AUTH_POLICIES_NOT_DEFINED("PMS_POL_009", "Auth Policies are not defined against to policy"),
-	NO_POLICY_AGAINST_APIKEY("PMS_POL_013","No policy available for given PartnerAPIKey");
+	NO_POLICY_AGAINST_APIKEY("PMS_POL_013","No policy available for given PartnerAPIKey"),
+	POLICY_GROUP_NAME_DUPLICATE("PMS_POL_014","Policy group exists with name : "),
+	POLICY_GROUP_POLICY_NOT_MAPPED("PMS_POL_015","Policy group and policy not mapped."),
+	POLICY_GROUP_ID_NOT_EXISTS("PMS_POL_016","Policy Group ID does not exist"),
+	NO_POLICY_AGAINST_PARTNER("PMS_POL_017","No policy available for given partner"),
+	PARTNER_POLICY_NOT_MAPPED("PMS_POL_018","Given partner and policy are not mapped."),
+	POLICY_GROUP_NAME_NOT_EXISTS("PMS_POL_019","Policy group name does not exist"),
+	POLICY_PUBLISHED("PMS_POL_020","Can not publish the published policy"),
+	AUTH_TYPES_NOT_REQUIRED("PMS_POL_021","allowed auth types are not required for policyType "),
+	AUTH_TOKEN_TYPE_NOT_ALLOWED("PMS_POL_022","Given auth token type is not allowed"),
+	POLICY_TYPE_NOT_ALLOWED("PMS_POL_023","Given policy type is not allowed "), 
+	POLICY_STATUS_CODE_EXCEPTION("PMS_POL_045","Policy Status either Active or De-active."),
+	DATASHARE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_046","Datashare attributes are not required for given policyType "),
+	SHAREABLE_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","Shareable attributes are not required for given policyType "),
+	ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED("PMS_POL_047","AllowedKYC attributes are not required for given policyType ");
 	
 	private final String errorCode;
 	private final String errorMessage;

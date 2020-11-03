@@ -5,47 +5,38 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.0.0</version>
+		<version>1.1.2</version>
 	</parent>
 	
-	<version>1.0.0</version>
+	<version>1.1.2</version>
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
-
-	<properties>
-		<java.version>1.8</java.version>
-		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
-		<maven.jacoco.version>0.8.2</maven.jacoco.version>
-	</properties>
-
-<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<sonar.host.url>http://localhost:9000</sonar.host.url>
-			</properties>
-		</profile>
-	</profiles>
-	
 	<dependencies>		
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>1.4.2</version>
+		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel-auth-adapter.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel-dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
-			<version>1.16.18</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -85,7 +76,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 			<version>2.0.2.RELEASE</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
@@ -95,8 +86,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-		</dependency>
-
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>

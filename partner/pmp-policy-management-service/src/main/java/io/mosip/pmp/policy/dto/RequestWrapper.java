@@ -1,6 +1,7 @@
 package io.mosip.pmp.policy.dto;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,7 @@ public class RequestWrapper<T> {
 	private String version;
 	@ApiModelProperty(notes = "Request Timestamp", example = "2018-12-10T06:12:52.994Z", required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime requesttime;
+	private LocalDateTime requesttime = LocalDateTime.now(ZoneId.of("UTC"));
 
 	private Object metadata;
 

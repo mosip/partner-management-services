@@ -23,6 +23,9 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
+import io.mosip.pmp.authdevice.exception.RequestException;
+import io.mosip.pmp.authdevice.exception.ValidationException;
 import io.mosip.pmp.partner.constant.PartnerInputExceptionConstant;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 
@@ -220,6 +223,59 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(PartnerDoesNotExistsException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
 			final HttpServletRequest httpServletRequest, final PartnerDoesNotExistsException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(PartnerServiceException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final PartnerServiceException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final ValidationException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrors().get(0).getErrorCode());
+		errorResponse.setMessage(exception.getErrors().get(0).getMessage());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	
+	@ExceptionHandler(AuthDeviceServiceException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final AuthDeviceServiceException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(RequestException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final RequestException exception) {
 		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
