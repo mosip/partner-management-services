@@ -92,9 +92,6 @@ public class PolicyManagementService {
 	@Value("${pmp.policy.expiry.period.indays:180 }")
 	private int policyExpiryPeriodInDays;
 
-	@Value("${pmp.policy.allowed.authtokens.types}")
-	private String allowedAuthTokenTypes;
-
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -155,15 +156,16 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
+	@Value("${pmp.bioextractors.required.partner.types}")
+	private String biometricExtractorsRequiredPartnerTypes;
+	
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
 
-	private static final String APPROVEDSTATUS = "Approved";
-
-	private static final String CREDENTIAL_PARTNER = "Credential_Partner";
+	private static final String APPROVEDSTATUS = "Approved";	
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -742,10 +744,11 @@ public class PartnerServiceImpl implements PartnerService {
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
-			if (!partnerFromDb.get().getPartnerTypeCode().equals(CREDENTIAL_PARTNER)) {
+			
+			if (!Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(",")).anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
 				throw new PartnerServiceException(
 						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorCode(),
-						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorMessage());
+						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorMessage() + biometricExtractorsRequiredPartnerTypes);
 			}
 		}
 

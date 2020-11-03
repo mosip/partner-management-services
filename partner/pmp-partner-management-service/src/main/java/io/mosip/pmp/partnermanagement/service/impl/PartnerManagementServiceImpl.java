@@ -3,6 +3,7 @@ package io.mosip.pmp.partnermanagement.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -106,12 +107,13 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 
 	private static final String APPROVED = "Approved";
 
-	private static final String REJECTED = "Rejected";
-
-	private static final String CREDENTIAL_PARTNER = "Credential_Partner";
+	private static final String REJECTED = "Rejected";	
 
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
 	private int partnerPolicyExpiryInDays;
+	
+	@Value("${pmp.bioextractors.required.partner.types}")
+	private String biometricExtractorsRequiredPartnerTypes;
 
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
@@ -451,7 +453,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			throw new InvalidInputParameterException(InvalidInputParameterConstant.INVALID_STATUS_CODE.getErrorCode(),
 					InvalidInputParameterConstant.INVALID_STATUS_CODE.getErrorMessage());
 		}
-		if (partnerPolicyRequestFromDb.get().getPartner().getPartnerTypeCode().equalsIgnoreCase(CREDENTIAL_PARTNER)) {
+		if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(",")).anyMatch(partnerPolicyRequestFromDb.get().getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {			
 			List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(
 					partnerPolicyRequestFromDb.get().getPartner().getId(),
 					partnerPolicyRequestFromDb.get().getPolicyId());
