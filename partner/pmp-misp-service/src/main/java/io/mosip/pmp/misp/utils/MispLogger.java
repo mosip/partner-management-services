@@ -1,10 +1,11 @@
 package io.mosip.pmp.misp.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MispLogger { 
 	
-	private static final Logger logger = Logger.getLogger(MispLogger.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(MispLogger.class);
 	
 	public static void error(String message){
 		
