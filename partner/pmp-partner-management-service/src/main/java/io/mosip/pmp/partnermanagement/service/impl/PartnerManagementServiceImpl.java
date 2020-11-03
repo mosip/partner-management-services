@@ -28,7 +28,6 @@ import io.mosip.pmp.partnermanagement.constant.PartnerApiKeyDoesNotBelongToThePo
 import io.mosip.pmp.partnermanagement.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerIdDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerValidationsConstants;
-import io.mosip.pmp.partnermanagement.controller.PartnerManagementController;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.AuthPolicyAttributes;
@@ -79,7 +78,7 @@ import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 @Service
 public class PartnerManagementServiceImpl implements PartnerManagementService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementServiceImpl.class);
 
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;

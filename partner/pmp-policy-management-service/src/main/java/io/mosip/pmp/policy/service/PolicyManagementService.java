@@ -14,6 +14,8 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -42,7 +44,6 @@ import io.mosip.pmp.policy.entity.PartnerPolicy;
 import io.mosip.pmp.policy.entity.PolicyGroup;
 import io.mosip.pmp.policy.errorMessages.ErrorMessages;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
-import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
 import io.mosip.pmp.policy.repository.AuthPolicyHRepository;
 import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PartnerPolicyRepository;
@@ -74,6 +75,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class PolicyManagementService {
 
+	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementService.class);
+	
 	@Autowired
 	private AuthPolicyRepository authPolicyRepository;
 
@@ -565,7 +568,7 @@ public class PolicyManagementService {
 			throws FileNotFoundException, IOException, ParseException {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
 		if (partnerPolicy == null) {
-			PolicyServiceLogger.error("Partner api key not found");
+			logger.error("Partner api key not found");
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
 		}
@@ -585,7 +588,7 @@ public class PolicyManagementService {
 			throws JsonParseException, JsonMappingException, IOException {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerId, policyId);
 		if (partnerPolicy == null) {
-			PolicyServiceLogger.error("Partner is not found");
+			logger.error("Partner is not found");
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
 		}

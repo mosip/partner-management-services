@@ -1,9 +1,13 @@
 package io.mosip.pmp.misp.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.pmp.misp.utils.MispLogger;
 
 public class MISPException  extends BaseUncheckedException {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MISPException.class);
 	
 	/**
 	 * 
@@ -13,13 +17,13 @@ public class MISPException  extends BaseUncheckedException {
 	public MISPException(String errorCode, String errorMessage)
 	{		
 		super(errorCode, errorMessage);
-		MispLogger.error(errorCode,errorMessage);
+		logger.error(errorCode,errorMessage);
 	}
 	
 	public MISPException(String errorCode, String errorMessage, Throwable rootCause)
 	{
 		super(errorCode, errorMessage, rootCause);
-		MispLogger.error(errorCode,errorMessage);
+		logger.error(errorCode,errorMessage);
 	}
 
 	public MISPException(String errorCode, Exception e) {
