@@ -7,6 +7,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,6 @@ import io.mosip.pmp.policy.dto.PolicyUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pmp.policy.dto.RequestWrapper;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
-import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 import io.swagger.annotations.Api;
 
@@ -58,6 +59,8 @@ import io.swagger.annotations.Api;
 @Api(tags = { "Partner Management : Policy Management Controller " })
 public class PolicyManagementController {
 
+	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementController.class);
+	
 	@Autowired
 	private PolicyManagementService policyManagementService;
 
@@ -65,7 +68,7 @@ public class PolicyManagementController {
 	@PostMapping(value = "/policies/policyGroup")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest){	
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -78,7 +81,7 @@ public class PolicyManagementController {
 	@PutMapping(value = "/policies/policyGroup/{policyGroupId}")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(
 			@PathVariable String policyGroupId,@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest){	
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policyGroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -100,7 +103,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.
 				createPolicies(createRequest.getRequest());		
@@ -108,7 +111,7 @@ public class PolicyManagementController {
 		response.setVersion(createRequest.getVersion());
 		response.setResponse(responseDto);		
 		
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 
@@ -143,13 +146,13 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
 			@RequestBody RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
 			throws Exception {
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),policyID);
 		response.setResponse(responseDto);
 		response.setId(updateRequestDto.getId());
 		response.setVersion(updateRequestDto.getVersion());
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 
@@ -166,13 +169,13 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto,
 			@PathVariable String policyGroupId, @PathVariable String policyID) throws Exception {		
 		PolicyStatusUpdateRequestDto statusUpdateRequest = requestDto.getRequest();	
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.
 				updatePolicyStatus(statusUpdateRequest,policyGroupId,policyID);		
 		response.setId(requestDto.getId());
 		response.setVersion(requestDto.getVersion());
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 
@@ -188,9 +191,9 @@ public class PolicyManagementController {
 	@GetMapping(value = "/policies")
 	public ResponseWrapper<List<PolicyResponseDto>> getPolicies() throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");		
+		logger.info("Calling PolicyManagementService from PolicyManageController.");		
 		response.setResponse(policyManagementService.findAllPolicies());
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 
@@ -205,10 +208,10 @@ public class PolicyManagementController {
 	@GetMapping(value = "/policies/policyId/{policyID}")
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyID) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyID);
 		response.setResponse(responseDto);
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 	
@@ -222,10 +225,10 @@ public class PolicyManagementController {
 	@GetMapping(value = "/policies/partnerApiKey/{partnerApiKey}")
 	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String partnerApiKey) throws FileNotFoundException, IOException, ParseException{
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(partnerApiKey);
 		response.setResponse(policyGroup);
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;		
 	}
 	
@@ -242,10 +245,10 @@ public class PolicyManagementController {
 	@GetMapping(value="/policies/partnerId/{partnerId}/policyId/{policyId}")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId, @PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyResponseDto policyGroup = policyManagementService.getPartnerMappedPolicy(partnerId, policyId);
 		response.setResponse(policyGroup);
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 	
@@ -276,9 +279,9 @@ public class PolicyManagementController {
 	@GetMapping(value ="/policies/policyGroups")
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");		
+		logger.info("Calling PolicyManagementService from PolicyManageController.");		
 		response.setResponse(policyManagementService.getPolicyGroup());
-		PolicyServiceLogger.info("Returning response from MispController.");
+		logger.info("Returning response from MispController.");
 		return response;
 	}
 }

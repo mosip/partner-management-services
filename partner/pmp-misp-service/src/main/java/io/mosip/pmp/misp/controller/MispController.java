@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +33,6 @@ import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
-import io.mosip.pmp.misp.utils.MispLogger;
 import io.swagger.annotations.Api;
 
 /**
@@ -57,7 +58,9 @@ import io.swagger.annotations.Api;
 @RestController
 @Api(tags = { "Partner Management : MOSIP Infra Provider controller" })
 public class MispController {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(MispController.class);
+	
 	@Autowired
 	private MISPManagementService mispManagementService;	
 	
@@ -76,11 +79,11 @@ public class MispController {
 	@PostMapping(value = "/misps")
 	public ResponseWrapper<MISPCreateResponseDto> registerMISP(@RequestBody @Valid RequestWrapper<MISPCreateRequestDto> mispCreateRequestDto)
 			throws Exception{		
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPCreateResponseDto> response = mispManagementService.createMISP(mispCreateRequestDto.getRequest());		
 		response.setId(mispCreateRequestDto.getId());
 		response.setVersion(mispCreateRequestDto.getVersion());		
-		MispLogger.info("Returning misp registration response from MispController.");		
+		logger.info("Returning misp registration response from MispController.");		
 		return response;
 	}
 	
@@ -92,13 +95,13 @@ public class MispController {
 	@PatchMapping(value="/misps/{mispId}/status")
 	public ResponseWrapper<MISPStatusUpdateResponse> processRequest(@RequestBody @Valid RequestWrapper<MISPStatusUpdateRequestDto> mispUpdateRequestDto,
 			@PathVariable String mispId){
-		MispLogger.info("Calling MISPManagementService from MispController.");		
+		logger.info("Calling MISPManagementService from MispController.");		
 		MISPStatusUpdateRequestDto updateRequest = mispUpdateRequestDto.getRequest(); 
 		updateRequest.setMispId(mispId);		
 		ResponseWrapper<MISPStatusUpdateResponse>  response = mispManagementService.processRequest(updateRequest);
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp update response from MispController.");
+		logger.info("Returning misp update response from MispController.");
 		return response;		
 	}
 	
@@ -114,13 +117,13 @@ public class MispController {
 	@PutMapping(value = "/misps/{mispId}")
 	public ResponseWrapper<MISPUpdateResponseDto> updateMISP(@RequestBody @Valid RequestWrapper<MISPUpdateRequestDto> mispUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception {
-		MispLogger.info("Calling MISPManagementService from MispController.");		
+		logger.info("Calling MISPManagementService from MispController.");		
 		MISPUpdateRequestDto updateRequest = mispUpdateRequestDto.getRequest(); 
 		updateRequest.setMispID(mispId);		
 		ResponseWrapper<MISPUpdateResponseDto> response = mispManagementService.update(updateRequest);
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp update response from MispController.");
+		logger.info("Returning misp update response from MispController.");
 		return response;
 	}
 		
@@ -139,14 +142,14 @@ public class MispController {
 	@PatchMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPValidatelKeyResponseDto> validateLicenseKey(@RequestBody RequestWrapper<MISPValidatelKeyRequestDto> misplKeyStatusUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception{		
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPValidatelKeyResponseDto> response = new ResponseWrapper<>();		
 		MISPValidatelKeyResponseDto responseDto = mispManagementService.validateLicenseKey(new MISPlKeyUniqueKeyEntity(mispId,misplKeyStatusUpdateRequestDto.getRequest().
 				getMispLicenseKey()));		
 		response.setResponse(responseDto);
 		response.setId(misplKeyStatusUpdateRequestDto.getId());		
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning misp validate licensekey response from MispController.");
+		logger.info("Returning misp validate licensekey response from MispController.");
 		return response;
 	}
 		
@@ -162,13 +165,13 @@ public class MispController {
 	@PatchMapping(value="/misps/{mispId}")
 	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(@RequestBody RequestWrapper<MISPStatusUpdateRequestDto> mispStatusUpdateRequestDto,
 			@PathVariable String mispId) throws Exception {
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		MISPStatusUpdateRequestDto requestDto = mispStatusUpdateRequestDto.getRequest();		
 		requestDto.setMispId(mispId);
 		ResponseWrapper<MISPStatusUpdateResponseDto> response = mispManagementService.updateMISPStatus(requestDto);		
 		response.setId(mispStatusUpdateRequestDto.getId());
 		response.setVersion(mispStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning update misp status response from MispController.");
+		logger.info("Returning update misp status response from MispController.");
 		return response;
 	}
 	
@@ -183,12 +186,12 @@ public class MispController {
 	@PutMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMISPlKeyStatus(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId) {
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();		
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = mispManagementService.updateMisplkeyStatus(request,mispId);		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
-		MispLogger.info("Returning update misp license key status update response from MispController.");
+		logger.info("Returning update misp license key status update response from MispController.");
 		return response;
 	}
 	
@@ -202,7 +205,7 @@ public class MispController {
 	@GetMapping(value = "/misps")
 	public ResponseWrapper<List<MISPDetailsDto>> getMisps(){
 		ResponseWrapper<List<MISPDetailsDto>> response = new ResponseWrapper<>();
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		response.setResponse(mispManagementService.getMisps());
 		return response;
 	}
@@ -216,7 +219,7 @@ public class MispController {
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/mispId/{mispId}")
 	public ResponseWrapper<MISPDetailsDto> getMisp(@PathVariable String mispId){
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPDetailsDto> response = new ResponseWrapper<>();
 		MISPDetailsDto mispDetails =  new MISPDetailsDto();		
 		mispDetails = mispManagementService.getMisp(mispId);		
@@ -234,7 +237,7 @@ public class MispController {
 	@GetMapping(value ="/misps/name/{orgName}")
 	public ResponseWrapper<List<MISPDetailsDto>> getMispsByOrg(@PathVariable String orgName ){
 		ResponseWrapper<List<MISPDetailsDto>> responseWrapper = new ResponseWrapper<>();
-		MispLogger.info("Calling MISPManagementService from MispController.");
+		logger.info("Calling MISPManagementService from MispController.");
 		responseWrapper.setResponse(mispManagementService.getMispsByOrg(orgName));
 		return responseWrapper;
 	}
@@ -252,7 +255,7 @@ public class MispController {
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLiceneseDto> downloadLicenseKey(@PathVariable @Valid String mispId){
-		MispLogger.info("Calling MISPManagementService from MispController.");	
+		logger.info("Calling MISPManagementService from MispController.");	
 		ResponseWrapper<MISPLiceneseDto> response = mispManagementService.retriveLicense(mispId);	
 		return response;
 	}	
