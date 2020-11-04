@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +50,7 @@ public class MispIdServiceTest {
 		Misp entity = new Misp();
 		entity.setMispId(initialMispid);
 		when(mispRepository.findLastMispId()).thenReturn(null);
-		when(mispRepository.create(Mockito.any())).thenReturn(entity);
+		when(mispRepository.create(ArgumentMatchers.any())).thenReturn(entity);
 		assertThat(service.generateId(), is(Integer.toString(initialMispid)));
 	}
 
@@ -58,7 +59,7 @@ public class MispIdServiceTest {
 		Misp entity = new Misp();
 		entity.setMispId(initialMispid);
 		when(mispRepository.findLastMispId()).thenReturn(entity);
-		when(mispRepository.create(Mockito.any())).thenReturn(entity);
+		when(mispRepository.create(ArgumentMatchers.any())).thenReturn(entity);
 		assertThat(service.generateId(), is(Integer.toString(newMispId)));
 	}
 
@@ -72,7 +73,7 @@ public class MispIdServiceTest {
 	@Test(expected = MISPException.class)
 	public void generateIdInsertExceptionTest() {
 		when(mispRepository.findLastMispId()).thenReturn(null);
-		when(mispRepository.create(Mockito.any()))
+		when(mispRepository.create(ArgumentMatchers.any()))
 				.thenThrow(new MISPException("", "cannot execute statement", new RuntimeException()));
 		service.generateId();
 	}
@@ -87,7 +88,7 @@ public class MispIdServiceTest {
 
 	@Test(expected = MISPException.class)
 	public void mispIdServiceInsertExceptionTest() throws Exception {
-		when(mispRepository.create(Mockito.any()))
+		when(mispRepository.create(ArgumentMatchers.any()))
 				.thenThrow(new MISPException("", "cannot execute statement", new RuntimeException()));
 		service.generateId();
 	}
@@ -97,7 +98,7 @@ public class MispIdServiceTest {
 		Misp entity = new Misp();
 		entity.setMispId(1000);
 		when(mispRepository.findLastMispId()).thenReturn(entity);
-		when(mispRepository.create(Mockito.any()))
+		when(mispRepository.create(ArgumentMatchers.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", new RuntimeException()));
 		service.generateId();
 	}

@@ -28,7 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;

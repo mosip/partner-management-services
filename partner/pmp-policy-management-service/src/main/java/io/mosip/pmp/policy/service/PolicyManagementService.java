@@ -2,6 +2,8 @@ package io.mosip.pmp.policy.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +24,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -49,11 +53,6 @@ import io.mosip.pmp.policy.repository.PartnerPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.util.PolicyUtil;
 import io.mosip.pmp.policy.validator.spi.PolicyValidator;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * <p>
