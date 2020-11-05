@@ -23,7 +23,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.policy.dto.FilterDto;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
@@ -121,8 +120,7 @@ public class PolicyServiceTest {
 	@Ignore
 	public void createPoliciesTest_S001() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.setVersion("0.10");
-		//Mockito.when(mappper.readValue(Mockito.anyString(), Mockito.class)).thenReturn(value)
+		request.setVersion("0.10");		
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
