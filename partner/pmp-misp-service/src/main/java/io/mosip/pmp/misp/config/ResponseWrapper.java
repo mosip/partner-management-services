@@ -47,7 +47,8 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
         return output.getWriter();
     }
 
-    public String toString()
+    @Override
+	public String toString()
     {
         return output.toString();
     }
@@ -61,7 +62,8 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             this.baos = baos;
         }
 
-        public void write(int param) throws IOException
+        @Override
+		public void write(int param) throws IOException
         {
             baos.write(param);
         }
