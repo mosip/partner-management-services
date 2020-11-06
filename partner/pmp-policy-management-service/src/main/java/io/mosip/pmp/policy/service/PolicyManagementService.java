@@ -53,6 +53,9 @@ import io.mosip.pmp.policy.repository.AuthPolicyRepository;
 import io.mosip.pmp.policy.repository.PartnerPolicyRepository;
 import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.util.PolicyUtil;
+import io.mosip.pmp.policy.validator.exception.InvalidPolicySchemaException;
+import io.mosip.pmp.policy.validator.exception.PolicyIOException;
+import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
 import io.mosip.pmp.policy.validator.spi.PolicyValidator;
 
 /**
@@ -196,14 +199,33 @@ public class PolicyManagementService {
 		validatePolicyTypes(requestDto.getPolicyType());
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
-		if (!policyValidator.validatePolicies(getPolicySchema(requestDto.getPolicyType()),
-				IOUtils.toString(requestDto.getPolicies().toString().getBytes(), "UTF-8"))) {
+		if (!validatePolicy(requestDto.getPolicyType(),requestDto.getPolicies())) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
 		return savePolicy(requestDto.getPolicies(), requestDto.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), requestDto.getPolicyType(), requestDto.getPolicyGroupName(),
 				requestDto.getVersion());
+	}
+	
+	/**
+	 * 
+	 * @param requestDto
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean validatePolicy(String policyType,  JSONObject policies) throws Exception {
+		try {
+			return policyValidator.validatePolicies(getPolicySchema(policyType),
+					IOUtils.toString(policies.toString().getBytes(), "UTF-8"));
+		}catch (PolicyObjectValidationFailedException e) {			
+			throw e;
+		}catch (InvalidPolicySchemaException |PolicyIOException e) {
+			throw new PolicyManagementServiceException(e.getErrorCode(),e.getErrorText());
+		}catch (IOException e) {
+			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
+					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage() +"/" + e.getMessage());
+		}
 	}
 
 	/**
@@ -223,8 +245,7 @@ public class PolicyManagementService {
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + requestDto.getName());
 		}
-		if (!policyValidator.validatePolicies(getPolicySchema(authPolicy.getPolicy_type()),
-				IOUtils.toString(requestDto.getPolicies().toString().getBytes(), "UTF-8"))) {
+		if (!validatePolicy(mappedPolicy.getPolicy_type(),requestDto.getPolicies())) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
@@ -742,4 +763,6 @@ public class PolicyManagementService {
 		return mapper.readValue(new URL(environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema")),
 				JsonNode.class).toString();
 	}
+	
+	
 }
