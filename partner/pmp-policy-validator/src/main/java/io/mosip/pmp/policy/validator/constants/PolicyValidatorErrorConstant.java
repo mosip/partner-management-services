@@ -3,11 +3,15 @@ package io.mosip.pmp.policy.validator.constants;
 public enum PolicyValidatorErrorConstant {
 	SCHEMA_IO_EXCEPTION("PMS_PV_001", "Failed to read schema"),
 
-	POLICY_VALIDATION_FAILED("PMS_PV_002", "Id Object validation failed"),
+	POLICY_VALIDATION_FAILED("PMS_PV_002", "Policy Object validation failed"),
 
-	POLICY_PARSING_FAILED("PMS_PV_003", "Failed to parse/convert Id Object"),
+	POLICY_PARSING_FAILED("PMS_PV_003", "Failed to parse/convert policy Object"),
 
-	INVALID_POLICY_SCHEMA("PMS_PV_004", "Invalid ID schema");
+	INVALID_POLICY_SCHEMA("PMS_PV_004", "Invalid policy schema"),
+	
+	INVALID_INPUT_PARAMETER("PMS-PV-005", "Invalid input parameter - %s"),
+
+	MISSING_INPUT_PARAMETER("PMS-PV-006", "Missing input parameter - %s");
 
 	private final String errorCode;
 

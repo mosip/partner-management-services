@@ -3,8 +3,8 @@ package io.mosip.pmp.policy.errorMessages;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
 
 
 /**
@@ -81,7 +82,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ExceptionUtils.logRootCause(e);
 		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+	
+	@ExceptionHandler(PolicyObjectValidationFailedException.class)
+	public ResponseEntity<ResponseWrapper<List<ServiceError>>> controlDataServiceException(
+			HttpServletRequest httpServletRequest, final PolicyObjectValidationFailedException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseObject(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 		
 	/**
 	 * This method extract the response from HttpServletRequest request.
@@ -100,6 +107,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorResponse, httpStatus);
 	}
 	
+	/**
+	 * This method extract the response from HttpServletRequest request.
+	 * 
+	 * @param httpServletRequest
+	 * @param e
+	 * @param httpStatus
+	 * @return
+	 * @throws IOException
+	 */
+	private ResponseEntity<ResponseWrapper<List<ServiceError>>> getErrorResponseObject(HttpServletRequest httpServletRequest,
+			PolicyObjectValidationFailedException ex, HttpStatus httpStatus) throws IOException {
+		List<ServiceError> errors = new ArrayList<>();		
+		for(io.mosip.pmp.policy.validator.exception.ServiceError error: ex.getServiceErrors()) {
+			errors.add(new ServiceError(error.getErrorCode(),error.getMessage()));
+		}
+		ResponseWrapper<List<ServiceError>> errorResponse = setServiceErrors(httpServletRequest);
+		errorResponse.getErrors().addAll(errors);
+		return new ResponseEntity<>(errorResponse, httpStatus);
+	}	
 	
 	/**
 	 * This method handles all runtime exceptions
@@ -129,6 +155,31 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	 */
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponsetime(LocalDateTime.now(ZoneId.of("UTC")));
+		String requestBody = null;
+		if (httpServletRequest instanceof ContentCachingRequestWrapper) {
+			requestBody = new String(((ContentCachingRequestWrapper) httpServletRequest).getContentAsByteArray());
+		}
+		if (EmptyCheckUtils.isNullEmpty(requestBody)) {			
+			return responseWrapper;
+		}		
+		
+		objectMapper.registerModule(new JavaTimeModule());
+		JsonNode reqNode = objectMapper.readTree(requestBody);
+		responseWrapper.setId(reqNode.path("id").asText());
+		responseWrapper.setVersion(reqNode.path("version").asText());
+		return responseWrapper;
+	}
+	
+	/**
+	 *  This method maps the HttpServletRequest parameters to the response. 
+	 * 
+	 * @param httpServletRequest
+	 * @return response
+	 * @throws IOException
+	 */
+	private ResponseWrapper<List<ServiceError>> setServiceErrors(HttpServletRequest httpServletRequest) throws IOException {
+		ResponseWrapper<List<ServiceError>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponsetime(LocalDateTime.now(ZoneId.of("UTC")));
 		String requestBody = null;
 		if (httpServletRequest instanceof ContentCachingRequestWrapper) {

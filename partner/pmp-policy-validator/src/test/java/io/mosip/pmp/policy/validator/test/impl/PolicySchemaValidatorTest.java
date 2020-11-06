@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pmp.policy.validator.exception.InvalidPolicySchemaException;
 import io.mosip.pmp.policy.validator.exception.PolicyIOException;
+import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
 import io.mosip.pmp.policy.validator.impl.PolicySchemaValidator;
 
 
@@ -46,8 +47,9 @@ public class PolicySchemaValidatorTest {
 		InputStream is = new FileInputStream(schemaFile);
 		schemaJson = IOUtils.toString(is, "UTF-8");
 	}
+	
 	@Test
-	public void testValidatePoliciesSuccess() throws IOException, InvalidPolicySchemaException, PolicyIOException {
+	public void testValidatePoliciesSuccess() throws IOException, InvalidPolicySchemaException, PolicyIOException, PolicyObjectValidationFailedException {
 		File policyFile = new File(classLoader.getResource("sample-qr-code-policy.json").getFile());
 		InputStream policyStream = new FileInputStream(policyFile);
 		String policyJson = IOUtils.toString(policyStream, "UTF-8");
@@ -56,7 +58,7 @@ public class PolicySchemaValidatorTest {
 	}
 	
 	@Test(expected = InvalidPolicySchemaException.class)
-	public void testInvalidPolicySchemaException() throws IOException, InvalidPolicySchemaException, PolicyIOException {
+	public void testInvalidPolicySchemaException() throws IOException, InvalidPolicySchemaException, PolicyIOException, PolicyObjectValidationFailedException {
 		File policyFile = new File(classLoader.getResource("sample-qr-code-policy.json").getFile());
 		InputStream policyStream = new FileInputStream(policyFile);
 		String policyJson = IOUtils.toString(policyStream, "UTF-8");
@@ -67,7 +69,7 @@ public class PolicySchemaValidatorTest {
 	
 	}
 	@Test(expected = InvalidPolicySchemaException.class)
-	public void testValidateSchemaNull() throws IOException, InvalidPolicySchemaException, PolicyIOException {
+	public void testValidateSchemaNull() throws IOException, InvalidPolicySchemaException, PolicyIOException, PolicyObjectValidationFailedException {
 		File policyFile = new File(classLoader.getResource("sample-qr-code-policy.json").getFile());
 		InputStream policyStream = new FileInputStream(policyFile);
 		String policyJson = IOUtils.toString(policyStream, "UTF-8");
@@ -76,7 +78,7 @@ public class PolicySchemaValidatorTest {
 	}
 	
 	@Test(expected = PolicyIOException.class)
-	public void testInvalidPolicy() throws IOException, InvalidPolicySchemaException, PolicyIOException {
+	public void testInvalidPolicy() throws IOException, InvalidPolicySchemaException, PolicyIOException, PolicyObjectValidationFailedException {
 		File policyFile = new File(classLoader.getResource("sample-qr-code-policy.json").getFile());
 		InputStream policyStream = new FileInputStream(policyFile);
 		String policyJson = IOUtils.toString(policyStream, "UTF-8");

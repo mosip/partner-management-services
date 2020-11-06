@@ -120,7 +120,7 @@ public class PolicyServiceTest {
 	@Ignore
 	public void createPoliciesTest_S001() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
-		request.setVersion("0.10");		
+		request.setVersion("0.10");
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
