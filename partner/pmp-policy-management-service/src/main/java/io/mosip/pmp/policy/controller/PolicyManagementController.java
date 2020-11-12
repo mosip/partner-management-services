@@ -144,7 +144,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PutMapping(value = "/policies/{policyID}")
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
-			@RequestBody RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
+			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
