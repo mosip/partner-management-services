@@ -33,6 +33,8 @@ import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
+import io.mosip.pmp.misp.utils.AuditUtil;
+import io.mosip.pmp.misp.utils.PartnerManageEnum;
 import io.swagger.annotations.Api;
 
 /**
@@ -62,7 +64,10 @@ public class MispController {
 	private static final Logger logger = LoggerFactory.getLogger(MispController.class);
 	
 	@Autowired
-	private MISPManagementService mispManagementService;	
+	private MISPManagementService mispManagementService;
+	
+	@Autowired
+	private AuditUtil audit;
 	
 	/**
 	 * <p>MOSIP Admin would be able to create MISP using this API. At the time of creation of MISP, MISP ID and</p> 
@@ -79,11 +84,14 @@ public class MispController {
 	@PostMapping(value = "/misps")
 	public ResponseWrapper<MISPCreateResponseDto> registerMISP(@RequestBody @Valid RequestWrapper<MISPCreateRequestDto> mispCreateRequestDto)
 			throws Exception{		
-		logger.info("Calling MISPManagementService from MispController.");
+
+        logger.info("Calling MISPManagementService from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.CREATE_MISP);
 		ResponseWrapper<MISPCreateResponseDto> response = mispManagementService.createMISP(mispCreateRequestDto.getRequest());		
 		response.setId(mispCreateRequestDto.getId());
 		response.setVersion(mispCreateRequestDto.getVersion());		
 		logger.info("Returning misp registration response from MispController.");		
+		audit.setAuditRequestDto(PartnerManageEnum.CREATE_MISP_SUCCESS);
 		return response;
 	}
 	
@@ -97,11 +105,13 @@ public class MispController {
 			@PathVariable String mispId){
 		logger.info("Calling MISPManagementService from MispController.");		
 		MISPStatusUpdateRequestDto updateRequest = mispUpdateRequestDto.getRequest(); 
-		updateRequest.setMispId(mispId);		
+		updateRequest.setMispId(mispId);
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.PROCESS_MISP,mispId));
 		ResponseWrapper<MISPStatusUpdateResponse>  response = mispManagementService.processRequest(updateRequest);
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
 		logger.info("Returning misp update response from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.PROCESS_MISP_SUCCESS,mispId));
 		return response;		
 	}
 	
@@ -120,10 +130,12 @@ public class MispController {
 		logger.info("Calling MISPManagementService from MispController.");		
 		MISPUpdateRequestDto updateRequest = mispUpdateRequestDto.getRequest(); 
 		updateRequest.setMispID(mispId);		
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP);
 		ResponseWrapper<MISPUpdateResponseDto> response = mispManagementService.update(updateRequest);
 		response.setId(mispUpdateRequestDto.getId());
 		response.setVersion(mispUpdateRequestDto.getVersion());
-		logger.info("Returning misp update response from MispController.");
+        logger.info("Returning misp update response from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP_SUCCESS);
 		return response;
 	}
 		
@@ -143,13 +155,15 @@ public class MispController {
 	public ResponseWrapper<MISPValidatelKeyResponseDto> validateLicenseKey(@RequestBody RequestWrapper<MISPValidatelKeyRequestDto> misplKeyStatusUpdateRequestDto, 
 			@PathVariable String mispId) throws Exception{		
 		logger.info("Calling MISPManagementService from MispController.");
-		ResponseWrapper<MISPValidatelKeyResponseDto> response = new ResponseWrapper<>();		
+		ResponseWrapper<MISPValidatelKeyResponseDto> response = new ResponseWrapper<>();	
+		audit.setAuditRequestDto(PartnerManageEnum.VALIDATE_LICENSE_KEY);
 		MISPValidatelKeyResponseDto responseDto = mispManagementService.validateLicenseKey(new MISPlKeyUniqueKeyEntity(mispId,misplKeyStatusUpdateRequestDto.getRequest().
 				getMispLicenseKey()));		
 		response.setResponse(responseDto);
 		response.setId(misplKeyStatusUpdateRequestDto.getId());		
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
 		logger.info("Returning misp validate licensekey response from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.VALIDATE_LICENSE_KEY_SUCCESS);
 		return response;
 	}
 		
@@ -168,10 +182,12 @@ public class MispController {
 		logger.info("Calling MISPManagementService from MispController.");
 		MISPStatusUpdateRequestDto requestDto = mispStatusUpdateRequestDto.getRequest();		
 		requestDto.setMispId(mispId);
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP_STATUS);
 		ResponseWrapper<MISPStatusUpdateResponseDto> response = mispManagementService.updateMISPStatus(requestDto);		
 		response.setId(mispStatusUpdateRequestDto.getId());
 		response.setVersion(mispStatusUpdateRequestDto.getVersion());
 		logger.info("Returning update misp status response from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP_STATUS_SUCCESS);
 		return response;
 	}
 	
@@ -187,11 +203,13 @@ public class MispController {
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMISPlKeyStatus(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
 			@PathVariable String mispId) {
 		logger.info("Calling MISPManagementService from MispController.");
-		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();		
+		MISPlKeyStatusUpdateRequestDto request = misplKeyStatusUpdateRequestDto.getRequest();	
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP_LICENSE_KEY_STATUS);
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = mispManagementService.updateMisplkeyStatus(request,mispId);		
 		response.setId(misplKeyStatusUpdateRequestDto.getId());
 		response.setVersion(misplKeyStatusUpdateRequestDto.getVersion());
 		logger.info("Returning update misp license key status update response from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.UPDATE_MISP_LICENSE_KEY_STATUS_SUCCESS);
 		return response;
 	}
 	
@@ -206,7 +224,9 @@ public class MispController {
 	public ResponseWrapper<List<MISPDetailsDto>> getMisps(){
 		ResponseWrapper<List<MISPDetailsDto>> response = new ResponseWrapper<>();
 		logger.info("Calling MISPManagementService from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.GET_ALL_MISPS);
 		response.setResponse(mispManagementService.getMisps());
+		audit.setAuditRequestDto(PartnerManageEnum.GET_ALL_MISPS_SUCCESS);
 		return response;
 	}
 	
@@ -222,8 +242,10 @@ public class MispController {
 		logger.info("Calling MISPManagementService from MispController.");
 		ResponseWrapper<MISPDetailsDto> response = new ResponseWrapper<>();
 		MISPDetailsDto mispDetails =  new MISPDetailsDto();		
+		audit.setAuditRequestDto(PartnerManageEnum.GET_MISP_BY_ID);
 		mispDetails = mispManagementService.getMisp(mispId);		
 		response.setResponse(mispDetails);		
+		audit.setAuditRequestDto(PartnerManageEnum.GET_MISP_BY_ID_SUCCESS);
 		return response;
 	}
 	
@@ -238,7 +260,9 @@ public class MispController {
 	public ResponseWrapper<List<MISPDetailsDto>> getMispsByOrg(@PathVariable String orgName ){
 		ResponseWrapper<List<MISPDetailsDto>> responseWrapper = new ResponseWrapper<>();
 		logger.info("Calling MISPManagementService from MispController.");
+		audit.setAuditRequestDto(PartnerManageEnum.GET_MISP_BY_ORGANIZATION_NAME);
 		responseWrapper.setResponse(mispManagementService.getMispsByOrg(orgName));
+		audit.setAuditRequestDto(PartnerManageEnum.GET_MISP_BY_ORGANIZATION_NAME_SUCCESS);
 		return responseWrapper;
 	}
 	
@@ -255,8 +279,11 @@ public class MispController {
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLiceneseDto> downloadLicenseKey(@PathVariable @Valid String mispId){
+
 		logger.info("Calling MISPManagementService from MispController.");	
+		audit.setAuditRequestDto(PartnerManageEnum.DOWNLOAD_LICENSE_KEY);
 		ResponseWrapper<MISPLiceneseDto> response = mispManagementService.retriveLicense(mispId);	
+		audit.setAuditRequestDto(PartnerManageEnum.DOWNLOAD_LICENSE_KEY_SUCCESS);
 		return response;
 	}	
 }
