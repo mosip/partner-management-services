@@ -27,9 +27,7 @@ import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
-import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 
@@ -145,11 +143,9 @@ public class PartnerManagementController {
 			method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
 			@PathVariable String partnerId, @PathVariable String partner_api_key,
-			@PathVariable String misp_license_key){
-		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();
-		
-		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misp_license_key,partner_api_key,partnerId);	
-		
+			@PathVariable String misp_license_key,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
+		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();		
+		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misp_license_key,partner_api_key,partnerId,needPartnerCert);
 		response.setResponse(responseFromService);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -195,24 +191,6 @@ public class PartnerManagementController {
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(retrievePartnerDetailsResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	
-	/**
-	 *   This API would be used to retrieve all Partner Details as per UI. 
-	 * @return response this class contains List of Partner.
-	 */
-	@Deprecated
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
-	@RequestMapping(value="/getManager", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<RetrievePartnerManagers>> getPartnerManager(){
-		ResponseWrapper<RetrievePartnerManagers> response=new ResponseWrapper<>();
-		RetrievePartnerManagers retrievePartnerManagers = null;
-		retrievePartnerManagers = partnerManagementService.getPartnerManager();
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(retrievePartnerManagers);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
@@ -291,25 +269,6 @@ public class PartnerManagementController {
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(apikeyRequests);
-		return new ResponseEntity<>(response , HttpStatus.OK);
-	}
-	
-	/**
-	 * @param policyName this is unique policy name of partner.
-	 * @return it will return corresponding policy Id.
-	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
-	@RequestMapping(value = "/policyname/{policyName}" , method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<PolicyIDResponse>> getPolicyID(
-			@PathVariable String policyName){
-		ResponseWrapper<PolicyIDResponse> response = new ResponseWrapper<>();
-		PolicyIDResponse policyIDResponse = null;
-		policyIDResponse = partnerManagementService.getPartnerPolicyID(policyName);
-		
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(policyIDResponse);
-
 		return new ResponseEntity<>(response , HttpStatus.OK);
 	}	
 }

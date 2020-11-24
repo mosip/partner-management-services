@@ -1,5 +1,6 @@
 package io.mosip.pmp.policy.dto;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.json.simple.JSONObject;
@@ -29,7 +30,7 @@ public class PolicyDto {
 	
 	private String cr_by;
 	
-	private LocalDateTime cr_dtimes;
+	private Timestamp cr_dtimes;
 	
 	private String up_by;
 	

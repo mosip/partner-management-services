@@ -2,9 +2,12 @@ package io.mosip.pmp.misp.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,15 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
+import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.Type;
+import io.mosip.pmp.common.entity.MISPEntity;
+import io.mosip.pmp.common.entity.MISPLicenseEntity;
+import io.mosip.pmp.common.entity.MISPLicenseReadEntity;
+import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.common.repository.MispServiceRepository;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -29,16 +41,11 @@ import io.mosip.pmp.misp.dto.MISPValidatelKeyResponseDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
-import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.exception.ErrorMessages;
 import io.mosip.pmp.misp.exception.MISPException;
-import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.utils.AuditUtil;
 import io.mosip.pmp.misp.utils.PartnerManageEnum;
+
 
 
 /**
@@ -77,6 +84,9 @@ public class MISPManagementService {
 
 	@Autowired
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
+	
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 	
 	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
 	private int mispLicenseExpiryInDays;
@@ -341,6 +351,8 @@ public class MISPManagementService {
 		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATE_MISP_LICENSE,misp_id));
 		Boolean activeness = status.toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
 		List<MISPLicenseEntity> licenses = misplKeyRepository.findByMispId(misp_id);
+		List<String> licenseKeys = licenses.stream().map(license->license.getMispLicenseUniqueKey().getLicense_key())
+				.collect(Collectors.toList());
 		if(activeness) {
 			for(MISPLicenseEntity license : licenses) {
 				if(license.getValidToDate().isAfter(LocalDateTime.now())){
@@ -362,6 +374,7 @@ public class MISPManagementService {
 				misplKeyRepository.save(license);
 			}
 		}
+		notify(licenseKeys);
 	}
 	/** 
 	 * This method update the status of misp license key to Active or DeActive of a specific misp.
@@ -402,7 +415,7 @@ public class MISPManagementService {
 			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.CANNOT_ACTIVATE_LICENSE_KEY,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorMessage());
-		}		
+		}
 		mispLicense.setIsActive(status);
 		mispLicense.setUpdatedDateTime(LocalDateTime.now());
 		mispLicense.setUpdatedBy(getUser());
@@ -410,8 +423,11 @@ public class MISPManagementService {
 		misplKeyRepository.save(mispLicense);
 		responseDto.setMispLicenseKeyStatus(updateRequest.getMispLicenseKeyStatus());
 		response.setResponse(responseDto);
+		notify(mispLicense.getMispLicenseUniqueKey().getLicense_key());
     	logger.info("Cursor back to controller");
 		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATED_LICENSE_KEY,mispId));
+		notify(mispLicense.getMispLicenseUniqueKey().getLicense_key());
+		logger.info("Cursor back to controller");
 		return response;	
 	}
 
@@ -688,5 +704,20 @@ public class MISPManagementService {
 	 */
 	public  boolean emailValidator(String email) {
 		return email.matches(emailRegex);
+	}
+	
+	private void notify(List<String> mispLicenseKeys) {		
+		for (String licenseKey : mispLicenseKeys) {
+			notify(licenseKey);
+		}
+	}
+	
+	private void notify(String mispLicenseKey) {
+		Type type = new Type();
+		type.setName("MISPService");
+		type.setNamespace("io.mosip.pmp.misp.service");
+		Map<String,Object> data = new HashMap<>();
+		data.put("mispLicenseKey", mispLicenseKey);
+		webSubPublisher.notify(EventType.MISP_UPDATED,data,type);
 	}
 }

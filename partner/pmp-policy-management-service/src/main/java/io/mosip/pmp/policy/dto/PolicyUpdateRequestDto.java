@@ -38,8 +38,6 @@ public class PolicyUpdateRequestDto {
 	@Size(min = 1, max = 128, message = "Policy desc length should be in between 1 and 128 chars")	
 	private String desc;	
 	
-	@NotBlank(message = "Policies should not be blank")
-	@NotNull
 	private JSONObject policies;
 
 	@NotBlank(message = "version should not be blank")

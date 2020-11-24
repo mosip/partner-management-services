@@ -1,5 +1,6 @@
 package io.mosip.pmp.policy.dto;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import lombok.Data;
@@ -46,7 +47,7 @@ public class PolicyCreateResponseDto {
 	/**
 	 * Created date and time
 	 */
-	private LocalDateTime cr_dtimes;
+	private Timestamp cr_dtimes;
 	
 	/**
 	 * Updated by
