@@ -24,6 +24,8 @@ public class MISPCreateRequestDto {
      *  organizationName carries misp organiization name<br/>
      *  Ex : Banking, Insurance, telecom <br/>  
      */	
+	@NotNull
+	@NotBlank
 	@Size(min = 1, max = 128)
 	@ApiModelProperty(value ="organizationName", required = true, dataType = "java.lang.String")	
 	public String organizationName;	

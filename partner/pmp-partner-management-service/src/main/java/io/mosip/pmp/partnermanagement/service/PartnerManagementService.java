@@ -9,9 +9,7 @@ import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
-import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 
 /**
@@ -108,17 +106,5 @@ public interface PartnerManagementService {
 	 * 
 	 */
 
-	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId);
-	/**
-	 * @return retrievePartnerManagers
-	 */
-	
-	public RetrievePartnerManagers getPartnerManager();
-	
-	/**
-	 * @param policyName 
-	 * @return policyIDResponse
-	 */
-	
-	public PolicyIDResponse getPartnerPolicyID(String policyName);
+	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId,boolean needPartnerCert);	
 }
