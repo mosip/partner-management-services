@@ -28,7 +28,7 @@ public class WebSubPublisher {
 	private PublisherClient<String, EventModel, HttpHeaders> pb;
 	
 	public void notify(EventType eventType,Map<String,Object> data,Type type) {
-		sendEventToIDA(createEventModel(EventType.MISP_UPDATED,data,type));
+		sendEventToIDA(createEventModel(eventType,data,type));
 	}
 	
 	private void sendEventToIDA(EventModel model) {
@@ -45,7 +45,7 @@ public class WebSubPublisher {
 	
 	private EventModel createEventModel(EventType eventType,Map<String,Object> data,Type type) {
 		EventModel model = new EventModel();
-		model.setPublisher("MISPService");
+		model.setPublisher(type.getName());
 		String dateTime = DateUtils.formatToISOString(DateUtils.getUTCCurrentDateTime());
 		model.setPublishedOn(dateTime);
 		Event event = new Event();
