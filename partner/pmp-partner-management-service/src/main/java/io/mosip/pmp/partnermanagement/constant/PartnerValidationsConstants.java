@@ -17,7 +17,8 @@ public enum PartnerValidationsConstants {
 	POLICY_FILE_PARSING_ERROR("PMS_PMP_024","Policy file is corrupted."),
 	MISP_IS_BLOCKED("PMS_PMP_025","License key of MISP is blocked"),
 	PARTNER_APIKEY_POLICY_MAPPING_NOTEXISTS("PMS_PMP_50","Given apikey,partner and policy mapping not exists."),
-	POLICY_NOT_BELONGS_TO_PARTNER_POLICY_GROUP("PMS_PMP_51","Given policy is not belongs to partner's policy group");
+	POLICY_NOT_BELONGS_TO_PARTNER_POLICY_GROUP("PMS_PMP_51","Given policy is not belongs to partner's policy group"),
+	PARTNER_CERTIFICATE_NOT_EXISTS("PMS_PMP_052","Partner Certificate not available");
 	
 	/**
 	 * The error code.

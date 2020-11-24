@@ -8,7 +8,7 @@ public class ApikeyRequests {
 	private String partnerID;
 	private String status;
 	private String organizationName;
-	private String policyName;
+	private String policyId;
 	private String policyDesc;
 	private String apiKeyReqNo;
 }

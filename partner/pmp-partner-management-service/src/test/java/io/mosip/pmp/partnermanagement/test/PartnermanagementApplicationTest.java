@@ -2,11 +2,16 @@ package io.mosip.pmp.partnermanagement.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.util.RestUtil;
 
 /**
  * @author sanjeev.shrivastava
  *
  */
+@Import(value = {WebSubPublisher.class,RestUtil.class})
 @SpringBootApplication(scanBasePackages = "io.mosip.pmp.partnermanagement.*")
 public class PartnermanagementApplicationTest {
 	
