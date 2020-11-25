@@ -413,6 +413,7 @@ public class PolicyManagementService {
 			authPolicy.setPolicyFileId(policyJson.toJSONString());
 			authPolicy.setUpdBy(getUser());
 			authPolicy.setUpdDtimes(LocalDateTime.now());
+			notify(authPolicy.getId());
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
@@ -494,6 +495,7 @@ public class PolicyManagementService {
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
 		responseDto.setMessage("status updated successfully");
+		notify(policyId);
 		response.setResponse(responseDto);
 		return response;
 	}

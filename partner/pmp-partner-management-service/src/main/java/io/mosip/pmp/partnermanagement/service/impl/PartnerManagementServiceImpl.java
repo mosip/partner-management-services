@@ -3,6 +3,9 @@ package io.mosip.pmp.partnermanagement.service.impl;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -523,9 +526,9 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		response.setPartnerId(partnerPolicy.getPartner().getId());
 		response.setPartnerName(partnerPolicy.getPartner().getName());
 		response.setPolicyName(authPolicy.get().getName());
-		response.setMispExpiresOn(licenseKeyresponse.getValidTo());
-		response.setPolicyExpiresOn(authPolicy.get().getValidToDate());
-		response.setApiKeyExpiresOn(partnerPolicy.getValidToDatetime());
+		response.setMispExpiresOn(toISOFormat(licenseKeyresponse.getValidTo()));
+		response.setPolicyExpiresOn(toISOFormat(authPolicy.get().getValidToDate()));
+		response.setApiKeyExpiresOn(toISOFormat(partnerPolicy.getValidToDatetime().toLocalDateTime()));
 		return response;
 	}
 
@@ -664,5 +667,11 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		}
 		
 		return responseObject.getCertificateData();
+	}
+	
+	private static LocalDateTime toISOFormat(LocalDateTime localDateTime) {
+		ZonedDateTime zonedtime = localDateTime.atZone(ZoneId.systemDefault());
+		ZonedDateTime converted = zonedtime.withZoneSameInstant(ZoneOffset.UTC);
+		return converted.toLocalDateTime();
 	}
 }
