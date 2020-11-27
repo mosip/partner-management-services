@@ -359,7 +359,7 @@ public class PolicyManagementService {
 			throws JsonParseException, JsonMappingException, IOException {
 		PolicyResponseDto response = new PolicyResponseDto();
 		response.setCr_by(authPolicy.getCrBy());
-		response.setCr_dtimes(authPolicy.getCrDtimes());
+		response.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
 		response.setIs_Active(authPolicy.getIsActive());
 		response.setPolicyDesc(authPolicy.getDescr());
 		response.setPolicyGroupDesc(policyGroup.getDescr());
@@ -701,7 +701,7 @@ public class PolicyManagementService {
 			throws JsonParseException, JsonMappingException, IOException {
 		PolicyDto policyDto = new PolicyDto();
 		policyDto.setCr_by(authPolicy.getCrBy());
-		policyDto.setCr_dtimes(authPolicy.getCrDtimes());
+		policyDto.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
 		policyDto.setIs_Active(authPolicy.getIsActive());
 		policyDto.setPolicyDesc(authPolicy.getDescr());
 		policyDto.setPolicyId(authPolicy.getId());
@@ -800,7 +800,13 @@ public class PolicyManagementService {
 		type.setNamespace("io.mosip.pmp.policy.service");
 		Map<String,Object> data = new HashMap<>();
 		data.put("policyId", policy);
-		webSubPublisher.notify(EventType.POLICY_UPDATED,data,type);
+		webSubPublisher.notify(EventType.POLICY_UPDATED,data,type);	
 	}
 	
+	private LocalDateTime getLocalDateTime(Timestamp date) {
+		if(date!=null) {
+			return date.toLocalDateTime();
+		}
+		return LocalDateTime.now();
+	}
 }
