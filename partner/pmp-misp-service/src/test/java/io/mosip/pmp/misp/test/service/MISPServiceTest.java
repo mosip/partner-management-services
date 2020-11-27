@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -37,6 +38,7 @@ import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.exception.MISPException;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
+import io.mosip.pmp.misp.utils.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
@@ -62,6 +64,9 @@ public class MISPServiceTest {
 	@Mock
 	private WebSubPublisher webSubPublisher; 
 	
+	@MockBean
+	private AuditUtil audit;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -71,6 +76,8 @@ public class MISPServiceTest {
 		ReflectionTestUtils.setField(service, "mispLicenseKeyGenerator", mispLicenseKeyGenerator);
 		ReflectionTestUtils.setField(service, "webSubPublisher", webSubPublisher);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	
 	}
 	
 	@Test
