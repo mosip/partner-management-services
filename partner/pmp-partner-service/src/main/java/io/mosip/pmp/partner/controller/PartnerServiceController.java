@@ -333,7 +333,7 @@ public class PartnerServiceController {
     }	
 	
 	@ResponseFilter
-	@PostMapping("/partner/search")
+	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
 	public ResponseWrapper<PageResponseDto<PartnerSearchDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {

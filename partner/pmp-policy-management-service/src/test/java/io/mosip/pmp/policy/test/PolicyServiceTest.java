@@ -14,7 +14,7 @@ import io.mosip.pmp.common.helper.WebSubPublisher;
  *
  */
 @Import(value = {WebSubPublisher.class})
-@SpringBootApplication(scanBasePackages = "io.mosip.pmp.policy.*")
+@SpringBootApplication(scanBasePackages = { "io.mosip.pmp.policy.*","io.mosip.pmp.common.*"})
 public class PolicyServiceTest {
 
 	/**
