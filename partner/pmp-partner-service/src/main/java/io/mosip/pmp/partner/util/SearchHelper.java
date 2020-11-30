@@ -20,6 +20,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,7 +50,8 @@ import io.mosip.pmp.partner.constant.PartnerSearchErrorCode;
 @Transactional(readOnly = true)
 public class SearchHelper {
 
-	private int maximumRows = 10;
+	@Value("${partner.search.maximum.rows}")
+	private int maximumRows;
 
 	private static final String ENTITY_IS_NULL = "entity is null";
 	private static final String WILD_CARD_CHARACTER = "%";
