@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,16 +36,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.Type;
 import io.mosip.pmp.common.entity.AuthPolicy;
 import io.mosip.pmp.common.entity.AuthPolicyH;
 import io.mosip.pmp.common.entity.PartnerPolicy;
 import io.mosip.pmp.common.entity.PolicyGroup;
+import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.common.repository.AuthPolicyHRepository;
 import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
+import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyDto;
@@ -112,6 +118,9 @@ public class PolicyManagementService {
 
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
+	
+	@Autowired
+	SearchHelper searchHelper; 
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
@@ -808,5 +817,32 @@ public class PolicyManagementService {
 			return date.toLocalDateTime();
 		}
 		return LocalDateTime.now();
+	}
+	public PageResponseDto<PartnerPolicySearchDto> searchPartnerPolicy(SearchDto dto) {
+		List<PartnerPolicySearchDto> partners = new ArrayList<>();
+		PageResponseDto<PartnerPolicySearchDto> pageDto = new PageResponseDto<>();
+		Page<PartnerPolicy> page = searchHelper.search(PartnerPolicy.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partners = MapperUtils.mapAll(page.getContent(), PartnerPolicySearchDto.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
+	}
+	
+	public PageResponseDto<PolicyGroup> searchPolicy(SearchDto dto) {
+		List<PolicyGroup> partners = new ArrayList<>();
+		PageResponseDto<PolicyGroup> pageDto = new PageResponseDto<>();
+		Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partners = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
 	}
 }
