@@ -17,7 +17,7 @@ import io.mosip.pmp.authdevice.constants.DeviceValidationErrorCode;
 import io.mosip.pmp.authdevice.dto.DigitalIdDto;
 import io.mosip.pmp.authdevice.dto.ResponseDto;
 import io.mosip.pmp.authdevice.dto.ValidateDeviceDto;
-import io.mosip.pmp.authdevice.exception.ValidationException;
+import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.entity.Partner;
@@ -144,7 +144,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					AuthDeviceConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC, "PMS-ADM-999", serviceErrors.toString()), "ADM-613");
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		} else {
 			serviceErrors = null;
 		}
@@ -167,7 +167,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
 					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
 							AuthDeviceConstant.ERROR_OCCURED_MOSIP_DEVICE_SERVICE_HISTORY)));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (deviceServiceHistory.isEmpty()) {			
 			auditUtil.auditRequest(
@@ -179,7 +179,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-619");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
 					DeviceValidationErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage()));			
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 
 		return true;
@@ -213,7 +213,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
 					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
 							AuthDeviceConstant.ERROR_OCCURED_REGISTERED_DEVICE_HISTORY)));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 
 		if (registeredDeviceHistory == null) {
@@ -226,7 +226,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-616");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorCode(),
 					DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (!registeredDeviceHistory.getStatusCode().equalsIgnoreCase(REGISTERED)) {
 			auditUtil.auditRequest(
@@ -238,7 +238,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-617");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorCode(),
 					DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		return registeredDeviceHistory;
 	}
@@ -301,7 +301,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					AuthDeviceConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC, "KER-ADM-999", serviceErrors.toString()), "ADM-613");
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		} else {
 			serviceErrors = null;
 		}
@@ -323,7 +323,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
 					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
 							AuthDeviceConstant.ERROR_OCCURED_MOSIP_DEVICE_SERVICE)));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (deviceServices.isEmpty()) {
 			auditUtil.auditRequest(
@@ -335,7 +335,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-609");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.MDS_DOES_NOT_EXIST.getErrorCode(),
 					DeviceValidationErrorCode.MDS_DOES_NOT_EXIST.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 
 		return true;
@@ -357,7 +357,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
 					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
 							AuthDeviceConstant.ERROR_OCCURED_DEVICE_PROVIDER)));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (deviceProvider == null) {
 			auditUtil.auditRequest(
@@ -369,7 +369,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-607");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DEVICE_PROVIDER_INACTIVE.getErrorCode(),
 					DeviceValidationErrorCode.DEVICE_PROVIDER_INACTIVE.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		return true;
 	}
@@ -395,7 +395,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorCode(),
 					String.format(DeviceValidationErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
 							AuthDeviceConstant.ERROR_OCCURED_REGISTERED_DEVICE)));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (registeredDevice == null) {
 			auditUtil.auditRequest(
@@ -408,7 +408,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorCode(),
 					DeviceValidationErrorCode.DEVICE_DOES_NOT_EXIST.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 		if (!registeredDevice.getStatusCode().equalsIgnoreCase(REGISTERED)) {
 			auditUtil.auditRequest(
@@ -420,7 +420,7 @@ public class DeviceValidationServiceImpl implements DeviceValidationService {
 					"ADM-607");
 			serviceErrors.add(new ServiceError(DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorCode(),
 					DeviceValidationErrorCode.DEVICE_REVOKED_OR_RETIRED.getErrorMessage()));
-			throw new ValidationException(serviceErrors);
+			throw new DeviceValidationException(serviceErrors);
 		}
 
 		return registeredDevice;
