@@ -252,14 +252,13 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final ValidationException exception) {
-		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
-		ErrorResponse errors = new ErrorResponse();
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();		
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrors().get(0).getErrorCode());
 		errorResponse.setMessage(exception.getErrors().get(0).getMessage());
 		responseError.setId(msg);
 		responseError.setVersion(version);
-		responseError.setErrors(errors);
+		responseError.setErrors(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
