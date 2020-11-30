@@ -15,7 +15,7 @@ import io.mosip.pmp.authdevice.dto.ValidateDeviceDto;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
-import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.regdevice.service.DeviceValidationService;
 import io.swagger.annotations.Api;
 
@@ -33,9 +33,9 @@ public class DeviceValidationController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
 	@ResponseFilter
-	public ResponseWrapper<ResponseDto> validateDeviceProvider(
+	public ValidateResponseWrapper<ResponseDto> validateDeviceProvider(
 			@RequestBody @Valid RequestWrapper<ValidateDeviceDto> request) {
-		ResponseWrapper<ResponseDto> responseWrapper = new ResponseWrapper<>();
+		ValidateResponseWrapper<ResponseDto> responseWrapper = new ValidateResponseWrapper<>();
 		auditUtil.auditRequest(
 				AuthDeviceConstant.DEVICE_VALIDATION_API_CALLED + ValidateDeviceDto.class.getSimpleName(),
 				AuthDeviceConstant.AUDIT_SYSTEM,
