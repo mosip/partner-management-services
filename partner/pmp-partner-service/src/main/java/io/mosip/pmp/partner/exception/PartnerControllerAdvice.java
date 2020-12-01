@@ -23,11 +23,14 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
+import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.exception.ValidationException;
 import io.mosip.pmp.partner.constant.PartnerInputExceptionConstant;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 
 /**
  * @author sanjeev.shrivastava
@@ -249,13 +252,30 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final ValidationException exception) {
-		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();		
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrors().get(0).getErrorCode());
 		errorResponse.setMessage(exception.getErrors().get(0).getMessage());
 		responseError.setId(msg);
 		responseError.setVersion(version);
 		responseError.setErrors(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(DeviceValidationException.class)
+	public ResponseEntity<ValidateResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final DeviceValidationException exception) {
+		ValidateResponseWrapper<ErrorResponse> responseError = new ValidateResponseWrapper<>();
+		List<ErrorResponse> errors = new ArrayList<>();		
+		for (ServiceError serviceError : exception.getErrors()) {
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setErrorCode(serviceError.getErrorCode());
+			errorResponse.setMessage(serviceError.getMessage());
+			errors.add(errorResponse);
+		}
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.setErrors(errors);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
