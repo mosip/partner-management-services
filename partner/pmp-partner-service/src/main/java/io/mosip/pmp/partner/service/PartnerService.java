@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.pmp.authdevice.dto.PageResponseDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
@@ -21,10 +23,12 @@ import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerSearchDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
+import io.mosip.pmp.partner.entity.PartnerType;
 
 /**
  * This interface provides the methods which can be used for PartnerService
@@ -162,5 +166,10 @@ public interface PartnerService {
      * @return
      */
     public ExtractorsDto getBiometricExtractors(String partnerId, String policyId);
+    
+	public PageResponseDto<PartnerSearchDto> searchPartner(SearchDto dto);
+
+	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto);
+
 	
 }
