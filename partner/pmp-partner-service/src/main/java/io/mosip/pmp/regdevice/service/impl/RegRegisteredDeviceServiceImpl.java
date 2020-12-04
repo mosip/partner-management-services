@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,6 +23,7 @@ import javax.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,10 +43,14 @@ import io.mosip.pmp.authdevice.dto.DeviceDeRegisterResponse;
 import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
 import io.mosip.pmp.authdevice.dto.DigitalId;
+import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
+import io.mosip.pmp.authdevice.entity.DeviceDetail;
+import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.exception.ValidationException;
@@ -51,7 +58,9 @@ import io.mosip.pmp.authdevice.util.HeaderRequest;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.RestUtil;
+import io.mosip.pmp.partner.util.SearchHelper;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
@@ -76,6 +85,9 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 
 	@Autowired
 	Environment environment;
+	
+	@Autowired
+	SearchHelper searchHelper;
 
 	@Autowired
 	RegDeviceDetailRepository deviceDetailRepository;
@@ -586,4 +598,23 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 					RegisteredDeviceErrorCode.INVALID_ENV.getErrorMessage());
 		}
 	}
+	
+	@PersistenceContext(unitName = "regDeviceEntityManagerFactory")
+	private EntityManager entityManager;
+
+	@Override
+	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, SearchDto dto) {
+		List<RegisteredDevice> partners=new ArrayList<>();
+		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
+		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			 partners=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
+	}
+
 }

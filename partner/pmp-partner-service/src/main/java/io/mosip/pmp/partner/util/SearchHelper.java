@@ -62,10 +62,9 @@ public class SearchHelper {
 	/**
 	 * Field for interface used to interact with the persistence context.
 	 */
-	@PersistenceContext
-	private EntityManager entityManager;
 
-	public <E> Page<E> search(Class<E> entity, SearchDto searchDto) {
+
+	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto) {
 		long rows = 0l;
 		List<E> result;
 		Objects.requireNonNull(entity, ENTITY_IS_NULL);

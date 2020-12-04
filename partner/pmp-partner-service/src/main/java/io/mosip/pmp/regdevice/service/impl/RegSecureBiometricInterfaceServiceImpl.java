@@ -2,9 +2,15 @@ package io.mosip.pmp.regdevice.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
+import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.PageResponseDto;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -25,6 +34,8 @@ import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceHistoryRepos
 import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.partner.util.MapperUtils;
+import io.mosip.pmp.partner.util.SearchHelper;
 import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 
 @Service
@@ -44,6 +55,9 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	
 	@Autowired
 	RegSecureBiometricInterfaceHistoryRepository sbiHistoryRepository;
+	
+	@Autowired
+	SearchHelper searchHelper;
 	
 	@Override
 	public IdDto createSecureBiometricInterface(SecureBiometricInterfaceCreateDto sbiDto) {
@@ -243,6 +257,25 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 				"AUT-008");
 		throw new RequestException(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
 				String.format(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage(), secureBiometricInterfaceDto.getId()));
+	}
+	
+	@PersistenceContext(unitName = "regDeviceEntityManagerFactory")
+	private EntityManager entityManager;
+
+	@Override
+	public <E> PageResponseDto<SecureBiometricInterfaceCreateDto> searchSecureBiometricInterface(Class<E> entity,
+			SearchDto dto) {
+		List<SecureBiometricInterfaceCreateDto> partners=new ArrayList<>();
+		PageResponseDto<SecureBiometricInterfaceCreateDto> pageDto = new PageResponseDto<>();		
+		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			 partners=MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
 	}
 
 }
