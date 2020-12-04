@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.Type;
 import io.mosip.pmp.common.entity.AuthPolicy;
@@ -832,12 +833,26 @@ public class PolicyManagementService {
 		return pageDto;
 	}
 	
-	public PageResponseDto<PolicyGroup> searchPolicy(SearchDto dto) {
+	public PageResponseDto<PolicyGroup> searchPolicyGroup(SearchDto dto) {
 		List<PolicyGroup> partners = new ArrayList<>();
 		PageResponseDto<PolicyGroup> pageDto = new PageResponseDto<>();
 		Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
+	}
+	
+	public PageResponseDto<SearchAuthPolicy> searchPolicy(SearchDto dto) {
+		List<SearchAuthPolicy> partners = new ArrayList<>();
+		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
+		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
 		}
 		pageDto.setData(partners);
 		pageDto.setFromRecord(0);

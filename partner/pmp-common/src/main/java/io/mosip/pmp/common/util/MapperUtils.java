@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pmp.common.dto.SearchAuthPolicy;
+import io.mosip.pmp.common.entity.AuthPolicy;
 import io.mosip.pmp.common.entity.BaseEntity;
 
 
@@ -423,6 +426,34 @@ public class MapperUtils {
 		dtf.set(destination, sf.get(source));
 		dtf.setAccessible(false);
 		sf.setAccessible(false);
+	}
+	
+	
+	public static List<SearchAuthPolicy> mapAuthPolicySearch(List<AuthPolicy> authPolicies){
+		Objects.requireNonNull(authPolicies);
+		List<SearchAuthPolicy> authPoliciesList=new ArrayList<>();
+		authPolicies.forEach(authPolicy -> {
+			SearchAuthPolicy searchAuthPolicy=new SearchAuthPolicy();
+			searchAuthPolicy.setCrBy(authPolicy.getCrBy());
+			searchAuthPolicy.setCrDtimes(authPolicy.getCrDtimes());
+			searchAuthPolicy.setDelDtimes(authPolicy.getDelDtimes());
+			searchAuthPolicy.setDescr(authPolicy.getDescr());
+			searchAuthPolicy.setId(authPolicy.getId());
+			searchAuthPolicy.setIsActive(authPolicy.getIsActive());
+			searchAuthPolicy.setIsDeleted(authPolicy.getIsDeleted());
+			searchAuthPolicy.setName(authPolicy.getName());
+			searchAuthPolicy.setPolicyFileId(authPolicy.getPolicyFileId());
+			searchAuthPolicy.setPolicyGroup(authPolicy.getPolicyGroup().getId());
+			searchAuthPolicy.setPolicyType(authPolicy.getPolicy_type());
+			searchAuthPolicy.setSchema(authPolicy.getPolicySchema());
+			searchAuthPolicy.setUpdBy(authPolicy.getUpdBy());
+			searchAuthPolicy.setUpdDtimes(authPolicy.getUpdDtimes());
+			searchAuthPolicy.setValidFromDate(authPolicy.getValidFromDate());
+			searchAuthPolicy.setValidToDate(authPolicy.getValidToDate());
+			searchAuthPolicy.setVersion(authPolicy.getVersion());
+			authPoliciesList.add(searchAuthPolicy);
+		});
+		return authPoliciesList;
 	}
 
 	
