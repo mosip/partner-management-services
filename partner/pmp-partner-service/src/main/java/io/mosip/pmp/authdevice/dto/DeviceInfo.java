@@ -28,6 +28,6 @@ public class DeviceInfo {
 	private LocalDateTime deviceExpiry;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime timeStamp;
+	private LocalDateTime timestamp;
 
 }

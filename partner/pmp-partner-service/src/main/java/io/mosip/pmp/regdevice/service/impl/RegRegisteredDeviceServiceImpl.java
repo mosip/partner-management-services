@@ -49,7 +49,6 @@ import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.SignRequestDto;
 import io.mosip.pmp.authdevice.dto.SignResponseDto;
-import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 import io.mosip.pmp.authdevice.exception.RequestException;
@@ -261,7 +260,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(deviceInfo.getTimeStamp());
+		registerDeviceResponse.setTimeStamp(deviceInfo.getTimestamp());
 		return registerDeviceResponse;
 	}
 
@@ -403,7 +402,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		if (deviceInfo != null) {
-			LocalDateTime timeStamp = deviceInfo.getTimeStamp();
+			LocalDateTime timeStamp = deviceInfo.getTimestamp();
 			String prefix = registerDeviceTimeStamp.substring(0, 1);
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
 			boolean isBetween = timeStamp

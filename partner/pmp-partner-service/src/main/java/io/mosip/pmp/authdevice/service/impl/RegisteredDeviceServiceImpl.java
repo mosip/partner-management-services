@@ -269,7 +269,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(deviceInfo.getTimeStamp());
+		registerDeviceResponse.setTimeStamp(deviceInfo.getTimestamp());
 		return registerDeviceResponse;
 	}
 
@@ -573,7 +573,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		if (deviceInfo != null) {
-			LocalDateTime timeStamp = deviceInfo.getTimeStamp();
+			LocalDateTime timeStamp = deviceInfo.getTimestamp();
 			String prefix = registerDeviceTimeStamp.substring(0, 1);
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
 			boolean isBetween = timeStamp
