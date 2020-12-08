@@ -129,7 +129,7 @@ public class RegRegisteredDeviceServiceTest {
 		deviceInfo.setDeviceExpiry(LocalDateTime.now(ZoneOffset.UTC));
 		deviceInfo.setFirmware("firmware");
 		deviceInfo.setDigitalId(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(dig)));
-		deviceInfo.setTimeStamp(LocalDateTime.now(ZoneOffset.UTC));
+		deviceInfo.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
 		//device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(device)));
 		
@@ -195,7 +195,7 @@ public class RegRegisteredDeviceServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected=ValidationException.class)
 	public void createRegisteredDeviceExcessTimeOffset() throws Exception {
-		deviceInfo.setTimeStamp(LocalDateTime.MAX);
+		deviceInfo.setTimestamp(LocalDateTime.MAX);
 		//device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(device)));
 		

@@ -2,8 +2,6 @@ package io.mosip.pmp.authdevice.exception;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.pmp.partner.exception.BaseUncheckedException;
 
