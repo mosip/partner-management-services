@@ -228,7 +228,7 @@ public class PolicyManagementService {
 		}
 		return savePolicy(requestDto.getPolicies(), requestDto.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), requestDto.getPolicyType(), requestDto.getPolicyGroupName(),
-				requestDto.getVersion());
+				requestDto.getVersion(),requestDto.getPolicyId() == null ? "" : requestDto.getPolicyId());
 	}
 	
 	/**
@@ -274,7 +274,7 @@ public class PolicyManagementService {
 		}
 		return savePolicy(requestDto.getPolicies(), authPolicy.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), authPolicy.getPolicy_type(), requestDto.getPolicyGroupName(),
-				requestDto.getVersion());
+				requestDto.getVersion(),authPolicy.getId());
 	}
 
 	/**
@@ -408,7 +408,7 @@ public class PolicyManagementService {
 	 * @throws Exception
 	 */
 	private PolicyCreateResponseDto savePolicy(JSONObject policyJson, String oldPolicyName, String newPolicyName,
-			String policyDesc, String policyGroupId, String policyType, String policyGroupName, String version)
+			String policyDesc, String policyGroupId, String policyType, String policyGroupName, String version,String authPolicyId)
 			throws PolicyManagementServiceException, Exception {
 		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, oldPolicyName);
 		if (authPolicy != null) {
@@ -427,7 +427,7 @@ public class PolicyManagementService {
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
-			authPolicy.setId(PolicyUtil.generateId());
+			authPolicy.setId(authPolicyId=="" ? PolicyUtil.generateId(): authPolicyId);
 			authPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);

@@ -277,7 +277,7 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		responseError.setVersion(version);
 		responseError.setErrors(errors);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
-	}	
+	}
 	
 	@ExceptionHandler(AuthDeviceServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(

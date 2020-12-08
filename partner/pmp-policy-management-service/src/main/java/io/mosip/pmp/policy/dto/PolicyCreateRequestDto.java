@@ -20,6 +20,8 @@ import lombok.Data;
 @ApiModel(value= "PolicyRequestDto", description = " Policy Create Request Representation")
 public class PolicyCreateRequestDto {	
 
+	public String policyId;
+	
 	@NotBlank(message = "Policy group name should not be empty.")
 	@Size(min = 1, max = 128, message = "Policy group name length should be in between 1 and 128 chars")
 	@Type(type="string")
