@@ -18,24 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
-import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
-import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
-import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
-import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
 import io.mosip.pmp.authdevice.exception.RequestException;
-import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
-import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceHistoryRepository;
-import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.SearchHelper;
+import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
+import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
+import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
+import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
+import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceHistoryRepository;
+import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 
 @Service

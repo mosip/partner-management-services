@@ -8,8 +8,6 @@ import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
-import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
-import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
 
 public interface RegDeviceDetailService {
 	/**

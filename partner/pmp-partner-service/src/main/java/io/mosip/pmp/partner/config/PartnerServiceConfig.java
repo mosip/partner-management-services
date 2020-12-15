@@ -5,11 +5,8 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.pmp.keycloak.impl.AccessTokenResponse;
-import io.mosip.pmp.keycloak.impl.MemoryCache;
 import io.mosip.pmp.keycloak.impl.RestInterceptor;
 import io.mosip.pmp.partner.util.RestUtil;
 
