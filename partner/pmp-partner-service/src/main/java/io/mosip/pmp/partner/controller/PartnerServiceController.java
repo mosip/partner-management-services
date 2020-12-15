@@ -39,6 +39,7 @@ import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
@@ -167,6 +168,31 @@ public class PartnerServiceController {
 		response.setResponse(extractors);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @param credentialType
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}/credentialType/{credentialType}",method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyId,
+			@PathVariable @Valid String credentialType){
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.mapPartnerPolicyCredentialType(credentialType, partnerId, policyId));
+		return new ResponseEntity<>(response,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/credentialType/{credentialType}",method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
+		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.getPartnerCredentialTypePolicy(credentialType, partnerId));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	/**
 	 * 
 	 * @param partnerId

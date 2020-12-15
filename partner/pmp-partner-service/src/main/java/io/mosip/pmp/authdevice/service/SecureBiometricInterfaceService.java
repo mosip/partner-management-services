@@ -2,7 +2,6 @@ package io.mosip.pmp.authdevice.service;
 
 import org.springframework.stereotype.Service;
 
-import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;

@@ -9,8 +9,7 @@ import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
-import io.mosip.pmp.authdevice.entity.DeviceDetail;
-import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
+import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 
 @Service
 public interface DeviceDetailService {

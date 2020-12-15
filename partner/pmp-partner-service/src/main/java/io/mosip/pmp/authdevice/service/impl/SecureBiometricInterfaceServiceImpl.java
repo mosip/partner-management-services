@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
-import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
