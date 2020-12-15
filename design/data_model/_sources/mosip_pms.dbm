@@ -203,7 +203,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner: Registered external partners use the authentication services provided by MOSIP. The auth services are channeled through MISPs. This table stores the master list of partners who can self register themselves and use auth services.]]></comment>
-	<position x="1160" y="360"/>
+	<position x="1320" y="400"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID : Unique ID generated / assigned for partner]]></comment>
@@ -539,7 +539,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Policy History: This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer pmp.auth_policy table description for details.   
 ]]></comment>
-	<position x="360" y="660"/>
+	<position x="220" y="720"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: A unique identity ]]></comment>
@@ -624,7 +624,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Trusted Service Provider ID Sequence : Maintains latest sequence number available for TSP ID  generation]]></comment>
-	<position x="40" y="740"/>
+	<position x="400" y="560"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="36"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for TSP (Trusted Service Provider) ID generation]]></comment>
@@ -919,7 +919,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Policy Bio Extract: Stores the partner policy biometric information with biometric extract provider details.]]></comment>
-	<position x="1080" y="740"/>
+	<position x="1200" y="760"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unique id to store all the partner policy biometric extractor details]]></comment>
@@ -981,6 +981,56 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<table name="partner_policy_credential_type" alias="ppctyp">
+	<schema name="pms"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Partner Policy and Credential Type: Table to map partner, Partner policy and credential type for the partner.]]></comment>
+	<position x="720" y="800"/>
+	<column name="part_id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Partner ID: Partner ID, refers to pmp.partner .id]]></comment>
+	</column>
+	<column name="policy_id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Policy ID: Policy ID, refers to pmp.auth_policy .id]]></comment>
+	</column>
+	<column name="credential_type" not-null="true">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Credential Type: Credential type which is mapped to partner with specific policy]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_ppctyp_id" type="pk-constr" table="pms.partner_policy_credential_type">
+		<columns names="part_id,policy_id,credential_type" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="fk_mispl_misp" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="pms.misp" table="pms.misp_license">
 	<columns names="misp_id" ref-type="src-columns"/>
@@ -1035,6 +1085,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="fk_part_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="pms.partner" table="pms.partner_policy_credential_type">
+	<columns names="part_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_pol_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="pms.auth_policy" table="pms.partner_policy_credential_type">
+	<columns names="policy_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
 <relationship name="rel_misp_license_misp" type="relfk"
 	 src-table="pms.misp_license"
 	 dst-table="pms.misp" reference-fk="fk_mispl_misp"
@@ -1078,6 +1140,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_policy_extractor_auth_policy" type="relfk"
 	 src-table="pms.partner_policy_bioextract"
 	 dst-table="pms.auth_policy" reference-fk="fk_ppbe_pol"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_partner_credential_partner" type="relfk"
+	 src-table="pms.partner_policy_credential_type"
+	 dst-table="pms.partner" reference-fk="fk_part_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_partner_credential_auth_policy" type="relfk"
+	 src-table="pms.partner_policy_credential_type"
+	 dst-table="pms.auth_policy" reference-fk="fk_pol_id"
 	 src-required="false" dst-required="false"/>
 
 <permission>
