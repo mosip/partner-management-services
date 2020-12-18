@@ -57,6 +57,7 @@ import io.swagger.annotations.Api;
   * @since 2019-Oct-11
  */
 
+
 @RestController
 @Api(tags = { "Partner Management : MOSIP Infra Provider controller" })
 public class MispController {
@@ -80,6 +81,7 @@ public class MispController {
 	 * @return mispCreateResponseDto this class conatins all the parameters that response should have
 	 * @throws Exception unhandle exceptions 
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PostMapping(value = "/misps")
 	public ResponseWrapper<MISPCreateResponseDto> registerMISP(@RequestBody @Valid RequestWrapper<MISPCreateRequestDto> mispCreateRequestDto)
@@ -99,6 +101,7 @@ public class MispController {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value="/misps/{mispId}/status")
 	public ResponseWrapper<MISPStatusUpdateResponse> processRequest(@RequestBody @Valid RequestWrapper<MISPStatusUpdateRequestDto> mispUpdateRequestDto,
@@ -115,6 +118,7 @@ public class MispController {
 		return response;		
 	}
 	
+	
 	/**
 	 * This API would be used to update MISP for given mispID.
 	 * </br>
@@ -123,6 +127,7 @@ public class MispController {
 	 * @return mispUpdateResponseDto this is the response 
 	 * @throws Exception if any exceptions
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PutMapping(value = "/misps/{mispId}")
 	public ResponseWrapper<MISPUpdateResponseDto> updateMISP(@RequestBody @Valid RequestWrapper<MISPUpdateRequestDto> mispUpdateRequestDto, 
@@ -150,6 +155,7 @@ public class MispController {
 	 * @throws Exception if any exception
 	 * 	 
 	 */	
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPValidatelKeyResponseDto> validateLicenseKey(@RequestBody RequestWrapper<MISPValidatelKeyRequestDto> misplKeyStatusUpdateRequestDto, 
@@ -175,6 +181,7 @@ public class MispController {
 	 * @return mispStatusUpdateResponseDto this class contains all the response fields.
 	 * @throws Exception if any exceptions
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PatchMapping(value="/misps/{mispId}")
 	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(@RequestBody RequestWrapper<MISPStatusUpdateRequestDto> mispStatusUpdateRequestDto,
@@ -198,6 +205,7 @@ public class MispController {
 	 * @param mispId this value coming as path variable.
 	 * @return misplKeyStatusUpdateResponseDto this class contains all the response fields.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@PutMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMISPlKeyStatus(@RequestBody @Valid RequestWrapper<MISPlKeyStatusUpdateRequestDto> misplKeyStatusUpdateRequestDto,
@@ -219,6 +227,7 @@ public class MispController {
 	 * </br>
 	 * @return MISPGroupResponseDto  list of misps
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps")
 	public ResponseWrapper<List<MISPDetailsDto>> getMisps(){
@@ -236,6 +245,7 @@ public class MispController {
 	 * @param mispId this value coming as path variable.
 	 * @return mispEntity specific misp details.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/mispId/{mispId}")
 	public ResponseWrapper<MISPDetailsDto> getMisp(@PathVariable String mispId){
@@ -255,6 +265,7 @@ public class MispController {
 	 * @param orgName
 	 * @return list of misp's which are starts with given name.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value ="/misps/name/{orgName}")
 	public ResponseWrapper<List<MISPDetailsDto>> getMispsByOrg(@PathVariable String orgName ){
@@ -276,6 +287,7 @@ public class MispController {
 	 * @param mispId
 	 * @return misp license details.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLiceneseDto> downloadLicenseKey(@PathVariable @Valid String mispId){

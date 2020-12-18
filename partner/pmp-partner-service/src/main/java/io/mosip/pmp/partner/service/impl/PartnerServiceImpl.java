@@ -116,7 +116,6 @@ import io.mosip.pmp.partner.util.SearchHelper;
 
 /**
  * @author sanjeev.shrivastava
- * @author Nagarjuna
  * @since 1.2.0
  *
  */
