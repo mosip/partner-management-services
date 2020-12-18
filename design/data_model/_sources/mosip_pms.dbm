@@ -145,7 +145,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MISP License: License key issued to MISP, using which an individual's authentication request that is initiated from partners are authenticated.]]></comment>
-	<position x="40" y="480"/>
+	<position x="100" y="480"/>
 	<column name="misp_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[MISP ID: MISP ID, refers to pmp.misp .id]]></comment>
@@ -1031,12 +1031,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<constraint name="fk_mispl_misp" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="pms.misp" table="pms.misp_license">
-	<columns names="misp_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="fk_part_code" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="pms.partner_type" table="pms.partner">
 	<columns names="partner_type_code" ref-type="src-columns"/>
@@ -1096,11 +1090,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="policy_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-
-<relationship name="rel_misp_license_misp" type="relfk"
-	 src-table="pms.misp_license"
-	 dst-table="pms.misp" reference-fk="fk_mispl_misp"
-	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_partner_partner_type" type="relfk"
 	 src-table="pms.partner"
