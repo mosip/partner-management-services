@@ -29,6 +29,7 @@ import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
 import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.exception.ValidationException;
+import io.mosip.pmp.misp.exception.MISPServiceException;
 import io.mosip.pmp.partner.constant.PartnerInputExceptionConstant;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
@@ -185,6 +186,19 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(APIKeyReqIdStatusInProgressException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final APIKeyReqIdStatusInProgressException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setErrors(errorResponse);
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(MISPServiceException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
+			final HttpServletRequest httpServletRequest, final MISPServiceException exception) {
 		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());

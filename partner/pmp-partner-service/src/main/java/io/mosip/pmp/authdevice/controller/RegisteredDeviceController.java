@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,11 +77,6 @@ public class RegisteredDeviceController {
 		}
 		return response;
 	}
-
-	@GetMapping
-	public void getRegisteredDeviceDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		
-	}
 	
 	@ResponseFilter
 	@PostMapping("/search")
@@ -97,10 +91,5 @@ public class RegisteredDeviceController {
 		responseWrapper.setResponse(registeredDeviceService.searchRegisteredDevice(RegisteredDevice.class, request.getRequest()));
 		return responseWrapper;
 	}
-	
-	
-
-
-
 }
 

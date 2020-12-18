@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +28,6 @@ import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.service.FTPChipDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
@@ -243,9 +241,4 @@ public class FTPChipDetailController {
 				"AUT-007");
 		return response;
     }
-	
-	@GetMapping
-	public void getFTPChipDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		
-	}
 }
