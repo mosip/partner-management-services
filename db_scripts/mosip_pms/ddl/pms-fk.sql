@@ -19,12 +19,6 @@ REFERENCES pms.policy_group (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: fk_mispl_misp | type: CONSTRAINT --
--- ALTER TABLE pms.misp_license DROP CONSTRAINT IF EXISTS fk_mispl_misp CASCADE;
-ALTER TABLE pms.misp_license ADD CONSTRAINT fk_mispl_misp FOREIGN KEY (misp_id)
-REFERENCES pms.misp (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
 
 -- object: fk_part_code | type: CONSTRAINT --
 -- ALTER TABLE pms.partner DROP CONSTRAINT IF EXISTS fk_part_code CASCADE;
