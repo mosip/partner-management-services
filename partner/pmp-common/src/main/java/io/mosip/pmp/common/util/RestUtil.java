@@ -54,12 +54,12 @@ public class RestUtil {
 	private static final String AUTHORIZATION = "Authorization=";
 
 	@SuppressWarnings("unchecked")
-	public <T> T postApi(String apiHostIpPort, List<String> pathsegments, String queryParamName, String queryParamValue,
+	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
 			MediaType mediaType, Object requestType, Class<?> responseClass) {
 		T result = null;
 		UriComponentsBuilder builder = null;
-		if (apiHostIpPort != null)
-			builder = UriComponentsBuilder.fromUriString(apiHostIpPort);
+		if (apiUrl != null)
+			builder = UriComponentsBuilder.fromUriString(apiUrl);
 		if (builder != null) {
 
 			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
@@ -89,7 +89,7 @@ public class RestUtil {
 			} catch (Exception e) {
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiUrl);
 			}
 		}
 		return result;
@@ -98,7 +98,6 @@ public class RestUtil {
 	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
 			Class<?> responseType) {
-
 		String apiHostIpPort = environment.getProperty(apiName);
 		T result = null;
 		UriComponentsBuilder builder = null;
@@ -112,7 +111,6 @@ public class RestUtil {
 						builder.pathSegment(segment);
 					}
 				}
-
 			}
 
 			if (!((queryParamName == null) || (("").equals(queryParamName)))) {
@@ -135,7 +133,7 @@ public class RestUtil {
 			} catch (Exception e) {
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiName);
 			}
 
 		}
@@ -143,12 +141,12 @@ public class RestUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getApi(String apiHostIpPort, Map<String, String> pathsegments, Class<?> responseType) {
+	public <T> T getApi(String apiUrl, Map<String, String> pathsegments, Class<?> responseType) {
 		T result = null;
 		UriComponentsBuilder builder = null;
-		if (apiHostIpPort != null) {
+		if (apiUrl != null) {
 
-			builder = UriComponentsBuilder.fromUriString(apiHostIpPort);
+			builder = UriComponentsBuilder.fromUriString(apiUrl);
 
 			URI urlWithPath = builder.build(pathsegments);
 
@@ -161,7 +159,7 @@ public class RestUtil {
 			} catch (Exception e) {
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiUrl);
 			}
 
 		}
@@ -211,11 +209,9 @@ public class RestUtil {
 		boolean isValid = false;
 
 		if (StringUtils.isNotEmpty(token)) {
-
 			isValid = TokenHandlerUtil.isValidBearerToken(token,
 					environment.getProperty("pms.cert.service.token.request.issuerUrl"),
 					environment.getProperty("pms.cert.service.token.request.clientId"));
-
 		}
 		if (!isValid) {
 			TokenRequestDTO<SecretKeyRequest> tokenRequestDTO = new TokenRequestDTO<SecretKeyRequest>();
@@ -227,7 +223,7 @@ public class RestUtil {
 
 			Gson gson = new Gson();
 			HttpClient httpClient = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost(environment.getProperty("token.request.issuerUrl"));
+			HttpPost post = new HttpPost(environment.getProperty("pms.cert.service.token.request.issuerUrl"));
 			try {
 				StringEntity postingString = new StringEntity(gson.toJson(tokenRequestDTO));
 				post.setEntity(postingString);

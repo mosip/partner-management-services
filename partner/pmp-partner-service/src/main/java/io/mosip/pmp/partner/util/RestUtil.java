@@ -206,12 +206,9 @@ public class RestUtil {
 		boolean isValid = false;
 
 		if (StringUtils.isNotEmpty(token)) {
-
 			isValid = TokenHandlerUtil.isValidBearerToken(token,
 					environment.getProperty("pms.cert.service.token.request.issuerUrl"),
 					environment.getProperty("pms.cert.service.token.request.clientId"));
-
-
 		}
 		if (!isValid) {
 			TokenRequestDTO<SecretKeyRequest> tokenRequestDTO = new TokenRequestDTO<SecretKeyRequest>();
@@ -223,7 +220,7 @@ public class RestUtil {
 
 			Gson gson = new Gson();
 			HttpClient httpClient = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost(environment.getProperty("token.request.issuerUrl"));
+			HttpPost post = new HttpPost(environment.getProperty("pms.cert.service.token.request.issuerUrl"));
 			try {
 				StringEntity postingString = new StringEntity(gson.toJson(tokenRequestDTO));
 				post.setEntity(postingString);
