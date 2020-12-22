@@ -37,8 +37,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.dto.Type;
 import io.mosip.pmp.common.entity.AuthPolicy;
 import io.mosip.pmp.common.entity.AuthPolicyH;
@@ -847,9 +849,17 @@ public class PolicyManagementService {
 		return pageDto;
 	}
 	
-	public PageResponseDto<SearchAuthPolicy> searchPolicy(SearchDto dto) {
+	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> partners = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
+		List<SearchFilter> filters = new ArrayList<>();
+		SearchFilter authtypeSearch = new SearchFilter();
+		authtypeSearch.setColumnName("policyType");
+		authtypeSearch.setValue(dto.getPolicyType());
+		authtypeSearch.setType("equals");
+		filters.addAll(dto.getFilters());
+		filters.add(authtypeSearch);
+		dto.setFilters(filters);
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
