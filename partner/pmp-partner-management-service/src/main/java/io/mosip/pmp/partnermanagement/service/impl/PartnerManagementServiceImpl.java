@@ -450,7 +450,13 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
 		}
 		Optional<MISPEntity> mispFromDb = mispRepository.findById(licenseKeyresponse.getMisp_id());
-		if (!mispFromDb.get().getIsActive()) {
+		if(mispFromDb.isEmpty()) {
+			Optional<Partner> mispPartner = partnerRepository.findById(licenseKeyresponse.getMisp_id());
+			if(!mispPartner.get().getIsActive()) {
+				throw new PartnerValidationException(PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorCode(),
+						PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());				
+			}
+		}else if (!mispFromDb.get().getIsActive()) {
 			throw new PartnerValidationException(PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorCode(),
 					PartnerValidationsConstants.MISP_IS_BLOCKED.getErrorMessage());
 		}

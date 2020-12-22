@@ -3,11 +3,8 @@ package io.mosip.pmp.partner.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -20,12 +17,6 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.pmp.authdevice.dto.DeviceData;
-import io.mosip.pmp.authdevice.dto.DigitalId;
-import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
-import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.entity.RegisteredDevice;
-import io.mosip.pmp.partner.entity.Partner;
 
 
 /**

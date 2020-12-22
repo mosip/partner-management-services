@@ -2,9 +2,6 @@ package io.mosip.pmp.authdevice.dto;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-
 import lombok.Data;
 
 @Data

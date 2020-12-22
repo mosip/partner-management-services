@@ -16,6 +16,9 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,7 @@ import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
@@ -78,6 +82,8 @@ import io.mosip.pmp.partner.entity.PartnerContact;
 import io.mosip.pmp.partner.entity.PartnerH;
 import io.mosip.pmp.partner.entity.PartnerHPK;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialType;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialTypePK;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.entity.PolicyGroup;
@@ -96,6 +102,7 @@ import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
 import io.mosip.pmp.partner.repository.PartnerContactRepository;
 import io.mosip.pmp.partner.repository.PartnerHRepository;
+import io.mosip.pmp.partner.repository.PartnerPolicyCredentialTypeRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
@@ -109,7 +116,6 @@ import io.mosip.pmp.partner.util.SearchHelper;
 
 /**
  * @author sanjeev.shrivastava
- * @author Nagarjuna
  * @since 1.2.0
  *
  */
@@ -139,7 +145,7 @@ public class PartnerServiceImpl implements PartnerService {
 	PartnerTypeRepository partnerTypeRepository;
 
 	@Autowired
-	PartnerContactRepository partnerContactRepository;
+	PartnerContactRepository partnerContactRepository;	
 
 	@Autowired
 	PartnerHRepository partnerHRepository;
@@ -147,6 +153,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	BiometricExtractorProviderRepository extractorProviderRepository;
 
+	@Autowired
+	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
+	
 	@Autowired
 	RestUtil restUtil;
 
@@ -170,6 +179,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
+	
+	@Value("${pmp.allowed.credential.types}")
+	private String allowedCredentialTypes;
+	
+	@Value("${policy.credential.type.mapping.allowed.partner.types}")
+	private String credentialTypesRequiredPartnerTypes;
 	
 	private static final String ERRORS = "errors";
 
@@ -870,5 +885,128 @@ public class PartnerServiceImpl implements PartnerService {
 		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
+
+	@Override
+	public String mapPartnerPolicyCredentialType(String credentialType,String partnerId,String policyId) {
+		validateCredentialTypes(credentialType);
+		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
+		if (partnerFromDb.isEmpty()) {
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(",")).anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
+			throw new PartnerServiceException(PartnerExceptionConstants.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
+					PartnerExceptionConstants.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
+		if (authPolicy.isEmpty()) {
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorCode(),
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorMessage());
+		}
+		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setCredentialType(credentialType);
+		key.setPartId(partnerId);
+		key.setPolicyId(policyId);
+		entity.setId(key);
+		entity.setCrBy(getUser());
+		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		entity.setIsActive(true);
+		entity.setIsDeleted(false);
+		partnerCredentialTypePolicyRepo.save(entity);		
+		return "Partner, policy and credentialType mapping done successfully.";
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException {
+		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType);
+		if(partnerCredentialTypePolicy == null) {
+			throw new PartnerServiceException(PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorCode(),
+					PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerCredentialTypePolicy.getId().getPolicyId());
+		if (authPolicy.isEmpty()) {
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorCode(),
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorMessage());
+		}
+		
+		return mapPolicyToResponseDto(authPolicy.get(),partnerId,credentialType);
+	}
 	
+	/**
+	 * 
+	 * @param credentialType
+	 */
+	private void validateCredentialTypes(String credentialType) {
+		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
+			throw new PartnerServiceException(PartnerExceptionConstants.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+					PartnerExceptionConstants.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
+		}	
+	}
+	
+	/**
+	 * 
+	 * @param authPolicy
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private PartnerCredentialTypePolicyDto mapPolicyToResponseDto(AuthPolicy authPolicy,String partnerId, String credentialType)
+			throws JsonParseException, JsonMappingException, IOException {
+		PartnerCredentialTypePolicyDto response = new PartnerCredentialTypePolicyDto();
+		response.setPartnerId(partnerId);
+		response.setCredentialType(credentialType);
+		response.setCr_by(authPolicy.getCrBy());
+		response.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
+		response.setIs_Active(authPolicy.getIsActive());
+		response.setPolicyDesc(authPolicy.getDescr());
+		response.setPolicyId(authPolicy.getId());
+		response.setPolicyName(authPolicy.getName());
+		response.setPolicyType(authPolicy.getPolicy_type());
+		response.setPublishDate(authPolicy.getValidFromDate());
+		response.setValidTill(authPolicy.getValidToDate());
+		response.setSchema(authPolicy.getPolicySchema());
+		response.setStatus(authPolicy.getIsActive() == true ? "PUBLISHED" : "DRAFTED");
+		response.setUp_by(authPolicy.getUpdBy());
+		response.setUpd_dtimes(authPolicy.getUpdDtimes());
+		response.setVersion(authPolicy.getVersion());
+		response.setPolicies(getPolicyObject(authPolicy.getPolicyFileId()));
+		return response;
+	}
+	
+	/**
+	 * 
+	 * @param policy
+	 * @return
+	 */
+	private JSONObject getPolicyObject(String policy) {
+		JSONParser parser = new JSONParser();
+		String error = null;
+		try {
+			return ((JSONObject) parser.parse(policy));
+		} catch (ParseException e) {
+			error = e.getMessage();			 
+		}
+		throw new PartnerServiceException(PartnerExceptionConstants.POLICY_PARSING_ERROR.getErrorCode(),
+				PartnerExceptionConstants.POLICY_PARSING_ERROR.getErrorMessage() + error);
+	}
+	
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private LocalDateTime getLocalDateTime(Timestamp date) {
+		if(date!=null) {
+			return date.toLocalDateTime();
+		}
+		return LocalDateTime.now();
+	}
 }

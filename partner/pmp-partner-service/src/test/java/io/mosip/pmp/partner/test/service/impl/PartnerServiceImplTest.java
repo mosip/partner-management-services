@@ -3,6 +3,7 @@ package io.mosip.pmp.partner.test.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
@@ -39,6 +43,8 @@ import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.BiometricExtractorProvider;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialType;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialTypePK;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.entity.PolicyGroup;
@@ -52,6 +58,7 @@ import io.mosip.pmp.partner.exception.PartnerTypeDoesNotExistException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
+import io.mosip.pmp.partner.repository.PartnerPolicyCredentialTypeRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
@@ -85,7 +92,9 @@ public class PartnerServiceImplTest {
 	@Mock
 	PartnerTypeRepository partnerTypeRepository;
 	@Mock 
-	BiometricExtractorProviderRepository extractorProviderRepository; 
+	BiometricExtractorProviderRepository extractorProviderRepository;	
+	@Mock
+	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	
 	@Before
 	public void setUp() {
@@ -97,6 +106,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
 
 	}
 	
@@ -590,6 +600,92 @@ public class PartnerServiceImplTest {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	
+	@Test
+	public void mapPartnerPolicyCredentialType_001() {		
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345");
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void mapPartnerPolicyCredentialType_002() {		
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.mapPartnerPolicyCredentialType("uin", "12345", "12345");
+	}
+	
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void mapPartnerPolicyCredentialType_003() {		
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "1234578", "12345");
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void mapPartnerPolicyCredentialType_004() {		
+		Optional<Partner> partner = Optional.of(createPartner(true));		
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void mapPartnerPolicyCredentialType_005() {		
+		Optional<Partner> partner = Optional.of(createPartner(true));	
+		partner.get().setPartnerTypeCode("Auth_Partner");
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
+	}
+	
+	@Test
+	public void getPartnerCredentialTypePolicy_001() throws JsonParseException, JsonMappingException, IOException {		
+		PartnerPolicyCredentialType response = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setCredentialType("euin");
+		key.setPartId("12345");
+		key.setPolicyId("12345");
+		response.setId(key);
+		response.setCrBy("system");
+		response.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType("12345", "euin")).thenReturn(response);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void getPartnerCredentialTypePolicy_002() throws JsonParseException, JsonMappingException, IOException {		
+		PartnerPolicyCredentialType response = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setCredentialType("euin");
+		key.setPartId("12345");
+		key.setPolicyId("12345");
+		response.setId(key);
+		response.setCrBy("system");
+		response.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType("12345", "euin")).thenReturn(null);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void getPartnerCredentialTypePolicy_003() throws JsonParseException, JsonMappingException, IOException {		
+		PartnerPolicyCredentialType response = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setCredentialType("euin");
+		key.setPartId("12345");
+		key.setPolicyId("12345");
+		response.setId(key);
+		response.setCrBy("system");
+		response.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType("12345", "euin")).thenReturn(response);
+		Mockito.when(authPolicyRepository.findById("1234578")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
+	}
+	
 	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
 		PartnerAPIKeyRequest req = new PartnerAPIKeyRequest();
 		req.setPolicyName("Banking");
@@ -612,7 +708,10 @@ public class PartnerServiceImplTest {
 
 	private AuthPolicy createAuthPolicy() {
 		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("12345");
 		authPolicy.setName("name");
+		authPolicy.setIsActive(true);
+		authPolicy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
 		return authPolicy;
 
 	}

@@ -26,6 +26,7 @@ import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
+import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.entity.PartnerType;
@@ -167,9 +168,27 @@ public interface PartnerService {
      */
     public ExtractorsDto getBiometricExtractors(String partnerId, String policyId);
     
+    /**
+     * 
+     * @param dto
+     * @return
+     */
 	public PageResponseDto<PartnerSearchDto> searchPartner(SearchDto dto);
 
+	/**
+	 * 
+	 * @param dto
+	 * @return
+	 */
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto);
-
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String mapPartnerPolicyCredentialType(String credentialType,String partnerId,String policyId);
+	
+	
+	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException;
 	
 }

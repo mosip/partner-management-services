@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Aug-2020             Sadanandegowda DM   Update for the partner managment restructure
+-- Dec-2020             Sadanandegowda DM   Update for the partner_policy_credential_type
 -- ------------------------------------------------------------------------------------------
 
 -- object: fk_apol_polg | type: CONSTRAINT --
@@ -18,12 +19,6 @@ REFERENCES pms.policy_group (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: fk_mispl_misp | type: CONSTRAINT --
--- ALTER TABLE pms.misp_license DROP CONSTRAINT IF EXISTS fk_mispl_misp CASCADE;
-ALTER TABLE pms.misp_license ADD CONSTRAINT fk_mispl_misp FOREIGN KEY (misp_id)
-REFERENCES pms.misp (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
 
 -- object: fk_part_code | type: CONSTRAINT --
 -- ALTER TABLE pms.partner DROP CONSTRAINT IF EXISTS fk_part_code CASCADE;
@@ -74,5 +69,17 @@ REFERENCES pms.auth_policy (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
+-- object: fk_part_id | type: CONSTRAINT --
+-- ALTER TABLE pms.partner_policy_credential_type DROP CONSTRAINT IF EXISTS fk_part_id CASCADE;
+ALTER TABLE pms.partner_policy_credential_type ADD CONSTRAINT fk_part_id FOREIGN KEY (part_id)
+REFERENCES pms.partner (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
 
+-- object: fk_pol_id | type: CONSTRAINT --
+-- ALTER TABLE pms.partner_policy_credential_type DROP CONSTRAINT IF EXISTS fk_pol_id CASCADE;
+ALTER TABLE pms.partner_policy_credential_type ADD CONSTRAINT fk_pol_id FOREIGN KEY (policy_id)
+REFERENCES pms.auth_policy (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
 
