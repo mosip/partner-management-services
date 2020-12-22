@@ -1,6 +1,7 @@
 package io.mosip.pmp.keycloak.impl;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import io.mosip.kernel.core.util.DateUtils;
 
 /**
  * RestInterceptor for getting admin token
@@ -63,7 +69,18 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 			throws IOException {
 		AccessTokenResponse accessTokenResponse = null;
-		accessTokenResponse = getAdminToken(false, null);
+		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
+			boolean accessTokenExpired = isExpired(accessTokenResponse.getAccess_token());
+			boolean refreshTokenExpired = isExpired(accessTokenResponse.getRefresh_token());
+			LOGGER.info("access token expired: " + accessTokenExpired + " ,refresh token expired: " + refreshTokenExpired);
+			if (refreshTokenExpired){
+				accessTokenResponse = getAdminToken(false, null);
+			} else if (accessTokenExpired) {
+				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
+			}
+		}else {
+			accessTokenResponse = getAdminToken(false, null);
+		}
 		memoryCache.put("adminToken", accessTokenResponse);
 		request.getHeaders().add("Authorization", "Bearer " + accessTokenResponse.getAccess_token());
 		return execution.execute(request, body);
@@ -110,5 +127,19 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		map.add("refresh_token", refreshToken);
 		map.add("client_id", adminClientID);
 		return map;
+	}
+	
+	/**
+	 * Returns true if token if expired else false
+	 * 
+	 * @param token the token
+	 * @return true if token if expired else false
+	 */
+	public boolean isExpired(String token) {
+		DecodedJWT decodedJWT = JWT.decode(token);
+		long expiryEpochTime = decodedJWT.getClaim("exp").asLong();
+		long currentEpoch = DateUtils.getUTCCurrentDateTime().toEpochSecond(ZoneOffset.UTC);
+		LOGGER.debug("invoked isExpired token " + expiryEpochTime + " currentEpoch " + currentEpoch);
+		return currentEpoch > expiryEpochTime;
 	}
 }
