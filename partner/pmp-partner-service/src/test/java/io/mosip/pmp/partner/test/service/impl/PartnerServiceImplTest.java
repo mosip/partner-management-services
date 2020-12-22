@@ -51,10 +51,10 @@ import io.mosip.pmp.partner.entity.PolicyGroup;
 import io.mosip.pmp.partner.exception.APIKeyReqIdStatusInProgressException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyIsNotCreatedException;
 import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
-import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
 import io.mosip.pmp.partner.exception.PartnerServiceException;
+import io.mosip.pmp.partner.exception.PartnerTypeDoesNotExistException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
@@ -199,7 +199,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.savePartner(partnerRequest);
 	}
 
-	@Test(expected = PartnerAlreadyRegisteredException.class)	
+	@Test(expected = PartnerTypeDoesNotExistException.class)	
 	public void throwExceptionWhenPartnerNameAlreadyRegisteredTest() {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();

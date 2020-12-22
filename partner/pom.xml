@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pmp</groupId>
 	<artifactId>pmp-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.3-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
@@ -58,8 +58,8 @@
 	</repositories>
 
 	<properties>
-		<kernel.version>1.1.3-SNAPSHOT</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.1.3-SNAPSHOT</kernel-dataaccess-hibernate.version>
+		<kernel.version>1.2.0-SNAPSHOT</kernel.version>		
+		<kernel-dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel-dataaccess-hibernate.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -68,7 +68,7 @@
 		<junit.version>4.12</junit.version>
 		<lombok.version>1.18.8</lombok.version>
 		<doclint>none</doclint>
-		<kernel-websubclient-api.version>1.1.3-SNAPSHOT</kernel-websubclient-api.version>
+		<kernel-websubclient-api.version>1.2.0-SNAPSHOT</kernel-websubclient-api.version>
 	</properties>
 	
 	<modules>
@@ -138,7 +138,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>1.1.3-SNAPSHOT</version>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	

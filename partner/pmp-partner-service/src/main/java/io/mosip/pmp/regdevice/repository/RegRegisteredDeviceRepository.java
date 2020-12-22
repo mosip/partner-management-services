@@ -9,6 +9,8 @@ import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 public interface RegRegisteredDeviceRepository extends JpaRepository<RegRegisteredDevice, String> {
 
 	RegRegisteredDevice findByDeviceDetailIdAndSerialNoAndIsActiveIsTrue(String deviceDetailId, String serialNo);
+	
+	RegRegisteredDevice findByDeviceDetailIdAndSerialNo(String deviceDetailId, String serialNo);
 
 	RegRegisteredDevice findByCodeAndIsActiveIsTrue(String deviceCode);
 	

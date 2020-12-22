@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.1.3-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 		
-	<version>1.1.3-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<artifactId>pmp-partner-management-service</artifactId>
 	<name>pmp-partner-management-service</name>
 	
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>io.mosip.pmp</groupId>
 			<artifactId>pmp-common</artifactId>
-			<version>1.1.3-SNAPSHOT</version>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
