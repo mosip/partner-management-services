@@ -231,8 +231,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		try {
 			signatureRequestDto.setApplicationId(signAppId);
 			signatureRequestDto.setDataToSign(encodedResponse);
-			signatureRequestDto.setIncludeCertHash(true);
-			signatureRequestDto.setIncludeCertificate(false);
+			signatureRequestDto.setIncludeCertHash(false);
+			signatureRequestDto.setIncludeCertificate(true);
 			signatureRequestDto.setIncludePayload(true);
 			signatureRequestDto.setReferenceId(signRefId);
 
