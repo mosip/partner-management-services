@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
-import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
@@ -142,11 +140,6 @@ public class SecureBiometricInterfaceController {
 				"AUT-007");
 
 		return responseWrapper;
-	}
-	
-	@GetMapping
-	public void getSecureBiometricInterfaceDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		
 	}
 	
 	@ResponseFilter

@@ -211,15 +211,7 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
-		Partner partnerFromDb = partnerRepository.findByName(request.getOrganizationName());
-		if (partnerFromDb != null) {
-			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
-			throw new PartnerAlreadyRegisteredException(
-					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
-					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
-
-		}
-		partnerFromDb = findPartnerByEmail(request.getEmailId());
+		Partner partnerFromDb = findPartnerByEmail(request.getEmailId());
 		if (partnerFromDb != null) {
 			LOGGER.error(request.getEmailId() + " : this is duplicate email");
 			throw new EmailIdAlreadyExistException(
@@ -353,7 +345,6 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-
 		Partner partner = partnerFromDb.get();
 		LocalDateTime now = LocalDateTime.now();
 		partner.setAddress(request.getAddress());
