@@ -3,6 +3,8 @@ package io.mosip.pmp.regdevice.service.impl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +54,7 @@ import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
+import io.mosip.pmp.partner.exception.ErrorResponse;
 import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.RestUtil;
 import io.mosip.pmp.partner.util.SearchHelper;
@@ -141,7 +144,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 
 		try {
 			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
-			validate(deviceData);
+			validate(deviceData);			
 			String deviceInfoPayLoad = getPayLoad(deviceData.getDeviceInfo());
 			deviceInfo = mapper.readValue(CryptoUtil.decodeBase64(deviceInfoPayLoad), DeviceInfo.class);
 			validate(deviceData, deviceInfo);
@@ -233,6 +236,12 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 					String.class);
 			ValidateResponseWrapper<?> responseObject;
 			responseObject = mapper.readValue(response, ValidateResponseWrapper.class);
+			if(responseObject.getResponse() == null && responseObject.getErrors() != null) {
+				for(ErrorResponse error : responseObject.getErrors()) {
+					serviceErrors.add(new ServiceError(error.getErrorCode(),error.getMessage()));
+				}
+				throw new DeviceValidationException(serviceErrors);
+			}
 			signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
 					JWTSignatureResponseDto.class);
 		} catch (IOException e) {			
@@ -398,29 +407,29 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 						RegisteredDeviceErrorCode.TIMESTAMP_CANNOTBE_NULL.getErrorMessage()));	
 
 			}else {
-//				LocalDateTime timeStamp = deviceInfo.getTimestamp();
-//				String prefix = registerDeviceTimeStamp.substring(0, 1);
-//				String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
-//				boolean isBetween = timeStamp
-//						.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
-//						&& timeStamp.isBefore(
-//								LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
-//				if (prefix.equals("+")) {
-//					if (!isBetween) {
-//						errors.add(new ServiceError(
-//								RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
-//								String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
-//										timeString)));
-//					}
-//				} else if (prefix.equals("-")) {
-//					if (LocalDateTime.now(ZoneOffset.UTC)
-//							.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
-//						errors.add(new ServiceError(
-//								RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
-//								String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
-//										timeString)));
-//					}
-//				}
+				LocalDateTime timeStamp = deviceInfo.getTimestamp();
+				String prefix = registerDeviceTimeStamp.substring(0, 1);
+				String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
+				boolean isBetween = timeStamp
+						.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
+						&& timeStamp.isBefore(
+								LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
+				if (prefix.equals("+")) {
+					if (!isBetween) {
+						errors.add(new ServiceError(
+								RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
+								String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
+										timeString)));
+					}
+				} else if (prefix.equals("-")) {
+					if (LocalDateTime.now(ZoneOffset.UTC)
+							.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+						errors.add(new ServiceError(
+								RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
+								String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
+										timeString)));
+					}
+				}
 			}
 		}
 		Set<ConstraintViolation<DeviceInfo>> deviceInfoSet = validator.validate(deviceInfo);
