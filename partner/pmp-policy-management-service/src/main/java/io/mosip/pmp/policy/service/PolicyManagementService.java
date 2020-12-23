@@ -879,11 +879,14 @@ public class PolicyManagementService {
 	 */
 	public KeyValuePair<String, Object> getValueForKey(String key) {
 		JSONParser parser = new JSONParser();
-		Object value = null;
+		Object value = environment.getProperty(key);
+		if(value == null) {
+			return new KeyValuePair<String,Object>(key, value);	
+		}
 		try {
 			value = (JSONObject) parser.parse(environment.getProperty(key));
 		} catch (ParseException e) {
-			value = (Object)environment.getProperty(key);
+			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
 		}
 		return new KeyValuePair<String,Object>(key, value);
 	}
