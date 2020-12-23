@@ -53,6 +53,7 @@ import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -869,5 +870,21 @@ public class PolicyManagementService {
 		pageDto.setToRecord(page.getContent().size());
 		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
+	}
+	
+	/**
+	 * This method returns value based on the key from configuration.
+	 * @param key
+	 * @return
+	 */
+	public KeyValuePair<String, Object> getValueForKey(String key) {
+		JSONParser parser = new JSONParser();
+		Object value = null;
+		try {
+			value = (JSONObject) parser.parse(environment.getProperty(key));
+		} catch (ParseException e) {
+			value = (Object)environment.getProperty(key);
+		}
+		return new KeyValuePair<String,Object>(key, value);
 	}
 }
