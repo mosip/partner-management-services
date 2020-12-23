@@ -227,7 +227,7 @@ public class RestUtil {
 
 			Gson gson = new Gson();
 			HttpClient httpClient = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost(environment.getProperty("token.request.issuerUrl"));
+			HttpPost post = new HttpPost(environment.getProperty("pms.cert.service.token.request.issuerUrl"));
 			try {
 				StringEntity postingString = new StringEntity(gson.toJson(tokenRequestDTO));
 				post.setEntity(postingString);
