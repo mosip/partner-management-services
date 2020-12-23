@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
@@ -879,15 +880,18 @@ public class PolicyManagementService {
 	 */
 	public KeyValuePair<String, Object> getValueForKey(String key) {
 		JSONParser parser = new JSONParser();
-		Object value = environment.getProperty(key);
-		if(value == null) {
-			return new KeyValuePair<String,Object>(key, value);	
+		String  configValue = environment.getProperty(key);
+		if(configValue == null) {
+			return new KeyValuePair<String,Object>(key, configValue);	
+		}
+		if(StringUtils.isNumeric(configValue)) {
+			return new KeyValuePair<String,Object>(key, configValue);
 		}
 		try {
-			value = (JSONObject) parser.parse(environment.getProperty(key));
+			return new KeyValuePair<String,Object>(key,(JSONObject) parser.parse(configValue));
 		} catch (ParseException e) {
 			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
 		}
-		return new KeyValuePair<String,Object>(key, value);
+		return new KeyValuePair<String,Object>(key, configValue);
 	}
 }
