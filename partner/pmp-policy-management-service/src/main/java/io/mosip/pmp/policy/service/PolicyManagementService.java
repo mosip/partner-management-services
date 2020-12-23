@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
@@ -53,6 +54,7 @@ import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -869,5 +871,27 @@ public class PolicyManagementService {
 		pageDto.setToRecord(page.getContent().size());
 		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
+	}
+	
+	/**
+	 * This method returns value based on the key from configuration.
+	 * @param key
+	 * @return
+	 */
+	public KeyValuePair<String, Object> getValueForKey(String key) {
+		JSONParser parser = new JSONParser();
+		String  configValue = environment.getProperty(key);
+		if(configValue == null) {
+			return new KeyValuePair<String,Object>(key, configValue);	
+		}
+		if(StringUtils.isNumeric(configValue)) {
+			return new KeyValuePair<String,Object>(key, configValue);
+		}
+		try {
+			return new KeyValuePair<String,Object>(key,(JSONObject) parser.parse(configValue));
+		} catch (ParseException e) {
+			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
+		}
+		return new KeyValuePair<String,Object>(key, configValue);
 	}
 }
