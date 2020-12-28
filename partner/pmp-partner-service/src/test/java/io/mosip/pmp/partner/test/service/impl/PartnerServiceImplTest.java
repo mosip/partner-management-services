@@ -65,6 +65,7 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
+import io.mosip.pmp.partner.util.WebSubPublisher;
 
 /**
  * @author sanjeev.shrivastava
@@ -95,6 +96,8 @@ public class PartnerServiceImplTest {
 	BiometricExtractorProviderRepository extractorProviderRepository;	
 	@Mock
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
+	@Mock
+	private WebSubPublisher webSubPublisher;
 	
 	@Before
 	public void setUp() {
@@ -107,7 +110,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
-
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
 	
 	@Test

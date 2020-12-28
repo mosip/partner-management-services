@@ -41,10 +41,12 @@ import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.authdevice.util.dto.Type;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.constant.EmailIdExceptionConstant;
+import io.mosip.pmp.partner.constant.EventType;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyReqDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
@@ -113,6 +115,7 @@ import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
 import io.mosip.pmp.partner.util.SearchHelper;
+import io.mosip.pmp.partner.util.WebSubPublisher;
 
 /**
  * @author sanjeev.shrivastava
@@ -167,6 +170,9 @@ public class PartnerServiceImpl implements PartnerService {
 	
 	@Autowired
 	SearchHelper partnerSearchHelper;
+	
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 
 	@Autowired
 	private ObjectMapper mapper;
@@ -674,7 +680,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-
+		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
 		return responseObject;
 	}
 
@@ -716,6 +722,7 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		partnerRepository.save(updateObject);
+		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
 	}
 
@@ -1018,4 +1025,29 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		return LocalDateTime.now();
 	}
+	
+	/**
+	 * 
+	 * @param mispLicenseKey
+	 */
+	private void notify(String certData,String partnerDomain) {
+		Type type = new io.mosip.pmp.authdevice.util.dto.Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("certificateData", certData);
+		data.put("partnerDomain", partnerDomain);
+		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED,data,type);
+	}
+	
+	private void notify(String partnerId) {
+		Type type = new io.mosip.pmp.authdevice.util.dto.Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("partnerId", partnerId);
+		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
+	}
 }
+
+//String updatedParam = (isApiKeyUpdated == true) ? "apiKey" : "";
