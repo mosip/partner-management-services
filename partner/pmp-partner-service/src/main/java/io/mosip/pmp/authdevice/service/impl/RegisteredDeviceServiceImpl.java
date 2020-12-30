@@ -451,6 +451,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				if (!EmptyCheckUtils.isNullEmpty(authN)) {
 					deviceRegisterEntity.setUpdBy(authN.getName());
 				}
+				deviceRegisterEntity.setActive(false);
 				deviceRegisterEntity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 				deviceRegisterHistory.setCode(deviceRegisterEntity.getCode());
 				deviceRegisterHistory.setEffectDateTime(deviceRegisterEntity.getUpdDtimes());
