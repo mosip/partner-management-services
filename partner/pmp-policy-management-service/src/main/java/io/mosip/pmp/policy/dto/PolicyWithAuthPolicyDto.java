@@ -6,9 +6,7 @@ import io.mosip.pmp.common.entity.PolicyGroup;
 import lombok.Data;
 
 /**
- * <p>This class contains objects of policyCreateResponseDto @link {@link PolicyCreateResponseDto}</p>
- * <p> list of auth policies {@link PolicyAttributesDto}.</p>
- * 
+ *  
  * @author Nagarjuna Kuchi
  *
  */
