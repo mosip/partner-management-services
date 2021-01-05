@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.pmp.common.constant.ValidationErrorCode;
 import io.mosip.pmp.common.dto.FilterDto;
 import io.mosip.pmp.common.exception.ValidationException;
 
@@ -61,8 +62,8 @@ public class FilterColumnValidator {
 				Optional<Field> renField = fieldList.stream()
 						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName())).findFirst();
 				if (!renField.isPresent()) {
-					//errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorCode(), String.format(
-						//	ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorMessage(), filter.getColumnName())));
+					errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorCode(), String.format(
+							ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorMessage(), filter.getColumnName())));
 				}
 //				if (!renField.isPresent()) {
 //					errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST_FILTER.getErrorCode(),
@@ -70,17 +71,17 @@ public class FilterColumnValidator {
 //									filter.getColumnName())));
 //				}
 				if (!containsFilterColumn(field, filter.getType())) {
-					//errors.add(new ServiceError(ValidationErrorCode.FILTER_COLUMN_NOT_SUPPORTED.getErrorCode(),
-						//	String.format(ValidationErrorCode.FILTER_COLUMN_NOT_SUPPORTED.getErrorMessage(),
-								//	filter.getType())));
+					errors.add(new ServiceError(ValidationErrorCode.FILTER_COLUMN_NOT_SUPPORTED.getErrorCode(),
+							String.format(ValidationErrorCode.FILTER_COLUMN_NOT_SUPPORTED.getErrorMessage(),
+									filter.getType())));
 				}
 			} else {
-				//errors.add(new ServiceError(ValidationErrorCode.NO_FILTER_COLUMN_FOUND.getErrorCode(),
-					//	String.format(ValidationErrorCode.NO_FILTER_COLUMN_FOUND.getErrorMessage(), filter.getType())));
+				errors.add(new ServiceError(ValidationErrorCode.NO_FILTER_COLUMN_FOUND.getErrorCode(),
+						String.format(ValidationErrorCode.NO_FILTER_COLUMN_FOUND.getErrorMessage(), filter.getType())));
 			}
 		} catch (NoSuchFieldException | SecurityException e) {
-			//errors.add(new ServiceError(ValidationErrorCode.FILTER_COLUMN_DOESNT_EXIST.getErrorCode(),
-				//	String.format(ValidationErrorCode.FILTER_COLUMN_DOESNT_EXIST.getErrorMessage(), filter.getType())));
+			errors.add(new ServiceError(ValidationErrorCode.FILTER_COLUMN_DOESNT_EXIST.getErrorCode(),
+					String.format(ValidationErrorCode.FILTER_COLUMN_DOESNT_EXIST.getErrorMessage(), filter.getType())));
 		}
 	}
 
