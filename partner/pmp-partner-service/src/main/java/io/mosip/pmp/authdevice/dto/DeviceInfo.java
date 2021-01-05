@@ -1,6 +1,7 @@
 package io.mosip.pmp.authdevice.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,7 +14,7 @@ import lombok.Data;
 @Data
 public class DeviceInfo {
 
-	private String deviceSubId;
+	private List<String> deviceSubId;
 
 	@ValidCertificateLevel(message = "Invalid Certification level received")
 	private String certification;

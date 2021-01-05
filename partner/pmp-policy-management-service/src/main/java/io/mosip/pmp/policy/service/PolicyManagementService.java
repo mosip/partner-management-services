@@ -35,10 +35,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.dto.Type;
 import io.mosip.pmp.common.entity.AuthPolicy;
 import io.mosip.pmp.common.entity.AuthPolicyH;
@@ -51,6 +54,7 @@ import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -847,9 +851,17 @@ public class PolicyManagementService {
 		return pageDto;
 	}
 	
-	public PageResponseDto<SearchAuthPolicy> searchPolicy(SearchDto dto) {
+	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> partners = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
+		List<SearchFilter> filters = new ArrayList<>();
+		SearchFilter authtypeSearch = new SearchFilter();
+		authtypeSearch.setColumnName("policyType");
+		authtypeSearch.setValue(dto.getPolicyType());
+		authtypeSearch.setType("equals");
+		filters.addAll(dto.getFilters());
+		filters.add(authtypeSearch);
+		dto.setFilters(filters);
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
@@ -859,5 +871,27 @@ public class PolicyManagementService {
 		pageDto.setToRecord(page.getContent().size());
 		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
+	}
+	
+	/**
+	 * This method returns value based on the key from configuration.
+	 * @param key
+	 * @return
+	 */
+	public KeyValuePair<String, Object> getValueForKey(String key) {
+		JSONParser parser = new JSONParser();
+		String  configValue = environment.getProperty(key);
+		if(configValue == null) {
+			return new KeyValuePair<String,Object>(key, configValue);	
+		}
+		if(StringUtils.isNumeric(configValue)) {
+			return new KeyValuePair<String,Object>(key, configValue);
+		}
+		try {
+			return new KeyValuePair<String,Object>(key,(JSONObject) parser.parse(configValue));
+		} catch (ParseException e) {
+			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
+		}
+		return new KeyValuePair<String,Object>(key, configValue);
 	}
 }

@@ -288,7 +288,7 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 			errorResponse.setMessage(serviceError.getMessage());
 			errors.add(errorResponse);
 		}
-		responseError.setId(msg);
+		responseError.setId("io.mosip.devicemanagement");
 		responseError.setVersion(version);
 		responseError.setErrors(errors);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
