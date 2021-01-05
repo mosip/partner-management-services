@@ -33,14 +33,12 @@ import io.mosip.pmp.common.repository.AuthPolicyHRepository;
 import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
-import io.mosip.pmp.policy.dto.FilterDto;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 
@@ -621,27 +619,5 @@ public class PolicyServiceTest {
 			e.printStackTrace();
 		}		
 		return json;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<SourceDto> getSourceAttributes(){
-		List<SourceDto> sourceAttributes = new ArrayList<SourceDto>();
-		SourceDto sourceDto = new SourceDto();
-		sourceDto.setAttribute("fullName");
-		sourceDto.setFilter(getFilterAttributes());
-		sourceAttributes.add(sourceDto);
-		return sourceAttributes;
-	}
-	
-	private List<FilterDto> getFilterAttributes(){
-		List<String> subType = new ArrayList<String>();
-		subType.add("Left IndexFinger");
-		subType.add("Right IndexFinger");
-		List<FilterDto> filterAttributes = new ArrayList<FilterDto>();
-		FilterDto filterDto = new FilterDto();
-		filterDto.setType("Finger");
-		filterDto.setSubType(subType);
-		filterAttributes.add(filterDto);
-		return filterAttributes;
 	}
 }

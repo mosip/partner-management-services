@@ -23,11 +23,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.entity.PolicyGroup;
+import io.mosip.pmp.policy.dto.FilterResponseCodeDto;
 import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -321,4 +323,15 @@ public class PolicyManagementController {
 		responseWrapper.setResponse(policyManagementService.getValueForKey(key));
     	return responseWrapper;
     }
+	
+	@PostMapping("/policyGroup/filtervalues")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	public ResponseWrapper<FilterResponseCodeDto> PolicyGroupFilterValues(
+			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(policyManagementService.policyGroupFilterValues(requestWrapper.getRequest()));
+		return responseWrapper;
+
+	}
+
 }
