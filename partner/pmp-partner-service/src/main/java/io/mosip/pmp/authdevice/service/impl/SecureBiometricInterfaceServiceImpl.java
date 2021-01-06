@@ -20,7 +20,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -271,7 +271,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	@Override
 	public <E> PageResponseDto<SecureBiometricInterfaceCreateDto> searchSecureBiometricInterface(Class<E> entity,
-			SearchDto dto) {
+			DeviceSearchDto dto) {
 		List<SecureBiometricInterfaceCreateDto> partners = new ArrayList<>();
 		PageResponseDto<SecureBiometricInterfaceCreateDto> pageDto = new PageResponseDto<>();
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
