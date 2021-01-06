@@ -24,6 +24,7 @@ import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
@@ -173,7 +174,7 @@ public interface PartnerService {
      * @param dto
      * @return
      */
-	public PageResponseDto<PartnerSearchDto> searchPartner(SearchDto dto);
+	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto);
 
 	/**
 	 * 
