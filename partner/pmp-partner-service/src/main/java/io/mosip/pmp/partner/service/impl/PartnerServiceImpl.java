@@ -40,6 +40,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.SearchFilter;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
@@ -71,6 +72,7 @@ import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
@@ -197,6 +199,8 @@ public class PartnerServiceImpl implements PartnerService {
 	private static final String ERRORMESSAGE = "message";
 
 	private static final String APPROVEDSTATUS = "Approved";
+
+	private static final String ALL = "all";
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -902,12 +906,22 @@ public class PartnerServiceImpl implements PartnerService {
 	private EntityManager entityManager;
 
 	@Override
-	public PageResponseDto<PartnerSearchDto> searchPartner(SearchDto dto) {
-		List<PartnerSearchDto> partners = new ArrayList<>();
-		PageResponseDto<PartnerSearchDto> pageDto = new PageResponseDto<>();
+	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
+		List<PartnerSearchResponseDto> partners = new ArrayList<>();
+		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
+		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter partnerTypeSearch = new SearchFilter();
+			partnerTypeSearch.setColumnName("partnerTypeCode");
+			partnerTypeSearch.setValue(dto.getPartnerType());
+			partnerTypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(partnerTypeSearch);
+			dto.setFilters(filters);
+		}
 		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchDto.class);
+			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 		}
 		pageDto.setData(partners);
 		pageDto.setFromRecord(0);

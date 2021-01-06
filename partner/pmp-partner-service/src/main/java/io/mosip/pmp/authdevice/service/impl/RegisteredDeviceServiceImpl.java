@@ -48,7 +48,7 @@ import io.mosip.pmp.authdevice.dto.JWTSignatureResponseDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.entity.RegisteredDeviceHistory;
@@ -604,7 +604,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, SearchDto dto) {
+	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
 		List<RegisteredDevice> partners=new ArrayList<>();
 		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
