@@ -22,7 +22,7 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.exception.RequestException;
@@ -254,7 +254,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, SearchDto dto) {
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailDto> partners=new ArrayList<>();
 		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
@@ -269,7 +269,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	}
 
 	@Override
-	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, SearchDto dto) {
+	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
 		List<RegistrationSubTypeDto> partners=new ArrayList<>();
 		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);

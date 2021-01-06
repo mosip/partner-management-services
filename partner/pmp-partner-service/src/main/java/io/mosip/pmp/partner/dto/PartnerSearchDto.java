@@ -1,47 +1,18 @@
 package io.mosip.pmp.partner.dto;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
+import io.mosip.pmp.authdevice.dto.SearchDto;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PartnerSearchDto {
+@EqualsAndHashCode(callSuper=true)
+public class PartnerSearchDto extends SearchDto {
 
-	private String id;
-
-	private String address;
-
-	private String contactNo;
-
-	private String crBy;
-
-	private Timestamp crDtimes;
-
-	private Timestamp delDtimes;
-
-	private String emailId;
-
-	private Boolean isActive;
-
-	private Boolean isDeleted;
-
-	private String name;
-
-	private String policyGroupId;
-
-	private String certificateAlias;
-
-	private String partnerTypeCode;
-
-	private String approvalStatus;
-
-	private String updBy;
-
-	private Timestamp updDtimes;
-
-	private String userId;
+	@NotBlank
+	@NotNull
+	private String partnerType;
+	
 }
