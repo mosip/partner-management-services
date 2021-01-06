@@ -148,6 +148,7 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
+	private static final String ALL = "all";
 
 	/** The mapper. */
 	@Autowired
@@ -870,22 +871,20 @@ public class PolicyManagementService {
 		return pageDto;
 	}
 
-	/**
-	 * 
-	 * @param dto
-	 * @return
-	 */
+
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> partners = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
-		List<SearchFilter> filters = new ArrayList<>();
-		SearchFilter authtypeSearch = new SearchFilter();
-		authtypeSearch.setColumnName("policyType");
-		authtypeSearch.setValue(dto.getPolicyType());
-		authtypeSearch.setType("equals");
-		filters.addAll(dto.getFilters());
-		filters.add(authtypeSearch);
-		dto.setFilters(filters);
+		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter authtypeSearch = new SearchFilter();
+			authtypeSearch.setColumnName("policyType");
+			authtypeSearch.setValue(dto.getPolicyType());
+			authtypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(authtypeSearch);
+			dto.setFilters(filters);
+		}
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
@@ -919,6 +918,7 @@ public class PolicyManagementService {
 		}
 		return new KeyValuePair<String, Object>(key, configValue);
 	}
+
 
 	/**
 	 * 
