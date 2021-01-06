@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -42,7 +41,6 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.service.PolicyManagementService;
-import io.mosip.pmp.policy.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,9 +64,6 @@ public class PolicyServiceTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
-	@MockBean
-	private AuditUtil audit;
-	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -78,7 +73,6 @@ public class PolicyServiceTest {
 		ReflectionTestUtils.setField(service, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(service, "webSubPublisher", webSubPublisher);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
-		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
 	}
 	
 	//Success Test
