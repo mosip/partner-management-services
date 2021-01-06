@@ -871,6 +871,7 @@ public class PolicyManagementService {
 		return pageDto;
 	}
 
+
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> partners = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
@@ -918,12 +919,43 @@ public class PolicyManagementService {
 		return new KeyValuePair<String, Object>(key, configValue);
 	}
 
+
+	/**
+	 * 
+	 * @param filterValueDto
+	 * @return
+	 */
 	public FilterResponseCodeDto policyGroupFilterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PolicyGroup.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PolicyGroup.class,
+						filterDto, filterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
+	}
+
+	/**
+	 * 
+	 * @param filterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto policyFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), AuthPolicy.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, AuthPolicy.class,
 						filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
