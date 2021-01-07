@@ -61,6 +61,7 @@ import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
+import io.mosip.pmp.partner.exception.ErrorResponse;
 import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.RestUtil;
 import io.mosip.pmp.partner.util.SearchHelper;
@@ -148,7 +149,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			validate(deviceData);
 			if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.REGISTRATION)) {
 				return regRegisteredDeviceService.signedRegisteredDevice(registeredDevicePostDto);
-			}
+			}			
 			String deviceInfoPayLoad = getPayLoad(deviceData.getDeviceInfo());
 			deviceInfo = mapper.readValue(CryptoUtil.decodeBase64(deviceInfoPayLoad), DeviceInfo.class);
 			validate(deviceData, deviceInfo);
@@ -240,6 +241,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 					String.class);
 			ValidateResponseWrapper<?> responseObject;
 			responseObject = mapper.readValue(response, ValidateResponseWrapper.class);
+			if(responseObject.getResponse() == null && responseObject.getErrors() != null) {
+				for(ErrorResponse error : responseObject.getErrors()) {
+					serviceErrors.add(new ServiceError(error.getErrorCode(),error.getMessage()));
+				}
+				throw new DeviceValidationException(serviceErrors);
+			}
 			signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
 					JWTSignatureResponseDto.class);
 		} catch (IOException e) {

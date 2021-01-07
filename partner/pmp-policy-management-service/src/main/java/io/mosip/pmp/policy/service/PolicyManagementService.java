@@ -44,6 +44,7 @@ import io.mosip.pmp.common.dto.FilterData;
 import io.mosip.pmp.common.dto.FilterDto;
 import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PolicyFilterValueDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
@@ -950,9 +951,19 @@ public class PolicyManagementService {
 	 * @param filterValueDto
 	 * @return
 	 */
-	public FilterResponseCodeDto policyFilterValues(FilterValueDto filterValueDto) {
+	public FilterResponseCodeDto policyFilterValues(PolicyFilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if(!filterValueDto.getPolicyType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter authtypeSearch = new SearchFilter();
+			authtypeSearch.setColumnName("policyType");
+			authtypeSearch.setValue(filterValueDto.getPolicyType());
+			authtypeSearch.setType("equals");
+			filters.addAll(filterValueDto.getOptionalFilters());
+			filters.add(authtypeSearch);
+			filterValueDto.setOptionalFilters(filters);
+		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), AuthPolicy.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, AuthPolicy.class,
