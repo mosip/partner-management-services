@@ -81,7 +81,6 @@ public class SearchHelper {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-
 		// root Query
 		Root<E> rootQuery = selectQuery.from(entity);
 		// count query
@@ -102,7 +101,7 @@ public class SearchHelper {
 			// getting the rows count
 			rows = countExecutableQuery.getSingleResult();
 			// adding pagination
-			paginationQuery(executableQuery, searchDto.getPagination());
+			//paginationQuery(executableQuery, searchDto.getPagination());
 			// executing query and returning data
 			result = executableQuery.getResultList();
 		} catch (Exception hibernateException) {
