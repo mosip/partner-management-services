@@ -7,16 +7,16 @@ package io.mosip.pmp.common.constant;
  * @since 1.0.0
  */
 public enum SearchErrorCode {
-	INVALID_COLUMN("KER-MSD-310", "Invalid column received : %s"),
-	INVALID_PAGINATION_VALUE("KER-MSD-313", "Invalid pagination value received pagestart:%d and pagefetch:%d"),
-	FILTER_TYPE_NOT_AVAILABLE("KER-MSD-312", "Filter type is missing"),
-	MISSING_FILTER_COLUMN("KER-MSD-311", "Column is missing in request"),
-	INVALID_SORT_INPUT("KER-MSD-314", "Missing sort field or sort type values"),
-	INVALID_BETWEEN_VALUES("KER-MSD-315", "Invalid fromValue or toValue"),
-	INVALID_PAGINATION("KER-MSD-356", "Pagination cannot be null"),
-	INVALID_SORT_TYPE("KER-MSD-358", "Sort type %s is not supported"),
-	ERROR_OCCURED_WHILE_SORTING("KER-MSD-359", "Error occured while sorting"),
-	INVALID_SORT_FIELD("KER-MSD-357", "Invalid sort field %s"), INVALID_VALUE("KER-MSD-390", "Invalid filter value");
+	INVALID_COLUMN("PMS-MSD-310", "Invalid column received : %s"),
+	INVALID_PAGINATION_VALUE("PMS-MSD-313", "Invalid pagination value received pagestart:%d and pagefetch:%d"),
+	FILTER_TYPE_NOT_AVAILABLE("PMS-MSD-312", "Filter type is missing"),
+	MISSING_FILTER_COLUMN("PMS-MSD-311", "Column is missing in request"),
+	INVALID_SORT_INPUT("PMS-MSD-314", "Missing sort field or sort type values"),
+	INVALID_BETWEEN_VALUES("PMS-MSD-315", "Invalid fromValue or toValue"),
+	INVALID_PAGINATION("PMS-MSD-356", "Pagination cannot be null"),
+	INVALID_SORT_TYPE("PMS-MSD-358", "Sort type %s is not supported"),
+	ERROR_OCCURED_WHILE_SORTING("PMS-MSD-359", "Error occured while sorting"),
+	INVALID_SORT_FIELD("PMS-MSD-357", "Invalid sort field %s"), INVALID_VALUE("PMS-MSD-390", "Invalid filter value");
 
 	/**
 	 * The error code.

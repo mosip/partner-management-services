@@ -20,15 +20,16 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
@@ -57,6 +58,9 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	
 	@Autowired
 	SearchHelper searchHelper;
+
+	@Autowired
+	private PageUtils pageUtils;
 	
 	@Override
 	public IdDto createSecureBiometricInterface(SecureBiometricInterfaceCreateDto sbiDto) {
@@ -264,16 +268,13 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	@Override
 	public <E> PageResponseDto<SecureBiometricInterfaceCreateDto> searchSecureBiometricInterface(Class<E> entity,
 			DeviceSearchDto dto) {
-		List<SecureBiometricInterfaceCreateDto> partners=new ArrayList<>();
+		List<SecureBiometricInterfaceCreateDto> sbis=new ArrayList<>();
 		PageResponseDto<SecureBiometricInterfaceCreateDto> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			 partners=MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
+			 sbis=MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
+			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 

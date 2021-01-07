@@ -62,6 +62,7 @@ import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.policy.dto.ColumnCodeValue;
 import io.mosip.pmp.policy.dto.FilterResponseCodeDto;
@@ -140,6 +141,9 @@ public class PolicyManagementService {
 
 	@Autowired
 	private FilterHelper filterHelper;
+	
+	@Autowired
+	private PageUtils pageUtils;
 
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
@@ -845,36 +849,30 @@ public class PolicyManagementService {
 	}
 
 	public PageResponseDto<PartnerPolicySearchDto> searchPartnerPolicy(SearchDto dto) {
-		List<PartnerPolicySearchDto> partners = new ArrayList<>();
+		List<PartnerPolicySearchDto> partnerPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchDto> pageDto = new PageResponseDto<>();
 		Page<PartnerPolicy> page = searchHelper.search(PartnerPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerPolicySearchDto.class);
+			partnerPolicies = MapperUtils.mapAll(page.getContent(), PartnerPolicySearchDto.class);
+			pageDto = pageUtils.sortPage(partnerPolicies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
 	public PageResponseDto<PolicyGroup> searchPolicyGroup(SearchDto dto) {
-		List<PolicyGroup> partners = new ArrayList<>();
+		List<PolicyGroup> policies = new ArrayList<>();
 		PageResponseDto<PolicyGroup> pageDto = new PageResponseDto<>();
 		Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+			policies = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
 
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
-		List<SearchAuthPolicy> partners = new ArrayList<>();
+		List<SearchAuthPolicy> policies = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
 		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
@@ -888,12 +886,9 @@ public class PolicyManagementService {
 		}
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
+			policies = MapperUtils.mapAuthPolicySearch(page.getContent());
+			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
