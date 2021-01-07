@@ -42,22 +42,22 @@ import io.mosip.pmp.authdevice.dto.DeviceData;
 import io.mosip.pmp.authdevice.dto.DeviceDeRegisterResponse;
 import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
 import io.mosip.pmp.authdevice.dto.JWTSignatureRequestDto;
 import io.mosip.pmp.authdevice.dto.JWTSignatureResponseDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.partner.exception.ErrorResponse;
-import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.RestUtil;
-import io.mosip.pmp.partner.util.SearchHelper;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDeviceHistory;
@@ -591,7 +591,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, SearchDto dto) {
+	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
 		List<RegisteredDevice> partners=new ArrayList<>();
 		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
