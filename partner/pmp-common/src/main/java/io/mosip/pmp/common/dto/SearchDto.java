@@ -19,7 +19,4 @@ public class SearchDto {
 
 	// @NotNull
 	private Pagination pagination;
-
-	
-
 }

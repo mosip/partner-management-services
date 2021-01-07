@@ -19,10 +19,10 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
-import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
@@ -32,9 +32,9 @@ import io.mosip.pmp.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
-import io.mosip.pmp.partner.util.MapperUtils;
-import io.mosip.pmp.partner.util.SearchHelper;
 
 @Component
 @Transactional
@@ -53,6 +53,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
+	
 	@Autowired
 	SearchHelper searchHelper;
 
