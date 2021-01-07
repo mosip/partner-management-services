@@ -66,7 +66,7 @@ public class PolicyServiceTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
-	@MockBean
+	@Mock
 	private AuditUtil audit;
 	
 	@Before

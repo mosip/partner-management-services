@@ -66,7 +66,7 @@ public class PolicyManagementControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;	
 	
-	@Mock
+	@MockBean
 	private AuditUtil audit;
 	
 	@Before
