@@ -19,8 +19,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.HibernateException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.dataaccess.hibernate.constant.HibernateErrorCode;
 import io.mosip.pmp.common.constant.FilterTypeEnum;
 import io.mosip.pmp.common.constant.OrderEnum;
 import io.mosip.pmp.common.constant.SearchErrorCode;
@@ -49,8 +46,6 @@ import io.mosip.pmp.common.exception.RequestException;
 @Repository
 @Transactional(readOnly = true)
 public class SearchHelper {
-	@Value("${partner.search.maximum.rows}")
-	private int maximumRows;
 
 	private static final String ENTITY_IS_NULL = "entity is null";
 	private static final String WILD_CARD_CHARACTER = "%";
@@ -64,8 +59,10 @@ public class SearchHelper {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	
-
+	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto) {
+		this.entityManager= entityManager;
+		return search(entity,searchDto);
+	}
 
 	/**
 	 * Method to search and sort the partnerManagementData.
@@ -85,7 +82,7 @@ public class SearchHelper {
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
 		Pagination pagination = searchDto.getPagination();
-		pagination.setPageFetch(pagination.getPageFetch() > maximumRows ? maximumRows : pagination.getPageFetch());
+		pagination.setPageFetch(pagination.getPageFetch());
 		searchDto.setPagination(pagination);
 		// root Query
 		Root<E> rootQuery = selectQuery.from(entity);
@@ -110,14 +107,9 @@ public class SearchHelper {
 			paginationQuery(executableQuery, searchDto.getPagination());
 			// executing query and returning data
 			result = executableQuery.getResultList();
-		} catch (HibernateException hibernateException) {
-			throw new DataAccessLayerException(HibernateErrorCode.HIBERNATE_EXCEPTION.getErrorCode(),
+		} catch (Exception hibernateException) {
+			throw new DataAccessLayerException("",
 					hibernateException.getMessage(), hibernateException);
-		} catch (RequestException e) {
-			throw e;
-		} catch (RuntimeException runtimeException) {
-			throw new DataAccessLayerException(HibernateErrorCode.ERR_DATABASE.getErrorCode(),
-					runtimeException.getMessage(), runtimeException);
 		}
 		return new PageImpl<>(result,
 				PageRequest.of(searchDto.getPagination().getPageStart(), searchDto.getPagination().getPageFetch()),

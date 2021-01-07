@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
-import io.mosip.pmp.partner.util.WebSubPublisher;
+import io.mosip.pmp.common.helper.WebSubPublisher;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
