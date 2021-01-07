@@ -81,9 +81,7 @@ public class SearchHelper {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-		Pagination pagination = searchDto.getPagination();
-		pagination.setPageFetch(pagination.getPageFetch());
-		searchDto.setPagination(pagination);
+
 		// root Query
 		Root<E> rootQuery = selectQuery.from(entity);
 		// count query

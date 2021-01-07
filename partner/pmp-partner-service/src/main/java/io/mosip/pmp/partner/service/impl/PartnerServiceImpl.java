@@ -38,12 +38,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
@@ -174,6 +175,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	private PageUtils pageUtils;
+	
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
 
@@ -922,26 +926,20 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
+			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
 	@Override
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
-		List<PartnerType> partners = new ArrayList<>();
+		List<PartnerType> partnerTypes = new ArrayList<>();
 		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
 		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerType.class);
+			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
+			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
