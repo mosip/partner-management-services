@@ -80,7 +80,7 @@ public class PartnerManagementControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;	
 	
-	@Mock
+	@MockBean
 	private AuditUtil audit;
 	
 	@Before
