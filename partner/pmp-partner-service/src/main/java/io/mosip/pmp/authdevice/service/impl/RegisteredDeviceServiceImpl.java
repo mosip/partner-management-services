@@ -46,7 +46,6 @@ import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
 import io.mosip.pmp.authdevice.dto.JWTSignatureRequestDto;
 import io.mosip.pmp.authdevice.dto.JWTSignatureResponseDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
@@ -59,8 +58,10 @@ import io.mosip.pmp.authdevice.repository.RegisteredDeviceHistoryRepository;
 import io.mosip.pmp.authdevice.repository.RegisteredDeviceRepository;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.partner.exception.ErrorResponse;
@@ -97,6 +98,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Autowired
 	RestUtil restUtil;
+	
+	@Autowired
+	private PageUtils pageUtils;
 
 	/** The registered. */
 	private static String REGISTERED = "Registered";
@@ -605,16 +609,13 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Override
 	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
-		List<RegisteredDevice> partners=new ArrayList<>();
+		List<RegisteredDevice> registredDevices=new ArrayList<>();
 		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
+			registredDevices=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
+			pageDto = pageUtils.sortPage(registredDevices, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
