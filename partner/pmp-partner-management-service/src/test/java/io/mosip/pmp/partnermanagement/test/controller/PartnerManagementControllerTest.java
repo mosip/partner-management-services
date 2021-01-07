@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -43,6 +45,7 @@ import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 import io.mosip.pmp.partnermanagement.test.PartnermanagementApplicationTest;
+import io.mosip.pmp.partnermanagement.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnermanagementApplicationTest.class)
@@ -76,6 +79,14 @@ public class PartnerManagementControllerTest {
 	
 	@Autowired
 	private ObjectMapper objectMapper;	
+	
+	@Mock
+	private AuditUtil audit;
+	
+	@Before
+	public void setUp() {
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	}
 	
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
