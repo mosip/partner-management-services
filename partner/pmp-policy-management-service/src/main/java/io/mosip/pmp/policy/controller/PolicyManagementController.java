@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PolicyFilterValueDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
@@ -374,7 +375,7 @@ public class PolicyManagementController {
 	@PostMapping("/policy/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
 	public ResponseWrapper<FilterResponseCodeDto> PolicyFilterValues(
-			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
+			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(policyManagementService.policyFilterValues(requestWrapper.getRequest()));
 		return responseWrapper;

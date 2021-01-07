@@ -1,5 +1,6 @@
 package io.mosip.pmp.common.exception;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -16,9 +17,11 @@ public class ValidationException extends BaseUncheckedException {
 	 */
 	private static final long serialVersionUID = 8764526395763989084L;
 
-	private List<ServiceError> errors;
+	private List<ServiceError> errors = new ArrayList<>();
 
 	public ValidationException(List<ServiceError> errors) {
+		errors.stream().forEach(error -> super.addInfo(error.getErrorCode(), error.getMessage()));
+		errors.stream().forEach(error -> errors.add(new ServiceError(error.getErrorCode(), error.getMessage())));
 		this.errors = errors;
 	}
 
