@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -45,6 +46,7 @@ import io.mosip.pmp.partnermanagement.exception.PartnerAPIKeyDoesNotExistExcepti
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pmp.partnermanagement.util.AuditUtil;
 
 
 @RunWith(SpringRunner.class)
@@ -80,6 +82,9 @@ public class PartnerManagementServiceImplTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
+	@Mock
+	private AuditUtil audit;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -92,7 +97,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispRepository", mispRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
-
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
 	}
 	
 	@Test(expected = PartnerValidationException.class)
