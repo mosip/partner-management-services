@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 //import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
