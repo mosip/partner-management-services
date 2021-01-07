@@ -69,7 +69,7 @@ public class PageUtils {
 		}
 		if (!pageList.isEmpty()) {
 			pageResponse = pageResponse(
-					new PageImpl<>(pageList, PageRequest.of(page.getPageStart(), page.getPageFetch()), totalNumberOfRecords));
+					new PageImpl<>(pageList, PageRequest.of(page.getPageStart(), page.getPageFetch()), content.size()));
 			pageResponse.setData(pageList);
 		}
 		return pageResponse;

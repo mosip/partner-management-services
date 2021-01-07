@@ -229,17 +229,18 @@ public class SearchHelper {
 	 * 
 	 * @param query to be added with pagination
 	 * @param page  contains the pagination details
-	 */
+	 */	
 	private void paginationQuery(Query query, Pagination page) {
 		if (page != null) {
 			if (page.getPageStart() < 0 || page.getPageFetch() < 1) {
 				throw new RequestException(SearchErrorCode.INVALID_PAGINATION_VALUE.getErrorCode(),
 						String.format(SearchErrorCode.INVALID_PAGINATION_VALUE.getErrorMessage(), page.getPageStart(),
 								page.getPageFetch()));
-			} else {
-				query.setFirstResult(page.getPageStart() * page.getPageFetch());
-				query.setMaxResults(page.getPageFetch());
-			}
+			} 
+//			else {
+//				query.setFirstResult(page.getPageStart() * page.getPageFetch());
+//				query.setMaxResults(page.getPageFetch());
+//			}
 		}
 	}
 
