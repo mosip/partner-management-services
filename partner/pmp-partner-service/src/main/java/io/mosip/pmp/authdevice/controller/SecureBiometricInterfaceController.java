@@ -15,6 +15,7 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -144,9 +145,9 @@ public class SecureBiometricInterfaceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> searchSecureBiometric(
-			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
+			@RequestBody @Valid RequestWrapper<SBISearchDto> request) {
 		ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(RegSecureBiometricInterface.class, request.getRequest()));
