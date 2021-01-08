@@ -1,6 +1,7 @@
 package io.mosip.pmp.regdevice.service;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
@@ -42,7 +43,7 @@ public interface RegDeviceDetailService {
 	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails);
 	
 
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto);
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto);
 	
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto);
 

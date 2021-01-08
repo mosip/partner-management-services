@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
-import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -34,6 +34,7 @@ import io.mosip.pmp.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
@@ -43,7 +44,8 @@ import io.mosip.pmp.common.util.PageUtils;
 public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
 
 	private static final String PENDING_APPROVAL = "Pending_Approval";
-
+	private static final String ALL = "all";
+	
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
 
@@ -275,9 +277,19 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	@Override
 	public <E> PageResponseDto<SecureBiometricInterfaceCreateDto> searchSecureBiometricInterface(Class<E> entity,
-			DeviceSearchDto dto) {
+			SBISearchDto dto) {
 		List<SecureBiometricInterfaceCreateDto> sbis = new ArrayList<>();
 		PageResponseDto<SecureBiometricInterfaceCreateDto> pageDto = new PageResponseDto<>();
+		if (!dto.getDeviceDetailId().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter deviceProviderSearchFilter = new SearchFilter();
+			deviceProviderSearchFilter.setColumnName("deviceDetailId");
+			deviceProviderSearchFilter.setValue(dto.getDeviceDetailId());
+			deviceProviderSearchFilter.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(deviceProviderSearchFilter);
+			dto.setFilters(filters);
+		}
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			sbis = MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
