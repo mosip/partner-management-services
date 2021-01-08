@@ -43,8 +43,6 @@ public class DeviceDetailDto {
 	@Size(min = 0, max = 128)
 	@ApiModelProperty(value = "partnerOrganizationName", required = true, dataType = "java.lang.String")
 	private String partnerOrganizationName;
-
-	
 	
 	@NotNull
 	private Boolean isItForRegistrationDevice;
