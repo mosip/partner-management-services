@@ -40,6 +40,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
 import io.mosip.pmp.authdevice.util.dto.Type;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
@@ -118,7 +119,6 @@ import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
-import io.mosip.pmp.partner.util.SearchHelper;
 import io.mosip.pmp.partner.util.WebSubPublisher;
 
 /**
