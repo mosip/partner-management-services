@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
@@ -28,6 +29,7 @@ import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
@@ -41,12 +43,13 @@ import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 @Service
 @Transactional
 public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
-	
+
 	private static final String Pending_Approval = "Pending_Approval";
+	private static final String ALL = "all";
 
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
 	RegDeviceDetailRepository deviceDetailRepository;
 
@@ -55,25 +58,25 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
-	
+
 	@Autowired
 	SearchHelper searchHelper;
-	
+
 	@Autowired
 	private PageUtils pageUtils;
-	
+
 	@Override
 	public IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
-		RegDeviceDetail entity=new RegDeviceDetail();
-		RegDeviceDetail deviceDetail=null;
-		IdDto dto=new IdDto();
-		
-		RegRegistrationDeviceSubType registrationDeviceSubType=registrationDeviceSubTypeRepository
-				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceSubTypeCode(),deviceDetailDto.getDeviceTypeCode());
+		RegDeviceDetail entity = new RegDeviceDetail();
+		RegDeviceDetail deviceDetail = null;
+		IdDto dto = new IdDto();
+
+		RegRegistrationDeviceSubType registrationDeviceSubType = registrationDeviceSubTypeRepository
+				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+						deviceDetailDto.getDeviceSubTypeCode(), deviceDetailDto.getDeviceTypeCode());
 		if (registrationDeviceSubType == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
@@ -81,15 +84,14 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 					"AUT-002");
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
-		}else {
+		} else {
 			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
 			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
-		if ((partnerRepository
-				.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceProviderId())) == null) {
+		if ((partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				deviceDetailDto.getDeviceProviderId())) == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
@@ -99,12 +101,11 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
 
-		if (deviceDetailRepository.findByDeviceDetail( deviceDetailDto.getMake(),
-				deviceDetailDto.getModel(),  deviceDetailDto.getDeviceProviderId(),
-				deviceDetailDto.getDeviceSubTypeCode(),deviceDetailDto.getDeviceTypeCode()) != null) {
+		if (deviceDetailRepository.findByDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
+				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
+				deviceDetailDto.getDeviceTypeCode()) != null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
@@ -113,13 +114,13 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
 		}
-		entity=getCreateMapping(entity,deviceDetailDto);
-		deviceDetail=deviceDetailRepository.save(entity);
+		entity = getCreateMapping(entity, deviceDetailDto);
+		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
-	return dto;
+		return dto;
 	}
-	
-	private RegDeviceDetail getCreateMapping(RegDeviceDetail deviceDetail,DeviceDetailDto deviceDetailDto) {
+
+	private RegDeviceDetail getCreateMapping(RegDeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setApprovalStatus(Pending_Approval);
@@ -133,33 +134,32 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 		deviceDetail.setModel(deviceDetailDto.getModel());
 		deviceDetail.setPartnerOrganizationName(deviceDetailDto.getPartnerOrganizationName());
 		return deviceDetail;
-		
+
 	}
 
 	@Override
 	public IdDto updateDeviceDetails(DeviceDetailUpdateDto deviceDetailDto) {
-		RegDeviceDetail entity=new RegDeviceDetail();
-		RegDeviceDetail deviceDetail=null;
-		IdDto dto=new IdDto();
-		entity=deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetailDto.getId());
+		RegDeviceDetail entity = new RegDeviceDetail();
+		RegDeviceDetail deviceDetail = null;
+		IdDto dto = new IdDto();
+		entity = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetailDto.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
 					"AUT-008");
-			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
-					String.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), dto.getId()));
+			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
+					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}
-		RegRegistrationDeviceSubType registrationDeviceSubType=registrationDeviceSubTypeRepository
-				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceSubTypeCode(),deviceDetailDto.getDeviceTypeCode());
+		RegRegistrationDeviceSubType registrationDeviceSubType = registrationDeviceSubTypeRepository
+				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+						deviceDetailDto.getDeviceSubTypeCode(), deviceDetailDto.getDeviceTypeCode());
 		if (registrationDeviceSubType == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
@@ -167,15 +167,14 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 					"AUT-009");
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
-		}else {
+		} else {
 			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
 			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
-		if ((partnerRepository
-			.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(deviceDetailDto.getDeviceProviderId())) == null) {
+		if ((partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				deviceDetailDto.getDeviceProviderId())) == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
@@ -184,17 +183,17 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
-		
-		entity=getUpdateMapping(entity,deviceDetailDto);
-		deviceDetail=deviceDetailRepository.save(entity);
+
+		entity = getUpdateMapping(entity, deviceDetailDto);
+		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
 		return dto;
 	}
-	
-	private RegDeviceDetail getUpdateMapping(RegDeviceDetail deviceDetail,DeviceDetailUpdateDto deviceDetailDto) {
+
+	private RegDeviceDetail getUpdateMapping(RegDeviceDetail deviceDetail, DeviceDetailUpdateDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
 		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
-		
+
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setUpdBy(authN.getName());
@@ -205,78 +204,88 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 		deviceDetail.setModel(deviceDetailDto.getModel());
 		deviceDetail.setPartnerOrganizationName(deviceDetailDto.getPartnerOrganizationName());
 		return deviceDetail;
-		
+
 	}
-	
+
 	@Override
 	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails) {
-		RegDeviceDetail entity=deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
+		RegDeviceDetail entity = deviceDetailRepository
+				.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
 					"AUT-008");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
-					String.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), deviceDetails.getId()));
+					String.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(),
+							deviceDetails.getId()));
 		}
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setUpdBy(authN.getName());
-			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));			
+			entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		}
-		
-		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
-			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);	
+
+		if (deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.APPROVE)) {
+			entity.setApprovalStatus(AuthDeviceConstant.APPROVED);
 			entity.setIsActive(true);
 			deviceDetailRepository.save(entity);
 			return "Device details approved successfully.";
 		}
-		if(deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
-			entity.setApprovalStatus(AuthDeviceConstant.REJECTED);	
+		if (deviceDetails.getApprovalStatus().equals(AuthDeviceConstant.REJECT)) {
+			entity.setApprovalStatus(AuthDeviceConstant.REJECTED);
 			entity.setIsActive(false);
 			deviceDetailRepository.save(entity);
 			return "Device details rejected successfully.";
 		}
-		
+
 		auditUtil.auditRequest(
-				String.format(
-						AuthDeviceConstant.STATUS_UPDATE_FAILURE, RegDeviceDetail.class.getCanonicalName()),
+				String.format(AuthDeviceConstant.STATUS_UPDATE_FAILURE, RegDeviceDetail.class.getCanonicalName()),
 				AuthDeviceConstant.AUDIT_SYSTEM,
 				String.format(AuthDeviceConstant.FAILURE_DESC,
 						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(),
 						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage()),
 				"AUT-008");
-		throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(),
-				String.format(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage(), deviceDetails.getId()));
+		throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(), String
+				.format(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage(), deviceDetails.getId()));
 	}
-	
+
 	@PersistenceContext(unitName = "regDeviceEntityManagerFactory")
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
-		List<DeviceDetailDto> deviceDetails=new ArrayList<>();
-		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto);
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto) {
+		List<DeviceDetailDto> deviceDetails = new ArrayList<>();
+		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();
+		if (!dto.getDeviceProviderId().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter deviceProviderSearchFilter = new SearchFilter();
+			deviceProviderSearchFilter.setColumnName("deviceProviderId");
+			deviceProviderSearchFilter.setValue(dto.getDeviceProviderId());
+			deviceProviderSearchFilter.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(deviceProviderSearchFilter);
+			dto.setFilters(filters);
+		}
+		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			 deviceDetails=MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
-			 pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
+			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		return pageDto;
 	}
 
 	@Override
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
-		List<RegistrationSubTypeDto> deviceSubTypes=new ArrayList<>();
-		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		List<RegistrationSubTypeDto> deviceSubTypes = new ArrayList<>();
+		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();
+		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			 deviceSubTypes=MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
-			 pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			deviceSubTypes = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
+			pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		return pageDto;
 	}
