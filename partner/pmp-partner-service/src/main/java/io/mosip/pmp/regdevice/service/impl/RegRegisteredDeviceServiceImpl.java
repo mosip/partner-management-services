@@ -200,7 +200,7 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 			.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
 			registerDeviceResponse.setEnv(activeProfile);
 			Objects.requireNonNull(registerDeviceResponse);
-			response.setResponse(getSignedResponse(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse))));
+			response.setResponse(getSignedResponse((CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)))));
 			registeredDeviceRepository.save(mapEntity);
 			registeredDeviceHistoryRepo.save(entityHistory);
 		} catch (IOException e) {
