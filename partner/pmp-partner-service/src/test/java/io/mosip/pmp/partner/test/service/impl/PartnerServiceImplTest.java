@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
@@ -65,7 +66,6 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
-import io.mosip.pmp.partner.util.WebSubPublisher;
 
 /**
  * @author sanjeev.shrivastava

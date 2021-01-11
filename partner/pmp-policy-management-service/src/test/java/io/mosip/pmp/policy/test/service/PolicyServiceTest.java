@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -33,16 +34,15 @@ import io.mosip.pmp.common.repository.AuthPolicyHRepository;
 import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
-import io.mosip.pmp.policy.dto.FilterDto;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pmp.policy.dto.SourceDto;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.service.PolicyManagementService;
+import io.mosip.pmp.policy.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,6 +66,9 @@ public class PolicyServiceTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
+	@Mock
+	private AuditUtil audit;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -75,6 +78,7 @@ public class PolicyServiceTest {
 		ReflectionTestUtils.setField(service, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(service, "webSubPublisher", webSubPublisher);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
 	}
 	
 	//Success Test
@@ -621,27 +625,5 @@ public class PolicyServiceTest {
 			e.printStackTrace();
 		}		
 		return json;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<SourceDto> getSourceAttributes(){
-		List<SourceDto> sourceAttributes = new ArrayList<SourceDto>();
-		SourceDto sourceDto = new SourceDto();
-		sourceDto.setAttribute("fullName");
-		sourceDto.setFilter(getFilterAttributes());
-		sourceAttributes.add(sourceDto);
-		return sourceAttributes;
-	}
-	
-	private List<FilterDto> getFilterAttributes(){
-		List<String> subType = new ArrayList<String>();
-		subType.add("Left IndexFinger");
-		subType.add("Right IndexFinger");
-		List<FilterDto> filterAttributes = new ArrayList<FilterDto>();
-		FilterDto filterDto = new FilterDto();
-		filterDto.setType("Finger");
-		filterDto.setSubType(subType);
-		filterAttributes.add(filterDto);
-		return filterAttributes;
 	}
 }

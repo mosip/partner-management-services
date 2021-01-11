@@ -24,8 +24,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchDto;
+//import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
@@ -43,6 +44,7 @@ import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.entity.PartnerType;
@@ -361,9 +363,9 @@ public class PartnerServiceController {
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
-	public ResponseWrapper<PageResponseDto<PartnerSearchDto>> searchPartner(
-			@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		ResponseWrapper<PageResponseDto<PartnerSearchDto>> responseWrapper = new ResponseWrapper<>();
+	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
+			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
+		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
 
 		responseWrapper.setResponse(partnerService.searchPartner(request.getRequest()));
 

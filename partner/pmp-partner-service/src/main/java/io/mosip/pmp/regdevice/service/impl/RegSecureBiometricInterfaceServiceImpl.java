@@ -19,16 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.partner.util.MapperUtils;
-import io.mosip.pmp.partner.util.SearchHelper;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
@@ -42,7 +44,8 @@ import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometricInterfaceService {
 	
 	private static final String Pending_Approval = "Pending_Approval";
-
+	private static final String ALL = "all";
+	
 	@Autowired
 	RegDeviceDetailRepository deviceDetailRepository;
 	
@@ -57,6 +60,9 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	
 	@Autowired
 	SearchHelper searchHelper;
+
+	@Autowired
+	private PageUtils pageUtils;
 	
 	@Override
 	public IdDto createSecureBiometricInterface(SecureBiometricInterfaceCreateDto sbiDto) {
@@ -263,17 +269,24 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 
 	@Override
 	public <E> PageResponseDto<SecureBiometricInterfaceCreateDto> searchSecureBiometricInterface(Class<E> entity,
-			SearchDto dto) {
-		List<SecureBiometricInterfaceCreateDto> partners=new ArrayList<>();
+			SBISearchDto dto) {
+		List<SecureBiometricInterfaceCreateDto> sbis=new ArrayList<>();
 		PageResponseDto<SecureBiometricInterfaceCreateDto> pageDto = new PageResponseDto<>();		
+		if (!dto.getDeviceDetailId().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter deviceProviderSearchFilter = new SearchFilter();
+			deviceProviderSearchFilter.setColumnName("deviceDetailId");
+			deviceProviderSearchFilter.setValue(dto.getDeviceDetailId());
+			deviceProviderSearchFilter.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(deviceProviderSearchFilter);
+			dto.setFilters(filters);
+		}
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			 partners=MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
+			 sbis=MapperUtils.mapAll(page.getContent(), SecureBiometricInterfaceCreateDto.class);
+			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 

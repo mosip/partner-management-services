@@ -16,6 +16,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -37,7 +40,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.FilterData;
+import io.mosip.pmp.common.dto.FilterDto;
+import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PolicyFilterValueDto;
 import io.mosip.pmp.common.dto.PolicySearchDto;
 import io.mosip.pmp.common.dto.SearchAuthPolicy;
 import io.mosip.pmp.common.dto.SearchDto;
@@ -47,6 +54,7 @@ import io.mosip.pmp.common.entity.AuthPolicy;
 import io.mosip.pmp.common.entity.AuthPolicyH;
 import io.mosip.pmp.common.entity.PartnerPolicy;
 import io.mosip.pmp.common.entity.PolicyGroup;
+import io.mosip.pmp.common.helper.FilterHelper;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.common.repository.AuthPolicyHRepository;
@@ -54,6 +62,10 @@ import io.mosip.pmp.common.repository.AuthPolicyRepository;
 import io.mosip.pmp.common.repository.PartnerPolicyRepository;
 import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
+import io.mosip.pmp.common.validator.FilterColumnValidator;
+import io.mosip.pmp.policy.dto.ColumnCodeValue;
+import io.mosip.pmp.policy.dto.FilterResponseCodeDto;
 import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
@@ -96,7 +108,7 @@ import io.mosip.pmp.policy.validator.spi.PolicyValidator;
 public class PolicyManagementService {
 
 	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementService.class);
-	
+
 	@Autowired
 	private AuthPolicyRepository authPolicyRepository;
 
@@ -108,7 +120,7 @@ public class PolicyManagementService {
 
 	@Autowired
 	PolicyValidator policyValidator;
-	
+
 	@Autowired
 	private WebSubPublisher webSubPublisher;
 
@@ -123,12 +135,25 @@ public class PolicyManagementService {
 
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
+
+	@Autowired
+	SearchHelper searchHelper;
+
+	@Autowired
+	private FilterHelper filterHelper;
 	
 	@Autowired
-	SearchHelper searchHelper; 
+	private PageUtils pageUtils;
+
+	@Autowired
+	private FilterColumnValidator filterColumnValidator;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
+	private static final String ALL = "all";
 
 	/** The mapper. */
 	@Autowired
@@ -193,8 +218,7 @@ public class PolicyManagementService {
 	 */
 	private void updatePoicyGroupPolicies(String policyId, boolean status) {
 		List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyGroupId(policyId);
-		List<String> policies = authPolicies.stream().map(policy->policy.getId())
-				.collect(Collectors.toList());
+		List<String> policies = authPolicies.stream().map(policy -> policy.getId()).collect(Collectors.toList());
 		for (AuthPolicy authPolicy : authPolicies) {
 			if (!status) {
 				authPolicy.setIsActive(status);
@@ -226,32 +250,32 @@ public class PolicyManagementService {
 		validatePolicyTypes(requestDto.getPolicyType());
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
-		if (!validatePolicy(requestDto.getPolicyType(),requestDto.getPolicies())) {
+		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies())) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
 		return savePolicy(requestDto.getPolicies(), requestDto.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), requestDto.getPolicyType(), requestDto.getPolicyGroupName(),
-				requestDto.getVersion(),requestDto.getPolicyId() == null ? "" : requestDto.getPolicyId());
+				requestDto.getVersion(), requestDto.getPolicyId() == null ? "" : requestDto.getPolicyId());
 	}
-	
+
 	/**
 	 * 
 	 * @param requestDto
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean validatePolicy(String policyType,  JSONObject policies) throws Exception {
+	private boolean validatePolicy(String policyType, JSONObject policies) throws Exception {
 		try {
 			return policyValidator.validatePolicies(getPolicySchema(policyType),
 					IOUtils.toString(policies.toString().getBytes(), "UTF-8"));
-		}catch (PolicyObjectValidationFailedException e) {			
+		} catch (PolicyObjectValidationFailedException e) {
 			throw e;
-		}catch (InvalidPolicySchemaException |PolicyIOException e) {
-			throw new PolicyManagementServiceException(e.getErrorCode(),e.getErrorText());
-		}catch (IOException e) {
+		} catch (InvalidPolicySchemaException | PolicyIOException e) {
+			throw new PolicyManagementServiceException(e.getErrorCode(), e.getErrorText());
+		} catch (IOException e) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
-					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage() +"/" + e.getMessage());
+					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage() + "/" + e.getMessage());
 		}
 	}
 
@@ -272,13 +296,13 @@ public class PolicyManagementService {
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + requestDto.getName());
 		}
-		if (!validatePolicy(authPolicy.getPolicy_type(),requestDto.getPolicies())) {
+		if (!validatePolicy(authPolicy.getPolicy_type(), requestDto.getPolicies())) {
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
 		return savePolicy(requestDto.getPolicies(), authPolicy.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), authPolicy.getPolicy_type(), requestDto.getPolicyGroupName(),
-				requestDto.getVersion(),authPolicy.getId());
+				requestDto.getVersion(), authPolicy.getId());
 	}
 
 	/**
@@ -412,15 +436,15 @@ public class PolicyManagementService {
 	 * @throws Exception
 	 */
 	private PolicyCreateResponseDto savePolicy(JSONObject policyJson, String oldPolicyName, String newPolicyName,
-			String policyDesc, String policyGroupId, String policyType, String policyGroupName, String version,String authPolicyId)
-			throws PolicyManagementServiceException, Exception {
+			String policyDesc, String policyGroupId, String policyType, String policyGroupName, String version,
+			String authPolicyId) throws PolicyManagementServiceException, Exception {
 		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, oldPolicyName);
 		if (authPolicy != null) {
 			authPolicy.setId(authPolicy.getId());
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
 			authPolicy.setIsActive(true);
-			authPolicy.setIsDeleted(false);			
+			authPolicy.setIsDeleted(false);
 			authPolicy.getPolicyGroup().setId(policyGroupId);
 			authPolicy.setPolicy_type(policyType);
 			authPolicy.SetVersion(version);
@@ -431,7 +455,7 @@ public class PolicyManagementService {
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
-			authPolicy.setId(authPolicyId=="" ? PolicyUtil.generateId(): authPolicyId);
+			authPolicy.setId(authPolicyId == "" ? PolicyUtil.generateId() : authPolicyId);
 			authPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
@@ -793,17 +817,17 @@ public class PolicyManagementService {
 		return mapper.readValue(new URL(environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema")),
 				JsonNode.class).toString();
 	}
-	
+
 	/**
 	 * 
 	 * @param partners
 	 */
-	private void notify(List<String> policies) {		
+	private void notify(List<String> policies) {
 		for (String policy : policies) {
 			notify(policy);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param partner
@@ -812,86 +836,143 @@ public class PolicyManagementService {
 		Type type = new Type();
 		type.setName("PolicyManagementService");
 		type.setNamespace("io.mosip.pmp.policy.service");
-		Map<String,Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("policyId", policy);
-		webSubPublisher.notify(EventType.POLICY_UPDATED,data,type);	
+		webSubPublisher.notify(EventType.POLICY_UPDATED, data, type);
 	}
-	
+
 	private LocalDateTime getLocalDateTime(Timestamp date) {
-		if(date!=null) {
+		if (date != null) {
 			return date.toLocalDateTime();
 		}
 		return LocalDateTime.now();
 	}
+
 	public PageResponseDto<PartnerPolicySearchDto> searchPartnerPolicy(SearchDto dto) {
-		List<PartnerPolicySearchDto> partners = new ArrayList<>();
+		List<PartnerPolicySearchDto> partnerPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchDto> pageDto = new PageResponseDto<>();
 		Page<PartnerPolicy> page = searchHelper.search(PartnerPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerPolicySearchDto.class);
+			partnerPolicies = MapperUtils.mapAll(page.getContent(), PartnerPolicySearchDto.class);
+			pageDto = pageUtils.sortPage(partnerPolicies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
-	
+
 	public PageResponseDto<PolicyGroup> searchPolicyGroup(SearchDto dto) {
-		List<PolicyGroup> partners = new ArrayList<>();
+		List<PolicyGroup> policies = new ArrayList<>();
 		PageResponseDto<PolicyGroup> pageDto = new PageResponseDto<>();
 		Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+			policies = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
-	
+
+
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
-		List<SearchAuthPolicy> partners = new ArrayList<>();
+		List<SearchAuthPolicy> policies = new ArrayList<>();
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
-		List<SearchFilter> filters = new ArrayList<>();
-		SearchFilter authtypeSearch = new SearchFilter();
-		authtypeSearch.setColumnName("policyType");
-		authtypeSearch.setValue(dto.getPolicyType());
-		authtypeSearch.setType("equals");
-		filters.addAll(dto.getFilters());
-		filters.add(authtypeSearch);
-		dto.setFilters(filters);
+		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter authtypeSearch = new SearchFilter();
+			authtypeSearch.setColumnName("policyType");
+			authtypeSearch.setValue(dto.getPolicyType());
+			authtypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(authtypeSearch);
+			dto.setFilters(filters);
+		}
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAuthPolicySearch(page.getContent());
+			policies = MapperUtils.mapAuthPolicySearch(page.getContent());
+			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
-	
+
 	/**
 	 * This method returns value based on the key from configuration.
+	 * 
 	 * @param key
 	 * @return
 	 */
 	public KeyValuePair<String, Object> getValueForKey(String key) {
 		JSONParser parser = new JSONParser();
-		String  configValue = environment.getProperty(key);
-		if(configValue == null) {
-			return new KeyValuePair<String,Object>(key, configValue);	
+		String configValue = environment.getProperty(key);
+		if (configValue == null) {
+			return new KeyValuePair<String, Object>(key, configValue);
 		}
-		if(StringUtils.isNumeric(configValue)) {
-			return new KeyValuePair<String,Object>(key, configValue);
+		if (StringUtils.isNumeric(configValue)) {
+			return new KeyValuePair<String, Object>(key, configValue);
 		}
 		try {
-			return new KeyValuePair<String,Object>(key,(JSONObject) parser.parse(configValue));
+			return new KeyValuePair<String, Object>(key, (JSONObject) parser.parse(configValue));
 		} catch (ParseException e) {
 			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
 		}
-		return new KeyValuePair<String,Object>(key, configValue);
+		return new KeyValuePair<String, Object>(key, configValue);
+	}
+
+
+	/**
+	 * 
+	 * @param filterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto policyGroupFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PolicyGroup.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PolicyGroup.class,
+						filterDto, filterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
+	}
+
+	/**
+	 * 
+	 * @param filterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto policyFilterValues(PolicyFilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if(!filterValueDto.getPolicyType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter authtypeSearch = new SearchFilter();
+			authtypeSearch.setColumnName("policyType");
+			authtypeSearch.setValue(filterValueDto.getPolicyType());
+			authtypeSearch.setType("equals");
+			filters.addAll(filterValueDto.getOptionalFilters());
+			filters.add(authtypeSearch);
+			filterValueDto.setOptionalFilters(filters);
+		}
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), AuthPolicy.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, AuthPolicy.class,
+						filterDto, filterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
 	}
 }

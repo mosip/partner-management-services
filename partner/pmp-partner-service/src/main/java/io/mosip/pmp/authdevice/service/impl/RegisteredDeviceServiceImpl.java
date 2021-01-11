@@ -42,13 +42,12 @@ import io.mosip.pmp.authdevice.dto.DeviceData;
 import io.mosip.pmp.authdevice.dto.DeviceDeRegisterResponse;
 import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
 import io.mosip.pmp.authdevice.dto.JWTSignatureRequestDto;
 import io.mosip.pmp.authdevice.dto.JWTSignatureResponseDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.entity.RegisteredDeviceHistory;
@@ -59,12 +58,13 @@ import io.mosip.pmp.authdevice.repository.RegisteredDeviceHistoryRepository;
 import io.mosip.pmp.authdevice.repository.RegisteredDeviceRepository;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.partner.exception.ErrorResponse;
-import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.RestUtil;
-import io.mosip.pmp.partner.util.SearchHelper;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 
 @Component
@@ -201,7 +201,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			digitalId = mapper.readValue(digitalIdJson, DigitalId.class);
 			registerDeviceResponse = mapRegisteredDeviceResponse(mapEntity, deviceData, deviceInfo);
 			registerDeviceResponse
-			.setDigitalId(getSignedResponse(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8"))));
+			.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
 			registerDeviceResponse.setEnv(activeProfile);
 			Objects.requireNonNull(registerDeviceResponse);
 			response.setResponse(getSignedResponse(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse))));
@@ -604,7 +604,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, SearchDto dto) {
+	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
 		List<RegisteredDevice> partners=new ArrayList<>();
 		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);

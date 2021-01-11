@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
 import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
@@ -83,7 +83,7 @@ public class RegisteredDeviceController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
 	public ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> searchRegisteredDevice(
-			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> responseWrapper = new ValidateResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regRegisteredDeviceService.searchRegisteredDevice(RegRegisteredDevice.class, request.getRequest()));

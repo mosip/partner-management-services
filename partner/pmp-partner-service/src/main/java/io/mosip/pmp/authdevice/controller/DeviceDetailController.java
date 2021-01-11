@@ -15,17 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
@@ -168,9 +169,9 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<DeviceDetailDto>> searchDeviceDetails(
-			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+			@RequestBody @Valid RequestWrapper<DeviceDetailSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
@@ -184,7 +185,7 @@ public class DeviceDetailController {
 	@PostMapping("/deviceType/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
-			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));

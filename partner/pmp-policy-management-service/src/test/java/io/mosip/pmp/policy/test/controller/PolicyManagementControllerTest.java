@@ -8,9 +8,11 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,7 +29,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.dto.AuthPolicyDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyCreateResponseDto;
@@ -38,9 +39,11 @@ import io.mosip.pmp.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.dto.RequestWrapper;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
+import io.mosip.pmp.policy.dto.ShareableAttributesDto;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 import io.mosip.pmp.policy.test.PolicyServiceTest;
+import io.mosip.pmp.policy.util.AuditUtil;
 
 
 /**
@@ -62,6 +65,14 @@ public class PolicyManagementControllerTest {
 	
 	@Autowired
 	private ObjectMapper objectMapper;	
+	
+	@MockBean
+	private AuditUtil audit;
+	
+	@Before
+	public void setUp() {
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	}
 	
 	@Test
 	@Ignore

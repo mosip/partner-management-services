@@ -14,18 +14,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pmp.authdevice.util.dto.Type;
+import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.Type;
+import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pmp.misp.exception.MISPErrorMessages;
 import io.mosip.pmp.misp.exception.MISPServiceException;
-import io.mosip.pmp.partner.constant.EventType;
 import io.mosip.pmp.partner.entity.MISPLicenseEntity;
 import io.mosip.pmp.partner.entity.MISPLicenseKey;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.MispLicenseRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.service.InfraProviderService;
-import io.mosip.pmp.partner.util.WebSubPublisher;
 
 @Component
 public class InfraProviderServiceImpl implements InfraProviderService {	
@@ -215,7 +215,7 @@ public class InfraProviderServiceImpl implements InfraProviderService {
 	 * @param mispLicenseKey
 	 */
 	private void notify(String mispLicenseKey) {
-		Type type = new io.mosip.pmp.authdevice.util.dto.Type();
+		Type type = new Type();
 		type.setName("InfraProviderServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
 		Map<String,Object> data = new HashMap<>();

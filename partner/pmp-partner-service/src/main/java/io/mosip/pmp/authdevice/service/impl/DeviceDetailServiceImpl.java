@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegistrationDeviceSubType;
@@ -32,16 +32,20 @@ import io.mosip.pmp.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pmp.authdevice.service.DeviceDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
-import io.mosip.pmp.partner.util.MapperUtils;
-import io.mosip.pmp.partner.util.SearchHelper;
 
 @Component
 @Transactional
 public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	private static final String PENDING_APPROVAL = "Pending_Approval";
-
+	private static final String ALL = "all";
+	
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -53,8 +57,12 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
+	
 	@Autowired
 	SearchHelper searchHelper;
+	
+	@Autowired
+	private PageUtils pageUtils;
 
 	@Override
 	public IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
@@ -247,32 +255,36 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, SearchDto dto) {
-		List<DeviceDetailDto> partners = new ArrayList<>();
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto) {
+		List<DeviceDetailDto> deviceDetails = new ArrayList<>();
 		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();
+		if (!dto.getDeviceProviderId().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter deviceProviderSearchFilter = new SearchFilter();
+			deviceProviderSearchFilter.setColumnName("deviceProviderId");
+			deviceProviderSearchFilter.setValue(dto.getDeviceProviderId());
+			deviceProviderSearchFilter.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(deviceProviderSearchFilter);
+			dto.setFilters(filters);
+		}
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
+			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
+			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
 	@Override
-	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, SearchDto dto) {
-		List<RegistrationSubTypeDto> partners = new ArrayList<>();
+	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
+		List<RegistrationSubTypeDto> deviceSubTypes = new ArrayList<>();
 		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
+			deviceSubTypes = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
+			pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 }

@@ -38,15 +38,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
-import io.mosip.pmp.authdevice.dto.PageResponseDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
-import io.mosip.pmp.authdevice.util.dto.Type;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchDto;
+import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.constant.EmailIdExceptionConstant;
-import io.mosip.pmp.partner.constant.EventType;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyIsNotCreatedConstant;
 import io.mosip.pmp.partner.constant.PartnerAPIKeyReqDoesNotExistConstant;
 import io.mosip.pmp.partner.constant.PartnerDoesNotExistExceptionConstant;
@@ -73,6 +75,7 @@ import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
 import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
@@ -112,11 +115,8 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
-import io.mosip.pmp.partner.util.MapperUtils;
 import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
-import io.mosip.pmp.partner.util.SearchHelper;
-import io.mosip.pmp.partner.util.WebSubPublisher;
 
 /**
  * @author sanjeev.shrivastava
@@ -171,13 +171,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	SearchHelper partnerSearchHelper;
-	
-	@Autowired
-	private WebSubPublisher webSubPublisher;
 
 	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	private PageUtils pageUtils;
+	
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
 
@@ -203,6 +203,8 @@ public class PartnerServiceImpl implements PartnerService {
 	private static final String ERRORMESSAGE = "message";
 
 	private static final String APPROVEDSTATUS = "Approved";
+
+	private static final String ALL = "all";
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -675,7 +677,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
+
 		return responseObject;
 	}
 
@@ -718,7 +720,6 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		partnerRepository.save(updateObject);
-		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
 	}
 
@@ -909,32 +910,36 @@ public class PartnerServiceImpl implements PartnerService {
 	private EntityManager entityManager;
 
 	@Override
-	public PageResponseDto<PartnerSearchDto> searchPartner(SearchDto dto) {
-		List<PartnerSearchDto> partners = new ArrayList<>();
-		PageResponseDto<PartnerSearchDto> pageDto = new PageResponseDto<>();
+	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
+		List<PartnerSearchResponseDto> partners = new ArrayList<>();
+		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
+		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter partnerTypeSearch = new SearchFilter();
+			partnerTypeSearch.setColumnName("partnerTypeCode");
+			partnerTypeSearch.setValue(dto.getPartnerType());
+			partnerTypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(partnerTypeSearch);
+			dto.setFilters(filters);
+		}
 		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchDto.class);
+			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
+			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
 	@Override
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
-		List<PartnerType> partners = new ArrayList<>();
+		List<PartnerType> partnerTypes = new ArrayList<>();
 		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
 		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerType.class);
+			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
+			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 
@@ -1064,29 +1069,4 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		return LocalDateTime.now();
 	}
-	
-	/**
-	 * 
-	 * @param mispLicenseKey
-	 */
-	private void notify(String certData,String partnerDomain) {
-		Type type = new io.mosip.pmp.authdevice.util.dto.Type();
-		type.setName("PartnerServiceImpl");
-		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		Map<String,Object> data = new HashMap<>();
-		data.put("certificateData", certData);
-		data.put("partnerDomain", partnerDomain);
-		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED,data,type);
-	}
-	
-	private void notify(String partnerId) {
-		Type type = new io.mosip.pmp.authdevice.util.dto.Type();
-		type.setName("PartnerServiceImpl");
-		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		Map<String,Object> data = new HashMap<>();
-		data.put("partnerId", partnerId);
-		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
-	}
 }
-
-//String updatedParam = (isApiKeyUpdated == true) ? "apiKey" : "";
