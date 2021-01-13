@@ -37,14 +37,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pmp.authdevice.dto.ColumnCodeValue;
+import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.common.dto.FilterData;
+import io.mosip.pmp.common.dto.FilterDto;
+import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.helper.FilterHelper;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
+import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
@@ -130,6 +137,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
 
+	@Autowired
+	FilterColumnValidator filterColumnValidator;
+
+	@Autowired
+	FilterHelper filterHelper;
+	
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -941,6 +954,27 @@ public class PartnerServiceImpl implements PartnerService {
 			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
 		return pageDto;
+	}
+	
+	@Override
+	public FilterResponseCodeDto filterValues(FilterValueDto deviceFilterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), Partner.class)) {
+			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, Partner.class,
+						filterDto, deviceFilterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
 	}
 
 	@Override

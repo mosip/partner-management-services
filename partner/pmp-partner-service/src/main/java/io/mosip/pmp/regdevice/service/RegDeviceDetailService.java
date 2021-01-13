@@ -4,10 +4,12 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
+import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
+import io.mosip.pmp.common.dto.DeviceFilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
 
 public interface RegDeviceDetailService {
@@ -46,7 +48,26 @@ public interface RegDeviceDetailService {
 	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto);
 	
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto);
+	
+	/**
+	 * 
+	 * @param deviceFilterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto regDeviceFilterValues(DeviceFilterValueDto deviceFilterValueDto);
+	
+	/**
+	 * 
+	 * @param deviceFilterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto regDeviceSubTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto);
 
-
+	/**
+	 * 
+	 * @param deviceFilterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto regDeviceTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto);
 
 }

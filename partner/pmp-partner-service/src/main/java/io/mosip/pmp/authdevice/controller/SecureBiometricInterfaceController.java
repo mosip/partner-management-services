@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
-import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
@@ -47,7 +46,7 @@ public class SecureBiometricInterfaceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save SecureBiometricInterfaceCreateDto", notes = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
@@ -79,7 +78,7 @@ public class SecureBiometricInterfaceController {
 
 	}
 	
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update SecureBiometricInterface", notes = "Updates SecureBiometricInterface and returns success message")
@@ -111,7 +110,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject SecureBiometricInterface", notes = "Approve SecureBiometricInterface and returns success message")
@@ -145,7 +144,7 @@ public class SecureBiometricInterfaceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<SBISearchDto> request) {
 		ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> responseWrapper = new ResponseWrapper<>();

@@ -2,13 +2,18 @@ package io.mosip.pmp.regdevice.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,15 +27,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.FoundationalTrustProviderErrorMessages;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertDownloadRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertificateRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.FTPSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
 import io.mosip.pmp.regdevice.entity.RegFoundationalTrustProvider;
 import io.mosip.pmp.regdevice.repository.RegFTPChipDetailRepository;
@@ -44,12 +54,19 @@ import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.exception.ApiAccessibleException;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
+import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
 
 
 @Component
 @Transactional
 public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
+	
+	@PersistenceContext(unitName = "regDeviceEntityManagerFactory")
+	private EntityManager entityManager;
+	
+	@Autowired
+	SearchHelper searchHelper;
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -109,7 +126,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		chipDetail.setCrBy(authN.getName());
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFoundationalTPId(chipDetails.getFtpProviderId());
-		chipDetail.setId(chipDetails.getId());
+		chipDetail.setId(PartnerUtil.generateId());
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
@@ -344,5 +361,20 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		}
 
 		return responseObject;
+	}
+
+	@Override
+	public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto) {
+		List<FTPSearchResponseDto> partners=new ArrayList<>();
+		PageResponseDto<FTPSearchResponseDto> pageDto = new PageResponseDto<>();		
+		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
 	}
 }
