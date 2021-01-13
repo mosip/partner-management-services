@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
-import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
@@ -173,7 +172,7 @@ public class DeviceDetailController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<DeviceDetailDto>> searchDeviceDetails(
-			@RequestBody @Valid RequestWrapper<DeviceDetailSearchDto> request) {
+			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));

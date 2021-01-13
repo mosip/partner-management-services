@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -146,7 +146,7 @@ public class SecureBiometricInterfaceController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> searchSecureBiometric(
-			@RequestBody @Valid RequestWrapper<SBISearchDto> request) {
+			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
 			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(RegSecureBiometricInterface.class, request.getRequest()));

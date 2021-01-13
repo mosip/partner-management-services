@@ -19,7 +19,6 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.ColumnCodeValue;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
-import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
@@ -33,7 +32,6 @@ import io.mosip.pmp.common.dto.DeviceFilterValueDto;
 import io.mosip.pmp.common.dto.FilterData;
 import io.mosip.pmp.common.dto.FilterDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.FilterHelper;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
@@ -52,7 +50,6 @@ import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 
 	private static final String Pending_Approval = "Pending_Approval";
-	private static final String ALL = "all";
 
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
@@ -270,19 +267,9 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto) {
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailDto> deviceDetails = new ArrayList<>();
-		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();
-		if (!dto.getDeviceProviderId().equalsIgnoreCase(ALL)) {
-			List<SearchFilter> filters = new ArrayList<>();
-			SearchFilter deviceProviderSearchFilter = new SearchFilter();
-			deviceProviderSearchFilter.setColumnName("deviceProviderId");
-			deviceProviderSearchFilter.setValue(dto.getDeviceProviderId());
-			deviceProviderSearchFilter.setType("equals");
-			filters.addAll(dto.getFilters());
-			filters.add(deviceProviderSearchFilter);
-			dto.setFilters(filters);
-		}
+		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();		
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
