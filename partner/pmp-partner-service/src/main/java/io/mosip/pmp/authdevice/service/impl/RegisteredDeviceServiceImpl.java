@@ -61,7 +61,6 @@ import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.partner.exception.ErrorResponse;
@@ -98,9 +97,6 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Autowired
 	RestUtil restUtil;
-	
-	@Autowired
-	private PageUtils pageUtils;
 
 	/** The registered. */
 	private static String REGISTERED = "Registered";
@@ -609,13 +605,16 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Override
 	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
-		List<RegisteredDevice> registredDevices=new ArrayList<>();
+		List<RegisteredDevice> partners=new ArrayList<>();
 		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			registredDevices=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
-			pageDto = pageUtils.sortPage(registredDevices, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			partners=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
 		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 

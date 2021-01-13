@@ -272,6 +272,7 @@ public class PolicyManagementController {
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyID);
 		response.setResponse(responseDto);
 		logger.info("Returning response from MispController.");
+
 		return response;
 	}
 

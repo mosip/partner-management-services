@@ -152,9 +152,9 @@ public class PolicyManagementService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
 	@Autowired
 	AuditUtil auditUtil;
+
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";

@@ -17,30 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
-import io.mosip.pmp.authdevice.dto.ColumnCodeValue;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
-import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.common.dto.DeviceFilterValueDto;
-import io.mosip.pmp.common.dto.FilterData;
-import io.mosip.pmp.common.dto.FilterDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.helper.FilterHelper;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
-import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
-import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceType;
 import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
 import io.mosip.pmp.regdevice.repository.RegRegistrationDeviceSubTypeRepository;
 import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
@@ -50,12 +45,7 @@ import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
 public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 
 	private static final String Pending_Approval = "Pending_Approval";
-
-	@Autowired
-	FilterColumnValidator filterColumnValidator;
-
-	@Autowired
-	FilterHelper filterHelper;
+	private static final String ALL = "all";
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -223,7 +213,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 				.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
-					String.format(AuthDeviceConstant.FAILURE_UPDATE, RegDeviceDetail.class.getCanonicalName()),
+					String.format(AuthDeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
@@ -267,9 +257,19 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
+	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceDetailSearchDto dto) {
 		List<DeviceDetailDto> deviceDetails = new ArrayList<>();
-		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();		
+		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();
+		if (!dto.getDeviceProviderId().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter deviceProviderSearchFilter = new SearchFilter();
+			deviceProviderSearchFilter.setColumnName("deviceProviderId");
+			deviceProviderSearchFilter.setValue(dto.getDeviceProviderId());
+			deviceProviderSearchFilter.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(deviceProviderSearchFilter);
+			dto.setFilters(filters);
+		}
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
@@ -289,78 +289,4 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 		}
 		return pageDto;
 	}
-
-	@Override
-	public FilterResponseCodeDto regDeviceFilterValues(DeviceFilterValueDto deviceFilterValueDto) {
-		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
-		List<ColumnCodeValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), RegDeviceDetail.class)) {
-			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, RegDeviceDetail.class,
-						filterDto, deviceFilterValueDto, "id");
-				filterValues.forEach(filterValue -> {
-					ColumnCodeValue columnValue = new ColumnCodeValue();
-					columnValue.setFieldCode(filterValue.getFieldCode());
-					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.getFieldValue());
-					columnValueList.add(columnValue);
-				});
-			}
-			filterResponseDto.setFilters(columnValueList);
-		}
-		return filterResponseDto;
-	}
-
-	/**
-	 * 
-	 * @param deviceFilterValueDto
-	 * @return
-	 */
-	@Override
-	public FilterResponseCodeDto regDeviceTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto) {
-		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
-		List<ColumnCodeValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), RegRegistrationDeviceType.class)) {
-			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, RegRegistrationDeviceType.class,
-						filterDto, deviceFilterValueDto, "code");
-				filterValues.forEach(filterValue -> {
-					ColumnCodeValue columnValue = new ColumnCodeValue();
-					columnValue.setFieldCode(filterValue.getFieldCode());
-					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.getFieldValue());
-					columnValueList.add(columnValue);
-				});
-			}
-			filterResponseDto.setFilters(columnValueList);
-		}
-		return filterResponseDto;
-	}
-	
-	/**
-	 * 
-	 * @param deviceFilterValueDto
-	 * @return
-	 */
-	@Override
-	public FilterResponseCodeDto regDeviceSubTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto) {
-		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
-		List<ColumnCodeValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), RegRegistrationDeviceSubType.class)) {
-			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, RegRegistrationDeviceSubType.class,
-						filterDto, deviceFilterValueDto, "code");
-				filterValues.forEach(filterValue -> {
-					ColumnCodeValue columnValue = new ColumnCodeValue();
-					columnValue.setFieldCode(filterValue.getFieldCode());
-					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.getFieldValue());
-					columnValueList.add(columnValue);
-				});
-			}
-			filterResponseDto.setFilters(columnValueList);
-		}
-		return filterResponseDto;
-	}
-
 }
