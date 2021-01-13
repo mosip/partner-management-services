@@ -82,7 +82,7 @@ public class PartnerManagementServiceImplTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
-	@Mock
+	@MockBean
 	private AuditUtil audit;
 	
 	@Before

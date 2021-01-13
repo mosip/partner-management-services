@@ -99,8 +99,6 @@ public class PolicyManagementController {
 		response.setResponse(responseDto);
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());
-
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
 		return response;		
 
 	}
@@ -110,14 +108,12 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policyGroupId,
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
-
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP);
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policyGroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP_SUCCESS);
 		return response;		
 
 	}
@@ -146,8 +142,6 @@ public class PolicyManagementController {
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());
 		response.setResponse(responseDto);		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
-
 		logger.info("Returning response from MispController.");
 		return response;
 	}
@@ -169,7 +163,6 @@ public class PolicyManagementController {
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY);
 		PolicyResponseDto responseDto = policyManagementService.publishPolicy(policyGroupId, policyId);
 		response.setResponse(responseDto);
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -199,7 +192,6 @@ public class PolicyManagementController {
 		response.setId(updateRequestDto.getId());
 		response.setVersion(updateRequestDto.getVersion());
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -231,7 +223,6 @@ public class PolicyManagementController {
 		response.setId(requestDto.getId());
 		response.setVersion(requestDto.getVersion());
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -258,7 +249,6 @@ public class PolicyManagementController {
 
 		response.setResponse(policyManagementService.findAllPolicies());
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -282,7 +272,6 @@ public class PolicyManagementController {
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyID);
 		response.setResponse(responseDto);
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -306,8 +295,6 @@ public class PolicyManagementController {
 		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(partnerApiKey);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from MispController.");
-
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return response;		
 
 	}
@@ -331,7 +318,6 @@ public class PolicyManagementController {
 		PolicyResponseDto policyGroup = policyManagementService.getPartnerMappedPolicy(partnerId, policyId);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return response;
 	}
 
@@ -350,7 +336,6 @@ public class PolicyManagementController {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
 		response.setResponse(policyManagementService.getPolicyGroupPolicy(policyGroupId));
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP_SUCCESS);
 		return response;
 	}
 
@@ -372,7 +357,6 @@ public class PolicyManagementController {
 
 		response.setResponse(policyManagementService.getPolicyGroup());
 		logger.info("Returning response from MispController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP_SUCCESS);
 		return response;
 	}
 
@@ -385,8 +369,6 @@ public class PolicyManagementController {
 
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
 		responseWrapper.setResponse(policyManagementService.searchPolicyGroup(request.getRequest()));
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP_SUCCESS);
-
 		return responseWrapper;
 	}
 
@@ -398,7 +380,6 @@ public class PolicyManagementController {
 		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
 		responseWrapper.setResponse(policyManagementService.searchPolicy(request.getRequest()));
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return responseWrapper;
 	}
 
