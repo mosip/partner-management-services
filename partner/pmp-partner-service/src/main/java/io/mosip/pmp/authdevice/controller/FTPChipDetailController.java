@@ -22,20 +22,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.authdevice.constants.Purpose;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertDownloadRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertificateRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.FTPSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.authdevice.entity.FTPChipDetail;
 import io.mosip.pmp.authdevice.service.FTPChipDetailService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
 import io.mosip.pmp.regdevice.service.RegFTPChipDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,7 +71,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save ftpChipDetail", notes = "Saves ftpChipDetail and return ftpChipDetail id")
@@ -105,7 +111,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update ftp chip detail", notes = "Updates ftp chip detail and returns success message")
@@ -141,7 +147,7 @@ public class FTPChipDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject ftp chip detail", notes = "Approve ftp chip detail and returns success message")
@@ -183,7 +189,7 @@ public class FTPChipDetailController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<FTPChipCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -216,7 +222,7 @@ public class FTPChipDetailController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
@@ -241,4 +247,18 @@ public class FTPChipDetailController {
 				"AUT-007");
 		return response;
     }
+	
+	@ResponseFilter
+	@PostMapping("/search")
+	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
+			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
+		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
+		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+			responseWrapper.setResponse(regFtpChipDetailService.searchFTPChipDetails(RegFTPChipDetail.class, request.getRequest()));
+			return responseWrapper;
+		} 
+		responseWrapper.setResponse(ftpChipDetaillService.searchFTPChipDetails(FTPChipDetail.class, request.getRequest()));
+		return responseWrapper;
+	}
 }

@@ -7,10 +7,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 @Data
 public class FTPChipDetailDto {
-	@NotNull
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
-	private String id;
+//	@NotNull
+//	@Size(min = 1, max = 36)
+//	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
+//	private String id;
 
 
 	@NotNull
@@ -41,13 +41,13 @@ public class FTPChipDetailDto {
 		this.isItForRegistrationDevice = isItForRegistrationDevice;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
+//	public String getId() {
+//		return id;
+//	}
+//
+//	public void setId(String id) {
+//		this.id = id;
+//	}
 
 	public String getFtpProviderId() {
 		return ftpProviderId;

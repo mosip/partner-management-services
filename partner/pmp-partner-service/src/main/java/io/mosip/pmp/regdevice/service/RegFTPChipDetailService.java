@@ -8,12 +8,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertDownloadRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipCertificateRequestDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailStatusDto;
 import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
+import io.mosip.pmp.authdevice.dto.FTPSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 
@@ -64,5 +67,14 @@ public interface RegFTPChipDetailService {
      * @throws JsonParseException 
     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(FTPChipCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+    
+    /**
+     * 
+     * @param <E>
+     * @param entity
+     * @param dto
+     * @return
+     */
+    public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto);
 
 }

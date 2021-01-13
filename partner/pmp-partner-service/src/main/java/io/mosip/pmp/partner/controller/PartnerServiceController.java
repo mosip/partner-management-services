@@ -24,6 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
+import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 //import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
@@ -96,7 +98,7 @@ public class PartnerServiceController {
 	 *            this class contains partner details
 	 * @return response this class contains partner response
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
@@ -124,7 +126,7 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse this class contains partner request id and
 	 *         massage details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> submitPartnerApiKeyRequest(
 			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
@@ -145,7 +147,7 @@ public class PartnerServiceController {
 	 * @param request
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
@@ -162,7 +164,7 @@ public class PartnerServiceController {
 	 * @param policyId
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ExtractorsDto>> getBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId){
 		ResponseWrapper<ExtractorsDto> response = new ResponseWrapper<>();
@@ -178,7 +180,7 @@ public class PartnerServiceController {
 	 * @param credentialType
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','PARTNER_ADMIN')")
 	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}/credentialType/{credentialType}",method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyId,
 			@PathVariable @Valid String credentialType){
@@ -187,7 +189,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','PARTNER_ADMIN')")
 	@RequestMapping(value = "/partnerId/{partnerId}/credentialType/{credentialType}",method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
@@ -201,7 +203,7 @@ public class PartnerServiceController {
 	 * @param request
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/addcontact", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -219,7 +221,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return partnerResponse this class contains updated partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerId) {
@@ -240,7 +242,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerId) {
@@ -262,7 +264,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> retrieveAllApiKeyRequestsSubmittedByPartnerTillDate(
 			@PathVariable String partnerId) {
@@ -287,7 +289,7 @@ public class PartnerServiceController {
 	 * @return response this class contains partnerApiKey apiKeyRequestStatus and
 	 *         validity details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/partnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<APIkeyRequests>> viewApiKeyRequestStatusAndApiKey(
 			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {
@@ -330,7 +332,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN')")
 	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -349,7 +351,7 @@ public class PartnerServiceController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN')")
 	@RequestMapping(value = "/getPartnerCertificate/{partnerId}", method = RequestMethod.GET)
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
@@ -362,25 +364,31 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN','CREDENTIAL_PARTNER')")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-
 		responseWrapper.setResponse(partnerService.searchPartner(request.getRequest()));
-
 		return responseWrapper;
 	}
 
 	@ResponseFilter
 	@PostMapping("/partnerType/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<PartnerType>> searchPartnerType(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerType>> responseWrapper = new ResponseWrapper<>();
-
 		responseWrapper.setResponse(partnerService.searchPartnerType(request.getRequest()));
-
+		return responseWrapper;
+	}
+	
+	@ResponseFilter
+	@PostMapping("/filtervalues")
+	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN')")
+	public ResponseWrapper<FilterResponseCodeDto> filterValues(
+			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(partnerService.filterValues(request.getRequest()));
 		return responseWrapper;
 	}
 }
