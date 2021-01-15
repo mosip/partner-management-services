@@ -39,10 +39,13 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.common.constant.EventType;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.dto.Type;
 import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
@@ -162,6 +165,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	RestUtil restUtil;
+	
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 
 	@Autowired
 	KeycloakImpl keycloakImpl;
@@ -677,7 +683,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-
+		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
 		return responseObject;
 	}
 
@@ -720,6 +726,7 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		partnerRepository.save(updateObject);
+		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
 	}
 
@@ -1068,5 +1075,25 @@ public class PartnerServiceImpl implements PartnerService {
 			return date.toLocalDateTime();
 		}
 		return LocalDateTime.now();
+	}
+	
+
+	private void notify(String certData,String partnerDomain) {
+		Type type = new Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("certificateData", certData);
+		data.put("partnerDomain", partnerDomain);
+		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED,data,type);
+	}
+
+	private void notify(String partnerId) {
+		Type type = new Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("partnerId", partnerId);
+		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
 	}
 }
