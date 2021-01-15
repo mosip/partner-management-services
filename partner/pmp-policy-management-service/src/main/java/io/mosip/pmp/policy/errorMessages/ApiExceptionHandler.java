@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pmp.common.exception.RequestException;
 import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
 
 
@@ -88,6 +90,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpServletRequest httpServletRequest, final PolicyObjectValidationFailedException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return getErrorResponseObject(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	@ExceptionHandler(RequestException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
+			HttpServletRequest httpServletRequest, final RequestException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 		
 	/**

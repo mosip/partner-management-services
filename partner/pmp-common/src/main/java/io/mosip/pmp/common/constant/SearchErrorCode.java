@@ -16,6 +16,7 @@ public enum SearchErrorCode {
 	INVALID_PAGINATION("PMS-MSD-356", "Pagination cannot be null"),
 	INVALID_SORT_TYPE("PMS-MSD-358", "Sort type %s is not supported"),
 	ERROR_OCCURED_WHILE_SORTING("PMS-MSD-359", "Error occured while sorting"),
+	INVALID_COLUMN_VALUE("PMS-MSD-316", "Invalid value present for the given column"),
 	INVALID_SORT_FIELD("PMS-MSD-357", "Invalid sort field %s"), INVALID_VALUE("PMS-MSD-390", "Invalid filter value");
 
 	/**

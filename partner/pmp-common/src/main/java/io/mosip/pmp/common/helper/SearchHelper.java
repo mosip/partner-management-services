@@ -109,6 +109,10 @@ public class SearchHelper {
 			throw new DataAccessLayerException("",
 					hibernateException.getMessage(), hibernateException);
 		}
+		if(result.isEmpty()) {
+			throw new RequestException(SearchErrorCode.INVALID_COLUMN_VALUE.getErrorCode(),
+					String.format(SearchErrorCode.INVALID_COLUMN_VALUE.getErrorMessage()));
+		}
 		return new PageImpl<>(result,
 				PageRequest.of(searchDto.getPagination().getPageStart(), searchDto.getPagination().getPageFetch()),
 				rows);
@@ -159,7 +163,14 @@ public class SearchHelper {
 		String value = filter.getValue();
 		String filterType = filter.getType();
 		if (FilterTypeEnum.CONTAINS.name().equalsIgnoreCase(filterType)) {
-			Expression<String> lowerCase = builder.lower(root.get(columnName));
+			Expression<String> lowerCase=null;
+			try {
+				lowerCase = builder.lower(root.get(columnName));
+			} catch (Exception e) {
+				throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
+						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), columnName));
+			}
+			
 			if (value.startsWith("*") && value.endsWith("*")) {
 				String replacedValue = (value.substring(1)).substring(0, value.length() - 2);
 				return builder.like(lowerCase,
@@ -179,7 +190,13 @@ public class SearchHelper {
 			if (value.endsWith("*")) {
 				value = value.substring(0, value.length() - 1);
 			}
-			Expression<String> lowerCase = builder.lower(root.get(columnName));
+			Expression<String> lowerCase = null;
+			try {
+				 lowerCase = builder.lower(root.get(columnName));
+			} catch (Exception e) {
+				throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
+						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), value));
+			}
 			return builder.like(lowerCase, builder.lower(builder.literal(value + WILD_CARD_CHARACTER)));
 		}
 		if (FilterTypeEnum.BETWEEN.name().equalsIgnoreCase(filterType)) {
