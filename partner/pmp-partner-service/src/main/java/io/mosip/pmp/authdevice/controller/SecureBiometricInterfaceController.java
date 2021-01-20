@@ -149,7 +149,7 @@ public class SecureBiometricInterfaceController {
 	public ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<SBISearchDto> request) {
 		ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(RegSecureBiometricInterface.class, request.getRequest()));
 			return responseWrapper;
 		} 
