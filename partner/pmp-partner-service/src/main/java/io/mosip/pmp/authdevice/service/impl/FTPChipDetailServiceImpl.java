@@ -112,18 +112,6 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 
 		}
 		FoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
-		if(ftpProvider != null) {
-			auditUtil.auditRequest(
-					String.format(
-							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailDto.class.getCanonicalName()),
-					AuthDeviceConstant.AUDIT_SYSTEM,
-					String.format(AuthDeviceConstant.FAILURE_DESC,
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorCode(),
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorMessage()),
-					"AUT-003");
-			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorMessage());
-		}
 		FoundationalTrustProvider entity = new FoundationalTrustProvider();
 		entity.setActive(true);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
@@ -132,19 +120,34 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		}
 		entity.setCrDtimes(LocalDateTime.now());
 		entity.setId(partnerFromDb.getId());
-		//entity.setPartnerOrganizationName(partnerFromDb.getName());
-		foundationalTrustProviderRepository.save(entity);
+		if(ftpProvider == null) {
+			foundationalTrustProviderRepository.save(entity);
+		}
 		
 		FTPChipDetail chipDetail = new FTPChipDetail();
 		chipDetail.setActive(false);
-		chipDetail.setCrBy(authN.getName());
+		chipDetail.setCrBy("system");
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setFtpChipDetailId(PartnerUtil.generateId());
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
-		ftpChipDetailRepository.save(chipDetail);
+		try {
+			ftpChipDetailRepository.save(chipDetail);	
+		}catch(Exception ex){
+			auditUtil.auditRequest(
+					String.format(
+							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailDto.class.getCanonicalName()),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage()),
+					"AUT-003");
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage());	
+		}
+
 		IdDto response = new IdDto();
 		response.setId(chipDetail.getFtpChipDetailId());
 		return response;
