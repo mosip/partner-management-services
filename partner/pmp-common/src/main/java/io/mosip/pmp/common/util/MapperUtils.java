@@ -437,7 +437,7 @@ public class MapperUtils {
 			searchAuthPolicy.setCrBy(authPolicy.getCrBy());
 			searchAuthPolicy.setCrDtimes(authPolicy.getCrDtimes());
 			searchAuthPolicy.setDelDtimes(authPolicy.getDelDtimes());
-			searchAuthPolicy.setDescr(authPolicy.getDescr());
+			searchAuthPolicy.setDesc(authPolicy.getDescr());
 			searchAuthPolicy.setId(authPolicy.getId());
 			searchAuthPolicy.setIsActive(authPolicy.getIsActive());
 			searchAuthPolicy.setIsDeleted(authPolicy.getIsDeleted());

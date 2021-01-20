@@ -14,7 +14,7 @@ public class SearchAuthPolicy  {
 
 	private LocalDateTime delDtimes;
 
-	private String descr;
+	private String desc;
 
 	private Boolean isActive;
 
@@ -51,8 +51,8 @@ public class SearchAuthPolicy  {
 		return delDtimes;
 	}
 
-	public String getDescr() {
-		return descr;
+	public String getDesc() {
+		return desc;
 	}
 
 	public String getId() {
@@ -119,8 +119,8 @@ public class SearchAuthPolicy  {
 		this.delDtimes = delDtimes;
 	}
 
-	public void setDescr(String descr) {
-		this.descr = descr;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	public void setId(String id) {

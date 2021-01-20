@@ -5,7 +5,8 @@ public enum FoundationalTrustProviderErrorMessages {
 	FTP_CHIP_ID_NOT_EXISTS("PMP_AUT_031","ftp chip id not exists."),
 	FTP_PROVIDER_MAKE_MODEL_EXISTS("PMP_AUT_032","Given provider,make and model already exists."),
 	FTP_CERT_NOT_UPLOADED("PMP_AUT_033","Certificate is not uploaded."),
-	FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED("PMP_AUT_034","Ftp chip detail id and ftp provider id not mappped. ");
+	FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED("PMP_AUT_034","Ftp chip detail id and ftp provider id not mappped. "),
+	FTP_PROVIDER_EXISTS("PMP_AUT-037","Given ftp provider already registered.");
 	
 	private final String errorCode;
 	private final String errorMessage;

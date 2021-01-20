@@ -19,6 +19,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.constants.DeviceDetailExceptionsConstant;
 import io.mosip.pmp.authdevice.dto.ColumnCodeValue;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
@@ -205,7 +206,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	private DeviceDetail getUpdateMapping(DeviceDetail deviceDetail, DeviceDetailUpdateDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId());
-		deviceDetail.setIsActive(deviceDetailDto.getIsActive());
 
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -269,12 +269,12 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
-		List<DeviceDetailDto> deviceDetails = new ArrayList<>();
-		PageResponseDto<DeviceDetailDto> pageDto = new PageResponseDto<>();
+	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
+		List<DeviceDetailSearchResponseDto> deviceDetails = new ArrayList<>();
+		PageResponseDto<DeviceDetailSearchResponseDto> pageDto = new PageResponseDto<>();
 		Page<E> page = searchHelper.search(entityManager, entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailDto.class);
+			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
 		return pageDto;
