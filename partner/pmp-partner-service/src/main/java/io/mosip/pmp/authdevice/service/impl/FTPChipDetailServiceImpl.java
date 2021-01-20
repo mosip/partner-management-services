@@ -125,6 +125,7 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		}
 		
 		FTPChipDetail chipDetail = new FTPChipDetail();
+		chipDetail.setCrBy(authN.getName());
 		chipDetail.setActive(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
@@ -141,10 +142,10 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 					AuthDeviceConstant.AUDIT_SYSTEM,
 					String.format(AuthDeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage()),
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage()),
 					"AUT-003");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage());	
+					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage());	
 		}
 
 		IdDto response = new IdDto();
