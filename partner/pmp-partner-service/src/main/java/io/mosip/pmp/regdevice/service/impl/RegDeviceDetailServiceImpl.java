@@ -37,7 +37,9 @@ import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.common.validator.FilterColumnValidator;
+import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
+import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceType;
@@ -98,8 +100,9 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
 			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
-		if ((partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
-				deviceDetailDto.getDeviceProviderId())) == null) {
+		Partner partner =  partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				deviceDetailDto.getDeviceProviderId());
+		if (partner == null) {
 			auditUtil.auditRequest(
 					String.format(AuthDeviceConstant.FAILURE_CREATE, RegDeviceDetail.class.getCanonicalName()),
 					AuthDeviceConstant.AUDIT_SYSTEM,
@@ -110,7 +113,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
-
+		deviceDetailDto.setPartnerOrganizationName(partner.getName());
 		if (deviceDetailRepository.findByDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
 				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
 				deviceDetailDto.getDeviceTypeCode()) != null) {
@@ -131,7 +134,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	}
 
 	private RegDeviceDetail getCreateMapping(RegDeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
-		deviceDetail.setId(deviceDetailDto.getId());
+		deviceDetail.setId(deviceDetailDto.getId() == null ? PartnerUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();

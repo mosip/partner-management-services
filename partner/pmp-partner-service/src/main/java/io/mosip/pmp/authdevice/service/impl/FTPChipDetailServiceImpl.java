@@ -126,14 +126,14 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		chipDetail.setActive(false);
 		chipDetail.setCrBy(authN.getName());
 		chipDetail.setCrDtimes(LocalDateTime.now());
-		chipDetail.setFoundationalTPId(chipDetails.getFtpProviderId());
-		chipDetail.setId(PartnerUtil.generateId());
+		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
+		chipDetail.setFtpChipDetailId(PartnerUtil.generateId());
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
 		ftpChipDetailRepository.save(chipDetail);
 		IdDto response = new IdDto();
-		response.setId(chipDetail.getId());
+		response.setId(chipDetail.getFtpChipDetailId());
 		return response;
 	}
 
@@ -167,7 +167,7 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		}
 		FTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetails.getFtpProviderId(),
 				chipDetails.getMake(), chipDetails.getModel());
-		if(uniqueChipDetail != null && !chipDetail.get().getId().equals(uniqueChipDetail.getId())){
+		if(uniqueChipDetail != null && !chipDetail.get().getFtpChipDetailId().equals(uniqueChipDetail.getFtpChipDetailId())){
 			auditUtil.auditRequest(
 					String.format(
 							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailUpdateDto.class.getCanonicalName()),
@@ -204,10 +204,10 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		updateObject.setMake(chipDetails.getMake());
 		updateObject.setModel(chipDetails.getModel());
-		updateObject.setFoundationalTPId(chipDetails.getFtpProviderId());
+		updateObject.setFtpProviderId(chipDetails.getFtpProviderId());
 		ftpChipDetailRepository.save(updateObject);
 		IdDto response = new IdDto();
-		response.setId(updateObject.getId());
+		response.setId(updateObject.getFtpChipDetailId());
 		return response;
 	}
 
@@ -268,7 +268,7 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
-		if(!chipDetail.get().getFoundationalTPId().equals(ftpChipCertRequestDto.getFtpProviderId())) {
+		if(!chipDetail.get().getFtpProviderId().equals(ftpChipCertRequestDto.getFtpProviderId())) {
 			auditUtil.auditRequest(
 					String.format(
 							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailUpdateDto.class.getCanonicalName()),
@@ -285,7 +285,7 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		certRequest.setCertificateData(ftpChipCertRequestDto.getCertificateData());
 		certRequest.setOrganizationName(ftpChipCertRequestDto.getOrganizationName());
 		certRequest.setPartnerDomain(ftpChipCertRequestDto.getPartnerDomain());
-		certRequest.setPartnerId(chipDetail.get().getId());
+		certRequest.setPartnerId(chipDetail.get().getFtpChipDetailId());
 		certRequest.setPartnerType(partnerFromDb.getPartnerTypeCode());
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(certRequest);

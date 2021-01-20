@@ -41,6 +41,7 @@ import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
 import io.mosip.pmp.regdevice.entity.RegFoundationalTrustProvider;
 import io.mosip.pmp.regdevice.repository.RegFTPChipDetailRepository;
@@ -87,6 +88,9 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 	PartnerServiceRepository partnerServiceRepository; 
 	
 	@Autowired
+	private PageUtils pageUtils;
+	
+	@Autowired
 	private ObjectMapper mapper;
 
 	private static final String ERRORS = "errors";
@@ -125,7 +129,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		chipDetail.setActive(false);
 		chipDetail.setCrBy(authN.getName());
 		chipDetail.setCrDtimes(LocalDateTime.now());
-		chipDetail.setFoundationalTPId(chipDetails.getFtpProviderId());
+		chipDetails.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setId(PartnerUtil.generateId());
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
@@ -203,7 +207,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		updateObject.setMake(chipDetails.getMake());
 		updateObject.setModel(chipDetails.getModel());
-		updateObject.setFoundationalTPId(chipDetails.getFtpProviderId());
+		updateObject.setFtpProviderId(chipDetails.getFtpProviderId());
 		ftpChipDetailRepository.save(updateObject);
 		IdDto response = new IdDto();
 		response.setId(updateObject.getId());
@@ -266,7 +270,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
-		if(!chipDetail.get().getFoundationalTPId().equals(ftpChipCertRequestDto.getFtpProviderId())) {
+		if(!chipDetail.get().getFtpProviderId().equals(ftpChipCertRequestDto.getFtpProviderId())) {
 			auditUtil.auditRequest(
 					String.format(
 							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailUpdateDto.class.getCanonicalName()),
@@ -370,11 +374,8 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		Page<E> page =searchHelper.search(entityManager,entity, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
+			 pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
-		pageDto.setData(partners);
-		pageDto.setFromRecord(0);
-		pageDto.setToRecord(page.getContent().size());
-		pageDto.setTotalRecord(page.getContent().size());
 		return pageDto;
 	}
 }
