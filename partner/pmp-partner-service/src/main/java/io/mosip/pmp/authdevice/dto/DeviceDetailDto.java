@@ -7,7 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 @Data
 public class DeviceDetailDto {
-	@NotNull
+	
+	
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;

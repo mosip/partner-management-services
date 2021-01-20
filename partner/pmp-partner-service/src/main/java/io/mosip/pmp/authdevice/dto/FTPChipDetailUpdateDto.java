@@ -9,7 +9,7 @@ import lombok.Data;
 public class FTPChipDetailUpdateDto {
 	@NotNull
 	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "ftpChipDetailId", required = true, dataType = "java.lang.String")
+	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String ftpChipDetailId;
 
 	@NotNull
@@ -39,12 +39,12 @@ public class FTPChipDetailUpdateDto {
 		this.isItForRegistrationDevice = isItForRegistrationDevice;
 	}
 
-	public String getFtpChipDetailId() {
+	public String getId() {
 		return ftpChipDetailId;
 	}
 
-	public void setFtpChipDetailId(String ftpChipDetailId) {
-		this.ftpChipDetailId = ftpChipDetailId;
+	public void setId(String id) {
+		this.ftpChipDetailId = id;
 	}
 
 	public String getFtpProviderId() {

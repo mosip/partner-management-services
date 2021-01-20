@@ -15,10 +15,10 @@ import javax.persistence.Table;
 public class FTPChipDetail {
 	@Id 
 	@Column(name = "id", length = 36,nullable=false)
-	private String id;
+	private String ftpChipDetailId;
 	
 	@Column(name = "foundational_trust_provider_id", length = 36)
-	private String foundationalTPId;
+	private String ftpProviderId;
 	
 	@Column(name="make",length=36)
 	private String make;
@@ -57,20 +57,20 @@ public class FTPChipDetail {
 	@JoinColumn(name = "foundational_trust_provider_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private FoundationalTrustProvider foundationalTrustProvider;
 
-	public String getId() {
-		return id;
+	public String getFtpChipDetailId() {
+		return ftpChipDetailId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setFtpChipDetailId(String ftpChipDetailId) {
+		this.ftpChipDetailId = ftpChipDetailId;
 	}
 
-	public String getFoundationalTPId() {
-		return foundationalTPId;
+	public String getFtpProviderId() {
+		return ftpProviderId;
 	}
 
-	public void setFoundationalTPId(String foundationalTPId) {
-		this.foundationalTPId = foundationalTPId;
+	public void setFtpProviderId(String ftpProviderId) {
+		this.ftpProviderId = ftpProviderId;
 	}
 
 	public String getMake() {
