@@ -36,8 +36,9 @@ public class PolicyGroup implements Serializable {
 
 	@Column(name="del_dtimes")
 	private LocalDateTime delDtimes;
-
-	private String descr;
+	
+	@Column(name="descr")
+	private String desc;
 
 	@Column(name="is_active")
 	private Boolean isActive;
@@ -91,12 +92,12 @@ public class PolicyGroup implements Serializable {
 		this.delDtimes = delDtimes;
 	}
 
-	public String getDescr() {
-		return this.descr;
+	public String getDesc() {
+		return this.desc;
 	}
 
-	public void setDescr(String descr) {
-		this.descr = descr;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	public Boolean getIsActive() {

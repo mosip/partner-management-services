@@ -114,12 +114,27 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());			
 		}
+		
+		RegFoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
+		if(ftpProvider != null) {
+			auditUtil.auditRequest(
+					String.format(
+							AuthDeviceConstant.FAILURE_CREATE, FTPChipDetailDto.class.getCanonicalName()),
+					AuthDeviceConstant.AUDIT_SYSTEM,
+					String.format(AuthDeviceConstant.FAILURE_DESC,
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorCode(),
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorMessage()),
+					"AUT-003");
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_EXISTS.getErrorMessage());
+		}
+		
 		RegFoundationalTrustProvider entity = new RegFoundationalTrustProvider();
 		entity.setActive(true);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
-		}
+		}		
 		entity.setCrDtimes(LocalDateTime.now());
 		entity.setId(partnerFromDb.getId());
 		entity.setPartnerOrganizationName(partnerFromDb.getName());

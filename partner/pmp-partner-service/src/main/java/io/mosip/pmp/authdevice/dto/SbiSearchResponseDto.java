@@ -37,6 +37,16 @@ public class SbiSearchResponseDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 
+	private boolean isActive;	
+	
+	public boolean getIsActive() {
+		return isActive;
+	}
+	
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
 	public String getSwBinaryHash() {
 		return swBinaryHash;
 	}
