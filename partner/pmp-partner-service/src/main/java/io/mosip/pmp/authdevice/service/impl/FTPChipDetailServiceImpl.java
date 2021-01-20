@@ -126,7 +126,6 @@ public class FTPChipDetailServiceImpl implements FTPChipDetailService {
 		
 		FTPChipDetail chipDetail = new FTPChipDetail();
 		chipDetail.setActive(false);
-		chipDetail.setCrBy("system");
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setFtpChipDetailId(PartnerUtil.generateId());

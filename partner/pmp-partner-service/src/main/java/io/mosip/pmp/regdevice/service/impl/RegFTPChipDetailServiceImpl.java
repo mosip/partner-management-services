@@ -130,7 +130,6 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		
 		RegFTPChipDetail chipDetail = new RegFTPChipDetail();
 		chipDetail.setActive(false);
-		chipDetail.setCrBy("system");
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setId(PartnerUtil.generateId());
