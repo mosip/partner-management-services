@@ -44,18 +44,7 @@ public class DeviceDetailUpdateDto {
 	@Size(min = 0, max = 128)
 	@ApiModelProperty(value = "partnerOrganizationName", required = true, dataType = "java.lang.String")
 	private String partnerOrganizationName;
-
-	@NotNull
-	private Boolean isActive;
 	
 	@NotNull
 	private Boolean isItForRegistrationDevice;
-	
-	public boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
 }

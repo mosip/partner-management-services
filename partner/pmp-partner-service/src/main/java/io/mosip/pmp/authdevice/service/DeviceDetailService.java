@@ -3,6 +3,7 @@ package io.mosip.pmp.authdevice.service;
 import org.springframework.stereotype.Service;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
@@ -46,9 +47,22 @@ public interface DeviceDetailService {
 	 */
 	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails);
 	
-
-	public <E> PageResponseDto<DeviceDetailDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto);
+	/**
+	 * 
+	 * @param <E>
+	 * @param entity
+	 * @param dto
+	 * @return
+	 */
+	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto);
 	
+	/**
+	 * 
+	 * @param <E>
+	 * @param entity
+	 * @param dto
+	 * @return
+	 */
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto);
 	
 	/**

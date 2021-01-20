@@ -174,7 +174,7 @@ public class PolicyManagementService {
 		policyGroup.setCrDtimes(LocalDateTime.now());
 		policyGroup.setIsActive(true);
 		policyGroup.setName(requestDto.getName());
-		policyGroup.setDescr(requestDto.getDesc());
+		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUserId(getUser());
 		policyGroup.setId(PolicyUtil.generateId());
 		return savePolicyGroup(policyGroup);
@@ -204,7 +204,7 @@ public class PolicyManagementService {
 			updatePoicyGroupPolicies(policyGroupFromDb.get().getId(), requestDto.isActive());
 			policyGroup.setIsActive(requestDto.isActive());
 		}
-		policyGroup.setDescr(requestDto.getDesc());
+		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUpdBy(getUser());
 		policyGroup.setUpdDtimes(LocalDateTime.now());
 		policyGroup.setUserId(getUser());
@@ -332,7 +332,7 @@ public class PolicyManagementService {
 		PolicyGroupCreateResponseDto responseDto = new PolicyGroupCreateResponseDto();
 		responseDto.setCr_by(policyGroup.getCrBy());
 		responseDto.setCr_dtimes(policyGroup.getCrDtimes());
-		responseDto.setDesc(policyGroup.getDescr());
+		responseDto.setDesc(policyGroup.getDesc());
 		responseDto.setName(policyGroup.getName());
 		responseDto.setId(policyGroup.getId());
 		responseDto.setIs_Active(policyGroup.getIsActive());
@@ -400,7 +400,7 @@ public class PolicyManagementService {
 		response.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
 		response.setIs_Active(authPolicy.getIsActive());
 		response.setPolicyDesc(authPolicy.getDescr());
-		response.setPolicyGroupDesc(policyGroup.getDescr());
+		response.setPolicyGroupDesc(policyGroup.getDesc());
 		response.setPolicyGroupId(policyGroup.getId());
 		response.setPolicyGroupName(policyGroup.getName());
 		response.setPolicyGroupStatus(policyGroup.getIsActive());

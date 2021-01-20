@@ -526,7 +526,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 					PartnerValidationsConstants.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());
 		}		
 		response.setPolicyId(partnerPolicy.getPolicyId());
-		response.setPolicyDescription(authPolicy.get().getPolicyGroup().getDescr());
+		response.setPolicyDescription(authPolicy.get().getPolicyGroup().getDesc());
 		response.setPolicy(getAuthPolicies(authPolicy.get().getPolicyFileId(), authPolicy.get().getId()));
 		response.setPolicyStatus(authPolicy.get().getIsActive());
 		response.setPartnerId(partnerPolicy.getPartner().getId());
