@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
+import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
@@ -191,7 +193,15 @@ public interface PartnerService {
 	 */
 	public String mapPartnerPolicyCredentialType(String credentialType,String partnerId,String policyId);
 	
-	
+	/**
+	 * 
+	 * @param credentialType
+	 * @param partnerId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException;
 	
 	/**
@@ -201,4 +211,24 @@ public interface PartnerService {
 	 */
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto);
 	
+	/**
+	 * 
+	 * @param filterValueDto
+	 * @return
+	 */
+	public FilterResponseCodeDto apiKeyRequestFilter(FilterValueDto filterValueDto);
+	
+	/**
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto);
+	
+	/**
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto);
 }
