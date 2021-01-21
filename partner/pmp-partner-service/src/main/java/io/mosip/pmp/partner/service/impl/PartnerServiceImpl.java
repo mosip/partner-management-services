@@ -45,6 +45,8 @@ import io.mosip.pmp.common.dto.FilterData;
 import io.mosip.pmp.common.dto.FilterDto;
 import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
+import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.FilterHelper;
@@ -1102,5 +1104,104 @@ public class PartnerServiceImpl implements PartnerService {
 			return date.toLocalDateTime();
 		}
 		return LocalDateTime.now();
+	}
+
+	@Override
+	public FilterResponseCodeDto apiKeyRequestFilter(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PartnerPolicyRequest.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PartnerPolicyRequest.class,
+						filterDto, filterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;		
+	}
+
+	@Override
+	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
+		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
+		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
+		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
+			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),page.getTotalElements());
+		}
+		return pageDto;
+	}
+
+	@Override
+	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto) {
+		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
+		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
+		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partnerPolicyRequests = mapPolicyRequests(page.getContent());
+			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),page.getTotalElements());
+		}
+		return pageDto;
+	}
+	
+	/**
+	 * 
+	 * @param policyRequests
+	 * @return
+	 */
+	private static List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> policyRequests){
+		Objects.requireNonNull(policyRequests);
+		List<PolicyRequestSearchResponseDto> policyRequestList=new ArrayList<>();
+		policyRequests.forEach(policyRequest -> {
+			PolicyRequestSearchResponseDto searchPolicyRequest=new PolicyRequestSearchResponseDto();
+			searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
+			searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
+			searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
+			searchPolicyRequest.setRequestDatetimes(policyRequest.getRequestDatetimes());
+			searchPolicyRequest.setRequestDetail(policyRequest.getRequestDetail());
+			searchPolicyRequest.setStatusCode(policyRequest.getStatusCode());
+			searchPolicyRequest.setCrBy(policyRequest.getCrBy());
+			searchPolicyRequest.setCrDtimes(policyRequest.getCrDtimes());
+			searchPolicyRequest.setUpdBy(policyRequest.getUpdBy());
+			searchPolicyRequest.setUpdDtimes(policyRequest.getUpdDtimes());
+			searchPolicyRequest.setIsDeleted(policyRequest.getIsDeleted());
+			searchPolicyRequest.setDelDtimes(policyRequest.getDelDtimes());
+			policyRequestList.add(searchPolicyRequest);
+		});
+		return policyRequestList;
+	}
+	
+	/**
+	 * 
+	 * @param partnerPolicies
+	 * @return
+	 */
+	private static List<PartnerPolicySearchResponseDto> mapPartnerPolicies(List<PartnerPolicy> partnerPolicies){
+		Objects.requireNonNull(partnerPolicies);
+		List<PartnerPolicySearchResponseDto> partnerPolicyList=new ArrayList<>();
+		partnerPolicies.forEach(partnerPolicy -> {
+			PartnerPolicySearchResponseDto searchResponse = new PartnerPolicySearchResponseDto();
+			searchResponse.setPolicyApiKey(partnerPolicy.getPolicyApiKey());
+			searchResponse.setPartnerId(partnerPolicy.getPartner().getId());
+			searchResponse.setPolicyId(partnerPolicy.getPolicyId());
+			searchResponse.setValidFromDatetime(partnerPolicy.getValidFromDatetime());
+			searchResponse.setValidToDatetime(partnerPolicy.getValidToDatetime());
+			searchResponse.setIsActive(partnerPolicy.getIsActive());
+			searchResponse.setIsDeleted(partnerPolicy.getIsDeleted());
+			searchResponse.setCrBy(partnerPolicy.getCrBy());
+			searchResponse.setCrDtimes(partnerPolicy.getCrDtimes());
+			searchResponse.setUpdBy(partnerPolicy.getUpdBy());
+			searchResponse.setUpdDtimes(partnerPolicy.getUpdDtimes());
+			searchResponse.setDelDtimes(partnerPolicy.getDelDtimes());
+			partnerPolicyList.add(searchResponse);
+		});
+		return partnerPolicyList;
 	}
 }
