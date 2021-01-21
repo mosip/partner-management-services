@@ -927,7 +927,7 @@ public class PolicyManagementService {
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PolicyGroup.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PolicyGroup.class,
-						filterDto, filterValueDto, "id");
+						filterDto, filterValueDto, "name");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
