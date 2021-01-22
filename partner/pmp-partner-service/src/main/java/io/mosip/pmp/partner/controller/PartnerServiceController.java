@@ -30,7 +30,6 @@ import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pmp.common.dto.SearchDto;
-//import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;

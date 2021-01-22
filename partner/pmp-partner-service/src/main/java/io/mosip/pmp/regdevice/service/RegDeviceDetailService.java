@@ -5,6 +5,7 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;

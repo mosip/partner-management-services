@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -41,6 +41,7 @@ import io.mosip.pmp.authdevice.util.dto.AuditRequestDto;
 import io.mosip.pmp.authdevice.util.dto.AuditResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.util.RestUtil;
 
 @Component
 public class AuditUtil {
@@ -71,6 +72,9 @@ public class AuditUtil {
 	
 	@Autowired
 	private Environment env;
+
+	@Autowired
+	RestUtil restUtil;
 	
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditUtil.class);
 	/**
@@ -91,11 +95,11 @@ public class AuditUtil {
 
 	public void auditRequest(String eventName, String eventType, String description) {
 		String eventId = "ADM-" + eventCounter.incrementAndGet();
-		//setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
-		//setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId);
 	}
 
 	/**
@@ -200,15 +204,16 @@ public class AuditUtil {
 		RequestWrapper<AuditRequestDto> auditReuestWrapper = new RequestWrapper<>();
 		auditReuestWrapper.setRequest(auditRequestDto);
 		HttpEntity<RequestWrapper<AuditRequestDto>> httpEntity = new HttpEntity<>(auditReuestWrapper);
-		ResponseEntity<String> response = null;
+		String response =null;
 		try {
-			response = restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
+			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);
+			//response = restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			handlException(ex);
 		}
-		String responseBody = response.getBody();
-		getAuditDetailsFromResponse(responseBody);
+		//String responseBody = response.getBody();
+		getAuditDetailsFromResponse(response);
 
 	}
 

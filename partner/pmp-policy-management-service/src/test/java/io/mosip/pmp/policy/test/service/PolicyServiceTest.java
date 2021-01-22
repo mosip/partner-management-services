@@ -64,9 +64,9 @@ public class PolicyServiceTest {
 	PartnerPolicyRepository partnerPolicyRepository;	
 	
 	@Mock
-	private WebSubPublisher webSubPublisher;
-	
-	@Mock
+	private WebSubPublisher webSubPublisher;	
+
+	@MockBean
 	private AuditUtil audit;
 	
 	@Before

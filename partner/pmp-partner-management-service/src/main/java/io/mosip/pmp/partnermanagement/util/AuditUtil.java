@@ -11,8 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -27,16 +26,14 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pmp.common.exception.ValidationException;
+import io.mosip.pmp.common.util.RestUtil;
 import io.mosip.pmp.partnermanagement.constant.PartnerManageEnum;
 import io.mosip.pmp.partnermanagement.dto.AuditRequestDto;
 import io.mosip.pmp.partnermanagement.dto.AuditResponseDto;
 
 
 @Component
-public class AuditUtil {
-
-
-	
+public class AuditUtil {	
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -46,6 +43,9 @@ public class AuditUtil {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	RestUtil restUtil;
 	
 	/** The Constant UNKNOWN_HOST. */
 	private static final String UNKNOWN_HOST = "Unknown Host";
@@ -99,24 +99,19 @@ public class AuditUtil {
 	}
 	
 	private void callAuditManager(AuditRequestDto auditRequestDto) {
-
 		RequestWrapper<AuditRequestDto> auditReuestWrapper = new RequestWrapper<>();
 		auditReuestWrapper.setRequest(auditRequestDto);
 		HttpEntity<RequestWrapper<AuditRequestDto>> httpEntity = new HttpEntity<>(auditReuestWrapper);
-		ResponseEntity<String> response = null;
+		String response =null;
 		try {
-			response = restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
-			String responseBody = response.getBody();
-			getAuditDetailsFromResponse(responseBody);
+			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);
+			getAuditDetailsFromResponse(response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-
 	}
 	
 	private AuditResponseDto getAuditDetailsFromResponse(String responseBody) throws Exception {
-
 		List<ServiceError> validationErrorsList = null;
 		validationErrorsList = ExceptionUtils.getServiceErrorList(responseBody);
 		AuditResponseDto auditResponseDto = null;
@@ -148,6 +143,4 @@ public class AuditUtil {
 			return SecurityContextHolder.getContext().getAuthentication().getName();
 		}
 	}
-
-	
 }

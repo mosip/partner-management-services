@@ -21,6 +21,7 @@ import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SbiSearchResponseDto;
+import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -28,6 +29,7 @@ import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.common.helper.SearchHelper;
 import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.common.util.PageUtils;
@@ -97,8 +99,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		return dto;
 	}
 
-	private RegSecureBiometricInterface getCreateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceCreateDto dto) {
-		
+	private RegSecureBiometricInterface getCreateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceCreateDto dto) {		
 		entity.setActive(false);
 		entity.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
@@ -108,10 +109,8 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		entity.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		entity.setSwVersion(dto.getSwVersion());
 		entity.setSwCreateDateTime(dto.getSwCreateDateTime());
-		entity.setSwExpiryDateTime(dto.getSwExpiryDateTime());
-		
-		return entity;
-		
+		entity.setSwExpiryDateTime(dto.getSwExpiryDateTime());		
+		return entity;		
 	}
 	
 	private RegSecureBiometricInterfaceHistory getCreateHistoryMapping(RegSecureBiometricInterfaceHistory historyEntity,RegSecureBiometricInterface entity) {
@@ -124,11 +123,10 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		historyEntity.setSwVersion(entity.getSwVersion());
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
-		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
-		
-		return historyEntity;
-		
+		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());		
+		return historyEntity;		
 	}
+
 	@Override
 	public IdDto updateSecureBiometricInterface(SecureBiometricInterfaceUpdateDto sbiupdateDto) {
 		RegSecureBiometricInterface sbi=null;
@@ -176,10 +174,8 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		return dto;
 	}
 	
-	private RegSecureBiometricInterface getUpdateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceUpdateDto dto) {
-		
-		entity.setActive(dto.getIsActive());
-		
+	private RegSecureBiometricInterface getUpdateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceUpdateDto dto) {		
+		entity.setActive(dto.getIsActive());		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setUpdBy(authN.getName());
@@ -187,10 +183,8 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		entity.setSwVersion(dto.getSwVersion());
 		entity.setSwCreateDateTime(dto.getSwCreateDateTime());
-		entity.setSwExpiryDateTime(dto.getSwExpiryDateTime());
-		
-		return entity;
-		
+		entity.setSwExpiryDateTime(dto.getSwExpiryDateTime());		
+		return entity;		
 	}
 	
 	private RegSecureBiometricInterfaceHistory getUpdateHistoryMapping(RegSecureBiometricInterfaceHistory historyEntity,RegSecureBiometricInterface entity) {
@@ -204,10 +198,8 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
 		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
-		historyEntity.setDeviceDetailId(entity.getDeviceDetailId());
-		
+		historyEntity.setDeviceDetailId(entity.getDeviceDetailId());		
 		return historyEntity;
-		
 	}
 	
 	@Override
@@ -278,5 +270,4 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 		}
 		return pageDto;
 	}
-
 }

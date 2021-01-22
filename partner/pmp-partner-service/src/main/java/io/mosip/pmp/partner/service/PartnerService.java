@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.common.dto.FilterValueDto;
 import io.mosip.pmp.common.dto.PageResponseDto;

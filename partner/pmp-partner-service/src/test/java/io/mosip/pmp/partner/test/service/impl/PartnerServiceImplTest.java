@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
@@ -95,6 +96,8 @@ public class PartnerServiceImplTest {
 	BiometricExtractorProviderRepository extractorProviderRepository;	
 	@Mock
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
+	@Mock
+	private WebSubPublisher webSubPublisher;
 	
 	@Before
 	public void setUp() {
@@ -107,7 +110,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
-
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
 	
 	@Test
