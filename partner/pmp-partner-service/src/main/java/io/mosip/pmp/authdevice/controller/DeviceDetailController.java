@@ -176,7 +176,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
 			return responseWrapper;
 		} 
@@ -190,7 +190,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));
 			return responseWrapper;
 		} 
