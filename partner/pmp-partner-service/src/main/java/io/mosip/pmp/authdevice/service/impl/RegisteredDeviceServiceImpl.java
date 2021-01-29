@@ -618,5 +618,4 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		}
 		return pageDto;
 	}
-
 }

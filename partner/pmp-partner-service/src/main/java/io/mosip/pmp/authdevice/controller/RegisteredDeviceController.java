@@ -85,7 +85,7 @@ public class RegisteredDeviceController {
 	public ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> searchRegisteredDevice(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> responseWrapper = new ValidateResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regRegisteredDeviceService.searchRegisteredDevice(RegRegisteredDevice.class, request.getRequest()));
 			return responseWrapper;
 		} 

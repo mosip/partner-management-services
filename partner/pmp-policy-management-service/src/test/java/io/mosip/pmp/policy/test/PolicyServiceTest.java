@@ -8,12 +8,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.util.RestUtil;
 
 /**
  * @author Nagarjuna
  *
  */
-@Import(value = {WebSubPublisher.class})
+@Import(value = {WebSubPublisher.class,RestUtil.class})
 @SpringBootApplication(scanBasePackages = { "io.mosip.pmp.policy.*","io.mosip.pmp.common.*"})
 public class PolicyServiceTest {
 

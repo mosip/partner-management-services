@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,6 +26,7 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.pmp.common.util.RestUtil;
 import io.mosip.pmp.misp.entity.AuditRequestDto;
 import io.mosip.pmp.misp.entity.AuditResponseDto;
 
@@ -44,6 +45,9 @@ public class AuditUtil {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	RestUtil restUtil;
 	
 	/** The Constant UNKNOWN_HOST. */
 	private static final String UNKNOWN_HOST = "Unknown Host";
@@ -101,11 +105,12 @@ public class AuditUtil {
 		RequestWrapper<AuditRequestDto> auditReuestWrapper = new RequestWrapper<>();
 		auditReuestWrapper.setRequest(auditRequestDto);
 		HttpEntity<RequestWrapper<AuditRequestDto>> httpEntity = new HttpEntity<>(auditReuestWrapper);
-		ResponseEntity<String> response = null;
+		String response =null;
 		try {
-			response = restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
-			String responseBody = response.getBody();
-			getAuditDetailsFromResponse(responseBody);
+			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);
+			//response = restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
+			//String responseBody = response.getBody();
+			getAuditDetailsFromResponse(response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

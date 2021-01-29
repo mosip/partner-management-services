@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.constants.Purpose;
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
+
 import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
@@ -175,7 +176,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
 			return responseWrapper;
 		} 
@@ -189,7 +190,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));
 			return responseWrapper;
 		} 
@@ -239,5 +240,4 @@ public class DeviceDetailController {
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}
-
 }

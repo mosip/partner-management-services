@@ -605,5 +605,4 @@ public class RegRegisteredDeviceServiceImpl implements RegRegisteredDeviceServic
 		}
 		return pageDto;
 	}
-
 }

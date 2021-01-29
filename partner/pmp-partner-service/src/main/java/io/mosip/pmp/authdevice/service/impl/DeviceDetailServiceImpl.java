@@ -23,6 +23,8 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
+import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
@@ -47,6 +49,7 @@ import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.util.PartnerUtil;
+import io.mosip.pmp.common.dto.SearchFilter;
 
 @Component
 @Transactional
@@ -56,6 +59,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
+
 
 	@Autowired
 	FilterHelper filterHelper;
@@ -364,5 +368,4 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		}
 		return filterResponseDto;
 	}
-
 }

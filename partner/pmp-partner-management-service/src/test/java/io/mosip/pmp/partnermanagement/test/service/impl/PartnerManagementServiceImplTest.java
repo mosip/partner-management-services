@@ -80,9 +80,9 @@ public class PartnerManagementServiceImplTest {
 	MispServiceRepository mispRepository;
 	
 	@Mock
-	private WebSubPublisher webSubPublisher;
-	
-	@Mock
+	private WebSubPublisher webSubPublisher;	
+
+	@MockBean
 	private AuditUtil audit;
 	
 	@Before
