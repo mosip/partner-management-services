@@ -5,8 +5,7 @@ on:
     branches:
       - master
       - 1.*
-      - develop
-      - develop_patch
+      - develop      
   
 jobs:
   build:
