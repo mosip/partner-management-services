@@ -333,9 +333,9 @@ public class PartnerControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
-	@ExceptionHandler(io.mosip.pmp.common.exception.RequestException.class)
+	@ExceptionHandler(io.mosip.pms.common.exception.RequestException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
-			final HttpServletRequest httpServletRequest, final io.mosip.pmp.common.exception.RequestException exception) {
+			final HttpServletRequest httpServletRequest, final io.mosip.pms.common.exception.RequestException exception) {
 		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
