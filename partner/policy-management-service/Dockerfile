@@ -55,7 +55,7 @@ RUN chown -R ${container_user}:${container_user} /home/${container_user}
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
 
-EXPOSE 9101
+EXPOSE 9107
 
 CMD wget -q --show-progress "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
 	java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" policy-management-service.jar ; \
