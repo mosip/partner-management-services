@@ -321,7 +321,7 @@ jobs:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION    
-    docker-policy-management-service:
+  docker-policy-management-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -372,7 +372,7 @@ jobs:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-    docker-partner-management-service:
+  docker-partner-management-service:
     needs: build
 
     runs-on: ubuntu-latest
