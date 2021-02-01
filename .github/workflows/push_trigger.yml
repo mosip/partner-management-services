@@ -6,6 +6,7 @@ on:
       - master
       - 1.*
       - develop
+      - develop_patch
   
 jobs:
   build:
