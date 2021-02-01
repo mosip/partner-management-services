@@ -17,11 +17,11 @@ import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
-import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.regdevice.entity.RegRegisteredDevice;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
+import io.mosip.pms.common.dto.PageResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 

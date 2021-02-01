@@ -30,6 +30,15 @@ public class PartnerUtil {
 	 * 
 	 * @return
 	 */
+	public static String createPartnerApiKey() {
+		int id = (int) (Math.random() * 100000000);
+		return id + "";
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public static String generateId(){
 	    int id = (int)(Math.random()*1000000);
 	    return id +"";

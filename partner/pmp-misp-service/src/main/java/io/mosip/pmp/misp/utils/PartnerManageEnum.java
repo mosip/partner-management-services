@@ -1,6 +1,6 @@
 package io.mosip.pmp.misp.utils;
 
-import io.mosip.pmp.common.constant.AuditConstant;
+import io.mosip.pms.common.constant.AuditConstant;
 
 public enum PartnerManageEnum {
 	

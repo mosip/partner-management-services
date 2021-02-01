@@ -20,22 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import io.mosip.pmp.common.entity.AuthPolicy;
-import io.mosip.pmp.common.entity.MISPEntity;
-import io.mosip.pmp.common.entity.MISPLicenseEntity;
-import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
-import io.mosip.pmp.common.entity.Partner;
-import io.mosip.pmp.common.entity.PartnerPolicy;
-import io.mosip.pmp.common.entity.PartnerPolicyRequest;
-import io.mosip.pmp.common.entity.PolicyGroup;
-import io.mosip.pmp.common.helper.WebSubPublisher;
-import io.mosip.pmp.common.repository.AuthPolicyRepository;
-import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.common.repository.MispServiceRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pmp.common.repository.PartnerRepository;
-import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.partnermanagement.PartnermanagementApplication;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
@@ -47,6 +31,22 @@ import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pmp.partnermanagement.util.AuditUtil;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.MISPEntity;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.MISPLicenseKey;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.MispServiceRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
 
 
 @RunWith(SpringRunner.class)
@@ -673,8 +673,8 @@ public class PartnerManagementServiceImplTest {
 		return req;
 	}
 
-	private MISPlKeyUniqueKeyEntity mispLUniqueKey() {
-		MISPlKeyUniqueKeyEntity unique = new MISPlKeyUniqueKeyEntity();
+	private MISPLicenseKey mispLUniqueKey() {
+		MISPLicenseKey unique = new MISPLicenseKey();
 		unique.setMisp_id("100");
 		unique.setLicense_key("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
 		return unique;

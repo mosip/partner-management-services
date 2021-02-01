@@ -23,12 +23,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
-import io.mosip.pmp.common.entity.MISPEntity;
-import io.mosip.pmp.common.entity.MISPLicenseEntity;
-import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
-import io.mosip.pmp.common.helper.WebSubPublisher;
-import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.common.repository.MispServiceRepository;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateRequestDto;
@@ -39,6 +33,13 @@ import io.mosip.pmp.misp.exception.MISPException;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
 import io.mosip.pmp.misp.utils.AuditUtil;
+import io.mosip.pms.common.entity.MISPEntity;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.MISPLicenseKey;
+import io.mosip.pms.common.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.MispServiceRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
@@ -470,9 +471,18 @@ public class MISPServiceTest {
 		return unique;
 	}
 	
+	private MISPLicenseKey getMISPLicenseKey() {
+		MISPLicenseKey unique = new MISPLicenseKey();
+		unique.setMisp_id("100");
+		unique.setLicense_key("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
+		return unique;		
+	}
+	
+	
+	
 	private MISPLicenseEntity mispLicense() {
 		MISPLicenseEntity mispLices = new MISPLicenseEntity();
-		mispLices.setMispLicenseUniqueKey(mispLUniqueKey());
+		mispLices.setMispLicenseUniqueKey(getMISPLicenseKey());
 		mispLices.setValidFromDate(LocalDateTime.now());
 		mispLices.setValidToDate(LocalDateTime.now().plusDays(90));
 		mispLices.setIsActive(true);
@@ -482,7 +492,7 @@ public class MISPServiceTest {
 	private List<MISPLicenseEntity> mispLicenses() {
 		List<MISPLicenseEntity> licenses = new ArrayList<MISPLicenseEntity>();
 		MISPLicenseEntity mispLices = new MISPLicenseEntity();
-		mispLices.setMispLicenseUniqueKey(mispLUniqueKey());
+		mispLices.setMispLicenseUniqueKey(getMISPLicenseKey());
 		mispLices.setValidFromDate(LocalDateTime.now());
 		mispLices.setValidToDate(LocalDateTime.now().plusDays(90));
 		licenses.add(mispLices);

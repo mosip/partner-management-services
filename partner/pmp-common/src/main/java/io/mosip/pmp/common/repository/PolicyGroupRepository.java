@@ -1,15 +1,17 @@
 package io.mosip.pmp.common.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import io.mosip.pmp.common.entity.PolicyGroup;
 
 /**
- * @author Nagarjuna Kuchi
+ * @author sanjeev.shrivastava
  *
  */
+
+@Repository
 public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String> {
-
-	PolicyGroup findByName(String name);
-
+	
+	public PolicyGroup findByName(String policyName);
 }

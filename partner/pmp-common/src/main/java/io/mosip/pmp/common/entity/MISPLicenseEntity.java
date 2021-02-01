@@ -31,7 +31,7 @@ public class MISPLicenseEntity extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = -8541947597557590399L;	
 	
 	@EmbeddedId
-	public MISPlKeyUniqueKeyEntity mispLicenseUniqueKey;	
+	public MISPLicenseKey mispLicenseUniqueKey;	
 	
 	@Column(name = "valid_from_date")
 	private LocalDateTime validFromDate;	

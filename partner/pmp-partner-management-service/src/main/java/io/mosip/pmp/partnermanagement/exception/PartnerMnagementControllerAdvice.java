@@ -23,9 +23,9 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pmp.common.exception.ApiAccessibleException;
 import io.mosip.pmp.partnermanagement.constant.PartnerManagementInputExceptionConstant;
 import io.mosip.pmp.partnermanagement.core.ResponseWrapper;
+import io.mosip.pms.common.exception.ApiAccessibleException;
 
 /**
  * @author sanjeev.shrivastava

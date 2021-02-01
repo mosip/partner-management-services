@@ -12,5 +12,6 @@ public class PartnerAPIKeyResponse {
 	
 	private String apiRequestId;
 	private String message;
+	private String apikeyId;
 		
 }

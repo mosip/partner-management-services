@@ -39,31 +39,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.StringUtils;
-import io.mosip.pmp.common.constant.EventType;
-import io.mosip.pmp.common.dto.FilterData;
-import io.mosip.pmp.common.dto.FilterDto;
-import io.mosip.pmp.common.dto.FilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.PolicyFilterValueDto;
-import io.mosip.pmp.common.dto.PolicySearchDto;
-import io.mosip.pmp.common.dto.SearchAuthPolicy;
-import io.mosip.pmp.common.dto.SearchDto;
-import io.mosip.pmp.common.dto.SearchFilter;
-import io.mosip.pmp.common.dto.Type;
-import io.mosip.pmp.common.entity.AuthPolicy;
-import io.mosip.pmp.common.entity.AuthPolicyH;
-import io.mosip.pmp.common.entity.PartnerPolicy;
-import io.mosip.pmp.common.entity.PolicyGroup;
-import io.mosip.pmp.common.helper.FilterHelper;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.helper.WebSubPublisher;
-import io.mosip.pmp.common.repository.AuthPolicyHRepository;
-import io.mosip.pmp.common.repository.AuthPolicyRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRepository;
-import io.mosip.pmp.common.repository.PolicyGroupRepository;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
-import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.policy.dto.ColumnCodeValue;
 import io.mosip.pmp.policy.dto.FilterResponseCodeDto;
 import io.mosip.pmp.policy.dto.KeyValuePair;
@@ -85,10 +60,35 @@ import io.mosip.pmp.policy.errorMessages.ErrorMessages;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.util.AuditUtil;
 import io.mosip.pmp.policy.util.PolicyUtil;
-import io.mosip.pmp.policy.validator.exception.InvalidPolicySchemaException;
-import io.mosip.pmp.policy.validator.exception.PolicyIOException;
-import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
-import io.mosip.pmp.policy.validator.spi.PolicyValidator;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.FilterData;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PolicyFilterValueDto;
+import io.mosip.pms.common.dto.PolicySearchDto;
+import io.mosip.pms.common.dto.SearchAuthPolicy;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.AuthPolicyH;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.helper.FilterHelper;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyHRepository;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.common.validator.FilterColumnValidator;
+import io.mosip.pms.policy.validator.exception.InvalidPolicySchemaException;
+import io.mosip.pms.policy.validator.exception.PolicyIOException;
+import io.mosip.pms.policy.validator.exception.PolicyObjectValidationFailedException;
+import io.mosip.pms.policy.validator.spi.PolicyValidator;
 
 /**
  * <p>
@@ -685,7 +685,7 @@ public class PolicyManagementService {
 	 */
 	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId)
 			throws JsonParseException, JsonMappingException, IOException {
-		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerId, policyId);
+		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId, policyId);
 		if (partnerPolicy == null) {
 			logger.error("Partner is not found");
 			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);

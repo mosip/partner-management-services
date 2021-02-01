@@ -51,10 +51,6 @@ import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ValidateResponseWrapper;
 import io.mosip.pmp.partner.exception.ErrorResponse;
@@ -67,6 +63,10 @@ import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
 import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceHistoryRepository;
 import io.mosip.pmp.regdevice.repository.RegRegisteredDeviceRepository;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
 
 @Component
 @Transactional

@@ -2,7 +2,7 @@ package io.mosip.pmp.policy.dto;
 
 import java.util.List;
 
-import io.mosip.pmp.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.PolicyGroup;
 import lombok.Data;
 
 /**

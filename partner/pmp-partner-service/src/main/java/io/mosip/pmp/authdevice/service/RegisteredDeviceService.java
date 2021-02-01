@@ -6,7 +6,7 @@ import io.mosip.pmp.authdevice.dto.DeRegisterDevicePostDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
-import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PageResponseDto;
 
 @Service
 public interface RegisteredDeviceService {

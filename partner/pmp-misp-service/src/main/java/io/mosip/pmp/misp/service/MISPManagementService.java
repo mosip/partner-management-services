@@ -19,15 +19,6 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
-import io.mosip.pmp.common.constant.EventType;
-import io.mosip.pmp.common.dto.Type;
-import io.mosip.pmp.common.entity.MISPEntity;
-import io.mosip.pmp.common.entity.MISPLicenseEntity;
-import io.mosip.pmp.common.entity.MISPLicenseReadEntity;
-import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
-import io.mosip.pmp.common.helper.WebSubPublisher;
-import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.common.repository.MispServiceRepository;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -45,6 +36,16 @@ import io.mosip.pmp.misp.exception.ErrorMessages;
 import io.mosip.pmp.misp.exception.MISPException;
 import io.mosip.pmp.misp.utils.AuditUtil;
 import io.mosip.pmp.misp.utils.PartnerManageEnum;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.entity.MISPEntity;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.MISPLicenseKey;
+import io.mosip.pms.common.entity.MISPLicenseReadEntity;
+import io.mosip.pms.common.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.MispServiceRepository;
 
 
 
@@ -230,11 +231,10 @@ public class MISPManagementService {
 	 * This method is used to generate the license key for misp.
 	 */
 	protected MISPLicenseEntity generateLicense(String misp_Id) {
-
 		logger.info("MISP license generation started.");
 		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.GENERATE_LICENSE,misp_Id));
 		MISPLicenseEntity misplEntity = new MISPLicenseEntity();
-		MISPlKeyUniqueKeyEntity uniqueKey = new MISPlKeyUniqueKeyEntity();		
+		MISPLicenseKey uniqueKey = new MISPLicenseKey();		
 		uniqueKey.setLicense_key(mispLicenseKeyGenerator.generateLicense());
 		uniqueKey.setMisp_id(misp_Id);
 		misplEntity.setValidFromDate(LocalDateTime.now());

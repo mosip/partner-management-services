@@ -38,15 +38,6 @@ import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
-import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
-import io.mosip.pmp.regdevice.entity.RegFoundationalTrustProvider;
-import io.mosip.pmp.regdevice.repository.RegFTPChipDetailRepository;
-import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
-import io.mosip.pmp.regdevice.service.RegFTPChipDetailService;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
@@ -57,6 +48,15 @@ import io.mosip.pmp.partner.exception.ApiAccessibleException;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
+import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
+import io.mosip.pmp.regdevice.entity.RegFoundationalTrustProvider;
+import io.mosip.pmp.regdevice.repository.RegFTPChipDetailRepository;
+import io.mosip.pmp.regdevice.repository.RegFoundationalTrustProviderRepository;
+import io.mosip.pmp.regdevice.service.RegFTPChipDetailService;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
 
 
 @Component

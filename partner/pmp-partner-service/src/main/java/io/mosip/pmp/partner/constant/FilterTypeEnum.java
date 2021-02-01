@@ -1,6 +1,7 @@
 package io.mosip.pmp.partner.constant;
 
 public enum FilterTypeEnum {
+	
 	CONTAINS("contains"), STARTSWITH("startsWith"), BETWEEN("between"), EQUALS("equals");
 
 	private String type;
