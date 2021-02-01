@@ -195,7 +195,7 @@ public class SearchHelper {
 				 lowerCase = builder.lower(root.get(columnName));
 			} catch (Exception e) {
 				throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
-						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), value));
+						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), columnName));
 			}
 			return builder.like(lowerCase, builder.lower(builder.literal(value + WILD_CARD_CHARACTER)));
 		}
@@ -359,7 +359,14 @@ public class SearchHelper {
 	 */
 	private <E> Predicate buildPredicate(CriteriaBuilder builder, Root<E> root, String column, String value) {
 		Predicate predicate = null;
-		Path<Object> path = root.get(column);
+		Path<Object> path = null;
+		try {
+			 path = root.get(column);
+		} catch (Exception e) {
+			throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
+					String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), column));
+		}
+		
 		if (path != null) {
 			Class<? extends Object> type = path.getJavaType();
 			String fieldType = type.getTypeName();
