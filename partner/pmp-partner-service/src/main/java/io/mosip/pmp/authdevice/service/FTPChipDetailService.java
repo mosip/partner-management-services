@@ -17,9 +17,9 @@ import io.mosip.pmp.authdevice.dto.FTPChipDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.FTPSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.entity.FTPChipDetail;
-import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.common.dto.PageResponseDto;
 
 @Service
 public interface FTPChipDetailService {	

@@ -21,7 +21,6 @@ import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SbiSearchResponseDto;
-import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
@@ -35,11 +34,10 @@ import io.mosip.pmp.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pmp.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.SearchFilter;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
 
 @Component
 @Transactional

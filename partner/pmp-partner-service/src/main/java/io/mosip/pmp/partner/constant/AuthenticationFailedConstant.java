@@ -2,7 +2,7 @@ package io.mosip.pmp.partner.constant;
 
 public enum AuthenticationFailedConstant {
 		
-	AUTHENTICATION_FAILED("KER-ATH-401","Authentication Failed");
+	AUTHENTICATION_FAILED("PMS-ATH-401","Authentication Failed");
 
 	/**
 	 * The error code.

@@ -7,9 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import io.mosip.pmp.common.entity.PartnerPolicyRequest;
 
-
 public interface PartnerPolicyRequestRepository extends JpaRepository<PartnerPolicyRequest, String>{
 		
 	@Query(value = "select * from partner_policy_request ppr where ppr.part_id=?", nativeQuery = true )
-	List<PartnerPolicyRequest> findByPartnerId(String partId);
+	List<PartnerPolicyRequest> findByPartnerId(String part_id);
+
+	@Query(value = "select * from partner_policy_request ppr where ppr.part_id=?1 and ppr.policy_id=?2", nativeQuery = true )
+	PartnerPolicyRequest findByPartnerIdAndPolicyId(String partnerId, String policyId);
+	
+	@Query(value = "select * from partner_policy_request ppr where ppr.part_id=?1 and ppr.id=?2", nativeQuery = true )
+	PartnerPolicyRequest findByPartnerIdAndReqId(String partnerId, String apikeyReqId);
 }

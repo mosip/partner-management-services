@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
 import io.mosip.kernel.core.util.MathUtils;
-import io.mosip.pmp.common.entity.Misp;
-import io.mosip.pmp.common.repository.MispRepository;
 import io.mosip.pmp.misp.constant.MispIdPropertyConstant;
 import io.mosip.pmp.misp.exception.ErrorMessages;
 import io.mosip.pmp.misp.exception.MISPException;
+import io.mosip.pms.common.entity.Misp;
+import io.mosip.pms.common.repository.MispRepository;
 
 /**
  * This service class contains methods for generating MISPID.

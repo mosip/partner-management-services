@@ -25,15 +25,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.pmp.common.entity.AuthPolicy;
-import io.mosip.pmp.common.entity.Partner;
-import io.mosip.pmp.common.entity.PartnerPolicy;
-import io.mosip.pmp.common.entity.PolicyGroup;
-import io.mosip.pmp.common.helper.WebSubPublisher;
-import io.mosip.pmp.common.repository.AuthPolicyHRepository;
-import io.mosip.pmp.common.repository.AuthPolicyRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRepository;
-import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
@@ -43,6 +34,15 @@ import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 import io.mosip.pmp.policy.util.AuditUtil;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyHRepository;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -443,7 +443,7 @@ public class PolicyServiceTest {
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoPolicyTest() throws JsonParseException, JsonMappingException, IOException {
-		Mockito.when(partnerPolicyRepository.findByPartnerId("2345","12345")).thenReturn(null);		
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("2345","12345")).thenReturn(null);		
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
@@ -457,7 +457,7 @@ public class PolicyServiceTest {
 		policy.get().getPartner().setId("12345");
 		policy.get().setPolicyId("12345");
 		policy.get().setPolicyApiKey("12345");
-		Mockito.when(partnerPolicyRepository.findByPartnerId("12345","12345")).thenReturn(policy.get());		
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());		
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 
@@ -471,7 +471,7 @@ public class PolicyServiceTest {
 		policy.get().getPartner().setId("12345");
 		policy.get().setPolicyId("2345");
 		policy.get().setPolicyApiKey("12345");
-		Mockito.when(partnerPolicyRepository.findByPartnerId("12345","12345")).thenReturn(policy.get());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
@@ -489,7 +489,7 @@ public class PolicyServiceTest {
 		Optional<PolicyGroup> policyGroup = Optional.of(new PolicyGroup());
 		policyGroup.get().setId("12345");		
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policyGroup);
-		Mockito.when(partnerPolicyRepository.findByPartnerId("12345","12345")).thenReturn(policy.get());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.getPartnerMappedPolicy("12345", "12345");
 	}

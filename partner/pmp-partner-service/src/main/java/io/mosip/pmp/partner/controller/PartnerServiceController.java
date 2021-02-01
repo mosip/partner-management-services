@@ -25,11 +25,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
-import io.mosip.pmp.common.dto.FilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
-import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
-import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
@@ -52,6 +47,11 @@ import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.service.PartnerService;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
+import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 import io.swagger.annotations.ApiParam;
 
 /**

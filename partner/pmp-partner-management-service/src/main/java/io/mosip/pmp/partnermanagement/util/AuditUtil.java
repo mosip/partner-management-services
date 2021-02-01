@@ -25,11 +25,11 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.pmp.common.exception.ValidationException;
-import io.mosip.pmp.common.util.RestUtil;
 import io.mosip.pmp.partnermanagement.constant.PartnerManageEnum;
 import io.mosip.pmp.partnermanagement.dto.AuditRequestDto;
 import io.mosip.pmp.partnermanagement.dto.AuditResponseDto;
+import io.mosip.pms.common.exception.ValidationException;
+import io.mosip.pms.common.util.RestUtil;
 
 
 @Component
@@ -76,7 +76,7 @@ public class AuditUtil {
 		hostName = getServerName();
 	}
 	
-	public  void setAuditRequestDto(PartnerManageEnum PartnerManageEnum) {
+	public void setAuditRequestDto(PartnerManageEnum PartnerManageEnum) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 
 		auditRequestDto.setHostIp(hostIpAddress);

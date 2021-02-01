@@ -14,9 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pmp.common.constant.EventType;
-import io.mosip.pmp.common.dto.Type;
-import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pmp.misp.exception.MISPErrorMessages;
 import io.mosip.pmp.misp.exception.MISPServiceException;
@@ -26,6 +23,9 @@ import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.MispLicenseRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.service.InfraProviderService;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.helper.WebSubPublisher;
 
 @Component
 public class InfraProviderServiceImpl implements InfraProviderService {	

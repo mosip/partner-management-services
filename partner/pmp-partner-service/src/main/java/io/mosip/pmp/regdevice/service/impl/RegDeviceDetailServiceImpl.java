@@ -23,39 +23,36 @@ import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
-import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.common.dto.DeviceFilterValueDto;
-import io.mosip.pmp.common.dto.FilterData;
-import io.mosip.pmp.common.dto.FilterDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.helper.FilterHelper;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
-import io.mosip.pmp.common.validator.FilterColumnValidator;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.util.PartnerUtil;
-import io.mosip.pmp.common.dto.SearchFilter;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceSubType;
 import io.mosip.pmp.regdevice.entity.RegRegistrationDeviceType;
 import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
 import io.mosip.pmp.regdevice.repository.RegRegistrationDeviceSubTypeRepository;
 import io.mosip.pmp.regdevice.service.RegDeviceDetailService;
+import io.mosip.pms.common.dto.DeviceFilterValueDto;
+import io.mosip.pms.common.dto.FilterData;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.helper.FilterHelper;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.common.validator.FilterColumnValidator;
 
 @Service
 @Transactional
 public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 
 	private static final String Pending_Approval = "Pending_Approval";
-	private static final String ALL = "all";
 
 	@Autowired
 	FilterColumnValidator filterColumnValidator;

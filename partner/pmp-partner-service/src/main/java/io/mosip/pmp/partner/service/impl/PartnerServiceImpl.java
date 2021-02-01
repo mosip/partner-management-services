@@ -41,23 +41,6 @@ import io.mosip.pmp.authdevice.dto.ColumnCodeValue;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
-import io.mosip.pmp.common.dto.FilterData;
-import io.mosip.pmp.common.dto.FilterDto;
-import io.mosip.pmp.common.dto.FilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
-import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
-import io.mosip.pmp.common.dto.SearchDto;
-import io.mosip.pmp.common.dto.SearchFilter;
-import io.mosip.pmp.common.helper.FilterHelper;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
-import io.mosip.pmp.common.validator.FilterColumnValidator;
-import io.mosip.pmp.common.constant.EventType;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.Type;
-import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
@@ -130,6 +113,22 @@ import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.mosip.pmp.partner.util.PartnerUtil;
 import io.mosip.pmp.partner.util.RestUtil;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.FilterData;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
+import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.helper.FilterHelper;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.common.validator.FilterColumnValidator;
 
 /**
  * @author sanjeev.shrivastava
@@ -217,6 +216,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${application.id:PMS}")
 	private String applicationId;
+	
+	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
+	private int partnerPolicyExpiryInDays;
 
 	private static final String ERRORS = "errors";
 
@@ -224,7 +226,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private static final String ERRORMESSAGE = "message";
 
-	private static final String APPROVEDSTATUS = "Approved";
+	private static final String APPROVEDSTATUS = "approved";
 
 	private static final String ALL = "all";
 
@@ -506,6 +508,7 @@ public class PartnerServiceImpl implements PartnerService {
 					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setStatusCode("In-Progress");
 		partnerPolicyRequest.setCrBy(getUser());
 		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
@@ -513,12 +516,40 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicyFromDb.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(request.getUseCaseDescription());
-		partnerPolicyRequest.setStatusCode("In-Progress");
+		if(isActiveApikeyExists(partnerID)) {
+			partnerPolicyRequest.setStatusCode(APPROVEDSTATUS);
+			partnerPolicyRequestRepository.save(partnerPolicyRequest);
+			return approvePartnerPolicy(partnerPolicyRequest);
+		}
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully created");
-		LOGGER.info("PartnerAPIKeyRequest Successfully created");
+		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted.");
+		LOGGER.info("PartnerAPIKeyRequest successfully submitted.");
+		return partnerAPIKeyResponse;
+	}
+
+	/**
+	 * 
+	 * @param partnerPolicyRequest
+	 * @return
+	 */
+	private PartnerAPIKeyResponse approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
+		PartnerPolicy partnerPolicy = new PartnerPolicy();
+		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
+		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
+		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
+		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
+		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
+		partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
+		partnerPolicyRepository.save(partnerPolicy);
+		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
+		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
+		partnerAPIKeyResponse.setApikeyId(partnerPolicy.getPolicyApiKey());
+		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
+		LOGGER.info("PartnerAPIKeyRequest successfully submitted and approved.");
 		return partnerAPIKeyResponse;
 	}
 
@@ -532,7 +563,7 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerPolicyRequest partnerPolicyRequest = partnerRequest.get();
 			if (partnerPolicyRequest.getPartner().getId().equals(partnerID)) {
 				LOGGER.info(partnerID + " : Valied Partner");
-				partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerID);
+				partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerRequest.get().getPolicyId());
 				if (partnerPolicy != null) {
 					downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicyApiKey());
 				} else {
@@ -574,7 +605,7 @@ public class PartnerServiceImpl implements PartnerService {
 					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
 					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
 
-					PartnerPolicy findByPartId = partnerPolicyRepository.findByPartnerId(partnerID);
+					PartnerPolicy findByPartId = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerPolicyRequest.getPolicyId());
 
 					approvedRequest.setPartnerApiKey(findByPartId.getPolicyApiKey());
 					approvedRequest.setValidityTill(findByPartId.getValidToDatetime());
@@ -610,7 +641,7 @@ public class PartnerServiceImpl implements PartnerService {
 				if (statusCode.equalsIgnoreCase("Approved")) {
 					aPIkeyRequests.setApiKeyReqID(partnerPolicyRequest.getId());
 					aPIkeyRequests.setApiKeyRequestStatus(statusCode);
-					partnerPolicy = partnerPolicyRepository.findByPartnerId(partnerID);
+					partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerPolicyRequest.getPolicyId());
 					aPIkeyRequests.setValidityTill(partnerPolicy.getValidToDatetime());
 					aPIkeyRequests.setPartnerApiKey(partnerPolicy.getPolicyApiKey());
 				} else {
@@ -1211,8 +1242,7 @@ public class PartnerServiceImpl implements PartnerService {
 			partnerPolicyList.add(searchResponse);
 		});
 		return partnerPolicyList;
-	}
-	
+	}	
 
 	private void notify(String certData,String partnerDomain) {
 		Type type = new Type();
@@ -1231,5 +1261,12 @@ public class PartnerServiceImpl implements PartnerService {
 		Map<String,Object> data = new HashMap<>();
 		data.put("partnerId", partnerId);
 		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
+	}
+	
+	private boolean isActiveApikeyExists(String partnerId) {
+		if(partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 }

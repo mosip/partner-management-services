@@ -3,18 +3,16 @@ package io.mosip.pmp.authdevice.service;
 import org.springframework.stereotype.Service;
 
 import io.mosip.pmp.authdevice.dto.DeviceDetailDto;
-
 import io.mosip.pmp.authdevice.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pmp.authdevice.dto.DeviceDetailUpdateDto;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
-import io.mosip.pmp.authdevice.dto.DeviceDetailSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.RegistrationSubTypeDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
-import io.mosip.pmp.common.dto.DeviceFilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.DeviceFilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
 
 @Service
 public interface DeviceDetailService {

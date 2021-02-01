@@ -14,11 +14,6 @@ import javax.persistence.Table;
  * The persistent class for the policy_group database table.
  * 
  */
-/**
- * @author Nagarjuna Kuchi
- *
- */
-
 @Entity
 @Table(name="policy_group")
 @NamedQuery(name="PolicyGroup.findAll", query="SELECT p FROM PolicyGroup p")
@@ -37,7 +32,7 @@ public class PolicyGroup implements Serializable {
 	@Column(name="del_dtimes")
 	private LocalDateTime delDtimes;
 
-	@Column(name ="descr")
+	@Column(name="descr")
 	private String desc;
 
 	@Column(name="is_active")
@@ -55,7 +50,7 @@ public class PolicyGroup implements Serializable {
 	private LocalDateTime updDtimes;
 
 	@Column(name="user_id")
-	private String userId;	
+	private String userId;
 
 	public PolicyGroup() {
 	}
@@ -147,49 +142,5 @@ public class PolicyGroup implements Serializable {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-//	public List<AuthPolicy> getAuthPolicies() {
-//		return this.authPolicies;
-//	}
-
-//	public void setAuthPolicies(List<AuthPolicy> authPolicies) {
-//		this.authPolicies = authPolicies;
-//	}
-
-//	public AuthPolicy addAuthPolicy(AuthPolicy authPolicy) {
-//		getAuthPolicies().add(authPolicy);
-//		authPolicy.setPolicyGroup(this);
-//
-//		return authPolicy;
-//	}
-
-//	public AuthPolicy removeAuthPolicy(AuthPolicy authPolicy) {
-//		getAuthPolicies().remove(authPolicy);
-//		authPolicy.setPolicyGroup(null);
-//
-//		return authPolicy;
-//	}
-
-//	public List<AuthPolicyH> getAuthPolicyHs() {
-//		return this.authPolicyHs;
-//	}
-
-//	public void setAuthPolicyHs(List<AuthPolicyH> authPolicyHs) {
-//		this.authPolicyHs = authPolicyHs;
-//	}
-//
-//	public AuthPolicyH addAuthPolicyH(AuthPolicyH authPolicyH) {
-//		getAuthPolicyHs().add(authPolicyH);
-//		authPolicyH.setPolicyGroup(this);
-//
-//		return authPolicyH;
-//	}
-//
-//	public AuthPolicyH removeAuthPolicyH(AuthPolicyH authPolicyH) {
-//		getAuthPolicyHs().remove(authPolicyH);
-//		authPolicyH.setPolicyGroup(null);
-//
-//		return authPolicyH;
-//	}
 
 }

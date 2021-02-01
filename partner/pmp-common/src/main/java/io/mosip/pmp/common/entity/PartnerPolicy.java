@@ -1,8 +1,15 @@
 package io.mosip.pmp.common.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -34,7 +41,6 @@ public class PartnerPolicy implements Serializable {
 	@Column(name="is_deleted")
 	private Boolean isDeleted;
 
-	// policy_id nothing but auth_policy_id
 	@Column(name="policy_id")
 	private String policyId;
 

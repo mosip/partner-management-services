@@ -9,7 +9,9 @@ package io.mosip.pmp.partner.constant;
  *
  */
 public enum HibernateErrorCode {
-	ERR_DATABASE("KER-DAH-001"), HIBERNATE_EXCEPTION("KER-DAH-002"), NO_RESULT_EXCEPTION("KER-DAH-003");
+	ERR_DATABASE("PMS-DAH-001"), 
+	HIBERNATE_EXCEPTION("PMS-DAH-002"), 
+	NO_RESULT_EXCEPTION("PMS-DAH-003");
 
 	/**
 	 * Field for error code

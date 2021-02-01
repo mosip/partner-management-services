@@ -54,7 +54,7 @@ public class AuthPolicy implements Serializable {
 
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
-
+	
 	@Column(name = "valid_from_date")
 	private LocalDateTime validFromDate;	
 
@@ -69,7 +69,7 @@ public class AuthPolicy implements Serializable {
 	
 	@Column(name="policy_schema")
 	private String schema;
-	
+
 	//bi-directional many-to-one association to PolicyGroup
 	@ManyToOne
 	@JoinColumn(name="policy_group_id")

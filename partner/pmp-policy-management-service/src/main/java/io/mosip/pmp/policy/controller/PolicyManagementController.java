@@ -23,13 +23,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pmp.common.dto.FilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.PolicyFilterValueDto;
-import io.mosip.pmp.common.dto.PolicySearchDto;
-import io.mosip.pmp.common.dto.SearchAuthPolicy;
-import io.mosip.pmp.common.dto.SearchDto;
-import io.mosip.pmp.common.entity.PolicyGroup;
 import io.mosip.pmp.policy.dto.FilterResponseCodeDto;
 import io.mosip.pmp.policy.dto.KeyValuePair;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
@@ -48,6 +41,13 @@ import io.mosip.pmp.policy.dto.RequestWrapper;
 import io.mosip.pmp.policy.dto.ResponseWrapper;
 import io.mosip.pmp.policy.service.PolicyManagementService;
 import io.mosip.pmp.policy.util.AuditUtil;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PolicyFilterValueDto;
+import io.mosip.pms.common.dto.PolicySearchDto;
+import io.mosip.pms.common.dto.SearchAuthPolicy;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.swagger.annotations.Api;
 
 /**

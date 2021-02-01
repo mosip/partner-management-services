@@ -27,7 +27,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.pmp.common.helper.WebSubPublisher;
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
@@ -66,6 +65,7 @@ import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.repository.PartnerTypeRepository;
 import io.mosip.pmp.partner.repository.PolicyGroupRepository;
 import io.mosip.pmp.partner.service.impl.PartnerServiceImpl;
+import io.mosip.pms.common.helper.WebSubPublisher;
 
 /**
  * @author sanjeev.shrivastava
@@ -424,7 +424,7 @@ public class PartnerServiceImplTest {
 		String aPIKeyReqID = "aPIKeyReqID";
 		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(createPartnerPolicy());
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkey = pserviceImpl.downloadPartnerAPIkey(partnerID,
 				aPIKeyReqID);
 		assertNotNull(downloadPartnerAPIkey);
@@ -437,7 +437,7 @@ public class PartnerServiceImplTest {
 		String aPIKeyReqID = "aPIKeyReqID";
 		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(null);
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"")).thenReturn(null);
 		pserviceImpl.downloadPartnerAPIkey(partnerID, aPIKeyReqID);
 	}
 
@@ -465,7 +465,7 @@ public class PartnerServiceImplTest {
 		String aPIKeyReqID = "aPIKeyReqID";
 		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.of(createPartnerPolicyRequest("Approved"));
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(createPartnerPolicy());
 		APIkeyRequests viewApiKeyRequestStatusApiKey = pserviceImpl.viewApiKeyRequestStatusApiKey(partnerID,
 				aPIKeyReqID);
 		assertNotNull(viewApiKeyRequestStatusApiKey);
@@ -594,12 +594,13 @@ public class PartnerServiceImplTest {
 	
 	@Test
 	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S3() {
-		String partnerId = "12345";
+		String partnerId = "12345";	
 		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
 		PartnerPolicyRequest request = createPartnerPolicyRequest("Approved");
+		request.setPolicyId("12345");
 		requests.add(request);
 		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerId)).thenReturn(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(createPartnerPolicy());
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	
@@ -706,6 +707,7 @@ public class PartnerServiceImplTest {
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setPartner(createPartner(Boolean.TRUE));
 		partnerPolicyRequest.setStatusCode(statusCode);
+		partnerPolicyRequest.setPolicyId("12345");
 		return partnerPolicyRequest;
 	}
 

@@ -30,8 +30,8 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.pmp.common.exception.RequestException;
-import io.mosip.pmp.policy.validator.exception.PolicyObjectValidationFailedException;
+import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.policy.validator.exception.PolicyObjectValidationFailedException;
 
 
 /**
@@ -127,7 +127,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ResponseEntity<ResponseWrapper<List<ServiceError>>> getErrorResponseObject(HttpServletRequest httpServletRequest,
 			PolicyObjectValidationFailedException ex, HttpStatus httpStatus) throws IOException {
 		List<ServiceError> errors = new ArrayList<>();		
-		for(io.mosip.pmp.policy.validator.exception.ServiceError error: ex.getServiceErrors()) {
+		for(io.mosip.pms.policy.validator.exception.ServiceError error: ex.getServiceErrors()) {
 			errors.add(new ServiceError(error.getErrorCode(),error.getMessage()));
 		}
 		ResponseWrapper<List<ServiceError>> errorResponse = setServiceErrors(httpServletRequest);

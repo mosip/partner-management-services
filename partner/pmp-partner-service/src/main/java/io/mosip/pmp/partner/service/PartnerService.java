@@ -6,12 +6,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.mosip.pmp.authdevice.dto.FilterResponseCodeDto;
-import io.mosip.pmp.common.dto.FilterValueDto;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.PartnerPolicySearchResponseDto;
-import io.mosip.pmp.common.dto.PolicyRequestSearchResponseDto;
-import io.mosip.pmp.common.dto.SearchDto;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
@@ -34,6 +30,11 @@ import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.entity.PartnerType;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
+import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 
 /**
  * This interface provides the methods which can be used for PartnerService

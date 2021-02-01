@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -45,6 +44,7 @@ import io.mosip.pmp.misp.dto.ResponseWrapper;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
 import io.mosip.pmp.misp.utils.AuditUtil;
+import io.mosip.pms.common.entity.MISPlKeyUniqueKeyEntity;
 
 
 @RunWith(SpringRunner.class)

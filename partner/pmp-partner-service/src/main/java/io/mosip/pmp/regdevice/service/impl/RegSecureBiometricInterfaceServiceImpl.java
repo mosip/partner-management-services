@@ -21,18 +21,12 @@ import io.mosip.pmp.authdevice.constants.SecureBiometricInterfaceConstant;
 import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
 import io.mosip.pmp.authdevice.dto.SbiSearchResponseDto;
-import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.exception.RequestException;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
-import io.mosip.pmp.common.dto.PageResponseDto;
-import io.mosip.pmp.common.dto.SearchFilter;
-import io.mosip.pmp.common.helper.SearchHelper;
-import io.mosip.pmp.common.util.MapperUtils;
-import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.regdevice.entity.RegDeviceDetail;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
 import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterfaceHistory;
@@ -40,6 +34,10 @@ import io.mosip.pmp.regdevice.repository.RegDeviceDetailRepository;
 import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceHistoryRepository;
 import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
 
 @Service
 @Transactional

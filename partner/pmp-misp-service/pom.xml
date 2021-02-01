@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>pmp-parent</artifactId>
-		<groupId>io.mosip.pmp</groupId>
+		<artifactId>pms-parent</artifactId>
+		<groupId>io.mosip.pms</groupId>
 		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 
@@ -112,8 +112,8 @@
 			<version>2.2</version>
 		</dependency>	
 		<dependency>
-			<groupId>io.mosip.pmp</groupId>
-			<artifactId>pmp-common</artifactId>
+			<groupId>io.mosip.pms</groupId>
+			<artifactId>pms-common</artifactId>
 			<version>1.2.0-SNAPSHOT</version>
 		</dependency>			
 	</dependencies>

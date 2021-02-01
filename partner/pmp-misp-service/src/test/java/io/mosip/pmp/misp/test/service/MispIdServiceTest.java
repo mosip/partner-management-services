@@ -16,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
-import io.mosip.pmp.common.entity.Misp;
-import io.mosip.pmp.common.repository.MispRepository;
 import io.mosip.pmp.misp.exception.MISPException;
+import io.mosip.pms.common.entity.Misp;
+import io.mosip.pms.common.repository.MispRepository;
 
 /**
  * @author Nagarjuna

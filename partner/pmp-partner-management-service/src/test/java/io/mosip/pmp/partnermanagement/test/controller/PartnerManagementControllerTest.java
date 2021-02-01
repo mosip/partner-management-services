@@ -28,12 +28,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pmp.common.repository.AuthPolicyRepository;
-import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRepository;
-import io.mosip.pmp.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pmp.common.repository.PartnerRepository;
-import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.partnermanagement.core.RequestWrapper;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
@@ -46,6 +40,12 @@ import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 import io.mosip.pmp.partnermanagement.test.PartnermanagementApplicationTest;
 import io.mosip.pmp.partnermanagement.util.AuditUtil;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnermanagementApplicationTest.class)
