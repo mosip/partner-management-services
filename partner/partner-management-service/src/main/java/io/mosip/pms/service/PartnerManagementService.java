@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @Import(value = {WebSubPublisher.class,RestUtil.class,FilterColumnValidator.class,FilterHelper.class,SearchHelper.class,PageUtils.class})
-@ComponentScan({ "io.mosip.pms.*", "${mosip.auth.adapter.impl.basepackage}"})
+@ComponentScan(basePackages = {"io.mosip.pms.*", "${mosip.auth.adapter.impl.basepackage}"})
 @EnableSwagger2
 public class PartnerManagementService {
 

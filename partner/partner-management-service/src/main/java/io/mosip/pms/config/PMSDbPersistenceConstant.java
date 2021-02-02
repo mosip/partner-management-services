@@ -97,7 +97,7 @@ public class PMSDbPersistenceConstant {
 	/**
 	 * The string constant partner entity package
 	 */
-	public static final String MOSIP_PACKAGE = "io.mosip.pmp.partner.entity";
+	public static final String MOSIP_PACKAGE = "io.mosip.pms.common.entity.**";
 
 	/**
 	 * The string constant false

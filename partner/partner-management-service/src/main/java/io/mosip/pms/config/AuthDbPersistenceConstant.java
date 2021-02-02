@@ -96,7 +96,7 @@ public class AuthDbPersistenceConstant {
 	/**
 	 * The string constant mosip package
 	 */
-	public static final String MOSIP_PACKAGE = "io.mosip.pmp.authdevice.**";
+	public static final String MOSIP_PACKAGE = "io.mosip.pms.device.authdevice.**";
 
 	/**
 	 * The string constant false

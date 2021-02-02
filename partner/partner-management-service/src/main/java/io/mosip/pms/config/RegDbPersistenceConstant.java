@@ -97,7 +97,7 @@ public class RegDbPersistenceConstant {
 	/**
 	 * The string constant mosip package
 	 */
-	public static final String MOSIP_PACKAGE = "io.mosip.pmp.regdevice.**";
+	public static final String MOSIP_PACKAGE = "io.mosip.pms.device.regdevice.**";
 
 	/**
 	 * The string constant false
