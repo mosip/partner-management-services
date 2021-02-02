@@ -5,12 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
-import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pms.common.helper.WebSubPublisher;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @Import(value = {WebSubPublisher.class})
-@ComponentScan({ "io.mosip.pmp.policy.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.pmp.common.*"})
+@ComponentScan({ "io.mosip.pms.policy.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.pms.common.*"})
 @EnableSwagger2
 public class PmpPolicyApplication {
 

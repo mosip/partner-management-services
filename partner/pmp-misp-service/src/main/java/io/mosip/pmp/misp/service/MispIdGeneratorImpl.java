@@ -71,7 +71,7 @@ public class MispIdGeneratorImpl implements MispIdGenerator<String> {
 				mispId.setUpdatedBy("SYSTEM");
 				mispId.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 				mispId.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
-				mispRepository.create(mispId);
+				mispRepository.save(mispId);
 
 			} else {
 				entity = new Misp();
@@ -82,7 +82,7 @@ public class MispIdGeneratorImpl implements MispIdGenerator<String> {
 				entity.setCreatedDateTime(createdTime);
 				entity.setUpdatedDateTime(null);
 				generatedId = initialValue;
-				mispRepository.create(entity);
+				mispRepository.save(entity);
 			}
 
 		} catch (DataAccessLayerException e) {

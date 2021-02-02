@@ -3,10 +3,11 @@ package io.mosip.pmp.common.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
+
 import io.mosip.pmp.common.entity.MISPEntity;
 
  /**
@@ -18,7 +19,7 @@ import io.mosip.pmp.common.entity.MISPEntity;
   *
   */
 @Repository
-public interface MispServiceRepository extends BaseRepository<MISPEntity, String> {
+public interface MispServiceRepository extends JpaRepository<MISPEntity, String> {
 
 	
 	@Query(value = "select * from misp m where m.name=?",nativeQuery = true)
