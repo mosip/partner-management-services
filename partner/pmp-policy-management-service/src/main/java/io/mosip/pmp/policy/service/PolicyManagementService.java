@@ -187,10 +187,8 @@ public class PolicyManagementService {
 
 	/**
 	 * 
-	 * @param Id
-	 * @param name
-	 * @param descr
-	 * @param is_active
+	 * @param requestDto
+	 * @param policyGroupId
 	 * @return
 	 */
 	public PolicyGroupCreateResponseDto updatePolicyGroup(PolicyGroupUpdateRequestDto requestDto,
@@ -355,12 +353,11 @@ public class PolicyManagementService {
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
 		return responseDto;
 	}
-
+	
 	/**
 	 * 
+	 * @param policyGroupId
 	 * @param auth_policy_name
-	 * @param isExists
-	 * @return
 	 */
 	private void validateAuthPolicyName(String policyGroupId, String auth_policy_name) {
 		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, auth_policy_name);

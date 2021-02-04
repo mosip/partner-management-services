@@ -42,30 +42,28 @@ public interface RegFTPChipDetailService {
 	 * @param chipDetails
 	 * @return
 	 */
-	public String updateFtpChipDetailStatus(FTPChipDetailStatusDto chipDetails);
-	
+	public String updateFtpChipDetailStatus(FTPChipDetailStatusDto chipDetails);	
+
 	/**
-     * Function to Upload Partner certificates
-     * 
-     * @param FTPChipCertificateRequestDto partnerCertResponseDto
-     * @return {@link PartnerCertificateResponseDto} instance
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
-    */
+	 * 
+	 * @param ftpChipCertRequestDto
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws IOException
+	 */
     public PartnerCertificateResponseDto uploadPartnerCertificate(FTPChipCertificateRequestDto ftpChipCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
-     * Function to Download Partner certificates
      * 
-     * @param FTPChipCertDownloadRequestDto certDownloadRequestDto
-     * @return {@link PartnerCertDownloadResponeDto} instance
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
-    */
+     * @param certDownloadRequestDto
+     * @return
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(FTPChipCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
     
     /**

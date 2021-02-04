@@ -37,7 +37,6 @@ import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
-import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
 import io.mosip.pmp.regdevice.entity.RegFTPChipDetail;
@@ -102,14 +101,11 @@ public class FTPChipDetailController {
 		return responseWrapper;
 
 	}
-
+	
 	/**
-	 * Put API to update a row of DeviceDetail data
 	 * 
-	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
-	 * @return ResponseEntity DeviceDetail which is updated successfully
-	 *         {@link ResponseEntity}
+	 * @param ftpChipDetailRequestDto
+	 * @return
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
@@ -144,7 +140,7 @@ public class FTPChipDetailController {
 	
 	/**
 	 * 
-	 * @param deviceDetailRequestDto
+	 * @param chipDetailRequestDto
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
@@ -212,15 +208,14 @@ public class FTPChipDetailController {
 		return response;
 	}
 	
-    /**
-	 * To Download Partner Certificate.
+	/**
 	 * 
-	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
-	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
+	 * @param ftpChipDetailId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws IOException
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)

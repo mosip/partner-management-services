@@ -275,17 +275,12 @@ public class MispController {
 		responseWrapper.setResponse(mispManagementService.getMispsByOrg(orgName));
 		audit.setAuditRequestDto(PartnerManageEnum.GET_MISP_BY_ORGANIZATION_NAME_SUCCESS);
 		return responseWrapper;
-	}
-	
+	}	
+
 	/**
-	 * <p> This api would be used to download misp's license key.</p>
-	 * <p> In case where license key got expired then user would be able to get a new license key. </p>
-	 * <p> New license key generated would be mapped with given MISP ID . Older license keys would be </p>
-	 * <p> updated with inactive status.</p>
 	 * 
-	 * @param misplKeyStatusUpdateRequestDto
 	 * @param mispId
-	 * @return misp license details.
+	 * @return
 	 */
 	@Deprecated
 	@PreAuthorize("hasAnyRole('MISP')")

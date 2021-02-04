@@ -201,7 +201,11 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup);
 		RegisterUserInKeycloak(partner);
+		try {
 		partnerRepository.save(partner);
+		}catch (Exception e) {
+			
+		}
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());

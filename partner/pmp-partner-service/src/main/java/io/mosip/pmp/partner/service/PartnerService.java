@@ -121,39 +121,36 @@ public interface PartnerService {
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId);
 	
 	/**
-	 * Function to Upload CA/Sub-CA certificates
 	 * 
-	 * @param CACertificateRequestDto caCertResponseDto
-	 * @return {@link CACertificateResponseDto} instance
-	 * @throws IOException 
-	 * @throws JsonProcessingException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @param caCertResponseDto
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws IOException
 	 */
-    public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
-    /**
-     * Function to Upload Partner certificates
-     * 
-     * @param PartnerCertificateRequestDto partnerCertResponseDto
-     * @return {@link PartnerCertificateResponseDto} instance
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
-    */
+	/**
+	 * 
+	 * @param partnerCertResponseDto
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws IOException
+	 */
     public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
-     * Function to Download Partner certificates
      * 
-     * @param FTPChipCertDownloadRequestDto certDownloadRequestDto
-     * @return {@link PartnerCertDownloadResponeDto} instance
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
-    */
+     * @param certDownloadRequestDto
+     * @return
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
     
     /**

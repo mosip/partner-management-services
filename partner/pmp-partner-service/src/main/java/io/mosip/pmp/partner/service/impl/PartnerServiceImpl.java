@@ -370,20 +370,18 @@ public class PartnerServiceImpl implements PartnerService {
 					.findById(partnerByName.getPolicyGroupId());
 			policyGroupName = findByIdpolicyGroup.get().getName();
 		}
-		if (partnerByName != null) {
-			response.setId(partnerByName.getId());
-			response.setAddress(partnerByName.getAddress());
-			response.setContactNo(partnerByName.getContactNo());
-			response.setCrBy(partnerByName.getCrBy());
-			response.setCrDtimes(partnerByName.getCrDtimes());
-			response.setEmailId(partnerByName.getEmailId());
-			response.setIsActive(partnerByName.getIsActive());
-			response.setName(partnerByName.getName());
-			response.setUpdBy(getUser());
-			response.setUpdDtimes(partnerByName.getUpdDtimes());
-			response.setUserId(partnerByName.getUserId());
-			response.setPolicyGroupName(policyGroupName);
-		}
+		response.setId(partnerByName.getId());
+		response.setAddress(partnerByName.getAddress());
+		response.setContactNo(partnerByName.getContactNo());
+		response.setCrBy(partnerByName.getCrBy());
+		response.setCrDtimes(partnerByName.getCrDtimes());
+		response.setEmailId(partnerByName.getEmailId());
+		response.setIsActive(partnerByName.getIsActive());
+		response.setName(partnerByName.getName());
+		response.setUpdBy(getUser());
+		response.setUpdDtimes(partnerByName.getUpdDtimes());
+		response.setUserId(partnerByName.getUserId());
+		response.setPolicyGroupName(policyGroupName);
 		return response;
 	}
 
@@ -415,12 +413,9 @@ public class PartnerServiceImpl implements PartnerService {
 		return partnerResponse;
 	}
 
+
 	/**
 	 * 
-	 * @param partnerId
-	 * @param emailId
-	 * @param address
-	 * @param contactNo
 	 */
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
 		if (!emailValidator(request.getEmailId())) {

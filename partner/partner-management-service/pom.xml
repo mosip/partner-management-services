@@ -13,11 +13,16 @@
 	<name>partner-management-service</name>
 	
 	<dependencies>
-	<dependency>
+<!-- 	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
 			<version>${kernel-dataaccess-hibernate.version}</version>
-		</dependency>
+		</dependency> -->
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-core</artifactId>
+			<version>${kernel.version}</version>
+		</dependency>		
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>

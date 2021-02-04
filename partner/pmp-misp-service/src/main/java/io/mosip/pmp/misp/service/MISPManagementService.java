@@ -114,9 +114,8 @@ public class MISPManagementService {
 	 *  7. By using corresponding repositories will save or insert the data into misp and misp_license tables. </br>
 	 *  8. After successful insertion maps the data to response dto. </br>
 	 *  9. And returns the response.</br>
+	 *
 	 * 
-	 * @param mispCreateRequest{@link {@link MISPCreateRequestDto} this class contains all the input/request fields.
-	 * @return MISPCreateResponseDto {@link MISPCreateResponseDto} this class contains all the response fields.
 	 */
 	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){
 		
@@ -166,10 +165,7 @@ public class MISPManagementService {
 	 * 2. Update the misp table with given status.
 	 * 3. If misp status is approved then license key will be generated.
 	 * 4. Else license key will not be generated.
-	 * @param {@link MISPStatusUpdateRequestDto} mispStatusUpdateRequest
-	 * @return {@link MISPStatusUpdateResponse} returns the misp update response.
-	 */
-	
+	 */	
 	public ResponseWrapper<MISPStatusUpdateResponse> processRequest(MISPStatusUpdateRequestDto request){
 		if(!(request.getMispStatus().toLowerCase().equals(APPROVED_STATUS) || 
 				request.getMispStatus().toLowerCase().equals(REJECTED_STATUS))) {
@@ -267,7 +263,7 @@ public class MISPManagementService {
 		ResponseWrapper<MISPStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		
 		MISPStatusUpdateResponseDto responseDto = new MISPStatusUpdateResponseDto();
-		Boolean status = false;
+		boolean status = false;
 		if(mispStatusUpdateRequest.getMispStatus().toLowerCase().equals(ACTIVE_STATUS)){
 			status = true;
 		}		
@@ -349,7 +345,7 @@ public class MISPManagementService {
 
 	private void updateMISPLicenseStatus(String misp_id, String status) {
 		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATE_MISP_LICENSE,misp_id));
-		Boolean activeness = status.toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
+		boolean activeness = status.toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
 		List<MISPLicenseEntity> licenses = misplKeyRepository.findByMispId(misp_id);
 		List<String> licenseKeys = licenses.stream().map(license->license.getMispLicenseUniqueKey().getLicense_key())
 				.collect(Collectors.toList());
@@ -387,8 +383,6 @@ public class MISPManagementService {
 	 *     if details not found throws the exception. </br>
 	 * 4. Save the data with inputed data. </br>
 	 * 5. And returns the updated data </br>
-	 * @param misplKeyStatusUpdateRequest {@link MISPlKeyStatusUpdateRequestDto} this class contains all the required fields for misp license key status update request.
-	 * @return MISPlKeyStatusUpdateResponseDto {@link MISPlKeyStatusUpdateResponseDto} this class contains all the required fields for misp license key status update response.
 	 */
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto updateRequest, String mispId){	
 		if(!(updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(ACTIVE_STATUS) || 
@@ -397,7 +391,7 @@ public class MISPManagementService {
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorMessage());
 		}
-		Boolean status = updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
+		boolean status = updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
 		ResponseWrapper<MISPlKeyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		MISPlKeyStatusUpdateResponseDto responseDto = new MISPlKeyStatusUpdateResponseDto();		
 		logger.info("Validating the misp license along with misp id.");
