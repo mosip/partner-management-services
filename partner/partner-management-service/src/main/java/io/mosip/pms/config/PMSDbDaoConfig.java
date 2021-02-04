@@ -42,7 +42,7 @@ import io.mosip.kernel.core.dataaccess.spi.config.BaseDaoConfig;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "pmsEntityManagerFactory",basePackages = {"io.mosip.pmp.partner.repository"},
+@EnableJpaRepositories(entityManagerFactoryRef = "pmsEntityManagerFactory",basePackages = {"io.mosip.pms.common.repository"},
 transactionManagerRef = "pmsPlatformTransactionManager")
 public class PMSDbDaoConfig implements BaseDaoConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PMSDbDaoConfig.class);

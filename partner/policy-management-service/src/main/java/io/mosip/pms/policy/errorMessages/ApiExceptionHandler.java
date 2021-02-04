@@ -30,7 +30,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.pmp.common.exception.RequestException;
+import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.policy.validator.exception.PolicyObjectValidationFailedException;
 
 
