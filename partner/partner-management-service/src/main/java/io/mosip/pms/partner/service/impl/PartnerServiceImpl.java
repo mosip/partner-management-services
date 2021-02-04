@@ -113,42 +113,42 @@ import io.mosip.pms.partner.util.PartnerUtil;
 public class PartnerServiceImpl implements PartnerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
-	
+
 	private static final String ALL = "all";
-	
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
-	
+
 	@Autowired
 	PartnerTypeRepository partnerTypeRepository;
-	
+
 	@Autowired
 	PolicyGroupRepository policyGroupRepository;
-	
+
 	@Autowired
 	PartnerHRepository partnerHRepository;
-	
+
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
-	
+
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
-	
+
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
-	
+
 	@Autowired
 	PartnerContactRepository partnerContactRepository;
-	
+
 	@Autowired
 	BiometricExtractorProviderRepository extractorProviderRepository;
-	
+
 	@Autowired
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
-	
+
 	@Autowired
 	SearchHelper partnerSearchHelper;
-	
+
 	@Autowired
 	private PageUtils pageUtils;
 
@@ -157,37 +157,37 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	FilterHelper filterHelper;
-	
+
 	@Autowired
 	RestUtil restUtil;
-	
+
 	@Autowired
 	private WebSubPublisher webSubPublisher;
-	
+
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
-	
+
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
 	private int partnerPolicyExpiryInDays;
-	
+
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
-	
+
 	@Value("${pmp.allowed.credential.types}")
 	private String allowedCredentialTypes;
-	
+
 	@Value("${policy.credential.type.mapping.allowed.partner.types}")
 	private String credentialTypesRequiredPartnerTypes;
-	
+
 	@Value("${application.id:PARTNER}")
 	private String applicationId;
-	
+
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		validateEmail(request.getEmailId());
@@ -196,17 +196,17 @@ public class PartnerServiceImpl implements PartnerService {
 		validatePartnerId(request.getPartnerId());
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if(partnerType.getIsPolicyRequired()) {
+		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
-		Partner partner = mapPartnerFromRequest(request,policyGroup);
+		Partner partner = mapPartnerFromRequest(request, policyGroup);
 		RegisterUserInKeycloak(partner);
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
 		partnerResponse.setStatus("Active");
-		return partnerResponse;		
+		return partnerResponse;
 	}
 
 	private void saveToPartnerH(Partner partner) {
@@ -227,7 +227,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setCrBy(partner.getCrBy());
 		partnerHistory.setCrDtimes(Timestamp.valueOf(now));
 		partnerHistory.setId(partnerHPK);
-		partnerHRepository.save(partnerHistory);		
+		partnerHRepository.save(partnerHistory);
 	}
 
 	private void RegisterUserInKeycloak(Partner partner) {
@@ -239,7 +239,7 @@ public class PartnerServiceImpl implements PartnerService {
 		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
 		userRegistrationRequestDto.setUserPassword(partner.getId());
 		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
-		//return keycloakImpl.registerUser(userRegistrationRequestDto);		
+		// return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
 	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup) {
@@ -263,8 +263,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroup);
 		if (policyGroup == null) {
 			LOGGER.error(policyGroup + " : Policy Group is not available");
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		return policyGroupFromDb;
@@ -274,8 +273,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<PartnerType> partnerTypeFromDb = partnerTypeRepository.findById(partnerType);
 		if (partnerTypeFromDb.isEmpty()) {
 			LOGGER.error(partnerType + " : partnerType is not available.");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());
 		}
 		return partnerTypeFromDb.get();
@@ -284,10 +282,9 @@ public class PartnerServiceImpl implements PartnerService {
 	private void validatePartnerByEmail(String emailId) {
 		Partner partnerFromDb = partnerRepository.findByEmailId(emailId);
 		if (partnerFromDb != null) {
-		LOGGER.error("Partner with email " + emailId + "already exists.");
-		throw new PartnerServiceException(
-				ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
-				ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
+			LOGGER.error("Partner with email " + emailId + "already exists.");
+			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
+					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
 	}
 
@@ -295,25 +292,25 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
 		if (!partnerById.isEmpty()) {
 			LOGGER.error("Partner with id " + partnerId + "already exists.");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
 	}
 
 	private void validatePartnerIdLength(String partnerId) {
-		if(partnerId.length() > partnerIdMaxLength ) {
-			LOGGER.error("Length of partner id " + partnerId + " : is more than max length(" + partnerIdMaxLength + ")");
+		if (partnerId.length() > partnerIdMaxLength) {
+			LOGGER.error(
+					"Length of partner id " + partnerId + " : is more than max length(" + partnerIdMaxLength + ")");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
-		}		
+		}
 	}
 
 	private void validateEmail(String emailId) {
-		if(!emailId.matches(emailRegex)) {
-		LOGGER.error(emailId  + " : this is invalid email");
-		throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
-				ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+		if (!emailId.matches(emailRegex)) {
+			LOGGER.error(emailId + " : this is invalid email");
+			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
 	}
 
@@ -326,7 +323,7 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setContactNumber(partner.getContactNo());
 		response.setEmailId(partner.getEmailId());
 		response.setOrganizationName(partner.getName());
-		if(partner.getPolicyGroupId() != null) {
+		if (partner.getPolicyGroupId() != null) {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
 		}
 		return response;
@@ -336,14 +333,12 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
 		if (partnerById.isEmpty()) {
 			LOGGER.error("Partner with id " + partnerId + "not exists.");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		if(!partnerById.get().getIsActive()) {
+		if (!partnerById.get().getIsActive()) {
 			LOGGER.error("Partner with id " + partnerId + "is not active.");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 		return partnerById.get();
@@ -353,8 +348,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
 		if (policyGroupFromDb.isEmpty()) {
 			LOGGER.error(policyGroupId + " : Policy Group is not available");
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		return policyGroupFromDb.get();
@@ -378,7 +372,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest partnerAPIKeyRequest, String partnerId) {
 		Partner partner = getValidPartner(partnerId);
-		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),partnerAPIKeyRequest.getPolicyName());
+		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
+				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
 		partnerPolicyRequest.setCrBy(getUser());
@@ -388,7 +383,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
-		if(!partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
+		if (!partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
 			return approvePartnerPolicy(partnerPolicyRequest);
@@ -400,7 +395,7 @@ public class PartnerServiceImpl implements PartnerService {
 		LOGGER.info("PartnerAPIKeyRequest successfully submitted.");
 		return partnerAPIKeyResponse;
 	}
-	
+
 	private PartnerAPIKeyResponse approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
 		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
@@ -421,70 +416,63 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
-		AuthPolicy authPolicyFromDb = authPolicyRepository
-				.findByPolicyGroupAndName(policyGroupId, policyName);
+		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, policyName);
 		if (authPolicyFromDb == null) {
 			LOGGER.info("Given Policy and partner's policy group not mapped.");
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
 					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
 		}
-		
-		if(!authPolicyFromDb.getIsActive()) {
+
+		if (!authPolicyFromDb.getIsActive()) {
 			LOGGER.info("Given Policy is not active. " + authPolicyFromDb.getId());
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			
+
 		}
-		if(authPolicyFromDb.getValidToDate().isBefore(LocalDateTime.now())) {
+		if (authPolicyFromDb.getValidToDate().isBefore(LocalDateTime.now())) {
 			LOGGER.info("Policy is expired. " + authPolicyFromDb.getId());
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorMessage());
-			
+
 		}
-		if(authPolicyFromDb.getPolicyGroup().getIsActive()) {
+		if (!authPolicyFromDb.getPolicyGroup().getIsActive()) {
 			LOGGER.info("Policy group is not active." + authPolicyFromDb.getPolicyGroup().getId());
-			throw new PartnerServiceException(
-					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
-		}		
+		}
 		return authPolicyFromDb;
 	}
 
 	@Override
 	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String partnerId, String apikeyReqId) {
-		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,apikeyReqId);
-		if(partnerRequest == null) {
+		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
+				apikeyReqId);
+		if (partnerRequest == null) {
 			LOGGER.info(apikeyReqId + " : Invalid apikeyReqId");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION
-							.getErrorMessage());
+			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
 		response.setApikeyReqStatus(partnerRequest.getStatusCode());
 		response.setApiRequestKey(apikeyReqId);
-		if(partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId,partnerRequest.getPolicyId());
+		if (partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
+			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, partnerRequest.getPolicyId());
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
-		}		
+		}
 		return response;
 	}
 
 	private PartnerPolicy getPartnerMappedPolicy(String partnerId, String policyId) {
-		return partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId,policyId);
+		return partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId, policyId);
 	}
 
 	@Override
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerId) {
 		List<PartnerPolicyRequest> apikeyRequestsByPartner = partnerPolicyRequestRepository.findByPartnerId(partnerId);
-		if(apikeyRequestsByPartner.isEmpty()) {
+		if (apikeyRequestsByPartner.isEmpty()) {
 			LOGGER.info("For partner " + partnerId + " : no apikey request exists.");
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		List<APIkeyRequests> apikeyRequests = new ArrayList<>();
@@ -492,16 +480,16 @@ public class PartnerServiceImpl implements PartnerService {
 			APIkeyRequests approvedRequest = new APIkeyRequests();
 			approvedRequest.setApiKeyReqID(apIkeyRequest.getId());
 			approvedRequest.setApiKeyRequestStatus(apIkeyRequest.getStatusCode());
-			if(apIkeyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId,apIkeyRequest.getPolicyId());
+			if (apIkeyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
+				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, apIkeyRequest.getPolicyId());
 				approvedRequest.setPartnerApiKey(approvedPolicy.getPolicyApiKey());
 				approvedRequest.setValidityTill(approvedPolicy.getValidToDatetime());
 				approvedRequest.setApikeyStatus(approvedPolicy.getIsActive());
 			}
 			apikeyRequests.add(approvedRequest);
-		}		
+		}
 		return apikeyRequests;
-	}	
+	}
 
 	@Override
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
@@ -547,7 +535,8 @@ public class PartnerServiceImpl implements PartnerService {
 		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
 				CACertificateResponseDto.class);
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(PartnerConstants.ERRORS);
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
+					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
@@ -578,7 +567,8 @@ public class PartnerServiceImpl implements PartnerService {
 				PartnerCertificateResponseDto.class);
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
 			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(PartnerConstants.ERRORS);
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
+					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
@@ -624,7 +614,8 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
 			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(PartnerConstants.ERRORS);
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
+					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
@@ -649,10 +640,10 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
 		PartnerPolicyRequest partnerPolicyRequest = getPartnerPolicyRequest(partnerId, policyId);
-        if(partnerPolicyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
+		if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
-        }
+		}
 		BiometricExtractorProvider extractorProvider = null;
 		for (ExtractorDto extractor : extractors.getExtractors()) {
 			extractorProvider = new BiometricExtractorProvider();
@@ -688,8 +679,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicyRequest partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
 				policyId);
 		if (partnerPolicyRequest == null) {
-			throw new PartnerServiceException(
-					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
 		return partnerPolicyRequest;
@@ -727,7 +717,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
 		List<PartnerSearchResponseDto> partners = new ArrayList<>();
@@ -745,7 +735,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
-			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		return pageDto;
 	}
@@ -757,7 +747,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
-			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		return pageDto;
 	}
@@ -769,10 +759,9 @@ public class PartnerServiceImpl implements PartnerService {
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
-					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage()
-							+ credentialTypesRequiredPartnerTypes);
+					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
 		}
-		validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),policyId);
+		validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyId);
 		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType(credentialType);
@@ -792,8 +781,6 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
 					ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
 		}
-
-		
 	}
 
 	@Override
@@ -844,7 +831,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		return LocalDateTime.now();
 	}
-	
+
 	private JSONObject getPolicyObject(String policyFileId) {
 		JSONParser parser = new JSONParser();
 		String error = null;
@@ -884,8 +871,8 @@ public class PartnerServiceImpl implements PartnerService {
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PartnerPolicyRequest.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PartnerPolicyRequest.class,
-						filterDto, filterValueDto, "id");
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager,
+						PartnerPolicyRequest.class, filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
@@ -896,7 +883,7 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			filterResponseDto.setFilters(columnValueList);
 		}
-		return filterResponseDto;		
+		return filterResponseDto;
 	}
 
 	@Override
@@ -906,14 +893,15 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
-			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),
+					page.getTotalElements());
 		}
 		return pageDto;
 	}
 
 	private List<PartnerPolicySearchResponseDto> mapPartnerPolicies(List<PartnerPolicy> content) {
 		Objects.requireNonNull(content);
-		List<PartnerPolicySearchResponseDto> partnerPolicyList=new ArrayList<>();
+		List<PartnerPolicySearchResponseDto> partnerPolicyList = new ArrayList<>();
 		content.forEach(partnerPolicy -> {
 			PartnerPolicySearchResponseDto searchResponse = new PartnerPolicySearchResponseDto();
 			searchResponse.setPolicyApiKey(partnerPolicy.getPolicyApiKey());
@@ -940,16 +928,17 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerPolicyRequests = mapPolicyRequests(page.getContent());
-			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),
+					page.getTotalElements());
 		}
 		return pageDto;
 	}
-	
+
 	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
 		Objects.requireNonNull(content);
-		List<PolicyRequestSearchResponseDto> policyRequestList=new ArrayList<>();
+		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
 		content.forEach(policyRequest -> {
-			PolicyRequestSearchResponseDto searchPolicyRequest=new PolicyRequestSearchResponseDto();
+			PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
 			searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
 			searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
 			searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
@@ -982,23 +971,23 @@ public class PartnerServiceImpl implements PartnerService {
 			return "system";
 		}
 	}
-	
-	private void notify(String certData,String partnerDomain) {
+
+	private void notify(String certData, String partnerDomain) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		Map<String,Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("certificateData", certData);
 		data.put("partnerDomain", partnerDomain);
-		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED,data,type);
+		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
 	}
 
 	private void notify(String partnerId) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		Map<String,Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("partnerId", partnerId);
-		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
+		webSubPublisher.notify(EventType.PARTNER_UPDATED, data, type);
 	}
 }
