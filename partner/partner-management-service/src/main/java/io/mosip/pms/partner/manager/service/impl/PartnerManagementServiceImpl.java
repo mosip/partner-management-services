@@ -541,7 +541,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					ErrorCode.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage());
 		}
-		if (mispLicense.getIsActive()) {
+		if (!mispLicense.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
 			throw new PartnerManagerServiceException(ErrorCode.MISP_IS_BLOCKED.getErrorCode(),
 					ErrorCode.MISP_IS_BLOCKED.getErrorMessage());

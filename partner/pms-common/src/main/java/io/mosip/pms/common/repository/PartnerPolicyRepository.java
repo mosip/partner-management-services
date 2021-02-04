@@ -18,7 +18,7 @@ public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, St
 	@Query(value = "select * from partner_policy ppr where ppr.part_id=?1 AND ppr.policy_id=?2", nativeQuery = true )
 	public PartnerPolicy findByPartnerIdAndPolicyId(String part_id, String policy_id);
 	
-	@Query(value = "select * from partner_policy pp where pp.part_id=?1 AND (d.is_deleted is null or d.is_deleted = false) AND d.is_active=true",nativeQuery = true)
+	@Query(value = "select * from partner_policy pp where pp.part_id=?1 AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true",nativeQuery = true)
 	public List<PartnerPolicy> findByPartnerIdAndIsActiveTrue(String partner_Id); 
 	
 	@Query(value = "select * from partner_policy ppr where ppr.part_id=?1 AND ppr.policy_id=?2 AND ppr.policy_api_key=?3", nativeQuery = true )
