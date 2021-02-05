@@ -383,7 +383,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
-		if (!partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
+		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId,authPolicy.getId()).isEmpty()) {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
 			return approvePartnerPolicy(partnerPolicyRequest);
@@ -456,15 +456,15 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setApikeyReqStatus(partnerRequest.getStatusCode());
 		response.setApiRequestKey(apikeyReqId);
 		if (partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, partnerRequest.getPolicyId());
+			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
 		}
 		return response;
 	}
 
-	private PartnerPolicy getPartnerMappedPolicy(String partnerId, String policyId) {
-		return partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId, policyId);
+	private PartnerPolicy getPartnerMappedPolicy(String apiKey) {
+		return partnerPolicyRepository.findByApiKey(apiKey);
 	}
 
 	@Override
@@ -481,7 +481,7 @@ public class PartnerServiceImpl implements PartnerService {
 			approvedRequest.setApiKeyReqID(apIkeyRequest.getId());
 			approvedRequest.setApiKeyRequestStatus(apIkeyRequest.getStatusCode());
 			if (apIkeyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, apIkeyRequest.getPolicyId());
+				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apIkeyRequest.getId());
 				approvedRequest.setPartnerApiKey(approvedPolicy.getPolicyApiKey());
 				approvedRequest.setValidityTill(approvedPolicy.getValidToDatetime());
 				approvedRequest.setApikeyStatus(approvedPolicy.getIsActive());
@@ -674,9 +674,8 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
-		PartnerPolicyRequest partnerPolicyRequest = getPartnerPolicyRequest(partnerId, policyId);
-		if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
+	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {				
+		if (isApprovedPolicyRequestExists(partnerId, policyId)) {
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
 		}
@@ -711,14 +710,18 @@ public class PartnerServiceImpl implements PartnerService {
 
 	}
 
-	private PartnerPolicyRequest getPartnerPolicyRequest(String partnerId, String policyId) {
-		PartnerPolicyRequest partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
-				policyId);
-		if (partnerPolicyRequest == null) {
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
+	private boolean isApprovedPolicyRequestExists(String partnerId, String policyId) {
+		List<PartnerPolicyRequest> partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
+				policyId);		
+		if (partnerPolicyRequest.isEmpty()) {
+			throw new PartnerServiceException(
+					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-		return partnerPolicyRequest;
+		if(partnerPolicyRequest.stream().filter(p->p.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)).count() > 0) {
+			return true;
+		};
+		return false;
 	}
 
 	@Override

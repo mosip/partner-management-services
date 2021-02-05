@@ -880,14 +880,14 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 		}
 
-		PartnerPolicyRequest partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
+		List<PartnerPolicyRequest> partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
 				policyId);
-		if (partnerPolicyRequest == null) {
+		if (partnerPolicyRequest.isEmpty()) {
 			throw new PartnerServiceException(
 					PartnerExceptionConstants.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					PartnerExceptionConstants.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-		if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase(APPROVEDSTATUS)) {
+		if (partnerPolicyRequest.stream().filter(p->p.getStatusCode().equalsIgnoreCase(APPROVEDSTATUS)).count() > 0) {
 			throw new PartnerServiceException(PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
 		}

@@ -82,14 +82,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final PolicyManagementServiceException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
+		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(PolicyObjectValidationFailedException.class)
 	public ResponseEntity<ResponseWrapper<List<ServiceError>>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final PolicyObjectValidationFailedException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return getErrorResponseObject(httpServletRequest, e, HttpStatus.INTERNAL_SERVER_ERROR);
+		return getErrorResponseObject(httpServletRequest, e, HttpStatus.OK);
 	}
 	@ExceptionHandler(RequestException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
@@ -151,7 +151,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
 		errorResponse.getErrors().add(error);
 		ExceptionUtils.logRootCause(exception);
-		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
 	
 	/**
