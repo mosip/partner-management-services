@@ -201,15 +201,11 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup);
 		RegisterUserInKeycloak(partner);
-		try {
 		partnerRepository.save(partner);
-		}catch (Exception e) {
-			
-		}
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
-		partnerResponse.setStatus("Active");
+		partnerResponse.setStatus(partner.getApprovalStatus());
 		return partnerResponse;
 	}
 
@@ -591,6 +587,8 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setUpdBy(getUser());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
+		updateObject.setIsActive(true);
+		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
 		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
@@ -634,11 +632,45 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+		if (partnerFromDb.isEmpty()) {
+			throw new PartnerServiceException(
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		if (partnerFromDb.get().getCertificateAlias() == null) {
+			throw new PartnerServiceException(
+					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+		}
+		PartnerCertDownloadResponeDto responseObject = null;
+		Map<String, String> pathsegments = new HashMap<>();
+		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+		Map<String, Object> getApiResponse = restUtil
+				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
+		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
+				PartnerCertDownloadResponeDto.class);
+		if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(PartnerConstants.ERRORS);
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+			} else {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
+		}
+		if (responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
+
+		return responseObject;
+
 	}
 
 	@Override
