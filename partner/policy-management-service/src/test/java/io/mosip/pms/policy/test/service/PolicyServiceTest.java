@@ -443,53 +443,42 @@ public class PolicyServiceTest {
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoPolicyTest() throws JsonParseException, JsonMappingException, IOException {
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("2345","12345")).thenReturn(null);		
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("2345","12345")).thenReturn(null);		
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoAuthPolicyTest() throws JsonParseException, JsonMappingException, IOException {
-		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
+		PartnerPolicy policy = new PartnerPolicy();
+		List<PartnerPolicy> partnerPolicy = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setAddress("Test");
 		partner.setName("Test");
-		policy.get().setPartner(partner);
-		policy.get().getPartner().setId("12345");
-		policy.get().setPolicyId("12345");
-		policy.get().setPolicyApiKey("12345");
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());		
-		service.getPartnerMappedPolicy("12345", "12345");
-	}
-
-	@Test(expected = PolicyManagementServiceException.class)
-	public void getPartnerMappedPolicy_PartnerPolicyNotMappedTest() throws JsonParseException, JsonMappingException, IOException {
-		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
-		Partner partner = new Partner();
-		partner.setAddress("Test");
-		partner.setName("Test");
-		policy.get().setPartner(partner);
-		policy.get().getPartner().setId("12345");
-		policy.get().setPolicyId("2345");
-		policy.get().setPolicyApiKey("12345");
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());
-		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		policy.setPartner(partner);
+		policy.getPartner().setId("12345");
+		policy.setPolicyId("12345");
+		policy.setPolicyApiKey("12345");
+		partnerPolicy.add(policy);
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345","12345")).thenReturn(partnerPolicy);		
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
 	@Test
 	public void getPartnerMappedPolicyTest_001() throws JsonParseException, JsonMappingException, IOException {
-		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
+		PartnerPolicy policy = new PartnerPolicy();
+		List<PartnerPolicy> partnerPolicy = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setAddress("Test");
 		partner.setName("Test");
-		policy.get().setPartner(partner);
-		policy.get().getPartner().setId("12345");
-		policy.get().setPolicyId("12345");
-		policy.get().setPolicyApiKey("12345");
+		policy.setPartner(partner);
+		policy.getPartner().setId("12345");
+		policy.setPolicyId("12345");
+		policy.setPolicyApiKey("12345");
+		partnerPolicy.add(policy);
 		Optional<PolicyGroup> policyGroup = Optional.of(new PolicyGroup());
 		policyGroup.get().setId("12345");		
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policyGroup);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(policy.get());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345","12345")).thenReturn(partnerPolicy);
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.getPartnerMappedPolicy("12345", "12345");
 	}

@@ -205,7 +205,7 @@ public class PartnerServiceImpl implements PartnerService {
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
-		partnerResponse.setStatus("Active");
+		partnerResponse.setStatus(partner.getApprovalStatus());
 		return partnerResponse;
 	}
 
@@ -383,7 +383,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
-		if (!partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
+		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId,authPolicy.getId()).isEmpty()) {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
 			return approvePartnerPolicy(partnerPolicyRequest);
@@ -456,15 +456,15 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setApikeyReqStatus(partnerRequest.getStatusCode());
 		response.setApiRequestKey(apikeyReqId);
 		if (partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, partnerRequest.getPolicyId());
+			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
 		}
 		return response;
 	}
 
-	private PartnerPolicy getPartnerMappedPolicy(String partnerId, String policyId) {
-		return partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId, policyId);
+	private PartnerPolicy getPartnerMappedPolicy(String apiKey) {
+		return partnerPolicyRepository.findByApiKey(apiKey);
 	}
 
 	@Override
@@ -481,7 +481,7 @@ public class PartnerServiceImpl implements PartnerService {
 			approvedRequest.setApiKeyReqID(apIkeyRequest.getId());
 			approvedRequest.setApiKeyRequestStatus(apIkeyRequest.getStatusCode());
 			if (apIkeyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(partnerId, apIkeyRequest.getPolicyId());
+				PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apIkeyRequest.getId());
 				approvedRequest.setPartnerApiKey(approvedPolicy.getPolicyApiKey());
 				approvedRequest.setValidityTill(approvedPolicy.getValidToDatetime());
 				approvedRequest.setApikeyStatus(approvedPolicy.getIsActive());
@@ -587,6 +587,8 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setUpdBy(getUser());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
+		updateObject.setIsActive(true);
+		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
 		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
@@ -630,17 +632,50 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+		if (partnerFromDb.isEmpty()) {
+			throw new PartnerServiceException(
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		if (partnerFromDb.get().getCertificateAlias() == null) {
+			throw new PartnerServiceException(
+					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+		}
+		PartnerCertDownloadResponeDto responseObject = null;
+		Map<String, String> pathsegments = new HashMap<>();
+		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+		Map<String, Object> getApiResponse = restUtil
+				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
+		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
+				PartnerCertDownloadResponeDto.class);
+		if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(PartnerConstants.ERRORS);
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+			} else {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
+		}
+		if (responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
+
+		return responseObject;
+
 	}
 
 	@Override
-	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
-		PartnerPolicyRequest partnerPolicyRequest = getPartnerPolicyRequest(partnerId, policyId);
-		if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
+	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {				
+		if (isApprovedPolicyRequestExists(partnerId, policyId)) {
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
 		}
@@ -675,14 +710,18 @@ public class PartnerServiceImpl implements PartnerService {
 
 	}
 
-	private PartnerPolicyRequest getPartnerPolicyRequest(String partnerId, String policyId) {
-		PartnerPolicyRequest partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
-				policyId);
-		if (partnerPolicyRequest == null) {
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
+	private boolean isApprovedPolicyRequestExists(String partnerId, String policyId) {
+		List<PartnerPolicyRequest> partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
+				policyId);		
+		if (partnerPolicyRequest.isEmpty()) {
+			throw new PartnerServiceException(
+					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-		return partnerPolicyRequest;
+		if(partnerPolicyRequest.stream().filter(p->p.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)).count() > 0) {
+			return true;
+		};
+		return false;
 	}
 
 	@Override

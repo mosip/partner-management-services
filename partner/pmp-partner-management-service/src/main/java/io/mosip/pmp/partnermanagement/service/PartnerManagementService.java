@@ -61,17 +61,13 @@ public interface PartnerManagementService {
 	 * @return retrievePartnersDetails this class contains Auth/E-KYC Partner details for given partner id
 	 */
 	
-	public RetrievePartnersDetails getparticularAuthEKYCPartnerDetailsForGivenPartnerId(String partnerID);
-	
-	/**
-	 *  Partner managers would be using this request to retrieve the Partner API key
-	 * to Policy Mappings. Partner management system would be able to validate
-	 * Partner API Key pattern, validate expiry for Partner API Key and status
-	 * details in background, while fetching Policy to Partner API mappings.
+	public RetrievePartnersDetails getparticularAuthEKYCPartnerDetailsForGivenPartnerId(String partnerID);	
 
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @param PartnerAPIKey this is unique id created by partner manager at the time of approving partner request
-	 * @return partnerAPIKeyToPolicyMappingsResponse this class contains partnerID and policyId
+	/**
+	 * 
+	 * @param partnerID
+	 * @param partnerAPIKey
+	 * @return
 	 */
 	public PartnerAPIKeyToPolicyMappingsResponse getPartnerAPIKeyToPolicyMapping(String partnerID, String partnerAPIKey);
 	
@@ -79,12 +75,12 @@ public interface PartnerManagementService {
 	 * This method would be used to retrieve all Partner API Key requests as received by partner manager.
 	 * @return this class contains list of Partner API Key requests as received by partner manager
 	 */
-	public List<ApikeyRequests> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();
-	
+	public List<ApikeyRequests> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();	
+
 	/**
-	 * This method would be used to retrieve the request for Partner API key to Policy Mappings for given request id.
-	 * @param APIKeyReqID this is unique id created after partner request for Partner API Key
-	 * @return apikeyRequests this class contains details relared to Partner API key to Policy Mappings
+	 * 
+	 * @param apiKeyReqID
+	 * @return
 	 */
 	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String apiKeyReqID);
 	

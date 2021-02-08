@@ -35,7 +35,8 @@ public enum ErrorCode {
 	PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_022","Given Partner api key is not active."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
-	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object");
+	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
+	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same.");
 
 	/**
 	 * The error code.

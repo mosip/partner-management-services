@@ -331,7 +331,9 @@ public class PartnerServiceImplTest {
 		partnerRequestedData.setPartner(part);
 		partnerRequestedData.setPolicyId("123456");
 		partnerRequestedData.setStatusCode("In-Progress");
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		List<PartnerPolicyRequest> requests = new ArrayList<>();
+		requests.add(partnerRequestedData);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(requests);
 		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
 	}
 	
@@ -347,7 +349,9 @@ public class PartnerServiceImplTest {
 		partnerRequestedData.setPartner(part);
 		partnerRequestedData.setPolicyId("123456");
 		partnerRequestedData.setStatusCode("Approved");
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		List<PartnerPolicyRequest> requests = new ArrayList<>();
+		requests.add(partnerRequestedData);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(requests);
 		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
 	}
 	
@@ -363,7 +367,9 @@ public class PartnerServiceImplTest {
 		partnerRequestedData.setPartner(part);
 		partnerRequestedData.setPolicyId("123456");
 		partnerRequestedData.setStatusCode("In-Progress");
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		List<PartnerPolicyRequest> requests = new ArrayList<>();
+		requests.add(partnerRequestedData);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(requests);
 		BiometricExtractorProvider extractorsFromDb = new BiometricExtractorProvider();
 		extractorsFromDb.setId("1234567");
 		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyIdAndAttributeName(partnerId, "12345", "face")).thenReturn(extractorsFromDb);

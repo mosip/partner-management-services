@@ -33,15 +33,10 @@ private final String errorCode;
 private final String errorMessage;
 
 /**
- * Constructs a new errorMessages enum with the specified detail message and
- * error code and error message.
- *
  * 
- * @param errorCode    the error code
- * @param errorMessage the detail message.
- * @param rootCause    the specified cause
+ * @param errorCode
+ * @param errorMessage
  */
-
 private ErrorMessages(final String errorCode, final String errorMessage) {
 	this.errorCode = errorCode;
 	this.errorMessage = errorMessage;

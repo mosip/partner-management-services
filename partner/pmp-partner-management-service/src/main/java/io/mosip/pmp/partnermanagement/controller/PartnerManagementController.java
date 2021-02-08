@@ -211,9 +211,9 @@ public class PartnerManagementController {
 	}
 	
 	/**
-	 * This API would be used to retrieve the particular Auth/E-KYC Partner details for given partner id.
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @return response this class contains Auth/E-KYC Partner details for given partner id
+	 * 
+	 * @param partnerId
+	 * @return
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager')")
 	@RequestMapping(value="/{partnerId}", method = RequestMethod.GET)

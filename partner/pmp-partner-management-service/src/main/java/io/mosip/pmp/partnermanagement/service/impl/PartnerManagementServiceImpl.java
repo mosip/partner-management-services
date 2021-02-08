@@ -596,7 +596,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		try {
 			readValue = new ObjectMapper().readValue(policeFileId, Map.class);
 		} catch (Exception e) {
-			LOGGER.info("Error occured while parsing the policy file" + e.getStackTrace());
+			LOGGER.info("Error occured while parsing the policy file" + e.getLocalizedMessage());
 			throw new PartnerValidationException(PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					PartnerValidationsConstants.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
@@ -653,7 +653,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 						PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
 			}
 		} catch (Exception e) {
-			LOGGER.warn("No details found for license key " + licenseKey + e.getStackTrace());
+			LOGGER.warn("No details found for license key " + licenseKey + e.getLocalizedMessage());
 			throw new PartnerValidationException(PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					PartnerValidationsConstants.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
 		}

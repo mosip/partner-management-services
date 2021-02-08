@@ -186,6 +186,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		updatePartnerObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
+			if(updatePartnerObject.getCertificateAlias() == null) {
+				throw new PartnerManagerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());				
+			}
 			updatePartnerObject.setIsActive(true);
 			notify(partnerId, false);
 			partnerRepository.save(updatePartnerObject);

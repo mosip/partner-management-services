@@ -187,10 +187,8 @@ public class PolicyManagementService {
 
 	/**
 	 * 
-	 * @param Id
-	 * @param name
-	 * @param descr
-	 * @param is_active
+	 * @param requestDto
+	 * @param policyGroupId
 	 * @return
 	 */
 	public PolicyGroupCreateResponseDto updatePolicyGroup(PolicyGroupUpdateRequestDto requestDto,
@@ -355,12 +353,11 @@ public class PolicyManagementService {
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
 		return responseDto;
 	}
-
+	
 	/**
 	 * 
+	 * @param policyGroupId
 	 * @param auth_policy_name
-	 * @param isExists
-	 * @return
 	 */
 	private void validateAuthPolicyName(String policyGroupId, String auth_policy_name) {
 		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, auth_policy_name);
@@ -685,9 +682,9 @@ public class PolicyManagementService {
 	 */
 	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId)
 			throws JsonParseException, JsonMappingException, IOException {
-		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId, policyId);
-		if (partnerPolicy == null) {
-			logger.error("Partner is not found");
+		List<PartnerPolicy> partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
+		if (partnerPolicy.isEmpty()) {
+			logger.error(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
 			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
@@ -698,13 +695,7 @@ public class PolicyManagementService {
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 
-		}
-		if (!partnerPolicy.getPolicyId().equals(policyId)) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
-			throw new PolicyManagementServiceException(ErrorMessages.PARTNER_POLICY_NOT_MAPPED.getErrorCode(),
-					ErrorMessages.PARTNER_POLICY_NOT_MAPPED.getErrorMessage());
-
-		}
+		}		
 		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.get().getPolicyGroup().getId());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy.get());

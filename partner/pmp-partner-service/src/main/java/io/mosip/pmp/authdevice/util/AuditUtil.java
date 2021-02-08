@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -76,11 +75,10 @@ public class AuditUtil {
 	@Autowired
 	RestUtil restUtil;
 	
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditUtil.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditUtil.class);	
+	
 	/**
-	 * Audit request.
-	 *
-	 * @param auditRequestDto the audit request dto
+	 * 
 	 */
 	@PostConstruct
 	private void init() {
@@ -101,11 +99,13 @@ public class AuditUtil {
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
 		setAuditRequestDto(eventName, eventType, description, eventId);
 	}
-
+	
 	/**
-	 * Sets the audit request dto.
-	 *
-	 * @param auditRequestDto the new audit request dto
+	 * 
+	 * @param eventName
+	 * @param eventType
+	 * @param description
+	 * @param eventId
 	 */
 	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
@@ -193,11 +193,8 @@ public class AuditUtil {
 	}
 
 	/**
-	 * For Auditing Login Services
 	 * 
 	 * @param auditRequestDto
-	 * @param token
-	 * @return
 	 */
 	public void callAuditManager(AuditRequestDto auditRequestDto) {
 
@@ -211,8 +208,7 @@ public class AuditUtil {
 
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			handlException(ex);
-		}
-		//String responseBody = response.getBody();
+		}		
 		getAuditDetailsFromResponse(response);
 
 	}
