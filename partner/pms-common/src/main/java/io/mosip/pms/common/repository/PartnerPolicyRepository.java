@@ -15,7 +15,7 @@ import io.mosip.pms.common.entity.PartnerPolicy;
 @Repository
 public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, String> {
 	
-	@Query(value = "select * from partner_policy pp where ppr.part_id=?1 AND pp.policy_id=?2 AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true",nativeQuery = true)
+	@Query(value = "select * from partner_policy pp where pp.part_id=?1 AND pp.policy_id=?2 AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true",nativeQuery = true)
 	public List<PartnerPolicy> findByPartnerIdAndPolicyIdAndIsActiveTrue(String part_id, String policy_id);
 	
 	@Query(value = "select * from partner_policy pp where pp.part_id=?1 AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true",nativeQuery = true)
