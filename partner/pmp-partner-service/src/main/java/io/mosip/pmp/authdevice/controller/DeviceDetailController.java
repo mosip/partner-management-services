@@ -175,7 +175,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
 			return responseWrapper;
 		} 
@@ -189,7 +189,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toUpperCase().equals(Purpose.REGISTRATION.toString())) {
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));
 			return responseWrapper;
 		} 
@@ -203,7 +203,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase("registration")){
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceFilterValues(request.getRequest()));
 			return responseWrapper;
 		} 
@@ -218,7 +218,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase("registration")){
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceTypeFilterValues(request.getRequest()));
 			return responseWrapper;
 		} 
@@ -232,7 +232,7 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase("registration")){
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceSubTypeFilterValues(request.getRequest()));
 			return responseWrapper;
 		} 

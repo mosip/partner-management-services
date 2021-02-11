@@ -20,5 +20,5 @@ public interface RegSecureBiometricInterfaceService {
 	public String updateSecureBiometricInterfaceStatus(
 			SecureBiometricInterfaceStatusUpdateDto secureBiometricInterfaceDto);
 
-	public <E> PageResponseDto<SbiSearchResponseDto> searchSecureBiometricInterface(Class<E> entity, DeviceSearchDto dto);
+	public <E> PageResponseDto<SbiSearchResponseDto> searchSecureBiometricInterface(DeviceSearchDto dto);
 }

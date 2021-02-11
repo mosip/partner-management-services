@@ -1,7 +1,7 @@
 package io.mosip.pmp.authdevice.constants;
 
 public enum Purpose {
-	REGISTRATION("Registration"),AUTH("Auth");
+	REGISTRATION("REGISTRATION"),AUTH("AUTH");
 	
 	private String purpose;
 

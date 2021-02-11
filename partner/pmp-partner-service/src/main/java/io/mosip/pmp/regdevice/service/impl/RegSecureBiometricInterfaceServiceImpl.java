@@ -36,7 +36,6 @@ import io.mosip.pmp.regdevice.repository.RegSecureBiometricInterfaceRepository;
 import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.helper.SearchHelper;
-import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 
 @Service
@@ -257,15 +256,39 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	private EntityManager entityManager;
 
 	@Override
-	public <E> PageResponseDto<SbiSearchResponseDto> searchSecureBiometricInterface(Class<E> entity,
-			DeviceSearchDto dto) {
+	public <E> PageResponseDto<SbiSearchResponseDto> searchSecureBiometricInterface(DeviceSearchDto dto) {
 		List<SbiSearchResponseDto> sbis=new ArrayList<>();
 		PageResponseDto<SbiSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		Page<RegSecureBiometricInterface> page =searchHelper.search(entityManager,RegSecureBiometricInterface.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			 sbis=MapperUtils.mapAll(page.getContent(), SbiSearchResponseDto.class);
+			 sbis=mapSbiResponse(page.getContent());
 			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
 		return pageDto;
+	}
+	
+	public static List<SbiSearchResponseDto> mapSbiResponse(List<RegSecureBiometricInterface> sbiDetails){
+		List<SbiSearchResponseDto> response = new ArrayList<>();
+		sbiDetails.forEach(sbi->{
+			SbiSearchResponseDto dto = new SbiSearchResponseDto();
+			dto.setCrBy(sbi.getCrBy());
+			dto.setCrDtimes(sbi.getCrDtimes());
+			dto.setDelDtimes(sbi.getDelDtimes());
+			dto.setUpdBy(sbi.getUpdBy());
+			dto.setUpdDtimes(sbi.getUpdDtimes());
+			dto.setIsActive(sbi.isActive());
+			dto.setDeleted(sbi.isDeleted());
+			dto.setApprovalStatus(sbi.getApprovalStatus());
+			dto.setDeviceDetailId(sbi.getDeviceDetailId());	
+			dto.setDeviceProviderId(sbi.getDeviceDetail().getDeviceProviderId());
+			dto.setPartnerOrganizationName(sbi.getDeviceDetail().getPartnerOrganizationName());
+			dto.setId(sbi.getId());
+			dto.setSwBinaryHash(sbi.getSwBinaryHash());
+			dto.setSwCreateDateTime(sbi.getSwCreateDateTime());
+			dto.setSwExpiryDateTime(sbi.getSwExpiryDateTime());
+			dto.setSwVersion(sbi.getSwVersion());
+			response.add(dto);
+		});
+		return response;
 	}
 }
