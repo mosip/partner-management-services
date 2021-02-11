@@ -81,9 +81,11 @@ import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -92,6 +94,7 @@ import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
+import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
@@ -169,6 +172,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	private Environment environment;
+	
+	@Autowired
+	private KeycloakImpl keycloakImpl;
 
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
@@ -230,7 +236,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHRepository.save(partnerHistory);
 	}
 
-	private void RegisterUserInKeycloak(Partner partner) {
+	private MosipUserDto RegisterUserInKeycloak(Partner partner) {
 		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
 		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
 		userRegistrationRequestDto.setContactNo(partner.getContactNo());
@@ -239,7 +245,7 @@ public class PartnerServiceImpl implements PartnerService {
 		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
 		userRegistrationRequestDto.setUserPassword(partner.getId());
 		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
-		// return keycloakImpl.registerUser(userRegistrationRequestDto);
+		return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
 	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup) {
@@ -398,7 +404,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private PartnerAPIKeyResponse approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
+		partnerPolicy.setPolicyApiKey(partnerPolicyRequest.getId());
 		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
 		partnerPolicy.setIsActive(true);
@@ -554,11 +560,16 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto)
+	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId());
+		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
+		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
+		uploadRequest.setOrganizationName(partner.getName());
+		uploadRequest.setPartnerDomain(partnerCertRequesteDto.getPartnerDomain());
+		uploadRequest.setPartnerType(partner.getPartnerTypeCode());
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
-		request.setRequest(partnerCertRequesteDto);
+		request.setRequest(uploadRequest);
 		PartnerCertificateResponseDto responseObject = null;
 		Map<String, Object> uploadApiResponse = restUtil.postApi(
 				environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
