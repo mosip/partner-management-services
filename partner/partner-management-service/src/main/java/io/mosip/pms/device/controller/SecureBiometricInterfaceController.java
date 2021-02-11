@@ -19,7 +19,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.regdevice.entity.RegSecureBiometricInterface;
 import io.mosip.pms.device.regdevice.service.RegSecureBiometricInterfaceService;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
@@ -149,8 +148,8 @@ public class SecureBiometricInterfaceController {
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
-			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(RegSecureBiometricInterface.class, request.getRequest()));
+		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
+			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(request.getRequest()));
 			return responseWrapper;
 		} 
 		responseWrapper.setResponse(secureBiometricInterface.searchSecureBiometricInterface(SecureBiometricInterface.class, request.getRequest()));

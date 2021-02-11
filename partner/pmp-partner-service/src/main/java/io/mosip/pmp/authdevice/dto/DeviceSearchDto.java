@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=true)
 public class DeviceSearchDto extends SearchDto {
 
-	private String purpose;
+	private Purpose purpose;
 }

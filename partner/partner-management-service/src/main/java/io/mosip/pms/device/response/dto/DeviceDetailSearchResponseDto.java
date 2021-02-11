@@ -1,5 +1,6 @@
 package io.mosip.pms.device.response.dto;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -51,6 +52,17 @@ public class DeviceDetailSearchResponseDto {
 
 	private boolean isActive;	
 
+	@Column(name="approval_status",length=36,nullable=false)
+	private String approvalStatus;	
+	
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+	
 	public boolean getIsActive() {
 		return isActive;
 	}

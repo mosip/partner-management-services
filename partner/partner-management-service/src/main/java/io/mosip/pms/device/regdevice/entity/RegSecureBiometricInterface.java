@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,7 +25,7 @@ public class RegSecureBiometricInterface {
 	@Column(name = "device_detail_id", nullable = false, length = 36)
 	private String deviceDetailId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "device_detail_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private RegDeviceDetail deviceDetail;
 	
@@ -84,7 +83,13 @@ public class RegSecureBiometricInterface {
 		this.swVersion = swVersion;
 	}
 
-	
+	public RegDeviceDetail getDeviceDetail() {
+		return deviceDetail;
+	}
+
+	public void setDeviceDetail(RegDeviceDetail deviceDetail) {
+		this.deviceDetail = deviceDetail;
+	}
 
 	public String getDeviceDetailId() {
 		return deviceDetailId;
