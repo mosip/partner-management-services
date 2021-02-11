@@ -28,4 +28,10 @@ REFERENCES pms.auth_policy (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
+----- TRUNCATE pms.partner_policy_credential_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
+
+\COPY pms.partner_policy_credential_type (part_id,policy_id,credential_type,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) FROM './dml/pms-partner_policy_credential_type.csv' delimiter ',' HEADER  csv;
+
+
 ALTER TABLE pms.misp_license DROP CONSTRAINT IF EXISTS fk_mispl_misp CASCADE;

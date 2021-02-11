@@ -19,7 +19,7 @@ import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
+import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
@@ -104,14 +104,14 @@ public interface PartnerService {
     /**
      * Function to Upload Partner certificates
      * 
-     * @param PartnerCertificateRequestDto partnerCertResponseDto
+     * @param PartnerCertificateUploadRequestDto partnerCertResponseDto
      * @return {@link PartnerCertificateResponseDto} instance
      * @throws IOException 
      * @throws JsonProcessingException 
      * @throws JsonMappingException 
      * @throws JsonParseException 
     */
-    public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+    public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateUploadRequestDto partnerCertResponseDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
      * Function to Download Partner certificates

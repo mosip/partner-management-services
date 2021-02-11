@@ -38,7 +38,7 @@ import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
+import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
@@ -309,7 +309,7 @@ public class PartnerServiceController {
 	/**
 	 * To Upload Partner Certificate.
 	 * 
-	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
+	 * @param partnerCertRequestDto {@link PartnerCertificateUploadRequestDto} request
 	 * @return {@link PartnerCertificateResponseDto} signed certificate response
 	 * @throws IOException 
 	 * @throws JsonProcessingException 
@@ -319,7 +319,7 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/uploadPartnerCertificate", method = RequestMethod.POST)
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
-			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateUploadRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		return response;
