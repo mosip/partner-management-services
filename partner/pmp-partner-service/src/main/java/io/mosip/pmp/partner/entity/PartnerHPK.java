@@ -1,7 +1,11 @@
 package io.mosip.pmp.partner.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The primary key class for the partner_h database table.

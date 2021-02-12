@@ -1,15 +1,20 @@
 package io.mosip.pmp.partner.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +22,22 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pmp.misp.exception.MISPErrorMessages;
 import io.mosip.pmp.misp.exception.MISPServiceException;
+import io.mosip.pmp.partner.dto.PartnerSearchDto;
 import io.mosip.pmp.partner.entity.MISPLicenseEntity;
 import io.mosip.pmp.partner.entity.MISPLicenseKey;
+import io.mosip.pmp.partner.entity.MispLicenseSearchEntity;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.repository.MispLicenseRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
 import io.mosip.pmp.partner.service.InfraProviderService;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
 
 @Component
 public class InfraProviderServiceImpl implements InfraProviderService {	
@@ -44,6 +56,12 @@ public class InfraProviderServiceImpl implements InfraProviderService {
 	
 	@Autowired
 	private WebSubPublisher webSubPublisher;
+	
+	@Autowired
+	SearchHelper searchHelper;
+	
+	@Autowired
+	private PageUtils pageUtils;
 	
 	public static final String APPROVED_STATUS = "approved";
 	public static final String REJECTED_STATUS = "rejected";
@@ -221,5 +239,33 @@ public class InfraProviderServiceImpl implements InfraProviderService {
 		Map<String,Object> data = new HashMap<>();
 		data.put("mispLicenseKey", mispLicenseKey);
 		webSubPublisher.notify(EventType.MISP_UPDATED,data,type);
+	}
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Override
+	public <E> PageResponseDto<MispLicenseSearchEntity> searchMispLicense(Class<E> entity,
+			SearchDto searchDto) {
+		List<MispLicenseSearchEntity> deviceSubTypes = new ArrayList<>();
+		PageResponseDto<MispLicenseSearchEntity> pageDto = new PageResponseDto<>();
+		Page<E> page = searchHelper.search(entityManager, entity, searchDto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			deviceSubTypes = MapperUtils.mapAll(page.getContent(), MispLicenseSearchEntity.class);
+			pageDto = pageUtils.sortPage(deviceSubTypes, searchDto.getSort(), searchDto.getPagination(), page.getTotalElements());
+		}
+		/*
+		 * if(searchDto!=null) { List<PartnerSearchDto> partners = new ArrayList<>();
+		 * PageResponseDto<PartnerSearchDto> partnerDto = new PageResponseDto<>();
+		 * Page<Partner> partnerPage =
+		 * searchHelper.search(entityManager,Partner.class,searchDto); if
+		 * (partnerPage.getContent() != null && !partnerPage.getContent().isEmpty()) {
+		 * partners = MapperUtils.mapAll(partnerPage.getContent(),
+		 * PartnerSearchDto.class); partnerDto = pageUtils.sortPage(partners,
+		 * searchDto.getSort(), searchDto.getPagination(),
+		 * partnerPage.getTotalElements()); } }
+		 */
+		return pageDto;
+		
 	}
 }

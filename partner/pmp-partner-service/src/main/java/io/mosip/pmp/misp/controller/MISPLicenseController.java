@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pmp.misp.dto.MISPLicenseRequestDto;
 import io.mosip.pmp.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pmp.misp.dto.MISPLicenseUpdateRequestDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.entity.MISPLicenseEntity;
+import io.mosip.pmp.partner.entity.MispLicenseSearchEntity;
 import io.mosip.pmp.partner.service.InfraProviderService;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 import io.swagger.annotations.Api;
 
 @RestController
@@ -62,5 +66,14 @@ public class MISPLicenseController {
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
 		return response;
+	}
+	@ResponseFilter
+	@PostMapping("/search")
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	public ResponseWrapper<PageResponseDto<MispLicenseSearchEntity>> searchPartnerType(
+			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		ResponseWrapper<PageResponseDto<MispLicenseSearchEntity>> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(infraProviderService.searchMispLicense(MispLicenseSearchEntity.class, request.getRequest()));
+		return responseWrapper;
 	}
 }

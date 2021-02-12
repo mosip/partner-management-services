@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import io.mosip.pmp.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pmp.partner.entity.MISPLicenseEntity;
+import io.mosip.pmp.partner.entity.MispLicenseSearchEntity;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 
 /**
  * 
@@ -42,4 +45,6 @@ public interface InfraProviderService {
 	 * @return
 	 */
 	public MISPLicenseResponseDto regenerateKey(String mispId);
+	
+	public <E> PageResponseDto<MispLicenseSearchEntity> searchMispLicense(Class<E> entity, SearchDto mispLicenseEntity);
 }
