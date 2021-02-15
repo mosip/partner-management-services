@@ -56,7 +56,6 @@ import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 import io.mosip.pmp.partnermanagement.util.AuditUtil;
-import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.Type;
@@ -448,8 +447,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			LOGGER.info("Creating PartnerAPIKey");
 			LOGGER.info("Partner_API_Key should be unique for same partner");
 			PartnerPolicy partnerPolicy = new PartnerPolicy();
-			String partnerAPIKey = PartnerUtil.createPartnerApiKey();
-			partnerPolicy.setPolicyApiKey(partnerAPIKey);
+			partnerPolicy.setPolicyApiKey(partnerKeyReqId);
 			partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 			partnerPolicy.setPolicyId(partnerPolicyRequestFromDb.get().getPolicyId());
 			partnerPolicy.setIsActive(true);
