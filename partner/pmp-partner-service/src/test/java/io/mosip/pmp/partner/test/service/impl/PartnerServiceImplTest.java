@@ -430,7 +430,9 @@ public class PartnerServiceImplTest {
 		String aPIKeyReqID = "aPIKeyReqID";
 		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(createPartnerPolicy());
+		List<PartnerPolicy> policies = new ArrayList<>();
+		policies.add(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(policies);
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkey = pserviceImpl.downloadPartnerAPIkey(partnerID,
 				aPIKeyReqID);
 		assertNotNull(downloadPartnerAPIkey);
@@ -471,7 +473,9 @@ public class PartnerServiceImplTest {
 		String aPIKeyReqID = "aPIKeyReqID";
 		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.of(createPartnerPolicyRequest("Approved"));
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(createPartnerPolicy());
+		List<PartnerPolicy> policies = new ArrayList<>();
+		policies.add(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,"12345")).thenReturn(policies);
 		APIkeyRequests viewApiKeyRequestStatusApiKey = pserviceImpl.viewApiKeyRequestStatusApiKey(partnerID,
 				aPIKeyReqID);
 		assertNotNull(viewApiKeyRequestStatusApiKey);
@@ -606,7 +610,9 @@ public class PartnerServiceImplTest {
 		request.setPolicyId("12345");
 		requests.add(request);
 		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(createPartnerPolicy());
+		List<PartnerPolicy> policies = new ArrayList<>();
+		policies.add(createPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(policies);
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	

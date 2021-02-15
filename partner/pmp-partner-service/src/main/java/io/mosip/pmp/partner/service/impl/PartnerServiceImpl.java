@@ -531,7 +531,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	private PartnerAPIKeyResponse approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
+		partnerPolicy.setPolicyApiKey(partnerPolicyRequest.getId());
 		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
 		partnerPolicy.setIsActive(true);
@@ -550,7 +550,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID, String aPIKeyReqID) {
-		PartnerPolicy partnerPolicy = null;
+		List<PartnerPolicy> partnerPolicy = null;
 		DownloadPartnerAPIkeyResponse downloadPartnerAPIkeyResponse = new DownloadPartnerAPIkeyResponse();
 		Optional<PartnerPolicyRequest> partnerRequest = partnerPolicyRequestRepository.findById(aPIKeyReqID);
 		if (partnerRequest.isPresent()) {
@@ -559,8 +559,8 @@ public class PartnerServiceImpl implements PartnerService {
 			if (partnerPolicyRequest.getPartner().getId().equals(partnerID)) {
 				LOGGER.info(partnerID + " : Valied Partner");
 				partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerRequest.get().getPolicyId());
-				if (partnerPolicy != null) {
-					downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.getPolicyApiKey());
+				if (!partnerPolicy.isEmpty()) {
+					downloadPartnerAPIkeyResponse.setPartnerAPIKey(partnerPolicy.get(0).getPolicyApiKey());
 				} else {
 					LOGGER.info(partnerID + " : Partner API Key is not created for given partnerID");
 					throw new PartnerAPIKeyIsNotCreatedException(
@@ -599,11 +599,9 @@ public class PartnerServiceImpl implements PartnerService {
 					APIkeyRequests approvedRequest = new APIkeyRequests();
 					approvedRequest.setApiKeyReqID(partnerPolicyRequest.getId());
 					approvedRequest.setApiKeyRequestStatus(partnerPolicyRequest.getStatusCode());
-
-					PartnerPolicy findByPartId = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerPolicyRequest.getPolicyId());
-
-					approvedRequest.setPartnerApiKey(findByPartId.getPolicyApiKey());
-					approvedRequest.setValidityTill(findByPartId.getValidToDatetime());
+					List<PartnerPolicy> findByPartId = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerPolicyRequest.getPolicyId());
+					approvedRequest.setPartnerApiKey(findByPartId.get(0).getPolicyApiKey());
+					approvedRequest.setValidityTill(findByPartId.get(0).getValidToDatetime());
 					listAPIkeyRequests.add(approvedRequest);
 				} else {
 					APIkeyRequests approvedRequest = new APIkeyRequests();
@@ -623,7 +621,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public APIkeyRequests viewApiKeyRequestStatusApiKey(String partnerID, String aPIKeyReqID) {
-		PartnerPolicy partnerPolicy = null;
+		List<PartnerPolicy> partnerPolicy = null;
 		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(aPIKeyReqID);
 		APIkeyRequests aPIkeyRequests = new APIkeyRequests();
 		if (findById.isPresent()) {
@@ -637,8 +635,8 @@ public class PartnerServiceImpl implements PartnerService {
 					aPIkeyRequests.setApiKeyReqID(partnerPolicyRequest.getId());
 					aPIkeyRequests.setApiKeyRequestStatus(statusCode);
 					partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyId(partnerID,partnerPolicyRequest.getPolicyId());
-					aPIkeyRequests.setValidityTill(partnerPolicy.getValidToDatetime());
-					aPIkeyRequests.setPartnerApiKey(partnerPolicy.getPolicyApiKey());
+					aPIkeyRequests.setValidityTill(partnerPolicy.get(0).getValidToDatetime());
+					aPIkeyRequests.setPartnerApiKey(partnerPolicy.get(0).getPolicyApiKey());
 				} else {
 					LOGGER.info("APIKeyReqID is not Approved");
 					throw new APIKeyReqIdStatusInProgressException(
