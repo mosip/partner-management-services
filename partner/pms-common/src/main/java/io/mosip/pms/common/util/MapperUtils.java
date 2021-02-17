@@ -442,7 +442,7 @@ public class MapperUtils {
 			searchAuthPolicy.setIsActive(authPolicy.getIsActive());
 			searchAuthPolicy.setIsDeleted(authPolicy.getIsDeleted());
 			searchAuthPolicy.setName(authPolicy.getName());
-			searchAuthPolicy.setPolicyFileId(authPolicy.getPolicyFileId());
+			searchAuthPolicy.setPolicies(authPolicy.getPolicyFileId());
 			searchAuthPolicy.setPolicyGroupId(authPolicy.getPolicyGroup().getId());
 			searchAuthPolicy.setPolicyGroupName(authPolicy.getPolicyGroup().getName());
 			searchAuthPolicy.setPolicyType(authPolicy.getPolicy_type());
