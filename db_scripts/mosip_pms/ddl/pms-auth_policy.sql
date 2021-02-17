@@ -9,7 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Aug-2020             Sadanndegowda       Added policy_type, version, schema and validity
--- Aug-2020             Sadanndegowda       Updated Schema name     
+-- Aug-2020             Sadanndegowda       Updated Schema name
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false     
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.auth_policy | type: TABLE --
@@ -30,7 +31,7 @@ CREATE TABLE pms.auth_policy(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_apol PRIMARY KEY (id),
 	CONSTRAINT uk_apol UNIQUE (policy_group_id,name)
