@@ -25,7 +25,7 @@ public class SearchAuthPolicy  {
 
 	private String name;
 
-	private String policyFileId;
+	private String policies;
 
 	private String updBy;
 
@@ -77,8 +77,8 @@ public class SearchAuthPolicy  {
 		return name;
 	}
 
-	public String getPolicyFileId() {
-		return policyFileId;
+	public String getPolicies() {
+		return policies;
 	}
 
 	public String getPolicyGroupId() {
@@ -145,8 +145,8 @@ public class SearchAuthPolicy  {
 		this.name = name;
 	}
 
-	public void setPolicyFileId(String policyFileId) {
-		this.policyFileId = policyFileId;
+	public void setPolicies(String policies) {
+		this.policies = policies;
 	}
 
 	public void setPolicyGroupId(String policyGroupId) {
