@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
---  
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 -- object: pms.partner_policy_bioextract | type: TABLE --
 -- DROP TABLE IF EXISTS pms.partner_policy_bioextract CASCADE;
@@ -25,7 +25,7 @@ CREATE TABLE pms.partner_policy_bioextract(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_ppbe_id PRIMARY KEY (id)
 

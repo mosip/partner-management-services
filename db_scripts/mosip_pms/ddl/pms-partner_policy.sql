@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Aug-2020             Sadanndegowda       Updated Schema name 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.partner_policy | type: TABLE --
@@ -24,7 +25,7 @@ CREATE TABLE pms.partner_policy(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_ppol PRIMARY KEY (policy_api_key),
 	CONSTRAINT uk_ppol UNIQUE (part_id,policy_id,valid_from_datetime)
