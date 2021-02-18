@@ -31,6 +31,7 @@ import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
+import io.swagger.annotations.Api;
 
 /**
  * <p>This is the MOSIP Partner Management Service controller. This defines all the necessary operations</p>
@@ -49,7 +50,8 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
  */
 
 @RestController
-//@RequestMapping(value = "/pmpartners")
+@RequestMapping(value = "/partners")
+@Api(tags = { "Partner Management Controller" })
 public class PartnerManagementController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
@@ -72,11 +74,11 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about API key created successfully
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/partnerId/{partnerId}/partnerApiKey/{partnerApiKey}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/policies", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerId,
-			@PathVariable String partnerApiKey) {
+			@PathVariable String apikey) {
 		LOGGER.info("Requesting for updating the Policy Group");
 		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING);
 		PartnersPolicyMappingRequest partnersPolicyMappingRequest = request.getRequest();
@@ -85,7 +87,7 @@ public class PartnerManagementController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		partnersPolicyMappingResponse = partnerManagementService
-				.updatePolicyAgainstApikey(partnersPolicyMappingRequest, partnerId, partnerApiKey);
+				.updatePolicyAgainstApikey(partnersPolicyMappingRequest, partnerId, apikey);
 		response.setResponse(partnersPolicyMappingResponse);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -98,8 +100,8 @@ public class PartnerManagementController {
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/partnerId/{partnerId}", method = RequestMethod.PATCH)
-	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAuthEKYCPartners(
+	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PATCH)
+	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartner(
 			 @PathVariable String partnerId,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
@@ -123,11 +125,11 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about Partner API Key status updated successfully
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/partnerId/{partnerId}/partnerApiKey/{partnerApiKey}", method = RequestMethod.PATCH)
-	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartnerAPIKeyGivenPartner(
+	@RequestMapping(value = "/{partnerId}/apikey/{apikey}", method = RequestMethod.PATCH)
+	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAPIKey(
 			@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
-			@PathVariable String partnerApiKey){
+			@PathVariable String apikey){
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
@@ -135,7 +137,7 @@ public class PartnerManagementController {
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS);
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		partnersPolicyMappingResponse = partnerManagementService
-				.activateDeactivatePartnerAPIKeyGivenPartner(partnerId,activateDeactivatePartnerRequest,partnerApiKey);
+				.activateDeactivatePartnerAPIKeyGivenPartner(partnerId,activateDeactivatePartnerRequest,apikey);
 		response.setResponse(partnersPolicyMappingResponse);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -149,14 +151,14 @@ public class PartnerManagementController {
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','ID_AUTHENTICATION','CREDENTIAL_ISSUANCE')")
-	@RequestMapping(value = "/validatePartnerMisp/partnerId/{partnerId}/partnerApiKey/{partner_api_key}/mispLicenseKey/{misp_license_key}", 
+	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/misp/{misplicensekey}/validate", 
 			method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
-			@PathVariable String partnerId, @PathVariable String partner_api_key,
-			@PathVariable String misp_license_key,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
+			@PathVariable String partnerId, @PathVariable String apikey,
+			@PathVariable String misplicensekey,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
 		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING);
-		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misp_license_key,partner_api_key,partnerId,needPartnerCert);
+		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misplicensekey,apikey,partnerId,needPartnerCert);
 		response.setResponse(responseFromService);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -174,10 +176,10 @@ public class PartnerManagementController {
 	 * @return response this class contains massage about PartnerAPIKey approved successfully
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}", method = RequestMethod.PATCH)
-	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
+	@RequestMapping(value = "/apikey/{apikey}", method = RequestMethod.PATCH)
+	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectAPIKeyRequest(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
-			@PathVariable String apiKeyReqId){
+			@PathVariable String apikey){
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
 		response.setId(request.getId());
@@ -185,7 +187,7 @@ public class PartnerManagementController {
 		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = request.getRequest();
 		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API);
 		partnersPolicyMappingResponse = partnerManagementService
-				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,apiKeyReqId);
+				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,apikey);
 		response.setResponse(partnersPolicyMappingResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -194,9 +196,9 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
-	@RequestMapping(value="/getPartners", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getAllAuthEKYCPartnersForThePolicyGroup(
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
@@ -221,14 +223,14 @@ public class PartnerManagementController {
 	 * @return response this class contains partnerID and policyId
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/partnerId/{partnerId}/partnerApiKey/{partnerApiKey}" , method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getValidatPartnerAPIKeyPatternAndExpiry(
+	@RequestMapping(value = "/{partnerId}/apikey/{apikey}" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getPolicyMappedToAPIKey(
 			@PathVariable String partnerId,
-			@PathVariable String partnerApiKey){
+			@PathVariable String apikey){
 		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyToPolicyMappingsResponse partnerAPIKeyToPolicyMappingsResponse = null;
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER);
-		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerId,partnerApiKey);
+		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerId,apikey);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(partnerAPIKeyToPolicyMappingsResponse);
@@ -240,8 +242,8 @@ public class PartnerManagementController {
 	 * @return response this class contains all Partner API Key requests as received by partner manager
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/PartnerAPIKeyRequests" , method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManager(){
+	@RequestMapping(value = "/apikey" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyRequestsResponse partnerAPIKeyRequestsResponse = new PartnerAPIKeyRequestsResponse();
@@ -260,13 +262,13 @@ public class PartnerManagementController {
 	 * @return response this class contains details related to Partner API key to Policy Mappings
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/PartnerAPIKeyRequests/{apiKeyReqId}" , method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(
-			@PathVariable String apiKeyReqId) {
+	@RequestMapping(value = "/apikey/{apikey}" , method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getAPIKeyRequest(
+			@PathVariable String apikey) {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();
 		ApikeyRequests apikeyRequests=null;
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER);
-		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(apiKeyReqId);
+		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(apikey);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(apikeyRequests);

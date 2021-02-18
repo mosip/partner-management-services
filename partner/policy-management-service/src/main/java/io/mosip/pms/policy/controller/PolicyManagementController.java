@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -42,7 +43,6 @@ import io.mosip.pms.policy.dto.PolicyResponseDto;
 import io.mosip.pms.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyUpdateResponseDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.policy.dto.ResponseWrapper;
@@ -50,32 +50,10 @@ import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
 
-/**
- * <p>
- * This is policy controller. This controller defines all the operations
- * required
- * </p>
- * <p>
- * to manage policy group.
- * </p>
- * <p>
- * This controller provides following operations/functions.
- * </p>
- * 1. Create policy group.</br>
- * 2. Create auth policies for policy group.</br>
- * 3. Update policy group.</br>
- * 4. Update policy group status.</br>
- * 5. Read/Get all policy groups.</br>
- * 6. Read/Get specific policy group.</br>
- * 7. Read/Get policy details of a partner api key.</br>
- * 
- * @author Nagarjuna Kuchi
- * @version 1.0
- *
- */
 
 @RestController
-@Api(tags = { "Partner Management : Policy Management Controller " })
+@RequestMapping(value = "/policies")
+@Api(tags = { "policy management controller " })
 public class PolicyManagementController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementController.class);
@@ -87,7 +65,7 @@ public class PolicyManagementController {
 	AuditUtil auditUtil;
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PostMapping(value = "/policyGroup")
+	@PostMapping(value = "/group/new")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
@@ -101,12 +79,12 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PutMapping(value = "/policyGroup/{policyGroupId}")
-	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policyGroupId,
+	@PutMapping(value = "/group/{policygroupId}")
+	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policygroupId,
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP);
-		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policyGroupId);
+		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policygroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
 		response.setId(createRequest.getId());
@@ -115,22 +93,10 @@ public class PolicyManagementController {
 
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to create new Policy for policy group.
-	 * </p>
-	 * 
-	 * @param createRequest {@link PolicyCreateRequestDto} this contains all the
-	 *                      required parameters for creating the policy.
-	 * @return response {@link PolicyCreateResponseDto} this contains all the
-	 *         response parameters for created policy.
-	 * @throws Exception
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PostMapping(value = "/definePolicy")
+	@PostMapping
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
-
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
@@ -143,48 +109,27 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	/**
-	 * 
-	 * @param policyGroupId
-	 * @param policyId
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PostMapping(value = "/publishPolicy/policyGroupId/{policyGroupId}/policyId/{policyId}")
-	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policyGroupId,
+	@PostMapping(value = "/policies/{policyId}/group/{policygroupId}/publish")
+	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY);
-		PolicyResponseDto responseDto = policyManagementService.publishPolicy(policyGroupId, policyId);
+		PolicyResponseDto responseDto = policyManagementService.publishPolicy(policygroupId, policyId);
 		response.setResponse(responseDto);
 		return response;
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to update existing policy for a policy group.
-	 * </p>
-	 * 
-	 * @param updateRequestDto {@link PolicyUpdateRequestDto } Encapsulated all the
-	 *                         required parameters required for policy update.
-	 * @param policyID         policy id.7
-	 * @return response {@link PolicyUpdateResponseDto} contains all response
-	 *         details.
-	 * @throws Exception
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PutMapping(value = "/policyId/{policyID}")
+    @PutMapping(value ="/{policyId}")
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
-			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyID)
+			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY);
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),
-				policyID);
+				policyId);
 		response.setResponse(responseDto);
 		response.setId(updateRequestDto.getId());
 		response.setVersion(updateRequestDto.getVersion());
@@ -192,49 +137,24 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to update the status (activate/deactivate) for the
-	 * given policy id.
-	 * </p>
-	 * 
-	 * @param requestDto {@link PolicyStatusUpdateRequestDto } Defines all the
-	 *                   required parameters for policy status update. *
-	 * @param policyID   policy id.
-	 * @return response {@link PolicyStatusUpdateResponseDto} contains all response
-	 *         details.
-	 * @throws Exception
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PatchMapping(value = "/policyGroupId/{policyGroupId}/policyId/{policyID}")
+	@PatchMapping(value = "/{policyId}/group/{policygroupId}")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(
-			@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto, @PathVariable String policyGroupId,
-			@PathVariable String policyID) throws Exception {
+			@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto, @PathVariable String policygroupId,
+			@PathVariable String policyId) throws Exception {
 		PolicyStatusUpdateRequestDto statusUpdateRequest = requestDto.getRequest();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY);
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.
-				updatePolicyStatus(statusUpdateRequest,policyGroupId,policyID);	
+				updatePolicyStatus(statusUpdateRequest,policygroupId,policyId);	
 		response.setId(requestDto.getId());
 		response.setVersion(requestDto.getVersion());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to get details for the policies in the policy group he
-	 * belongs to.
-	 * </p>
-	 * 
-	 * @return response {@link PolicyWithAuthPolicyDto} policy group associated with
-	 *         his auth policies.
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/getPolicies")
+	@GetMapping
 	public ResponseWrapper<List<PolicyResponseDto>> getPolicies()
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
@@ -245,63 +165,33 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to retrieve existing policy for a policy group based
-	 * on the policy id.
-	 * </p>
-	 * 
-	 * @param policyID policy id.
-	 * @return response {@link PolicyWithAuthPolicyDto} policy group associated with
-	 *         his auth policies.
-	 * @throws Exception
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/policyId/{policyID}")
-	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyID) throws Exception {
+	@GetMapping(value = "/{policyId}")
+	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyId) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
-		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyID);
+		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyId);
 		response.setResponse(responseDto);
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
 
-	/**
-	 * <p>
-	 * This API would be used to retrieve the partner policy details for given
-	 * PartnerAPIKey.
-	 * </p>
-	 * 
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/partnerApiKey/{partnerApiKey}")
-	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String partnerApiKey)
+	@GetMapping(value = "/apikey/{apikey}")
+	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String apikey)
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
-		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(partnerApiKey);
+		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
 
-	/**
-	 * 
-	 * @param partnerId
-	 * @param policyId
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
-	@GetMapping(value = "/partnerId/{partnerId}/policyId/{policyId}")
+	@GetMapping(value = "/{policyId}/partner/{partnerId}")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId,
 			@PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -313,33 +203,18 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	/**
-	 * 
-	 * @param policyGroupId
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/policyGroupId/{policyGroupId}")
-	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policyGroupId)
+	@GetMapping(value = "/group/{policygroupId}")
+	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policygroupId)
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
-		response.setResponse(policyManagementService.getPolicyGroupPolicy(policyGroupId));
+		response.setResponse(policyManagementService.getPolicyGroupPolicy(policygroupId));
 		return response;
 	}
 
-	/**
-	 * 
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/policyGroups")
+	@GetMapping(value = "/group/all")
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup()
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
@@ -351,7 +226,7 @@ public class PolicyManagementController {
 	}
 
 	@ResponseFilter
-	@PostMapping("/policyGroup/search")
+	@PostMapping("/group/search")
 	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -373,14 +248,14 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/key/{key}")
+	@GetMapping(value = "/config/{key}")
 	public ResponseWrapper<KeyValuePair<String, Object>> getValueForKey(@PathVariable String key) {
 		ResponseWrapper<KeyValuePair<String, Object>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(policyManagementService.getValueForKey(key));
 		return responseWrapper;
 	}
 
-	@PostMapping("/policyGroup/filtervalues")
+	@PostMapping("/group/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<FilterResponseCodeDto> PolicyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
