@@ -467,6 +467,7 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
+			response.setApikeyStatus(approvedPolicy.getIsActive());
 		}
 		return response;
 	}
