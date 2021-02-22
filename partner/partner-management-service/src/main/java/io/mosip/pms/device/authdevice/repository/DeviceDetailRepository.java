@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
-import io.mosip.pms.device.regdevice.entity.RegDeviceDetail;
 
 @Repository
 public interface DeviceDetailRepository extends JpaRepository<DeviceDetail, String>{
@@ -20,7 +19,7 @@ public interface DeviceDetailRepository extends JpaRepository<DeviceDetail, Stri
 	DeviceDetail findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(String id);
 	
 	@Query(value ="select * from device_detail where  make=?1 AND model=?2 AND dprovider_id=?3 AND dstype_code=?4 AND dtype_code=?5",nativeQuery = true)
-	RegDeviceDetail findUniqueDeviceDetail( String make, String model, String deviceProviderId, String deviceSubTypeCode,
+	DeviceDetail findUniqueDeviceDetail( String make, String model, String deviceProviderId, String deviceSubTypeCode,
 			String deviceTypeCode);
 
 }
