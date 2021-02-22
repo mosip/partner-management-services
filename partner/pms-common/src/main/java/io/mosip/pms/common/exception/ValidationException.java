@@ -21,7 +21,7 @@ public class ValidationException extends BaseUncheckedException {
 
 	public ValidationException(List<ServiceError> errors) {
 		errors.stream().forEach(error -> super.addInfo(error.getErrorCode(), error.getMessage()));
-		errors.stream().forEach(error -> errors.add(new ServiceError(error.getErrorCode(), error.getMessage())));
+		//errors.stream().forEach(error -> errors.add(new ServiceError(error.getErrorCode(), error.getMessage())));
 		this.errors = errors;
 	}
 

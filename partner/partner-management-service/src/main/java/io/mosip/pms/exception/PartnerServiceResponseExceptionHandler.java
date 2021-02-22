@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,39 +46,20 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	String msg = "mosip.partnermanagement";
 	String version = "1.0";
 
-//	/**
-//	 * @param httpServletRequest
-//	 *            this class contains servlet request
-//	 * @param exception
-//	 *            this class contains Partner already registered exception
-//	 * @return this class contains errorCode and message
-//	 * @throws IOException
-//	 *             this class contains Checked Exception
-//	 */
-//	@ExceptionHandler(PartnerServiceException.class)
-//	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassage(
-//			final HttpServletRequest httpServletRequest, final PartnerServiceException exception)
-//			throws IOException {
-//		ResponseWrapper<ErrorResponse> responseError = setErrors(httpServletRequest);
-//		ErrorResponse errorResponse = new ErrorResponse();
-//		errorResponse.setErrorCode(exception.getErrorCode());
-//		errorResponse.setMessage(exception.getErrorText());
-//		responseError.setErrors(errorResponse);
-//		return new ResponseEntity<>(responseError, HttpStatus.OK);
-//	}
-
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp", new Date());
 		body.put("status", status.value());
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        FieldError fieldError = fieldErrors.get(0);
+        
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
-		errorResponse.setMessage(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		errorResponse.setMessage(fieldError.getDefaultMessage() +"  " + fieldError.getField());
 		List<ErrorResponse> errors = new ArrayList<>();
 		errors.add(errorResponse);
-
 		body.put("errors", errors);
 		return new ResponseEntity<>(body, headers, status);
 	}

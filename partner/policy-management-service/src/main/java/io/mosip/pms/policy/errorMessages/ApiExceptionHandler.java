@@ -54,12 +54,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
     		HttpStatus status, WebRequest request) {		
-		
 		ExceptionUtils.logRootCause(ex);
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         FieldError fieldError = fieldErrors.get(0);		
         ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
-        		ErrorMessages.MISSING_INPUT_PARAMETER.getErrorMessage() + fieldError.getField());
+        		fieldError.getDefaultMessage() + " "+ fieldError.getField());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
 			errorResponse = setErrors(request);
