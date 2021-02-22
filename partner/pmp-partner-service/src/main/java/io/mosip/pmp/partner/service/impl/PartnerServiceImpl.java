@@ -511,7 +511,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicyFromDb.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(request.getUseCaseDescription());
-		if(isActiveApikeyExists(partnerID)) {
+		if(isActiveApikeyExists(partnerID,partnerPolicyRequest.getPolicyId())) {
 			partnerPolicyRequest.setStatusCode(APPROVEDSTATUS);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
 			return approvePartnerPolicy(partnerPolicyRequest);
@@ -1272,8 +1272,8 @@ public class PartnerServiceImpl implements PartnerService {
 		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
 	}
 	
-	private boolean isActiveApikeyExists(String partnerId) {
-		if(partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(partnerId).isEmpty()) {
+	private boolean isActiveApikeyExists(String partnerId,String policyId) {
+		if(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId,policyId).isEmpty()) {
 			return false;
 		}
 		return true;
