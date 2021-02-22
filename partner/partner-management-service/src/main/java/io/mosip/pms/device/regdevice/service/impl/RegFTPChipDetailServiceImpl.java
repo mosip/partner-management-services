@@ -114,6 +114,20 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());			
 		}
+		RegFTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetails.getFtpProviderId(),
+				chipDetails.getMake(), chipDetails.getModel());
+		if(uniqueChipDetail != null ){
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, FtpChipDetailUpdateDto.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage()),
+					"AUT-003");
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());
+		}
 		RegFoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
 		RegFoundationalTrustProvider entity = new RegFoundationalTrustProvider();
 		entity.setActive(true);
@@ -137,22 +151,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
-		try {
-			ftpChipDetailRepository.save(chipDetail);	
-		}catch(Exception ex){
-			auditUtil.auditRequest(
-					String.format(
-							DeviceConstant.FAILURE_CREATE, FtpChipDetailDto.class.getCanonicalName()),
-					DeviceConstant.AUDIT_SYSTEM,
-					String.format(DeviceConstant.FAILURE_DESC,
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage()),
-					"AUT-003");
-			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage());			
-			
-		}
-		
+		ftpChipDetailRepository.save(chipDetail);		
 		IdDto response = new IdDto();
 		response.setId(chipDetail.getId());
 		return response;

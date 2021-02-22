@@ -571,6 +571,7 @@ public class PartnerServiceImpl implements PartnerService {
 		uploadRequest.setOrganizationName(partner.getName());
 		uploadRequest.setPartnerDomain(partnerCertRequesteDto.getPartnerDomain());
 		uploadRequest.setPartnerType(partner.getPartnerTypeCode());
+		uploadRequest.setCertificateData(partnerCertRequesteDto.getCertificateData());
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(uploadRequest);
 		PartnerCertificateResponseDto responseObject = null;

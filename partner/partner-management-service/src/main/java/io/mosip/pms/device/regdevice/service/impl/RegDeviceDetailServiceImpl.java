@@ -115,7 +115,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
 		deviceDetailDto.setPartnerOrganizationName(partner.getName());
-		if (deviceDetailRepository.findByDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
+		if (deviceDetailRepository.findUniqueDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
 				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
 				deviceDetailDto.getDeviceTypeCode()) != null) {
 			auditUtil.auditRequest(

@@ -111,6 +111,21 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());
 
 		}
+		FTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetails.getFtpProviderId(),
+				chipDetails.getMake(), chipDetails.getModel());
+		if(uniqueChipDetail != null){
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, FtpChipDetailUpdateDto.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
+							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage()),
+					"AUT-003");
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
+			
+		}
 		FoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
 		FoundationalTrustProvider entity = new FoundationalTrustProvider();
 		entity.setActive(true);
@@ -133,21 +148,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
-		try {
-			ftpChipDetailRepository.save(chipDetail);	
-		}catch(Exception ex){
-			auditUtil.auditRequest(
-					String.format(
-							DeviceConstant.FAILURE_CREATE, FtpChipDetailDto.class.getCanonicalName()),
-					DeviceConstant.AUDIT_SYSTEM,
-					String.format(DeviceConstant.FAILURE_DESC,
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage()),
-					"AUT-003");
-			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_DETAILS_EXISTS.getErrorMessage() + ex.getMessage());	
-		}
-
+		ftpChipDetailRepository.save(chipDetail);
 		IdDto response = new IdDto();
 		response.setId(chipDetail.getFtpChipDetailId());
 		return response;
