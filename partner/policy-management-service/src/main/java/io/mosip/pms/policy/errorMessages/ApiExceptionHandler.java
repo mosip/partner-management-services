@@ -150,7 +150,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ServiceError error = new ServiceError(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorCode(),
 				ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
 		errorResponse.getErrors().add(error);
-		ExceptionUtils.logRootCause(exception);
+		if(exception != null) {
+			ExceptionUtils.logRootCause(exception);
+		}
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
 	

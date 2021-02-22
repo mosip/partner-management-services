@@ -323,26 +323,28 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
-		Partner partner = getValidPartner(partnerId);
+		Partner partner = getValidPartner(partnerId,true);
 		response.setPartnerID(partner.getId());
 		response.setAddress(partner.getAddress());
 		response.setContactNumber(partner.getContactNo());
 		response.setEmailId(partner.getEmailId());
 		response.setOrganizationName(partner.getName());
+		response.setPartnerType(partner.getPartnerTypeCode());
+		response.setStatus(partner.getApprovalStatus());
 		if (partner.getPolicyGroupId() != null) {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
 		}
 		return response;
 	}
 
-	private Partner getValidPartner(String partnerId) {
+	private Partner getValidPartner(String partnerId,boolean isToRetrieve) {
 		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
 		if (partnerById.isEmpty()) {
 			LOGGER.error("Partner with id " + partnerId + "not exists.");
 			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		if (!partnerById.get().getIsActive()) {
+		if (!partnerById.get().getIsActive() && !isToRetrieve) {
 			LOGGER.error("Partner with id " + partnerId + "is not active.");
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
@@ -362,7 +364,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest, String partnerId) {
-		Partner partner = getValidPartner(partnerId);
+		Partner partner = getValidPartner(partnerId,false);
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
 		partner.setUpdBy(getUser());
@@ -377,7 +379,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest partnerAPIKeyRequest, String partnerId) {
-		Partner partner = getValidPartner(partnerId);
+		Partner partner = getValidPartner(partnerId,false);
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
@@ -465,6 +467,7 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
+			response.setApikeyStatus(approvedPolicy.getIsActive());
 		}
 		return response;
 	}
@@ -510,7 +513,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
 		} else {
-			Partner partnerFromDb = getValidPartner(partnerId);
+			Partner partnerFromDb = getValidPartner(partnerId,false);
 			contactsFromDb = new PartnerContact();
 			contactsFromDb.setId(PartnerUtil.createPartnerId());
 			contactsFromDb.setAddress(request.getAddress());
@@ -562,7 +565,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId());
+		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(),false);
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());
@@ -805,7 +808,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyId) {
 		validateCredentialTypes(credentialType);
-		Partner partner = getValidPartner(partnerId);
+		Partner partner = getValidPartner(partnerId,false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),

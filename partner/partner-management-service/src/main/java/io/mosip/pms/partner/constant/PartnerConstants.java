@@ -4,7 +4,7 @@ public final class PartnerConstants {
 	
 	public static final String ACTIVATED = "activated";
 	
-	public static final String IN_PROGRESS="inProgress";
+	public static final String IN_PROGRESS="InProgress";
 	
 	public static final String DE_ACTIVATED="de-activated";
 	
