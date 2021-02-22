@@ -276,7 +276,7 @@ public class DeviceDetailServiceTest {
 		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
     }
 	
-	@Test(expected=RequestException.class)
+	@Test
     public void createDeviceDetailAlreadyExistsTest() throws Exception {
        deviceDetaillService.createDeviceDetails(deviceDetailDto);
     }
