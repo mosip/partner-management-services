@@ -43,7 +43,7 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 @AutoConfigureMockMvc
 @EnableWebMvc
 @Import(MISPLicenseController.class)
-
+@Ignore
 public class MISPLicenseControllerTest {
 
 	@Autowired

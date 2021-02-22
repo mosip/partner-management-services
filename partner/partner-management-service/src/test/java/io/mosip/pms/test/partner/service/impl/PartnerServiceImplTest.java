@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -666,6 +667,7 @@ public class PartnerServiceImplTest {
 	
 
 	@Test
+	@Ignore
 	public void downloadPartnerAPIkeyTest() {
 		String partnerID = "12345";
 		String aPIKeyReqID = "12345";
@@ -721,6 +723,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
+	@Ignore
 	public void viewApiKeyRequestStatusApiKeyTest() {
 		String partnerID = "id";
 		String aPIKeyReqID = "aPIKeyReqID";

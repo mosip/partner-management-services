@@ -19,7 +19,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("io.mosip.pms")).paths(PathSelectors.regex("(?!/(error).*).*")).build()
+				.apis(RequestHandlerSelectors.basePackage("io.mosip")).paths(PathSelectors.regex("(?!/(error).*).*")).build()
 				.apiInfo(metaData());
 	}
 

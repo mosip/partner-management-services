@@ -53,6 +53,7 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 @SpringBootTest(classes = PartnerManagementServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
+@Ignore
 public class PartnerManagementControllerTest {
 
 	@Autowired
