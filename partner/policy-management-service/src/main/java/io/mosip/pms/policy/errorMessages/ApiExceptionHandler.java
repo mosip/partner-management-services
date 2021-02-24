@@ -84,17 +84,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param e
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(PolicyObjectValidationFailedException.class)
 	public ResponseEntity<ResponseWrapper<List<ServiceError>>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final PolicyObjectValidationFailedException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return getErrorResponseObject(httpServletRequest, e, HttpStatus.OK);
 	}
+	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param e
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(RequestException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> controlDataServiceException(
 			HttpServletRequest httpServletRequest, final RequestException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return getErrorResponseEntity(httpServletRequest, e, HttpStatus.OK);
+		return getErrorResponseEntity(e);
 	}
 		
 	/**
@@ -114,6 +129,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorResponse, httpStatus);
 	}
 	
+	/**
+	 * 
+	 * @param exception
+	 * @return
+	 */
+	private ResponseEntity<ResponseWrapper<ServiceError>> getErrorResponseEntity(RequestException exception){
+		List<ServiceError> errors = new ArrayList<>();		
+		ResponseWrapper<ServiceError> responseError = new ResponseWrapper<>();
+		for (ServiceError serviceError : exception.getErrors()) {
+			ServiceError errorResponse = new ServiceError();
+			errorResponse.setErrorCode(serviceError.getErrorCode());
+			errorResponse.setMessage(serviceError.getMessage());
+			errors.add(errorResponse);
+		}
+		responseError.setErrors(errors);		
+		return new ResponseEntity<>(responseError, HttpStatus.OK);	
+	}
 	/**
 	 * This method extract the response from HttpServletRequest request.
 	 * 
