@@ -73,12 +73,7 @@
 	
 	<modules>		
 		<module>policy-validator</module>
-		<module>pmp-common</module>
 		<module>pms-common</module>
-		<module>pmp-misp-service</module>
-		<module>pmp-policy-management-service</module>
-		<module>pmp-partner-management-service</module>
-		<module>pmp-partner-service</module>
 		<module>policy-management-service</module>		
 		<module>partner-management-service</module>
 	</modules>

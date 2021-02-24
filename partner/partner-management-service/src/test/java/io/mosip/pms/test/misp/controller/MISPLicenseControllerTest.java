@@ -65,7 +65,7 @@ public class MISPLicenseControllerTest {
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		Mockito.when(infraProvidertService.approveInfraProvider(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPLicenseRequestDto> request = createRequest();
-		mockMvc.perform(post("/misp").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());	
 	}
 	
@@ -75,7 +75,7 @@ public class MISPLicenseControllerTest {
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		Mockito.when(infraProvidertService.updateInfraProvider(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPLicenseUpdateRequestDto> request = createUpdateRequest();
-		mockMvc.perform(put("/misp").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -83,7 +83,7 @@ public class MISPLicenseControllerTest {
 	@Test
 	@WithMockUser(roles = {"MISP_PARTNER"})
 	public void getLicenseDetailsTest () throws MISPServiceException , Exception{
-		mockMvc.perform(MockMvcRequestBuilders.get("/misp")).
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps")).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -91,7 +91,7 @@ public class MISPLicenseControllerTest {
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void regenarteLicenseKeyTest () throws Exception{
 		Mockito.when(infraProvidertService.regenerateKey("12345")).thenReturn(new MISPLicenseResponseDto() );
-		mockMvc.perform(MockMvcRequestBuilders.get("/misp/12345/licenseKey")).andExpect(status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.get("/misps/12345/licenseKey")).andExpect(status().isOk());
 	}
 	
 	private RequestWrapper<MISPLicenseRequestDto> createRequest() {

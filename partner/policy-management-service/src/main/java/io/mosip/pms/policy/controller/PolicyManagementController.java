@@ -99,7 +99,7 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY);
 		PolicyCreateResponseDto responseDto = policyManagementService.
 				createPolicies(createRequest.getRequest());		
 		response.setId(createRequest.getId());
@@ -114,7 +114,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY);
 		PolicyResponseDto responseDto = policyManagementService.publishPolicy(policygroupId, policyId);
 		response.setResponse(responseDto);
 		return response;
@@ -144,7 +144,7 @@ public class PolicyManagementController {
 			@PathVariable String policyId) throws Exception {
 		PolicyStatusUpdateRequestDto statusUpdateRequest = requestDto.getRequest();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS);
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.
 				updatePolicyStatus(statusUpdateRequest,policygroupId,policyId);	
 		response.setId(requestDto.getId());
@@ -159,7 +159,7 @@ public class PolicyManagementController {
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICIES);
 		response.setResponse(policyManagementService.findAllPolicies());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
@@ -183,7 +183,7 @@ public class PolicyManagementController {
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_APIKEY);
 		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
@@ -196,7 +196,7 @@ public class PolicyManagementController {
 			@PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY);
 		PolicyResponseDto policyGroup = policyManagementService.getPartnerMappedPolicy(partnerId, policyId);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
@@ -219,7 +219,7 @@ public class PolicyManagementController {
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICY_GROUPS);
 		response.setResponse(policyManagementService.getPolicyGroup());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
@@ -231,7 +231,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP);
 		responseWrapper.setResponse(policyManagementService.searchPolicyGroup(request.getRequest()));
 		return responseWrapper;
 	}
@@ -242,7 +242,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
 			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
 		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY);
 		responseWrapper.setResponse(policyManagementService.searchPolicy(request.getRequest()));
 		return responseWrapper;
 	}
@@ -251,6 +251,7 @@ public class PolicyManagementController {
 	@GetMapping(value = "/config/{key}")
 	public ResponseWrapper<KeyValuePair<String, Object>> getValueForKey(@PathVariable String key) {
 		ResponseWrapper<KeyValuePair<String, Object>> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE);
 		responseWrapper.setResponse(policyManagementService.getValueForKey(key));
 		return responseWrapper;
 	}
@@ -260,6 +261,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<FilterResponseCodeDto> PolicyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY_GROUP);
 		responseWrapper.setResponse(policyManagementService.policyGroupFilterValues(requestWrapper.getRequest()));
 		return responseWrapper;
 	}
@@ -269,6 +271,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<FilterResponseCodeDto> PolicyFilterValues(
 			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY);
 		responseWrapper.setResponse(policyManagementService.policyFilterValues(requestWrapper.getRequest()));
 		return responseWrapper;
 	}
