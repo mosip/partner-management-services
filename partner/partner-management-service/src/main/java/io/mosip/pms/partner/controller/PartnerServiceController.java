@@ -277,10 +277,10 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikeyreqId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> getAPIKeyRequestStatus(
-			@PathVariable String partnerId, @PathVariable String apiKeyReqId) {
+			@PathVariable String partnerId, @PathVariable String apikeyreqId) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
 		DownloadPartnerAPIkeyResponse aPIkeyRequests = null;
-		aPIkeyRequests = partnerService.getApikeyFromRequestKey(partnerId, apiKeyReqId);
+		aPIkeyRequests = partnerService.getApikeyFromRequestKey(partnerId, apikeyreqId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);

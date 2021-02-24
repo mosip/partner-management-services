@@ -169,7 +169,7 @@ public class PolicyManagementControllerTest {
 	public void publishPolicyTest() throws Exception{
 		PolicyResponseDto response = new PolicyResponseDto();
 		Mockito.when(policyManagementService.publishPolicy(Mockito.any(),Mockito.any())).thenReturn(response);
-		mockMvc.perform(MockMvcRequestBuilders.post("/policies/policies/12345/group/12345/publish")).
+		mockMvc.perform(MockMvcRequestBuilders.post("/policies/12345/group/12345/publish")).
 		andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 	
