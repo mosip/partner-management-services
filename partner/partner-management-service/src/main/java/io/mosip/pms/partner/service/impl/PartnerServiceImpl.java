@@ -344,10 +344,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		if (!partnerById.get().getIsActive() && !isToRetrieve) {
-			LOGGER.error("Partner with id " + partnerId + "is not active.");
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		if(!isToRetrieve) {
+			if (!partnerById.get().getIsActive()) {
+				LOGGER.error("Partner with id " + partnerId + "is not active.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
 		}
 		return partnerById.get();
 	}

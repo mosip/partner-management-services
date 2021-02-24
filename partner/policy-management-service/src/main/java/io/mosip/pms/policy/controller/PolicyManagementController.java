@@ -110,7 +110,7 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@PostMapping(value = "/policies/{policyId}/group/{policygroupId}/publish")
+	@PostMapping(value = "/{policyId}/group/{policygroupId}/publish")
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();

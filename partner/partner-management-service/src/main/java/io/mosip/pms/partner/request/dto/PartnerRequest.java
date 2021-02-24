@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.request.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -11,24 +12,30 @@ import lombok.Data;
 
 @Data
 public class PartnerRequest{
-		
-	@NotEmpty(message="Please provide partnerId")
+	
+	@NotNull(message = "partnerId must not be null")
+	@NotBlank(message="partnerId must not be empty")
 	public String partnerId;
 	
 	public String policyGroup;
 	
-	@NotEmpty(message = "Please provide organizationName")
+	@NotNull(message = "organizationName must not be null")
+	@NotBlank(message="organizationName must not be empty")
 	public String organizationName;
 	
-	@NotEmpty(message = "Please provide address")
+	@NotNull(message = "address must not be null")
+	@NotBlank(message="address must not be empty")
 	public String address;
 	
-	@NotEmpty(message = "Please provide contactNumber")
+	@NotNull(message = "contactNumber must not be null")
+	@NotBlank(message="contactNumber must not be empty")
 	public String contactNumber;
 	
-	@NotEmpty(message = "Please provide emailId")
+	@NotNull(message = "emailId must not be null")
+	@NotBlank(message="emailId must not be empty")	
 	public String emailId;
 	
-	@NotEmpty(message="Please provide partner Type")
+	@NotNull(message = "partnerType must not be null")
+	@NotBlank(message="partnerType must not be empty")
 	public String partnerType;
 }
