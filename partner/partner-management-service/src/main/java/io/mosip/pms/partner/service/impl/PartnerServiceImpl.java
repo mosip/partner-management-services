@@ -567,7 +567,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(),false);
+		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(),true);
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());

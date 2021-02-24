@@ -268,7 +268,7 @@ public class PartnerServiceController {
 	 * 
 	 * @param partnerId
 	 *            this is unique id created after self registered by partner
-	 * @param apiKeyReqId
+	 * @param apikeyreqId
 	 *            this is unique id created after partner request for Partner API
 	 *            Key
 	 * @return response this class contains partnerApiKey apiKeyRequestStatus and
