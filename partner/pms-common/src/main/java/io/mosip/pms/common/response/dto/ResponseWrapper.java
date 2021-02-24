@@ -2,6 +2,8 @@ package io.mosip.pms.common.response.dto;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -29,6 +31,6 @@ public class ResponseWrapper<T> {
 	@Valid
 	private T response;
 
-	private ErrorResponse errors;
+	private List<ErrorResponse> errors = new ArrayList<>();
 
 }

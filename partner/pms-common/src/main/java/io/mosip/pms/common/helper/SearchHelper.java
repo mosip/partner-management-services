@@ -106,8 +106,11 @@ public class SearchHelper {
 			// executing query and returning data
 			result = executableQuery.getResultList();
 		} catch (Exception hibernateException) {
-			throw new DataAccessLayerException("",
-					hibernateException.getMessage(), hibernateException);
+			if(hibernateException instanceof RequestException) {
+				throw new RequestException(((RequestException) hibernateException).getErrors());
+			}
+			throw new RequestException("PMS-MSD-394",
+					String.format(hibernateException.getMessage(), hibernateException.getLocalizedMessage()));
 		}
 		if(result.isEmpty()) {
 			throw new RequestException(SearchErrorCode.INVALID_COLUMN_VALUE.getErrorCode(),
@@ -195,7 +198,7 @@ public class SearchHelper {
 				 lowerCase = builder.lower(root.get(columnName));
 			} catch (Exception e) {
 				throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
-						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), value));
+						String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), columnName));
 			}
 			return builder.like(lowerCase, builder.lower(builder.literal(value + WILD_CARD_CHARACTER)));
 		}

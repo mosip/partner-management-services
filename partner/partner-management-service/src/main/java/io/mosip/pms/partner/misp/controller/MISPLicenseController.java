@@ -24,7 +24,7 @@ import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping(value = "/misp")
+@RequestMapping(value = "/misps")
 @Api(tags = { "MISP License Detail" })
 public class MISPLicenseController {
 
