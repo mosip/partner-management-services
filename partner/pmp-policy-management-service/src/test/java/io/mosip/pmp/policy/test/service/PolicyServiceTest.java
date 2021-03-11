@@ -167,6 +167,20 @@ public class PolicyServiceTest {
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
 	}
+
+	private PolicyGroupUpdateRequestDto updatePolicygroupRequest() {
+		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
+		updateRequest.setName("Test_Policy_Group_001");
+		updateRequest.setDesc("Test_Policy_Group_001");
+		return updateRequest;
+	}
+	private PolicyGroupCreateRequestDto createPolicyGroupRequest() {
+		PolicyGroupCreateRequestDto request = new PolicyGroupCreateRequestDto();
+		request.setDesc("Test_Policy_Group_001");
+		request.setName("Test_Policy_Group_001");
+		return request;
+	}
+	
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void createPoliciesTest_S004() throws PolicyManagementServiceException, Exception {
@@ -186,21 +200,7 @@ public class PolicyServiceTest {
 		request.setVersion("0.8");
 		request.setPolicies(createAuthPolicyInput());
 		return request;
-	}
-
-	private PolicyGroupUpdateRequestDto updatePolicygroupRequest() {
-		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
-		updateRequest.setName("Test_Policy_Group_001");
-		updateRequest.setDesc("Test_Policy_Group_001");
-		return updateRequest;
-	}
-	private PolicyGroupCreateRequestDto createPolicyGroupRequest() {
-		PolicyGroupCreateRequestDto request = new PolicyGroupCreateRequestDto();
-		request.setDesc("Test_Policy_Group_001");
-		request.setName("Test_Policy_Group_001");
-		return request;
-	}
-	
+	}	
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void updatePolicyStatus_PolicyGroupIDNotExistsTest() {
