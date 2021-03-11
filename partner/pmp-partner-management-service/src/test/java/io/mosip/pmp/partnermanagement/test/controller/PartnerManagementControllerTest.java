@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,6 +28,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pmp.common.repository.AuthPolicyRepository;
+import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.common.repository.PartnerPolicyRepository;
+import io.mosip.pmp.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pmp.common.repository.PartnerRepository;
+import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.partnermanagement.core.RequestWrapper;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
@@ -33,18 +41,11 @@ import io.mosip.pmp.partnermanagement.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnerPolicyResponse;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingRequest;
 import io.mosip.pmp.partnermanagement.dto.PartnersPolicyMappingResponse;
-import io.mosip.pmp.partnermanagement.dto.PolicyIDResponse;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
-import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
-import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
-import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRequestRepository;
-import io.mosip.pmp.partnermanagement.repository.PartnerRepository;
-import io.mosip.pmp.partnermanagement.repository.PolicyGroupRepository;
 import io.mosip.pmp.partnermanagement.service.PartnerManagementService;
 import io.mosip.pmp.partnermanagement.test.PartnermanagementApplicationTest;
+import io.mosip.pmp.partnermanagement.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PartnermanagementApplicationTest.class)
@@ -78,6 +79,14 @@ public class PartnerManagementControllerTest {
 	
 	@Autowired
 	private ObjectMapper objectMapper;	
+	
+	@MockBean
+	private AuditUtil audit;
+	
+	@Before
+	public void setUp() {
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	}
 	
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
@@ -187,25 +196,6 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/partnerID"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
-	@Test
-	@WithMockUser(roles = {"PARTNERMANAGER"})
-	public void getPartnerManagerTest() throws Exception {
-		RetrievePartnerManagers retrievePartnerManagers = new RetrievePartnerManagers();
-		Mockito.when(partnerManagementService.getPartnerManager()).thenReturn(retrievePartnerManagers);
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/getManager"))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-	
-	@Test
-	@WithMockUser(roles = {"PARTNERMANAGER"})
-	public void getPolicyIDTest()  throws Exception{
-		String policyName = "Banking";
-		PolicyIDResponse policyIDResponse = new PolicyIDResponse();
-		Mockito.when(partnerManagementService.getPartnerPolicyID(Mockito.anyString())).thenReturn(policyIDResponse);
-		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/policyname/" + policyName))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
@@ -244,7 +234,7 @@ public class PartnerManagementControllerTest {
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void validateAndGetPartnerPolicyFile() throws Exception {
 		PartnerPolicyResponse res = new PartnerPolicyResponse();
-		Mockito.when(partnerManagementService.getPartnerMappedPolicyFile("1234","asdsa","adfdsasd")).thenReturn(res);
+		Mockito.when(partnerManagementService.getPartnerMappedPolicyFile("1234","asdsa","adfdsasd",false)).thenReturn(res);
 		mockMvc.perform(MockMvcRequestBuilders.get("/pmpartners/validatePartnerMisp/partnerId/12345/partnerApiKey/adsaASD/mispLicenseKey/QWETREWWEFG"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 	}

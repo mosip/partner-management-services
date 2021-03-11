@@ -2,11 +2,12 @@ package io.mosip.pmp.partnermanagement.constant;
 
 public enum InvalidInputParameterConstant {
 	
-	INVALIED_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter"),
-	POLICY_REQUEST_ALREADY_APPROVED("PMS_PM_034","Policy request already approved."),
+   INVALIED_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter"),
+   POLICY_REQUEST_ALREADY_APPROVED("PMS_PM_034","Policy request already approved."),
    POLICY_REQUEST_ALREADY_REJECTED("PMS_PM_035","Policy request already rejected."),
    INVALID_STATUS_CODE("PMS_PM_045","Status should be either Approved or Rejected"),
-   EXTRACTORS_NOT_PRESENT("PMS_PM_051","Extractors are not present. Please add extractors.");
+   EXTRACTORS_NOT_PRESENT("PMS_PM_051","Extractors are not present. Please add extractors."),
+   INVALID_STATUS_CODE_ACTIVE_DEACTIVE("PMS_PM_058","Status should be either Active or De-Active");
 
 	/**
 	 * The error code.

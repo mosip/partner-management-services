@@ -23,6 +23,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pmp.common.exception.ApiAccessibleException;
 import io.mosip.pmp.partnermanagement.constant.PartnerManagementInputExceptionConstant;
 import io.mosip.pmp.partnermanagement.core.ResponseWrapper;
 
@@ -66,6 +67,22 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getErrorMsg(ApiAccessibleException exception) {
+		ResponseWrapper<ErrorResponse> response = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+
+		List<ErrorResponse> errorlist = new ArrayList<>();
+		errorlist.add(errorResponse);
+
+		response.setId("mosip.partnermanagement.partners.retrieve");
+		response.setVersion("1.0");
+		response.setErrors(errorlist);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	
 	/**
 	 * @param httpServletRequest
 	 *            this is contains servlet request
@@ -152,6 +169,12 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 		return getErrorMsg(exception);
 	}
 
+	@ExceptionHandler(ApiAccessibleException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getApiAccessibleExceptionMessage(
+			final ApiAccessibleException exception) {
+		return getErrorMsg(exception);
+	}
+	
 	/**
 	 * @param httpServletRequest
 	 *            this is contains servlet request as a parameter
@@ -185,24 +208,7 @@ public class PartnerMnagementControllerAdvice extends ResponseEntityExceptionHan
 			final NoPartnerApiKeyRequestsException exception) {
 		return getErrorMsg(exception);
 	}
-
-	/**
-	 * @param httpServletRequest
-	 *            this is contains servlet request as a parameter
-	 * @param exception
-	 *            this is contain No Partner ApiKey Requests Exception as a
-	 *            parameter
-	 * @return this class contains errorCode and message
-	 * @throws IOException
-	 *             this class contains Checked Exception
-	 */
-
-	@ExceptionHandler(PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException.class)
-	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerApiKeyDoesNotBelongToThePolicyGroupExceptionMessage(
-			final PartnerApiKeyDoesNotBelongToThePolicyGroupOfThePartnerMangerException exception) {
-		return getErrorMsg(exception);
-	}
-
+	
 	/**
 	 * @param httpServletRequest
 	 *            this is contains servlet request as a parameter

@@ -6,10 +6,10 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.1.3</version>
+		<version>1.1.4</version>
 	</parent>
-
-	<version>1.1.3</version>
+  
+	<version>1.1.4</version>
 	<artifactId>pmp-misp-service</artifactId>
 	<name>pmp-misp-service</name>
 
@@ -110,7 +110,12 @@
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
 			<version>2.2</version>
-			</dependency>			
+		</dependency>	
+		<dependency>
+			<groupId>io.mosip.pmp</groupId>
+			<artifactId>pmp-common</artifactId>
+			<version>1.1.4</version>
+		</dependency>			
 	</dependencies>
 
 	<build>

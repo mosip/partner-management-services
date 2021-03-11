@@ -2,9 +2,12 @@ package io.mosip.pmp.misp.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,15 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
+import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.Type;
+import io.mosip.pmp.common.entity.MISPEntity;
+import io.mosip.pmp.common.entity.MISPLicenseEntity;
+import io.mosip.pmp.common.entity.MISPLicenseReadEntity;
+import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.common.repository.MispServiceRepository;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -29,14 +41,12 @@ import io.mosip.pmp.misp.dto.MISPValidatelKeyResponseDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseReadEntity;
-import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.exception.ErrorMessages;
 import io.mosip.pmp.misp.exception.MISPException;
-import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.misp.repository.MispServiceRepository;
+import io.mosip.pmp.misp.utils.AuditUtil;
+import io.mosip.pmp.misp.utils.PartnerManageEnum;
+
+
 
 /**
  * <p>This class manages business logic before or after performing database operations.</p>
@@ -68,9 +78,15 @@ public class MISPManagementService {
 
 	@Autowired
 	private MispIdGenerator<String> mispIdGenerator;
+	
+	@Autowired
+	private AuditUtil audit;
 
 	@Autowired
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
+	
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 	
 	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
 	private int mispLicenseExpiryInDays;
@@ -101,9 +117,12 @@ public class MISPManagementService {
 	 * @param mispCreateRequest{@link {@link MISPCreateRequestDto} this class contains all the input/request fields.
 	 * @return MISPCreateResponseDto {@link MISPCreateResponseDto} this class contains all the response fields.
 	 */
-	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){	
+	public ResponseWrapper<MISPCreateResponseDto> createMISP(MISPCreateRequestDto mispCreateRequest){
+		
 		if(!emailValidator(mispCreateRequest.getEmailId())) {
+
 			logger.error(mispCreateRequest.getEmailId() + " : this is invalid email");
+			audit.setAuditRequestDto(PartnerManageEnum.MISP_INVALID_EMAIL_CREATE);
 			throw new MISPException(
 					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
@@ -115,8 +134,8 @@ public class MISPManagementService {
 		logger.info("Validating misp name " + mispCreateRequest.getOrganizationName());
 		validateName(mispCreateRequest.getOrganizationName());	
 		MISPEntity mispEntity = new MISPEntity();
-		
 		logger.info("Generating misp id by using kernel misp id generator");
+		audit.setAuditRequestDto(PartnerManageEnum.GENERATING_MISP_ID);
 		mispEntity.setID(mispIdGenerator.generateId());	
 		mispEntity.setIsActive(true);
 		mispEntity.setName(mispCreateRequest.getOrganizationName());
@@ -133,7 +152,9 @@ public class MISPManagementService {
 		responseDto.setMispID(mispEntity.getID());
 		responseDto.setMispStatus("Active");
 		response.setResponse(responseDto);		
-		logger.info("Cursor back to controller");		
+		audit.setAuditRequestDto(PartnerManageEnum.GENERATED_MISP_DETAILS);
+		logger.info("Cursor back to controller");	
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.CREATED_MISP,mispEntity.getID()));
 		return response;
 	}	
 	
@@ -151,6 +172,8 @@ public class MISPManagementService {
 	public ResponseWrapper<MISPStatusUpdateResponse> processRequest(MISPStatusUpdateRequestDto request){
 		if(!(request.getMispStatus().toLowerCase().equals(APPROVED_STATUS) || 
 				request.getMispStatus().toLowerCase().equals(REJECTED_STATUS))) {
+			
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.STATUS_EXCEPTION,request.getMispId()));
 			throw new MISPException(ErrorMessages.STATUS_CODE_EXCEPTION.getErrorCode(),
 					ErrorMessages.STATUS_CODE_EXCEPTION.getErrorMessage());
 		}		
@@ -158,12 +181,17 @@ public class MISPManagementService {
 		ResponseWrapper<MISPStatusUpdateResponse> response = new ResponseWrapper<>();		
 		logger.info("Validating misp id " + request.getMispId());
 		MISPEntity misp = findById(request.getMispId());
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.VALIDATE_MISPID,request.getMispId()));
+		
 		if(misp.getStatus_code().toLowerCase().equals(request.getMispStatus().toLowerCase())) {
+			audit.setAuditRequestDto(PartnerManageEnum.MISP_EXCEPTION);
 			throw new MISPException(ErrorMessages.MISP_STATUS_CHENAGE_REQUEST_EXCEPTION.getErrorCode(),
 					ErrorMessages.MISP_STATUS_CHENAGE_REQUEST_EXCEPTION.getErrorMessage() + request.getMispStatus().toLowerCase());
 		}
 		if(misp.getIsActive() == false && 
 				request.getMispStatus().toLowerCase().equals(APPROVED_STATUS)){
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_DEACTIVATED,request.getMispId()));
+			
 			logger.info("MISP " + misp.getName() + ""
 					+ "is de-activated. Can not be approved the de-actived misps.");
 			throw new MISPException(ErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
@@ -175,6 +203,7 @@ public class MISPManagementService {
 		logger.info("Updating the misp request status");
 		mispRepository.save(misp);		
 		logger.info("MISP " + request.getMispStatus().toLowerCase() + " successfully");
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATED_MISP_STATUS_PROCESS,request.getMispId()));
 		MISPStatusUpdateResponse responseDto = new MISPStatusUpdateResponse();				
 		if(request.getMispStatus().toLowerCase().equals(APPROVED_STATUS)){
 			MISPLicenseEntity misplEntity = generateLicense(request.getMispId());
@@ -186,6 +215,7 @@ public class MISPManagementService {
 		if(request.getMispStatus().toLowerCase().equals(REJECTED_STATUS)){
 			updateMISPLicenseStatus(request.getMispId(), NOTACTIVE_STATUS);
 			logger.info("MISP license key is not generated for rejected misps");
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.REJECTED_MISP_LICENSE,request.getMispId()));
 		}
 		responseDto.setMessage("MISP " + request.getMispStatus().toLowerCase() + " successfully");
 		responseDto.setMispStatus(misp.getIsActive() == true ? "Active" : "De-Active");
@@ -200,7 +230,9 @@ public class MISPManagementService {
 	 * This method is used to generate the license key for misp.
 	 */
 	protected MISPLicenseEntity generateLicense(String misp_Id) {
+
 		logger.info("MISP license generation started.");
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.GENERATE_LICENSE,misp_Id));
 		MISPLicenseEntity misplEntity = new MISPLicenseEntity();
 		MISPlKeyUniqueKeyEntity uniqueKey = new MISPlKeyUniqueKeyEntity();		
 		uniqueKey.setLicense_key(mispLicenseKeyGenerator.generateLicense());
@@ -228,6 +260,7 @@ public class MISPManagementService {
 	public ResponseWrapper<MISPStatusUpdateResponseDto> updateMISPStatus(MISPStatusUpdateRequestDto mispStatusUpdateRequest){		
 		if(!(mispStatusUpdateRequest.getMispStatus().toLowerCase().equals(ACTIVE_STATUS) || 
 				mispStatusUpdateRequest.getMispStatus().toLowerCase().equals(NOTACTIVE_STATUS))) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.ACTIVE_STATUS_EXCEPTION_STATUS,mispStatusUpdateRequest.getMispId()));		
 			throw new MISPException(ErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorCode(),
 					ErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorMessage());
 		}	
@@ -245,6 +278,8 @@ public class MISPManagementService {
 		mispEntity.setUpdatedDateTime(LocalDateTime.now());
 		logger.info("Updating the misp status");	
 		mispRepository.save(mispEntity);
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATED_MISP_STATUS,mispStatusUpdateRequest.getMispId()));
+
 		updateMISPLicenseStatus(mispStatusUpdateRequest.getMispId(),mispStatusUpdateRequest.getMispStatus());
 		if(status){
 			responseDto.setMessage("MISP actived successfully");
@@ -254,6 +289,7 @@ public class MISPManagementService {
 		logger.info(responseDto.getMessage());
 		response.setResponse(responseDto);		
 		logger.info("Cursor back to controller");
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_ACTIVE_STATUS,responseDto.getMessage()+" for misp id -"+mispStatusUpdateRequest.getMispId()));
 		return response;
 	}
 
@@ -272,6 +308,7 @@ public class MISPManagementService {
 	public ResponseWrapper<MISPUpdateResponseDto> update(MISPUpdateRequestDto mispUpdateRequestDto){
 		if(!emailValidator(mispUpdateRequestDto.getEmailId())) {
 			logger.error(mispUpdateRequestDto.getEmailId() + " : this is invalid email");
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_INVALID_EMAIL_UPDATE,mispUpdateRequestDto.getMispID()));
 			throw new MISPException(
 					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorMessages.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
@@ -287,6 +324,7 @@ public class MISPManagementService {
 		MISPEntity mispByName = mispRepository.findByName(mispUpdateRequestDto.getName());
 		if(mispByName != null && !mispEntity.getID().equals(mispByName.getID())) {
 			logger.error("Misp details found with misp name : " + mispUpdateRequestDto.getName() + "Can't create misp with same name.");
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.ORGANIZATION_NAME_EXISTS_UPDATE,mispUpdateRequestDto.getMispID()));
 			throw new MISPException(ErrorMessages.MISP_EXISTS.getErrorCode(), 
 					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + mispUpdateRequestDto.getName());
 		}
@@ -310,8 +348,11 @@ public class MISPManagementService {
 	}
 
 	private void updateMISPLicenseStatus(String misp_id, String status) {
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATE_MISP_LICENSE,misp_id));
 		Boolean activeness = status.toLowerCase().equals(NOTACTIVE_STATUS) ? false : true;
 		List<MISPLicenseEntity> licenses = misplKeyRepository.findByMispId(misp_id);
+		List<String> licenseKeys = licenses.stream().map(license->license.getMispLicenseUniqueKey().getLicense_key())
+				.collect(Collectors.toList());
 		if(activeness) {
 			for(MISPLicenseEntity license : licenses) {
 				if(license.getValidToDate().isAfter(LocalDateTime.now())){
@@ -333,6 +374,7 @@ public class MISPManagementService {
 				misplKeyRepository.save(license);
 			}
 		}
+		notify(licenseKeys);
 	}
 	/** 
 	 * This method update the status of misp license key to Active or DeActive of a specific misp.
@@ -351,6 +393,7 @@ public class MISPManagementService {
 	public ResponseWrapper<MISPlKeyStatusUpdateResponseDto> updateMisplkeyStatus(MISPlKeyStatusUpdateRequestDto updateRequest, String mispId){	
 		if(!(updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(ACTIVE_STATUS) || 
 				updateRequest.getMispLicenseKeyStatus().toLowerCase().equals(NOTACTIVE_STATUS))) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.ACTIVE_STATUS_EXCEPTION_UPDATE,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_STATUS_EXCEPTION.getErrorMessage());
 		}
@@ -362,15 +405,17 @@ public class MISPManagementService {
 		if(!mispLicense.getMispLicenseUniqueKey().getMisp_id().equals(mispId)) {
 			logger.warn("No details found for combination of misp license key " + updateRequest.getMispLicenseKey() + 
 					" and misp id" + "." + mispId);
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_ID_NO_LICENSE_KEY,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  
 			+ mispId + ", LicenseKey: " + updateRequest.getMispLicenseKey());
 		}	
 		mispLicense.getMispLicenseUniqueKey().setMisp_id(mispId);
 		if(status && mispLicense.getValidToDate().isBefore(LocalDateTime.now())) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.CANNOT_ACTIVATE_LICENSE_KEY,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_EXPIRED_NOT_ACTIVATE.getErrorMessage());
-		}		
+		}
 		mispLicense.setIsActive(status);
 		mispLicense.setUpdatedDateTime(LocalDateTime.now());
 		mispLicense.setUpdatedBy(getUser());
@@ -378,6 +423,10 @@ public class MISPManagementService {
 		misplKeyRepository.save(mispLicense);
 		responseDto.setMispLicenseKeyStatus(updateRequest.getMispLicenseKeyStatus());
 		response.setResponse(responseDto);
+		notify(mispLicense.getMispLicenseUniqueKey().getLicense_key());
+    	logger.info("Cursor back to controller");
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.UPDATED_LICENSE_KEY,mispId));
+		notify(mispLicense.getMispLicenseUniqueKey().getLicense_key());
 		logger.info("Cursor back to controller");
 		return response;	
 	}
@@ -396,6 +445,7 @@ public class MISPManagementService {
 		List<MISPEntity> misps = mispRepository.findAll();		
 		if(misps.isEmpty()){
 			logger.warn("No details found ");
+			audit.setAuditRequestDto(PartnerManageEnum.NO_MISP_DETAILS);
 			throw new MISPException(ErrorMessages.NO_MISP_DETAILS.getErrorCode(),
 					ErrorMessages.NO_MISP_DETAILS.getErrorMessage());
 		}		
@@ -420,6 +470,7 @@ public class MISPManagementService {
 		List<MISPLicenseEntity> misp_licenses  = misplKeyRepository.findByMispId(mispId);
 		response.setMisp(misp);
 		response.setMisp_licenses(misp_licenses);
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.FETCH_MISP,mispId));
 		return response;
 	}
 	
@@ -432,7 +483,8 @@ public class MISPManagementService {
 	private void validateName(String mispName){
 		logger.info("Reading the database with misp name " + mispName);
 		MISPEntity mispEntity = mispRepository.findByName(mispName);
-		if(mispEntity != null){				
+		if(mispEntity != null){		
+			audit.setAuditRequestDto(PartnerManageEnum.ORGANIZATION_NAME_EXISTS_CREATE);
 			logger.error("Misp details found with misp name : " + mispName + "Can't create misp with same name.");
 			throw new MISPException(ErrorMessages.MISP_EXISTS.getErrorCode(), 
 					ErrorMessages.MISP_EXISTS.getErrorMessage() + "  " + mispName);
@@ -473,6 +525,8 @@ public class MISPManagementService {
 		if(!response.getMisp_id().equals(mispUniqueKey.getMisp_id())) {
 			logger.warn("No details found for combination of misp license key " + mispUniqueKey.getLicense_key() + 
 					" and misp id" + "." + mispUniqueKey.getMisp_id());
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.VALIDATING_LICENSE_KEY, mispUniqueKey.getLicense_key() + 
+					" and misp id -"+ mispUniqueKey.getMisp_id()));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage() + "  MISPID: "  
 			+ mispUniqueKey.getMisp_id() + ", LicenseKey: " + mispUniqueKey.getLicense_key());
@@ -490,7 +544,7 @@ public class MISPManagementService {
 		MISPValidatelKeyResponseDto response = new MISPValidatelKeyResponseDto();
 		logger.info("Getting the misp license key " + licenseKey);
 		MISPLicenseEntity mispLicense = getLicenseDetails(licenseKey);
-		
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.FETCH_LICENSE_KEY_DETAILS,mispLicense.getMispLicenseUniqueKey().getMisp_id()));
 		response.setActive(mispLicense.getIsActive());
 		response.setLicenseKey(mispLicense.getMispLicenseUniqueKey().getLicense_key());
 		response.setValid(mispLicense.getValidToDate().isAfter(LocalDateTime.now()));
@@ -505,6 +559,7 @@ public class MISPManagementService {
 		}
 		response.setMessage("MISP " + mispLicense.getMispLicenseUniqueKey().getMisp_id() + " with license key " 
 		+ mispLicense.getMispLicenseUniqueKey().getLicense_key() + "  is " + message);
+		audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.LICENSE_KEY_STATUS,message));
 		return response;
 	}
 	
@@ -518,6 +573,7 @@ public class MISPManagementService {
 		MISPLicenseEntity mispLicense = misplKeyRepository.findByLicensekey(licenseKey);
 		if(mispLicense == null){
 			logger.warn("No details found for license key " + licenseKey);
+			audit.setAuditRequestDto(PartnerManageEnum.LICENSE_KEY_NOT_FOUND);
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage() + " " + licenseKey);
 		}
@@ -540,6 +596,7 @@ public class MISPManagementService {
 		List<MISPDetailsDto> mispDetails = new ArrayList<MISPDetailsDto>();
 		List<MISPEntity> misps = mispRepository.findByStartsWithName(name);		
 		if(misps.isEmpty()){
+			audit.setAuditRequestDto(PartnerManageEnum.NO_MISP_BY_ORGANIZATION_NAME);
 			logger.warn("No details found  with name starts with " + name);
 			throw new MISPException(ErrorMessages.NO_MISP_DETAILS.getErrorCode(),
 					ErrorMessages.NO_MISP_DETAILS.getErrorMessage());
@@ -588,16 +645,19 @@ public class MISPManagementService {
 		logger.info("Validating the misp id " + mispId);
 		MISPEntity misp = findById(mispId);
 		if(!misp.status_code.toLowerCase().equals("approved")) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_NOT_APPROVED,mispId));
 			throw new MISPException(ErrorMessages.MISP_NOT_APPROVED.getErrorCode(),
 					ErrorMessages.MISP_NOT_APPROVED.getErrorMessage());
 		}
 		if(!misp.getIsActive()) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_INACTIVE,mispId));
 			throw new MISPException(ErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
 					ErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
 		}
 		logger.info("Getting the misp license key with misp id " + mispId);
 		List<MISPLicenseEntity> mispLicenses = misplKeyRepository.findByMispId(mispId);	
 		if(mispLicenses.isEmpty()) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_LICENSE_NOT_EXISTS,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage());
 		}
@@ -629,6 +689,7 @@ public class MISPManagementService {
 			}
 		}
 		if(!isMISPHavingActiveLicense) {
+			audit.setAuditRequestDto(PartnerManageEnum.getPartnerManageEnumWithValue(PartnerManageEnum.MISP_ALL_LICENSE_INACTIVE,mispId));
 			throw new MISPException(ErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorCode(),
 					ErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorMessage());
 		}
@@ -643,5 +704,20 @@ public class MISPManagementService {
 	 */
 	public  boolean emailValidator(String email) {
 		return email.matches(emailRegex);
+	}
+	
+	private void notify(List<String> mispLicenseKeys) {		
+		for (String licenseKey : mispLicenseKeys) {
+			notify(licenseKey);
+		}
+	}
+	
+	private void notify(String mispLicenseKey) {
+		Type type = new Type();
+		type.setName("MISPService");
+		type.setNamespace("io.mosip.pmp.misp.service");
+		Map<String,Object> data = new HashMap<>();
+		data.put("mispLicenseKey", mispLicenseKey);
+		webSubPublisher.notify(EventType.MISP_UPDATED,data,type);
 	}
 }

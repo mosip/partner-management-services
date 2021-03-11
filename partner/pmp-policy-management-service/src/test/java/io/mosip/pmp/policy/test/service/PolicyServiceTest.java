@@ -18,29 +18,31 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.pmp.policy.dto.FilterDto;
+import io.mosip.pmp.common.entity.AuthPolicy;
+import io.mosip.pmp.common.entity.Partner;
+import io.mosip.pmp.common.entity.PartnerPolicy;
+import io.mosip.pmp.common.entity.PolicyGroup;
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.repository.AuthPolicyHRepository;
+import io.mosip.pmp.common.repository.AuthPolicyRepository;
+import io.mosip.pmp.common.repository.PartnerPolicyRepository;
+import io.mosip.pmp.common.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.dto.PolicyAttributesDto;
 import io.mosip.pmp.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyGroupUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyStatusUpdateRequestDto;
 import io.mosip.pmp.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pmp.policy.dto.SourceDto;
-import io.mosip.pmp.policy.entity.AuthPolicy;
-import io.mosip.pmp.policy.entity.PartnerPolicy;
-import io.mosip.pmp.policy.entity.PolicyGroup;
 import io.mosip.pmp.policy.errorMessages.PolicyManagementServiceException;
-import io.mosip.pmp.policy.repository.AuthPolicyHRepository;
-import io.mosip.pmp.policy.repository.AuthPolicyRepository;
-import io.mosip.pmp.policy.repository.PartnerPolicyRepository;
-import io.mosip.pmp.policy.repository.PolicyGroupRepository;
 import io.mosip.pmp.policy.service.PolicyManagementService;
+import io.mosip.pmp.policy.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -61,6 +63,12 @@ public class PolicyServiceTest {
 	@Mock
 	PartnerPolicyRepository partnerPolicyRepository;	
 	
+	@Mock
+	private WebSubPublisher webSubPublisher;
+	
+	@MockBean
+	private AuditUtil audit;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -68,6 +76,9 @@ public class PolicyServiceTest {
 		ReflectionTestUtils.setField(service, "policyGroupRepository", policyGroupRepository);
 		ReflectionTestUtils.setField(service, "authPolicyHRepository", authPolicyHRepository);
 		ReflectionTestUtils.setField(service, "partnerPolicyRepository", partnerPolicyRepository);
+		ReflectionTestUtils.setField(service, "webSubPublisher", webSubPublisher);		
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
 	}
 	
 	//Success Test
@@ -268,7 +279,7 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("8976");
+		authPolicy.getPolicyGroup().setId("8976");
 		authPolicy.setId("12345");
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
@@ -290,7 +301,7 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("12345");
+		authPolicy.getPolicyGroup().setId("12345");
 		authPolicy.setName("Test");
 		authPolicy.setPolicy_type("AUTH");
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
@@ -314,7 +325,7 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("12345");
+		authPolicy.getPolicyGroup().setId("12345");
 		authPolicy.setName("Test");
 		authPolicy.setPolicy_type("AUTH");
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
@@ -337,13 +348,13 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("12345");
+		authPolicy.getPolicyGroup().setId("12345");
 		authPolicy.setName("Test");
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		AuthPolicy authPolicyName = getAuthPolicy();
-		authPolicyName.setPolicy_group_id("12345");
+		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
 		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
 		service.updatePolicies(request, "12345");
@@ -361,7 +372,7 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("12345");
+		authPolicy.getPolicyGroup().setId("12345");
 		authPolicy.setName("Test");
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(authPolicy);
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
@@ -382,9 +393,10 @@ public class PolicyServiceTest {
 		policyGroup.setName("Test");
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
-		authPolicy.setPolicy_group_id("12345");
+		authPolicy.getPolicyGroup().setId("12345");
 		authPolicy.setName("Test");
 		authPolicy.setIsActive(false);
+		authPolicy.setPolicyGroup(policyGroup);
 		Mockito.when(authPolicyRepository.findById("Test")).thenReturn(Optional.of(authPolicy));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("Test")).thenReturn(policy);
@@ -438,7 +450,11 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoAuthPolicyTest() throws JsonParseException, JsonMappingException, IOException {
 		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
-		policy.get().setPartner("12345");
+		Partner partner = new Partner();
+		partner.setAddress("Test");
+		partner.setName("Test");
+		policy.get().setPartner(partner);
+		policy.get().getPartner().setId("12345");
 		policy.get().setPolicyId("12345");
 		policy.get().setPolicyApiKey("12345");
 		Mockito.when(partnerPolicyRepository.findByPartnerId("12345","12345")).thenReturn(policy.get());		
@@ -448,7 +464,11 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_PartnerPolicyNotMappedTest() throws JsonParseException, JsonMappingException, IOException {
 		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
-		policy.get().setPartner("12345");
+		Partner partner = new Partner();
+		partner.setAddress("Test");
+		partner.setName("Test");
+		policy.get().setPartner(partner);
+		policy.get().getPartner().setId("12345");
 		policy.get().setPolicyId("2345");
 		policy.get().setPolicyApiKey("12345");
 		Mockito.when(partnerPolicyRepository.findByPartnerId("12345","12345")).thenReturn(policy.get());
@@ -459,7 +479,11 @@ public class PolicyServiceTest {
 	@Test
 	public void getPartnerMappedPolicyTest_001() throws JsonParseException, JsonMappingException, IOException {
 		Optional<PartnerPolicy> policy = Optional.of(new PartnerPolicy());
-		policy.get().setPartner("12345");
+		Partner partner = new Partner();
+		partner.setAddress("Test");
+		partner.setName("Test");
+		policy.get().setPartner(partner);
+		policy.get().getPartner().setId("12345");
 		policy.get().setPolicyId("12345");
 		policy.get().setPolicyApiKey("12345");
 		Optional<PolicyGroup> policyGroup = Optional.of(new PolicyGroup());
@@ -532,7 +556,11 @@ public class PolicyServiceTest {
 		List<AuthPolicy> policies = new ArrayList<AuthPolicy>();
 		policy.setName("Test");
 		policy.setDescr("Policy Desc");
-		policy.setPolicy_group_id("12345");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		policy.setPolicyGroup(policyGroup);
+		policy.getPolicyGroup().setId("12345");
 		policy.setId("12345");
 		policy.setIsActive(true);
 		policy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
@@ -545,7 +573,11 @@ public class PolicyServiceTest {
 		AuthPolicy policy = new AuthPolicy();		
 		policy.setName("Test");
 		policy.setDescr("Policy Desc");
-		policy.setPolicy_group_id("12345");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		policy.setPolicyGroup(policyGroup);
+		policy.getPolicyGroup().setId("12345");
 		policy.setIsActive(true);
 		policy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");		
 		return policy;
@@ -593,27 +625,5 @@ public class PolicyServiceTest {
 			e.printStackTrace();
 		}		
 		return json;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<SourceDto> getSourceAttributes(){
-		List<SourceDto> sourceAttributes = new ArrayList<SourceDto>();
-		SourceDto sourceDto = new SourceDto();
-		sourceDto.setAttribute("fullName");
-		sourceDto.setFilter(getFilterAttributes());
-		sourceAttributes.add(sourceDto);
-		return sourceAttributes;
-	}
-	
-	private List<FilterDto> getFilterAttributes(){
-		List<String> subType = new ArrayList<String>();
-		subType.add("Left IndexFinger");
-		subType.add("Right IndexFinger");
-		List<FilterDto> filterAttributes = new ArrayList<FilterDto>();
-		FilterDto filterDto = new FilterDto();
-		filterDto.setType("Finger");
-		filterDto.setSubType(subType);
-		filterAttributes.add(filterDto);
-		return filterAttributes;
 	}
 }

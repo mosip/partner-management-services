@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,6 +23,7 @@ import javax.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,26 +42,28 @@ import io.mosip.pmp.authdevice.dto.DeviceData;
 import io.mosip.pmp.authdevice.dto.DeviceDeRegisterResponse;
 import io.mosip.pmp.authdevice.dto.DeviceInfo;
 import io.mosip.pmp.authdevice.dto.DeviceResponse;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.DigitalId;
+import io.mosip.pmp.authdevice.dto.JWTSignatureRequestDto;
+import io.mosip.pmp.authdevice.dto.JWTSignatureResponseDto;
 import io.mosip.pmp.authdevice.dto.RegisterDeviceResponse;
 import io.mosip.pmp.authdevice.dto.RegisteredDevicePostDto;
-import io.mosip.pmp.authdevice.dto.SignRequestDto;
-import io.mosip.pmp.authdevice.dto.SignResponseDto;
 import io.mosip.pmp.authdevice.entity.DeviceDetail;
 import io.mosip.pmp.authdevice.entity.RegisteredDevice;
 import io.mosip.pmp.authdevice.entity.RegisteredDeviceHistory;
-import io.mosip.pmp.authdevice.exception.AuthDeviceServiceException;
-import io.mosip.pmp.authdevice.exception.RequestException;
-import io.mosip.pmp.authdevice.exception.ValidationException;
+import io.mosip.pmp.authdevice.exception.DeviceValidationException;
 import io.mosip.pmp.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pmp.authdevice.repository.FoundationalTrustProviderRepository;
 import io.mosip.pmp.authdevice.repository.RegisteredDeviceHistoryRepository;
 import io.mosip.pmp.authdevice.repository.RegisteredDeviceRepository;
 import io.mosip.pmp.authdevice.service.RegisteredDeviceService;
-import io.mosip.pmp.authdevice.util.HeaderRequest;
 import io.mosip.pmp.authdevice.util.RegisteredDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.util.MapperUtils;
 import io.mosip.pmp.partner.core.RequestWrapper;
-import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.partner.core.ValidateResponseWrapper;
+import io.mosip.pmp.partner.exception.ErrorResponse;
 import io.mosip.pmp.partner.util.RestUtil;
 import io.mosip.pmp.regdevice.service.RegRegisteredDeviceService;
 
@@ -77,6 +82,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Autowired
 	private CryptoCore cryptoCore;
+
+	@Autowired
+	SearchHelper searchHelper;
 
 	@Autowired
 	Environment environment;
@@ -110,6 +118,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Value("${masterdata.registerdevice.timestamp.validate:+5}")
 	private String registerDeviceTimeStamp;
+	
+	@Value("${mosip.sign.applicationid:KERNEL}")
+	private String signAppId;
+	
+	@Value("${mosip.sign.refid:SIGN}")
+	private String signRefId;
 
 	@Autowired
 	RegRegisteredDeviceService regRegisteredDeviceService;
@@ -119,8 +133,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 */
 	@Override
 	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto) throws Exception {
+		List<ServiceError> serviceErrors = new ArrayList<>();
 		RegisteredDevice mapEntity = null;
-		RegisteredDevice crtRegisteredDevice = null;
 		RegisteredDeviceHistory entityHistory = new RegisteredDeviceHistory();
 		String digitalIdJson;
 		DeviceResponse response = new DeviceResponse();
@@ -128,15 +142,14 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		DigitalId digitalId = null;
 		DeviceInfo deviceInfo = null;
 		DeviceDetail deviceDetail = null;
-		RegisterDeviceResponse registerDeviceResponse = null;
-		String headerString, signedResponse, registerDevice = null;
+		RegisterDeviceResponse registerDeviceResponse = null;		
 		try {
 			String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
 			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
 			validate(deviceData);
 			if (deviceData.getPurpose().equalsIgnoreCase(RegisteredDeviceConstant.REGISTRATION)) {
 				return regRegisteredDeviceService.signedRegisteredDevice(registeredDevicePostDto);
-			}
+			}			
 			String deviceInfoPayLoad = getPayLoad(deviceData.getDeviceInfo());
 			deviceInfo = mapper.readValue(CryptoUtil.decodeBase64(deviceInfoPayLoad), DeviceInfo.class);
 			validate(deviceData, deviceInfo);
@@ -146,8 +159,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			deviceDetail = deviceDetailRepository.findByDeviceDetail(digitalId.getMake(), digitalId.getModel(),
 					digitalId.getDeviceProviderId(), digitalId.getDeviceSubType(), digitalId.getType());
 			if (deviceDetail == null) {
-				throw new RequestException(RegisteredDeviceErrorCode.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
-						RegisteredDeviceErrorCode.DEVICE_DETAIL_NOT_FOUND.getErrorMessage());
+				serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
+						RegisteredDeviceErrorCode.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()));
+				throw new DeviceValidationException(serviceErrors);
 			} else {
 				mapEntity = new RegisteredDevice();
 				mapEntity.setDeviceDetailId(deviceDetail.getId());
@@ -156,96 +170,94 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			if (deviceData.getFoundationalTrustProviderId() != null
 					&& !deviceData.getFoundationalTrustProviderId().isEmpty()) {
 				if (ftpRepo.findByIdAndIsActiveTrue(deviceData.getFoundationalTrustProviderId()) == null) {
-					throw new RequestException(RegisteredDeviceErrorCode.FTP_NOT_FOUND.getErrorCode(),
-							RegisteredDeviceErrorCode.FTP_NOT_FOUND.getErrorMessage());
+					serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.FTP_NOT_FOUND.getErrorCode(),
+							RegisteredDeviceErrorCode.FTP_NOT_FOUND.getErrorMessage()));
+					throw new DeviceValidationException(serviceErrors);
 				}
 			} else {
 				deviceData.setFoundationalTrustProviderId(null);
 			}
 
+			String deviceCode = null;
 			RegisteredDevice regDevice = registeredDeviceRepository
-					.findByDeviceDetailIdAndSerialNoAndIsActiveIsTrue(deviceDetail.getId(), digitalId.getSerialNo());
-
-			if (regDevice != null) {
-				throw new RequestException(RegisteredDeviceErrorCode.SERIALNO_DEVICEDETAIL_ALREADY_EXIST.getErrorCode(),
-						RegisteredDeviceErrorCode.SERIALNO_DEVICEDETAIL_ALREADY_EXIST.getErrorMessage());
+					.findByDeviceDetailIdAndSerialNo(deviceDetail.getId(), digitalId.getSerialNo());
+			if(regDevice != null && regDevice.isActive() && regDevice.getStatusCode().equals(REGISTERED)) {
+				serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.SERIALNO_DEVICEDETAIL_ALREADY_EXIST.getErrorCode(),
+						RegisteredDeviceErrorCode.SERIALNO_DEVICEDETAIL_ALREADY_EXIST.getErrorMessage()));
+				throw new DeviceValidationException(serviceErrors);				
+			}else if(regDevice != null && !regDevice.isActive() && regDevice.getStatusCode().equals(RETIRED)) {
+				deviceCode = regDevice.getCode();
+			}else {
+				deviceCode = UUID.randomUUID().toString();
 			}
-
+			
 			digitalIdJson = mapper.writeValueAsString(digitalId);
 			mapEntity = mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData, deviceInfo,
 					deviceDetail, digitalId);
-			mapEntity.setCode(UUID.randomUUID().toString());
+			mapEntity.setCode(deviceCode);
 			entityHistory.setCode(mapEntity.getCode());
 			entityHistory.setEffectDateTime(mapEntity.getCrDtimes());
 			entityHistory = mapRegisteredDeviceHistory(entityHistory, mapEntity);
-			crtRegisteredDevice = registeredDeviceRepository.save(mapEntity);
-
-			registeredDeviceHistoryRepo.save(entityHistory);
-
 			digitalId = mapper.readValue(digitalIdJson, DigitalId.class);
-
-			registerDeviceResponse = mapRegisteredDeviceResponse(crtRegisteredDevice, deviceData, deviceInfo);
+			registerDeviceResponse = mapRegisteredDeviceResponse(mapEntity, deviceData, deviceInfo);
 			registerDeviceResponse
-					.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
+			.setDigitalId(getSignedResponse(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8"))));
 			registerDeviceResponse.setEnv(activeProfile);
-			HeaderRequest header = new HeaderRequest();
-			header.setAlg("RS256");
-			header.setType("JWS");
-			headerString = mapper.writeValueAsString(header);
 			Objects.requireNonNull(registerDeviceResponse);
-			signedResponse = getSignedResponse(registerDeviceResponse);
-			registerDevice = mapper.writeValueAsString(registerDeviceResponse);
-			response.setResponse(convertToJWS(headerString, registerDevice, signedResponse));
+			response.setResponse(getSignedResponse(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse))));
+			registeredDeviceRepository.save(mapEntity);
+			registeredDeviceHistoryRepo.save(entityHistory);
 		} catch (IOException e) {
-			throw new AuthDeviceServiceException(
+			serviceErrors.add(new ServiceError(
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
-							+ e.getMessage());
+							+ e.getMessage()));
+			throw new DeviceValidationException(serviceErrors);
 		}
 
 		return response.getResponse();
 	}
-
-	/**
-	 * 
-	 * @param headerString
-	 * @param registerDevice
-	 * @param signedResponse
-	 * @return
-	 */
-	private String convertToJWS(String headerString, String registerDevice, String signedResponse) {
-		return CryptoUtil.encodeBase64String(headerString.getBytes()) + "."
-				+ CryptoUtil.encodeBase64String(registerDevice.getBytes()) + "."
-				+ CryptoUtil.encodeBase64String(signedResponse.getBytes());
-	}
-
+	
 	/**
 	 * 
 	 * @param registerDeviceResponse
 	 * @return
 	 */
-	private String getSignedResponse(RegisterDeviceResponse registerDeviceResponse) {
-		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
-		SignRequestDto signatureRequestDto = new SignRequestDto();
-		SignResponseDto signResponse = new SignResponseDto();
+	private String getSignedResponse(String encodedResponse) {
+		List<ServiceError> serviceErrors = new ArrayList<>();
+		RequestWrapper<JWTSignatureRequestDto> request = new RequestWrapper<JWTSignatureRequestDto>();
+		JWTSignatureRequestDto signatureRequestDto = new JWTSignatureRequestDto();
+		JWTSignatureResponseDto signResponse = new JWTSignatureResponseDto();
 		try {
-			signatureRequestDto
-					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
+			signatureRequestDto.setApplicationId(signAppId);
+			signatureRequestDto.setDataToSign(encodedResponse);
+			signatureRequestDto.setIncludeCertHash(false);
+			signatureRequestDto.setIncludeCertificate(true);
+			signatureRequestDto.setIncludePayload(true);
+			signatureRequestDto.setReferenceId(signRefId);
+
 			request.setRequest(signatureRequestDto);
 			String response = restUtil.postApi(signUrl, null, "", "", MediaType.APPLICATION_JSON, request,
 					String.class);
-			ResponseWrapper<?> responseObject;
-			responseObject = mapper.readValue(response, ResponseWrapper.class);
+			ValidateResponseWrapper<?> responseObject;
+			responseObject = mapper.readValue(response, ValidateResponseWrapper.class);
+			if(responseObject.getResponse() == null && responseObject.getErrors() != null) {
+				for(ErrorResponse error : responseObject.getErrors()) {
+					serviceErrors.add(new ServiceError(error.getErrorCode(),error.getMessage()));
+				}
+				throw new DeviceValidationException(serviceErrors);
+			}
 			signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
-					SignResponseDto.class);
+					JWTSignatureResponseDto.class);
 		} catch (IOException e) {
-			throw new AuthDeviceServiceException(
-					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
-					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
-							+ e.getMessage());
+			serviceErrors.add(new ServiceError(
+					RegisteredDeviceErrorCode.RESPONSE_SIGN_FAILED.getErrorCode(),
+					RegisteredDeviceErrorCode.RESPONSE_SIGN_FAILED.getErrorMessage() + " "
+							+ e.getMessage()));
+			throw new DeviceValidationException(serviceErrors);
 		}
 
-		return signResponse.getSignature();
+		return signResponse.getJwtSignedData();
 	}
 
 	/**
@@ -259,7 +271,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(deviceInfo.getTimeStamp());
+		registerDeviceResponse.setTimeStamp(deviceInfo.getTimestamp());
 		return registerDeviceResponse;
 	}
 
@@ -279,7 +291,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		entity.setDeviceDetailId(deviceDetail.getId());
 		entity.setStatusCode(REGISTERED);
 		entity.setDeviceId(deviceData.getDeviceId());
-		entity.setDeviceSubId(deviceInfo.getDeviceSubId());
+		entity.setDeviceSubId(deviceInfo.getDeviceSubId().toString());
 		entity.setHotlisted(false);
 		entity.setDigitalId(digitalIdJson);
 		entity.setSerialNo(digitalId.getSerialNo());
@@ -357,8 +369,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			}
 		}
 		if (!errors.isEmpty()) {
-
-			throw new ValidationException(errors);
+			throw new DeviceValidationException(errors);
 		}
 	}
 
@@ -376,8 +387,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 					c.getPropertyPath() + " " + c.getMessage()));
 		}
 		if (!errors.isEmpty()) {
-
-			throw new ValidationException(errors);
+			throw new DeviceValidationException(errors);
 		}
 
 	}
@@ -388,12 +398,14 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 * @return
 	 */
 	private String getPayLoad(String jws) {
+		List<ServiceError> serviceErrors = new ArrayList<>();
 		String[] split = jws.split("\\.");
 		if (split.length > 2) {
 			if (!verifySignature(jws)) {
-				throw new AuthDeviceServiceException(
+				serviceErrors.add(new ServiceError(
 						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorCode(),
-						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage());
+						RegisteredDeviceErrorCode.REGISTERED_DEVICE_SIGN_VALIDATION_FAILURE.getErrorMessage()));
+				throw new DeviceValidationException(serviceErrors);
 			}
 			return split[1];
 		}
@@ -418,9 +430,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 */
 	@Override
 	public String deRegisterDevice(DeRegisterDevicePostDto deRegisterDevicePostDto) {
+		List<ServiceError> serviceErrors = new ArrayList<>();
 		RegisteredDevice deviceRegisterEntity = null;
 		RegisteredDeviceHistory deviceRegisterHistory = new RegisteredDeviceHistory();
-		String headerString, signedResponse, deRegisterDevice = null;
 		try {
 			String devicePayLoad = getPayLoad(deRegisterDevicePostDto.getDevice());
 			DeRegisterDeviceReqDto device = mapper.readValue(CryptoUtil.decodeBase64(devicePayLoad),
@@ -429,15 +441,17 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			deviceRegisterEntity = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(device.getDeviceCode());
 			if (deviceRegisterEntity != null) {
 				if (Arrays.asList(REVOKED, RETIRED).contains(deviceRegisterEntity.getStatusCode())) {
-					throw new AuthDeviceServiceException(
+					serviceErrors.add(new ServiceError(
 							RegisteredDeviceErrorCode.DEVICE_DE_REGISTERED_ALREADY.getErrorCode(),
-							RegisteredDeviceErrorCode.DEVICE_DE_REGISTERED_ALREADY.getErrorMessage());
+							RegisteredDeviceErrorCode.DEVICE_DE_REGISTERED_ALREADY.getErrorMessage()));
+					throw new DeviceValidationException(serviceErrors);
 				}
 				deviceRegisterEntity.setStatusCode("Retired");
 				Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 				if (!EmptyCheckUtils.isNullEmpty(authN)) {
 					deviceRegisterEntity.setUpdBy(authN.getName());
 				}
+				deviceRegisterEntity.setActive(false);
 				deviceRegisterEntity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 				deviceRegisterHistory.setCode(deviceRegisterEntity.getCode());
 				deviceRegisterHistory.setEffectDateTime(deviceRegisterEntity.getUpdDtimes());
@@ -451,26 +465,21 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				deviceDeRegisterResponse.setEnv(activeProfile);
 				DigitalId digitalId = mapper.readValue(deviceRegisterEntity.getDigitalId(), DigitalId.class);
 				deviceDeRegisterResponse.setTimeStamp(digitalId.getDateTime());
-				HeaderRequest header = new HeaderRequest();
-				header.setAlg("RS256");
-				header.setType("JWS");
-				headerString = mapper.writeValueAsString(header);
 				Objects.requireNonNull(deviceDeRegisterResponse);
-				signedResponse = getSignedResponse(deviceDeRegisterResponse);
-				deRegisterDevice = mapper.writeValueAsString(deviceDeRegisterResponse);
+				return getSignedResponse(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(deviceDeRegisterResponse)));
+				
 			} else {
-
-				throw new RequestException(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-						RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+				serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+						RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage()));
+				throw new DeviceValidationException(serviceErrors);
 			}
 
 		} catch (IOException e) {
-			throw new AuthDeviceServiceException(
+			serviceErrors.add(new ServiceError(
 					RegisteredDeviceErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorCode(),
-					RegisteredDeviceErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorMessage() + " " + e);
-		}
-
-		return convertToJWS(headerString, deRegisterDevice, signedResponse);
+					RegisteredDeviceErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorMessage() + " " + e));
+			throw new DeviceValidationException(serviceErrors);
+		}		
 	}
 
 	/**
@@ -508,38 +517,22 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	/**
 	 * 
-	 * @param registerDeviceResponse
-	 * @return
-	 * @throws IOException
-	 */
-	private String getSignedResponse(DeviceDeRegisterResponse registerDeviceResponse) throws IOException {
-		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
-		SignRequestDto signatureRequestDto = new SignRequestDto();
-		SignResponseDto signResponse = new SignResponseDto();
-		signatureRequestDto.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
-		request.setRequest(signatureRequestDto);
-		String response = restUtil.postApi(signUrl, null, "", "", MediaType.APPLICATION_JSON, request, String.class);
-		ResponseWrapper<?> responseObject = mapper.readValue(response, ResponseWrapper.class);
-		signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()), SignResponseDto.class);
-		return signResponse.getSignature();
-	}
-
-	/**
-	 * 
 	 * @param device
 	 */
 	private void validate(DeRegisterDeviceReqDto device) {
+		List<ServiceError> serviceErrors = new ArrayList<>();
 		if (EmptyCheckUtils.isNullEmpty(device.getDeviceCode()) || EmptyCheckUtils.isNullEmpty(device.getEnv())) {
-			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-					RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+			serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+					RegisteredDeviceErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage()));
+			throw new DeviceValidationException(serviceErrors);
 		} else if (device.getDeviceCode().length() > 36) {
-			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorCode(),
-					RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorMessage());
+			serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorCode(),
+					RegisteredDeviceErrorCode.DEVICE_CODE_EXCEEDS_LENGTH.getErrorMessage()));
 		} else if (!device.getEnv().equals(activeProfile)) {
-			throw new RequestException(RegisteredDeviceErrorCode.INVALID_ENV.getErrorCode(),
-					RegisteredDeviceErrorCode.INVALID_ENV.getErrorMessage());
+			serviceErrors.add(new ServiceError(RegisteredDeviceErrorCode.INVALID_ENV.getErrorCode(),
+					RegisteredDeviceErrorCode.INVALID_ENV.getErrorMessage()));
+			throw new DeviceValidationException(serviceErrors);
 		}
-
 	}
 
 	/**
@@ -563,27 +556,32 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		if (deviceInfo != null) {
-			LocalDateTime timeStamp = deviceInfo.getTimeStamp();
-			String prefix = registerDeviceTimeStamp.substring(0, 1);
-			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
-			boolean isBetween = timeStamp
-					.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
-					&& timeStamp.isBefore(
-							LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
-			if (prefix.equals("+")) {
-				if (!isBetween) {
-					throw new AuthDeviceServiceException(
-							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
-							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
-									timeString));
-				}
-			} else if (prefix.equals("-")) {
-				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
-					throw new AuthDeviceServiceException(
-							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
-							String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
-									timeString));
+			if(deviceInfo.getTimestamp() == null) {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.TIMESTAMP_CANNOTBE_NULL.getErrorCode(),
+						RegisteredDeviceErrorCode.TIMESTAMP_CANNOTBE_NULL.getErrorMessage()));
+			}else {
+				LocalDateTime timeStamp = deviceInfo.getTimestamp();
+				String prefix = registerDeviceTimeStamp.substring(0, 1);
+				String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
+				boolean isBetween = timeStamp
+						.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES))
+						&& timeStamp.isBefore(
+								LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
+				if (prefix.equals("+")) {
+					if (!isBetween) {
+						errors.add(new ServiceError(
+								RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
+								String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
+										timeString)));
+					}
+				} else if (prefix.equals("-")) {
+					if (LocalDateTime.now(ZoneOffset.UTC)
+							.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+						errors.add(new ServiceError(
+								RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
+								String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
+										timeString)));
+					}
 				}
 			}
 		}
@@ -598,7 +596,26 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			}
 		}
 		if (!errors.isEmpty()) {
-			throw new ValidationException(errors);
+			throw new DeviceValidationException(errors);
 		}
 	}
+
+	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
+	private EntityManager entityManager;
+
+	@Override
+	public <E> PageResponseDto<RegisteredDevice> searchRegisteredDevice(Class<E> entity, DeviceSearchDto dto) {
+		List<RegisteredDevice> partners=new ArrayList<>();
+		PageResponseDto<RegisteredDevice> pageDto = new PageResponseDto<>();		
+		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partners=MapperUtils.mapAll(page.getContent(), RegisteredDevice.class);
+		}
+		pageDto.setData(partners);
+		pageDto.setFromRecord(0);
+		pageDto.setToRecord(page.getContent().size());
+		pageDto.setTotalRecord(page.getContent().size());
+		return pageDto;
+	}
+
 }

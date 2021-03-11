@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -21,9 +22,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPDetailsDto;
@@ -39,9 +42,9 @@ import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateResponseDto;
 import io.mosip.pmp.misp.dto.RequestWrapper;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
+import io.mosip.pmp.misp.utils.AuditUtil;
 
 
 @RunWith(SpringRunner.class)
@@ -57,6 +60,14 @@ public class MispControllerTest {
 	
 	@Autowired
 	private ObjectMapper objectMapper;	
+	
+	@MockBean
+	private AuditUtil audit;
+	
+	@Before
+	public void setUp() {
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	}
 	
 	@Test
 	@WithMockUser(roles = {"MISP"})

@@ -1,18 +1,19 @@
 package io.mosip.pmp.partner.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchDto;
+//import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
@@ -35,10 +40,14 @@ import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.service.PartnerService;
 import io.swagger.annotations.ApiParam;
 
@@ -161,6 +170,31 @@ public class PartnerServiceController {
 		response.setResponse(extractors);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @param credentialType
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/policyId/{policyId}/credentialType/{credentialType}",method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyId,
+			@PathVariable @Valid String credentialType){
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.mapPartnerPolicyCredentialType(credentialType, partnerId, policyId));
+		return new ResponseEntity<>(response,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@RequestMapping(value = "/partnerId/{partnerId}/credentialType/{credentialType}",method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
+		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.getPartnerCredentialTypePolicy(credentialType, partnerId));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	/**
 	 * 
 	 * @param partnerId
@@ -325,4 +359,28 @@ public class PartnerServiceController {
 		response.setResponse(partnerService.getPartnerCertificate(requestDto));
 		return response;
     }	
+	
+	@ResponseFilter
+	@PostMapping("/search")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
+			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
+		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
+
+		responseWrapper.setResponse(partnerService.searchPartner(request.getRequest()));
+
+		return responseWrapper;
+	}
+
+	@ResponseFilter
+	@PostMapping("/partnerType/search")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	public ResponseWrapper<PageResponseDto<PartnerType>> searchPartnerType(
+			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		ResponseWrapper<PageResponseDto<PartnerType>> responseWrapper = new ResponseWrapper<>();
+
+		responseWrapper.setResponse(partnerService.searchPartnerType(request.getRequest()));
+
+		return responseWrapper;
+	}
 }

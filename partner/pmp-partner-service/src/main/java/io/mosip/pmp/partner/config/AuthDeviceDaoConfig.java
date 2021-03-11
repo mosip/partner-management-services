@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -94,6 +95,7 @@ public class AuthDeviceDaoConfig {
 	 * @see io.mosip.kernel.core.dao.config.BaseDaoConfig#entityManagerFactory()
 	 */
 	//@Override
+	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
 	@Bean(name="authDeviceEntityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean authDeviceEntityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();

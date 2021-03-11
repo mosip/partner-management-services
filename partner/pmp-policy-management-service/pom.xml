@@ -5,17 +5,23 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.1.3</version>
+		<version>1.1.4</version>
 	</parent>
 	
-	<version>1.1.3</version>
+	<version>1.1.4</version>
+	
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.pmp</groupId>
 			<artifactId>pmp-policy-validator</artifactId>
-			<version>1.1.3</version>
+       <version>1.1.4</version>			
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.pmp</groupId>
+			<artifactId>pmp-common</artifactId>
+			<version>1.1.4</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -27,6 +33,11 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 			<version>1.4.2</version>
 		</dependency>
+ 		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-dataaccess-hibernate</artifactId>
+			<version>${kernel-dataaccess-hibernate.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
@@ -37,11 +48,6 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-core</artifactId>
 		    <version>5.3.3.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${kernel-dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

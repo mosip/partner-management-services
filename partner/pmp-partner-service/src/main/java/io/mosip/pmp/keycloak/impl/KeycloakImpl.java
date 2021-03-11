@@ -3,6 +3,7 @@ package io.mosip.pmp.keycloak.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.exception.AuthNException;
 import io.mosip.kernel.core.authmanager.exception.AuthZException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.pmp.authdevice.dto.KeycloakPasswordDTO;
 import io.mosip.pmp.authdevice.dto.KeycloakRequestDto;
@@ -264,11 +264,9 @@ public class KeycloakImpl{
 		ResponseEntity<String> responseEntity = null;
 		String response = null;
 		try {
-
 			responseEntity = restTemplate.exchange(url, httpMethod, requestEntity, String.class);
 		} catch (HttpServerErrorException | HttpClientErrorException ex) {
-			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
-
+			List<ServiceError> validationErrorsList = getServiceErrorList(ex.getResponseBodyAsString());            			
 			if (ex.getRawStatusCode() == 401) {
 				if (!validationErrorsList.isEmpty()) {
 					throw new AuthNException(validationErrorsList);
@@ -283,6 +281,11 @@ public class KeycloakImpl{
 					throw new AccessDeniedException("Access denied from AuthManager");
 				}
 			}
+			if(ex.getRawStatusCode() == 409) {
+				if (!validationErrorsList.isEmpty()) {
+					throw new AuthZException(validationErrorsList);					
+				}
+			}
 
 			throw new PartnerServiceException(PartnerExceptionConstants.SERVER_ERROR.getErrorCode(),
 					PartnerExceptionConstants.SERVER_ERROR.getErrorMessage());
@@ -295,6 +298,52 @@ public class KeycloakImpl{
 		return response;
 	}
 
+	/**
+	 * This method gives service error list for response receive from service.
+	 * 
+	 * @param responseBody the service response body.
+	 * @return the list of {@link ServiceError}
+	 */
+	public static List<ServiceError> getServiceErrorList(String responseBody) {
+		ObjectMapper mapper = new ObjectMapper();
+		List<ServiceError> validationErrorsList = new ArrayList<>();
+		try {
+			JsonNode errorResponse = mapper.readTree(responseBody);
+			if (errorResponse.has("errors")) {
+				JsonNode errors = errorResponse.get("errors");
+				Iterator<JsonNode> iter = errors.iterator();
+				while (iter.hasNext()) {
+					JsonNode parameterNode = iter.next();
+					ServiceError serviceError = new ServiceError(getJsonValue(parameterNode, "errorCode"),
+							getJsonValue(parameterNode, "message"));
+					validationErrorsList.add(serviceError);
+				}
+			}
+			if(errorResponse.has("errorMessage")) {
+				ServiceError serviceError = new ServiceError(PartnerExceptionConstants.SERVER_ERROR.getErrorCode()
+						,PartnerExceptionConstants.SERVER_ERROR.getErrorMessage());						
+				validationErrorsList.add(serviceError);
+			}
+		} catch (Exception e) {
+			// There is no Service error
+		}
+		return validationErrorsList;
+	}
+	
+	/**
+	 * This method provide jsonvalue based on propname mention.
+	 * 
+	 * @param node     the jsonnode.
+	 * @param propName the property name.
+	 * @return the property value.
+	 */
+	private static String getJsonValue(JsonNode node, String propName) {
+		if (node.get(propName) != null) {
+			return node.get(propName).asText();
+		}
+		return null;
+	}
+	
 	/**
 	 * Gets the role details given a role name.
 	 *

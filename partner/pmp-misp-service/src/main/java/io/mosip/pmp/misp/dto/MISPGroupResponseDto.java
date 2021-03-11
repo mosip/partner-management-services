@@ -2,7 +2,7 @@ package io.mosip.pmp.misp.dto;
 
 import java.util.List;
 
-import io.mosip.pmp.misp.entity.MISPEntity;
+import io.mosip.pmp.common.entity.MISPEntity;
 import lombok.Data;
 
 /**

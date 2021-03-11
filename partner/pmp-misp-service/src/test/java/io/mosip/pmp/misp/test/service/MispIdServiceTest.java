@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
-import io.mosip.pmp.misp.entity.Misp;
+import io.mosip.pmp.common.entity.Misp;
+import io.mosip.pmp.common.repository.MispRepository;
 import io.mosip.pmp.misp.exception.MISPException;
-import io.mosip.pmp.misp.repository.MispRepository;
 
 /**
  * @author Nagarjuna

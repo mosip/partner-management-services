@@ -13,11 +13,18 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,6 +39,15 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
+import io.mosip.pmp.common.constant.EventType;
+import io.mosip.pmp.common.dto.PageResponseDto;
+import io.mosip.pmp.common.dto.SearchDto;
+import io.mosip.pmp.common.dto.SearchFilter;
+import io.mosip.pmp.common.dto.Type;
+import io.mosip.pmp.common.helper.SearchHelper;
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.util.MapperUtils;
+import io.mosip.pmp.common.util.PageUtils;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
 import io.mosip.pmp.partner.constant.APIKeyReqIdStatusInProgressConstant;
 import io.mosip.pmp.partner.constant.ApiAccessibleExceptionConstant;
@@ -58,12 +74,16 @@ import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateRequestDto;
 import io.mosip.pmp.partner.dto.PartnerCertificateResponseDto;
+import io.mosip.pmp.partner.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
+import io.mosip.pmp.partner.dto.PartnerSearchDto;
+import io.mosip.pmp.partner.dto.PartnerSearchResponseDto;
 import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
+import io.mosip.pmp.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pmp.partner.entity.AuthPolicy;
 import io.mosip.pmp.partner.entity.BiometricExtractorProvider;
 import io.mosip.pmp.partner.entity.Partner;
@@ -71,6 +91,8 @@ import io.mosip.pmp.partner.entity.PartnerContact;
 import io.mosip.pmp.partner.entity.PartnerH;
 import io.mosip.pmp.partner.entity.PartnerHPK;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialType;
+import io.mosip.pmp.partner.entity.PartnerPolicyCredentialTypePK;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
 import io.mosip.pmp.partner.entity.PartnerType;
 import io.mosip.pmp.partner.entity.PolicyGroup;
@@ -89,6 +111,7 @@ import io.mosip.pmp.partner.repository.AuthPolicyRepository;
 import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
 import io.mosip.pmp.partner.repository.PartnerContactRepository;
 import io.mosip.pmp.partner.repository.PartnerHRepository;
+import io.mosip.pmp.partner.repository.PartnerPolicyCredentialTypeRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
@@ -100,7 +123,6 @@ import io.mosip.pmp.partner.util.RestUtil;
 
 /**
  * @author sanjeev.shrivastava
- * @author Nagarjuna
  * @since 1.2.0
  *
  */
@@ -139,7 +161,13 @@ public class PartnerServiceImpl implements PartnerService {
 	BiometricExtractorProviderRepository extractorProviderRepository;
 
 	@Autowired
+	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
+
+	@Autowired
 	RestUtil restUtil;
+	
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 
 	@Autowired
 	KeycloakImpl keycloakImpl;
@@ -148,8 +176,14 @@ public class PartnerServiceImpl implements PartnerService {
 	private Environment environment;
 
 	@Autowired
+	SearchHelper partnerSearchHelper;
+
+	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	private PageUtils pageUtils;
+	
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
 
@@ -158,14 +192,25 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
-	
+
+	@Value("${pmp.allowed.credential.types}")
+	private String allowedCredentialTypes;
+
+	@Value("${policy.credential.type.mapping.allowed.partner.types}")
+	private String credentialTypesRequiredPartnerTypes;
+
+	@Value("${application.id:PMS}")
+	private String applicationId;
+
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
 
-	private static final String APPROVEDSTATUS = "Approved";	
+	private static final String APPROVEDSTATUS = "Approved";
+
+	private static final String ALL = "all";
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -199,15 +244,7 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
-		Partner partnerFromDb = partnerRepository.findByName(request.getOrganizationName());
-		if (partnerFromDb != null) {
-			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
-			throw new PartnerAlreadyRegisteredException(
-					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
-					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
-
-		}
-		partnerFromDb = findPartnerByEmail(request.getEmailId());
+		Partner partnerFromDb = findPartnerByEmail(request.getEmailId());
 		if (partnerFromDb != null) {
 			LOGGER.error(request.getEmailId() + " : this is duplicate email");
 			throw new EmailIdAlreadyExistException(
@@ -341,7 +378,6 @@ public class PartnerServiceImpl implements PartnerService {
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-
 		Partner partner = partnerFromDb.get();
 		LocalDateTime now = LocalDateTime.now();
 		partner.setAddress(request.getAddress());
@@ -647,7 +683,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-
+		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
 		return responseObject;
 	}
 
@@ -684,12 +720,51 @@ public class PartnerServiceImpl implements PartnerService {
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 
+		uploadOtherDomainCertificate(responseObject.getSignedCertificateData(), partnerCertRequesteDto.getPartnerId());
 		Partner updateObject = partnerFromDb.get();
 		updateObject.setUpdBy(getUser());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		partnerRepository.save(updateObject);
+		notify(partnerCertRequesteDto.getPartnerId());
 		return responseObject;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void uploadOtherDomainCertificate(String certData, String partnerId) {
+		RequestWrapper<UploadCertificateRequestDto> request = new RequestWrapper<>();
+		UploadCertificateRequestDto requestDto = new UploadCertificateRequestDto();
+		CACertificateResponseDto responseObject = null;
+		requestDto.setApplicationId(applicationId);
+		requestDto.setCertificateData(certData);
+		requestDto.setReferenceId(partnerId);
+		request.setRequest(requestDto);
+		Map<String, Object> uploadApiResponse = restUtil.postApi(
+				environment.getProperty("pmp-keymanager.upload.other.domain.cert.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class);
+		try {
+			responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
+					CACertificateResponseDto.class);
+		} catch (Exception e) {
+			LOGGER.error(
+					("Error occured while mapping the response of upload other domain cert api " + e.getStackTrace()));
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+		}
+		if (responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			} else {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
+		}
+		if (responseObject == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -744,11 +819,13 @@ public class PartnerServiceImpl implements PartnerService {
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 			}
-			
-			if (!Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(",")).anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
+
+			if (!Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
+					.anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
 				throw new PartnerServiceException(
 						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorCode(),
-						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorMessage() + biometricExtractorsRequiredPartnerTypes);
+						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorMessage()
+								+ biometricExtractorsRequiredPartnerTypes);
 			}
 		}
 
@@ -772,7 +849,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
 		}
-		
+
 		BiometricExtractorProvider extractorProvider = null;
 		for (ExtractorDto extractor : extractors.getExtractors()) {
 			extractorProvider = new BiometricExtractorProvider();
@@ -788,8 +865,9 @@ public class PartnerServiceImpl implements PartnerService {
 			extractorProvider.setExtractorProviderVersion(extractor.getExtractor().getVersion());
 			extractorProvider.setCrBy(getUser());
 			extractorProvider.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			BiometricExtractorProvider extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyIdAndAttributeName(partnerId, policyId, extractor.getAttributeName());
-			if(extractorsFromDb != null) {
+			BiometricExtractorProvider extractorsFromDb = extractorProviderRepository
+					.findByPartnerAndPolicyIdAndAttributeName(partnerId, policyId, extractor.getAttributeName());
+			if (extractorsFromDb != null) {
 				extractorProvider.setId(extractorsFromDb.getId());
 				extractorProvider.setUpdBy(getUser());
 				extractorProvider.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -807,7 +885,8 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public ExtractorsDto getBiometricExtractors(String partnerId, String policyId) {
-		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(partnerId,policyId);
+		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository
+				.findByPartnerAndPolicyId(partnerId, policyId);
 		if (extractorsFromDb.isEmpty()) {
 			throw new PartnerServiceException(PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorCode(),
 					PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorMessage());
@@ -818,18 +897,203 @@ public class PartnerServiceImpl implements PartnerService {
 		ExtractorProviderDto provider = null;
 		for (BiometricExtractorProvider biometricExtractor : extractorsFromDb) {
 			extractor = new ExtractorDto();
-			provider = new ExtractorProviderDto();			
+			provider = new ExtractorProviderDto();
 			extractor.setAttributeName(biometricExtractor.getAttributeName());
 			extractor.setBiometric(biometricExtractor.getBiometricModality());
 			provider.setProvider(biometricExtractor.getExtractorProvider());
 			provider.setVersion(biometricExtractor.getExtractorProviderVersion());
 			extractor.setExtractor(provider);
-			if(biometricExtractor.getBiometricSubTypes() != null) {
-				extractor.setBiometric(biometricExtractor.getBiometricModality() +"[" + biometricExtractor.getBiometricSubTypes() +"]" );
+			if (biometricExtractor.getBiometricSubTypes() != null) {
+				extractor.setBiometric(biometricExtractor.getBiometricModality() + "["
+						+ biometricExtractor.getBiometricSubTypes() + "]");
 			}
 			extractors.add(extractor);
 		}
 		response.setExtractors(extractors);
 		return response;
+	}
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Override
+	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
+		List<PartnerSearchResponseDto> partners = new ArrayList<>();
+		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
+		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter partnerTypeSearch = new SearchFilter();
+			partnerTypeSearch.setColumnName("partnerTypeCode");
+			partnerTypeSearch.setValue(dto.getPartnerType());
+			partnerTypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(partnerTypeSearch);
+			dto.setFilters(filters);
+		}
+		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
+			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(),page.getTotalElements());
+		}
+		return pageDto;
+	}
+
+	@Override
+	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
+		List<PartnerType> partnerTypes = new ArrayList<>();
+		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
+		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
+			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
+		}
+		return pageDto;
+	}
+
+	@Override
+	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyId) {
+		validateCredentialTypes(credentialType);
+		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
+		if (partnerFromDb.isEmpty()) {
+			throw new PartnerDoesNotExistsException(
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
+				.anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
+			throw new PartnerServiceException(PartnerExceptionConstants.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
+					PartnerExceptionConstants.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage()
+							+ credentialTypesRequiredPartnerTypes);
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
+		if (authPolicy.isEmpty()) {
+			throw new PartnerServiceException(PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorCode(),
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorMessage());
+		}
+		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setCredentialType(credentialType);
+		key.setPartId(partnerId);
+		key.setPolicyId(policyId);
+		entity.setId(key);
+		entity.setCrBy(getUser());
+		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		entity.setIsActive(true);
+		entity.setIsDeleted(false);
+		partnerCredentialTypePolicyRepo.save(entity);
+		return "Partner, policy and credentialType mapping done successfully.";
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType, String partnerId)
+			throws JsonParseException, JsonMappingException, IOException {
+		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo
+				.findByPartnerIdAndCrdentialType(partnerId, credentialType);
+		if (partnerCredentialTypePolicy == null) {
+			throw new PartnerServiceException(PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorCode(),
+					PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		Optional<AuthPolicy> authPolicy = authPolicyRepository
+				.findById(partnerCredentialTypePolicy.getId().getPolicyId());
+		if (authPolicy.isEmpty()) {
+			throw new PartnerServiceException(PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorCode(),
+					PartnerExceptionConstants.POLICY_NOT_EXIST.getErrorMessage());
+		}
+
+		return mapPolicyToResponseDto(authPolicy.get(), partnerId, credentialType);
+	}
+
+	/**
+	 * 
+	 * @param credentialType
+	 */
+	private void validateCredentialTypes(String credentialType) {
+		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
+			throw new PartnerServiceException(PartnerExceptionConstants.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+					PartnerExceptionConstants.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
+		}
+	}
+
+	/**
+	 * 
+	 * @param authPolicy
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private PartnerCredentialTypePolicyDto mapPolicyToResponseDto(AuthPolicy authPolicy, String partnerId,
+			String credentialType) throws JsonParseException, JsonMappingException, IOException {
+		PartnerCredentialTypePolicyDto response = new PartnerCredentialTypePolicyDto();
+		response.setPartnerId(partnerId);
+		response.setCredentialType(credentialType);
+		response.setCr_by(authPolicy.getCrBy());
+		response.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
+		response.setIs_Active(authPolicy.getIsActive());
+		response.setPolicyDesc(authPolicy.getDescr());
+		response.setPolicyId(authPolicy.getId());
+		response.setPolicyName(authPolicy.getName());
+		response.setPolicyType(authPolicy.getPolicy_type());
+		response.setPublishDate(authPolicy.getValidFromDate());
+		response.setValidTill(authPolicy.getValidToDate());
+		response.setSchema(authPolicy.getPolicySchema());
+		response.setStatus(authPolicy.getIsActive() == true ? "PUBLISHED" : "DRAFTED");
+		response.setUp_by(authPolicy.getUpdBy());
+		response.setUpd_dtimes(authPolicy.getUpdDtimes());
+		response.setVersion(authPolicy.getVersion());
+		response.setPolicies(getPolicyObject(authPolicy.getPolicyFileId()));
+		return response;
+	}
+
+	/**
+	 * 
+	 * @param policy
+	 * @return
+	 */
+	private JSONObject getPolicyObject(String policy) {
+		JSONParser parser = new JSONParser();
+		String error = null;
+		try {
+			return ((JSONObject) parser.parse(policy));
+		} catch (ParseException e) {
+			error = e.getMessage();
+		}
+		throw new PartnerServiceException(PartnerExceptionConstants.POLICY_PARSING_ERROR.getErrorCode(),
+				PartnerExceptionConstants.POLICY_PARSING_ERROR.getErrorMessage() + error);
+	}
+
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private LocalDateTime getLocalDateTime(Timestamp date) {
+		if (date != null) {
+			return date.toLocalDateTime();
+		}
+		return LocalDateTime.now();
+	}
+	
+
+	private void notify(String certData,String partnerDomain) {
+		Type type = new Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("certificateData", certData);
+		data.put("partnerDomain", partnerDomain);
+		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED,data,type);
+	}
+
+	private void notify(String partnerId) {
+		Type type = new Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("partnerId", partnerId);
+		webSubPublisher.notify(EventType.PARTNER_UPDATED,data,type);
 	}
 }

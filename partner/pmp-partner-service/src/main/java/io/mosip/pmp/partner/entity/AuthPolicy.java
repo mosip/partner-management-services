@@ -54,6 +54,21 @@ public class AuthPolicy implements Serializable {
 
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
+	
+	@Column(name = "valid_from_date")
+	private LocalDateTime validFromDate;	
+
+	@Column(name = "valid_to_date")	
+	private LocalDateTime validToDate;
+	
+	@Column(name="version")
+	private String version;
+	
+	@Column(name="policy_type")
+	private String policyType;
+	
+	@Column(name="policy_schema")
+	private String schema;
 
 	//bi-directional many-to-one association to PolicyGroup
 	@ManyToOne
@@ -157,5 +172,45 @@ public class AuthPolicy implements Serializable {
 
 	public void setPolicyGroup(PolicyGroup policyGroup) {
 		this.policyGroup = policyGroup;
+	}
+	
+	public void SetVersion(String version) {
+		this.version = version;
+	}
+	
+	public String getVersion() {
+		return this.version;
+	}
+	
+	public LocalDateTime getValidFromDate() {
+		return this.validFromDate;
+	}
+
+	public void setValidFromDate(LocalDateTime validFromDate) {
+		this.validFromDate=validFromDate;
+	}
+
+	public LocalDateTime getValidToDate() {
+		return this.validToDate;
+	}
+
+	public void setValidToDate(LocalDateTime validToDate) {
+		this.validToDate=validToDate;
+	}
+	
+	public void setPolicy_type(String policyType) {
+		this.policyType = policyType;
+	}
+	
+	public String getPolicy_type() {
+		return this.policyType;
+	}
+	
+	public void setPolicySchema(String schema) {
+		this.schema = schema;
+	}
+	
+	public String getPolicySchema() {
+		return this.schema;
 	}
 }

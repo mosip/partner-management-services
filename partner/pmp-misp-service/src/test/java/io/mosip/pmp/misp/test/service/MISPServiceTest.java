@@ -16,26 +16,29 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.mosip.kernel.core.idgenerator.spi.MISPLicenseGenerator;
 import io.mosip.kernel.core.idgenerator.spi.MispIdGenerator;
+import io.mosip.pmp.common.entity.MISPEntity;
+import io.mosip.pmp.common.entity.MISPLicenseEntity;
+import io.mosip.pmp.common.entity.MISPlKeyUniqueKeyEntity;
+import io.mosip.pmp.common.helper.WebSubPublisher;
+import io.mosip.pmp.common.repository.MispLicenseKeyRepository;
+import io.mosip.pmp.common.repository.MispServiceRepository;
 import io.mosip.pmp.misp.dto.MISPCreateRequestDto;
 import io.mosip.pmp.misp.dto.MISPCreateResponseDto;
 import io.mosip.pmp.misp.dto.MISPStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPUpdateRequestDto;
 import io.mosip.pmp.misp.dto.MISPlKeyStatusUpdateRequestDto;
 import io.mosip.pmp.misp.dto.ResponseWrapper;
-import io.mosip.pmp.misp.entity.MISPEntity;
-import io.mosip.pmp.misp.entity.MISPLicenseEntity;
-import io.mosip.pmp.misp.entity.MISPlKeyUniqueKeyEntity;
 import io.mosip.pmp.misp.exception.MISPException;
-import io.mosip.pmp.misp.repository.MispLicenseKeyRepository;
-import io.mosip.pmp.misp.repository.MispServiceRepository;
 import io.mosip.pmp.misp.service.MISPManagementService;
 import io.mosip.pmp.misp.test.MispServiceTest;
+import io.mosip.pmp.misp.utils.AuditUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MispServiceTest.class)
@@ -58,6 +61,12 @@ public class MISPServiceTest {
 	@Mock
 	private MISPLicenseGenerator<String> mispLicenseKeyGenerator;
 	
+	@Mock
+	private WebSubPublisher webSubPublisher; 
+	
+	@MockBean
+	private AuditUtil audit;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -65,6 +74,10 @@ public class MISPServiceTest {
 		ReflectionTestUtils.setField(service, "misplKeyRepository", misplKeyRepository);
 		ReflectionTestUtils.setField(service, "mispIdGenerator", mispIdGenerator);
 		ReflectionTestUtils.setField(service, "mispLicenseKeyGenerator", mispLicenseKeyGenerator);
+		ReflectionTestUtils.setField(service, "webSubPublisher", webSubPublisher);		
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+	
 	}
 	
 	@Test
@@ -274,7 +287,7 @@ public class MISPServiceTest {
 	@Test
 	public void UpdateMISPLkeyStatusTest() {
 		MISPLicenseEntity license = mispLicense();
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);		
 		MISPlKeyStatusUpdateRequestDto dto = LkeyStatusUpdateRequest("active","active");
 		dto.setMispLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
 		service.updateMisplkeyStatus(dto,"100");

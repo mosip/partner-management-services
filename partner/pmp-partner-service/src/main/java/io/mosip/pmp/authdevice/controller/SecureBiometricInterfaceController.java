@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,17 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pmp.authdevice.constants.Purpose;
+import io.mosip.pmp.authdevice.dto.DeviceSearchDto;
 import io.mosip.pmp.authdevice.dto.IdDto;
-import io.mosip.pmp.authdevice.dto.SearchDto;
+import io.mosip.pmp.authdevice.dto.SBISearchDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pmp.authdevice.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pmp.authdevice.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pmp.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pmp.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pmp.authdevice.util.AuditUtil;
 import io.mosip.pmp.authdevice.util.AuthDeviceConstant;
+import io.mosip.pmp.common.dto.PageResponseDto;
 import io.mosip.pmp.partner.core.RequestWrapper;
 import io.mosip.pmp.partner.core.ResponseWrapper;
+import io.mosip.pmp.regdevice.entity.RegSecureBiometricInterface;
 import io.mosip.pmp.regdevice.service.RegSecureBiometricInterfaceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -139,8 +143,17 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 	
-	@GetMapping
-	public void getSecureBiometricInterfaceDetails(@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		
+	@ResponseFilter
+	@PostMapping("/search")
+	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER')")
+	public ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> searchSecureBiometric(
+			@RequestBody @Valid RequestWrapper<SBISearchDto> request) {
+		ResponseWrapper<PageResponseDto<SecureBiometricInterfaceCreateDto>> responseWrapper = new ResponseWrapper<>();
+		if(request.getRequest().getPurpose().equals(Purpose.REGISTRATION)) {
+			responseWrapper.setResponse(regSecureBiometricInterface.searchSecureBiometricInterface(RegSecureBiometricInterface.class, request.getRequest()));
+			return responseWrapper;
+		} 
+		responseWrapper.setResponse(secureBiometricInterface.searchSecureBiometricInterface(SecureBiometricInterface.class, request.getRequest()));
+		return responseWrapper;
 	}
 }
