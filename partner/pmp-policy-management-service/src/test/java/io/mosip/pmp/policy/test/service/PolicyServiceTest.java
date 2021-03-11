@@ -189,21 +189,7 @@ public class PolicyServiceTest {
 		request.setVersion("0.8");
 		request.setPolicies(createAuthPolicyInput());
 		return request;
-	}
-
-	private PolicyGroupUpdateRequestDto updatePolicygroupRequest() {
-		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
-		updateRequest.setName("Test_Policy_Group_001");
-		updateRequest.setDesc("Test_Policy_Group_001");
-		return updateRequest;
-	}
-	private PolicyGroupCreateRequestDto createPolicyGroupRequest() {
-		PolicyGroupCreateRequestDto request = new PolicyGroupCreateRequestDto();
-		request.setDesc("Test_Policy_Group_001");
-		request.setName("Test_Policy_Group_001");
-		return request;
-	}
-	
+	}	
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void updatePolicyStatus_PolicyGroupIDNotExistsTest() {
@@ -607,39 +593,6 @@ public class PolicyServiceTest {
 			e.printStackTrace();
 		}		
 		return json;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<SourceDto> getSourceAttributes(){
-		List<SourceDto> sourceAttributes = new ArrayList<SourceDto>();
-		SourceDto sourceDto = new SourceDto();
-		sourceDto.setAttribute("fullName");
-		sourceDto.setFilter(getFilterAttributes());
-		sourceAttributes.add(sourceDto);
-		return sourceAttributes;
-	}
-	
-	private List<FilterDto> getFilterAttributes(){
-		List<String> subType = new ArrayList<String>();
-		subType.add("Left IndexFinger");
-		subType.add("Right IndexFinger");
-		List<FilterDto> filterAttributes = new ArrayList<FilterDto>();
-		FilterDto filterDto = new FilterDto();
-		filterDto.setType("Finger");
-		filterDto.setSubType(subType);
-		filterAttributes.add(filterDto);
-		return filterAttributes;
-	}
-	
-	private DataShareDto getDataSharableAttributes() {
-		DataShareDto dataShareDto = new DataShareDto();
-		dataShareDto.setEncryptionType("encrtion Type");
-		dataShareDto.setShareDomain("mosip.io");
-		dataShareDto.setTransactionsAllowed("2");
-		dataShareDto.setValidForInMinutes("30");
-		dataShareDto.setTypeOfShare("URL");
-		//dataShareDto.setSource("mosip");		
-		return dataShareDto;
 	}
 	
 	@SuppressWarnings("unused")

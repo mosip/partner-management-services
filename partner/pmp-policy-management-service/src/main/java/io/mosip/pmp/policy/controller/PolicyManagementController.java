@@ -80,8 +80,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','policymanager')")
 	@PutMapping(value = "/policies/policyGroup/{policyGroupId}")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(
-			@PathVariable String policyGroupId,@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest){	
-		PolicyServiceLogger.info("Calling PolicyManagementService from PolicyManageController.");
+			@PathVariable String policyGroupId,@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest){
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policyGroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
