@@ -2,7 +2,7 @@ package io.mosip.pmp.partner.constant;
 
 public enum PolicyGroupDoesNotExistConstant {
 
-	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy Group does not exist");
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy does not exist");
 	
 	/**
 	 * The error code.

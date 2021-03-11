@@ -11,10 +11,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-
-import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
 
 /**
  * @author Nagarjuna Kuchi
@@ -23,6 +23,7 @@ import io.mosip.pmp.policy.errorMessages.PolicyServiceLogger;
  */
 public class ReqResFilter implements Filter {
 
+	private static final Logger logger = LoggerFactory.getLogger(ReqResFilter.class);
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -55,8 +56,8 @@ public class ReqResFilter implements Filter {
 		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
 		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
 		
-		PolicyServiceLogger.info("ClientIP : " + myRequestWrapper.getRemoteHost() + " clientPort : " + request.getRemotePort() + "Uri :" +myRequestWrapper.getRequestURI());
-		PolicyServiceLogger.info("RequestBody: " + myRequestWrapper.getBody());
+		logger.info("ClientIP : " + myRequestWrapper.getRemoteHost() + " clientPort : " + request.getRemotePort() + "Uri :" +myRequestWrapper.getRequestURI());
+		logger.info("RequestBody: " + myRequestWrapper.getBody());
 		
 		chain.doFilter(myRequestWrapper, responseWrapper);
 

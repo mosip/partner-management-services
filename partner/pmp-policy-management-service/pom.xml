@@ -5,13 +5,18 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</parent>
 	
-	<version>1.1.2</version>
+	<version>1.1.3</version>
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
-	<dependencies>		
+	<dependencies>
+		<dependency>
+			<groupId>io.mosip.pmp</groupId>
+			<artifactId>pmp-policy-validator</artifactId>
+			<version>1.1.3</version>
+		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-core</artifactId>
@@ -23,9 +28,15 @@
 			<version>1.4.2</version>
 		</dependency>
 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${kernel-auth-adapter.version}</version>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>5.3.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -94,6 +105,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<layout>ZIP</layout>
 					<executable>true</executable>
 				</configuration>
 				<executions>

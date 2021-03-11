@@ -26,6 +26,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import io.mosip.pmp.partner.PartnerserviceApplication;
 import io.mosip.pmp.partner.dto.APIkeyRequests;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.ExtractorDto;
+import io.mosip.pmp.partner.dto.ExtractorProviderDto;
+import io.mosip.pmp.partner.dto.ExtractorsDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerRequest;
 import io.mosip.pmp.partner.dto.PartnerResponse;
@@ -33,6 +36,7 @@ import io.mosip.pmp.partner.dto.PartnerUpdateRequest;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.entity.AuthPolicy;
+import io.mosip.pmp.partner.entity.BiometricExtractorProvider;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerPolicy;
 import io.mosip.pmp.partner.entity.PartnerPolicyRequest;
@@ -44,8 +48,10 @@ import io.mosip.pmp.partner.exception.PartnerAPIKeyReqIDDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerAlreadyRegisteredException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistException;
 import io.mosip.pmp.partner.exception.PartnerDoesNotExistsException;
+import io.mosip.pmp.partner.exception.PartnerServiceException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
+import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRequestRepository;
 import io.mosip.pmp.partner.repository.PartnerServiceRepository;
@@ -78,6 +84,8 @@ public class PartnerServiceImplTest {
 	PartnerPolicyRepository partnerPolicyRepository;
 	@Mock
 	PartnerTypeRepository partnerTypeRepository;
+	@Mock 
+	BiometricExtractorProviderRepository extractorProviderRepository; 
 	
 	@Before
 	public void setUp() {
@@ -88,6 +96,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
 
 	}
 	
@@ -252,7 +261,131 @@ public class PartnerServiceImplTest {
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
-
+	@Test(expected = PartnerServiceException.class)
+	public void addBiometricExtractorsTest_001() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test(expected = PartnerDoesNotExistsException.class)
+	public void addBiometricExtractorsTest_002() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "456789";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void addBiometricExtractorsTest_003() {
+		Partner part = createPartner(Boolean.TRUE);
+		part.setPartnerTypeCode("Auth");
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test(expected = PolicyGroupDoesNotExistException.class)
+	public void addBiometricExtractorsTest_004() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		pserviceImpl.addBiometricExtractors("12345", "123456", getExtractorsInput());
+	}
+	
+	@Test
+	public void addBiometricExtractorsTest_005() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		PartnerPolicyRequest partnerRequestedData = new PartnerPolicyRequest();
+		partnerRequestedData.setPartner(part);
+		partnerRequestedData.setPolicyId("123456");
+		partnerRequestedData.setStatusCode("In-Progress");
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void addBiometricExtractorsTest_006() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		PartnerPolicyRequest partnerRequestedData = new PartnerPolicyRequest();
+		partnerRequestedData.setPartner(part);
+		partnerRequestedData.setPolicyId("123456");
+		partnerRequestedData.setStatusCode("Approved");
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test
+	public void addBiometricExtractorsTest_007() {
+		Partner part = createPartner(Boolean.TRUE);
+		String partnerId = "12345";
+		part.setName("name");
+		Optional<Partner> partner = Optional.of(part);		
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		PartnerPolicyRequest partnerRequestedData = new PartnerPolicyRequest();
+		partnerRequestedData.setPartner(part);
+		partnerRequestedData.setPolicyId("123456");
+		partnerRequestedData.setStatusCode("In-Progress");
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,"12345")).thenReturn(partnerRequestedData);
+		BiometricExtractorProvider extractorsFromDb = new BiometricExtractorProvider();
+		extractorsFromDb.setId("1234567");
+		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyIdAndAttributeName(partnerId, "12345", "face")).thenReturn(extractorsFromDb);
+		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
+	}
+	
+	@Test(expected = PartnerServiceException.class)
+	public void getBiometricExtractorsTest_001() {
+		List<BiometricExtractorProvider> data = new ArrayList<>();
+		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId("12345", "12345")).thenReturn(data);
+		pserviceImpl.getBiometricExtractors("12345", "12345");
+	}
+	
+	@Test
+	public void getBiometricExtractorsTest_002() {
+		List<BiometricExtractorProvider> data = new ArrayList<>();
+		BiometricExtractorProvider extractorsFromDb = new BiometricExtractorProvider();
+		extractorsFromDb.setId("1234567");	
+		data.add(extractorsFromDb);
+		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId("12345", "12345")).thenReturn(data);
+		pserviceImpl.getBiometricExtractors("12345", "12345");
+	}
+	
+	@Test
+	public void getBiometricExtractorsTest_003() {
+		List<BiometricExtractorProvider> data = new ArrayList<>();
+		BiometricExtractorProvider extractorsFromDb = new BiometricExtractorProvider();
+		extractorsFromDb.setId("1234567");
+		extractorsFromDb.setBiometricModality("finger");
+		extractorsFromDb.setBiometricSubTypes("RightIndex");
+		data.add(extractorsFromDb);
+		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId("12345", "12345")).thenReturn(data);
+		pserviceImpl.getBiometricExtractors("12345", "12345");
+	}
+	
 	@Test
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
 		String partnerId = "12345";
@@ -261,7 +394,6 @@ public class PartnerServiceImplTest {
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
 		assertEquals(updatePartnerDetail.getPartnerId(), "id");
-		//assertNull(updatePartnerDetail.getStatus());
 	}
 
 	@Test(expected = PartnerDoesNotExistException.class)
@@ -272,71 +404,6 @@ public class PartnerServiceImplTest {
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 	}
 	
-	/*@Test
-	public void submitPartnerApiKeyReqTest() {
-		String partnerId = "12345";
-		String auth_policy_id = "2223232";
-		Optional<AuthPolicy> findByAuthId = Optional.empty();
-		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.FALSE));
-		Mockito.when(policyGroupRepository.findByName(request.getPolicyName()))
-				.thenReturn(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(partnerPolicyRequestRepository.save(Mockito.any())).thenReturn(Mockito.any());
-		Mockito.when(authPolicyRepository.findById(auth_policy_id)).thenReturn(findByAuthId);
-		PartnerAPIKeyResponse submitPartnerApiKeyReq = pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
-		assertNotNull(submitPartnerApiKeyReq);
-		assertEquals(submitPartnerApiKeyReq.getMessage(), "partnerAPIKeyRequest successfully created");
-	}
-	
-	public void submitPartnerApiKeyReq_Test(){
-		PartnerAPIKeyRequest request = new PartnerAPIKeyRequest();
-		String partnerId = "12345"; 
-		
-		String policyName = "Banking";
-		String useCaseDescription = "This is Banking domain";
-
-		request.setPolicyName(policyName);
-		request.setUseCaseDescription(useCaseDescription);
-		
-		
-	}*/
-
-	/*@Test
-	public void doNotSubmitPartnerApiKeyReqWhenAuthPolicyIsPresentTest() {
-		String partnerId = "12345";
-		String auth_policy_id = "2223232";
-		Optional<AuthPolicy> findByAuthId = Optional.of(createAuthPolicy());
-		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.FALSE));
-		Mockito.when(policyGroupRepository.findByName(request.getPolicyName()))
-				.thenReturn(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(partnerPolicyRequestRepository.save(Mockito.any())).thenReturn(Mockito.any());
-		Mockito.when(authPolicyRepository.findById(auth_policy_id)).thenReturn(findByAuthId);
-		PartnerAPIKeyResponse submitPartnerApiKeyReq = pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
-		assertNotNull(submitPartnerApiKeyReq);
-		assertEquals(submitPartnerApiKeyReq.getMessage(), "partnerAPIKeyRequest successfully created");
-	}*/
-
-	/*@Test(expected = PartnerDoesNotExistsException.class)
-	public void throwExceptionWhenPartnerNotFoundByPartnerIdTest() {
-		String partnerId = "12345";
-		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
-		Optional<Partner> partner = Optional.empty();
-		Mockito.when(policyGroupRepository.findByName(request.getPolicyName())).thenReturn(null);
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
-	}*/
-	
-	/*@Test(expected = PolicyGroupDoesNotExistException.class)
-	public void throwExceptionWhenPartnerNotFoundByPartnerIdTest() {
-		String partnerId = "12345";
-		PartnerAPIKeyRequest request = createPartnerAPIKeyRequest();
-		Optional<Partner> partner = Optional.empty();
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		pserviceImpl.submitPartnerApiKeyReq(request, partnerId);
-	}*/
 
 	@Test
 	public void downloadPartnerAPIkeyTest() {
@@ -419,40 +486,6 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
 		pserviceImpl.viewApiKeyRequestStatusApiKey(partnerID, aPIKeyReqID);
 	}
-	
-	/*@Test
-	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest() {
-		String partnerID = "id";
-		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
-		partnerPolicyRequest.add(createPartnerPolicyRequest("approved"));
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerID)).thenReturn(partnerPolicyRequest);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(createPartnerPolicy());
-		PartnersRetrieveApiKeyRequests result = pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
-		assertNotNull(result);
-		assertEquals(result.getAPIkeyRequests().get(0).getPartnerApiKey(), "partnerAPIKey_1");
-		assertEquals(result.getAPIkeyRequests().get(0).getApiKeyRequestStatus(), "approved");
-	}*/
-	
-	/*@Test
-	public void retrieveAllApiKeyRequestsSubmittedByPartnerWhenStatusIsNotApprovedTest() {
-		String partnerID = "id";
-		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
-		partnerPolicyRequest.add(createPartnerPolicyRequest("Rejected"));
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerID)).thenReturn(partnerPolicyRequest);
-		PartnersRetrieveApiKeyRequests result = pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
-		assertNotNull(result);
-		assertEquals(result.getAPIkeyRequests().get(0).getApiKeyRequestStatus(), "Rejected");
-	}*/
-	
-	/*@Test(expected = PartnerAPIKeyIsNotCreatedException.class)
-	public void throwExceptionWhenPartnerPolicyIsNotFoundByPartnerIdTest(){
-		String partnerID = "id";
-		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
-		partnerPolicyRequest.add(createPartnerPolicyRequest("approved"));
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerID)).thenReturn(partnerPolicyRequest);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(null);
-		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
-	}*/
 	
 	@Test(expected = PartnerDoesNotExistsException.class)
 	public void throwExceptionWhenPartnerPolicyRequestIsEmptyTest() {
@@ -591,6 +624,21 @@ public class PartnerServiceImplTest {
 //		return partnerAPIKeyRequest;
 //	}
 
+	private ExtractorsDto getExtractorsInput() {
+    	ExtractorsDto request = new ExtractorsDto();
+    	List<ExtractorDto> extractors = new ArrayList<>();
+    	ExtractorDto dto = new ExtractorDto();
+    	dto.setAttributeName("face");
+    	dto.setBiometric("face[RightIndex]");
+    	ExtractorProviderDto provider = new ExtractorProviderDto();
+    	provider.setProvider("t5");
+    	provider.setVersion("1.1");
+    	dto.setExtractor(provider);
+    	extractors.add(dto);
+    	request.setExtractors(extractors);
+    	return request;
+    }
+	
 	private PartnerUpdateRequest createPartnerUpdateRequest() {
 		PartnerUpdateRequest partnerUpdateRequest = new PartnerUpdateRequest();
 		partnerUpdateRequest.setAddress("address");
@@ -610,6 +658,7 @@ public class PartnerServiceImplTest {
 		partner.setIsActive(isActive);
 		partner.setUpdBy("Partner Service");
 		partner.setUpdDtimes(Timestamp.valueOf(now));
+		partner.setPartnerTypeCode("Credential_Partner");
 		return partner;
 	}
 	

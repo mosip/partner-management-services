@@ -3,6 +3,7 @@ package io.mosip.pmp.partnermanagement.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pmp.partnermanagement.constant.InvalidInputParameterConstant;
 import io.mosip.pmp.partnermanagement.constant.NoPartnerApiKeyRequestsConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerAPIDoesNotExistConstant;
@@ -27,7 +28,6 @@ import io.mosip.pmp.partnermanagement.constant.PartnerApiKeyDoesNotBelongToThePo
 import io.mosip.pmp.partnermanagement.constant.PartnerDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerIdDoesNotExistExceptionConstant;
 import io.mosip.pmp.partnermanagement.constant.PartnerValidationsConstants;
-import io.mosip.pmp.partnermanagement.controller.PartnerManagementController;
 import io.mosip.pmp.partnermanagement.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pmp.partnermanagement.dto.ApikeyRequests;
 import io.mosip.pmp.partnermanagement.dto.AuthPolicyAttributes;
@@ -45,6 +45,7 @@ import io.mosip.pmp.partnermanagement.dto.RetrievePartnerManagers;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersDetails;
 import io.mosip.pmp.partnermanagement.dto.RetrievePartnersManagersDetails;
 import io.mosip.pmp.partnermanagement.entity.AuthPolicy;
+import io.mosip.pmp.partnermanagement.entity.BiometricExtractorProvider;
 import io.mosip.pmp.partnermanagement.entity.MISPEntity;
 import io.mosip.pmp.partnermanagement.entity.MISPLicenseEntity;
 import io.mosip.pmp.partnermanagement.entity.Partner;
@@ -59,6 +60,7 @@ import io.mosip.pmp.partnermanagement.exception.PartnerApiKeyDoesNotBelongToTheP
 import io.mosip.pmp.partnermanagement.exception.PartnerIdDoesNotExistException;
 import io.mosip.pmp.partnermanagement.exception.PartnerValidationException;
 import io.mosip.pmp.partnermanagement.repository.AuthPolicyRepository;
+import io.mosip.pmp.partnermanagement.repository.BiometricExtractorProviderRepository;
 import io.mosip.pmp.partnermanagement.repository.MispLicenseKeyRepository;
 import io.mosip.pmp.partnermanagement.repository.MispServiceRepository;
 import io.mosip.pmp.partnermanagement.repository.PartnerPolicyRepository;
@@ -76,7 +78,7 @@ import io.mosip.pmp.partnermanagement.util.PartnerUtil;
 @Service
 public class PartnerManagementServiceImpl implements PartnerManagementService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementServiceImpl.class);
 
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;
@@ -94,13 +96,23 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 	PolicyGroupRepository policyGroupRepository;
 
 	@Autowired
+	BiometricExtractorProviderRepository extractorProviderRepository;
+
+	@Autowired
 	AuthPolicyRepository authPolicyRepository;
 
 	@Autowired
 	MispServiceRepository mispRepository;
 
+	private static final String APPROVED = "Approved";
+
+	private static final String REJECTED = "Rejected";	
+
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
 	private int partnerPolicyExpiryInDays;
+	
+	@Value("${pmp.bioextractors.required.partner.types}")
+	private String biometricExtractorsRequiredPartnerTypes;
 
 	@Override
 	public PartnersPolicyMappingResponse partnerApiKeyPolicyMappings(PartnersPolicyMappingRequest request,
@@ -413,31 +425,42 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 		PartnerPolicyRequest partnerPolicyRequest = null;
 		LocalDateTime now = LocalDateTime.now();
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
-		Optional<PartnerPolicyRequest> findById = partnerPolicyRequestRepository.findById(partnerKeyReqId);
-		if (!findById.isPresent()) {
+		Optional<PartnerPolicyRequest> partnerPolicyRequestFromDb = partnerPolicyRequestRepository
+				.findById(partnerKeyReqId);
+		if (!partnerPolicyRequestFromDb.isPresent()) {
 			throw new PartnerAPIDoesNotExistException(
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIDoesNotExistConstant.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		if (findById.get().getStatusCode().equalsIgnoreCase("Approved")) {
+		if (partnerPolicyRequestFromDb.get().getStatusCode().equalsIgnoreCase(APPROVED)) {
 			throw new InvalidInputParameterException(
 					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_APPROVED.getErrorCode(),
 					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_APPROVED.getErrorMessage());
 
 		}
-		if (findById.get().getStatusCode().equalsIgnoreCase("Rejected")) {
+		if (partnerPolicyRequestFromDb.get().getStatusCode().equalsIgnoreCase(REJECTED)) {
 			throw new InvalidInputParameterException(
 					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_REJECTED.getErrorCode(),
 					InvalidInputParameterConstant.POLICY_REQUEST_ALREADY_REJECTED.getErrorMessage());
 		}
-		partnerPolicyRequest = findById.get();
-		if ((request.getStatus().equalsIgnoreCase("Approved") || request.getStatus().equalsIgnoreCase("Rejected"))) {
+
+		partnerPolicyRequest = partnerPolicyRequestFromDb.get();
+		if ((request.getStatus().equalsIgnoreCase(APPROVED) || request.getStatus().equalsIgnoreCase(REJECTED))) {
 			partnerPolicyRequest.setStatusCode(request.getStatus());
 		} else {
 			LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
-			throw new InvalidInputParameterException(
-					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorCode(),
-					InvalidInputParameterConstant.INVALIED_INPUT_PARAMETER.getErrorMessage());
+			throw new InvalidInputParameterException(InvalidInputParameterConstant.INVALID_STATUS_CODE.getErrorCode(),
+					InvalidInputParameterConstant.INVALID_STATUS_CODE.getErrorMessage());
+		}
+		if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(",")).anyMatch(partnerPolicyRequestFromDb.get().getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {			
+			List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(
+					partnerPolicyRequestFromDb.get().getPartner().getId(),
+					partnerPolicyRequestFromDb.get().getPolicyId());
+			if (extractorsFromDb.isEmpty()) {
+				throw new InvalidInputParameterException(
+						InvalidInputParameterConstant.EXTRACTORS_NOT_PRESENT.getErrorCode(),
+						InvalidInputParameterConstant.EXTRACTORS_NOT_PRESENT.getErrorMessage());
+			}
 		}
 		partnerPolicyRequest.setUpdBy(getUser());
 		partnerPolicyRequest.setUpdDtimes(Timestamp.valueOf(now));
@@ -449,10 +472,7 @@ public class PartnerManagementServiceImpl implements PartnerManagementService {
 			String partnerAPIKey = PartnerUtil.createPartnerApiKey();
 			partnerPolicy.setPolicyApiKey(partnerAPIKey);
 			partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-			AuthPolicy findByPolicyId = authPolicyRepository.findByPolicyId(findById.get().getPolicyId());
-			if (findByPolicyId != null) {
-				partnerPolicy.setPolicyId(findByPolicyId.getId());
-			}
+			partnerPolicy.setPolicyId(partnerPolicyRequestFromDb.get().getPolicyId());
 			partnerPolicy.setIsActive(true);
 			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(now));
 			partnerPolicy.setValidToDatetime(Timestamp.valueOf(now.plusDays(partnerPolicyExpiryInDays)));

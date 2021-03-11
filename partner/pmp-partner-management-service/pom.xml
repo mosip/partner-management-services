@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pmp-parent</artifactId>
 		<groupId>io.mosip.pmp</groupId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</parent>
 		
-	<version>1.1.2</version>
+	<version>1.1.3</version>
 	<artifactId>pmp-partner-management-service</artifactId>
 	<name>pmp-partner-management-service</name>
 	
@@ -16,12 +16,7 @@
 	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${kernel-auth-adapter.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${kernel-auth-adapter.version}</version>
+			<version>${kernel-dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -57,7 +52,13 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 			<version>${lombok.version}</version>
-		</dependency>		
+		</dependency>	
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>5.3.3.RELEASE</version>
+			<scope>test</scope>
+		</dependency>	
 	</dependencies>
 
 	<build>
@@ -66,6 +67,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<layout>ZIP</layout>
 					<executable>true</executable>
 				</configuration>
 				<executions>

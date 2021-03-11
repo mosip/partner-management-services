@@ -1,5 +1,8 @@
 package io.mosip.pmp.policy.errorMessages;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
@@ -9,6 +12,8 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
  */
 public class PolicyManagementServiceException extends BaseUncheckedException {
 
+	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementServiceException.class);
+	
 	/**
 	 * 
 	 */
@@ -21,19 +26,19 @@ public class PolicyManagementServiceException extends BaseUncheckedException {
 
 	public PolicyManagementServiceException(String errorCode, String errorMessage, Throwable cause) {
 		super(errorCode, errorMessage, cause);
-		PolicyServiceLogger.error(errorCode,errorMessage);
-		PolicyServiceLogger.error(cause.getMessage());
+		logger.error(errorCode,errorMessage);
+		logger.error(cause.getMessage());
 		
 	}
 
 	public PolicyManagementServiceException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
-		PolicyServiceLogger.error(errorCode,errorMessage);
+		logger.error(errorCode,errorMessage);
 	}
 
 	public PolicyManagementServiceException(String errorMessage) {
 		super(errorMessage);
-		PolicyServiceLogger.error(errorMessage);
+		logger.error(errorMessage);
 	}
 	
 }

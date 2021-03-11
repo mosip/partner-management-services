@@ -1,9 +1,11 @@
 package io.mosip.pmp.policy.errorMessages;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PolicyServiceLogger {
-	private static final Logger logger = Logger.getLogger(PolicyServiceLogger.class.getName());
+	
+	private static final Logger logger = LoggerFactory.getLogger(PolicyServiceLogger.class);
 	
 	public static void error(String message){
 		

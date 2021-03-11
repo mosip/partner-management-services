@@ -22,5 +22,6 @@ public class RegisteredDeviceConstant {
 	// CertificateLevelValidator values
 	public static final String L0 = "L0";
 	public static final String L1 = "L1";
-	static final String CERTIFICATELEVELARR[] = { L0, L1 };
+	public static final String L2 = "L2";
+	static final String CERTIFICATELEVELARR[] = { L0, L1, L2 };
 }

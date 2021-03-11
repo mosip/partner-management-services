@@ -57,6 +57,7 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 		return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
+	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
 		List<UserDetails> users = new ArrayList<>();

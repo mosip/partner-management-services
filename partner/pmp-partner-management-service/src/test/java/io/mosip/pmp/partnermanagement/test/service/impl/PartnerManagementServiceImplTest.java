@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -53,6 +54,7 @@ import io.mosip.pmp.partnermanagement.service.impl.PartnerManagementServiceImpl;
 @EnableWebMvc
 public class PartnerManagementServiceImplTest {
 	
+	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
 	
 	@Mock
@@ -79,7 +81,6 @@ public class PartnerManagementServiceImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		partnerManagementImpl = new PartnerManagementServiceImpl();
 		ReflectionTestUtils.setField(partnerManagementImpl, "policyGroupRepository", policyGroupRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerRepository", partnerRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "authPolicyRepository", authPolicyRepository);
@@ -767,6 +768,7 @@ public class PartnerManagementServiceImplTest {
 		part.setIsActive(true);
 		part.setId("123456");
 		part.setPolicyGroupId("234");
+		part.setPartnerTypeCode("Auth");
 		return part;
 	}
 }

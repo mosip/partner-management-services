@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,7 +28,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pmp.authdevice.dto.MosipUserDto;
 import io.mosip.pmp.authdevice.dto.UserRegistrationRequestDto;
 import io.mosip.pmp.keycloak.impl.KeycloakImpl;
@@ -47,6 +49,9 @@ import io.mosip.pmp.partner.dto.AddContactRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateRequestDto;
 import io.mosip.pmp.partner.dto.CACertificateResponseDto;
 import io.mosip.pmp.partner.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pmp.partner.dto.ExtractorDto;
+import io.mosip.pmp.partner.dto.ExtractorProviderDto;
+import io.mosip.pmp.partner.dto.ExtractorsDto;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyRequest;
 import io.mosip.pmp.partner.dto.PartnerAPIKeyResponse;
 import io.mosip.pmp.partner.dto.PartnerCertDownloadRequestDto;
@@ -60,6 +65,7 @@ import io.mosip.pmp.partner.dto.PolicyIdResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pmp.partner.dto.RetrievePartnerDetailsWithNameResponse;
 import io.mosip.pmp.partner.entity.AuthPolicy;
+import io.mosip.pmp.partner.entity.BiometricExtractorProvider;
 import io.mosip.pmp.partner.entity.Partner;
 import io.mosip.pmp.partner.entity.PartnerContact;
 import io.mosip.pmp.partner.entity.PartnerH;
@@ -80,6 +86,7 @@ import io.mosip.pmp.partner.exception.PartnerServiceException;
 import io.mosip.pmp.partner.exception.PartnerTypeDoesNotExistException;
 import io.mosip.pmp.partner.exception.PolicyGroupDoesNotExistException;
 import io.mosip.pmp.partner.repository.AuthPolicyRepository;
+import io.mosip.pmp.partner.repository.BiometricExtractorProviderRepository;
 import io.mosip.pmp.partner.repository.PartnerContactRepository;
 import io.mosip.pmp.partner.repository.PartnerHRepository;
 import io.mosip.pmp.partner.repository.PartnerPolicyRepository;
@@ -123,10 +130,13 @@ public class PartnerServiceImpl implements PartnerService {
 	PartnerTypeRepository partnerTypeRepository;
 
 	@Autowired
-	PartnerContactRepository partnerContactRepository; 
+	PartnerContactRepository partnerContactRepository;
 
 	@Autowired
 	PartnerHRepository partnerHRepository;
+
+	@Autowired
+	BiometricExtractorProviderRepository extractorProviderRepository;
 
 	@Autowired
 	RestUtil restUtil;
@@ -146,11 +156,16 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
+	@Value("${pmp.bioextractors.required.partner.types}")
+	private String biometricExtractorsRequiredPartnerTypes;
+	
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
+
+	private static final String APPROVEDSTATUS = "Approved";	
 
 	@Override
 	public PolicyIdResponse getPolicyId(String policyName) {
@@ -166,36 +181,34 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
-		if(!emailValidator(request.getEmailId())) {
+		if (!emailValidator(request.getEmailId())) {
 			LOGGER.error(request.getEmailId() + " : this is invalid email");
-			throw new EmailIdAlreadyExistException(
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+			throw new EmailIdAlreadyExistException(EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 
-		}		
-		if(request.getPartnerId().length() > partnerIdMaxLength) {
+		}
+		if (request.getPartnerId().length() > partnerIdMaxLength) {
 			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
-			throw new PartnerServiceException(
-					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
+			throw new PartnerServiceException(PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
 					PartnerExceptionConstants.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
 		}
 		Optional<Partner> partnerById = partnerRepository.findById(request.getPartnerId());
-		if(!partnerById.isEmpty()) {
+		if (!partnerById.isEmpty()) {
 			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
 			throw new PartnerAlreadyRegisteredException(
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
-					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());			
+					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
 		Partner partnerFromDb = partnerRepository.findByName(request.getOrganizationName());
-		if(partnerFromDb != null) {
+		if (partnerFromDb != null) {
 			LOGGER.error(request.getOrganizationName() + " : this is duplicate partner");
 			throw new PartnerAlreadyRegisteredException(
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
 					PartnerIdExceptionConstant.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
 
-		}		
+		}
 		partnerFromDb = findPartnerByEmail(request.getEmailId());
-		if(partnerFromDb != null) {
+		if (partnerFromDb != null) {
 			LOGGER.error(request.getEmailId() + " : this is duplicate email");
 			throw new EmailIdAlreadyExistException(
 					EmailIdExceptionConstant.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
@@ -203,21 +216,21 @@ public class PartnerServiceImpl implements PartnerService {
 
 		}
 		Optional<PartnerType> partnerType = partnerTypeRepository.findById(request.getPartnerType());
-		if(partnerType.isEmpty()) {
+		if (partnerType.isEmpty()) {
 			LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
 			throw new PartnerTypeDoesNotExistException(
 					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
-					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());			
+					PartnerTypeDoesNotExistConstant.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());
 		}
 		PolicyGroup policyGroup = null;
-		if(partnerType.get().getIsPolicyRequired()) {
+		if (partnerType.get().getIsPolicyRequired()) {
 			LOGGER.info("Validating the policy group");
 			policyGroup = policyGroupRepository.findByName(request.getPolicyGroup());
-			if(policyGroup == null) {
+			if (policyGroup == null) {
 				LOGGER.error(request.getPolicyGroup() + " : Policy Group is not availavle for the partner");
 				throw new PolicyGroupDoesNotExistException(
 						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
-						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 			}
 		}
 		Partner partner = new Partner();
@@ -227,7 +240,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
 		partner.setPartnerTypeCode(request.getPartnerType());
-		partner.setEmailId(request.getEmailId());		
+		partner.setEmailId(request.getEmailId());
 		partner.setIsActive(true);
 		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getUser());
@@ -269,11 +282,11 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setContactNumber(partner.getContactNo());
 			response.setEmailId(partner.getEmailId());
 			response.setOrganizationName(partner.getName());
-			if(findByIdPartner.get().getPolicyGroupId() != null) {
+			if (findByIdPartner.get().getPolicyGroupId() != null) {
 				LOGGER.info("Retriving the name of policy group");
 				findByIdpolicyGroup = policyGroupRepository.findById(partner.getPolicyGroupId());
 
-				if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() !=null) {
+				if (findByIdpolicyGroup.isPresent() && findByIdpolicyGroup.get() != null) {
 					response.setPolicyGroup(findByIdpolicyGroup.get().getName());
 				}
 			}
@@ -290,15 +303,16 @@ public class PartnerServiceImpl implements PartnerService {
 	public RetrievePartnerDetailsWithNameResponse getPartnerDetailsWithName(String partnerName) {
 		RetrievePartnerDetailsWithNameResponse response = new RetrievePartnerDetailsWithNameResponse();
 		Partner partnerByName = partnerRepository.findByName(partnerName);
-		if(partnerByName == null) {
+		if (partnerByName == null) {
 			LOGGER.info(partnerName + ": Partner is not available");
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		String policyGroupName = null;
-		if(partnerByName.getPolicyGroupId() != null) {
-			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository.findById(partnerByName.getPolicyGroupId());
+		if (partnerByName.getPolicyGroupId() != null) {
+			Optional<PolicyGroup> findByIdpolicyGroup = policyGroupRepository
+					.findById(partnerByName.getPolicyGroupId());
 			policyGroupName = findByIdpolicyGroup.get().getName();
 		}
 		if (partnerByName != null) {
@@ -314,18 +328,18 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setUpdDtimes(partnerByName.getUpdDtimes());
 			response.setUserId(partnerByName.getUserId());
 			response.setPolicyGroupName(policyGroupName);
-		} 
+		}
 		return response;
 	}
 
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest request, String partnerID) {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerID);
-		if(partnerFromDb.isEmpty()) {
+		if (partnerFromDb.isEmpty()) {
 			LOGGER.info(partnerID + ": Partner is not available");
 			throw new PartnerDoesNotExistException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 
 		Partner partner = partnerFromDb.get();
@@ -355,24 +369,23 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param contactNo
 	 */
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
-		if(!emailValidator(request.getEmailId())) {
+		if (!emailValidator(request.getEmailId())) {
 			LOGGER.error(request.getEmailId() + " : this is invalid email");
-			throw new EmailIdAlreadyExistException(
-					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+			throw new EmailIdAlreadyExistException(EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					EmailIdExceptionConstant.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
-		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId,request.getEmailId());
+		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId, request.getEmailId());
 		String resultMessage;
-		if(contactsFromDb != null) {
+		if (contactsFromDb != null) {
 			contactsFromDb.setAddress(request.getAddress());
 			contactsFromDb.setContactNo(request.getContactNumber());
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setUpdBy(getUser());
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
-		}else {
+		} else {
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
-			if(partnerFromDb.isEmpty()) {
+			if (partnerFromDb.isEmpty()) {
 				LOGGER.info(partnerId + ": Partner is not available");
 				throw new PartnerDoesNotExistException(
 						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
@@ -422,23 +435,23 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest request, String partnerID) {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerID);
-		if (partnerFromDb.isEmpty()) {			
+		if (partnerFromDb.isEmpty()) {
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}				
+		}
 		if (partnerFromDb.get().getIsActive() == false) {
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupAndName(partnerFromDb.get().getPolicyGroupId(),
-				request.getPolicyName());
-		if(authPolicyFromDb == null) {
+		AuthPolicy authPolicyFromDb = authPolicyRepository
+				.findByPolicyGroupAndName(partnerFromDb.get().getPolicyGroupId(), request.getPolicyName());
+		if (authPolicyFromDb == null) {
 			LOGGER.info(request.getPolicyName() + ": Invalied Policy Group");
 			throw new PolicyGroupDoesNotExistException(
 					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
-					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());			
+					PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setCrBy(getUser());
@@ -456,7 +469,6 @@ public class PartnerServiceImpl implements PartnerService {
 		LOGGER.info("PartnerAPIKeyRequest Successfully created");
 		return partnerAPIKeyResponse;
 	}
-
 
 	@Override
 	public DownloadPartnerAPIkeyResponse downloadPartnerAPIkey(String partnerID, String aPIKeyReqID) {
@@ -488,7 +500,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerAPIKeyReqIDDoesNotExistException(
 					PartnerAPIKeyReqDoesNotExistConstant.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIKeyReqDoesNotExistConstant.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION
-					.getErrorMessage());
+							.getErrorMessage());
 		}
 		return downloadPartnerAPIkeyResponse;
 	}
@@ -568,7 +580,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerAPIKeyReqIDDoesNotExistException(
 					PartnerAPIKeyReqDoesNotExistConstant.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerAPIKeyReqDoesNotExistConstant.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION
-					.getErrorMessage());
+							.getErrorMessage());
 		}
 		return aPIkeyRequests;
 	}
@@ -603,31 +615,35 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param email
 	 * @return
 	 */
-	public  boolean emailValidator(String email) {
+	public boolean emailValidator(String email) {
 		return email.matches(emailRegex);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		RequestWrapper<CACertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(caCertRequestDto);
 		request.setRequesttime(LocalDateTime.now());
 		CACertificateResponseDto responseObject = null;
-		Map<String, Object> uploadApiResponse= restUtil.postApi(environment.getProperty("pmp.ca.certificaticate.upload.rest.uri"), null, "", "",
+		Map<String, Object> uploadApiResponse = restUtil.postApi(
+				environment.getProperty("pmp.ca.certificaticate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class);
 		LOGGER.info("Calling the upload ca certificate api");
-		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), CACertificateResponseDto.class);		
-		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
+				CACertificateResponseDto.class);
+		if (responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
-			if(!certServiceErrorList.isEmpty()) {
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
-			}else {				
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			} else {
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());				
-			}				
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+			}
 		}
-		if(responseObject == null) {
+		if (responseObject == null) {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
@@ -637,9 +653,10 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateRequestDto partnerCertRequesteDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerCertRequesteDto.getPartnerId());
-		if(partnerFromDb.isEmpty()) {
+		if (partnerFromDb.isEmpty()) {
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
@@ -647,21 +664,24 @@ public class PartnerServiceImpl implements PartnerService {
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(partnerCertRequesteDto);
 		PartnerCertificateResponseDto responseObject = null;
-		Map<String, Object> uploadApiResponse = restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, Map.class);		
-		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), PartnerCertificateResponseDto.class);
-		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+		Map<String, Object> uploadApiResponse = restUtil.postApi(
+				environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class);
+		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
+				PartnerCertificateResponseDto.class);
+		if (responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
-			if(!certServiceErrorList.isEmpty()) {
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
-			}else {
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			} else {
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
-		if(responseObject == null) {
+		if (responseObject == null) {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 
 		Partner updateObject = partnerFromDb.get();
@@ -674,36 +694,142 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-		if(partnerFromDb.isEmpty()) {
+		if (partnerFromDb.isEmpty()) {
 			throw new PartnerDoesNotExistsException(
 					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());			
+					PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
-		if(partnerFromDb.get().getCertificateAlias() == null) {
-			throw new PartnerServiceException(PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
-					PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());	
+		if (partnerFromDb.get().getCertificateAlias() == null) {
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+					PartnerExceptionConstants.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
 		}
 		PartnerCertDownloadResponeDto responseObject = null;
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
-		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
-		responseObject=mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), PartnerCertDownloadResponeDto.class);
-		if(responseObject == null && getApiResponse.containsKey(ERRORS)) {
+		Map<String, Object> getApiResponse = restUtil
+				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
+		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
+				PartnerCertDownloadResponeDto.class);
+		if (responseObject == null && getApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(ERRORS);
-			if(!certServiceErrorList.isEmpty()) {
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
-			}else {
+			if (!certServiceErrorList.isEmpty()) {
+				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),
+						certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
+			} else {
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
-		if(responseObject == null) {
+		if (responseObject == null) {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 
 		return responseObject;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
+		if (!EmptyCheckUtils.isNullEmpty(partnerId)) {
+			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
+			if (partnerFromDb.isEmpty()) {
+				throw new PartnerDoesNotExistsException(
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PartnerDoesNotExistExceptionConstant.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			
+			if (!Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(",")).anyMatch(partnerFromDb.get().getPartnerTypeCode()::equalsIgnoreCase)) {
+				throw new PartnerServiceException(
+						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorCode(),
+						PartnerExceptionConstants.EXTRACTORS_ONLY_FOR_CREDENTIAL_PARTNER.getErrorMessage() + biometricExtractorsRequiredPartnerTypes);
+			}
+		}
+
+		if (!EmptyCheckUtils.isNullEmpty(policyId)) {
+			Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
+			if (authPolicy.isEmpty()) {
+				throw new PolicyGroupDoesNotExistException(
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						PolicyGroupDoesNotExistConstant.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
+			}
+		}
+
+		PartnerPolicyRequest partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
+				policyId);
+		if (partnerPolicyRequest == null) {
+			throw new PartnerServiceException(
+					PartnerExceptionConstants.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
+					PartnerExceptionConstants.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
+		}
+		if (partnerPolicyRequest.getStatusCode().equalsIgnoreCase(APPROVEDSTATUS)) {
+			throw new PartnerServiceException(PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
+					PartnerExceptionConstants.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
+		}
+		
+		BiometricExtractorProvider extractorProvider = null;
+		for (ExtractorDto extractor : extractors.getExtractors()) {
+			extractorProvider = new BiometricExtractorProvider();
+			extractorProvider.setPartnerId(partnerId);
+			extractorProvider.setPolicyId(policyId);
+			extractorProvider.setId(PartnerUtil.generateId());
+			extractorProvider.setAttributeName(extractor.getAttributeName());
+			extractorProvider.setBiometricModality(extractor.getBiometric().split("\\[")[0]);
+			if (extractor.getBiometric().split("\\[").length > 1) {
+				extractorProvider.setBiometricSubTypes(extractor.getBiometric().split("\\[")[1].split("\\]")[0]);
+			}
+			extractorProvider.setExtractorProvider(extractor.getExtractor().getProvider());
+			extractorProvider.setExtractorProviderVersion(extractor.getExtractor().getVersion());
+			extractorProvider.setCrBy(getUser());
+			extractorProvider.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			BiometricExtractorProvider extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyIdAndAttributeName(partnerId, policyId, extractor.getAttributeName());
+			if(extractorsFromDb != null) {
+				extractorProvider.setId(extractorsFromDb.getId());
+				extractorProvider.setUpdBy(getUser());
+				extractorProvider.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+				extractorProvider.setCrBy(extractorsFromDb.getCrBy());
+				extractorProvider.setCrDtimes(extractorsFromDb.getCrDtimes());
+			}
+			extractorProviderRepository.save(extractorProvider);
+		}
+
+		return "Extractors added successfully.";
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public ExtractorsDto getBiometricExtractors(String partnerId, String policyId) {
+		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(partnerId,policyId);
+		if (extractorsFromDb.isEmpty()) {
+			throw new PartnerServiceException(PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorCode(),
+					PartnerExceptionConstants.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		ExtractorsDto response = new ExtractorsDto();
+		List<ExtractorDto> extractors = new ArrayList<>();
+		ExtractorDto extractor = null;
+		ExtractorProviderDto provider = null;
+		for (BiometricExtractorProvider biometricExtractor : extractorsFromDb) {
+			extractor = new ExtractorDto();
+			provider = new ExtractorProviderDto();			
+			extractor.setAttributeName(biometricExtractor.getAttributeName());
+			extractor.setBiometric(biometricExtractor.getBiometricModality());
+			provider.setProvider(biometricExtractor.getExtractorProvider());
+			provider.setVersion(biometricExtractor.getExtractorProviderVersion());
+			extractor.setExtractor(provider);
+			if(biometricExtractor.getBiometricSubTypes() != null) {
+				extractor.setBiometric(biometricExtractor.getBiometricModality() +"[" + biometricExtractor.getBiometricSubTypes() +"]" );
+			}
+			extractors.add(extractor);
+		}
+		response.setExtractors(extractors);
+		return response;
 	}
 }

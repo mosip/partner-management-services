@@ -144,7 +144,12 @@ public class PolicyManagementControllerTest {
 
 	private RequestWrapper<PolicyUpdateRequestDto> createPolicyUpdateRequest() {
 		RequestWrapper<PolicyUpdateRequestDto> request = new RequestWrapper<PolicyUpdateRequestDto>();
-		request.setRequest(new PolicyUpdateRequestDto());
+		PolicyUpdateRequestDto updateRequest = new PolicyUpdateRequestDto();
+		updateRequest.setDesc("Update Policy");
+		updateRequest.setName("Update Name");
+		updateRequest.setPolicyGroupName("Test");
+		updateRequest.setVersion("1.0");
+		request.setRequest(updateRequest);
         request.setId("mosip.partnermanagement.policies.authPolicies.create");
         request.setVersion("1.0");
         request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());

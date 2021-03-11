@@ -26,12 +26,12 @@ ENV spring_config_label_env=${spring_config_label}
 
 ENV spring_config_url_env=${spring_config_url}
 
-
+# environment variable to pass iam_adapter url, at docker runtime
+ENV iam_adapter_url_env=${iam_adapter_url}
 
 COPY ./target/pmp-policy-management-service-*.jar pmp-policy-management-service.jar
 
 EXPOSE 9101
 
-
-
-CMD ["java","-jar","-Dspring.cloud.config.label=${spring_config_label_env}","-Dspring.profiles.active=${active_profile_env}","-Dspring.cloud.config.uri=${spring_config_url_env}","pmp-policy-management-service.jar"]
+CMD wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+	java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" pmp-policy-management-service.jar ; \
