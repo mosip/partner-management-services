@@ -306,6 +306,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		}
 		entity.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		entity.setActive(true);
+		entity.setDeleted(false);
 		entity.setPurpose(deviceData.getPurpose());
 		entity.setFirmware(deviceInfo.getFirmware());
 		entity.setExpiryDate(deviceInfo.getDeviceExpiry());
@@ -341,6 +342,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 		history.setCrDtimes(entity.getCrDtimes());
 		history.setActive(entity.isActive());
+		history.setDeleted(entity.isDeleted());
 		history.setPurpose(entity.getPurpose());
 		history.setFirmware(entity.getFirmware());
 		history.setExpiryDate(entity.getExpiryDate());

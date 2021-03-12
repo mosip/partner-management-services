@@ -129,6 +129,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		FoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
 		FoundationalTrustProvider entity = new FoundationalTrustProvider();
 		entity.setActive(true);
+		entity.setDeleted(false);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
@@ -142,6 +143,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		FTPChipDetail chipDetail = new FTPChipDetail();
 		chipDetail.setCrBy(authN.getName());
 		chipDetail.setActive(false);
+		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setFtpChipDetailId(DeviceUtil.generateId());

@@ -101,6 +101,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			SecureBiometricInterfaceCreateDto dto) {
 
 		entity.setActive(false);
+		entity.setDeleted(false);
 		entity.setApprovalStatus(PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -119,6 +120,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			SecureBiometricInterface entity) {
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
+		historyEntity.setDeleted(entity.isDeleted());
 		historyEntity.setApprovalStatus(entity.getApprovalStatus());
 		historyEntity.setCrBy(entity.getCrBy());
 		historyEntity.setEffectDateTime(entity.getCrDtimes());

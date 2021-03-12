@@ -182,6 +182,7 @@ public class PolicyManagementService {
 		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUserId(getUser());
 		policyGroup.setId(PolicyUtil.generateId());
+		policyGroup.setIsDeleted(false);
 		return savePolicyGroup(policyGroup);
 	}
 
