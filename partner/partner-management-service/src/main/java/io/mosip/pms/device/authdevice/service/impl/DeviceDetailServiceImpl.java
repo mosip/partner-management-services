@@ -138,6 +138,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {		
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
 		deviceDetail.setApprovalStatus(PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {

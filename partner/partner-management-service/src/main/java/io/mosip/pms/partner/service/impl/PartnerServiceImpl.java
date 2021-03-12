@@ -229,10 +229,11 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setApprovalStatus(partner.getApprovalStatus());
 		partnerHistory.setEmailId(partner.getEmailId());
 		partnerHistory.setIsActive(partner.getIsActive());
+		partnerHistory.setIsDeleted(partner.getIsDeleted());
 		partnerHistory.setUserId(partner.getUserId());
 		partnerHistory.setCrBy(partner.getCrBy());
 		partnerHistory.setCrDtimes(Timestamp.valueOf(now));
-		partnerHistory.setId(partnerHPK);
+		partnerHistory.setId(partnerHPK);		
 		partnerHRepository.save(partnerHistory);
 	}
 
@@ -258,6 +259,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setPartnerTypeCode(request.getPartnerType());
 		partner.setEmailId(request.getEmailId());
 		partner.setIsActive(false);
+		partner.setIsDeleted(false);
 		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getUser());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
@@ -393,6 +395,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
+		partnerPolicyRequest.setIsDeleted(false);
 		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId,authPolicy.getId()).isEmpty()) {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);
@@ -412,6 +415,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
 		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
 		partnerPolicy.setIsActive(true);
+		partnerPolicy.setIsDeleted(false);
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
@@ -525,6 +529,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setPartner(partnerFromDb);
 			contactsFromDb.setEmailId(request.getEmailId());
 			contactsFromDb.setIsActive(request.getIs_Active());
+			contactsFromDb.setIsDeleted(false);
 			resultMessage = "Contacts details added successfully.";
 		}
 		partnerContactRepository.save(contactsFromDb);
@@ -720,6 +725,7 @@ public class PartnerServiceImpl implements PartnerService {
 				extractorProvider.setCrBy(extractorsFromDb.getCrBy());
 				extractorProvider.setCrDtimes(extractorsFromDb.getCrDtimes());
 			}
+			extractorProvider.setIsDeleted(false);
 			extractorProviderRepository.save(extractorProvider);
 		}
 

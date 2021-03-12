@@ -137,6 +137,7 @@ public class RegDeviceDetailServiceImpl implements RegDeviceDetailService {
 	private RegDeviceDetail getCreateMapping(RegDeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
 		deviceDetail.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
