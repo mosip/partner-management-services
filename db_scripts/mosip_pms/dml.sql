@@ -10,21 +10,11 @@ TRUNCATE TABLE pms.partner_type cascade ;
 
 \COPY pms.partner_type (code,partner_description,is_active,cr_by,cr_dtimes,is_policy_required) FROM './dml/pms-partner_type.csv' delimiter ',' HEADER  csv;
 
------ TRUNCATE pms.partner TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE pms.partner cascade ;
-
-\COPY pms.partner (id,policy_group_id,name,address,contact_no,email_id,certificate_alias,user_id,partner_type_code,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-partner.csv' delimiter ',' HEADER  csv;
-
 ----- TRUNCATE pms.policy_group TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE pms.policy_group cascade ;
 
 \COPY pms.policy_group (id,name,descr,user_id,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-policy_group.csv' delimiter ',' HEADER  csv;
 
-
------ TRUNCATE pms.auth_policy TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE pms.auth_policy cascade ;
-
-\COPY pms.auth_policy (id,policy_group_id,name,descr,policy_file_id,policy_type,version,policy_schema,valid_from_date,valid_to_date,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-auth_policy.csv' delimiter ',' HEADER  csv;
 
 ------------------------------------------- Level 2 data load scripts ----------------------------------
 
@@ -50,16 +40,4 @@ TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
 
 ------------------------------------------- History Table Loading ----------------------------------
 
------ TRUNCATE pms.partner_h TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE pms.partner_h cascade ;
 
-\COPY pms.partner_h (id,eff_dtimes,policy_group_id,name,address,contact_no,email_id,certificate_alias,user_id,partner_type_code,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-partner_h.csv' delimiter ',' HEADER  csv;
-
-
------ TRUNCATE pms.auth_policy_h TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE pms.auth_policy_h cascade ;
-
-\COPY pms.auth_policy_h (id,eff_dtimes,policy_group_id,name,descr,policy_file_id,policy_type,version,policy_schema,valid_from_date,valid_to_date,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-auth_policy_h.csv' delimiter ',' HEADER  csv;
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
