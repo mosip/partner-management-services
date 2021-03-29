@@ -99,6 +99,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 
 	private RegSecureBiometricInterface getCreateMapping(RegSecureBiometricInterface entity,SecureBiometricInterfaceCreateDto dto) {		
 		entity.setActive(false);
+		entity.setDeleted(false);
 		entity.setApprovalStatus(Pending_Approval);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -114,6 +115,7 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 	private RegSecureBiometricInterfaceHistory getCreateHistoryMapping(RegSecureBiometricInterfaceHistory historyEntity,RegSecureBiometricInterface entity) {
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
+		historyEntity.setDeleted(entity.isDeleted());
 		historyEntity.setApprovalStatus(entity.getApprovalStatus());
 		historyEntity.setCrBy(entity.getCrBy());
 		historyEntity.setEffectDateTime(entity.getCrDtimes());

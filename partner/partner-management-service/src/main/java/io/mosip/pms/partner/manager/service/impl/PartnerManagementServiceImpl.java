@@ -352,6 +352,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicy.setPartner(updateObject.getPartner());
 			partnerPolicy.setPolicyId(updateObject.getPolicyId());
 			partnerPolicy.setIsActive(true);
+			partnerPolicy.setIsDeleted(false);
 			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 			partnerPolicy
 					.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));

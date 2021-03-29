@@ -182,6 +182,7 @@ public class PolicyManagementService {
 		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUserId(getUser());
 		policyGroup.setId(PolicyUtil.generateId());
+		policyGroup.setIsDeleted(false);
 		return savePolicyGroup(policyGroup);
 	}
 
@@ -517,6 +518,7 @@ public class PolicyManagementService {
 		authPolicyH.setDescr(authPolicy.getDescr());
 		authPolicyH.setId(PolicyUtil.generateId());
 		authPolicyH.setIsActive(authPolicy.getIsActive());
+		authPolicyH.setIsDeleted(authPolicy.getIsDeleted());
 		authPolicyH.setName(authPolicy.getName());
 		authPolicyH.setPolicyFileId(authPolicy.getPolicyFileId());
 		authPolicyH.setUpdBy(authPolicy.getUpdBy());

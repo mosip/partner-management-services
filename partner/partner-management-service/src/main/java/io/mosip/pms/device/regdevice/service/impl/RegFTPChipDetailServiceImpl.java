@@ -131,6 +131,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		RegFoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
 		RegFoundationalTrustProvider entity = new RegFoundationalTrustProvider();
 		entity.setActive(true);
+		entity.setDeleted(false);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
@@ -145,6 +146,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 		RegFTPChipDetail chipDetail = new RegFTPChipDetail();
 		chipDetail.setCrBy(authN.getName());
 		chipDetail.setActive(false);
+		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setId(DeviceUtil.generateId());
@@ -209,6 +211,7 @@ public class RegFTPChipDetailServiceImpl implements RegFTPChipDetailService {
 			entity.setId(partnerFromDb.getId());
 			entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setActive(true);
+			entity.setDeleted(false);
 			entity.setCrBy(authN.getName());
 		}else {
 			entity = ftpProvider.get();
