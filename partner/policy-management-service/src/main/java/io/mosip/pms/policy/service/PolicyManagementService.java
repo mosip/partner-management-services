@@ -173,7 +173,7 @@ public class PolicyManagementService {
 	 * @return
 	 */
 	public PolicyGroupCreateResponseDto createPolicyGroup(PolicyGroupCreateRequestDto requestDto) {
-		validatePolicyGroupName(requestDto.getName(), true);
+		validatePolicyGroupName(requestDto.getName(), true,PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setCrBy(getUser());
 		policyGroup.setCrDtimes(LocalDateTime.now());
@@ -204,7 +204,7 @@ public class PolicyManagementService {
 		}
 		PolicyGroup policyGroup = policyGroupFromDb.get();
 		if (!policyGroupFromDb.get().getName().equals(requestDto.getName())) {
-			validatePolicyGroupName(requestDto.getName(), true);
+			validatePolicyGroupName(requestDto.getName(), true,PolicyManageEnum.UPDATE_POLICY_GROUP_FAILURE);
 			policyGroup.setName(requestDto.getName());
 		}
 		if (policyGroup.getIsActive() != requestDto.isActive()) {
@@ -256,14 +256,14 @@ public class PolicyManagementService {
 	public PolicyCreateResponseDto createPolicies(PolicyCreateRequestDto requestDto)
 			throws PolicyManagementServiceException, Exception {
 		validatePolicyTypes(requestDto.getPolicyType());
-		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
+		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
-		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies())) {
+		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies(),PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE)) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_SUCCESS);
 		return savePolicy(requestDto.getPolicies(), requestDto.getName(), requestDto.getName(), requestDto.getDesc(),
 				policyGroup.getId(), requestDto.getPolicyType(), requestDto.getPolicyGroupName(),
 				requestDto.getVersion(), requestDto.getPolicyId() == null ? "" : requestDto.getPolicyId());
@@ -275,7 +275,7 @@ public class PolicyManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean validatePolicy(String policyType, JSONObject policies) throws Exception {
+	private boolean validatePolicy(String policyType, JSONObject policies,PolicyManageEnum auditEnum) throws Exception {
 		try {
 			return policyValidator.validatePolicies(getPolicySchema(policyType),
 					IOUtils.toString(policies.toString().getBytes(), "UTF-8"));
@@ -284,6 +284,7 @@ public class PolicyManagementService {
 		} catch (InvalidPolicySchemaException | PolicyIOException e) {
 			throw new PolicyManagementServiceException(e.getErrorCode(), e.getErrorText());
 		} catch (IOException e) {
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage() + "/" + e.getMessage());
 		}
@@ -297,8 +298,8 @@ public class PolicyManagementService {
 	 */
 	public PolicyCreateResponseDto updatePolicies(PolicyUpdateRequestDto requestDto, String policyId)
 			throws PolicyManagementServiceException, Exception {
-		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false);
-		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false);
+		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
+		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
 		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroup.getId(),
 				requestDto.getName());
 		if (mappedPolicy != null && !mappedPolicy.getName().equals(authPolicy.getName())) {
@@ -307,7 +308,7 @@ public class PolicyManagementService {
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + requestDto.getName());
 		}
-		if (!validatePolicy(authPolicy.getPolicy_type(), requestDto.getPolicies())) {
+		if (!validatePolicy(authPolicy.getPolicy_type(), requestDto.getPolicies(),PolicyManageEnum.UPDATE_POLICY_FAILURE)) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
@@ -322,15 +323,15 @@ public class PolicyManagementService {
 	 * 
 	 * @param policy_group_name
 	 */
-	private PolicyGroup validatePolicyGroupName(String policy_group_name, boolean isExists) {
+	private PolicyGroup validatePolicyGroupName(String policy_group_name, boolean isExists,PolicyManageEnum auditEnum) {
 		PolicyGroup policy_group_by_name = policyGroupRepository.findByName(policy_group_name);
 		if (policy_group_by_name == null && !isExists) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorMessage());
 		}
 		if (policy_group_by_name != null && isExists) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NAME_DUPLICATE.getErrorCode(),
 					ErrorMessages.POLICY_GROUP_NAME_DUPLICATE.getErrorMessage() + policy_group_name);
 		}
@@ -353,7 +354,7 @@ public class PolicyManagementService {
 		responseDto.setIs_Active(policyGroup.getIsActive());
 		responseDto.setUp_by(policyGroup.getUpdBy());
 		responseDto.setUpd_dtimes(policyGroup.getUpdDtimes());
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
 		return responseDto;
 	}
 
@@ -366,6 +367,7 @@ public class PolicyManagementService {
 	private void validateAuthPolicyName(String policyGroupId, String auth_policy_name) {
 		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, auth_policy_name);
 		if (auth_policy_by_name != null) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorCode(),
 					ErrorMessages.AUTH_POLICY_NAME_DUPLICATE_EXCEPTION.getErrorMessage() + auth_policy_name);
@@ -383,10 +385,9 @@ public class PolicyManagementService {
 	 */
 	public PolicyResponseDto publishPolicy(String policyGroupName, String policyName)
 			throws JsonParseException, JsonMappingException, IOException {
-		AuthPolicy authPolicy = checkMappingExists(policyGroupName, policyName, false);
-		if (authPolicy.getIsActive()) {
-			
-			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
+		AuthPolicy authPolicy = checkMappingExists(policyGroupName, policyName, false,PolicyManageEnum.PUBLISH_POLICY_FAILURE);
+		if (authPolicy.getIsActive()) {			
+			auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_PUBLISHED.getErrorCode(),
 					ErrorMessages.POLICY_PUBLISHED.getErrorMessage());
 		}
@@ -399,7 +400,7 @@ public class PolicyManagementService {
 		insertIntoAuthPolicyH(authPolicy);
 		notify(authPolicy.getId());
 		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.getPolicyGroup().getId());
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS);
 		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy);
 	}
 
@@ -540,12 +541,12 @@ public class PolicyManagementService {
 			PolicyStatusUpdateRequestDto statusUpdateRequest, String policyGroupId, String policyId) {
 		if (!(statusUpdateRequest.getStatus().toLowerCase().equals(ACTIVE_STATUS)
 				|| statusUpdateRequest.getStatus().toLowerCase().equals(NOTACTIVE_STATUS))) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE);
+			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_STATUS_CODE_EXCEPTION.getErrorCode(),
 					ErrorMessages.POLICY_STATUS_CODE_EXCEPTION.getErrorMessage());
 		}
 		Boolean status = statusUpdateRequest.getStatus().contains("De-Active") ? false : true;
-		AuthPolicy authPolicy = checkMappingExists(policyGroupId, policyId, false);
+		AuthPolicy authPolicy = checkMappingExists(policyGroupId, policyId, false,PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
 		authPolicy.setIsActive(status);
 		authPolicy.setUpdBy(getUser());
 		authPolicy.setUpdDtimes(LocalDateTime.now());
@@ -556,7 +557,7 @@ public class PolicyManagementService {
 		responseDto.setMessage("status updated successfully");
 		notify(policyId);
 		response.setResponse(responseDto);
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_SUCCESS);
 		return response;
 	}
 
@@ -568,7 +569,7 @@ public class PolicyManagementService {
 	 * @return
 	 */
 	private AuthPolicy checkMappingExists(String uniquePolicyGroupAttribute, String uniquePolicyAttribute,
-			boolean hasToCheckWithName) {
+			boolean hasToCheckWithName,PolicyManageEnum auditEnum) {
 		Optional<PolicyGroup> policyGroup = null;
 		Optional<AuthPolicy> authPolicy = null;
 		if (hasToCheckWithName) {
@@ -580,14 +581,17 @@ public class PolicyManagementService {
 			authPolicy = authPolicyRepository.findById(uniquePolicyAttribute);
 		}
 		if (policyGroup.isEmpty()) {
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());
 		}
 		if (authPolicy.isEmpty()) {
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 		}
 		if (!policyGroup.get().getId().equals(authPolicy.get().getPolicyGroup().getId())) {
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_POLICY_NOT_MAPPED.getErrorCode(),
 					ErrorMessages.POLICY_GROUP_POLICY_NOT_MAPPED.getErrorMessage());
 		}
@@ -603,8 +607,7 @@ public class PolicyManagementService {
 	 */
 	public PolicyResponseDto findPolicy(String policyId) throws FileNotFoundException, IOException, ParseException {
 		AuthPolicy authPolicy = getAuthPolicy(policyId);
-		PolicyGroup policyGroup = getPolicyGroup(authPolicy.getPolicyGroup().getId());
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
+		PolicyGroup policyGroup = getPolicyGroup(authPolicy.getPolicyGroup().getId());				
 		return mapPolicyAndPolicyGroup(policyGroup, authPolicy);
 	}
 
@@ -621,6 +624,7 @@ public class PolicyManagementService {
 		for (AuthPolicy authPolicy : authPolicies) {
 			authPolicesResponse.add(findPolicy(authPolicy.getId()));
 		}
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		return authPolicesResponse;
 	}
 
@@ -668,11 +672,11 @@ public class PolicyManagementService {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
 		if (partnerPolicy == null) {
 			logger.error("Partner api key not found");
-			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_BY_APIKEY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
 		}
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_BY_APIKEY_SUCCESS);
 		return findPolicy(partnerPolicy.getPolicyId());
 	}
 
@@ -690,19 +694,19 @@ public class PolicyManagementService {
 		List<PartnerPolicy> partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
 		if (partnerPolicy.isEmpty()) {
 			logger.error("Partner is not found");
-			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
 		}
 		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
 		if (authPolicy.isEmpty()) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 
 		}
 		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.get().getPolicyGroup().getId());
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY_SUCCESS);
 		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy.get());
 	}
 
@@ -826,6 +830,7 @@ public class PolicyManagementService {
 	 */
 	private void validatePolicyTypes(String policyType) {
 		if (!Arrays.stream(supportedPolicyTypes.split(",")).anyMatch(policyType::equalsIgnoreCase)) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_TYPE_NOT_ALLOWED.getErrorCode(),
 					ErrorMessages.POLICY_TYPE_NOT_ALLOWED.getErrorMessage());
 		}
@@ -918,7 +923,7 @@ public class PolicyManagementService {
 			policies = MapperUtils.mapAuthPolicySearch(page.getContent());
 			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_SUCCESS);
 		return pageDto;
 	}
 
@@ -932,16 +937,21 @@ public class PolicyManagementService {
 		JSONParser parser = new JSONParser();
 		String configValue = environment.getProperty(key);
 		if (configValue == null) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_SUCCESS);
 			return new KeyValuePair<String, Object>(key, configValue);
 		}
 		if (StringUtils.isNumeric(configValue)) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_SUCCESS);
 			return new KeyValuePair<String, Object>(key, configValue);
 		}
 		try {
 			return new KeyValuePair<String, Object>(key, (JSONObject) parser.parse(configValue));
 		} catch (ParseException e) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_FAILURE);
 			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
+
 		}
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_SUCCESS);
 		return new KeyValuePair<String, Object>(key, configValue);
 	}
 
@@ -968,6 +978,7 @@ public class PolicyManagementService {
 			}
 			filterResponseDto.setFilters(columnValueList);
 		}
+		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY_GROUP_SUCCESS);
 		return filterResponseDto;
 	}
 
@@ -1003,6 +1014,7 @@ public class PolicyManagementService {
 			}
 			filterResponseDto.setFilters(columnValueList);
 		}
+		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY_SUCCESS);
 		return filterResponseDto;
 	}
 }
