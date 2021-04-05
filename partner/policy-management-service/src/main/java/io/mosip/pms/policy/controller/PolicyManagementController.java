@@ -173,6 +173,7 @@ public class PolicyManagementController {
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyId);
 		response.setResponse(responseDto);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
@@ -183,7 +184,7 @@ public class PolicyManagementController {
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_APIKEY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_BY_APIKEY);
 		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
