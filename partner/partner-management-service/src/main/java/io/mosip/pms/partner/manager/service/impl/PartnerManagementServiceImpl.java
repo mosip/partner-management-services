@@ -33,6 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.APIKeyDataPublishDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
+import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
@@ -51,6 +54,7 @@ import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerConstants;
@@ -145,6 +149,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Given apikey updated with policy successfully. ");
 		notify(partnerApikey, true);
+		notify(null, null, MapperUtils.mapKeyDataToPublishDto(updateObject), EventType.APIKEY_UPDATED);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_SUCCESS);
 		return partnersPolicyMappingResponse;
 	}
@@ -190,19 +195,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerManagerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
 						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());				
 			}
-			updatePartnerObject.setIsActive(true);
-			notify(partnerId, false);
+			updatePartnerObject.setIsActive(true);			
 			partnerRepository.save(updatePartnerObject);
-			response.setMessage("Partner activated successfully");
+			response.setMessage("Partner activated successfully");			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
+			notify(partnerId, false);
+			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject), null, null, EventType.PARTNER_UPDATED);
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
 			updatePartnerObject.setIsActive(false);
 			partnerRepository.save(updatePartnerObject);
-			notify(partnerId, false);
 			response.setMessage("Partner de-activated successfully");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
+			notify(partnerId, false);
+			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject), null, null, EventType.PARTNER_UPDATED);
 			return response;
 		}
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
@@ -226,6 +233,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
 			partnerPolicyFromDb.setIsActive(true);
 			notify(partnerAPIKey, true);
+			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey activated successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
@@ -234,6 +242,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
 			partnerPolicyFromDb.setIsActive(false);
 			notify(partnerAPIKey, true);
+			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey de-activated successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
@@ -343,6 +352,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			ActivateDeactivatePartnerRequest request, String requestedApikey) {
 		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
 		PartnerPolicyRequest updateObject = getValidApikeyRequestForStatusUpdate(requestedApikey);
+		AuthPolicy validPolicy = validatePolicy(updateObject.getPolicyId());		
 		if ((request.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			updateObject.setUpdBy(getUser());
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -362,6 +372,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicyRepository.save(partnerPolicy);
 			response.setMessage("Apikey request approved successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
+			notify(MapperUtils.mapDataToPublishDto(updateObject.getPartner()),
+					MapperUtils.mapPolicyToPublishDto(validPolicy, getPolicyObject(validPolicy.getPolicyFileId())),
+					MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_APPROVED);
 			return response;
 		}
 		if ((request.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
@@ -407,7 +420,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
 						ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
 			}
-		}
+		}		
 
 		return partnerPolicyRequestFromDb.get();
 	}
@@ -603,11 +616,45 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private void notify(String updatedObject, boolean isApiKeyUpdated) {
 		Type type = new Type();
 		type.setName("PartnerManagementServiceImpl");
-		type.setNamespace("io.mosip.pmp.misp.service");
+		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
 		Map<String, Object> data = new HashMap<>();
 		String updatedParam = (isApiKeyUpdated == true) ? "apiKey" : "partnerId";
 		data.put(updatedParam, updatedObject);
 		EventType event = (isApiKeyUpdated == true) ? EventType.APIKEY_UPDATED : EventType.PARTNER_UPDATED;
 		webSubPublisher.notify(event, data, type);
+	}	
+	
+	/**
+	 * 
+	 * @param partnerDataToPublish
+	 * @param policyDataToPublish
+	 * @param apiKeyDataToPublish
+	 * @param eventType
+	 */
+	private void notify(PartnerDataPublishDto partnerDataToPublish, PolicyPublishDto policyDataToPublish,
+			APIKeyDataPublishDto apiKeyDataToPublish, EventType eventType) {
+		Map<String, Object> data = new HashMap<>();
+		if (partnerDataToPublish != null) {
+			data.put("partnerData", partnerDataToPublish);
+		}
+		if (policyDataToPublish != null) {
+			data.put("policyData", policyDataToPublish);
+		}
+		if(apiKeyDataToPublish != null) {
+			data.put("apiKeyData",apiKeyDataToPublish);
+		}
+		notify(data, eventType);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @param eventType
+	 */
+	private void notify(Map<String, Object> data,EventType eventType) {
+		Type type = new Type();
+		type.setName("PartnerManagementServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
+		webSubPublisher.notify(eventType, data, type);
 	}
 }

@@ -45,6 +45,7 @@ import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PolicyFilterValueDto;
+import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.PolicySearchDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.dto.SearchDto;
@@ -472,6 +473,7 @@ public class PolicyManagementService {
 			authPolicy.setUpdBy(getUser());
 			authPolicy.setUpdDtimes(LocalDateTime.now());
 			notify(authPolicy.getId());
+			notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
@@ -556,6 +558,7 @@ public class PolicyManagementService {
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
 		responseDto.setMessage("status updated successfully");
 		notify(policyId);
+		notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));
 		response.setResponse(responseDto);
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_SUCCESS);
 		return response;
@@ -1016,5 +1019,14 @@ public class PolicyManagementService {
 		}
 		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY_SUCCESS);
 		return filterResponseDto;
+	}
+	
+	private void notify(PolicyPublishDto dataToPublish) {
+		Type type = new Type();
+		type.setName("PolicyManagementService");
+		type.setNamespace("io.mosip.pmp.policy.service");
+		Map<String, Object> data = new HashMap<>();
+		data.put("policyData", dataToPublish);
+		webSubPublisher.notify(EventType.POLICY_UPDATED, data, type);
 	}
 }

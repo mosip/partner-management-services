@@ -86,6 +86,7 @@ import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
+import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -148,6 +149,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
+	
+	@Autowired
+	PartnerManagerService partnerManagerService;
 
 	@Autowired
 	SearchHelper partnerSearchHelper;
@@ -383,9 +387,11 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest partnerAPIKeyRequest, String partnerId) {
+		Map<String, Object> data = new HashMap<>();
+		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		Partner partner = getValidPartner(partnerId,false);
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
-				partnerAPIKeyRequest.getPolicyName());
+				partnerAPIKeyRequest.getPolicyName());		
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
 		partnerPolicyRequest.setCrBy(getUser());
@@ -398,18 +404,24 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setIsDeleted(false);
 		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId,authPolicy.getId()).isEmpty()) {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(partnerPolicyRequest);
-			return approvePartnerPolicy(partnerPolicyRequest);
+			partnerPolicyRequestRepository.save(partnerPolicyRequest);	
+			data.put("apiKeyData",MapperUtils.mapKeyDataToPublishDto(approvePartnerPolicy(partnerPolicyRequest)));
+			data.put("partnerData", MapperUtils.mapDataToPublishDto(partnerPolicyRequest.getPartner()));
+			data.put("policyData", MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())));			
+			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
+			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
+			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
+			notify(data,EventType.APIKEY_APPROVED);
+			return partnerAPIKeyResponse;
 		}
-		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
+		partnerPolicyRequestRepository.save(partnerPolicyRequest);		
 		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted.");
 		LOGGER.info("PartnerAPIKeyRequest successfully submitted.");
 		return partnerAPIKeyResponse;
 	}
 
-	private PartnerAPIKeyResponse approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
+	private PartnerPolicy approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
 		partnerPolicy.setPolicyApiKey(partnerPolicyRequest.getId());
 		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
@@ -421,12 +433,8 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
 		partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
 		partnerPolicyRepository.save(partnerPolicy);
-		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
-		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-		partnerAPIKeyResponse.setApikeyId(partnerPolicy.getPolicyApiKey());
-		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
 		LOGGER.info("PartnerAPIKeyRequest successfully submitted and approved.");
-		return partnerAPIKeyResponse;
+		return partnerPolicy;
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
@@ -611,10 +619,9 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
-		partnerRepository.save(updateObject);
-		notify(partnerCertRequesteDto.getPartnerId());
+		partnerRepository.save(updateObject);		
 		return responseObject;
-	}
+	}	
 
 	private void uploadOtherDomainCertificate(String signedCertificateData, String partnerId) {
 		RequestWrapper<UploadCertificateRequestDto> request = new RequestWrapper<>();
@@ -1043,13 +1050,12 @@ public class PartnerServiceImpl implements PartnerService {
 		data.put("partnerDomain", partnerDomain);
 		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
 	}
-
-	private void notify(String partnerId) {
+	
+	private void notify(Map<String, Object> data, EventType eventType) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
-		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		Map<String, Object> data = new HashMap<>();
-		data.put("partnerId", partnerId);
-		webSubPublisher.notify(EventType.PARTNER_UPDATED, data, type);
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");		
+		webSubPublisher.notify(eventType, data, type);
 	}
+	
 }
