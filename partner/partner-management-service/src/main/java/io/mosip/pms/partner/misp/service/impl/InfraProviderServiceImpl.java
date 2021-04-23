@@ -22,6 +22,7 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.partner.misp.dto.MISPDataPublishDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
@@ -76,6 +77,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 		response.setLicenseKeyStatus("Active");
 		response.setProviderId(mispId);
+		notify(mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_GENERATED);
 		return response;
 	}
 	
@@ -110,6 +112,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		response.setLicenseKeyStatus(mispLicenseFromDb.getIsActive() ? ACTIVE_STATUS : NOTACTIVE_STATUS);
 		response.setProviderId(mispLicenseFromDb.getMispLicenseUniqueKey().getMisp_id());
 		notify(licenseKey);
+		notify(mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
 		return response;
 
 	}
@@ -174,6 +177,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
 				notify(licenseKey.getMispLicenseUniqueKey().getLicense_key());
+				notify(mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
 			}
 			
 			if(licenseKey.getIsActive() && 
@@ -221,5 +225,34 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		Map<String,Object> data = new HashMap<>();
 		data.put("mispLicenseKey", mispLicenseKey);
 		webSubPublisher.notify(EventType.MISP_UPDATED,data,type);
+	}
+	
+	/**
+	 * 
+	 * @param dataToPublish
+	 * @param eventType
+	 */
+	private void notify(MISPDataPublishDto dataToPublish,EventType eventType) {
+		Type type = new Type();
+		type.setName("InfraProviderServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
+		Map<String,Object> data = new HashMap<>();
+		data.put("mispLicenseData", dataToPublish);
+		webSubPublisher.notify(eventType,data,type);		
+	}
+	
+	/**
+	 * Data to publish websub on changes of misp license
+	 * @param entity
+	 * @return
+	 */
+	private MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
+		MISPDataPublishDto dataToPublish = new MISPDataPublishDto();
+		dataToPublish.setLicenseKey(entity.getMispLicenseUniqueKey().getLicense_key());
+		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
+		dataToPublish.setMispExpiresOn(entity.getValidToDate());
+		dataToPublish.setMispId(entity.getMispLicenseUniqueKey().getMisp_id());
+		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE_STATUS: NOTACTIVE_STATUS);
+		return dataToPublish;
 	}
 }

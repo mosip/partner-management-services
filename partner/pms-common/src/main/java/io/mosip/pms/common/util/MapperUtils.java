@@ -4,6 +4,9 @@ package io.mosip.pms.common.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,13 +17,19 @@ import java.util.stream.Collectors;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pms.common.dto.APIKeyDataPublishDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
+import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BaseEntity;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
 
 
 /**
@@ -456,10 +465,56 @@ public class MapperUtils {
 		});
 		return authPoliciesList;
 	}
-
 	
-
-
-
-
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static PolicyPublishDto mapPolicyToPublishDto(AuthPolicy entity,JSONObject policy) {
+		PolicyPublishDto dataToPublish = new PolicyPublishDto();
+		dataToPublish.setPolicy(policy);
+		dataToPublish.setPolicyCommenceOn(entity.getValidFromDate());
+		dataToPublish.setPolicyDescription(entity.getDescr());
+		dataToPublish.setPolicyExpiresOn(entity.getValidToDate());
+		dataToPublish.setPolicyId(entity.getId());
+		dataToPublish.setPolicyName(entity.getName());
+		dataToPublish.setPolicyStatus(entity.getIsActive() == true ? "ACTIVE" : "NOT_ACTIVE");
+		return dataToPublish;
+	}
+	
+	/**
+	 * 
+	 * @param entity
+	 * @param certData
+	 * @return
+	 */
+	public static PartnerDataPublishDto mapDataToPublishDto(Partner entity, String partnerCert) {
+		PartnerDataPublishDto dataToPublish= new PartnerDataPublishDto();		
+		dataToPublish.setPartnerId(entity.getId());
+		dataToPublish.setPartnerName(entity.getName());
+		dataToPublish.setPartnerStatus(entity.getIsActive() == true? "ACTIVE" : "NOT_ACTIVE");
+		dataToPublish.setCertificateData(partnerCert);
+		return dataToPublish;
+	}
+	
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static APIKeyDataPublishDto mapKeyDataToPublishDto(PartnerPolicy entity) {
+		APIKeyDataPublishDto dataToPublish = new APIKeyDataPublishDto();
+		dataToPublish.setApiKeyCommenceOn(toISOFormat(entity.getValidFromDatetime().toLocalDateTime()));
+		dataToPublish.setApiKeyExpiresOn(toISOFormat(entity.getValidToDatetime().toLocalDateTime()));
+		dataToPublish.setApiKeyId(entity.getPolicyApiKey());
+		dataToPublish.setApiKeyStatus(entity.getIsActive() == true ? "ACTIVE" : "NOT_ACTIVE");
+		return dataToPublish;
+	}
+	
+	private static LocalDateTime toISOFormat(LocalDateTime localDateTime) {
+		ZonedDateTime zonedtime = localDateTime.atZone(ZoneId.systemDefault());
+		ZonedDateTime converted = zonedtime.withZoneSameInstant(ZoneOffset.UTC);
+		return converted.toLocalDateTime();
+	}
 }
