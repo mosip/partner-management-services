@@ -200,7 +200,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			response.setMessage("Partner activated successfully");			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
 			notify(partnerId, false);
-			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject), null, null, EventType.PARTNER_UPDATED);
+
+			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
@@ -209,7 +210,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			response.setMessage("Partner de-activated successfully");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
 			notify(partnerId, false);
-			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject), null, null, EventType.PARTNER_UPDATED);
+			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
 			return response;
 		}
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
@@ -372,7 +373,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicyRepository.save(partnerPolicy);
 			response.setMessage("Apikey request approved successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
-			notify(MapperUtils.mapDataToPublishDto(updateObject.getPartner()),
+			notify(MapperUtils.mapDataToPublishDto(updateObject.getPartner(),getPartnerCertificate(updateObject.getPartner().getCertificateAlias())),
 					MapperUtils.mapPolicyToPublishDto(validPolicy, getPolicyObject(validPolicy.getPolicyFileId())),
 					MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_APPROVED);
 			return response;

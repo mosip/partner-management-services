@@ -406,7 +406,13 @@ public class PartnerServiceImpl implements PartnerService {
 			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(partnerPolicyRequest);	
 			data.put("apiKeyData",MapperUtils.mapKeyDataToPublishDto(approvePartnerPolicy(partnerPolicyRequest)));
-			data.put("partnerData", MapperUtils.mapDataToPublishDto(partnerPolicyRequest.getPartner()));
+			PartnerCertDownloadRequestDto certDownloadRequestDto = new PartnerCertDownloadRequestDto();
+			certDownloadRequestDto.setPartnerId(partnerPolicyRequest.getPartner().getId());
+			try {
+				data.put("partnerData", MapperUtils.mapDataToPublishDto(partnerPolicyRequest.getPartner(),getPartnerCertificate(certDownloadRequestDto).getCertificateData()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			data.put("policyData", MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())));			
 			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());

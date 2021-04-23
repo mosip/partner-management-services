@@ -489,11 +489,12 @@ public class MapperUtils {
 	 * @param certData
 	 * @return
 	 */
-	public static PartnerDataPublishDto mapDataToPublishDto(Partner entity) {
+	public static PartnerDataPublishDto mapDataToPublishDto(Partner entity, String partnerCert) {
 		PartnerDataPublishDto dataToPublish= new PartnerDataPublishDto();		
 		dataToPublish.setPartnerId(entity.getId());
 		dataToPublish.setPartnerName(entity.getName());
 		dataToPublish.setPartnerStatus(entity.getIsActive() == true? "ACTIVE" : "NOT_ACTIVE");
+		dataToPublish.setCertificateData(partnerCert);
 		return dataToPublish;
 	}
 	
