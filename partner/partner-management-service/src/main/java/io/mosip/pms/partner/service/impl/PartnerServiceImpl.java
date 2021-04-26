@@ -73,6 +73,8 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PartnerTypeRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
@@ -176,6 +178,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	private Environment environment;
+
+	@Autowired
+	private NotificatonService notificationService;
 	
 	@Autowired
 	private KeycloakImpl keycloakImpl;
@@ -216,6 +221,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerResponse partnerResponse = new PartnerResponse();
 		partnerResponse.setPartnerId(partner.getId());
 		partnerResponse.setStatus(partner.getApprovalStatus());
+		sendNotifications(EventType.PARTNER_REGISTRED,partner);
 		return partnerResponse;
 	}
 
@@ -1062,6 +1068,22 @@ public class PartnerServiceImpl implements PartnerService {
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");		
 		webSubPublisher.notify(eventType, data, type);
+	}
+	
+	/**
+	 * 
+	 * @param eventType
+	 * @param partner
+	 */
+	private void sendNotifications(EventType eventType, Partner partner) {
+		List<NotificationDto> notificationDtos = new ArrayList<NotificationDto>();
+		NotificationDto dto = new NotificationDto();
+		dto.setPartnerId(partner.getId());
+		dto.setPartnerName(partner.getName());
+		dto.setEmailId(partner.getEmailId());
+		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		notificationDtos.add(dto);
+		notificationService.sendNotications(eventType, notificationDtos);
 	}
 	
 }

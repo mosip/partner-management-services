@@ -69,6 +69,7 @@
 		<lombok.version>1.18.8</lombok.version>
 		<doclint>none</doclint>
 		<kernel-websubclient-api.version>1.2.0-SNAPSHOT</kernel-websubclient-api.version>
+		<kernel.templatemanager.velocity.version>1.2.0-SNAPSHOT</kernel.templatemanager.velocity.version>
 	</properties>
 	
 	<modules>		

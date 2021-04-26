@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 
 import io.mosip.pms.common.entity.PartnerPolicy;
 
@@ -35,4 +36,7 @@ public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, St
 	
 	@Query(value = "select * from partner_policy pp where pp.policy_api_key=? AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true",nativeQuery = true)
 	public PartnerPolicy findByPolicyApiKey(String policyApiKey);
+	
+	@Query(value = "select * from partner_policy pp where pp.valid_to_datetime <?1 AND pp.valid_to_datetime >?2  AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true", nativeQuery = true)
+	public List<PartnerPolicy> findAPIKeysLessThanGivenDate(LocalDateTime validToDate, LocalDateTime fromDate);
 }

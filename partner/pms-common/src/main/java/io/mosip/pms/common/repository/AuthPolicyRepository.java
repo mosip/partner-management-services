@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import io.mosip.pms.common.entity.AuthPolicy;
 
@@ -21,5 +22,8 @@ public interface AuthPolicyRepository extends JpaRepository<AuthPolicy, String>{
 	List<AuthPolicy> findByPolicyGroupId(String policyId);
 	
 	AuthPolicy findByName(String name);
+	
+	@Query(value = "select * from auth_policy ap where ap.id IN :policyIds and (ap.is_deleted is null or ap.is_deleted = false) and ap.is_active = true",nativeQuery = true)
+	List<AuthPolicy> findByPolicyIds(@Param("policyIds") List<String> policyIds);
 
 }

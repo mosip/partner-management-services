@@ -54,6 +54,8 @@ import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
@@ -104,6 +106,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	private WebSubPublisher webSubPublisher;
+	
+	@Autowired
+	private NotificatonService notificationService;
 
 	@Autowired
 	RestUtil restUtil;
@@ -200,8 +205,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			response.setMessage("Partner activated successfully");			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
 			notify(partnerId, false);
-
 			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
+			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
@@ -211,6 +216,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
 			notify(partnerId, false);
 			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
+			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
 		}
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
@@ -238,6 +244,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey activated successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
+			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicyFromDb.getPartner(), partnerPolicyFromDb);
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
@@ -247,6 +254,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey de-activated successfully.");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
+			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicyFromDb.getPartner(), partnerPolicyFromDb);
 			return response;
 		}
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED);
@@ -658,4 +666,41 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
 		webSubPublisher.notify(eventType, data, type);
 	}
+	
+	/**
+	 * 
+	 * @param eventType
+	 * @param partner
+	 */
+	private void sendNotifications(EventType eventType, Partner partner) {
+		List<NotificationDto> notificationDtos = new ArrayList<NotificationDto>();
+		NotificationDto dto = new NotificationDto();
+		dto.setPartnerId(partner.getId());
+		dto.setPartnerName(partner.getName());
+		dto.setEmailId(partner.getEmailId());
+		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		notificationDtos.add(dto);
+		notificationService.sendNotications(eventType, notificationDtos);
+	}
+	
+	private void sendNotifications(EventType eventType, Partner partner,PartnerPolicy partnerPolicyFromDb) {
+		List<NotificationDto> notificationDtos = new ArrayList<NotificationDto>();
+		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicyFromDb.getPolicyId());
+		NotificationDto dto = new NotificationDto();
+		dto.setPartnerId(partner.getId());
+		dto.setPartnerName(partner.getName());
+		dto.setEmailId(partner.getEmailId());
+		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());
+		dto.setApiKeyExpiryDate(partnerPolicyFromDb.getValidToDatetime().toLocalDateTime());
+		dto.setApiKeyStatus(partnerPolicyFromDb.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		dto.setPolicyId(partnerPolicyFromDb.getPolicyId());
+		dto.setPolicyName(authPolicy.get().getName());
+		dto.setPolicyExpiryDateTime(authPolicy.get().getValidToDate());
+		dto.setPolicyStatus(authPolicy.get().getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		notificationDtos.add(dto);
+		notificationService.sendNotications(eventType, notificationDtos);
+		
+	}
 }
+
