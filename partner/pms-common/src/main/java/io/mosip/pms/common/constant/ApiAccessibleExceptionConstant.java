@@ -4,7 +4,8 @@ public enum ApiAccessibleExceptionConstant {
 
 	API_NOT_ACCESSIBLE_EXCEPTION("PMS_KKS_001", "API not accessible  "),
 	API_NULL_RESPONSE_EXCEPTION("PMS_PRT_107","Responese from the api is null"),
-	UNABLE_TO_PROCESS("PMS_PRT_500","Unable to process the request.");
+	UNABLE_TO_PROCESS("PMS_PRT_500","Unable to process the request."),
+	TEMPLATE_NOT_FOUND("PMS_PRT_501","Template not found");
 
 	/**
 	 * The error code.

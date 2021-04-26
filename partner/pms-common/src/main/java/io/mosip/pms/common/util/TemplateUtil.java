@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.kernel.logger.logback.factory.Logfactory;
+import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.response.dto.TemplatesResponseDto;
 
@@ -61,6 +63,11 @@ public class TemplateUtil {
 		} catch (Exception e) {
 			log.error("Error occured while parsing the response from template api", e.getLocalizedMessage());
 			e.printStackTrace();
+		}
+		if(templatesResponseDto == null) {
+			log.error("Template not found" , langCode,templatetypecode);
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.TEMPLATE_NOT_FOUND.getErrorCode(),
+					ApiAccessibleExceptionConstant.TEMPLATE_NOT_FOUND.getErrorMessage());
 		}
 
 		return templatesResponseDto.getTemplates().get(0).getFileText().replaceAll("^\"|\"$", "");
