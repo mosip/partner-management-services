@@ -38,6 +38,11 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-websubclient-api</artifactId>
 			<version>${kernel-websubclient-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-templatemanager-velocity</artifactId>
+			<version>${kernel.templatemanager.velocity.version}</version>
 		</dependency>	
   </dependencies>
 </project>

@@ -91,7 +91,7 @@ public class RestUtil {
 			} catch (Exception e) {
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiUrl);
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + e.getMessage());
 			}
 		}
 		return result;
@@ -135,7 +135,7 @@ public class RestUtil {
 			} catch (Exception e) {
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiName);
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + e.getMessage());
 			}
 
 		}
