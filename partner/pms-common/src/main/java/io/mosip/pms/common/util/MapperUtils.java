@@ -479,7 +479,7 @@ public class MapperUtils {
 		dataToPublish.setPolicyExpiresOn(entity.getValidToDate());
 		dataToPublish.setPolicyId(entity.getId());
 		dataToPublish.setPolicyName(entity.getName());
-		dataToPublish.setPolicyStatus(entity.getIsActive() == true ? "ACTIVE" : "NOT_ACTIVE");
+		dataToPublish.setPolicyStatus(entity.getIsActive() == true ? "ACTIVE" : "DEACTIVE");
 		return dataToPublish;
 	}
 	
@@ -493,7 +493,7 @@ public class MapperUtils {
 		PartnerDataPublishDto dataToPublish= new PartnerDataPublishDto();		
 		dataToPublish.setPartnerId(entity.getId());
 		dataToPublish.setPartnerName(entity.getName());
-		dataToPublish.setPartnerStatus(entity.getIsActive() == true? "ACTIVE" : "NOT_ACTIVE");
+		dataToPublish.setPartnerStatus(entity.getIsActive() == true? "ACTIVE" : "DEACTIVE");
 		dataToPublish.setCertificateData(partnerCert);
 		return dataToPublish;
 	}
@@ -508,7 +508,7 @@ public class MapperUtils {
 		dataToPublish.setApiKeyCommenceOn(toISOFormat(entity.getValidFromDatetime().toLocalDateTime()));
 		dataToPublish.setApiKeyExpiresOn(toISOFormat(entity.getValidToDatetime().toLocalDateTime()));
 		dataToPublish.setApiKeyId(entity.getPolicyApiKey());
-		dataToPublish.setApiKeyStatus(entity.getIsActive() == true ? "ACTIVE" : "NOT_ACTIVE");
+		dataToPublish.setApiKeyStatus(entity.getIsActive() == true ? "ACTIVE" : "DEACTIVE");
 		return dataToPublish;
 	}
 	
