@@ -54,8 +54,14 @@ public class PartnerNotificationScheduledJob {
 		}
 
 		if (notificationsDto.size() > 0) {
-			notificationService.sendNotications(EventType.APIKEY_EXPIRED, notificationsDto);
-			log.info("Notifications sent successfully.");
+			
+			try {
+				notificationService.sendNotications(EventType.APIKEY_EXPIRED, notificationsDto);
+			} catch (Exception e) {
+				log.error("Error occured while sending the APIKEY_EXPIRED notifications.", e.getLocalizedMessage(),
+						e.getMessage());
+			}
+			log.info("Notifications sent successfully.",LocalDateTime.now());
 		}
 	}
 

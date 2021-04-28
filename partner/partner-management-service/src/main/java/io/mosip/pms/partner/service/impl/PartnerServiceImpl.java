@@ -1083,7 +1083,12 @@ public class PartnerServiceImpl implements PartnerService {
 		dto.setEmailId(partner.getEmailId());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
-		notificationService.sendNotications(eventType, notificationDtos);
+		try {
+			notificationService.sendNotications(eventType, notificationDtos);
+		} catch (Exception e) {
+			LOGGER.error("Error occured while sending the partner register notifications.", e.getLocalizedMessage(),
+					e.getMessage());
+		}
 	}
 	
 }

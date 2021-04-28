@@ -680,7 +680,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setEmailId(partner.getEmailId());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
-		notificationService.sendNotications(eventType, notificationDtos);
+		try {
+			notificationService.sendNotications(eventType, notificationDtos);
+		} catch (Exception e) {
+			LOGGER.error("Error occured while sending the partner update notifications.", e.getLocalizedMessage(),
+					e.getMessage());
+		}
 	}
 	
 	private void sendNotifications(EventType eventType, Partner partner,PartnerPolicy partnerPolicyFromDb) {
@@ -699,8 +704,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setPolicyExpiryDateTime(authPolicy.get().getValidToDate());
 		dto.setPolicyStatus(authPolicy.get().getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
-		notificationService.sendNotications(eventType, notificationDtos);
-		
+		try {
+			notificationService.sendNotications(eventType, notificationDtos);
+		} catch (Exception e) {
+			LOGGER.error("Error occured while sending the apikey notifications.", e.getLocalizedMessage(),
+					e.getMessage());
+		}
 	}
 }
 
