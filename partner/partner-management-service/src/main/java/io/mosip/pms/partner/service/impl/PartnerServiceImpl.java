@@ -565,7 +565,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
+		//notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
 		return responseObject;
 	}
 
@@ -613,6 +613,7 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
 		notify(partnerCertRequesteDto.getPartnerId());
+		notify(responseObject.getSignedCertificateData(), partnerCertRequesteDto.getPartnerDomain());
 		return responseObject;
 	}
 
