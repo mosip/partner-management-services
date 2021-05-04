@@ -50,6 +50,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	public static final String REJECTED_STATUS = "rejected";
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
+	public static final String ACTIVE = "ACTIVE";
+	public static final String NOTACTIVE = "NOT_ACTIVE";
 	
 	/**
 	 * 
@@ -252,7 +254,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
 		dataToPublish.setMispExpiresOn(entity.getValidToDate());
 		dataToPublish.setMispId(entity.getMispLicenseUniqueKey().getMisp_id());
-		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE_STATUS: NOTACTIVE_STATUS);
+		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE: NOTACTIVE);
 		return dataToPublish;
 	}
 }
