@@ -1,13 +1,13 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name: mosip_pms
--- Release Version 	: 1.1.5
+-- Release Version 	: 1.1.5.1
 -- Purpose    		: Database Alter scripts for the release for PMS DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -------------------------------------------------------------------------------------------------
--- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5  
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5.1  
 ------------------------------------------------------------------------------------------------------
 
 \c mosip_pms sysadmin
