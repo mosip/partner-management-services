@@ -584,8 +584,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if (responseObject == null) {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
-		}
-		notify(caCertRequestDto.getCertificateData(), caCertRequestDto.getPartnerDomain());
+		}		
 		return responseObject;
 	}
 
@@ -631,7 +630,8 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
-		partnerRepository.save(updateObject);		
+		partnerRepository.save(updateObject);
+		notify(responseObject.getSignedCertificateData(), partnerCertRequesteDto.getPartnerDomain());
 		return responseObject;
 	}	
 
