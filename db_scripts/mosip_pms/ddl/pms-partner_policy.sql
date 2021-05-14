@@ -10,7 +10,7 @@
 -- ------------------------------------------------------------------------------------------
 -- Aug-2020             Sadanndegowda       Updated Schema name 
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5.1  
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5.2  
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.partner_policy | type: TABLE --
