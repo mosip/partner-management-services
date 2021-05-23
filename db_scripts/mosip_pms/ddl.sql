@@ -1,4 +1,4 @@
-\c mosip_pms sysadmin
+\c mosip_pms 
 
 \ir ddl/pms-misp.sql
 \ir ddl/pms-misp_license.sql
@@ -15,5 +15,4 @@
 \ir ddl/pms-otp_transaction.sql
 \ir ddl/pms-partner_policy_bioextract.sql
 \ir ddl/pms-partner_policy_credential_type.sql
-
 \ir ddl/pms-fk.sql
