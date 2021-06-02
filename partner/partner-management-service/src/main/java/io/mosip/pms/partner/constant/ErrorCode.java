@@ -48,7 +48,10 @@ public enum ErrorCode {
 	POLICY_GROUP_POLICY_NOT_EXISTS("PMS_PRT_098","Given policy under partner's policy group not exists."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy group is not active."),
-	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired.");
+	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
+	DATASHARE_RESPONSE_NULL("PMS_DTS_001",  "DataShare response is null"),
+	P7B_CERTDATA_PARSING_ERROR("PMS_PRT_045","Error occured while parsing P7B certificate data"),
+	P7B_CERTDATA_ERROR("PMS_PRT_046","Error occured while extracting the leaf cert.");
 
 	
 	/**

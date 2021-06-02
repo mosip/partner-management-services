@@ -1,10 +1,16 @@
 package io.mosip.pms.partner.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +29,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +44,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.FilterData;
@@ -83,6 +93,7 @@ import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
@@ -121,6 +132,12 @@ public class PartnerServiceImpl implements PartnerService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
 
 	private static final String ALL = "all";
+	
+	private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
+	
+	private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
+    
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
@@ -202,6 +219,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${application.id:PARTNER}")
 	private String applicationId;
+	
+	@Value("${pms.certs.datashare.policyId}")
+	private String policyId;	
+	
+	@Value("${pms.certs.datashare.subscriberId}")
+	private String subscriberId;
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
@@ -589,9 +612,10 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public PartnerCertificateResponseDto uploadPartnerCertificate(PartnerCertificateUploadRequestDto partnerCertRequesteDto)
+	public PartnerCertificateResponseDto uploadPartnerCertificate(
+			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(),true);
+		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());
@@ -623,7 +647,15 @@ public class PartnerServiceImpl implements PartnerService {
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 
-		uploadOtherDomainCertificate(responseObject.getSignedCertificateData(), partnerCertRequesteDto.getPartnerId());
+		String signedPartnerCert = null;
+		try {
+			signedPartnerCert = getPartnerCertFromChain(responseObject.getSignedCertificateData());
+		} catch (Exception ex) {
+			LOGGER.error("Error occured while extracting the leaf cert", ex.getMessage());
+			throw new PartnerServiceException(ErrorCode.P7B_CERTDATA_ERROR.getErrorCode(),
+					ErrorCode.P7B_CERTDATA_ERROR.getErrorMessage());
+		}
+		uploadOtherDomainCertificate(signedPartnerCert, partnerCertRequesteDto.getPartnerId());
 		Partner updateObject = partner;
 		updateObject.setUpdBy(getUser());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -631,10 +663,16 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
-		notify(responseObject.getSignedCertificateData(), partnerCertRequesteDto.getPartnerDomain());
+		notify(getDataShareurl(responseObject.getSignedCertificateData()), partnerCertRequesteDto.getPartnerDomain());
+		responseObject.setSignedCertificateData(signedPartnerCert);
 		return responseObject;
-	}	
+	}
 
+	/**
+	 * Uploading other domain certs
+	 * @param signedCertificateData
+	 * @param partnerId
+	 */
 	private void uploadOtherDomainCertificate(String signedCertificateData, String partnerId) {
 		RequestWrapper<UploadCertificateRequestDto> request = new RequestWrapper<>();
 		UploadCertificateRequestDto requestDto = new UploadCertificateRequestDto();
@@ -752,6 +790,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	}
 
+	/**
+	 * Method to check weather approved policy exists for a given partner
+	 * @param partnerId
+	 * @param policyId
+	 * @return
+	 */
 	private boolean isApprovedPolicyRequestExists(String partnerId, String policyId) {
 		List<PartnerPolicyRequest> partnerPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(partnerId,
 				policyId);		
@@ -883,6 +927,13 @@ public class PartnerServiceImpl implements PartnerService {
 		return mapPolicyToResponseDto(authPolicy.get(), partnerId, credentialType);
 	}
 
+	/**
+	 * 
+	 * @param authPolicy
+	 * @param partnerId
+	 * @param credentialType
+	 * @return
+	 */
 	private PartnerCredentialTypePolicyDto mapPolicyToResponseDto(AuthPolicy authPolicy, String partnerId,
 			String credentialType) {
 		PartnerCredentialTypePolicyDto response = new PartnerCredentialTypePolicyDto();
@@ -906,6 +957,11 @@ public class PartnerServiceImpl implements PartnerService {
 		return response;
 	}
 
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
 	private LocalDateTime getLocalDateTime(Timestamp date) {
 		if (date != null) {
 			return date.toLocalDateTime();
@@ -913,6 +969,11 @@ public class PartnerServiceImpl implements PartnerService {
 		return LocalDateTime.now();
 	}
 
+	/**
+	 * 
+	 * @param policyFileId
+	 * @return
+	 */
 	private JSONObject getPolicyObject(String policyFileId) {
 		JSONParser parser = new JSONParser();
 		String error = null;
@@ -980,6 +1041,11 @@ public class PartnerServiceImpl implements PartnerService {
 		return pageDto;
 	}
 
+	/**
+	 * 
+	 * @param content
+	 * @return
+	 */
 	private List<PartnerPolicySearchResponseDto> mapPartnerPolicies(List<PartnerPolicy> content) {
 		Objects.requireNonNull(content);
 		List<PartnerPolicySearchResponseDto> partnerPolicyList = new ArrayList<>();
@@ -1015,6 +1081,11 @@ public class PartnerServiceImpl implements PartnerService {
 		return pageDto;
 	}
 
+	/**
+	 * 
+	 * @param content
+	 * @return
+	 */
 	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
 		Objects.requireNonNull(content);
 		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
@@ -1053,16 +1124,26 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param certData
+	 * @param partnerDomain
+	 */
 	private void notify(String certData, String partnerDomain) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
 		Map<String, Object> data = new HashMap<>();
-		data.put("certificateData", certData);
+		data.put("certChainDatashareUrl", certData);
 		data.put("partnerDomain", partnerDomain);
 		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
 	}
 	
+	/**
+	 * 
+	 * @param data
+	 * @param eventType
+	 */
 	private void notify(Map<String, Object> data, EventType eventType) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
@@ -1091,4 +1172,70 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 	
+	/**
+	 * Method to extract the leaf certificate from complete chain of a certificate.
+	 * @param certChain
+	 * @return
+	 * @throws Exception
+	 */
+	private String getPartnerCertFromChain(String certChain) throws Exception {
+		byte[] p7bBytes = CryptoUtil.decodeBase64(certChain);
+		try (ByteArrayInputStream certStream = new ByteArrayInputStream(p7bBytes)) {
+			CertificateFactory cf = CertificateFactory.getInstance("X.509");
+			Collection<?> p7bCertList = cf.generateCertificates(certStream);
+			List<Certificate> certList = new ArrayList<>();
+			p7bCertList.forEach(cert -> {
+				certList.add((Certificate) cert);
+			});
+			Base64.Encoder base64Encoder = Base64.getMimeEncoder(64, LINE_SEPARATOR.getBytes());
+			byte[] certificateData = certList.get(0).getEncoded();
+			String encodedCertificateData = new String(base64Encoder.encode(certificateData));
+			StringBuilder leafSignedCert = new StringBuilder();
+			leafSignedCert.append(BEGIN_CERTIFICATE);
+			leafSignedCert.append(LINE_SEPARATOR);
+			leafSignedCert.append(encodedCertificateData);
+			leafSignedCert.append(LINE_SEPARATOR);
+			leafSignedCert.append(END_CERTIFICATE);
+			return leafSignedCert.toString();
+		} catch (CertificateException | IOException exp) {
+			LOGGER.error("Error Parsing P7B Certificate data.", exp);
+			throw new PartnerServiceException(ErrorCode.P7B_CERTDATA_PARSING_ERROR.getErrorCode(),
+					ErrorCode.P7B_CERTDATA_PARSING_ERROR.getErrorMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param certsChain
+	 * @return
+	 */
+	private String getDataShareurl(String certsChain) {
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		String fileName = "certsChain";
+		map.add("name", fileName);
+		map.add("filename", fileName);
+		ByteArrayResource contentsAsResource = new ByteArrayResource(certsChain.getBytes()) {
+			@Override
+			public String getFilename() {
+				return fileName;
+			}
+		};
+		map.add("file", contentsAsResource);
+		List<String> pathSegments = new ArrayList<>();
+		pathSegments.add(policyId);
+		pathSegments.add(subscriberId);
+		DataShareResponseDto response = restUtil.postApi(
+				environment.getProperty("pmp.certificaticate.datashare.rest.uri"), pathSegments, "", "",
+				MediaType.MULTIPART_FORM_DATA, map, DataShareResponseDto.class);
+		if (response == null) {
+			throw new PartnerServiceException(ErrorCode.DATASHARE_RESPONSE_NULL.getErrorCode(),
+					ErrorCode.DATASHARE_RESPONSE_NULL.getErrorMessage());
+		}
+		if ((response.getErrors() != null && response.getErrors().size() > 0)) {
+			throw new PartnerServiceException(response.getErrors().get(0).getErrorCode(),
+					response.getErrors().get(0).getMessage());
+		}
+		System.out.println(response.getDataShare().getUrl());
+		return response.getDataShare().getUrl();
+	}	
 }
