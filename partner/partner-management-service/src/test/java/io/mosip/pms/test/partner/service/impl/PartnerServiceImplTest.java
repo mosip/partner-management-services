@@ -171,7 +171,6 @@ public class PartnerServiceImplTest {
     	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
     	filterDtos.add(filterDto);
     	deviceFilterValueDto.setFilters(filterDtos);
-    	deviceFilterValueDto.setOptionalFilters(searchDtos);
     	//Search_Partner_Test
     	pagination.setPageFetch(10);
     	pagination.setPageStart(0);

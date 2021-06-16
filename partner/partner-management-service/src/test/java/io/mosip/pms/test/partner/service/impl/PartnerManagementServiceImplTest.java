@@ -38,6 +38,7 @@ import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
@@ -95,7 +96,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispRepository", mispRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
-		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 	}
 	
 	@Test(expected = PartnerManagerServiceException.class)

@@ -138,8 +138,7 @@ public class DeviceDetailServiceTest {
     	filterDtos.add(filterDto);
     	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
     	searchDtos.add(searchDto);
-    	deviceFilterDto.setFilters(filterDtos);
-    	deviceFilterDto.setOptionalFilters(searchDtos);
+    	deviceFilterDto.setFilters(filterDtos);    	
     	//deviceFilterDto.setDeviceProviderId("all");
     	deviceFilterDto.setPurpose(Purpose.REGISTRATION);
     	//Search

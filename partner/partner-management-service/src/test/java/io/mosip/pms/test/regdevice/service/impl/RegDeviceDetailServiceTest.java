@@ -141,7 +141,6 @@ public class RegDeviceDetailServiceTest {
     	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
     	searchDtos.add(searchDto);
     	deviceFilterDto.setFilters(filterDtos);
-    	deviceFilterDto.setOptionalFilters(searchDtos);
     	deviceFilterDto.setPurpose(Purpose.REGISTRATION);
 		
 		partner.setId("1234");

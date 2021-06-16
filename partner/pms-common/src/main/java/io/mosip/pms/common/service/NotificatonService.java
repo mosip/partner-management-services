@@ -49,6 +49,9 @@ public class NotificatonService {
 
 	@Value("${apikey.status.content-template}")
 	private String apikeyStatusContentTemplate;
+	
+	@Value("${partner.apikey.status.sub-template}")
+	private String apikeyStatusSubjectTemplate;
 
 	@Autowired
 	private TemplateUtil templateUtil;
@@ -68,7 +71,7 @@ public class NotificatonService {
 			sendNotications(notificationDtos, partnerApikeyStatusSubTemplate, apikeyStatusContentTemplate);
 			break;
 		case APIKEY_EXPIRED:
-			sendNotications(notificationDtos, apikeyStatusContentTemplate, apikeyStatusContentTemplate);
+			sendNotications(notificationDtos, apikeyStatusSubjectTemplate, apikeyStatusContentTemplate);
 		default:
 			break;
 		}

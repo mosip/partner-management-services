@@ -39,6 +39,7 @@ public enum ErrorCode {
 	INVALID_PARTNER_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - for all attributes not as per defined data definition"),
 	EMAIL_ALREADY_EXISTS_EXCEPTION("PMS_PRT_011", "Email is already exists."),
 	INVALID_EMAIL_ID_EXCEPTION("PMS_PRT_012", "Invalid emailId."),
+	INVALID_MOBILE_NUMBER_EXCEPTION("PMS_PRT_013", "Invalid mobile number.Length should be less than ."),
 	AUTHENTICATION_FAILED("PMS-ATH-401","Authentication Failed"),
 	APIKEYREQIDSTATUSINPROGRESS("PMS_PRT_106","APIKeyReqID status is In-progress"),
 	API_NOT_ACCESSIBLE_EXCEPTION("PMS_KKS_001", "API not accessible  "),

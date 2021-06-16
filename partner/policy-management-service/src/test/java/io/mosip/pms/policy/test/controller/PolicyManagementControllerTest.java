@@ -116,10 +116,8 @@ public class PolicyManagementControllerTest {
     	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
     	searchDtos.add(searchFilter);
     	filterValueDto.setFilters(filterDtos);
-    	filterValueDto.setOptionalFilters(searchDtos);
     	policyFilterValueDto.setPolicyType("");
     	policyFilterValueDto.setFilters(filterDtos);
-    	policyFilterValueDto.setOptionalFilters(searchDtos);
     	policySearchDto.setPolicyType("");
     	searchDto.setFilters(searchDtos);
     	searchSort.setSortField("model");
@@ -497,6 +495,11 @@ public class PolicyManagementControllerTest {
         request.setMetadata("{}");
         return request;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private FilterValueDto createPolicyGroupFilterRequest() {
 		List<FilterDto> filterDtos = new ArrayList<FilterDto>();
 		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
@@ -506,7 +509,6 @@ public class PolicyManagementControllerTest {
 		PolicyFilterValueDto policyFilterValueDto = new PolicyFilterValueDto();
 		policyFilterValueDto.setPolicyType("");
     	policyFilterValueDto.setFilters(filterDtos);
-    	policyFilterValueDto.setOptionalFilters(searchDtos);
 		filterDto.setColumnName("name");
 		filterDto.setText("");
 		filterDto.setType("ALL");
@@ -518,10 +520,13 @@ public class PolicyManagementControllerTest {
     	filterDtos.add(filterDto);
     	searchDtos.add(searchFilter);
     	filterValueDto.setFilters(filterDtos);
-    	filterValueDto.setOptionalFilters(searchDtos);
     	return filterValueDto;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private RequestWrapper<PolicyFilterValueDto> createPolicyFilterrRequest() {
 		RequestWrapper<PolicyFilterValueDto> request = new RequestWrapper<PolicyFilterValueDto>();
 		request.setRequest(createPolicyFilterRequest());
@@ -531,6 +536,11 @@ public class PolicyManagementControllerTest {
         request.setMetadata("{}");
         return request;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private PolicyFilterValueDto createPolicyFilterRequest() {
 		List<FilterDto> filterDtos = new ArrayList<FilterDto>();
 		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
@@ -549,7 +559,6 @@ public class PolicyManagementControllerTest {
     	searchDtos.add(searchFilter);
     	policyFilterValueDto.setPolicyType("AUTH");
     	policyFilterValueDto.setFilters(filterDtos);
-    	policyFilterValueDto.setOptionalFilters(searchDtos);
     	return policyFilterValueDto;
 	}
 
