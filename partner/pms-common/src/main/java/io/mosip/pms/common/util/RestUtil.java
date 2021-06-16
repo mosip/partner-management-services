@@ -22,6 +22,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.TrustStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -50,11 +52,25 @@ import io.mosip.pms.common.exception.ApiAccessibleException;
 @Component
 public class RestUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
+
 	@Autowired
 	private Environment environment;
 
 	private static final String AUTHORIZATION = "Authorization=";
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param apiUrl
+	 * @param pathsegments
+	 * @param queryParamName
+	 * @param queryParamValue
+	 * @param mediaType
+	 * @param requestType
+	 * @param responseClass
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
 			MediaType mediaType, Object requestType, Class<?> responseClass) {
@@ -89,14 +105,25 @@ public class RestUtil {
 						responseClass);
 
 			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + e.getMessage());
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param apiName
+	 * @param pathsegments
+	 * @param queryParamName
+	 * @param queryParamValue
+	 * @param responseType
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
 			Class<?> responseType) {
@@ -105,7 +132,6 @@ public class RestUtil {
 		UriComponentsBuilder builder = null;
 		UriComponents uriComponents = null;
 		if (apiHostIpPort != null) {
-
 			builder = UriComponentsBuilder.fromUriString(apiHostIpPort);
 			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
 				for (String segment : pathsegments) {
@@ -133,41 +159,54 @@ public class RestUtil {
 						.exchange(uriComponents.toUri(), HttpMethod.GET, setRequestHeader(null, null), responseType)
 						.getBody();
 			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + e.getMessage());
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 
 		}
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param apiUrl
+	 * @param pathsegments
+	 * @param responseType
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiUrl, Map<String, String> pathsegments, Class<?> responseType) {
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiUrl != null) {
-
 			builder = UriComponentsBuilder.fromUriString(apiUrl);
-
 			URI urlWithPath = builder.build(pathsegments);
-
 			RestTemplate restTemplate;
-
 			try {
 				restTemplate = getRestTemplate();
 				result = (T) restTemplate
 						.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, null), responseType).getBody();
 			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", urlWithPath, e);
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage() + apiUrl);
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
 			}
 
 		}
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws KeyManagementException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyStoreException
+	 */
 	public RestTemplate getRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
@@ -176,11 +215,16 @@ public class RestUtil {
 		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClient);
-
 		return new RestTemplate(requestFactory);
-
 	}
 
+	/**
+	 * 
+	 * @param requestType
+	 * @param mediaType
+	 * @return
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
@@ -199,13 +243,18 @@ public class RestUtil {
 						headers.add(key, httpHeader.get(key).get(0));
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
-			} catch (ClassCastException e) {
+			} catch (ClassCastException e) {				
 				return new HttpEntity<Object>(requestType, headers);
 			}
 		} else
 			return new HttpEntity<Object>(headers);
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public String getToken() throws IOException {
 		String token = System.getProperty("token");
 		boolean isValid = false;
@@ -220,7 +269,6 @@ public class RestUtil {
 			tokenRequestDTO.setMetadata(new Metadata());
 
 			tokenRequestDTO.setRequesttime(DateUtils.getUTCCurrentDateTimeString());
-			// tokenRequestDTO.setRequest(setPasswordRequestDTO());
 			tokenRequestDTO.setRequest(setSecretKeyRequestDTO());
 
 			Gson gson = new Gson();
@@ -238,12 +286,17 @@ public class RestUtil {
 				System.setProperty("token", token.substring(14, token.indexOf(';')));
 				return token.substring(0, token.indexOf(';'));
 			} catch (IOException e) {
+				logger.error("Error occurred in getToken()", e);
 				throw e;
 			}
 		}
 		return AUTHORIZATION + token;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private SecretKeyRequest setSecretKeyRequestDTO() {
 		SecretKeyRequest request = new SecretKeyRequest();
 		request.setAppId(environment.getProperty("mosip.pmp.auth.appId"));

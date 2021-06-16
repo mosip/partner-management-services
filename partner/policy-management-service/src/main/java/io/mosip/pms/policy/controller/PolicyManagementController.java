@@ -170,7 +170,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyId) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICIES);
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyId);
 		response.setResponse(responseDto);
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
@@ -220,7 +220,7 @@ public class PolicyManagementController {
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICY_GROUPS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
 		response.setResponse(policyManagementService.getPolicyGroup());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;

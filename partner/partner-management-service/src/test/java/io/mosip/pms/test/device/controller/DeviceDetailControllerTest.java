@@ -282,8 +282,7 @@ public class DeviceDetailControllerTest {
     	searchfilterDtos.add(searchFilter);
     	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
     	filterDtos.add(filterDto);
-    	dto.setFilters(filterDtos);
-    	dto.setOptionalFilters(searchfilterDtos);
+    	dto.setFilters(filterDtos);    	
     	dto.setPurpose(Purpose.REGISTRATION);
 		return dto;
     
@@ -315,8 +314,7 @@ public class DeviceDetailControllerTest {
     	searchfilterDtos.add(searchFilter);
     	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
     	filterDtos.add(filterDto);
-    	dto.setFilters(filterDtos);
-    	dto.setOptionalFilters(searchfilterDtos);
+    	dto.setFilters(filterDtos);    	
     	dto.setPurpose(Purpose.AUTH);
 		return dto;
     

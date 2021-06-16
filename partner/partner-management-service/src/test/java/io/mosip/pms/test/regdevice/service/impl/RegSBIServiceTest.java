@@ -76,6 +76,7 @@ public class RegSBIServiceTest {
 	
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	RegDeviceDetail deviceDetail=new RegDeviceDetail();
+	List<RegDeviceDetail> deviceDetailsList = new ArrayList<RegDeviceDetail>();
 	SecureBiometricInterfaceCreateDto sbicreatedto = new SecureBiometricInterfaceCreateDto();
 	SecureBiometricInterfaceUpdateDto sbidto = new SecureBiometricInterfaceUpdateDto();
 	RegSecureBiometricInterface secureBiometricInterface=new RegSecureBiometricInterface();
@@ -161,6 +162,7 @@ public class RegSBIServiceTest {
     	deviceDetail.setMake("make");
     	deviceDetail.setModel("model");
     	deviceDetail.setPartnerOrganizationName("pog");
+    	deviceDetailsList.add(deviceDetail);
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
@@ -168,6 +170,7 @@ public class RegSBIServiceTest {
 		Mockito.doReturn(secureBiometricInterfaceHistory).when(sbiHistoryRepository).save(Mockito.any());
 		
 		Mockito.doReturn(deviceDetail).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
+		Mockito.doReturn(deviceDetailsList).when(deviceDetailRepository).findByIds(Mockito.any());
 		
 		}
 	
@@ -197,9 +200,8 @@ public class RegSBIServiceTest {
     }
 	
 	@Test(expected=RequestException.class)
-    public void createSBINoDviceTest() throws Exception {
+    public void createSBINoDeviceTest() throws Exception {		
 		Mockito.doReturn(null).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
-		
 		secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
     }
 	

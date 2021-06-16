@@ -162,7 +162,6 @@ public class RegisteredDeviceServiceTest {
     	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
     	searchDtos.add(searchDto);
     	DeviceFilterValueDto.setFilters(filterDtos);
-    	DeviceFilterValueDto.setOptionalFilters(searchDtos);
     	//DeviceFilterValueDto.setDeviceProviderId("all");
     	DeviceFilterValueDto.setPurpose(Purpose.REGISTRATION);
 		

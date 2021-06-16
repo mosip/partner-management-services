@@ -184,6 +184,7 @@ public class PolicyManagementService {
 		policyGroup.setUserId(getUser());
 		policyGroup.setId(PolicyUtil.generateId());
 		policyGroup.setIsDeleted(false);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
 		return savePolicyGroup(policyGroup);
 	}
 
@@ -257,10 +258,10 @@ public class PolicyManagementService {
 	public PolicyCreateResponseDto createPolicies(PolicyCreateRequestDto requestDto)
 			throws PolicyManagementServiceException, Exception {
 		validatePolicyTypes(requestDto.getPolicyType());
-		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
+		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.CREATE_POLICY_FAILURE);
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
-		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies(),PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE)) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE);
+		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies(),PolicyManageEnum.CREATE_POLICY_FAILURE)) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage());
 		}
@@ -280,12 +281,17 @@ public class PolicyManagementService {
 		try {
 			return policyValidator.validatePolicies(getPolicySchema(policyType),
 					IOUtils.toString(policies.toString().getBytes(), "UTF-8"));
-		} catch (PolicyObjectValidationFailedException e) {
+		}catch(PolicyObjectValidationFailedException e) {
+			auditUtil.setAuditRequestDto(auditEnum);
+			logger.error("Error occured while validating the policy {} ", e.getLocalizedMessage(), e);
 			throw e;
 		} catch (InvalidPolicySchemaException | PolicyIOException e) {
+			auditUtil.setAuditRequestDto(auditEnum);
+			logger.error("Error occured while validating the policy {} ", e.getLocalizedMessage(), e);
 			throw new PolicyManagementServiceException(e.getErrorCode(), e.getErrorText());
 		} catch (IOException e) {
 			auditUtil.setAuditRequestDto(auditEnum);
+			logger.error("Error occured while validating the policy {} ", e.getLocalizedMessage(), e);
 			throw new PolicyManagementServiceException(ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorCode(),
 					ErrorMessages.SCHEMA_POLICY_NOT_MATCHING.getErrorMessage() + "/" + e.getMessage());
 		}
@@ -354,8 +360,7 @@ public class PolicyManagementService {
 		responseDto.setId(policyGroup.getId());
 		responseDto.setIs_Active(policyGroup.getIsActive());
 		responseDto.setUp_by(policyGroup.getUpdBy());
-		responseDto.setUpd_dtimes(policyGroup.getUpdDtimes());
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS);
+		responseDto.setUpd_dtimes(policyGroup.getUpdDtimes());		
 		return responseDto;
 	}
 
@@ -471,8 +476,7 @@ public class PolicyManagementService {
 			authPolicy.SetVersion(version);
 			authPolicy.setPolicyFileId(policyJson.toJSONString());
 			authPolicy.setUpdBy(getUser());
-			authPolicy.setUpdDtimes(LocalDateTime.now());
-			notify(authPolicy.getId());
+			authPolicy.setUpdDtimes(LocalDateTime.now());			
 			notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));
 		} else {
 			authPolicy = new AuthPolicy();
@@ -557,7 +561,6 @@ public class PolicyManagementService {
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response = new ResponseWrapper<>();
 		PolicyStatusUpdateResponseDto responseDto = new PolicyStatusUpdateResponseDto();
 		responseDto.setMessage("status updated successfully");
-		notify(policyId);
 		notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));
 		response.setResponse(responseDto);
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_SUCCESS);
@@ -673,8 +676,7 @@ public class PolicyManagementService {
 	public PolicyResponseDto getAuthPolicyWithApiKey(String partnerApiKey)
 			throws FileNotFoundException, IOException, ParseException {
 		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
-		if (partnerPolicy == null) {
-			logger.error("Partner api key not found");
+		if (partnerPolicy == null) {			
 			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_BY_APIKEY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
@@ -695,8 +697,7 @@ public class PolicyManagementService {
 	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId)
 			throws JsonParseException, JsonMappingException, IOException {
 		List<PartnerPolicy> partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
-		if (partnerPolicy.isEmpty()) {
-			logger.error("Partner is not found");
+		if (partnerPolicy.isEmpty()) {			
 			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY_FAILURE);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
@@ -795,11 +796,11 @@ public class PolicyManagementService {
 		try {
 			return ((JSONObject) parser.parse(policy));
 		} catch (ParseException e) {
-			error = e.getMessage();
+			logger.error("Error occured while getting the getPolicyObject {} ", e.getLocalizedMessage(), e);
+			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_PARSING_ERROR.getErrorCode(),
+					ErrorMessages.POLICY_PARSING_ERROR.getErrorMessage() + error);
 		}
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_FAILURE);
-		throw new PolicyManagementServiceException(ErrorMessages.POLICY_PARSING_ERROR.getErrorCode(),
-				ErrorMessages.POLICY_PARSING_ERROR.getErrorMessage() + error);
 	}
 
 	/**
@@ -898,12 +899,17 @@ public class PolicyManagementService {
 	public PageResponseDto<PolicyGroup> searchPolicyGroup(SearchDto dto) {
 		List<PolicyGroup> policies = new ArrayList<>();
 		PageResponseDto<PolicyGroup> pageDto = new PageResponseDto<>();
-		Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
-		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			policies = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
-			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
+		try {
+			Page<PolicyGroup> page = searchHelper.search(PolicyGroup.class, dto);
+			if (page.getContent() != null && !page.getContent().isEmpty()) {
+				policies = MapperUtils.mapAll(page.getContent(), PolicyGroup.class);
+				pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(), page.getTotalElements());
+			}
+		} catch (Exception ex) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP_FAILURE);
+			throw ex;
 		}
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP_SUCCESS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP_SUCCESS);
 		return pageDto;
 	}
 
@@ -950,9 +956,8 @@ public class PolicyManagementService {
 		try {
 			return new KeyValuePair<String, Object>(key, (JSONObject) parser.parse(configValue));
 		} catch (ParseException e) {
+			logger.error("Error occured while reading the getValueForKey {} ", e.getLocalizedMessage(), e);
 			auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_FAILURE);
-			logger.error("Error while reading the config value " + e.getLocalizedMessage() + e.getMessage());
-
 		}
 		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE_SUCCESS);
 		return new KeyValuePair<String, Object>(key, configValue);
