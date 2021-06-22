@@ -38,6 +38,7 @@ import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
@@ -88,7 +89,7 @@ public class PartnerManagementControllerTest {
 	
 	@Before
 	public void setUp() {
-		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
+		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 	}
 	
 	@Test

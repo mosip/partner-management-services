@@ -6,8 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,8 @@ import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
@@ -64,15 +64,16 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping(value = "/partners")
 @Api(tags = { "Partner Service Controller" })
-public class PartnerServiceController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceController.class);
+public class PartnerServiceController {	
 
 	@Autowired
 	PartnerService partnerService;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
+	
+	@Autowired
+	AuditUtil auditUtil;
 	
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
@@ -87,14 +88,12 @@ public class PartnerServiceController {
 	@PostMapping
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
-		LOGGER.info("partner self registration");
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
-		LOGGER.info("calling savePartner method");
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER);
 		partnerResponse = partnerService.savePartner(partnerRequest);
-		LOGGER.info(partnerResponse + " : response of savePartner method");
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
@@ -118,6 +117,7 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnerAPIKeyResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
 		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST);
 		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -137,6 +137,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS);
 		response.setResponse(partnerService.addBiometricExtractors(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -153,6 +154,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "{partnerId}/bioextractors/{policyId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ExtractorsDto>> getBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId){
 		ResponseWrapper<ExtractorsDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_BIO_EXTRACTORS);
 		ExtractorsDto extractors = partnerService.getBiometricExtractors(partnerId, policyId);
 		response.setResponse(extractors);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -170,6 +172,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyId,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE);
 		response.setResponse(partnerService.mapPartnerPolicyCredentialType(credentialType, partnerId, policyId));
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
@@ -178,6 +181,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies",method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_POLICY_CREDENTIAL_TYPE);
 		response.setResponse(partnerService.getPartnerCredentialTypePolicy(credentialType, partnerId));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -192,6 +196,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "{partnerId}/contact/add", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS);
 		response.setResponse(partnerService.createAndUpdateContactDetails(request.getRequest(),partnerId));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -213,6 +218,7 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerUpdateRequest partnerRequest = request.getRequest();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER);
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -233,6 +239,7 @@ public class PartnerServiceController {
 			@PathVariable String partnerId) {
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER);
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -255,6 +262,7 @@ public class PartnerServiceController {
 			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
 		List<APIkeyRequests> apikeyRequestsList = null;
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEYS);
 		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -280,6 +288,7 @@ public class PartnerServiceController {
 			@PathVariable String partnerId, @PathVariable String apikeyreqId) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
 		DownloadPartnerAPIkeyResponse aPIkeyRequests = null;
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEY_STATUS);
 		aPIkeyRequests = partnerService.getApikeyFromRequestKey(partnerId, apikeyreqId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -302,6 +311,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
 			@ApiParam("Upload CA/Sub-CA certificates.") @RequestBody @Valid RequestWrapper<CACertificateRequestDto> caCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<CACertificateResponseDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_CA_CERT);
 		response.setResponse(partnerService.uploadCACertificate(caCertRequestDto.getRequest()));
 		return response;
     }
@@ -322,6 +332,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateUploadRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT);
 		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		return response;
 	}
@@ -342,7 +353,8 @@ public class PartnerServiceController {
 			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
-		requestDto.setPartnerId(partnerId);		
+		requestDto.setPartnerId(partnerId);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT);
 		response.setResponse(partnerService.getPartnerCertificate(requestDto));
 		return response;
     }	
@@ -353,6 +365,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER);
 		responseWrapper.setResponse(partnerService.searchPartner(request.getRequest()));
 		return responseWrapper;
 	}
@@ -363,6 +376,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PageResponseDto<PartnerType>> searchPartnerType(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerType>> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_TYPE);
 		responseWrapper.setResponse(partnerService.searchPartnerType(request.getRequest()));
 		return responseWrapper;
 	}
@@ -373,6 +387,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.FILTER_PARTNER);
 		responseWrapper.setResponse(partnerService.filterValues(request.getRequest()));
 		return responseWrapper;
 	}
@@ -383,6 +398,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<FilterResponseCodeDto> apikeyRequetsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.FILTER_PARTNER_APIKEY_REQUESTS);
 		responseWrapper.setResponse(partnerService.apiKeyRequestFilter(request.getRequest()));
 		return responseWrapper;
 	}
@@ -393,6 +409,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_APIKEY);
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeyRequests(request.getRequest()));
 		return responseWrapper;
 	}
@@ -403,6 +420,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> responseWrapper = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_APIKEY_REQUEST);
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeys(request.getRequest()));
 		return responseWrapper;
 	}
