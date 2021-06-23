@@ -335,10 +335,10 @@ public class PartnerServiceImpl implements PartnerService {
 		return partner;
 	}
 
-	private PolicyGroup validateAndGetPolicyGroupByName(String policyGroup) {
-		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroup);
-		if (policyGroup == null) {
-			LOGGER.error(policyGroup + " : Policy Group is not available");
+	private PolicyGroup validateAndGetPolicyGroupByName(String policyGroupName) {
+		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroupName);
+		if (policyGroupFromDb == null) {
+			LOGGER.error(policyGroupName + " : Policy Group is not available");
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
@@ -481,6 +481,11 @@ public class PartnerServiceImpl implements PartnerService {
 		Map<String, Object> data = new HashMap<>();
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		Partner partner = getValidPartner(partnerId, false);
+		if(partner.getPolicyGroupId() == null) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
+					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
+		}
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
