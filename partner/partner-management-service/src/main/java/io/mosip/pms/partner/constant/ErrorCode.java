@@ -3,7 +3,7 @@ package io.mosip.pms.partner.constant;
 public enum ErrorCode {
 
 	MISSING_PARTNER_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter"),
-	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy does not exist"),
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy group does not exist"),
 	PARTNER_TYPE_DOES_NOT_EXIST("PMS_PRT_010", "Partner Type does not exist"),
 	INVALID_COLUMN("PMS-PRT-310", "Invalid column received : %s"),
 	INVALID_PAGINATION_VALUE("PMS-PRT-313", "Invalid pagination value received pagestart:%d and pagefetch:%d"),
@@ -52,7 +52,8 @@ public enum ErrorCode {
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
 	DATASHARE_RESPONSE_NULL("PMS_DTS_001",  "DataShare response is null"),
 	P7B_CERTDATA_PARSING_ERROR("PMS_PRT_045","Error occured while parsing P7B certificate data"),
-	P7B_CERTDATA_ERROR("PMS_PRT_046","Error occured while extracting the leaf cert.");
+	P7B_CERTDATA_ERROR("PMS_PRT_046","Error occured while extracting the leaf cert."),
+	PARTNER_NOT_MAPPED_TO_POLICY_GROUP("PMS_PRT_046","Partner is not mapped to policy group");
 
 	
 	/**
