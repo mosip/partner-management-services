@@ -53,7 +53,7 @@ public enum ErrorCode {
 	DATASHARE_RESPONSE_NULL("PMS_DTS_001",  "DataShare response is null"),
 	P7B_CERTDATA_PARSING_ERROR("PMS_PRT_045","Error occured while parsing P7B certificate data"),
 	P7B_CERTDATA_ERROR("PMS_PRT_046","Error occured while extracting the leaf cert."),
-	PARTNER_NOT_MAPPED_TO_POLICY_GROUP("PMS_PRT_046","Partner is not mapped to policy group");
+	PARTNER_NOT_MAPPED_TO_POLICY_GROUP("PMS_PRT_047","Partner is not mapped to policy group");
 
 	
 	/**
