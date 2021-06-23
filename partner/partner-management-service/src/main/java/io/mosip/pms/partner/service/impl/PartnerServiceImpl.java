@@ -482,7 +482,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		Partner partner = getValidPartner(partnerId, false);
 		if(partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
 					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
 		}
