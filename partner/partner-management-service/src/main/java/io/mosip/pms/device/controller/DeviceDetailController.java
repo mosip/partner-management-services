@@ -61,8 +61,9 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetail())")
 	@PostMapping
 	@ApiOperation(value = "Service to save DeviceDetail", notes = "Saves DeviceDetail and return DeviceDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully created"),
@@ -101,8 +102,9 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutdevicedetail())")
 	@PutMapping
 	@ApiOperation(value = "Service to update DeviceDetail", notes = "Updates DeviceDetail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully updated"),
@@ -137,8 +139,9 @@ public class DeviceDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdevicedetail())")
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
@@ -170,8 +173,9 @@ public class DeviceDetailController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailsearch())")
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -184,8 +188,9 @@ public class DeviceDetailController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypesearch())")
 	@PostMapping("/deviceType/search")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
@@ -198,8 +203,9 @@ public class DeviceDetailController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailfiltervalues())")
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -213,8 +219,9 @@ public class DeviceDetailController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypefiltervalues())")
 	@PostMapping("/deviceType/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -227,8 +234,9 @@ public class DeviceDetailController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicesubtypefiltervalues())")
 	@PostMapping("/deviceSubType/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
