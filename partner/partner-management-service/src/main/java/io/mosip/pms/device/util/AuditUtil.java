@@ -40,6 +40,7 @@ import io.mosip.pms.device.constant.AuditErrorCode;
 import io.mosip.pms.device.exception.DeviceServiceException;
 import io.mosip.pms.device.util.dto.AuditRequestDto;
 import io.mosip.pms.device.util.dto.AuditResponseDto;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 
 @Component
 public class AuditUtil {
@@ -123,21 +124,32 @@ public class AuditUtil {
 		auditRequestDto.setApplicationName(APPLICATION_NAME);
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		
-		//if current profile is local or dev donot call this method
-		if(Arrays.stream(env.getActiveProfiles()).anyMatch(
-				   environment -> (environment.equalsIgnoreCase("local")) )) {
-			LOGGER.info("Recieved Audit : "+auditRequestDto.toString());
-			
-		} else {
-			callAuditManager(auditRequestDto);
-		}
-
-
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());		
+		callAuditManager(auditRequestDto);
 	}
 	
 	public void setAuditRequestDto(io.mosip.pms.partner.manager.constant.PartnerManageEnum PartnerManageEnum) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(PartnerManageEnum.getId());
+		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
+		callAuditManager(auditRequestDto);
+	}
+	
+	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		auditRequestDto.setHostIp(hostIpAddress);
 		auditRequestDto.setHostName(hostName);

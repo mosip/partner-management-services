@@ -294,8 +294,7 @@ public class PartnerServiceControllerTest {
     	filterDto.setType("all");
     	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
     	filterDtos.add(filterDto);
-    	deviceFilterValueDto.setFilters(filterDtos);
-    	deviceFilterValueDto.setOptionalFilters(searchDtos);
+    	deviceFilterValueDto.setFilters(filterDtos);    	
     	return deviceFilterValueDto;
     }
     

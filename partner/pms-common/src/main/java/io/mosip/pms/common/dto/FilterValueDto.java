@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class FilterValueDto {
+	
 	@NotNull
 	@Valid
 	private List<FilterDto> filters;

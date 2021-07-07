@@ -3,7 +3,7 @@ package io.mosip.pms.partner.constant;
 public enum ErrorCode {
 
 	MISSING_PARTNER_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter"),
-	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy does not exist"),
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy group does not exist"),
 	PARTNER_TYPE_DOES_NOT_EXIST("PMS_PRT_010", "Partner Type does not exist"),
 	INVALID_COLUMN("PMS-PRT-310", "Invalid column received : %s"),
 	INVALID_PAGINATION_VALUE("PMS-PRT-313", "Invalid pagination value received pagestart:%d and pagefetch:%d"),
@@ -39,6 +39,7 @@ public enum ErrorCode {
 	INVALID_PARTNER_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - for all attributes not as per defined data definition"),
 	EMAIL_ALREADY_EXISTS_EXCEPTION("PMS_PRT_011", "Email is already exists."),
 	INVALID_EMAIL_ID_EXCEPTION("PMS_PRT_012", "Invalid emailId."),
+	INVALID_MOBILE_NUMBER_EXCEPTION("PMS_PRT_013", "Invalid mobile number.Length should be less than ."),
 	AUTHENTICATION_FAILED("PMS-ATH-401","Authentication Failed"),
 	APIKEYREQIDSTATUSINPROGRESS("PMS_PRT_106","APIKeyReqID status is In-progress"),
 	API_NOT_ACCESSIBLE_EXCEPTION("PMS_KKS_001", "API not accessible  "),
@@ -48,7 +49,11 @@ public enum ErrorCode {
 	POLICY_GROUP_POLICY_NOT_EXISTS("PMS_PRT_098","Given policy under partner's policy group not exists."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy group is not active."),
-	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired.");
+	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
+	DATASHARE_RESPONSE_NULL("PMS_DTS_001",  "DataShare response is null"),
+	P7B_CERTDATA_PARSING_ERROR("PMS_PRT_045","Error occured while parsing P7B certificate data"),
+	P7B_CERTDATA_ERROR("PMS_PRT_046","Error occured while extracting the leaf cert."),
+	PARTNER_NOT_MAPPED_TO_POLICY_GROUP("PMS_PRT_047","Partner is not mapped to policy group");
 
 	
 	/**

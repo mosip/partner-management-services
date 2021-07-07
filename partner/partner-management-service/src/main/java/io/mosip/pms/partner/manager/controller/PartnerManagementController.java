@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +51,6 @@ import io.swagger.annotations.Api;
 @RequestMapping(value = "/partners")
 @Api(tags = { "Partner Management Controller" })
 public class PartnerManagementController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementController.class);
 	
 	@Autowired
 	PartnerManagerService partnerManagementService;
@@ -79,8 +75,7 @@ public class PartnerManagementController {
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerId,
-			@PathVariable String apikey) {
-		LOGGER.info("Requesting for updating the Policy Group");
+			@PathVariable String apikey) {		
 		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING);
 		PartnersPolicyMappingRequest partnersPolicyMappingRequest = request.getRequest();
 		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
