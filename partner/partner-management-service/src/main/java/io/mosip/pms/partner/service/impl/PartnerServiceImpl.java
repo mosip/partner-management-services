@@ -51,6 +51,7 @@ import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
@@ -517,7 +518,6 @@ public class PartnerServiceImpl implements PartnerService {
 			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
-			notify(data, EventType.APIKEY_APPROVED);
 			return partnerAPIKeyResponse;
 		}
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
@@ -758,11 +758,12 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
+		notify(MapperUtils.mapDataToPublishDto(updateObject, signedPartnerCert), EventType.PARTNER_UPDATED);
 		notify(getDataShareurl(responseObject.getSignedCertificateData()), partnerCertRequesteDto.getPartnerDomain());
 		responseObject.setSignedCertificateData(signedPartnerCert);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_SUCCESS);
 		return responseObject;
-	}
+	}	
 
 	/**
 	 * Uploading other domain certs
@@ -1257,21 +1258,18 @@ public class PartnerServiceImpl implements PartnerService {
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
 		Map<String, Object> data = new HashMap<>();
-		data.put("certChainDatashareUrl", certData);
-		data.put("partnerDomain", partnerDomain);
+		data.put(PartnerConstants.CERT_CHAIN_DATA_SHARE_URL, certData);
+		data.put(PartnerConstants.PARTNER_DOMAIN, partnerDomain);
 		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
 	}
-
-	/**
-	 * 
-	 * @param data
-	 * @param eventType
-	 */
-	private void notify(Map<String, Object> data, EventType eventType) {
+	
+	private void notify(PartnerDataPublishDto mapDataToPublishDto, EventType partnerUpdated) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		webSubPublisher.notify(eventType, data, type);
+		Map<String, Object> data = new HashMap<>();
+		data.put(PartnerConstants.PARTNER_DATA, mapDataToPublishDto);
+		webSubPublisher.notify(partnerUpdated, data, type);		
 	}
 
 	/**

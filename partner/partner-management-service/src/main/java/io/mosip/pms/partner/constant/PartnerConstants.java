@@ -21,4 +21,14 @@ public final class PartnerConstants {
 	public static final String ACTIVE = "active";
 
 	public static final String DEACTIVE = "De-active";
+	
+	public static final String PARTNER_DATA = "partnerData";
+	
+	public static final String POLICY_DATA = "policyData";
+	
+	public static final String APIKEY_DATA = "apiKeyData";
+	
+	public static final String CERT_CHAIN_DATA_SHARE_URL = "certChainDatashareUrl";
+	
+	public static final String PARTNER_DOMAIN = "partnerDomain";
 }
