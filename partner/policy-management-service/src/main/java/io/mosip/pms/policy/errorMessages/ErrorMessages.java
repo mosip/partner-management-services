@@ -38,7 +38,8 @@ public enum ErrorMessages {
 	ALLOWED_KYC_ATTRIBUTES_NOT_REQUIRED("PMS_POL_048","AllowedKYC attributes are not required for given policyType "),
 	VERSION_NOT_ALLOWED("PMS_POL_050","The given version is not available.Allowed versions are : "),
 	SCHEMA_POLICY_NOT_MATCHING("PMS_POL_051","Policy Schema and policy are not matching"),
-	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object");
+	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
+	POLICY_GROUP_NOT_ACTIVE("PMS_POL_052","Policy group is not active.");
 	
 	
 	private final String errorCode;

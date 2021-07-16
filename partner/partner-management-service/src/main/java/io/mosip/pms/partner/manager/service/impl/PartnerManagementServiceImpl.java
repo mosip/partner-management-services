@@ -153,7 +153,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		partnerPolicyRepository.save(updateObject);
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Given apikey updated with policy successfully. ");
-		notify(partnerApikey, true);
 		notify(null, null, MapperUtils.mapKeyDataToPublishDto(updateObject), EventType.APIKEY_UPDATED);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_SUCCESS);
 		return partnersPolicyMappingResponse;
@@ -204,7 +203,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerRepository.save(updatePartnerObject);
 			response.setMessage("Partner activated successfully");			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
-			notify(partnerId, false);
 			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
 			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
@@ -214,7 +212,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerRepository.save(updatePartnerObject);
 			response.setMessage("Partner de-activated successfully");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
-			notify(partnerId, false);
 			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
 			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
@@ -239,7 +236,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
 			partnerPolicyFromDb.setIsActive(true);
-			notify(partnerAPIKey, true);
 			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey activated successfully.");
@@ -249,7 +245,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
 			partnerPolicyFromDb.setIsActive(false);
-			notify(partnerAPIKey, true);
 			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(partnerPolicyFromDb);
 			response.setMessage("Partner apikey de-activated successfully.");
@@ -620,17 +615,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		} else {
 			return null;
 		}
-	}
-
-	private void notify(String updatedObject, boolean isApiKeyUpdated) {
-		Type type = new Type();
-		type.setName("PartnerManagementServiceImpl");
-		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
-		Map<String, Object> data = new HashMap<>();
-		String updatedParam = (isApiKeyUpdated == true) ? "apiKey" : "partnerId";
-		data.put(updatedParam, updatedObject);
-		EventType event = (isApiKeyUpdated == true) ? EventType.APIKEY_UPDATED : EventType.PARTNER_UPDATED;
-		webSubPublisher.notify(event, data, type);
 	}	
 	
 	/**
@@ -644,13 +628,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			APIKeyDataPublishDto apiKeyDataToPublish, EventType eventType) {
 		Map<String, Object> data = new HashMap<>();
 		if (partnerDataToPublish != null) {
-			data.put("partnerData", partnerDataToPublish);
+			data.put(PartnerConstants.PARTNER_DATA, partnerDataToPublish);
 		}
 		if (policyDataToPublish != null) {
-			data.put("policyData", policyDataToPublish);
+			data.put(PartnerConstants.POLICY_DATA, policyDataToPublish);
 		}
 		if(apiKeyDataToPublish != null) {
-			data.put("apiKeyData",apiKeyDataToPublish);
+			data.put(PartnerConstants.APIKEY_DATA, apiKeyDataToPublish);
 		}
 		notify(data, eventType);
 	}
