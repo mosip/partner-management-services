@@ -232,7 +232,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${pmp.partner.mobileNumbe.max.length:16}")
+	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
 	@Override
