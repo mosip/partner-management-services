@@ -156,8 +156,7 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
-	public static final String ALL = "all";
-	public static final LocalDateTime MAX_DATE = LocalDateTime.MAX;
+	public static final String ALL = "all";	
 
 	/** The mapper. */
 	@Autowired
@@ -497,7 +496,7 @@ public class PolicyManagementService {
 			authPolicy.setIsDeleted(false);
 			authPolicy.SetVersion(version);
 			authPolicy.setValidFromDate(LocalDateTime.now());
-			authPolicy.setValidToDate(MAX_DATE);
+			authPolicy.setValidToDate(LocalDateTime.now().plusYears(200));
 			authPolicy.setPolicyGroup(new PolicyGroup());
 			authPolicy.getPolicyGroup().setId(policyGroupId);
 			authPolicy.setPolicyFileId(policyJson.toJSONString());
