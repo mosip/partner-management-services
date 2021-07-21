@@ -31,7 +31,8 @@ public class MISPLicenseController {
 	@Autowired
 	InfraServiceProviderService infraProviderService;
 	
-	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisps())")
 	@PostMapping
 	public ResponseWrapper<MISPLicenseResponseDto> generateLicense(@RequestBody @Valid RequestWrapper<MISPLicenseRequestDto> request){	
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
@@ -39,7 +40,8 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutmisps())")
 	@PutMapping
 	public ResponseWrapper<MISPLicenseResponseDto> updateLicenseDetails(@RequestBody @Valid RequestWrapper<MISPLicenseUpdateRequestDto> request){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
@@ -48,7 +50,8 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisps())")
 	@GetMapping
 	public ResponseWrapper<List<MISPLicenseEntity>> getLicenseDetails(){
 		ResponseWrapper<List<MISPLicenseEntity>> response = new ResponseWrapper<>();
@@ -56,7 +59,8 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmispsmispidlicensekey())")
 	@GetMapping(value = "/{mispId}/licenseKey")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
