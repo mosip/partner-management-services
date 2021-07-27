@@ -30,8 +30,7 @@ public class DeviceValidationController {
 	@Autowired
 	private DeviceValidationService deviceValidationService;
 	
-	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeviceprovidermanagementvalidate())")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
 	@ResponseFilter
 	public ValidateResponseWrapper<ResponseDto> validateDeviceProvider(
