@@ -51,6 +51,7 @@ import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
@@ -231,7 +232,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${pmp.partner.mobileNumbe.max.length:16}")
+	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
 	@Override
@@ -335,10 +336,10 @@ public class PartnerServiceImpl implements PartnerService {
 		return partner;
 	}
 
-	private PolicyGroup validateAndGetPolicyGroupByName(String policyGroup) {
-		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroup);
-		if (policyGroup == null) {
-			LOGGER.error(policyGroup + " : Policy Group is not available");
+	private PolicyGroup validateAndGetPolicyGroupByName(String policyGroupName) {
+		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroupName);
+		if (policyGroupFromDb == null) {
+			LOGGER.error(policyGroupName + " : Policy Group is not available");
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
@@ -481,6 +482,11 @@ public class PartnerServiceImpl implements PartnerService {
 		Map<String, Object> data = new HashMap<>();
 		PartnerAPIKeyResponse partnerAPIKeyResponse = new PartnerAPIKeyResponse();
 		Partner partner = getValidPartner(partnerId, false);
+		if(partner.getPolicyGroupId() == null) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
+					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
+		}
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
@@ -512,7 +518,6 @@ public class PartnerServiceImpl implements PartnerService {
 			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
-			notify(data, EventType.APIKEY_APPROVED);
 			return partnerAPIKeyResponse;
 		}
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
@@ -753,11 +758,12 @@ public class PartnerServiceImpl implements PartnerService {
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
 		partnerRepository.save(updateObject);
+		notify(MapperUtils.mapDataToPublishDto(updateObject, signedPartnerCert), EventType.PARTNER_UPDATED);
 		notify(getDataShareurl(responseObject.getSignedCertificateData()), partnerCertRequesteDto.getPartnerDomain());
 		responseObject.setSignedCertificateData(signedPartnerCert);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_SUCCESS);
 		return responseObject;
-	}
+	}	
 
 	/**
 	 * Uploading other domain certs
@@ -1252,21 +1258,18 @@ public class PartnerServiceImpl implements PartnerService {
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
 		Map<String, Object> data = new HashMap<>();
-		data.put("certChainDatashareUrl", certData);
-		data.put("partnerDomain", partnerDomain);
+		data.put(PartnerConstants.CERT_CHAIN_DATA_SHARE_URL, certData);
+		data.put(PartnerConstants.PARTNER_DOMAIN, partnerDomain);
 		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
 	}
-
-	/**
-	 * 
-	 * @param data
-	 * @param eventType
-	 */
-	private void notify(Map<String, Object> data, EventType eventType) {
+	
+	private void notify(PartnerDataPublishDto mapDataToPublishDto, EventType partnerUpdated) {
 		Type type = new Type();
 		type.setName("PartnerServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
-		webSubPublisher.notify(eventType, data, type);
+		Map<String, Object> data = new HashMap<>();
+		data.put(PartnerConstants.PARTNER_DATA, mapDataToPublishDto);
+		webSubPublisher.notify(partnerUpdated, data, type);		
 	}
 
 	/**

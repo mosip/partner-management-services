@@ -260,6 +260,7 @@ public class PolicyServiceTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(getAuthPolicy()));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
@@ -277,6 +278,7 @@ public class PolicyServiceTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
 		authPolicy.getPolicyGroup().setId("8976");
@@ -346,6 +348,7 @@ public class PolicyServiceTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
 		authPolicy.getPolicyGroup().setId("12345");

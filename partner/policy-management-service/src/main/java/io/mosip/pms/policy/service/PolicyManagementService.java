@@ -129,10 +129,7 @@ public class PolicyManagementService {
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
-
-	@Value("${pmp.policy.expiry.period.indays:180 }")
-	private int policyExpiryPeriodInDays;
-
+	
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
 
@@ -159,7 +156,7 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
-	private static final String ALL = "all";
+	public static final String ALL = "all";	
 
 	/** The mapper. */
 	@Autowired
@@ -259,6 +256,11 @@ public class PolicyManagementService {
 			throws PolicyManagementServiceException, Exception {
 		validatePolicyTypes(requestDto.getPolicyType());
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.CREATE_POLICY_FAILURE);
+		if(!policyGroup.getIsActive()) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
+		}
 		validateAuthPolicyName(policyGroup.getId(), requestDto.getName());
 		if (!validatePolicy(requestDto.getPolicyType(), requestDto.getPolicies(),PolicyManageEnum.CREATE_POLICY_FAILURE)) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE);
@@ -306,6 +308,11 @@ public class PolicyManagementService {
 	public PolicyCreateResponseDto updatePolicies(PolicyUpdateRequestDto requestDto, String policyId)
 			throws PolicyManagementServiceException, Exception {
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
+		if(!policyGroup.getIsActive()) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
+		}
 		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
 		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroup.getId(),
 				requestDto.getName());
@@ -400,7 +407,6 @@ public class PolicyManagementService {
 		authPolicy.setPolicySchema(policySchemaUrl);
 		authPolicy.setIsActive(true);
 		authPolicy.setUpdBy(getUser());
-		authPolicy.setValidToDate(LocalDateTime.now().plusDays(policyExpiryPeriodInDays));
 		authPolicy.setUpdDtimes(LocalDateTime.now());
 		authPolicyRepository.save(authPolicy);
 		insertIntoAuthPolicyH(authPolicy);
@@ -490,7 +496,7 @@ public class PolicyManagementService {
 			authPolicy.setIsDeleted(false);
 			authPolicy.SetVersion(version);
 			authPolicy.setValidFromDate(LocalDateTime.now());
-			authPolicy.setValidToDate(LocalDateTime.now().plusDays(60));
+			authPolicy.setValidToDate(LocalDateTime.now().plusYears(200));
 			authPolicy.setPolicyGroup(new PolicyGroup());
 			authPolicy.getPolicyGroup().setId(policyGroupId);
 			authPolicy.setPolicyFileId(policyJson.toJSONString());
