@@ -147,7 +147,7 @@ public class RegisteredDeviceServiceTest {
 		searchFilter.setToValue("");
 		searchFilter.setType("STARTSWITH");
 		searchFilter.setValue("b");
-		deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+		deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
 		//Filter
 		filterDto.setColumnName("code");
     	filterDto.setText("");

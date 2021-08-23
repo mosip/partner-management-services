@@ -159,7 +159,6 @@ public class PolicyManagementController {
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICIES);
 		response.setResponse(policyManagementService.findAllPolicies());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
@@ -170,10 +169,8 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyId) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_ALL_POLICIES);
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyId);
 		response.setResponse(responseDto);
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_SUCCESS);
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
@@ -184,7 +181,6 @@ public class PolicyManagementController {
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_BY_APIKEY);
 		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
@@ -197,7 +193,6 @@ public class PolicyManagementController {
 			@PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_PARTNER_POLICY);
 		PolicyResponseDto policyGroup = policyManagementService.getPartnerMappedPolicy(partnerId, policyId);
 		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
@@ -209,8 +204,9 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policygroupId)
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
+		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		response.setResponse(policyManagementService.getPolicyGroupPolicy(policygroupId));
+		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}
 
@@ -219,8 +215,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup()
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_POLICY_GROUP);
+		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		response.setResponse(policyManagementService.getPolicyGroup());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
@@ -252,7 +247,6 @@ public class PolicyManagementController {
 	@GetMapping(value = "/config/{key}")
 	public ResponseWrapper<KeyValuePair<String, Object>> getValueForKey(@PathVariable String key) {
 		ResponseWrapper<KeyValuePair<String, Object>> responseWrapper = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.GET_CONFIG_VALUE);
 		responseWrapper.setResponse(policyManagementService.getValueForKey(key));
 		return responseWrapper;
 	}

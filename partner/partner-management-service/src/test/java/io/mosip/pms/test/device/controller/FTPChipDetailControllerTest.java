@@ -204,7 +204,7 @@ public class FTPChipDetailControllerTest {
 	    	dto.setSort(searchDtos1);
 	    	dto.setFilters(searchfilterDtos);
 	    	dto.setPagination(pagination);
-	    	dto.setPurpose(Purpose.REGISTRATION);
+	    	dto.setPurpose(Purpose.REGISTRATION.toString());
 			return dto;	
 	    }
 	    
@@ -241,7 +241,7 @@ public class FTPChipDetailControllerTest {
 	    	dto.setSort(searchDtos1);
 	    	dto.setFilters(searchfilterDtos);
 	    	dto.setPagination(pagination);
-	    	dto.setPurpose(Purpose.AUTH);
+	    	dto.setPurpose(Purpose.AUTH.toString());
 			return dto;
 	    }
 	    

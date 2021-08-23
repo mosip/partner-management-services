@@ -134,7 +134,7 @@ public class SBIServiceTest {
     	searchfilterDtos.add(searchFilter);
     	deviceSearchDto.setFilters(searchfilterDtos);
     	deviceSearchDto.setPagination(pagination);
-    	deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+    	deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
     	deviceSearchDto.setSort(searchDtos1);
     	pagination.setPageFetch(10);
     	pagination.setPageStart(0);
@@ -153,7 +153,7 @@ public class SBIServiceTest {
 		    	searchDtos.add(searchDto);
 		    	deviceSearchDto.setFilters(searchfilterDtos);
 		    	deviceSearchDto.setPagination(pagination);
-		    	deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+		    	deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
 		    	deviceSearchDto.setSort(searchDtos1);
 		    	
 				

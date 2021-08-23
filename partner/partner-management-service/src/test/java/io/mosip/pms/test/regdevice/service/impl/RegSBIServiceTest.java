@@ -129,7 +129,7 @@ public class RegSBIServiceTest {
     	deviceSearchDto.setFilters(searchfilterDtos);
     	deviceSearchDto.setPagination(pagination);
     	deviceSearchDto.setSort(searchDtos1);
-    	deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+    	deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
     	pagination.setPageFetch(10);
     	pagination.setPageStart(0);
 		

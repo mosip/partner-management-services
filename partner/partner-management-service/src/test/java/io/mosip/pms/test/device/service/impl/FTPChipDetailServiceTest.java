@@ -128,7 +128,7 @@ public class FTPChipDetailServiceTest {
     	searchDtos1.add(searchSort);
     	pagination.setPageFetch(10);
     	pagination.setPageStart(0);
-		deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+		deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
 		deviceSearchDto.setFilters(searchDtos);
 		deviceSearchDto.setPagination(pagination);
 		deviceSearchDto.setSort(searchDtos1);

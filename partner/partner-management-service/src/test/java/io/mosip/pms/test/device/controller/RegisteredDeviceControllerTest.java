@@ -126,7 +126,7 @@ public class RegisteredDeviceControllerTest {
     	registeredDeviceSearchDto.setSort(searchDtos1);
     	registeredDeviceSearchDto.setFilters(searchfilterDtos);
 		registeredDeviceSearchDto.setPagination(pagination);
-    	registeredDeviceSearchDto.setPurpose(Purpose.AUTH);
+    	registeredDeviceSearchDto.setPurpose(Purpose.AUTH.toString());
     	request.setRequest(registeredDeviceSearchDto);
     	mockMvc.perform(post("/registereddevices/search").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
@@ -179,7 +179,7 @@ public class RegisteredDeviceControllerTest {
     	registeredDeviceSearchDto.setSort(searchDtos1);
     	registeredDeviceSearchDto.setFilters(searchfilterDtos);
 		registeredDeviceSearchDto.setPagination(pagination);
-    	registeredDeviceSearchDto.setPurpose(Purpose.REGISTRATION);
+    	registeredDeviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
     	request.setRequest(registeredDeviceSearchDto);
     	mockMvc.perform(post("/registereddevices/search").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());

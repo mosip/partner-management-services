@@ -129,7 +129,7 @@ public class RegRegisteredDeviceServiceTest {
 				searchFilter.setToValue("");
 				searchFilter.setType("STARTSWITH");
 				searchFilter.setValue("b");
-				deviceSearchDto.setPurpose(Purpose.REGISTRATION);
+				deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
 		
 		registeredDevicePostDto = new RegisteredDevicePostDto();
 		 dig = new DigitalId();
