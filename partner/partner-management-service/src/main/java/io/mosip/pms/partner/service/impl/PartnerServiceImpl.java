@@ -344,6 +344,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
+		if(!policyGroupFromDb.getIsActive()) {
+			LOGGER.error("Policy group with name" + policyGroupName + " : is not active");
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());			
+		}
 		return policyGroupFromDb;
 	}
 
@@ -421,10 +427,10 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
 		response.setStatus(partner.getApprovalStatus());
+		response.setIsActive(partner.getIsActive());
 		if (partner.getPolicyGroupId() != null) {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
 		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_SUCCESS);
 		return response;
 	}
 
@@ -448,7 +454,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private PolicyGroup validateAndGetPolicyGroupById(String policyGroupId) {
 		Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
 		if (policyGroupFromDb.isEmpty()) {
-			LOGGER.error(policyGroupId + " : Policy Group is not available");
+			LOGGER.error("Policy group is not available with id {} ", policyGroupId);
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
@@ -576,8 +582,7 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
 				apikeyReqId);
 		if (partnerRequest == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEY_STATUS_FAILURE);
-			LOGGER.info(apikeyReqId + " : Invalid apikeyReqId");
+			LOGGER.error("No apikey requests exists for partner {} and apiKeyReqId {}", partnerId, apikeyReqId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -589,11 +594,15 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
 			response.setValidityTill(approvedPolicy.getValidToDatetime());
 			response.setApikeyStatus(approvedPolicy.getIsActive());
-		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEY_STATUS_SUCCESS);
+		}		
 		return response;
 	}
 
+	/**
+	 * 
+	 * @param apiKey
+	 * @return
+	 */
 	private PartnerPolicy getPartnerMappedPolicy(String apiKey) {
 		return partnerPolicyRepository.findByApiKey(apiKey);
 	}
@@ -602,8 +611,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerId) {
 		List<PartnerPolicyRequest> apikeyRequestsByPartner = partnerPolicyRequestRepository.findByPartnerId(partnerId);
 		if (apikeyRequestsByPartner.isEmpty()) {
-			LOGGER.info("For partner " + partnerId + " : no apikey request exists.");
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEYS_FAILURE);
+			LOGGER.error("No apiKey requests exists for given partner {} ", partnerId);  			
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -620,7 +628,6 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			apikeyRequests.add(approvedRequest);
 		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEYS_SUCCESS);
 		return apikeyRequests;
 	}
 
@@ -820,12 +827,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
 		if (partnerFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_FAILURE);
+			LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
 			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_FAILURE);
+			LOGGER.error("Cert is not uploaded for given partner {} ", certDownloadRequestDto.getPartnerId());
 			throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
 					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
 		}
@@ -840,22 +847,21 @@ public class PartnerServiceImpl implements PartnerService {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_FAILURE);
+				LOGGER.error("Error occured while getting the cert from keymanager ");
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_FAILURE);
 				LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
 		if (responseObject == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_FAILURE);
+			LOGGER.error("Got null respone from {} ",
+					environment.getProperty("pmp.partner.certificaticate.get.rest.uri"));
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT_SUCCESS);
 		return responseObject;
 
 	}
@@ -926,7 +932,7 @@ public class PartnerServiceImpl implements PartnerService {
 		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository
 				.findByPartnerAndPolicyId(partnerId, policyId);
 		if (extractorsFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_BIO_EXTRACTORS_FAILURE);
+			LOGGER.error("Bio extractors are not mapped to partner {} with policy {} ", partnerId, policyId);
 			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 		}
@@ -948,8 +954,7 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			extractors.add(extractor);
 		}
-		response.setExtractors(extractors);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_BIO_EXTRACTORS_SUCCESS);
+		response.setExtractors(extractors);		
 		return response;
 	}
 
@@ -1032,18 +1037,18 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndCrdentialType(partnerId, credentialType);
 		if (partnerCredentialTypePolicy == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_POLICY_CREDENTIAL_TYPE_FAILURE);
+			LOGGER.error("Policy is not mapped against to credential type {} and partner {} ", credentialType,
+					partnerId);
 			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 		}
 		Optional<AuthPolicy> authPolicy = authPolicyRepository
 				.findById(partnerCredentialTypePolicy.getId().getPolicyId());
 		if (authPolicy.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_POLICY_CREDENTIAL_TYPE_FAILURE);
+			LOGGER.error("Policy not exists with id {} ", partnerCredentialTypePolicy.getId().getPolicyId());
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_POLICY_CREDENTIAL_TYPE_SUCCESS);
+		}		
 		return mapPolicyToResponseDto(authPolicy.get(), partnerId, credentialType);
 	}
 

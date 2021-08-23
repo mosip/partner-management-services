@@ -39,7 +39,9 @@ public enum ErrorMessages {
 	VERSION_NOT_ALLOWED("PMS_POL_050","The given version is not available.Allowed versions are : "),
 	SCHEMA_POLICY_NOT_MATCHING("PMS_POL_051","Policy Schema and policy are not matching"),
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
-	POLICY_GROUP_NOT_ACTIVE("PMS_POL_052","Policy group is not active.");
+	POLICY_GROUP_NOT_ACTIVE("PMS_POL_053","Policy group is not active."),
+	DRAFTED_POLICY_NOT_ACTIVE("PMS_POL_054","Cannot activate unpublished policy."),
+	PUBLISHED_POLICY_NOT_UPDATED("PMS_POL_055","Published policy cannot be updated.");
 	
 	
 	private final String errorCode;

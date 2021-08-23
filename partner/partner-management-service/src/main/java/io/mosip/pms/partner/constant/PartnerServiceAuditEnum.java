@@ -139,15 +139,6 @@ public enum PartnerServiceAuditEnum {
 	RETRIVE_PARTNER_CERT_FAILURE("PMS_PRT_415", AuditConstant.AUDIT_SYSTEM, "GET PARTNER CERT",
 			"Retrieving partner cert failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_BIO_EXTRACTORS("PMS_PRT_116", AuditConstant.AUDIT_SYSTEM, "GET BIO EXTRACTORS",
-			"Retrieving bio extractors", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_BIO_EXTRACTORS_SUCCESS("PMS_PRT_216", AuditConstant.AUDIT_SYSTEM, "GET BIO EXTRACTORS",
-			"Retrieving bio extractors success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_BIO_EXTRACTORS_FAILURE("PMS_PRT_416", AuditConstant.AUDIT_SYSTEM, "GET BIO EXTRACTORS",
-			"Retrieving bio extractors failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
 	RETRIVE_PARTNER_APIKEYS("PMS_PRT_117", AuditConstant.AUDIT_SYSTEM, "GET PARTNER APIKEY REQUESTS",
 			"Retrieving partner apikey requests", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
@@ -174,17 +165,7 @@ public enum PartnerServiceAuditEnum {
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
 	RETRIVE_PARTNER_FAILURE("PMS_PRT_419", AuditConstant.AUDIT_SYSTEM, "GET PARTNER ",
 			"Retrieving partner failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_POLICY_CREDENTIAL_TYPE("PMS_PRT_120", AuditConstant.AUDIT_SYSTEM, "GET MAP POLICY CREDENTIAL TYPE",
-			"Retrieving policy and credential type ", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_POLICY_CREDENTIAL_TYPE_SUCCESS("PMS_PRT_220", AuditConstant.AUDIT_SYSTEM, "GET MAP POLICY CREDENTIAL TYPE",
-			"Retrieving policy and credential type success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-	RETRIVE_POLICY_CREDENTIAL_TYPE_FAILURE("PMS_PRT_420", AuditConstant.AUDIT_SYSTEM, "GET MAP POLICY CREDENTIAL TYPE",
-			"Retrieving policy and credential type failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
-
 	
 	private final String eventId;
 

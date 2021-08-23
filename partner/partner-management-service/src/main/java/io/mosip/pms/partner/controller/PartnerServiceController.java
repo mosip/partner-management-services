@@ -154,7 +154,6 @@ public class PartnerServiceController {
 	@RequestMapping(value = "{partnerId}/bioextractors/{policyId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<ExtractorsDto>> getBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId){
 		ResponseWrapper<ExtractorsDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_BIO_EXTRACTORS);
 		ExtractorsDto extractors = partnerService.getBiometricExtractors(partnerId, policyId);
 		response.setResponse(extractors);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -181,7 +180,6 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies",method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_POLICY_CREDENTIAL_TYPE);
 		response.setResponse(partnerService.getPartnerCredentialTypePolicy(credentialType, partnerId));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -192,14 +190,14 @@ public class PartnerServiceController {
 	 * @param request
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
 	@RequestMapping(value = "{partnerId}/contact/add", method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS);
 		response.setResponse(partnerService.createAndUpdateContactDetails(request.getRequest(),partnerId));
 		response.setId(request.getId());
-		response.setVersion(request.getVersion());
+																																																										response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	/**
@@ -211,7 +209,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return partnerResponse this class contains updated partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerId) {
@@ -233,13 +231,12 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerId) {
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER);
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -261,8 +258,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
 			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
-		List<APIkeyRequests> apikeyRequestsList = null;
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEYS);
+		List<APIkeyRequests> apikeyRequestsList = null;		
 		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -288,7 +284,6 @@ public class PartnerServiceController {
 			@PathVariable String partnerId, @PathVariable String apikeyreqId) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
 		DownloadPartnerAPIkeyResponse aPIkeyRequests = null;
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_APIKEY_STATUS);
 		aPIkeyRequests = partnerService.getApikeyFromRequestKey(partnerId, apikeyreqId);
 		response.setId(msg);
 		response.setVersion(version);
@@ -354,7 +349,6 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_CERT);
 		response.setResponse(partnerService.getPartnerCertificate(requestDto));
 		return response;
     }	

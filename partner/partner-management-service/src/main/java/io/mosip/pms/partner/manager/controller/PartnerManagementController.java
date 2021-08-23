@@ -152,10 +152,8 @@ public class PartnerManagementController {
 			@PathVariable String partnerId, @PathVariable String apikey,
 			@PathVariable String misplicensekey,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
 		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING);
 		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misplicensekey,apikey,partnerId,needPartnerCert);
 		response.setResponse(responseFromService);
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
@@ -197,12 +195,10 @@ public class PartnerManagementController {
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_GROUP);
 		retrievePartnerDetailsResponse = partnerManagementService.getAllAuthEKYCPartnersForThePolicyGroup(partnerType);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(retrievePartnerDetailsResponse);
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_GROUP_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
@@ -224,8 +220,8 @@ public class PartnerManagementController {
 			@PathVariable String apikey){
 		ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyToPolicyMappingsResponse partnerAPIKeyToPolicyMappingsResponse = null;
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER);
-		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerId,apikey);
+		partnerAPIKeyToPolicyMappingsResponse = partnerManagementService.getPartnerAPIKeyToPolicyMapping(partnerId,
+				apikey);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(partnerAPIKeyToPolicyMappingsResponse);
@@ -242,7 +238,6 @@ public class PartnerManagementController {
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
 		PartnerAPIKeyRequestsResponse partnerAPIKeyRequestsResponse = new PartnerAPIKeyRequestsResponse();
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER);
 		apikeyRequests = partnerManagementService.getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers();
 		partnerAPIKeyRequestsResponse.setApikeyRequests(apikeyRequests);
 		response.setId(msg);
@@ -262,7 +257,6 @@ public class PartnerManagementController {
 			@PathVariable String apikey) {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();
 		ApikeyRequests apikeyRequests=null;
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER);
 		apikeyRequests = partnerManagementService.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(apikey);
 		response.setId(msg);
 		response.setVersion(version);

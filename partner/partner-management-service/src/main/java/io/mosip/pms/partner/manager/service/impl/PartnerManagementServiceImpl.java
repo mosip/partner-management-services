@@ -185,35 +185,40 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			ActivateDeactivatePartnerRequest request) {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 		if (partnerFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);			
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		Partner updatePartnerObject = partnerFromDb.get();
 		updatePartnerObject.setUpdBy(getUser());
 		updatePartnerObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
+		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();		
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
 			if(updatePartnerObject.getCertificateAlias() == null) {
 				throw new PartnerManagerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
 						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());				
 			}
-			updatePartnerObject.setIsActive(true);			
-			partnerRepository.save(updatePartnerObject);
+			//if partner is not active, then only make partner active
+			if(!updatePartnerObject.getIsActive()) {
+				updatePartnerObject.setIsActive(true);			
+				partnerRepository.save(updatePartnerObject);
+				notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
+				sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
+			}
 			response.setMessage("Partner activated successfully");			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
-			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
-			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
-			updatePartnerObject.setIsActive(false);
-			partnerRepository.save(updatePartnerObject);
+			// if partner is active, then only make partner in-active
+			if(updatePartnerObject.getIsActive()) {
+				updatePartnerObject.setIsActive(false);
+				partnerRepository.save(updatePartnerObject);				
+				notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
+				sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
+			}
 			response.setMessage("Partner de-activated successfully");
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
-			notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
-			sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			return response;
 		}
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
@@ -270,7 +275,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		Partner partner = null;
 		if (partnersFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_GROUP_FAILURE);
+			LOGGER.error("Partners not exists in database");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -280,7 +285,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partner = partnerIterat.next();
 			retrievePartnersDetails.setPartnerID(partner.getId());
 			retrievePartnersDetails
-					.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+					.setStatus(partner.getApprovalStatus());
 			retrievePartnersDetails.setOrganizationName(partner.getName());
 			retrievePartnersDetails.setContactNumber(partner.getContactNo());
 			retrievePartnersDetails.setEmailId(partner.getEmailId());
@@ -289,7 +294,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partners.add(retrievePartnersDetails);
 		}
 		partnersResponse.setPartners(partners);
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_GROUP_SUCCESS);
 		return partnersResponse;
 	}
 
@@ -298,14 +302,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			String partnerAPIKey) {
 		PartnerPolicy partnerPolicyFromDb = partnerPolicyRepository.findByPartnerIdAndApikey(partnerId, partnerAPIKey);
 		if (partnerPolicyFromDb == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			LOGGER.error("Given apikey {} not mapped to partner {}", partnerAPIKey, partnerId);
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_API_KEY_NOT_MAPPED.getErrorCode(),
 					ErrorCode.PARTNER_API_KEY_NOT_MAPPED.getErrorMessage());
 		}
 		PartnerAPIKeyToPolicyMappingsResponse response = new PartnerAPIKeyToPolicyMappingsResponse();
 		response.setPartnerID(partnerId);
 		response.setPolicyId(partnerPolicyFromDb.getPolicyId());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_SUCCESS);
 		return response;
 	}
 
@@ -313,7 +316,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public List<ApikeyRequests> getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagers() {
 		List<PartnerPolicyRequest> apikeyRequestsFromDb = partnerPolicyRequestRepository.findAll();
 		if (apikeyRequestsFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_FAILURE);
+			LOGGER.error("No apikey requests exists");
 			throw new PartnerManagerServiceException(ErrorCode.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorCode(),
 					ErrorCode.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorMessage());
 		}
@@ -327,8 +330,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			apikeyRequests.setPolicyId(partnerPolicyRequest.getPolicyId());
 			apikeyRequests.setStatus(partnerPolicyRequest.getStatusCode());
 			response.add(apikeyRequests);
-		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_SUCCESS);
+		}		
 		return response;
 	}
 
@@ -336,7 +338,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public ApikeyRequests getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(String apiKeyReqId) {
 		Optional<PartnerPolicyRequest> apikeyRequestsFromDb = partnerPolicyRequestRepository.findById(apiKeyReqId);
 		if (apikeyRequestsFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_FAILURE);
+			LOGGER.error("APIKey request is not exists with id {}", apiKeyReqId);
 			throw new PartnerManagerServiceException(ErrorCode.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorCode(),
 					ErrorCode.NO_PARTNER_API_KEY_REQUEST_EXCEPTION.getErrorMessage());
 		}
@@ -347,7 +349,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		apikeyRequest.setPolicyDesc(apikeyRequestsFromDb.get().getRequestDetail());
 		apikeyRequest.setPolicyId(apikeyRequestsFromDb.get().getPolicyId());
 		apikeyRequest.setStatus(apikeyRequestsFromDb.get().getStatusCode());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_SUCCESS);
 		return apikeyRequest;
 	}
 
@@ -450,7 +451,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		response.setMispExpiresOn(toISOFormat(validLicense.getValidToDate()));
 		response.setPolicyExpiresOn(toISOFormat(policy.getValidToDate()));
 		response.setApiKeyExpiresOn(toISOFormat(partnerPolicy.getValidToDatetime().toLocalDateTime()));
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_SUCCESS);
 		return response;
 	}
 

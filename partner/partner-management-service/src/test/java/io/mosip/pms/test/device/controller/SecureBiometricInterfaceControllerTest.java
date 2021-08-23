@@ -123,7 +123,7 @@ public class SecureBiometricInterfaceControllerTest {
     	pagination.setPageStart(0);
     	dto.setFilters(searchfilterDtos);
     	dto.setPagination(pagination);
-    	dto.setPurpose(Purpose.AUTH);
+    	dto.setPurpose(Purpose.AUTH.toString());
     	dto.setSort(searchDtos1);
     	return dto;
     }
@@ -158,7 +158,7 @@ public class SecureBiometricInterfaceControllerTest {
     	pagination.setPageStart(0);
     	dto.setFilters(searchfilterDtos);
     	dto.setPagination(pagination);
-    	dto.setPurpose(Purpose.REGISTRATION);
+    	dto.setPurpose(Purpose.REGISTRATION.toString());
     	dto.setSort(searchDtos1);
     	return dto;
     }
