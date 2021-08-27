@@ -35,6 +35,7 @@ import io.mosip.pms.policy.dto.FilterResponseCodeDto;
 import io.mosip.pms.policy.dto.KeyValuePair;
 import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyCreateResponseDto;
+import io.mosip.pms.policy.dto.PolicyDetailsDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateResponseDto;
 import io.mosip.pms.policy.dto.PolicyGroupUpdateRequestDto;
@@ -253,7 +254,7 @@ public class PolicyManagementController {
 
 	@PostMapping("/group/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
-	public ResponseWrapper<FilterResponseCodeDto> PolicyGroupFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> policyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY_GROUP);
@@ -263,11 +264,21 @@ public class PolicyManagementController {
 
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
-	public ResponseWrapper<FilterResponseCodeDto> PolicyFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> policyFilterValues(
 			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.FILTERVALUES_POLICY);
 		responseWrapper.setResponse(policyManagementService.policyFilterValues(requestWrapper.getRequest()));
 		return responseWrapper;
+	}
+	
+	@GetMapping("/active/group/{groupName}")
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','ABIS_PARTNER','MANUAL_ADJUDICATION','POLICYMANAGER')")
+	public ResponseWrapper<List<PolicyDetailsDto>> getPoliciesByGroupName(@PathVariable String groupName) {
+		ResponseWrapper<List<PolicyDetailsDto>> response = new ResponseWrapper<>();
+		logger.info("Calling PolicyManagementService from PolicyManagementController.");
+		response.setResponse(policyManagementService.getActivePolicyDetailsByGroupName(groupName));
+		logger.info("Returning response from PolicyManagementController.");
+		return response;
 	}
 }
