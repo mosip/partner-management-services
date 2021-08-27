@@ -71,6 +71,7 @@ import io.mosip.pms.policy.dto.KeyValuePair;
 import io.mosip.pms.policy.dto.PartnerPolicySearchDto;
 import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyCreateResponseDto;
+import io.mosip.pms.policy.dto.PolicyDetailsDto;
 import io.mosip.pms.policy.dto.PolicyDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateResponseDto;
@@ -1042,5 +1043,41 @@ public class PolicyManagementService {
 		Map<String, Object> data = new HashMap<>();
 		data.put("policyData", dataToPublish);
 		webSubPublisher.notify(EventType.POLICY_UPDATED, data, type);
+	}
+	
+	/**
+	 * Gets the active policyDetails for given policy group name
+	 * 
+	 * @param policyGroupName
+	 * @return
+	 */
+	public List<PolicyDetailsDto> getActivePolicyDetailsByGroupName(String policyGroupName) {
+		PolicyGroup policy_group_by_name = policyGroupRepository.findByName(policyGroupName);
+		if (policy_group_by_name == null) {
+			logger.error("Policy group not exists with name {}", policyGroupName);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NAME_NOT_EXISTS.getErrorMessage());
+		}
+		if (!policy_group_by_name.getIsActive()) {
+			logger.error("Policy group with name {} is not active", policyGroupName);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
+		}
+
+		List<PolicyDetailsDto> policiesByGroupName = new ArrayList<>();
+		List<AuthPolicy> authPoliciesByGroupName = authPolicyRepository
+				.findActivePoliciesByPolicyGroupId(policy_group_by_name.getId());
+		authPoliciesByGroupName.forEach(policies -> {
+			PolicyDetailsDto dto = new PolicyDetailsDto();
+			dto.setDescr(policies.getDescr());
+			dto.setId(policies.getId());
+			dto.setName(policies.getName());
+			dto.setPolicyGroupId(policies.getPolicyGroup().getId());
+			dto.setPolicyGroupName(policies.getPolicyGroup().getName());
+			dto.setPolicyType(policies.getPolicy_type());
+			policiesByGroupName.add(dto);
+		});
+		return policiesByGroupName;
+
 	}
 }

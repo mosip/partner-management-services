@@ -25,5 +25,8 @@ public interface AuthPolicyRepository extends JpaRepository<AuthPolicy, String>{
 	
 	@Query(value = "select * from auth_policy ap where ap.id IN :policyIds and (ap.is_deleted is null or ap.is_deleted = false) and ap.is_active = true",nativeQuery = true)
 	List<AuthPolicy> findByPolicyIds(@Param("policyIds") List<String> policyIds);
+	
+	@Query(value = "select * from auth_policy ap where ap.policy_group_id=? and (ap.is_deleted is null or ap.is_deleted = false) and ap.is_active = true",nativeQuery = true)
+	List<AuthPolicy> findActivePoliciesByPolicyGroupId(String policyId);
 
 }
