@@ -1216,14 +1216,8 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param content
 	 * @return
 	 */
-	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
-		content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()).forEach(p->{
-			System.out.println("PolicyId : " + p);
-		});
-		List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));
-		authPolices.forEach(p->{
-			System.out.println(p.getId());
-		});
+	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {		
+		List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));		
 		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
 		content.forEach(policyRequest -> {
 			PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
