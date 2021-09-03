@@ -285,7 +285,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partner = partnerIterat.next();
 			retrievePartnersDetails.setPartnerID(partner.getId());
 			retrievePartnersDetails
-					.setStatus(partner.getApprovalStatus());
+			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
 			retrievePartnersDetails.setContactNumber(partner.getContactNo());
 			retrievePartnersDetails.setEmailId(partner.getEmailId());

@@ -426,7 +426,7 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setEmailId(partner.getEmailId());
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
-		response.setStatus(partner.getApprovalStatus());
+		response.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		response.setIsActive(partner.getIsActive());
 		if (partner.getPolicyGroupId() != null) {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
