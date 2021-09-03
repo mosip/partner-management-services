@@ -207,9 +207,9 @@ public class PolicyManagementService {
 			validatePolicyGroupName(requestDto.getName(), true,PolicyManageEnum.UPDATE_POLICY_GROUP_FAILURE);
 			policyGroup.setName(requestDto.getName());
 		}
-		if (policyGroup.getIsActive() != requestDto.isActive()) {
-			updatePoicyGroupPolicies(policyGroupFromDb.get().getId(), requestDto.isActive());
-			policyGroup.setIsActive(requestDto.isActive());
+		if (!policyGroup.getIsActive().equals(requestDto.getIsActive())) {
+			updatePoicyGroupPolicies(policyGroupFromDb.get().getId(), requestDto.getIsActive());
+			policyGroup.setIsActive(requestDto.getIsActive());
 		}
 		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUpdBy(getUser());
