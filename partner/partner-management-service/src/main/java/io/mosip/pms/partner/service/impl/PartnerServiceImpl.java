@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -1216,13 +1217,24 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @return
 	 */
 	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
-		Objects.requireNonNull(content);
+		content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()).forEach(p->{
+			System.out.println("PolicyId : " + p);
+		});
+		List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));
+		authPolices.forEach(p->{
+			System.out.println(p.getId());
+		});
 		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
 		content.forEach(policyRequest -> {
 			PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
 			searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
 			searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
+			searchPolicyRequest.setPartnerName(policyRequest.getPartner().getName());
 			searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
+			Optional<AuthPolicy> authPolicy = authPolices.stream()
+					.filter(p -> p.getId().equals(policyRequest.getPolicyId()))
+					.findFirst();			
+			searchPolicyRequest.setPolicyName(authPolicy.isPresent() ? authPolicy.get().getName() : "");			
 			searchPolicyRequest.setRequestDatetimes(policyRequest.getRequestDatetimes());
 			searchPolicyRequest.setRequestDetail(policyRequest.getRequestDetail());
 			searchPolicyRequest.setStatusCode(policyRequest.getStatusCode());
