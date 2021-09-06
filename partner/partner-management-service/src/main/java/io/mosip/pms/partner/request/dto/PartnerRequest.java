@@ -1,7 +1,7 @@
 package io.mosip.pms.partner.request.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -11,31 +11,29 @@ import lombok.Data;
  */
 
 @Data
-public class PartnerRequest{
+public class PartnerRequest{	
 	
-	@NotNull(message = "partnerId must not be null")
-	@NotBlank(message="partnerId must not be empty")
+	@NotBlank(message="value is empty or null")
 	public String partnerId;
 	
-	public String policyGroup;
+	public String policyGroup;	
 	
-	@NotNull(message = "organizationName must not be null")
-	@NotBlank(message="organizationName must not be empty")
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 128, message = "Length should be between 1 and 128 chars")
 	public String organizationName;
 	
-	@NotNull(message = "address must not be null")
-	@NotBlank(message="address must not be empty")
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 2000, message = "Length should be between 1 and 2000 chars")
 	public String address;
 	
-	@NotNull(message = "contactNumber must not be null")
-	@NotBlank(message="contactNumber must not be empty")
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 16, message = "Length should be between 1 and 16 chars")
 	public String contactNumber;
 	
-	@NotNull(message = "emailId must not be null")
-	@NotBlank(message="emailId must not be empty")	
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 254, message = "Length should be between 1 and 254 chars")
 	public String emailId;
 	
-	@NotNull(message = "partnerType must not be null")
-	@NotBlank(message="partnerType must not be empty")
+	@NotBlank(message="value is empty or null")
 	public String partnerType;
 }
