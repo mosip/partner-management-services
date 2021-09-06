@@ -1,8 +1,9 @@
 package io.mosip.pms.exception;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,18 +51,21 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
-		body.put("timestamp", new Date());
-		body.put("status", status.value());
+		body.put("id", null);
+		body.put("version", null);
+		body.put("metadata", null);
+		body.put("response", null);
+		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         FieldError fieldError = fieldErrors.get(0);
         
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
-		errorResponse.setMessage(fieldError.getDefaultMessage() +"  " + fieldError.getField());
+		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		List<ErrorResponse> errors = new ArrayList<>();
 		errors.add(errorResponse);
 		body.put("errors", errors);
-		return new ResponseEntity<>(body, headers, status);
+		return new ResponseEntity<>(body, headers, HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(MISPServiceException.class)

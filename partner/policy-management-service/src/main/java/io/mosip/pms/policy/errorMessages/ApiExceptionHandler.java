@@ -58,7 +58,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         FieldError fieldError = fieldErrors.get(0);		
         ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
-        		fieldError.getDefaultMessage() + " "+ fieldError.getField());
+        		"Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
 			errorResponse = setErrors(request);
@@ -66,7 +66,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		} catch (IOException e) {
 			//
 		}
-		return new ResponseEntity<>(errorResponse, status);        
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);        
     }
 	
 	/**
