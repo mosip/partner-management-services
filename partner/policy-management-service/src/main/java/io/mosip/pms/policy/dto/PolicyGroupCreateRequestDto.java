@@ -19,11 +19,11 @@ import lombok.Data;
 public class PolicyGroupCreateRequestDto {
 
 	@NotBlank(message="value is empty or null")
-	@Size(min = 1, max = 128, message = "Group name length should be in between 1 and 128 chars")
+	@Size(min = 1, max = 128, message = "Length should be in between 1 and 128 chars")
 	@Type(type="string")
 	public String name;
 	
 	@NotBlank(message="value is empty or null")
-	@Size(min = 1, max = 128, message = "Group desc length should be in between 1 and 128 chars")	
+	@Size(min = 1, max = 128, message = "Length should be in between 1 and 128 chars")	
 	public String desc;
 }

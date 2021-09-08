@@ -1,17 +1,17 @@
 package io.mosip.pms.partner.request.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 @Data
 public class AddContactRequestDto {
 
-	@NotEmpty(message = "Please provide address")
+	@NotBlank(message="value is empty or null")
 	public String address;
-	@NotEmpty(message = "Please provide contactNumber")
+	@NotBlank(message="value is empty or null")
 	public String contactNumber;
-	@NotEmpty(message = "Please provide emailId")
+	@NotBlank(message="value is empty or null")
 	public String emailId;	
 	public Boolean is_Active;
 }
