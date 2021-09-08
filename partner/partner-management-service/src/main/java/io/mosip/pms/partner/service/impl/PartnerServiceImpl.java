@@ -468,9 +468,8 @@ public class PartnerServiceImpl implements PartnerService {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
-		}
-		;
-		Partner partner = getValidPartner(partnerId, false);
+		};
+		Partner partner = getValidPartner(partnerId, true);
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
 		partner.setUpdBy(getUser());
