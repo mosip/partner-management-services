@@ -9,10 +9,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
@@ -37,8 +36,7 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@AutoConfigureMockMvc
-@EnableWebMvc
+@Transactional("regDevicePlatformTransactionManager")
 public class DeviceValidationServiceImplTest {
 
 	@InjectMocks
@@ -65,7 +63,7 @@ public class DeviceValidationServiceImplTest {
 	@Mock
 	private AuditUtil audit;
 	
-	@Test
+	@Test	
 	public void validateDeviceProviderstest() {
 		Mockito.doNothing().when(audit).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 		ValidateDeviceDto validateDeviceDto = new ValidateDeviceDto();
