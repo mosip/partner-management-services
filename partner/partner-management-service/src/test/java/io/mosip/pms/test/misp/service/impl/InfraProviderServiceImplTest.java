@@ -11,12 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
+import org.springframework.transaction.annotation.Transactional;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.MISPLicenseKey;
 import io.mosip.pms.common.entity.Partner;
@@ -29,8 +27,7 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@AutoConfigureMockMvc
-@EnableWebMvc
+@Transactional("pmsPlatformTransactionManager")
 public class InfraProviderServiceImplTest {
 
 	@Autowired
