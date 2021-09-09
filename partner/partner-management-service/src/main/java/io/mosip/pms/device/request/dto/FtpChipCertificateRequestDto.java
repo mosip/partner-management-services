@@ -25,34 +25,31 @@ public class FtpChipCertificateRequestDto {
 	/**
 	 * ftp provider Id
 	 */
-	@NotBlank
-	@NotNull
+	@NotBlank(message="value is empty or null")
 	String ftpProviderId;
 	
 	/**
 	 * ftp chip id
 	 */
-	@NotBlank
-	@NotNull
+	@NotBlank(message="value is empty or null")
 	String ftpChipDeatilId;	
 	
-	@NotNull
+	@NotNull(message="value is empty or null")
 	Boolean isItForRegistrationDevice;
     /**
 	 * Certificate Data of Partner.
 	 */
 	@ApiModelProperty(notes = "X509 Certificate Data", required = true)
-	@NotBlank
+	@NotBlank(message="value is empty or null")
 	String certificateData;
 	
 	/**
 	 * Certificate Data of Partner.
 	 */
 	@ApiModelProperty(notes = "Organization Name", required = true)
-	@NotBlank
+	@NotBlank(message="value is empty or null")
     String organizationName;    
     
-	@NotBlank
-	@NotNull
+	@NotBlank(message="value is empty or null")
 	String partnerDomain;
 }

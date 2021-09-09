@@ -1,7 +1,10 @@
 package io.mosip.pms.common.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.pms.common.entity.Partner;
@@ -25,5 +28,8 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 	public Partner findByEmailId(String emailId);
 	
 	Partner findByIdAndIsActiveIsTrue(String id);
+	
+	@Query(value = "select * from partner ppr where ppr.id IN :partnerIds and (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
+	List<Partner> findByPartnerIds(@Param("partnerIds") List<String> partnerIds);
 
 }

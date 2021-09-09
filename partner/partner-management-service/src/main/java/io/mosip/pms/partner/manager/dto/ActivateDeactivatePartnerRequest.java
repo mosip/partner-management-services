@@ -1,7 +1,6 @@
 package io.mosip.pms.partner.manager.dto;
 
-import javax.validation.constraints.NotEmpty;
-
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -11,6 +10,6 @@ import lombok.Data;
 @Data
 public class ActivateDeactivatePartnerRequest {
 	
-		@NotEmpty
+		@NotBlank(message="value is empty or null")
 		public String status;
 }

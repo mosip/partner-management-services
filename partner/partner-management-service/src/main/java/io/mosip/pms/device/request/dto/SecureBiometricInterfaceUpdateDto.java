@@ -2,6 +2,7 @@ package io.mosip.pms.device.request.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -13,23 +14,23 @@ import lombok.Data;
 @Data
 public class SecureBiometricInterfaceUpdateDto {
 	
-	@NotNull
-	@Size(min = 1, max = 36)
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 36, message = "Length should be in between 1 and 36 chars")
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 	
-	@NotNull
-	@Size(min = 1, max = 36)
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 36, message = "Length should be in between 1 and 36 chars")
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.String")
 	private String swBinaryHash;
 	
-	@NotNull
-	@Size(min = 1, max = 64)
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 64, message = "Length should be in between 1 and 64 chars")
 	@ApiModelProperty(value = "softwareVersion", required = true, dataType = "java.lang.String")
 	private String swVersion;
 	
-	@NotNull
-	@Size(min = 1, max = 36)
+	@NotBlank(message="value is empty or null")
+	@Size(min = 1, max = 36, message = "Length should be in between 1 and 36 chars")
 	@ApiModelProperty(value = "deviceDetailId", required = true, dataType = "java.lang.String")
 	private String deviceDetailId;
 	
@@ -39,10 +40,10 @@ public class SecureBiometricInterfaceUpdateDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 	
-	@NotNull
+	@NotNull(message="value is empty or null")
 	private boolean isActive;
 	
-	@NotNull
+	@NotNull(message="value is empty or null")
 	private Boolean isItForRegistrationDevice;
 
 

@@ -120,7 +120,7 @@ public class PolicyServiceTest {
 	@Test
 	public void updatePolicyGroupTest_S004() {
 		PolicyGroupUpdateRequestDto updateRequest = updatePolicygroupRequest();
-		updateRequest.setActive(false);
+		updateRequest.setIsActive(false);
 		Optional<PolicyGroup> policyGroupFromDb = Optional.of(policyGroupData());
 		Mockito.when(policyGroupRepository.findById("1234")).thenReturn(policyGroupFromDb);
 		service.updatePolicyGroup(updateRequest,"1234");
@@ -192,6 +192,7 @@ public class PolicyServiceTest {
 		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
 		updateRequest.setName("Test_Policy_Group_001");
 		updateRequest.setDesc("Test_Policy_Group_001");
+		updateRequest.setIsActive(true);
 		return updateRequest;
 	}
 	private PolicyGroupCreateRequestDto createPolicyGroupRequest() {

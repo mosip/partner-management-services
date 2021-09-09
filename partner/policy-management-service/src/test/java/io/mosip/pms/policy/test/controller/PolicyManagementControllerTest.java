@@ -328,7 +328,7 @@ public class PolicyManagementControllerTest {
 		PolicyGroupUpdateRequestDto updateRequest = new PolicyGroupUpdateRequestDto();
 		updateRequest.setDesc("Update Policy");
 		updateRequest.setName("Update Name");
-		updateRequest.setActive(true);
+		updateRequest.setIsActive(true);
 		request.setRequest(updateRequest);
         request.setId("mosip.partnermanagement.policies.authPolicies.create");
         request.setVersion("1.0");

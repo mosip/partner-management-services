@@ -46,6 +46,10 @@ public class PolicyRequestSearchResponseDto implements Serializable{
 
 	@Column(name="part_id")
 	private String partnerId;
+	
+	private String partnerName;
+	
+	private String policyName;
 
 	public PolicyRequestSearchResponseDto() {
 	}
@@ -144,6 +148,22 @@ public class PolicyRequestSearchResponseDto implements Serializable{
 
 	public void setPartnerId(String partnerId) {
 		this.partnerId = partnerId;
+	}
+	
+	public String getPartnerName() {
+		return this.partnerName;
+	}
+
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
+	}
+
+	public String getPolicyName() {
+		return this.policyName;
+	}
+
+	public void setPolicyName(String policyName) {
+		this.policyName = policyName;
 	}
 
 }

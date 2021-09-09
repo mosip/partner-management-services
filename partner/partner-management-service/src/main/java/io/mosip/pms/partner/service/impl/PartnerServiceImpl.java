@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -467,9 +468,8 @@ public class PartnerServiceImpl implements PartnerService {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
-		}
-		;
-		Partner partner = getValidPartner(partnerId, false);
+		};
+		Partner partner = getValidPartner(partnerId, true);
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
 		partner.setUpdBy(getUser());
@@ -1215,14 +1215,19 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param content
 	 * @return
 	 */
-	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
-		Objects.requireNonNull(content);
+	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {		
+		List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));		
 		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
 		content.forEach(policyRequest -> {
 			PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
 			searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
 			searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
+			searchPolicyRequest.setPartnerName(policyRequest.getPartner().getName());
 			searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
+			Optional<AuthPolicy> authPolicy = authPolices.stream()
+					.filter(p -> p.getId().equals(policyRequest.getPolicyId()))
+					.findFirst();			
+			searchPolicyRequest.setPolicyName(authPolicy.isPresent() ? authPolicy.get().getName() : "");			
 			searchPolicyRequest.setRequestDatetimes(policyRequest.getRequestDatetimes());
 			searchPolicyRequest.setRequestDetail(policyRequest.getRequestDetail());
 			searchPolicyRequest.setStatusCode(policyRequest.getStatusCode());
