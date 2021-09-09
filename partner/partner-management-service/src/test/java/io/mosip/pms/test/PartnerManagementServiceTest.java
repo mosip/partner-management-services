@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 
 import io.mosip.pms.config.AuthDeviceDaoConfig;
 
-@Import(value = {AuthDeviceDaoConfig.class})
+
 @SpringBootApplication(scanBasePackages = {"io.mosip.pms"})
 public class PartnerManagementServiceTest {
 	
