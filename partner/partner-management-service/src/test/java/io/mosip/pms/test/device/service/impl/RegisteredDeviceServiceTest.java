@@ -18,14 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,8 +67,7 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@AutoConfigureMockMvc
-@EnableWebMvc
+@Transactional("authDeviceTransactionManager")
 public class RegisteredDeviceServiceTest {
 
 	@Mock
@@ -601,78 +598,5 @@ public class RegisteredDeviceServiceTest {
 		//Mockito.when(objectMapper.writeValueAsString(Mockito.any())).thenReturn(headerString).thenReturn(mapper.writeValueAsString(signResponseDto)).thenReturn(mapper.writeValueAsString(deviceDeRegisterResponse));
 		registeredDeviceService.deRegisterDevice(deRegisterDevicePostDto);
 		
-	}
-	
-	private RegisteredDevicePostDto createDevRequest() throws JsonProcessingException {
-		DigitalId digitalIdDto = new DigitalId();
-		digitalIdDto.setDateTime(LocalDateTime.now(ZoneOffset.UTC));
-		digitalIdDto.setDeviceSubType("Full face");
-		digitalIdDto.setDeviceProvider("MOSIP.PROXY.SBI");
-		digitalIdDto.setDeviceProvider("MOSIP.PROXY.SBI");
-		digitalIdDto.setMake("MOSIP");
-		digitalIdDto.setModel("FACE01");
-		digitalIdDto.setSerialNo("TR001234567");
-		digitalIdDto.setType("Face");
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(digitalIdDto)));
-		deviceInfo.setCertification("L0");
-		deviceInfo.setDeviceExpiry(LocalDateTime.now(ZoneOffset.UTC).plusYears(1));
-		List<String> deviceSubID = new ArrayList<String>();
-		deviceSubID.add("1");
-		deviceSubID.add("2");
-		deviceSubID.add("3");
-		deviceInfo.setDeviceSubId(deviceSubID);
-		deviceInfo.setFirmware("0.9.5");
-		deviceInfo.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-		DeviceData data = new DeviceData();
-		data.setDeviceInfo(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(deviceInfo)));
-		data.setDeviceId("47d53c45-5edb-4607-9c64-35c80483693e");
-		data.setFoundationalTrustProviderId("121");
-		data.setPurpose("Auth");
-		RegisteredDevicePostDto registeredDevicePostDto1 = new RegisteredDevicePostDto();
-		registeredDevicePostDto1.setDeviceData(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(data)));
-		return registeredDevicePostDto1;
-		
-	}
-	
-	
-	private DigitalId getDitalId() {
-		DigitalId digitalIdDto = new DigitalId();
-		digitalIdDto.setDateTime(LocalDateTime.now(ZoneOffset.UTC));
-		digitalIdDto.setDeviceSubType("Full face");
-		digitalIdDto.setDeviceProvider("MOSIP.PROXY.SBI");
-		digitalIdDto.setDeviceProvider("MOSIP.PROXY.SBI");
-		digitalIdDto.setMake("MOSIP");
-		digitalIdDto.setModel("FACE01");
-		digitalIdDto.setSerialNo("TR001234567");
-		digitalIdDto.setType("Face");
-		return digitalIdDto;
-		
-	}
-	
-	private DeviceInfo getDeviceInfo(DigitalId digitalId) throws JsonProcessingException {
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(digitalId)));
-		deviceInfo.setCertification("L0");
-		deviceInfo.setDeviceExpiry(LocalDateTime.now(ZoneOffset.UTC).plusYears(1));
-		List<String> deviceSubID = new ArrayList<String>();
-		deviceSubID.add("1");
-		deviceSubID.add("2");
-		deviceSubID.add("3");
-		deviceInfo.setDeviceSubId(deviceSubID);
-		deviceInfo.setFirmware("0.9.5");
-		deviceInfo.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-		DeviceData data = new DeviceData();
-		data.setDeviceInfo(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(deviceInfo)));
-		return deviceInfo;
-	}
-	
-	private DeviceData getDeviceData(DeviceInfo deviceInfo) throws JsonProcessingException {
-		DeviceData data = new DeviceData();
-		data.setDeviceInfo(CryptoUtil.encodeBase64(mapper.writeValueAsBytes(deviceInfo)));
-		data.setDeviceId("47d53c45-5edb-4607-9c64-35c80483693e");
-		data.setFoundationalTrustProviderId("121");
-		data.setPurpose("Auth");
-		return data;
 	}
 }
