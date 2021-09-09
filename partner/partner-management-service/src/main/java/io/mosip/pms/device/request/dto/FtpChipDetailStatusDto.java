@@ -1,6 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -14,10 +15,10 @@ public class FtpChipDetailStatusDto {
 	@ApiModelProperty(value = "ftpChipDetailId", required = true, dataType = "java.lang.String")
 	private String ftpChipDetailId;
 	
-	@NotBlank(message="value is empty or null")		
+	@NotNull(message="value is empty or null")		
 	private Boolean approvalStatus;
 		
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	private Boolean isItForRegistrationDevice;
 
 	public Boolean getIsItForRegistrationDevice() {

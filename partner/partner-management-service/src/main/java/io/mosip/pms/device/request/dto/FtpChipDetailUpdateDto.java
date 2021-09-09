@@ -1,6 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -28,7 +29,7 @@ public class FtpChipDetailUpdateDto {
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	private Boolean isItForRegistrationDevice;
 
 
