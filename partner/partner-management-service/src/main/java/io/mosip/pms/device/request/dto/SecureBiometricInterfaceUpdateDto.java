@@ -3,6 +3,7 @@ package io.mosip.pms.device.request.dto;
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -39,10 +40,10 @@ public class SecureBiometricInterfaceUpdateDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	private boolean isActive;
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	private Boolean isItForRegistrationDevice;
 
 

@@ -1,6 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,7 +34,7 @@ public class FtpChipCertificateRequestDto {
 	@NotBlank(message="value is empty or null")
 	String ftpChipDeatilId;	
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	Boolean isItForRegistrationDevice;
     /**
 	 * Certificate Data of Partner.

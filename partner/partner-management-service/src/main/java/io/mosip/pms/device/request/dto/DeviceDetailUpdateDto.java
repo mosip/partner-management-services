@@ -1,6 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -46,6 +47,6 @@ public class DeviceDetailUpdateDto {
 	@ApiModelProperty(value = "partnerOrganizationName", required = true, dataType = "java.lang.String")
 	private String partnerOrganizationName;
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
 	private Boolean isItForRegistrationDevice;
 }
