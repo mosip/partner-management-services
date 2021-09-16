@@ -171,7 +171,7 @@ public class SearchHelper {
 		String columnName = filter.getColumnName();
 		String value = filter.getValue();
 		String filterType = filter.getType();
-		if(!filter.getValue().isEmpty() && !filter.getValues().isEmpty()) {
+		if(!filter.getValue().isEmpty() && (filter.getValues() != null) &&!filter.getValues().isEmpty()) {
 			throw new RequestException(SearchErrorCode.INVALID_VALUE_VALUES.getErrorCode(),
 					SearchErrorCode.INVALID_VALUE_VALUES.getErrorMessage());			
 		}
@@ -447,7 +447,7 @@ public class SearchHelper {
 	 */
 	private boolean validateFilter(SearchFilter filter) {
 		boolean flag = false;
-		if(!filter.getValue().isEmpty() && !filter.getValues().isEmpty()) {
+		if(!filter.getValue().isEmpty() && (filter.getValues() != null) && !filter.getValues().isEmpty()) {
 			throw new RequestException(SearchErrorCode.INVALID_VALUE_VALUES.getErrorCode(),
 					SearchErrorCode.INVALID_VALUE_VALUES.getErrorMessage());			
 		}
@@ -531,8 +531,8 @@ public class SearchHelper {
 	 */
 	private SearchDto addPartnerFilter(SearchDto searchDto) {
 		AuthUserDetails loggedInUserDetails = getUser();
-		if (!loggedInUserDetails.getAuthorities().stream()
-				.anyMatch(r -> r.getAuthority().equalsIgnoreCase(partnerAdminRole))) {
+		if (!(loggedInUserDetails.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_"+partnerAdminRole)))) {
 			SearchFilter partnerIdSearchFilter = new SearchFilter();
 			partnerIdSearchFilter.setColumnName("partnerId");
 			partnerIdSearchFilter.setType("equals");
