@@ -23,6 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.MISPLicenseKey;
@@ -45,6 +47,7 @@ import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 
 
 @RunWith(SpringRunner.class)
@@ -86,6 +89,9 @@ public class PartnerManagementServiceImplTest {
 	@MockBean
 	private RestUtil restUtil;
 	
+	@Mock
+    private ObjectMapper mapper;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -97,6 +103,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "misplKeyRepository", misplKeyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
+//		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 		Mockito.doNothing().when(notificationService).sendNotications(Mockito.any(), Mockito.any());
@@ -556,7 +563,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void activateDeactivateAuthEKYCPartnerTest_S6() {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
@@ -572,7 +579,7 @@ public class PartnerManagementServiceImplTest {
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S8() {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
@@ -590,7 +597,7 @@ public class PartnerManagementServiceImplTest {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
 		req.setStatus("De-active");
 		String partnerId = "12345";
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
@@ -837,24 +844,30 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S3() throws IOException {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
 		req.setStatus("Approved");
-		String apiKey ="2345";	
+		String apiKey ="2345";
+		PartnerCertDownloadResponeDto certDto = new PartnerCertDownloadResponeDto();
+		certDto.setCertificateData("sdfghjjhgffghjijhgrffghjhbvfghgftgbvgbghbvghjkjhb");
+		certDto.setTimestamp(LocalDateTime.now());
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
 		Optional<Partner> partner = Optional.of(getPartner());
 		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
 		Mockito.when(authPolicyRepository.findById(Optional.of(getPartnerPolicyRequestData()).get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
+//		Mockito.when(
+//				mapper.readValue(Mockito.anyString(), Mockito.eq(PartnerCertDownloadResponeDto.class)))
+//				.thenReturn(certDto);
 		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
 	}
 
 	@Test
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S10() throws IOException {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
@@ -870,7 +883,7 @@ public class PartnerManagementServiceImplTest {
 	@Test(expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S11() throws IOException {
 		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
@@ -885,13 +898,11 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getCertResponse() {
-		JSONObject obj=new JSONObject();    
+	private JSONObject getCertResponse() {
+		JSONObject obj=new JSONObject();		
 		obj.put("certificateData", "I6RNkys7tjbmOQhJkgY1HhRpvts8LZPioJD4I82wsMHDtGj");
-		obj.put("timestamp", "2021-09-02T07:43:15.577329");
-		return obj.toString();
-		
-		//return "{\"certificateData\": \"I6RNkys7tjbmOQhJkgY1HhRpvts8LZPioJD4I82wsMHDtGj\",\"timestamp\": \"2021-09-02T07:43:15.577329\"}";
+		obj.put("timestamp", "2021-09-02T07:43:15.577329");		
+		return obj;
 	}
 	
 	@Test
@@ -1097,7 +1108,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void getPartnerMappedPolicyFileTest_S62() {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
