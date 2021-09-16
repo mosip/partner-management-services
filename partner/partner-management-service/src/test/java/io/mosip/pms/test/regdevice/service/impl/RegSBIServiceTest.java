@@ -44,11 +44,10 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest
 @Transactional("regDevicePlatformTransactionManager")
 public class RegSBIServiceTest {
 	
@@ -242,6 +241,20 @@ public class RegSBIServiceTest {
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(request);
 	}
+	
+	@Test
+	public void sbiSearchTest() throws Exception{
+		objectMapper.writeValueAsString(deviceRequestDto);
+		RegDeviceDetail device = new RegDeviceDetail();
+		device.setDeviceProviderId("101");
+		device.setPartnerOrganizationName("TEST");
+		RegSecureBiometricInterface sbi = new RegSecureBiometricInterface();
+		sbi.setDeviceDetail(device);
+		sbi.setId("1001");
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(sbi))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		secureBiometricInterfaceService.searchSecureBiometricInterface(deviceSearchDto);
+	}
+	
 	
 	private SecureBiometricInterfaceStatusUpdateDto statusUpdateRequest(String status) {
 		SecureBiometricInterfaceStatusUpdateDto request = new SecureBiometricInterfaceStatusUpdateDto();

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
+import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -48,10 +49,9 @@ import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest
 @Transactional("regDevicePlatformTransactionManager")
 public class RegDeviceDetailServiceTest {
 	
@@ -208,6 +208,10 @@ public class RegDeviceDetailServiceTest {
 	@Test
 	public void filterDeviceDetailTest1() throws Exception {
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.regDeviceFilterValues(deviceFilterDto);
 	}
 	
@@ -219,17 +223,29 @@ public class RegDeviceDetailServiceTest {
 	@Test
 	public void regDeviceTypeFilterValuesTest1() throws Exception {
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.regDeviceTypeFilterValues(deviceFilterDto);
 	}
 
 	@Test
 	public void regDeviceSubTypeFilterValuesTest() throws Exception {
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.regDeviceSubTypeFilterValues(deviceFilterDto);
 	}
 	
 	@Test
 	public void regDeviceSubTypeFilterValuesTest1() throws Exception {
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.regDeviceSubTypeFilterValues(deviceFilterDto);
 	}
 	
@@ -265,8 +281,10 @@ public class RegDeviceDetailServiceTest {
 		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
     }
 	
-	@Test
+	@Test(expected = RequestException.class)
     public void createDeviceDetailAlreadyExistsTest() throws Exception {
+		Mockito.when(deviceDetailRepository.findUniqueDeviceDetail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString())).thenReturn(deviceDetail);
        deviceDetaillService.createDeviceDetails(deviceDetailDto);
     }
 	

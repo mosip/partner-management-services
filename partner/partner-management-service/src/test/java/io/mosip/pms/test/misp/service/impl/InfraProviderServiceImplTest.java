@@ -23,10 +23,9 @@ import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest//(classes = { PartnerManagementServiceTest.class })
 @Transactional("pmsPlatformTransactionManager")
 public class InfraProviderServiceImplTest {
 
@@ -85,6 +84,29 @@ public class InfraProviderServiceImplTest {
 		infraProviderServiceImpl.approveInfraProvider(misp_Id);	
 		}
 	
+	@Test(expected = MISPServiceException.class)
+	public void approveInfraProvider_03 () {
+		String misp_Id = "1234";
+		String licenseKey = "12345";
+		Partner partner = new Partner();
+		partner.setId(misp_Id);
+		partner.setIsActive(true);
+		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
+		mispLicenseEntity.setIsActive(true);
+		Optional<Partner> opt_partner = Optional.of(partner);
+		MISPLicenseKey mispLicenseKey = new MISPLicenseKey();
+		mispLicenseKey.setLicense_key(licenseKey);
+		mispLicenseKey.setMisp_id(misp_Id);	
+		mispLicenseEntity.setIsActive(true);
+		mispLicenseEntity.setMispLicenseUniqueKey(mispLicenseKey);
+		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
+		List<MISPLicenseEntity> mispEntityList = new ArrayList<>();
+		mispEntityList.add(mispLicenseEntity);
+		Mockito.when(mispLicenseRepository.findByMispId(misp_Id)).thenReturn(mispEntityList);
+		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);
+		infraProviderServiceImpl.approveInfraProvider(misp_Id);	
+		}
+
 	@Test
 	public void updateInfraProviderTest() {
 		String id = "123"; 
@@ -217,6 +239,17 @@ public class InfraProviderServiceImplTest {
 		Optional<Partner> opt_partner = Optional.of(partner);
 		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);
 		infraProviderServiceImpl.regenerateKey(misp_Id);	
+	}
+	
+	@Test
+	public void getAllInfraProviders() {
+		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
+		mispLicenseEntity.setIsActive(true);
+		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
+		List<MISPLicenseEntity> licenses =  new ArrayList<>();
+		licenses.add(mispLicenseEntity);
+		Mockito.when(mispLicenseRepository.findAll()).thenReturn(licenses);
+		infraProviderServiceImpl.getInfraProvider();
 	}
 	
 }

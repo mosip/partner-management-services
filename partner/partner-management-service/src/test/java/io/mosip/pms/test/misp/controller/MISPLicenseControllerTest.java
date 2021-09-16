@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -15,10 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -28,22 +26,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.partner.misp.controller.MISPLicenseController;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
-
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Import(MISPLicenseController.class)
-@Ignore
 public class MISPLicenseControllerTest {
 
 	@Autowired

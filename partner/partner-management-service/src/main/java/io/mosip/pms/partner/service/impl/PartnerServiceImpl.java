@@ -578,11 +578,10 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String partnerId, String apikeyReqId) {
-		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
-				apikeyReqId);
+	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apikeyReqId) {
+		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByReqId(apikeyReqId);
 		if (partnerRequest == null) {
-			LOGGER.error("No apikey requests exists for partner {} and apiKeyReqId {}", partnerId, apikeyReqId);
+			LOGGER.error("No apikey requests exists for apiKeyReqId {}", apikeyReqId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}

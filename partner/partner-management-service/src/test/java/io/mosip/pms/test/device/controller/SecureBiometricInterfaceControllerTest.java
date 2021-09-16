@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -46,13 +45,11 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest//(classes = PartnerManagementServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class SecureBiometricInterfaceControllerTest {
 	
 	@Autowired

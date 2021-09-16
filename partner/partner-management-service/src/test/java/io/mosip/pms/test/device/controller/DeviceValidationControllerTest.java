@@ -8,7 +8,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -31,14 +30,12 @@ import io.mosip.pms.device.request.dto.DigitalIdDto;
 import io.mosip.pms.device.request.dto.ValidateDeviceDto;
 import io.mosip.pms.device.response.dto.ResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class DeviceValidationControllerTest {
 
 	@Autowired

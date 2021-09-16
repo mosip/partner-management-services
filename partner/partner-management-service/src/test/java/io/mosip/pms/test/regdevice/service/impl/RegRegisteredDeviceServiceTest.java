@@ -9,11 +9,11 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
-
 import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -58,10 +57,9 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.RegisteredDevicePostDto;
 import io.mosip.pms.device.response.dto.DeviceDeRegisterResponse;
 import io.mosip.pms.device.response.dto.RegisterDeviceResponse;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest
 @Transactional("regDevicePlatformTransactionManager")
 public class RegRegisteredDeviceServiceTest {
 

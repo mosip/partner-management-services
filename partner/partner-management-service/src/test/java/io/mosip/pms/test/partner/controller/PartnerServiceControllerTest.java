@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -57,15 +56,12 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
-
-import io.mosip.pms.test.PartnerManagementServiceTest;
  
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class PartnerServiceControllerTest {
 
     @Autowired
@@ -111,7 +107,7 @@ public class PartnerServiceControllerTest {
     public void uploadPartnerCertificateTest() throws Exception{
     	PartnerCertificateResponseDto response = new PartnerCertificateResponseDto();
         Mockito.when(partnerService.uploadPartnerCertificate(Mockito.any())).thenReturn(response);
-        mockMvc.perform(post("/partners/certificate/ca/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners/certificate/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(partnerCertificateRequest()))).andExpect(status().isOk());
     }
     
@@ -215,8 +211,8 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void viewApiKeyRequestStatusAndApiKey_Test() throws Exception{
     	DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-        Mockito.when(partnerService.getApikeyFromRequestKey("12345","123456")).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/apikey/123456")).andExpect(MockMvcResultMatchers.status().isOk());
+        Mockito.when(partnerService.getApikeyFromRequestKey("123456")).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/request/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test

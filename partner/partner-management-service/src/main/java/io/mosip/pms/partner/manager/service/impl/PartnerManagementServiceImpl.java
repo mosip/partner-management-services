@@ -481,9 +481,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
 		PartnerCertDownloadResponeDto responseObject = null;
 		try {
-			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
+			responseObject = mapper.readValue(getApiResponse.get("response").toString(),
 					PartnerCertDownloadResponeDto.class);
 		} catch (IOException e) {
+			LOGGER.error("Error occured while parsing the response ", e);
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 		}

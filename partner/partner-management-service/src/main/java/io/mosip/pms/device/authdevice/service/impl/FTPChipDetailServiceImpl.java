@@ -167,8 +167,10 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		entity.setActive(true);
 		entity.setDeleted(false);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		FTPChipDetail chipDetail = new FTPChipDetail();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
+			chipDetail.setCrBy(authN.getName());
 		}
 		entity.setCrDtimes(LocalDateTime.now());
 		entity.setId(partnerFromDb.getId());
@@ -176,8 +178,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			foundationalTrustProviderRepository.save(entity);
 		}
 		
-		FTPChipDetail chipDetail = new FTPChipDetail();
-		chipDetail.setCrBy(authN.getName());
 		chipDetail.setActive(false);
 		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
@@ -244,12 +244,16 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			entity.setId(partnerFromDb.getId());
 			//entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setActive(true);
-			entity.setCrBy(authN.getName());
+			if (!EmptyCheckUtils.isNullEmpty(authN)) {
+				entity.setCrBy(authN.getName());
+			}
 		}else {
 			entity = ftpProvider.get();
 			//entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setUpdDtimes(LocalDateTime.now());
-			entity.setUpdBy(authN.getName());
+			if (!EmptyCheckUtils.isNullEmpty(authN)) {
+				entity.setUpdBy(authN.getName());
+			}
 		}
 		foundationalTrustProviderRepository.save(entity);
 		FTPChipDetail updateObject = chipDetail.get();		
