@@ -27,6 +27,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.dto.FilterData;
@@ -211,7 +212,6 @@ public class PolicyServiceTest {
 		search.setFilters(searchfilterDtos);
 		search.setPagination(pagination);
 		search.setSort(searchDtos1);
-
 	}
 	
 	//Success Test
@@ -271,7 +271,9 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S001() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setVersion("0.10");
-		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), String.class)).thenReturn(authPolicySchema);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
@@ -282,7 +284,9 @@ public class PolicyServiceTest {
 	public void createPoliciesTest_S002() throws PolicyManagementServiceException, Exception {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("Auth");		
-		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), String.class)).thenReturn(authPolicySchema);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(null);
 		service.createPolicies(request);
@@ -293,7 +297,9 @@ public class PolicyServiceTest {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("Auth");		
 		request.setPolicies(createWrongAuthPolicyInput());
-		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), String.class)).thenReturn(authPolicySchema);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(null);
 		service.createPolicies(request);
@@ -564,7 +570,9 @@ public class PolicyServiceTest {
 		authPolicyName.setName("Test_01");
 		authPolicyName.setPolicy_type("Auth");
 		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
-		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), String.class)).thenReturn(authPolicySchema);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		service.updatePolicies(request, "12345");
 	}
 	
@@ -594,7 +602,9 @@ public class PolicyServiceTest {
 		authPolicyName.setName("Test_01");
 		authPolicyName.setPolicy_type("Auth");
 		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test_01")).thenReturn(authPolicyName);
-		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), String.class)).thenReturn(authPolicySchema);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		service.updatePolicies(request, "12345");
 	}
 
