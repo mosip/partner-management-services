@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -846,7 +847,7 @@ public class PolicyManagementService {
 	private String getPolicySchema(String policyType)
 			throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
 		return mapper.readValue(new URL(environment.getProperty("pmp." + policyType.toLowerCase() + ".policy.schema")),
-				String.class);
+				JsonNode.class).toString();
 	}
 
 	/**
