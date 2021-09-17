@@ -5,8 +5,7 @@ on:
     branches:
       - master
       - 1.*
-      - develop
-      - develop_*
+      - develop      
   
 jobs:
   build:
@@ -136,7 +135,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: 06f41a0441
+      NAMESPACE: mosipdev
       SERVICE_NAME: policy-management-service
       SERVICE_LOCATION: partner/policy-management-service
 
@@ -199,7 +198,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: 06f41a0441
+      NAMESPACE: mosipdev
       SERVICE_NAME: partner-management-service
       SERVICE_LOCATION: partner/partner-management-service
 
@@ -293,7 +292,7 @@ jobs:
       - name: Analyze with SonarCloud
         run: |
           cd partner
-          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=NagarjunaKuchi_partner-management-services -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_${{ github.event.repository.name }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
