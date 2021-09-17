@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -40,6 +39,7 @@ import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.regdevice.service.impl.RegFTPChipDetailServiceImpl;
@@ -54,13 +54,11 @@ import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class FTPChipDetailControllerTest {
 	@MockBean
 	private FTPChipDetailServiceImpl ftpChipDetailServiceImpl;
@@ -86,7 +84,7 @@ public class FTPChipDetailControllerTest {
 		 String stringResponse = new String();
 		 PageResponseDto<FTPSearchResponseDto> searchResponse = new PageResponseDto<FTPSearchResponseDto>();
 		 FtpCertificateResponseDto uploadResponse = new FtpCertificateResponseDto();
-		 FtpCertDownloadResponeDto getResponse = new FtpCertDownloadResponeDto();
+		 FtpCertDownloadResponeDto getResponse = new FtpCertDownloadResponeDto();		 
 		 ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		 ResponseWrapper<String> responsewrapper = new ResponseWrapper<>();
 		 ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchResponseWrapper = new ResponseWrapper<PageResponseDto<FTPSearchResponseDto>>();
@@ -108,7 +106,7 @@ public class FTPChipDetailControllerTest {
 		 Mockito.when(ftpChipDetailServiceImpl.uploadPartnerCertificate(Mockito.any())).thenReturn(uploadResponse);
 		 Mockito.when(regFTPChipDetailServiceImpl.uploadPartnerCertificate(Mockito.any())).thenReturn(uploadResponse);
 		 Mockito.when(ftpChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);
-		 Mockito.when(regFTPChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);
+		 Mockito.when(regFTPChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);		 
 		 Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any());
 	     Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any(),any());
 	 }
@@ -376,6 +374,19 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void getPartnerCertificateTest_01() throws JsonProcessingException, Exception {
 	    	RequestWrapper<FtpChipCertDownloadRequestDto> request = getRequest(false);
+	    	mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/getPartnerCertificate/1234").contentType(MediaType.APPLICATION_JSON_VALUE)
+	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+	    }
+	    
+	    @Test
+	    @WithMockUser(roles = {"PARTNER_ADMIN"})
+	    public void getPartnerCertificateTest_02() throws JsonProcessingException, Exception {
+	    	RequestWrapper<FtpChipCertDownloadRequestDto> request = getRequest(true);
+	    	request.getRequest().setFtpChipDetailId("1234");
+	    	FTPChipDetail ftpChipDetailResponse = new FTPChipDetail();
+	    	ftpChipDetailResponse.setFtpChipDetailId("1234");
+	    	Mockito.when(ftpChipDetaillService.getFtpChipDeatils(Mockito.anyString())).thenReturn(ftpChipDetailResponse);
+	    	Mockito.when(ftpChipDetailServiceImpl.getFtpChipDeatils(Mockito.anyString())).thenReturn(ftpChipDetailResponse);
 	    	mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/getPartnerCertificate/1234").contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }

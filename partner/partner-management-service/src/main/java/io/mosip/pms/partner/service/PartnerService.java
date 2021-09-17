@@ -72,7 +72,7 @@ public interface PartnerService {
 	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
 	 */
 	
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String partnerId,String aPIKeyReqId);
+	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apiKeyReqId);
 	
 	/**
 	 * This method is used to retrieve all API key requests submitted by partner till date.

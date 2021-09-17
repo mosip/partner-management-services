@@ -4,13 +4,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -55,7 +55,6 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 @SpringBootTest(classes = PartnerManagementServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class DeviceDetailControllerTest {
 
 	@Autowired
@@ -112,6 +111,7 @@ public class DeviceDetailControllerTest {
         Mockito.when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
     }
     
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     private RequestWrapper<DeviceDetailDto> createRequest(boolean isItForRegistrationDevice) {
         RequestWrapper<DeviceDetailDto> request = new RequestWrapper<DeviceDetailDto>();
         request.setRequest(createdetailRequest(isItForRegistrationDevice));

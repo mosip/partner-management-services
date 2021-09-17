@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.device.exception.DeviceValidationException;
@@ -31,11 +30,10 @@ import io.mosip.pms.device.regdevice.service.impl.DeviceValidationServiceImpl;
 import io.mosip.pms.device.request.dto.DigitalIdDto;
 import io.mosip.pms.device.request.dto.ValidateDeviceDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest
 @Transactional("regDevicePlatformTransactionManager")
 public class DeviceValidationServiceImplTest {
 
@@ -63,7 +61,7 @@ public class DeviceValidationServiceImplTest {
 	@Mock
 	private AuditUtil audit;
 	
-	@Test	
+	@Test
 	public void validateDeviceProviderstest() {
 		Mockito.doNothing().when(audit).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 		ValidateDeviceDto validateDeviceDto = new ValidateDeviceDto();
@@ -814,6 +812,86 @@ public class DeviceValidationServiceImplTest {
 		deviceValidationService.validateDeviceProviders(validateDeviceDto);
 	}
 
+	@Test(expected = DeviceValidationException.class)
+	public void validateDeviceProvidersTest() {
+		Mockito.doNothing().when(audit).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+		ValidateDeviceDto validateDeviceDto = new ValidateDeviceDto();
+		DigitalIdDto digitalId = new DigitalIdDto();
+		RegRegisteredDevice regRegisteredDevice = new RegRegisteredDevice();
+		RegDeviceDetail regDeviceDetail = new RegDeviceDetail();
+		Partner deviceProvider = new Partner();
+		List<RegSecureBiometricInterface> deviceServices = new ArrayList<RegSecureBiometricInterface>();
+		RegSecureBiometricInterface deviceobject = new RegSecureBiometricInterface();
+		digitalId.setDateTime("2021-01-29T13:13:04.923Z");
+		digitalId.setDeviceSubType("subtype");
+		digitalId.setDp("abcd");
+		digitalId.setDpId("1234");
+		digitalId.setMake("make");
+		digitalId.setModel("model");
+		digitalId.setSerialNo("123456");
+		digitalId.setType("type");
+		validateDeviceDto.setDeviceCode("1234");
+		validateDeviceDto.setDeviceServiceVersion("1.0.0");
+		validateDeviceDto.setDigitalId(digitalId);
+		validateDeviceDto.setPurpose("Registration");
+		validateDeviceDto.setTimeStamp("2021-01-29T13:13:04.923Z");
+		regRegisteredDevice.setDeviceId("1234");
+		regRegisteredDevice.setDeviceDetailId("1234");
+		regRegisteredDevice.setStatusCode("REGISTERED");
+		regRegisteredDevice.setSerialNo("123456");
+		regDeviceDetail.setDeviceProviderId("1234");
+		regDeviceDetail.setDeviceSubTypeCode("subtype");
+		regDeviceDetail.setDeviceTypeCode("type");
+		regDeviceDetail.setMake("make");
+		regDeviceDetail.setModel("model");
+		deviceServices.add(deviceobject);
+		deviceProvider.setId("1234");
+		Mockito.when(registeredDeviceRepository.findByCodeAndPurposeIgnoreCaseAndIsActiveIsTrue(Mockito.anyString(), Mockito.anyString())).thenReturn(regRegisteredDevice);
+		Mockito.when(deviceProviderRepository.findByIdAndIsActiveIsTrue(Mockito.anyString())).thenReturn(deviceProvider);
+		Mockito.when(deviceServiceRepository.findBySwVersionAndIsActiveIsTrue(Mockito.anyString())).thenReturn(deviceServices);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString())).thenReturn(regDeviceDetail);
+		deviceValidationService.validateDeviceProviders(validateDeviceDto);
+	}
 	
+	@Test(expected = DeviceValidationException.class)
+	public void validateDeviceProvidersTest_01() {
+		Mockito.doNothing().when(audit).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+		ValidateDeviceDto validateDeviceDto = new ValidateDeviceDto();
+		DigitalIdDto digitalId = new DigitalIdDto();
+		RegRegisteredDevice regRegisteredDevice = new RegRegisteredDevice();
+		RegDeviceDetail regDeviceDetail = new RegDeviceDetail();
+		Partner deviceProvider = new Partner();
+		List<RegSecureBiometricInterface> deviceServices = new ArrayList<RegSecureBiometricInterface>();
+		RegSecureBiometricInterface deviceobject = new RegSecureBiometricInterface();
+		digitalId.setDateTime("2021-01-29T13:13:04.923Z");
+		digitalId.setDeviceSubType("subtype");
+		digitalId.setDp("abcd");
+		digitalId.setDpId("1234");
+		digitalId.setMake("make");
+		digitalId.setModel("model");
+		digitalId.setSerialNo("123456");
+		digitalId.setType("type");
+		validateDeviceDto.setDeviceCode("1234");
+		validateDeviceDto.setDeviceServiceVersion("1.0.0");
+		validateDeviceDto.setDigitalId(digitalId);
+		validateDeviceDto.setPurpose("Registration");
+		validateDeviceDto.setTimeStamp("2021-01-29T13:13:04.923Z");
+		regRegisteredDevice.setDeviceId("1234");
+		regRegisteredDevice.setDeviceDetailId("1234");
+		regRegisteredDevice.setStatusCode("REGISTERED");
+		regRegisteredDevice.setSerialNo("123456");
+		regDeviceDetail.setDeviceProviderId("1234");
+		regDeviceDetail.setDeviceSubTypeCode("subtype");
+		regDeviceDetail.setDeviceTypeCode("type");
+		regDeviceDetail.setMake("make");
+		regDeviceDetail.setModel("model");
+		deviceServices.add(deviceobject);
+		deviceProvider.setId("1234");
+		Mockito.when(registeredDeviceRepository.findByCodeAndPurposeIgnoreCaseAndIsActiveIsTrue(Mockito.anyString(), Mockito.anyString())).thenReturn(regRegisteredDevice);
+		Mockito.when(deviceProviderRepository.findByIdAndIsActiveIsTrue(Mockito.anyString())).thenReturn(deviceProvider);
+		Mockito.when(deviceServiceRepository.findBySwVersionAndIsActiveIsTrue(Mockito.anyString())).thenReturn(deviceServices);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString())).thenReturn(regDeviceDetail);
+		deviceValidationService.validateDeviceProviders(validateDeviceDto);
+	}
 	
 }

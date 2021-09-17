@@ -133,7 +133,7 @@ public class FTPChipDetailServiceTest {
 		
 		
 	}
-	@Ignore
+	
 	@Test
 	public void createFTPChipDetailtest() {
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
@@ -145,18 +145,8 @@ public class FTPChipDetailServiceTest {
 	public void createFTPChipDetailtest01() {
 		Mockito.when(foundationalTrustProviderRepository.findByIdAndIsActiveTrue(Mockito.anyString())).thenReturn(foundationalTrustProvider);
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
-	}
+	}	
 	
-	@Ignore
-	@Test(expected = RequestException.class)
-	public void createFTPChipDetailtest02() {
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
-		Mockito.when(foundationalTrustProviderRepository.findByIdAndIsActiveTrue(Mockito.anyString())).thenReturn(foundationalTrustProviderRequest());
-		Mockito.doReturn(partner).when(ftpChipDetailRepository).save(Mockito.any());
-		ftpChipDetailService.createFtpChipDetails(ftpChipDeatilRequest());
-	}
-	
-	@Ignore
 	@Test 
 	public void updateFtpChipDetailsTest() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
@@ -275,30 +265,7 @@ public class FTPChipDetailServiceTest {
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.uploadPartnerCertificate(request);	
-	}
-	
-	private FtpChipDetailDto ftpChipDeatilRequest() {
-		FtpChipDetailDto ftpChipDetailDto = new FtpChipDetailDto();
-		ftpChipDetailDto.setFtpProviderId("1234");
-		ftpChipDetailDto.setIsItForRegistrationDevice(true);
-		ftpChipDetailDto.setMake("make");
-		ftpChipDetailDto.setModel("model");
-		return ftpChipDetailDto;
-	}
-	
-	
-	private FoundationalTrustProvider foundationalTrustProviderRequest() {
-		FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
-		foundationalTrustProvider.setActive(true);
-		foundationalTrustProvider.setCrBy("admin");
-		foundationalTrustProvider.setId("1234");
-		foundationalTrustProvider.setCrDtimes(LocalDateTime.now());
-		foundationalTrustProvider.setDelDtimes(LocalDateTime.now());
-		foundationalTrustProvider.setDeleted(false);
-		foundationalTrustProvider.setUpdBy("system");
-		foundationalTrustProvider.setUpdDtimes(LocalDateTime.now());
-		return foundationalTrustProvider;
-	}
+	}	
 	
 	private FtpChipDetailUpdateDto createUpdateRequest() {
 		FtpChipDetailUpdateDto ChipDetailUpdateDto = new FtpChipDetailUpdateDto();

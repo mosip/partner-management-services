@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,10 +43,8 @@ import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailUpdateDto;
 import io.mosip.pms.device.util.AuditUtil;
 
-import io.mosip.pms.test.PartnerManagementServiceTest;
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { PartnerManagementServiceTest.class })
+@SpringBootTest
 @Transactional("regDevicePlatformTransactionManager")
 public class RegFTPChipDetailServiceTest {
 	
@@ -104,7 +101,7 @@ public class RegFTPChipDetailServiceTest {
 		deviceSearchDto.setSort(searchDtos1);
 		
 	}
-	@Ignore
+
 	@Test
 	public void createRegFTPChipDetailtest() {
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(createPartnerRequest());
@@ -118,15 +115,7 @@ public class RegFTPChipDetailServiceTest {
 		regFTPChipDetailService.createFtpChipDetails(ftpChipDeatilRequest());
 	}
 	
-	@Ignore
-	@Test(expected = RequestException.class)
-	public void createRegFTPChipDetailtest02() {
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(createPartnerRequest());
-		Mockito.when(foundationalTrustProviderRepository.findByIdAndIsActiveTrue(Mockito.anyString())).thenReturn(foundationalTrustProviderRequest());
-		Mockito.doReturn(createPartnerRequest()).when(ftpChipDetailRepository).save(Mockito.any());
-		regFTPChipDetailService.createFtpChipDetails(ftpChipDeatilRequest());
-	}
-	@Ignore
+	
 	@Test 
 	public void updateRegFtpChipDetailsTest() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();

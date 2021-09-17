@@ -18,7 +18,9 @@ public enum SearchErrorCode {
 	ERROR_OCCURED_WHILE_SORTING("PMS-MSD-359", "Error occured while sorting"),
 	INVALID_COLUMN_VALUE("PMS-MSD-316", "Invalid value present for the given column"),
 	INVALID_SORT_FIELD("PMS-MSD-357", "Invalid sort field %s"), 
-	INVALID_VALUE("PMS-MSD-390", "Invalid filter value");
+	INVALID_VALUE("PMS-MSD-390", "Invalid filter value"),
+	INVALID_VALUES("PMS-MSD-391", "Invalid filter values"),
+	INVALID_VALUE_VALUES("PMS-MSD-392", "Both value and values cannot be present");
 
 	/**
 	 * The error code.

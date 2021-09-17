@@ -59,7 +59,7 @@ public class FilterHelper  {
 	private static final String WILD_CARD_CHARACTER = "%";
 	private static final String FILTER_VALUE_EMPTY = "";
 
-	@Value("${mosip.kernel.filtervalue.max_columns:20}")
+	@Value("${mosip.kernel.filtervalue.max_columns:100}")
 	int filterValueMaxColumns;
 
 
@@ -106,6 +106,7 @@ public class FilterHelper  {
 		} else if (columnType.equals(FILTER_VALUE_ALL)) {
 			criteriaQueryByType.distinct(false);
 		}
+		 
 		TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQueryByType);
 		results = typedQuery.setMaxResults(filterValueMaxColumns).getResultList();
 		return results;
@@ -160,13 +161,14 @@ public class FilterHelper  {
 			criteriaQueryByType.distinct(true);
 		} else if (columnType.equals(FILTER_VALUE_ALL)) {
 			criteriaQueryByType.distinct(false);
-		}
+		}		
+		
 		TypedQuery<FilterData> typedQuery = entityManager.createQuery(criteriaQueryByType);
 		results = typedQuery.setMaxResults(filterValueMaxColumns).getResultList();
 		return results;
 
 	}
-
+	
 	private <E> void columnTypeValidator(Root<E> root, String columnName) {
 		if (classes.contains(root.get(columnName).getJavaType())) {
 			throw new RequestException(ValidationErrorCode.FILTER_COLUMN_NOT_SUPPORTED.getErrorCode(),
@@ -204,9 +206,9 @@ public class FilterHelper  {
 			List<Predicate> optionalPredicates = optionalFilters.stream().map(i -> masterdataSearchHelper.buildFilters(builder, root, i))
 					.filter(Objects::nonNull).collect(Collectors.toList());
 			if (!optionalPredicates.isEmpty()) {
-				Predicate orPredicate = builder
-						.or(optionalPredicates.toArray(new Predicate[optionalPredicates.size()]));
-				predicates.add(orPredicate);
+				Predicate andPredicate = builder
+						.and(optionalPredicates.toArray(new Predicate[optionalPredicates.size()]));
+				predicates.add(andPredicate);
 			}
 		}
 	}
