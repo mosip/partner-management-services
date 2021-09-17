@@ -601,6 +601,65 @@ public class PolicyServiceTest {
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
 		authPolicyName.setPolicy_type("Auth");
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test_01")).thenReturn(authPolicyName);		
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
+		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
+		service.updatePolicies(request, "12345");
+	}
+
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePoliciesStatus_01() {
+		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById(Mockito.anyString())).thenReturn(policy);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setIsActive(true);		
+		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(authPolicy));		
+		service.updatePolicyStatus(request,"1234","3456");	
+	}
+	
+	@Test(expected = PolicyManagementServiceException.class)
+	public void updatePoliciesStatus_02() {
+		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
+		request.setStatus("NotActive");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById(Mockito.anyString())).thenReturn(policy);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.setIsActive(true);		
+		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(authPolicy));		
+		service.updatePolicyStatus(request,"1234","3456");	
+	}
+	
+	@Test
+	public void updatePolicies_Test_04() throws PolicyManagementServiceException, Exception {
+		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
+		request.setPolicyGroupName("Test");
+		request.setDesc("Test");
+		request.setName("Test");
+		request.setPolicies(createAuthPolicyInput());
+		request.setVersion("0.8");
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test_01");
+		policyGroup.setIsActive(true);
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
+		AuthPolicy authPolicy = getAuthPolicy();
+		authPolicy.getPolicyGroup().setId("12345");
+		authPolicy.setName("Test_01");
+		authPolicy.setPolicy_type("Auth");
+		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(authPolicy));
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
+		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
+		AuthPolicy authPolicyName = getAuthPolicy();
+		authPolicyName.setPolicySchema("localhost");
+		authPolicyName.getPolicyGroup().setId("12345");
+		authPolicyName.setName("Test_01");
+		authPolicyName.setPolicy_type("Auth");
 		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test_01")).thenReturn(authPolicyName);
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
