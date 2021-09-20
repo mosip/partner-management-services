@@ -43,26 +43,27 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
-	
+
 	@Autowired
 	AuditUtil auditUtil;
-	
-	@Autowired	
+
+	@Autowired
 	DeviceDetailService deviceDetaillService;
-	
-	@Autowired	
+
+	@Autowired
 	RegDeviceDetailService regDeviceDetaillService;
-	
+
 	/**
 	 * Post API to insert a new row of DeviceDetail data
-	 * 
+	 *
 	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
+	 *
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetail())")
 	@PostMapping
 	@ApiOperation(value = "Service to save DeviceDetail", notes = "Saves DeviceDetail and return DeviceDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully created"),
@@ -78,11 +79,11 @@ public class DeviceDetailController {
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regDeviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
-			
+					.setResponse(regDeviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
+
 		}else {
-		responseWrapper
-				.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
+			responseWrapper
+					.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
@@ -95,14 +96,15 @@ public class DeviceDetailController {
 
 	/**
 	 * Put API to update a row of DeviceDetail data
-	 * 
+	 *
 	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
+	 *
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutdevicedetail())")
 	@PutMapping
 	@ApiOperation(value = "Service to update DeviceDetail", notes = "Updates DeviceDetail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully updated"),
@@ -118,11 +120,11 @@ public class DeviceDetailController {
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regDeviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
-			
+					.setResponse(regDeviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
+
 		}else {
-		responseWrapper
-				.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
+			responseWrapper
+					.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
@@ -131,14 +133,15 @@ public class DeviceDetailController {
 				"AUT-007");
 		return responseWrapper;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdevicedetail())")
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
@@ -154,11 +157,11 @@ public class DeviceDetailController {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regDeviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
-			
+					.setResponse(regDeviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
+
 		}else {
 			responseWrapper
-			.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
+					.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
@@ -168,74 +171,79 @@ public class DeviceDetailController {
 
 		return responseWrapper;
 	}
-	
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailsearch())")
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(deviceDetaillService.searchDeviceDetails(DeviceDetail.class, request.getRequest()));
 		return responseWrapper;
 	}
-	
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypesearch())")
 	@PostMapping("/deviceType/search")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(deviceDetaillService.searchDeviceType(RegistrationDeviceSubType.class, request.getRequest()));
 		return responseWrapper;
 	}
-	
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailfiltervalues())")
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceFilterValues(request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(deviceDetaillService.deviceFilterValues(request.getRequest()));
 		return responseWrapper;
 
 	}
-	
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypefiltervalues())")
 	@PostMapping("/deviceType/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceTypeFilterValues(request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(deviceDetaillService.deviceTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicesubtypefiltervalues())")
 	@PostMapping("/deviceSubType/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
 			responseWrapper.setResponse(regDeviceDetaillService.regDeviceSubTypeFilterValues(request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}

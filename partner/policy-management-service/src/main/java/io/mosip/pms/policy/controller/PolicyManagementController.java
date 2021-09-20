@@ -65,7 +65,8 @@ public class PolicyManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
@@ -79,7 +80,8 @@ public class PolicyManagementController {
 		return response;		
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpoliciesgrouppolicygroupid())")
 	@PutMapping(value = "/group/{policygroupId}")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policygroupId,
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
@@ -94,7 +96,8 @@ public class PolicyManagementController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpolicies())")
 	@PostMapping
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
@@ -110,7 +113,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciespolicyidgrouppublish())")
 	@PostMapping(value = "/{policyId}/group/{policygroupId}/publish")
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
@@ -121,7 +125,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpoliciespolicyid())")
     @PutMapping(value ="/{policyId}")
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
 			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
@@ -138,7 +143,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpoliciespolicyidgrouppolicygroupid())")
 	@PatchMapping(value = "/{policyId}/group/{policygroupId}")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(
 			@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto, @PathVariable String policygroupId,
@@ -154,7 +160,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicies())")
 	@GetMapping
 	public ResponseWrapper<List<PolicyResponseDto>> getPolicies()
 			throws FileNotFoundException, IOException, ParseException {
@@ -165,7 +172,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciespolicyid())")
 	@GetMapping(value = "/{policyId}")
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyId) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -176,7 +184,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciesapikey())")
 	@GetMapping(value = "/apikey/{apikey}")
 	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String apikey)
 			throws FileNotFoundException, IOException, ParseException {
@@ -188,7 +197,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciespolicyidpartnerpartnerid))")
 	@GetMapping(value = "/{policyId}/partner/{partnerId}")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId,
 			@PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException {
@@ -200,7 +210,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciesgrouppolicygroupid))")
 	@GetMapping(value = "/group/{policygroupId}")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policygroupId)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -211,7 +222,8 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciesgroupall))")
 	@GetMapping(value = "/group/all")
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup()
 			throws JsonParseException, JsonMappingException, IOException {
@@ -224,7 +236,8 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/group/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupsearch))")
+	//@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
@@ -235,7 +248,8 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciessearch))")
+	//@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
 			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
 		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
@@ -244,7 +258,8 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpoliciesconfigkey))")
 	@GetMapping(value = "/config/{key}")
 	public ResponseWrapper<KeyValuePair<String, Object>> getValueForKey(@PathVariable String key) {
 		ResponseWrapper<KeyValuePair<String, Object>> responseWrapper = new ResponseWrapper<>();
@@ -253,7 +268,8 @@ public class PolicyManagementController {
 	}
 
 	@PostMapping("/group/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupfiltervalues))")
+	//@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<FilterResponseCodeDto> policyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -263,7 +279,8 @@ public class PolicyManagementController {
 	}
 
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesfiltervalues))")
+	//@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<FilterResponseCodeDto> policyFilterValues(
 			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -273,7 +290,8 @@ public class PolicyManagementController {
 	}
 	
 	@GetMapping("/active/group/{groupName}")
-	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','ABIS_PARTNER','MANUAL_ADJUDICATION','POLICYMANAGER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetactivegroupgroupname))")
+	//@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','ABIS_PARTNER','MANUAL_ADJUDICATION','POLICYMANAGER')")
 	public ResponseWrapper<List<PolicyDetailsDto>> getPoliciesByGroupName(@PathVariable String groupName) {
 		ResponseWrapper<List<PolicyDetailsDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");

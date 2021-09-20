@@ -52,26 +52,28 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/ftpchipdetail")
 @Api(tags = { "FTPChipDetail" })
 public class FTPChipDetailController {
-	
+
 	@Autowired
 	AuditUtil auditUtil;
-	
-	@Autowired	
+
+	@Autowired
 	FtpChipDetailService ftpChipDetaillService;
-	
-	@Autowired	
+
+	@Autowired
 	RegFTPChipDetailService regFtpChipDetailService;
-	
+
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
-	 * 
+	 *
 	 * @param chipDetailRequestDto input parameter chipDetailRequestDto
-	 * 
+	 *
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetail())")
 	@PostMapping
 	@ApiOperation(value = "Service to save ftpChipDetail", notes = "Saves ftpChipDetail and return ftpChipDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftpChipDetail successfully created"),
@@ -87,11 +89,11 @@ public class FTPChipDetailController {
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		if(chipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regFtpChipDetailService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
-			
+					.setResponse(regFtpChipDetailService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
+
 		}else {
-		responseWrapper
-				.setResponse(ftpChipDetaillService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
+			responseWrapper
+					.setResponse(ftpChipDetaillService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , FtpChipDetailDto.class.getCanonicalName()),
@@ -104,14 +106,15 @@ public class FTPChipDetailController {
 
 	/**
 	 * Put API to update a row of DeviceDetail data
-	 * 
+	 *
 	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
+	 *
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutftpchipdetail())")
 	@PutMapping
 	@ApiOperation(value = "Service to update ftp chip detail", notes = "Updates ftp chip detail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully updated"),
@@ -127,11 +130,11 @@ public class FTPChipDetailController {
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		if(ftpChipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regFtpChipDetailService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
-			
+					.setResponse(regFtpChipDetailService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
+
 		}else {
-		responseWrapper
-				.setResponse(ftpChipDetaillService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
+			responseWrapper
+					.setResponse(ftpChipDetaillService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FtpChipDetailUpdateDto.class.getCanonicalName()),
@@ -140,21 +143,22 @@ public class FTPChipDetailController {
 				"AUT-007");
 		return responseWrapper;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchftpchipdetail())")
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject ftp chip detail", notes = "Approve ftp chip detail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting ftp chip detail any error occured") })
 	public ResponseWrapper<String> approveDeviceDetails(
-			@Valid @RequestBody RequestWrapper<FtpChipDetailStatusDto> chipDetailRequestDto){		
+			@Valid @RequestBody RequestWrapper<FtpChipDetailStatusDto> chipDetailRequestDto){
 		auditUtil.auditRequest(
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + FtpChipDetailStatusDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -163,11 +167,11 @@ public class FTPChipDetailController {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		if(chipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			responseWrapper
-			.setResponse(regFtpChipDetailService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
-			
+					.setResponse(regFtpChipDetailService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
+
 		}else {
 			responseWrapper
-			.setResponse(ftpChipDetaillService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
+					.setResponse(ftpChipDetaillService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FtpChipDetailStatusDto.class.getCanonicalName()),
@@ -177,18 +181,19 @@ public class FTPChipDetailController {
 
 		return responseWrapper;
 	}
-	
+
 	/**
 	 * To Upload FTP Chip Certificate.
-	 * 
+	 *
 	 * @param partnerCertRequestDto {@link FtpChipCertificateRequestDto} request
 	 * @return {@link PartnerCertificateResponseDto} signed certificate response
-	 * @throws IOException 
-	 * @throws JsonProcessingException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailuploadcertificate())")
 	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
 	public ResponseWrapper<FtpCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<FtpChipCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -201,7 +206,7 @@ public class FTPChipDetailController {
 		if(partnerCertRequestDto.getRequest().getIsItForRegistrationDevice()) {
 			response.setResponse(regFtpChipDetailService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		}else {
-		response.setResponse(ftpChipDetaillService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+			response.setResponse(ftpChipDetaillService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),
@@ -210,21 +215,22 @@ public class FTPChipDetailController {
 				"AUT-007");
 		return response;
 	}
-	
-    /**
+
+	/**
 	 * To Download Partner Certificate.
-	 * 
+	 *
 	 * @param certDownloadRequestDto {@link FtpCertDownloadRequestDto} request
 	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftpchipdetailgetpartnercertificate())")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
 	public ResponseWrapper<FtpCertDownloadResponeDto> getPartnerCertificate(
-			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
+			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<FtpCertDownloadResponeDto> response = new ResponseWrapper<>();
 		FtpChipCertDownloadRequestDto requestDto = new FtpChipCertDownloadRequestDto();
 		requestDto.setFtpChipDetailId(ftpChipDetailId);
@@ -245,18 +251,19 @@ public class FTPChipDetailController {
 				String.format(DeviceConstant.SUCCESSFUL_DOWNLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),
 				"AUT-007");
 		return response;
-    }
-	
+	}
+
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailsearch())")
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
 		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
 			responseWrapper.setResponse(regFtpChipDetailService.searchFTPChipDetails(RegFTPChipDetail.class, request.getRequest()));
 			return responseWrapper;
-		} 
+		}
 		responseWrapper.setResponse(ftpChipDetaillService.searchFTPChipDetails(FTPChipDetail.class, request.getRequest()));
 		return responseWrapper;
 	}

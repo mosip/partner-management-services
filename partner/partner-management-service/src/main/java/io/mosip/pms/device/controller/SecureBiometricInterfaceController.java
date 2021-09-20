@@ -46,7 +46,8 @@ public class SecureBiometricInterfaceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterface())")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save SecureBiometricInterfaceCreateDto", notes = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
@@ -78,7 +79,8 @@ public class SecureBiometricInterfaceController {
 
 	}
 	
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterface())")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update SecureBiometricInterface", notes = "Updates SecureBiometricInterface and returns success message")
@@ -110,7 +112,8 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	//@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchsecurebiometricinterface())")
 	@ResponseFilter
 	@PatchMapping
 	@ApiOperation(value = "Service to approve/reject SecureBiometricInterface", notes = "Approve SecureBiometricInterface and returns success message")
@@ -143,8 +146,9 @@ public class SecureBiometricInterfaceController {
 	}
 	
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacesearch())")
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	//@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
