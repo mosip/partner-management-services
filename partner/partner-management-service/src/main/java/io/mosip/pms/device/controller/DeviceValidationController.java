@@ -30,6 +30,7 @@ public class DeviceValidationController {
 	@Autowired
 	private DeviceValidationService deviceValidationService;
 	
+	@Deprecated
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
 	@ResponseFilter
