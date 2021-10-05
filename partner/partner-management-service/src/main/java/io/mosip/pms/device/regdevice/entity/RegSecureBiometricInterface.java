@@ -20,7 +20,7 @@ public class RegSecureBiometricInterface {
 	@Column(name = "sw_version", nullable = false, length = 64)
 	private String swVersion;
 	
-	@Column(name = "device_detail_id", nullable = false, length = 36)
+	@Column(name = "device_detail_id", nullable = false)
 	private String deviceDetailId;	
 	
 	@Column(name = "sw_cr_dtimes")

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -94,6 +95,21 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 					"AUT-015");
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
+		}
+		
+		Map<String, Long> deviceDetailsGroupBy = deviceDetails.stream().collect(Collectors.groupingBy(RegDeviceDetail::getDeviceProviderId,Collectors.counting()));
+		if(deviceDetailsGroupBy.size() > 1) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, RegSecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+					SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage());
+			
 		}
 		
 		entity.setDeviceDetailId(
@@ -188,10 +204,22 @@ public class RegSecureBiometricInterfaceServiceImpl implements RegSecureBiometri
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
 		}
 		
+		Map<String, Long> deviceDetailsGroupBy = deviceDetails.stream().collect(Collectors.groupingBy(RegDeviceDetail::getDeviceProviderId,Collectors.counting()));
+		if(deviceDetailsGroupBy.size() > 1) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, RegSecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+					SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage());
+			
+		}
 		entity.setDeviceDetailId(
-				deviceDetails.stream().map(dd -> String.valueOf(dd.getId())).collect(Collectors.joining(",")));
-
-		
+				deviceDetails.stream().map(dd -> String.valueOf(dd.getId())).collect(Collectors.joining(",")));		
 		entity.setId(sbiupdateDto.getId());
 		byte[] swNinaryHashArr = sbiupdateDto.getSwBinaryHash().getBytes();
 		entity.setSwBinaryHash(swNinaryHashArr);
