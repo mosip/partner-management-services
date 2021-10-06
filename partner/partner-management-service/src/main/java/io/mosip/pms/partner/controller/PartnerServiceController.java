@@ -417,4 +417,15 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeys(request.getRequest()));
 		return responseWrapper;
 	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
+			@ApiParam("To Update policygroup") @PathVariable("partnerId") @NotNull String partnerId,
+			@PathVariable("policygroupName") @NotNull String policygroupName) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		response.setResponse(partnerService.updatePolicyGroup(partnerId, policygroupName));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

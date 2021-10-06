@@ -270,7 +270,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired()) {
+		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup() != null
+				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup);
@@ -713,6 +714,12 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
+		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorMessage());
+		}
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());
@@ -1368,5 +1375,32 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		System.out.println(response.getDataShare().getUrl());
 		return response.getDataShare().getUrl();
+	}
+
+	/**
+	 * This method updates the policy group for not approved partners.
+	 */
+	@Override
+	public String updatePolicyGroup(String partnerId, String policyGroupName) {
+		Partner partner = getValidPartner(partnerId, true);
+		//Approved partners policy group should not be updated
+		if (partner.getIsActive()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorMessage());
+		}		
+		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());		
+		if (!partnerType.getIsPolicyRequired()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorMessage());
+		}		
+		PolicyGroup policyGroup = validateAndGetPolicyGroupByName(policyGroupName);
+		partner.setPolicyGroupId(policyGroup.getId());
+		partner.setUpdBy(getUser());
+		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		partnerRepository.save(partner);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS);
+		return "Success";
 	}
 }

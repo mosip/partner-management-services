@@ -200,4 +200,12 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto);
+	
+	/**
+	 *  This one updates the policy group for a partner
+	 * @param partnerId
+	 * @param policyGroupId
+	 * @return
+	 */
+	public String updatePolicyGroup(String partnerId, String policygroupName);
 }
