@@ -46,6 +46,7 @@ public class RegisteredDeviceController {
 	 * @return ResponseWrapper<String>
 	 * @throws Exception
 	 */
+	@Deprecated
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@PostMapping
@@ -64,6 +65,7 @@ public class RegisteredDeviceController {
 	 *            the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ApiOperation(value = "DeRegister Device")
 	@PostMapping("/deregister")
@@ -79,6 +81,7 @@ public class RegisteredDeviceController {
 		return response;
 	}
 	
+	@Deprecated
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")

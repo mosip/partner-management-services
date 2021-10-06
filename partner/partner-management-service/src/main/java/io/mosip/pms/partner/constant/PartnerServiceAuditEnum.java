@@ -165,7 +165,17 @@ public enum PartnerServiceAuditEnum {
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
 	RETRIVE_PARTNER_FAILURE("PMS_PRT_419", AuditConstant.AUDIT_SYSTEM, "GET PARTNER ",
 			"Retrieving partner failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
-			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	MAP_POLICY_GROUP("PMS_PRT_121", AuditConstant.AUDIT_SYSTEM, "PUT MAP POLICY GROUP",
+			"Mapping policy group to partner", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	MAP_POLICY_GROUP_SUCCESS("PMS_PRT_221", AuditConstant.AUDIT_SYSTEM, "PUT MAP POLICY GROUP",
+			"Mapping policy group to partner success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	MAP_POLICY_GROUP_FAILURE("PMS_PRT_421", AuditConstant.AUDIT_SYSTEM, "PUT MAP POLICY GROUP",
+			"Mapping policy group to partner failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+;
 	
 	private final String eventId;
 
