@@ -235,6 +235,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
+	
+	@Value("${partner.register.as.user.in.iam.enable:true}")
+	private boolean isPartnerToBeRegistredAsUserInIAM; 
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
@@ -275,7 +278,9 @@ public class PartnerServiceImpl implements PartnerService {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup);
-		RegisterUserInKeycloak(partner);
+		if(isPartnerToBeRegistredAsUserInIAM) {
+			RegisterUserInKeycloak(partner);
+		}
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
@@ -1402,5 +1407,17 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerRepository.save(partner);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS);
 		return "Success";
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public boolean isPartnerExistsWithEmail(String emailId) {
+		if (!validateEmail(emailId)) {			
+			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+		}
+		return !validatePartnerByEmail(emailId);
 	}
 }

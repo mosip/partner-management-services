@@ -208,4 +208,11 @@ public interface PartnerService {
 	 * @return
 	 */
 	public String updatePolicyGroup(String partnerId, String policygroupName);
+	
+	/**
+	 * This method will check weather a record exists with given email.
+	 * @param emailId
+	 * @return
+	 */
+	public boolean isPartnerExistsWithEmail(String emailId);
 }

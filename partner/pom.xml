@@ -64,19 +64,7 @@
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
-	</distributionManagement>
-	
-	<repositories>
-		<repository>
-		  <id>ossrh</id>
-		  <name>Central Repository</name>
-		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		  <layout>default</layout>
-		  <snapshots>
-			<enabled>true</enabled>
-		  </snapshots>
-		</repository>
-	</repositories>
+	</distributionManagement>	
 
 	<properties>
 		<kernel.version>1.2.0-SNAPSHOT</kernel.version>		
