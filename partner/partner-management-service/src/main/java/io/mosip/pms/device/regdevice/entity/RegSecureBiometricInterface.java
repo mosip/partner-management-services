@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,12 +20,8 @@ public class RegSecureBiometricInterface {
 	@Column(name = "sw_version", nullable = false, length = 64)
 	private String swVersion;
 	
-	@Column(name = "device_detail_id", nullable = false, length = 36)
-	private String deviceDetailId;
-	
-	@ManyToOne
-	@JoinColumn(name = "device_detail_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private RegDeviceDetail deviceDetail;
+	@Column(name = "device_detail_id", nullable = false)
+	private String deviceDetailId;	
 	
 	@Column(name = "sw_cr_dtimes")
 	private LocalDateTime swCreateDateTime;
@@ -81,14 +75,6 @@ public class RegSecureBiometricInterface {
 
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
-	}
-
-	public RegDeviceDetail getDeviceDetail() {
-		return deviceDetail;
-	}
-
-	public void setDeviceDetail(RegDeviceDetail deviceDetail) {
-		this.deviceDetail = deviceDetail;
 	}
 
 	public String getDeviceDetailId() {

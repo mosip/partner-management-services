@@ -8,3 +8,4 @@ Online_Verification_Partner,Online_Verification_Partner,TRUE,superadmin,now(),TR
 ABIS_Partner,ABIS Partner,TRUE,superadmin,now(),TRUE
 Manual_Adjudication,Manual Adjudication,TRUE,superadmin,now(),TRUE
 MISP_Partner,MISP_Partner,TRUE,superadmin,now(),FALSE
+Internal_Partner,Used internally to share certs,TRUE,superadmin,now(),TRUE

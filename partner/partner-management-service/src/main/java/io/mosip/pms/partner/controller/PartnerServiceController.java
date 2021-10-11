@@ -35,6 +35,7 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
+import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -436,5 +437,26 @@ public class PartnerServiceController {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_APIKEY_REQUEST);
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeys(request.getRequest()));
 		return responseWrapper;
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
+			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
+			@PathVariable("policygroupName") @NotNull String policygroupName) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		response.setResponse(partnerService.updatePolicyGroup(partnerId, policygroupName));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}	
+
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<Boolean>> isEmailExists(
+			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
+		ResponseWrapper<Boolean> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

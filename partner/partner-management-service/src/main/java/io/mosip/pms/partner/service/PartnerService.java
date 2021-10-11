@@ -200,4 +200,19 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto);
+	
+	/**
+	 *  This one updates the policy group for a partner
+	 * @param partnerId
+	 * @param policyGroupId
+	 * @return
+	 */
+	public String updatePolicyGroup(String partnerId, String policygroupName);
+	
+	/**
+	 * This method will check weather a record exists with given email.
+	 * @param emailId
+	 * @return
+	 */
+	public boolean isPartnerExistsWithEmail(String emailId);
 }

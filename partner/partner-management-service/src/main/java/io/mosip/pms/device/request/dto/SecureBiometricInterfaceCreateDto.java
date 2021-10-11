@@ -24,7 +24,7 @@ public class SecureBiometricInterfaceCreateDto {
 	private String swVersion;
 	
 	@NotBlank(message="value is empty or null")
-	@Size(min = 1, max = 36, message = "Length should be in between 1 and 36 chars")
+	@Size(min = 1, max = 200000, message = "Length should be in between 1 and 200000 chars")
 	@ApiModelProperty(value = "deviceDetailId", required = true, dataType = "java.lang.String")
 	private String deviceDetailId;
 	
