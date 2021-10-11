@@ -47,7 +47,85 @@ public class AuthorizedRolesDto {
     private List<String> getftpchipdetailgetpartnercertificate;
 	
 	private List<String> postftpchipdetailsearch;
-	
+
+	//misplicense controller
+
+    private List<String> postmisps;
+
+    private List<String> putmisps;
+
+    private List<String> getmisps;
+
+    private List<String> getmispsmispidlicensekey;
+
+
+    //partner-management-controller
+
+    private List<String> putpartnerspartneridapikeypolicies;
+
+    private List<String> patchpartnerspartnerid;
+
+    private List<String> patchpartnerspartneridapikey;
+
+    private List<String> getpartnerspartneridapikeymisplicensekey;
+
+    private List<String> patchpartnersapikey;
+
+    private List<String> getpartners;
+
+    private List<String> getpartnerspartneridapikey;
+
+    private List<String> getpartnersapikey;
+
+    private List<String> getpartnersapikeykey;
+
+
+    //partnerservice controller
+    private List<String> postpartners;
+
+    private List<String> patchpartnerspartneridapikeyrequest;
+
+    private List<String> postpartnerspartneridbioextractorspolicyid;
+
+    private List<String> getpartnerspartneridbioextractorspolicyid;
+
+    private List<String> postpartnerspartneridcredentialtypepolicyid;
+
+    private List<String> getpartnerspartneridcredentialtypepolicies;
+
+    private List<String> postpartnerspartneridcontactadd;
+
+    private List<String> putpartnerspartnerid;
+
+    private List<String> getpartnerspartnerid;
+
+    private List<String> getpartnerspartneridapikeyrequest;
+
+    private List<String> getpartnerspartneridapikeyapikeyreqid;
+
+    private List<String> postpartnerscertificatecaupload;
+
+    private List<String> postpartnerscertificateupload;
+
+    private List<String> getpartnerspartneridcertificate;
+
+    private List<String> postpartnerssearch;
+
+    private List<String> postpartnerspartnertypesearch;
+
+    private List<String> postpartnersfiltervalues;
+
+    private List<String> postpartnersapikeyrequestfiltervalues;
+
+    private List<String> postpartnersapikeyrequestsearch;
+
+    private List<String> postpartnersapikeysearch;
+
+    private List<String> putpartneridpolicygrouppolicygroupname;
+
+    private List<String> putemailverify;
+
+
 	//Registered Device
     
     private List<String> postregistereddevices;

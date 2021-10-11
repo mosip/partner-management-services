@@ -439,7 +439,8 @@ public class PartnerServiceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	//@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartneridpolicygrouppolicygroupname())")
 	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
@@ -450,7 +451,8 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	//@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutemailverify())")
 	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<Boolean>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
