@@ -119,6 +119,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -1413,11 +1414,16 @@ public class PartnerServiceImpl implements PartnerService {
 	 * 
 	 */
 	@Override
-	public boolean isPartnerExistsWithEmail(String emailId) {
-		if (!validateEmail(emailId)) {			
+	public EmailVerificationResponseDto isPartnerExistsWithEmail(String emailId) {
+		EmailVerificationResponseDto response = new EmailVerificationResponseDto();
+		if (!validateEmail(emailId)) {
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
-		return !validatePartnerByEmail(emailId);
+		response.setEmailExists(!validatePartnerByEmail(emailId));
+		List<PartnerType> partnerTypesFromDb = partnerTypeRepository.findAll();
+		response.setPolicyRequiredPartnerTypes(partnerTypesFromDb.stream().filter(pt -> pt.getIsPolicyRequired())
+				.map(p -> p.getCode()).collect(Collectors.toList()));
+		return response;
 	}
 }

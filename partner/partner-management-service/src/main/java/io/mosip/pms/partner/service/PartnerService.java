@@ -26,6 +26,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -214,5 +215,5 @@ public interface PartnerService {
 	 * @param emailId
 	 * @return
 	 */
-	public boolean isPartnerExistsWithEmail(String emailId);
+	public EmailVerificationResponseDto isPartnerExistsWithEmail(String emailId);
 }
