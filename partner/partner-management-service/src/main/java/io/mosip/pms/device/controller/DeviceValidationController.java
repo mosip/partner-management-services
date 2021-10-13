@@ -22,6 +22,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping(value = "/deviceprovidermanagement")
 @Api(tags = { "Device Validation" })
+@Deprecated
 public class DeviceValidationController {
 
 	@Autowired
@@ -33,6 +34,7 @@ public class DeviceValidationController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
 	@ResponseFilter
+	@Deprecated
 	public ValidateResponseWrapper<ResponseDto> validateDeviceProvider(
 			@RequestBody @Valid RequestWrapper<ValidateDeviceDto> request) {
 		ValidateResponseWrapper<ResponseDto> responseWrapper = new ValidateResponseWrapper<>();

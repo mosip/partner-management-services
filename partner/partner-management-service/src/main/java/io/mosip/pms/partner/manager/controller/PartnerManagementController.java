@@ -30,6 +30,7 @@ import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * <p>This is the MOSIP Partner Management Service controller. This defines all the necessary operations</p>
@@ -71,6 +72,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/policies", method = RequestMethod.PUT)
+	@Operation(summary = "Service to update policies against to api key", description = "Service to update policies against to api key")
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerId,
@@ -96,6 +98,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PATCH)
+	@Operation(summary = "Service to activate/de-activate partner", description = "Service to activate/de-activate partner")
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartner(
 			 @PathVariable String partnerId,
 			 @RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request){
@@ -121,6 +124,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}", method = RequestMethod.PATCH)
+	@Operation(summary = "Service to activate/de-activate api key", description = "Service to activate/de-activate api key")
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAPIKey(
 			@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
@@ -148,6 +152,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','ID_AUTHENTICATION','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/misp/{misplicensekey}/validate", 
 			method = RequestMethod.GET)
+	@Operation(summary = "Service to validate partner and misp details", description = "Service to validate partner and misp details")
 	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
 			@PathVariable String partnerId, @PathVariable String apikey,
 			@PathVariable String misplicensekey,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
@@ -170,6 +175,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/apikey/{apikey}", method = RequestMethod.PATCH)
+	@Operation(summary = "Service to approve/reject api key requests", description = "Service to approve/reject api key requests")
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectAPIKeyRequest(
 			@RequestBody @Valid RequestWrapper<ActivateDeactivatePartnerRequest> request,
 			@PathVariable String apikey){
@@ -191,6 +197,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE')")
 	@RequestMapping(method = RequestMethod.GET)
+	@Operation(summary = "Service to get partner details", description = "Service to get partner details")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -215,6 +222,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}" , method = RequestMethod.GET)
+	@Operation(summary = "Service to get policy for given api key", description = "Service to get policy for given api key")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getPolicyMappedToAPIKey(
 			@PathVariable String partnerId,
 			@PathVariable String apikey){
@@ -234,6 +242,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/apikey" , method = RequestMethod.GET)
+	@Operation(summary = "Service to get api key requests", description = "Service to get api key requests")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
@@ -253,6 +262,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/apikey/{apikey}" , method = RequestMethod.GET)
+	@Operation(summary = "Service to get api key request", description = "Service to get api key request")
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getAPIKeyRequest(
 			@PathVariable String apikey) {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();

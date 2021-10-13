@@ -29,9 +29,9 @@ import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping(value = "/securebiometricinterface")
@@ -49,7 +49,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
-	@ApiOperation(value = "Service to save SecureBiometricInterfaceCreateDto", notes = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
+	@Operation(summary = "Service to save SecureBiometricInterfaceCreateDto", description = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterfaceCreateDto successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating SecureBiometricInterfaceCreateDto any error occured") })
@@ -81,7 +81,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
-	@ApiOperation(value = "Service to update SecureBiometricInterface", notes = "Updates SecureBiometricInterface and returns success message")
+	@Operation(summary = "Service to update SecureBiometricInterface", description = "Updates SecureBiometricInterface and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterface successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating SecureBiometricInterface any error occured") })
@@ -113,7 +113,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
-	@ApiOperation(value = "Service to approve/reject SecureBiometricInterface", notes = "Approve SecureBiometricInterface and returns success message")
+	@Operation(summary = "Service to approve/reject SecureBiometricInterface", description = "Approve SecureBiometricInterface and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterface successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting DeviceDetail any error occured") })
@@ -145,6 +145,7 @@ public class SecureBiometricInterfaceController {
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@Operation(summary = "Service to search SecureBiometricInterface details", description = "Service to search SecureBiometricInterface details")
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> responseWrapper = new ResponseWrapper<>();

@@ -22,6 +22,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping(value = "/misps")
@@ -33,6 +34,7 @@ public class MISPLicenseController {
 	
 	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@PostMapping
+	@Operation(summary = "Service to generate license for misp", description = "Service to generate license for misp")
 	public ResponseWrapper<MISPLicenseResponseDto> generateLicense(@RequestBody @Valid RequestWrapper<MISPLicenseRequestDto> request){	
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
 		response.setResponse(infraProviderService.approveInfraProvider(request.getRequest().getProviderId()));
@@ -41,6 +43,7 @@ public class MISPLicenseController {
 	
 	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@PutMapping
+	@Operation(summary = "Service to update license details of misp", description = "Service to update license details of misp")
 	public ResponseWrapper<MISPLicenseResponseDto> updateLicenseDetails(@RequestBody @Valid RequestWrapper<MISPLicenseUpdateRequestDto> request){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
 		response.setResponse(infraProviderService.updateInfraProvider(request.getRequest().getProviderId(), request.getRequest().getLicenseKey(),
@@ -50,6 +53,7 @@ public class MISPLicenseController {
 	
 	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@GetMapping
+	@Operation(summary = "Service to get license details of misp", description = "Service to get license details of misp")
 	public ResponseWrapper<List<MISPLicenseEntity>> getLicenseDetails(){
 		ResponseWrapper<List<MISPLicenseEntity>> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.getInfraProvider());
@@ -58,6 +62,7 @@ public class MISPLicenseController {
 	
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/{mispId}/licenseKey")
+	@Operation(summary = "Service to get/regenarate license details of misp", description = "Service to get/regenarate license details of misp")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));

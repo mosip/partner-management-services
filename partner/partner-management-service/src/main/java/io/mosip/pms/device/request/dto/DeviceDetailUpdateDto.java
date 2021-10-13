@@ -42,8 +42,7 @@ public class DeviceDetailUpdateDto {
 	@Size(min = 1, max = 36, message = "Length should be in between 1 and 36 chars")
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
-
-	@Size(min = 1, max = 128, message = "Length should be in between 1 and 128 chars")
+	
 	@ApiModelProperty(value = "partnerOrganizationName", required = true, dataType = "java.lang.String")
 	private String partnerOrganizationName;
 	

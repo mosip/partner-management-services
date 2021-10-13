@@ -1,31 +1,52 @@
 package io.mosip.pms.config;
 
-import java.util.Collections;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
-	@Bean
-	public Docket productApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("io.mosip")).paths(PathSelectors.regex("(?!/(error).*).*")).build()
-				.apiInfo(metaData());
-	}
+	private static final Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
 
-	private ApiInfo metaData() {
-		return new ApiInfo("Partner Services", "Partner Regitration ", "1.0", "Terms of service",
-				new Contact("MOSIP Partner", "https://mosip.io", "info@mosip.io"), "Apache License Version 2.0",
-				"https://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
+	@Autowired
+	private OpenApiProperties openApiProperties;
+
+	@Bean
+	public OpenAPI openApi() {
+		String msg = "Swagger open api, ";
+		OpenAPI api = new OpenAPI().components(new Components());
+		if (null != openApiProperties.getInfo()) {
+			api.info(new Info().title(openApiProperties.getInfo().getTitle())
+					.version(openApiProperties.getInfo().getVersion())
+					.description(openApiProperties.getInfo().getDescription()));
+			if (null != openApiProperties.getInfo().getLicense()) {
+				api.getInfo().license(new License().name(openApiProperties.getInfo().getLicense().getName())
+						.url(openApiProperties.getInfo().getLicense().getUrl()));
+				logger.info(msg + "info license property is added");
+			} else {
+				logger.error(msg + "info license property is empty");
+			}
+			logger.info(msg + "info property is added");
+		} else {
+			logger.error(msg + "info property is empty");
+		}
+
+		if (null != openApiProperties.getPartnerManagementService().getServers()) {
+			openApiProperties.getPartnerManagementService().getServers().forEach(server -> {
+				api.addServersItem(new Server().description(server.getDescription()).url(server.getUrl()));
+			});
+			logger.info(msg + "server property is added");
+		} else {
+			logger.error(msg + "server property is empty");
+		}
+		return api;
 	}
 }
