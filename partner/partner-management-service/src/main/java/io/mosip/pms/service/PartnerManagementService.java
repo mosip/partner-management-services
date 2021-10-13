@@ -11,12 +11,10 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @Import(value = {WebSubPublisher.class,RestUtil.class,FilterColumnValidator.class,FilterHelper.class,SearchHelper.class,PageUtils.class})
 @ComponentScan(basePackages = {"io.mosip.pms.*", "${mosip.auth.adapter.impl.basepackage}"})
-@EnableSwagger2
 public class PartnerManagementService {
 
 	public static void main(String[] args) {

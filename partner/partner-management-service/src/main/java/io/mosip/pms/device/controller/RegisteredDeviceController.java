@@ -49,6 +49,7 @@ public class RegisteredDeviceController {
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@PostMapping
+	@Deprecated
 	public ValidateResponseWrapper<String> signedRegisteredDevice(
 			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
 		ValidateResponseWrapper<String> response = new ValidateResponseWrapper<>();
@@ -68,6 +69,7 @@ public class RegisteredDeviceController {
 	@ApiOperation(value = "DeRegister Device")
 	@PostMapping("/deregister")
 	@ResponseFilter
+	@Deprecated
 	public ValidateResponseWrapper<String> deRegisterDevice(@Valid @RequestBody RequestWrapper<DeRegisterDevicePostDto>
 							deRegisterDevicePostDto) {
 		ValidateResponseWrapper<String> response = new ValidateResponseWrapper<>();
@@ -82,6 +84,7 @@ public class RegisteredDeviceController {
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION')")
+	@Deprecated
 	public ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> searchRegisteredDevice(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ValidateResponseWrapper<PageResponseDto<RegisteredDevice>> responseWrapper = new ValidateResponseWrapper<>();
