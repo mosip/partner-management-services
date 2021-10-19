@@ -224,7 +224,6 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/group/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
@@ -235,7 +234,6 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','POLICYMANAGER','PARTNER_ADMIN')")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
 			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
 		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
@@ -252,8 +250,7 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@PostMapping("/group/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PostMapping("/group/filtervalues")	
 	public ResponseWrapper<FilterResponseCodeDto> policyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -262,8 +259,7 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PostMapping("/filtervalues")	
 	public ResponseWrapper<FilterResponseCodeDto> policyFilterValues(
 			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();

@@ -281,7 +281,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			DeviceSearchDto dto) {
 		List<SbiSearchResponseDto> sbis = new ArrayList<>();
 		PageResponseDto<SbiSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page = searchHelper.search(entityManager, entity, dto);
+		Page<E> page = searchHelper.search(entityManager, entity, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			sbis = MapperUtils.mapAll(page.getContent(), SbiSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
