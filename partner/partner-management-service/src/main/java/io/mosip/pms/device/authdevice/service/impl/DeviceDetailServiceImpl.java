@@ -274,7 +274,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailSearchResponseDto> deviceDetails = new ArrayList<>();
 		PageResponseDto<DeviceDetailSearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<E> page = searchHelper.search(entityManager, entity, dto);
+		Page<E> page = searchHelper.search(entityManager, entity, dto, "deviceProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -286,7 +286,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
 		List<RegistrationSubTypeDto> deviceSubTypes = new ArrayList<>();
 		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();
-		Page<E> page = searchHelper.search(entityManager, entity, dto);
+		Page<E> page = searchHelper.search(entityManager, entity, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceSubTypes = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
 			pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());

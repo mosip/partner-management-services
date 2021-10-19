@@ -42,7 +42,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
-import io.mosip.pms.device.regdevice.service.impl.RegFTPChipDetailServiceImpl;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
@@ -62,9 +61,6 @@ import io.mosip.pms.device.util.AuditUtil;
 public class FTPChipDetailControllerTest {
 	@MockBean
 	private FTPChipDetailServiceImpl ftpChipDetailServiceImpl;
-	
-	@MockBean
-	private RegFTPChipDetailServiceImpl regFTPChipDetailServiceImpl;
 	
 	@Mock
 	FtpChipDetailService ftpChipDetaillService;
@@ -96,17 +92,11 @@ public class FTPChipDetailControllerTest {
 		 uploadResponseWrapper.setResponse(uploadResponse);
 		 getResponseWrapper.setResponse(getResponse);
 		 Mockito.when(ftpChipDetailServiceImpl.createFtpChipDetails(Mockito.any())).thenReturn(response);
-		 Mockito.when(regFTPChipDetailServiceImpl.createFtpChipDetails(Mockito.any())).thenReturn(response);
 		 Mockito.when(ftpChipDetailServiceImpl.updateFtpChipDetails(Mockito.any())).thenReturn(response);
-		 Mockito.when(regFTPChipDetailServiceImpl.updateFtpChipDetails(Mockito.any())).thenReturn(response);
 		 Mockito.when(ftpChipDetailServiceImpl.updateFtpChipDetailStatus(Mockito.any())).thenReturn(stringResponse);
-		 Mockito.when(regFTPChipDetailServiceImpl.updateFtpChipDetailStatus(Mockito.any())).thenReturn(stringResponse);
 		 Mockito.when(ftpChipDetailServiceImpl.searchFTPChipDetails(Mockito.any(), Mockito.any())).thenReturn(searchResponse);
-		 Mockito.when(regFTPChipDetailServiceImpl.searchFTPChipDetails(Mockito.any(),Mockito.any())).thenReturn(searchResponse);
 		 Mockito.when(ftpChipDetailServiceImpl.uploadPartnerCertificate(Mockito.any())).thenReturn(uploadResponse);
-		 Mockito.when(regFTPChipDetailServiceImpl.uploadPartnerCertificate(Mockito.any())).thenReturn(uploadResponse);
-		 Mockito.when(ftpChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);
-		 Mockito.when(regFTPChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);		 
+		 Mockito.when(ftpChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);		 
 		 Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any());
 	     Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any(),any());
 	 }

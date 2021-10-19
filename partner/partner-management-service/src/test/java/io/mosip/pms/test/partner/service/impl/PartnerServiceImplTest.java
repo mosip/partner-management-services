@@ -248,7 +248,7 @@ public class PartnerServiceImplTest {
 		PartnerPolicyRequest partnerPolicy = new PartnerPolicyRequest();
 		partnerPolicy.setId("12345");
 		partnerPolicy.setPartner(createPartner(true));
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.anyString());
 		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 	}
 	
@@ -258,7 +258,7 @@ public class PartnerServiceImplTest {
 		PartnerPolicy policy = new PartnerPolicy();
 		policy.setPolicyId("12345");
 		policy.setPartner(createPartner(true));
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(policy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(policy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.anyString());
 		pserviceImpl.searchPartnerApiKeys(searchDto);
 	}
 	
@@ -267,7 +267,7 @@ public class PartnerServiceImplTest {
 		objectMapper.writeValueAsString(partnerSearchDto);
 		Partner partner = new Partner();
 		partner.setId("id");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partner))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partner))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.anyString());
 		pserviceImpl.searchPartner(partnerSearchDto);
 	}
 	
@@ -276,7 +276,7 @@ public class PartnerServiceImplTest {
 		objectMapper.writeValueAsString(partnerSearchDto1);
 		Partner partner = new Partner();
 		partner.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partner))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partner))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.anyString());
 		pserviceImpl.searchPartner(partnerSearchDto1);
 	}
 	
@@ -285,7 +285,7 @@ public class PartnerServiceImplTest {
 		objectMapper.writeValueAsString(searchDto);
 		PartnerType partnerType = new PartnerType();
 		partnerType.setCode("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.anyString());
 		pserviceImpl.searchPartnerType(searchDto);
 	}
 	@Test

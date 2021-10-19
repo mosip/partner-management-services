@@ -38,7 +38,6 @@ import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
-import io.mosip.pms.device.regdevice.service.impl.RegDeviceDetailServiceImpl;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
@@ -67,11 +66,7 @@ public class DeviceDetailControllerTest {
 	AuditUtil auditUtil;
     
     @MockBean	
-    private DeviceDetailServiceImpl deviceDetaillService;
-	
-    @MockBean	
-    private RegDeviceDetailServiceImpl regDeviceDetaillService;
-    
+    private DeviceDetailServiceImpl deviceDetaillService;    
     
     @Before
     public void setup() {
@@ -93,14 +88,6 @@ public class DeviceDetailControllerTest {
     	searchResponseWrapper.setResponse(searchResponse);
     	responseWrapper.setResponse(response);
     	responsewrapper.setResponse(stringResponse);
-    	Mockito.when(regDeviceDetaillService.regDeviceFilterValues(Mockito.any())).thenReturn(filterResponse);
-    	Mockito.when(regDeviceDetaillService.regDeviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
-    	Mockito.when(regDeviceDetaillService.regDeviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
-    	Mockito.when(regDeviceDetaillService.searchDeviceType(Mockito.any(), Mockito.any())).thenReturn(searchTypeResponse);
-    	Mockito.when(regDeviceDetaillService.searchDeviceDetails(Mockito.any(), Mockito.any())).thenReturn(searchResponse);
-        Mockito.when(regDeviceDetaillService.updateDeviceDetails(Mockito.any())).thenReturn(response);
-        Mockito.when(regDeviceDetaillService.createDeviceDetails(Mockito.any())).thenReturn(response);
-        Mockito.when(regDeviceDetaillService.updateDeviceDetailStatus(Mockito.any())).thenReturn(stringResponse);
         Mockito.when(deviceDetaillService.updateDeviceDetails(Mockito.any())).thenReturn(response);
         Mockito.when(deviceDetaillService.createDeviceDetails(Mockito.any())).thenReturn(response);
         Mockito.when(deviceDetaillService.updateDeviceDetailStatus(Mockito.any())).thenReturn(stringResponse);

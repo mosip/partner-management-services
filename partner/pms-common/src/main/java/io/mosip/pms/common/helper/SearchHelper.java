@@ -64,8 +64,11 @@ public class SearchHelper {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto) {
+	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto, String partnerIdColumn) {
 		this.entityManager= entityManager;
+		if (partnerIdColumn != null) {
+			addPartnerFilter(searchDto, partnerIdColumn);
+		}
 		return search(entity,searchDto);
 	}
 
@@ -81,8 +84,7 @@ public class SearchHelper {
 	 */
 	public <E> Page<E> search(Class<E> entity, SearchDto searchDto) {
 		long rows = 0l;
-		List<E> result;
-		addPartnerFilter(searchDto);
+		List<E> result;		
 		Objects.requireNonNull(entity, ENTITY_IS_NULL);
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
@@ -529,12 +531,12 @@ public class SearchHelper {
 	 * 
 	 * @return
 	 */
-	private SearchDto addPartnerFilter(SearchDto searchDto) {
+	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
 		AuthUserDetails loggedInUserDetails = getUser();
 		if (!(loggedInUserDetails.getAuthorities().stream()
-				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_"+partnerAdminRole)))) {
+				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)))) {
 			SearchFilter partnerIdSearchFilter = new SearchFilter();
-			partnerIdSearchFilter.setColumnName("partnerId");
+			partnerIdSearchFilter.setColumnName(partnerIdColumn);
 			partnerIdSearchFilter.setType("equals");
 			partnerIdSearchFilter.setValue(loggedInUserDetails.getUserId());
 			searchDto.getFilters().add(partnerIdSearchFilter);

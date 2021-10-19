@@ -987,7 +987,7 @@ public class PartnerServiceImpl implements PartnerService {
 			filters.add(partnerTypeSearch);
 			dto.setFilters(filters);
 		}
-		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
+		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -1000,7 +1000,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
 		List<PartnerType> partnerTypes = new ArrayList<>();
 		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
-		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
+		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
 			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -1171,7 +1171,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
 		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto);
+		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto,"part_id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
 			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),
@@ -1212,7 +1212,8 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto) {
 		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
 		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto);
+		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
+				"part_id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerPolicyRequests = mapPolicyRequests(page.getContent());
 			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),

@@ -448,7 +448,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<FTPSearchResponseDto> partners=new ArrayList<>();
 		PageResponseDto<FTPSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		Page<E> page =searchHelper.search(entityManager,entity, dto, "ftpProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
 		}

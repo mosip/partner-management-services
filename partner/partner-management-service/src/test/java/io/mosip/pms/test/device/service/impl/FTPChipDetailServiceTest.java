@@ -246,7 +246,7 @@ public class FTPChipDetailServiceTest {
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("1234");
 		ftpChipDetail.setFtpProviderId("1234");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.anyString());
 		ftpChipDetailService.searchFTPChipDetails(FTPChipDetail.class, deviceSearchDto);	
 	}
 	

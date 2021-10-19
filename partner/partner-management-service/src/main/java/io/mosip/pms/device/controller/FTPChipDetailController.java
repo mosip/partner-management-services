@@ -22,15 +22,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.regdevice.entity.RegFTPChipDetail;
-import io.mosip.pms.device.regdevice.service.RegFTPChipDetailService;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
@@ -58,9 +55,7 @@ public class FTPChipDetailController {
 	
 	@Autowired	
 	FtpChipDetailService ftpChipDetaillService;
-	
-	@Autowired	
-	RegFTPChipDetailService regFtpChipDetailService;
+
 	
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
@@ -85,14 +80,8 @@ public class FTPChipDetailController {
 				DeviceConstant.CREATE_API_IS_CALLED + FtpChipDetailDto.class.getCanonicalName(),
 				"AUT-001");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		if(chipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regFtpChipDetailService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
-			
-		}else {
 		responseWrapper
-				.setResponse(ftpChipDetaillService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
-		}
+		.setResponse(ftpChipDetaillService.createFtpChipDetails(chipDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , FtpChipDetailDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -125,14 +114,8 @@ public class FTPChipDetailController {
 				DeviceConstant.UPDATE_API_IS_CALLED + FtpChipDetailUpdateDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		if(ftpChipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regFtpChipDetailService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
-			
-		}else {
 		responseWrapper
-				.setResponse(ftpChipDetaillService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
-		}
+		.setResponse(ftpChipDetaillService.updateFtpChipDetails(ftpChipDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FtpChipDetailUpdateDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -161,14 +144,8 @@ public class FTPChipDetailController {
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + FtpChipDetailStatusDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		if(chipDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regFtpChipDetailService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
-			
-		}else {
-			responseWrapper
-			.setResponse(ftpChipDetaillService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
-		}
+		responseWrapper
+		.setResponse(ftpChipDetaillService.updateFtpChipDetailStatus(chipDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FtpChipDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -198,11 +175,7 @@ public class FTPChipDetailController {
 				DeviceConstant.CERTIFICATE_UPLOAD_API_IS_CALLED + FtpChipCertificateRequestDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<FtpCertificateResponseDto> response = new ResponseWrapper<>();
-		if(partnerCertRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			response.setResponse(regFtpChipDetailService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
-		}else {
 		response.setResponse(ftpChipDetaillService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
-		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -236,8 +209,6 @@ public class FTPChipDetailController {
 
 		if(ftpChipDetaillService.getFtpChipDeatils(ftpChipDetailId) != null) {
 			response.setResponse(ftpChipDetaillService.getPartnerCertificate(requestDto));
-		}else {
-			response.setResponse(regFtpChipDetailService.getPartnerCertificate(requestDto));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_DOWNLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),
@@ -253,10 +224,6 @@ public class FTPChipDetailController {
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
-			responseWrapper.setResponse(regFtpChipDetailService.searchFTPChipDetails(RegFTPChipDetail.class, request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(ftpChipDetaillService.searchFTPChipDetails(FTPChipDetail.class, request.getRequest()));
 		return responseWrapper;
 	}

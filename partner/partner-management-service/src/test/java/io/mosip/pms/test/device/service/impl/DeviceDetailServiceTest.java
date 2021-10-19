@@ -195,7 +195,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(), Mockito.any());
 		deviceDetaillService.searchDeviceType(DeviceDetail.class, deviceSearchDto);
 	}
 
@@ -205,7 +205,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(),Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
 
@@ -215,7 +215,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(), Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
 
