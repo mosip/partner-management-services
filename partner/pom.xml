@@ -2,10 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>	
-	<groupId>io.mosip.pmp</groupId>
-	<artifactId>pmp-parent</artifactId>
+	<groupId>io.mosip.pms</groupId>
+	<artifactId>pms-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.4</version>	
+	<version>1.1.5.2</version>
+	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
 	<url>https://github.com/mosip/partner-management-services</url>
@@ -57,8 +58,8 @@
 	</repositories>
 
 	<properties>
-		<kernel.version>1.1.4</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.1.4</kernel-dataaccess-hibernate.version>
+		<kernel.version>1.1.5.2</kernel.version>		
+		<kernel-dataaccess-hibernate.version>1.1.5.2</kernel-dataaccess-hibernate.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -67,16 +68,14 @@
 		<junit.version>4.12</junit.version>
 		<lombok.version>1.18.8</lombok.version>
 		<doclint>none</doclint>
-		<kernel-websubclient-api.version>1.1.4</kernel-websubclient-api.version>
+		<kernel-websubclient-api.version>1.1.5.2</kernel-websubclient-api.version>
 	</properties>
 	
-	<modules>
-		<module>pmp-policy-validator</module>
-		<module>pmp-common</module>
-		<module>pmp-misp-service</module>
-		<module>pmp-policy-management-service</module>
-		<module>pmp-partner-management-service</module>
-		<module>pmp-partner-service</module>
+	<modules>		
+		<module>policy-validator</module>
+		<module>pms-common</module>
+		<module>policy-management-service</module>		
+		<module>partner-management-service</module>
 	</modules>
 
 	<profiles>
@@ -111,7 +110,7 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>javax.activation</groupId>
@@ -121,7 +120,7 @@
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.0-b170127.1453</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.mockito</groupId>
@@ -137,10 +136,9 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>1.1.4</version>
+			<version>1.1.5.2</version>
 		</dependency>
-	</dependencies>
-	
+	</dependencies>	
 	<build>	
 		<plugins>
 			<plugin>
