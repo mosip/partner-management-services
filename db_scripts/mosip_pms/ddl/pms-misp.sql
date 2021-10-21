@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
-
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5.2  
 -- -------------------------------------------------------------------------------------------
 
 -- object: pms.misp | type: TABLE --
@@ -26,7 +27,7 @@ CREATE TABLE pms.misp(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_misp PRIMARY KEY (id),
 	CONSTRAINT uk_misp UNIQUE (name)

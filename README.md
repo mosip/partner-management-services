@@ -1,5 +1,3 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?id=mosip_partner-management-services)
-
 # partner-management-services
 
 This repository contains the source code and design documents for MOSIP partner management. To know more about MOSIP, its architecture, external integrations, releases, etc., please check the [Platform Documentation](https://github.com/mosip/mosip-docs/wiki)
