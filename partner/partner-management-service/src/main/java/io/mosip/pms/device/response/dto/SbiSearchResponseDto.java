@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import io.mosip.pms.device.regdevice.entity.RegDeviceDetail;
+import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -69,13 +69,13 @@ public class SbiSearchResponseDto {
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
 	
-	List<RegDeviceDetail> deviceDetails;
+	List<DeviceDetail> deviceDetails;
 	
-	public void setDeviceDetails(List<RegDeviceDetail> deviceDetails) {
+	public void setDeviceDetails(List<DeviceDetail> deviceDetails) {
 		this.deviceDetails= deviceDetails;
 	}
 	
-	public List<RegDeviceDetail> getDeviceDetails(){
+	public List<DeviceDetail> getDeviceDetails(){
 		return deviceDetails;
 	}
 	
