@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="0.4"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="454,39" last-zoom="0.7" max-obj-count="18"
 	 default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -65,18 +65,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[PMP related entities and its data is stored in this database]]></comment>
 </database>
 
-<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="pms" rect-visible="true" fill-color="#83af1f">
+<schema name="pms" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin"/>
 </schema>
 
-<table name="misp" alias="misp">
+<table name="misp" layer="0" alias="misp" collapse-mode="2" max-obj-count="16" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MISP: MISP, acronym for MOSIP Identity Service Provider, stores the master list of MISPs.]]></comment>
-	<position x="60" y="100"/>
+	<position x="60" y="60"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[MISP ID: Unique ID generated / assigned for a MISP.]]></comment>
@@ -125,7 +125,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -141,11 +141,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="misp_license" alias="mlic">
+<table name="misp_license" layer="0" alias="mlic" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MISP License: License key issued to MISP, using which an individual's authentication request that is initiated from partners are authenticated.]]></comment>
-	<position x="100" y="480"/>
+	<position x="60" y="460"/>
 	<column name="misp_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[MISP ID: MISP ID, refers to pmp.misp .id]]></comment>
@@ -182,7 +182,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -195,15 +195,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<schema name="pmp_cp" rect-visible="true" fill-color="#83af1f">
+<schema name="pmp_cp" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin_cp"/>
 </schema>
 
-<table name="partner" alias="part">
+<table name="partner" layer="0" alias="part" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner: Registered external partners use the authentication services provided by MOSIP. The auth services are channeled through MISPs. This table stores the master list of partners who can self register themselves and use auth services.]]></comment>
-	<position x="1320" y="400"/>
+	<position x="880" y="440"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID : Unique ID generated / assigned for partner]]></comment>
@@ -264,7 +264,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -277,11 +277,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="auth_policy" alias="apol">
+<table name="auth_policy" layer="0" alias="apol" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Policy: The authentication policy is defined in this table. An authentication policy can be of single or a group of authentication types supported by the auth services of MOSIP application. ]]></comment>
-	<position x="720" y="460"/>
+	<position x="880" y="880"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: A unique identity ]]></comment>
@@ -342,7 +342,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -358,11 +358,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_policy" alias="ppol">
+<table name="partner_policy" layer="0" alias="ppol" collapse-mode="2" max-obj-count="14" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Policy: Authentication policies assigned to a partner once the policy creation request is approved. An Policy API Key is generated and provided to the partner that will be used as part of auth requests.]]></comment>
-	<position x="1640" y="780"/>
+	<position x="1320" y="920"/>
 	<column name="policy_api_key" not-null="true">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Policy API Key: ]]></comment>
@@ -403,7 +403,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -419,11 +419,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="policy_group" alias="polg">
+<table name="policy_group" layer="0" alias="polg" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Policy Group: Authentication policies are categorized into different groups/domains. These policy groups are defined and maintained in this table.]]></comment>
-	<position x="420" y="300"/>
+	<position x="480" y="420"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: A unique id generated / assigned for a policy group.]]></comment>
@@ -460,7 +460,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -476,11 +476,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_policy_request" alias="papr">
+<table name="partner_policy_request" layer="0" alias="papr" collapse-mode="2" max-obj-count="14" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Policy Request: Partner can self register themselves to use the auth services provided by MOSIP. The registeration requests are stored and processed through here. Once the request is approved and processed a partner is created.]]></comment>
-	<position x="1760" y="480"/>
+	<position x="1740" y="400"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner Policy Request ID : Unique ID generated / assigned to track the policy creation request for a partner.]]></comment>
@@ -521,7 +521,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -534,12 +534,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="auth_policy_h" alias="apolh">
+<table name="auth_policy_h" layer="0" alias="apolh" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Policy History: This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer pmp.auth_policy table description for details.   
 ]]></comment>
-	<position x="220" y="720"/>
+	<position x="60" y="800"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: A unique identity ]]></comment>
@@ -604,7 +604,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -620,11 +620,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="tspid_seq" alias="tiseq">
+<table name="tspid_seq" layer="0" alias="tiseq" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Trusted Service Provider ID Sequence : Maintains latest sequence number available for TSP ID  generation]]></comment>
-	<position x="400" y="560"/>
+	<position x="460" y="800"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="36"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for TSP (Trusted Service Provider) ID generation]]></comment>
@@ -650,11 +650,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_contact" alias="partcnt">
+<table name="partner_contact" layer="0" alias="partcnt" collapse-mode="2" max-obj-count="14" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.]]></comment>
-	<position x="740" y="80"/>
+	<position x="880" y="60"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Contact ID : Unique ID generated / assigned for partner]]></comment>
@@ -695,7 +695,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -714,11 +714,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_type" alias="partyp">
+<table name="partner_type" layer="0" alias="partyp" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Type: List of different partnet are allowed in partnet management]]></comment>
-	<position x="1740" y="80"/>
+	<position x="1740" y="60"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID : Unique ID generated / assigned for partner]]></comment>
@@ -751,7 +751,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -764,11 +764,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_h" alias="part">
+<table name="partner_h" layer="0" alias="part" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner History: This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer pmp.auth_policy table description for details.   ]]></comment>
-	<position x="1160" y="60"/>
+	<position x="1300" y="60"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID : Unique ID generated / assigned for partner]]></comment>
@@ -833,7 +833,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -849,11 +849,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="otp_transaction" alias="otpt">
+<table name="otp_transaction" layer="0" alias="otpt" collapse-mode="2" max-obj-count="16" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[OTP Transaction: All OTP related data and validation details are maintained here fro partner managment service.]]></comment>
-	<position x="400" y="60"/>
+	<position x="460" y="60"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unique transaction id for each otp transaction request]]></comment>
@@ -902,7 +902,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -915,11 +915,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_policy_bioextract" alias="ppbe">
+<table name="partner_policy_bioextract" layer="0" alias="ppbe" collapse-mode="2" max-obj-count="16" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Policy Bio Extract: Stores the partner policy biometric information with biometric extract provider details.]]></comment>
-	<position x="1200" y="760"/>
+	<position x="1300" y="480"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unique id to store all the partner policy biometric extractor details]]></comment>
@@ -968,7 +968,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -981,11 +981,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_policy_credential_type" alias="ppctyp">
+<table name="partner_policy_credential_type" layer="0" alias="ppctyp" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="pms"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Policy and Credential Type: Table to map partner, Partner policy and credential type for the partner.]]></comment>
-	<position x="720" y="800"/>
+	<position x="460" y="1000"/>
 	<column name="part_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Partner ID: Partner ID, refers to pmp.partner .id]]></comment>
@@ -1018,7 +1018,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -1091,52 +1091,52 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_partner_partner_type" type="relfk"
+<relationship name="rel_partner_partner_type" type="relfk" layer="0"
 	 src-table="pms.partner"
 	 dst-table="pms.partner_type" reference-fk="fk_part_code"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_auth_policy_policy_group" type="relfk"
+<relationship name="rel_auth_policy_policy_group" type="relfk" layer="0"
 	 src-table="pms.auth_policy"
 	 dst-table="pms.policy_group" reference-fk="fk_apol_polg"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_policy_partner" type="relfk"
+<relationship name="rel_partner_policy_partner" type="relfk" layer="0"
 	 src-table="pms.partner_policy"
 	 dst-table="pms.partner" reference-fk="fk_ppol_part"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_policy_auth_policy" type="relfk"
+<relationship name="rel_partner_policy_auth_policy" type="relfk" layer="0"
 	 src-table="pms.partner_policy"
 	 dst-table="pms.auth_policy" reference-fk="fk_ppol_apol"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_policy_request_partner" type="relfk"
+<relationship name="rel_partner_policy_request_partner" type="relfk" layer="0"
 	 src-table="pms.partner_policy_request"
 	 dst-table="pms.partner" reference-fk="fk_papr_part"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_contact_partner" type="relfk"
+<relationship name="rel_partner_contact_partner" type="relfk" layer="0"
 	 src-table="pms.partner_contact"
 	 dst-table="pms.partner" reference-fk="fk_partcnt_id"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_policy_request_cp_partner" type="relfk"
+<relationship name="rel_partner_policy_request_cp_partner" type="relfk" layer="0"
 	 src-table="pms.partner_policy_bioextract"
 	 dst-table="pms.partner" reference-fk="fk_ppbe_part"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_policy_extractor_auth_policy" type="relfk"
+<relationship name="rel_policy_extractor_auth_policy" type="relfk" layer="0"
 	 src-table="pms.partner_policy_bioextract"
 	 dst-table="pms.auth_policy" reference-fk="fk_ppbe_pol"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_credential_partner" type="relfk"
+<relationship name="rel_partner_credential_partner" type="relfk" layer="0"
 	 src-table="pms.partner_policy_credential_type"
 	 dst-table="pms.partner" reference-fk="fk_part_id"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_partner_credential_auth_policy" type="relfk"
+<relationship name="rel_partner_credential_auth_policy" type="relfk" layer="0"
 	 src-table="pms.partner_policy_credential_type"
 	 dst-table="pms.auth_policy" reference-fk="fk_pol_id"
 	 src-required="false" dst-required="false"/>
