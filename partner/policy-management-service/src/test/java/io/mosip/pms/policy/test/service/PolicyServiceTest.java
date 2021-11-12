@@ -382,7 +382,11 @@ public class PolicyServiceTest {
 	@Test(expected = PolicyManagementServiceException.class)
 	public void updatePolicyStatus_PolicIDNotExistsTest() {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
-		Optional<PolicyGroup> policy = Optional.of(new PolicyGroup());
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
+		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		service.updatePolicyStatus(request,"12345","3456");		
 	}
@@ -392,6 +396,7 @@ public class PolicyServiceTest {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("5678");
+		policyGroup.setIsActive(true);
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(getAuthPolicy()));
@@ -403,6 +408,7 @@ public class PolicyServiceTest {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
+		policyGroup.setIsActive(true);
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		AuthPolicy authPolicy = getAuthPolicy();
@@ -613,6 +619,7 @@ public class PolicyServiceTest {
 		PolicyStatusUpdateRequestDto request = createUpdatePolicyStatusRequest();
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
+		policyGroup.setIsActive(true);
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById(Mockito.anyString())).thenReturn(policy);
 		AuthPolicy authPolicy = getAuthPolicy();
@@ -666,6 +673,7 @@ public class PolicyServiceTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setId("12345");
 		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroup);
 		AuthPolicy authPolicy = getAuthPolicy();
 		authPolicy.getPolicyGroup().setId("12345");
