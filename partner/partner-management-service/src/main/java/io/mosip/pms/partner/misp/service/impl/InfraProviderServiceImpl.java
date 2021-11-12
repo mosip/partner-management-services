@@ -10,11 +10,14 @@ import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.MISPDataPublishDto;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.MISPLicenseKey;
@@ -22,7 +25,7 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.partner.misp.dto.MISPDataPublishDto;
+import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
@@ -46,6 +49,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	@Autowired
 	private WebSubPublisher webSubPublisher;
 	
+	@Autowired
+	private Environment environment;
+	
 	public static final String APPROVED_STATUS = "approved";
 	public static final String REJECTED_STATUS = "rejected";
 	public static final String ACTIVE_STATUS = "active";
@@ -63,6 +69,10 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
 					MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
 		}
+		if(!partnerFromDb.get().getPartnerTypeCode().equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
+			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_VALID.getErrorCode(),
+					MISPErrorMessages.MISP_ID_NOT_VALID.getErrorMessage());
+		}
 		if(!partnerFromDb.get().getIsActive()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
 					MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());			
@@ -79,13 +89,16 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 		response.setLicenseKeyStatus("Active");
 		response.setProviderId(mispId);
-		notify(mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_GENERATED);
+		notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_GENERATED);
 		return response;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String generate() {
-		String generatedLicenseKey = RandomStringUtils.randomAlphanumeric(licenseKeyLength);
-		return generatedLicenseKey;
+		return RandomStringUtils.randomAlphanumeric(licenseKeyLength);
 	}
 	
 	/**
@@ -113,8 +126,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		response.setLicenseKeyExpiry(mispLicenseFromDb.getValidToDate());
 		response.setLicenseKeyStatus(mispLicenseFromDb.getIsActive() ? ACTIVE_STATUS : NOTACTIVE_STATUS);
 		response.setProviderId(mispLicenseFromDb.getMispLicenseUniqueKey().getMisp_id());
-		notify(licenseKey);
-		notify(mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
+		notify(MapperUtils.mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
 		return response;
 
 	}
@@ -178,8 +190,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
-				notify(licenseKey.getMispLicenseUniqueKey().getLicense_key());
-				notify(mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
+				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
 			}
 			
 			if(licenseKey.getIsActive() && 
@@ -214,20 +225,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		} else {
 			return "system";
 		}
-	}
-	
-	/**
-	 * 
-	 * @param mispLicenseKey
-	 */
-	private void notify(String mispLicenseKey) {
-		Type type = new Type();
-		type.setName("InfraProviderServiceImpl");
-		type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
-		Map<String,Object> data = new HashMap<>();
-		data.put("mispLicenseKey", mispLicenseKey);
-		webSubPublisher.notify(EventType.MISP_UPDATED,data,type);
-	}
+	}	
 	
 	/**
 	 * 
@@ -241,20 +239,5 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		Map<String,Object> data = new HashMap<>();
 		data.put("mispLicenseData", dataToPublish);
 		webSubPublisher.notify(eventType,data,type);		
-	}
-	
-	/**
-	 * Data to publish websub on changes of misp license
-	 * @param entity
-	 * @return
-	 */
-	private MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
-		MISPDataPublishDto dataToPublish = new MISPDataPublishDto();
-		dataToPublish.setLicenseKey(entity.getMispLicenseUniqueKey().getLicense_key());
-		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
-		dataToPublish.setMispExpiresOn(entity.getValidToDate());
-		dataToPublish.setMispId(entity.getMispLicenseUniqueKey().getMisp_id());
-		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE: NOTACTIVE);
-		return dataToPublish;
 	}
 }

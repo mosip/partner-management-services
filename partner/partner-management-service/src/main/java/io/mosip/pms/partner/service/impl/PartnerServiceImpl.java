@@ -33,7 +33,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,7 +43,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
@@ -90,6 +88,7 @@ import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
@@ -242,6 +241,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
+		// Registered partner cannot create another partner 
+		String loggedInUserEmail = getLoggedInUserEmail();
+		if(loggedInUserEmail != null && isPartnerExistsWithEmail(loggedInUserEmail).getEmailExists()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 		if (!validateMobileNumeber(request.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
@@ -338,7 +344,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
 		partner.setUserId(request.getPartnerId());
-		partner.setCrBy(getUser());
+		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
 		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		return partner;
@@ -479,7 +485,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, true);
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
-		partner.setUpdBy(getUser());
+		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
@@ -504,7 +510,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
-		partnerPolicyRequest.setCrBy(getUser());
+		partnerPolicyRequest.setCrBy(getLoggedInUserId());
 		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
 		partnerPolicyRequest.setPartner(partner);
@@ -657,7 +663,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setAddress(request.getAddress());
 			contactsFromDb.setContactNo(request.getContactNumber());
 			contactsFromDb.setIsActive(request.getIs_Active());
-			contactsFromDb.setUpdBy(getUser());
+			contactsFromDb.setUpdBy(getLoggedInUserId());
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
 		} else {
@@ -666,7 +672,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setId(PartnerUtil.createPartnerId());
 			contactsFromDb.setAddress(request.getAddress());
 			contactsFromDb.setContactNo(request.getContactNumber());
-			contactsFromDb.setCrBy(getUser());
+			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
 			contactsFromDb.setEmailId(request.getEmailId());
@@ -771,7 +777,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		uploadOtherDomainCertificate(signedPartnerCert, partnerCertRequesteDto.getPartnerId());
 		Partner updateObject = partner;
-		updateObject.setUpdBy(getUser());
+		updateObject.setUpdBy(getLoggedInUserId());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		updateObject.setIsActive(true);
@@ -898,13 +904,13 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			extractorProvider.setExtractorProvider(extractor.getExtractor().getProvider());
 			extractorProvider.setExtractorProviderVersion(extractor.getExtractor().getVersion());
-			extractorProvider.setCrBy(getUser());
+			extractorProvider.setCrBy(getLoggedInUserId());
 			extractorProvider.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			BiometricExtractorProvider extractorsFromDb = extractorProviderRepository
 					.findByPartnerAndPolicyIdAndAttributeName(partnerId, policyId, extractor.getAttributeName());
 			if (extractorsFromDb != null) {
 				extractorProvider.setId(extractorsFromDb.getId());
-				extractorProvider.setUpdBy(getUser());
+				extractorProvider.setUpdBy(getLoggedInUserId());
 				extractorProvider.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 				extractorProvider.setCrBy(extractorsFromDb.getCrBy());
 				extractorProvider.setCrDtimes(extractorsFromDb.getCrDtimes());
@@ -1026,7 +1032,7 @@ public class PartnerServiceImpl implements PartnerService {
 		key.setPartId(partnerId);
 		key.setPolicyId(policyId);
 		entity.setId(key);
-		entity.setCrBy(getUser());
+		entity.setCrBy(getLoggedInUserId());
 		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		entity.setIsActive(true);
 		entity.setIsDeleted(false);
@@ -1259,16 +1265,13 @@ public class PartnerServiceImpl implements PartnerService {
 	 * 
 	 * @return
 	 */
-	public String getUser() {
-		if (Objects.nonNull(SecurityContextHolder.getContext())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
-			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-					.getUserId();
-		} else {
-			return "system";
-		}
+	private String getLoggedInUserId() {
+		return UserDetailUtil.getLoggedInUserId();
+	}
+	
+	private String getLoggedInUserEmail() {
+		return UserDetailUtil.getLoggedInUserDetails() != null ? UserDetailUtil.getLoggedInUserDetails().getMail()
+				: null;
 	}
 
 	/**
@@ -1324,7 +1327,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @throws Exception
 	 */
 	private String getPartnerCertFromChain(String certChain) throws Exception {
-		byte[] p7bBytes = CryptoUtil.decodeBase64(certChain);
+		byte[] p7bBytes = CryptoUtil.decodePlainBase64(certChain);
 		try (ByteArrayInputStream certStream = new ByteArrayInputStream(p7bBytes)) {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 			Collection<?> p7bCertList = cf.generateCertificates(certStream);
@@ -1404,7 +1407,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}		
 		PolicyGroup policyGroup = validateAndGetPolicyGroupByName(policyGroupName);
 		partner.setPolicyGroupId(policyGroup.getId());
-		partner.setUpdBy(getUser());
+		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerRepository.save(partner);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS);

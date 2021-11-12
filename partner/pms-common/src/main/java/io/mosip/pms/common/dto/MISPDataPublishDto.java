@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.misp.dto;
+package io.mosip.pms.common.dto;
 
 import java.time.LocalDateTime;
 

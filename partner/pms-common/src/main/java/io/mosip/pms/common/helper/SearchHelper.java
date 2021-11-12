@@ -24,7 +24,6 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +37,7 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.common.util.UserDetailUtil;
 
 /**
  * Generating dynamic query for partnerManagementData based on the search filters.
@@ -516,23 +516,8 @@ public class SearchHelper {
 	 * 
 	 * @return
 	 */
-	public AuthUserDetails getUser() {
-		if (Objects.nonNull(SecurityContextHolder.getContext())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
-			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
 	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
-		AuthUserDetails loggedInUserDetails = getUser();
+		AuthUserDetails loggedInUserDetails = UserDetailUtil.getLoggedInUserDetails();
 		if (!(loggedInUserDetails.getAuthorities().stream()
 				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)))) {
 			SearchFilter partnerIdSearchFilter = new SearchFilter();

@@ -32,15 +32,15 @@ public class WebSubPublisher {
 	}
 	
 	private void sendEventToIDA(EventModel model) {
-		try {
-			logger.info(this.getClass().getSimpleName(), "sendEventToIDA", "Trying registering topic: " + model.getTopic());
-			pb.registerTopic(model.getTopic(), webSubHubPublishUrl);
-		} catch (Exception e) {
-			//Exception will be there if topic already registered. Ignore that
-			logger.warn(this.getClass().getSimpleName(), "sendEventToIDA", "Error in registering topic: " + model.getTopic() + " : " + e.getMessage() );
-		}
-		logger.info(this.getClass().getSimpleName(), "sendEventToIDA", "Publising event to topic: " + model.getTopic());
-		pb.publishUpdate(model.getTopic(), model, MediaType.APPLICATION_JSON_VALUE, null, webSubHubPublishUrl);
+//		try {
+//			logger.info(this.getClass().getSimpleName(), "sendEventToIDA", "Trying registering topic: " + model.getTopic());
+//			pb.registerTopic(model.getTopic(), webSubHubPublishUrl);
+//		} catch (Exception e) {
+//			//Exception will be there if topic already registered. Ignore that
+//			logger.warn(this.getClass().getSimpleName(), "sendEventToIDA", "Error in registering topic: " + model.getTopic() + " : " + e.getMessage() );
+//		}
+//		logger.info(this.getClass().getSimpleName(), "sendEventToIDA", "Publising event to topic: " + model.getTopic());
+//		pb.publishUpdate(model.getTopic(), model, MediaType.APPLICATION_JSON_VALUE, null, webSubHubPublishUrl);
 	}
 	
 	private EventModel createEventModel(EventType eventType,Map<String,Object> data,Type type) {

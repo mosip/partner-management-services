@@ -23,11 +23,13 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.dto.APIKeyDataPublishDto;
+import io.mosip.pms.common.dto.MISPDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BaseEntity;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 
@@ -57,6 +59,9 @@ public class MapperUtils {
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	private static final String SOURCE_NULL_MESSAGE = "source should not be null";
 	private static final String DESTINATION_NULL_MESSAGE = "destination should not be null";
+	
+	public static final String ACTIVE = "ACTIVE";
+	public static final String NOTACTIVE = "NOT_ACTIVE";
 
 	/**
 	 * This flag is used to restrict copy null values.
@@ -509,6 +514,21 @@ public class MapperUtils {
 		dataToPublish.setApiKeyExpiresOn(toISOFormat(entity.getValidToDatetime().toLocalDateTime()));
 		dataToPublish.setApiKeyId(entity.getPolicyApiKey());
 		dataToPublish.setApiKeyStatus(entity.getIsActive() == true ? "ACTIVE" : "DEACTIVE");
+		return dataToPublish;
+	}
+	
+	/**
+	 * Data to publish websub on changes of misp license
+	 * @param entity
+	 * @return
+	 */
+	public static MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
+		MISPDataPublishDto dataToPublish = new MISPDataPublishDto();
+		dataToPublish.setLicenseKey(entity.getMispLicenseUniqueKey().getLicense_key());
+		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
+		dataToPublish.setMispExpiresOn(entity.getValidToDate());
+		dataToPublish.setMispId(entity.getMispLicenseUniqueKey().getMisp_id());
+		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE: NOTACTIVE);
 		return dataToPublish;
 	}
 	

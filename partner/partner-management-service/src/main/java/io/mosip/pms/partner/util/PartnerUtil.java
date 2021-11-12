@@ -61,18 +61,4 @@ public class PartnerUtil {
 	    int id = (int)(Math.random()*1000000);
 	    return id+"";
 	}
-	
-	public Properties getProperties(String path) {
-	    Properties prop = new Properties();
-	    try {
-	    	InputStream inputStream = getClass()
-	    				.getClassLoader().getResourceAsStream(path);
-	        prop.load(inputStream);
-	    } catch (FileNotFoundException e) {
-	    	LOGGER.error(e.getMessage());
-	    } catch (IOException e) {
-	    	LOGGER.error(e.getMessage());
-	    }
-	    return prop;
-	}
 }
