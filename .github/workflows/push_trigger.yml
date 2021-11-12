@@ -135,7 +135,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
       SERVICE_NAME: policy-management-service
       SERVICE_LOCATION: partner/policy-management-service
 
@@ -198,7 +198,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
       SERVICE_NAME: partner-management-service
       SERVICE_LOCATION: partner/partner-management-service
 
