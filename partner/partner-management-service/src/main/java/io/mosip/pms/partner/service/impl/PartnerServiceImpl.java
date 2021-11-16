@@ -1222,6 +1222,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
 			partnerNameSearchFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
 		}
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
 			SearchFilter policyNameFilter = dto.getFilters().stream()
