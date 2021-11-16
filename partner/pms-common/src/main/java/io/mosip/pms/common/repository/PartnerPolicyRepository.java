@@ -39,4 +39,7 @@ public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, St
 	
 	@Query(value = "select * from partner_policy pp where pp.valid_to_datetime <?1 AND pp.valid_to_datetime >?2  AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true", nativeQuery = true)
 	public List<PartnerPolicy> findAPIKeysLessThanGivenDate(LocalDateTime validToDate, LocalDateTime fromDate);
+	
+	@Query(value = "select * from partner_policy pp where pp.policy_id=?1 AND (pp.is_deleted is null or pp.is_deleted = false) AND pp.is_active=true", nativeQuery = true)
+	public List<PartnerPolicy> findByPolicyIdAndIsActiveTrue(String policy_id);
 }

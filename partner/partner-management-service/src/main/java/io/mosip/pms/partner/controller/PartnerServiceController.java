@@ -85,8 +85,7 @@ public class PartnerServiceController {
 	 * @param request
 	 *            this class contains partner details
 	 * @return response this class contains partner response
-	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	 */	
 	@PostMapping
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {

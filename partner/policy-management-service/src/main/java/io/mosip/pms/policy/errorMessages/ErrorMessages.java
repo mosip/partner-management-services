@@ -41,7 +41,9 @@ public enum ErrorMessages {
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
 	POLICY_GROUP_NOT_ACTIVE("PMS_POL_053","Policy group is not active."),
 	DRAFTED_POLICY_NOT_ACTIVE("PMS_POL_054","Cannot activate unpublished policy."),
-	PUBLISHED_POLICY_NOT_UPDATED("PMS_POL_055","Published policy cannot be updated.");
+	PUBLISHED_POLICY_NOT_UPDATED("PMS_POL_055","Published policy cannot be updated."),
+	ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP("PMS_POL_056","Active policies exists under the policy group."),
+	ACTIVE_APIKEY_EXISTS_UNDER_POLICY("PMS_POL_057","Active apiKey exists under the policy.");
 	
 	
 	private final String errorCode;

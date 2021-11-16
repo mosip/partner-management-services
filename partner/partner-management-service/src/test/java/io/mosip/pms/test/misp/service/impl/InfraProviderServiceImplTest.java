@@ -54,6 +54,7 @@ public class InfraProviderServiceImplTest {
 		Partner partner = new Partner();
 		partner.setId(misp_Id);
 		partner.setIsActive(true);
+		partner.setPartnerTypeCode("MISP_Partner");
 		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
 		mispLicenseEntity.setIsActive(true);
 		Optional<Partner> opt_partner = Optional.of(partner);
@@ -77,6 +78,7 @@ public class InfraProviderServiceImplTest {
 		Partner partner = new Partner();
 		partner.setId(misp_Id);
 		partner.setIsActive(false);
+		partner.setPartnerTypeCode("MISP_Partner");
 		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
 		mispLicenseEntity.setIsActive(true);
 		Optional<Partner> opt_partner = Optional.of(partner);
@@ -91,6 +93,7 @@ public class InfraProviderServiceImplTest {
 		Partner partner = new Partner();
 		partner.setId(misp_Id);
 		partner.setIsActive(true);
+		partner.setPartnerTypeCode("MISP_Partner");
 		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
 		mispLicenseEntity.setIsActive(true);
 		Optional<Partner> opt_partner = Optional.of(partner);

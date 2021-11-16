@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -208,7 +207,11 @@ public class PolicyManagementService {
 			policyGroup.setName(requestDto.getName());
 		}
 		if (!policyGroup.getIsActive().equals(requestDto.getIsActive())) {
-			updatePoicyGroupPolicies(policyGroupFromDb.get().getId(), requestDto.getIsActive());
+			if(isActivePolicesExists(policyGroupId)) {
+				auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP_FAILURE);
+				throw new PolicyManagementServiceException(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());				
+			}			
 			policyGroup.setIsActive(requestDto.getIsActive());
 		}
 		policyGroup.setDesc(requestDto.getDesc());
@@ -218,24 +221,17 @@ public class PolicyManagementService {
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP_SUCCESS);
 		return savePolicyGroup(policyGroup);
 	}
-
+	
 	/**
 	 * 
 	 * @param policyId
-	 * @param status
+	 * @return
 	 */
-	private void updatePoicyGroupPolicies(String policyId, boolean status) {
-		List<AuthPolicy> authPolicies = authPolicyRepository.findByPolicyGroupId(policyId);
-		List<String> policies = authPolicies.stream().map(policy -> policy.getId()).collect(Collectors.toList());
-		for (AuthPolicy authPolicy : authPolicies) {
-			authPolicy.setIsActive(status);
-			authPolicy.setUpdBy(getUser());
-			authPolicy.setUpdDtimes(LocalDateTime.now());
-			authPolicyRepository.save(authPolicy);
-			insertIntoAuthPolicyH(authPolicy);
+	private boolean isActivePolicesExists(String policyGroupId) {
+		if(!authPolicyRepository.findActivePoliciesByPolicyGroupId(policyGroupId).isEmpty()) {
+			return true;
 		}
-		notify(policies);
-		//notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));
+		return false;
 	}
 
 	/**
@@ -296,11 +292,6 @@ public class PolicyManagementService {
 	public PolicyCreateResponseDto updatePolicies(PolicyUpdateRequestDto requestDto, String policyId)
 			throws PolicyManagementServiceException, Exception {
 		PolicyGroup policyGroup = validatePolicyGroupName(requestDto.getPolicyGroupName(), false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
-		if(!policyGroup.getIsActive()) {
-			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE);
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
-					ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
-		}
 		AuthPolicy authPolicy = checkMappingExists(policyGroup.getId(), policyId, false,PolicyManageEnum.UPDATE_POLICY_FAILURE);
 		// Published policy cannot be updated.
 		if(authPolicy.getPolicySchema() != null) {
@@ -553,6 +544,12 @@ public class PolicyManagementService {
 			throw new PolicyManagementServiceException(ErrorMessages.DRAFTED_POLICY_NOT_ACTIVE.getErrorCode(),
 					ErrorMessages.DRAFTED_POLICY_NOT_ACTIVE.getErrorMessage());
 		}
+		// policy having active apikeys cannot be made de-active
+		if(!partnerPolicyRepository.findByPolicyIdAndIsActiveTrue(policyId).isEmpty() && !status) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.ACTIVE_APIKEY_EXISTS_UNDER_POLICY.getErrorCode(),
+					ErrorMessages.ACTIVE_APIKEY_EXISTS_UNDER_POLICY.getErrorMessage());
+		}
 		authPolicy.setIsActive(status);
 		authPolicy.setUpdBy(getUser());
 		authPolicy.setUpdDtimes(LocalDateTime.now());
@@ -590,6 +587,11 @@ public class PolicyManagementService {
 			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
 					ErrorMessages.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());
+		}
+		if(!policyGroup.get().getIsActive()) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+					ErrorMessages.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
 		if (authPolicy.isEmpty()) {
 			auditUtil.setAuditRequestDto(auditEnum);
@@ -852,16 +854,6 @@ public class PolicyManagementService {
 
 	/**
 	 * 
-	 * @param partners
-	 */
-	private void notify(List<String> policies) {
-		for (String policy : policies) {
-			notify(policy);
-		}
-	}
-
-	/**
-	 * 
 	 * @param partner
 	 */
 	private void notify(String policy) {
@@ -917,6 +909,20 @@ public class PolicyManagementService {
 			filters.add(authtypeSearch);
 			dto.setFilters(filters);
 		}
+		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName"))) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter searchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName")).findFirst().get();
+			PolicyGroup policyGroup = policyGroupRepository.findByName(searchFilter.getFromValue());
+			SearchFilter authtypeSearch = new SearchFilter();
+			authtypeSearch.setColumnName("policyGroupId");
+			authtypeSearch.setValue(policyGroup.getId());
+			authtypeSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(authtypeSearch);
+			dto.setFilters(filters);			
+		}
+		
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			policies = MapperUtils.mapAuthPolicySearch(page.getContent());

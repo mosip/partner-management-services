@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.APIKeyDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
@@ -49,6 +50,7 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
 import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.MispServiceRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
@@ -103,6 +105,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	MispServiceRepository mispRepository;
+	
+	@Autowired
+	MispLicenseRepository mispLicenseRepository;
 
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -213,7 +218,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			// if partner is active, then only make partner in-active
 			if(updatePartnerObject.getIsActive()) {
 				updatePartnerObject.setIsActive(false);
-				partnerRepository.save(updatePartnerObject);				
+				partnerRepository.save(updatePartnerObject);
+				// if partner is misp, then de-activate all licenses.
+				if(updatePartnerObject.getPartnerTypeCode().equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
+					List<MISPLicenseEntity> activeLicenses = mispLicenseRepository.findByMispIdAndIsActive(updatePartnerObject.getId());
+					// assuming one misp partner will have only one active license key at any giving point of time
+					for(MISPLicenseEntity license : activeLicenses) {
+						license.setIsActive(false);
+						license.setUpdatedBy(getUser());
+						license.setUpdatedDateTime(LocalDateTime.now());
+						mispLicenseRepository.save(license);
+						Map<String, Object> data = new HashMap<>();
+						data.put("mispLicenseData", MapperUtils.mapDataToPublishDto(license));
+						notify(data, EventType.MISP_LICENSE_UPDATED);
+					}
+				}
 				notify(MapperUtils.mapDataToPublishDto(updatePartnerObject,getPartnerCertificate(updatePartnerObject.getCertificateAlias())), null, null, EventType.PARTNER_UPDATED);
 				sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			}
