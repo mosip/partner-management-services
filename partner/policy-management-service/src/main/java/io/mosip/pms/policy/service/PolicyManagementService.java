@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -898,6 +899,7 @@ public class PolicyManagementService {
 
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> policies = new ArrayList<>();
+		SearchFilter policyGroupNameFilter = null;
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
 		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
@@ -908,25 +910,24 @@ public class PolicyManagementService {
 			filters.addAll(dto.getFilters());
 			filters.add(authtypeSearch);
 			dto.setFilters(filters);
-		}
-		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName"))) {
-			List<SearchFilter> filters = new ArrayList<>();
-			SearchFilter searchFilter = dto.getFilters().stream()
+		}		
+		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName"))) {			
+			policyGroupNameFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName")).findFirst().get();
-			PolicyGroup policyGroup = policyGroupRepository.findByName(searchFilter.getFromValue());
-			SearchFilter authtypeSearch = new SearchFilter();
-			authtypeSearch.setColumnName("policyGroupId");
-			authtypeSearch.setValue(policyGroup.getId());
-			authtypeSearch.setType("equals");
-			filters.addAll(dto.getFilters());
-			filters.add(authtypeSearch);
-			dto.setFilters(filters);			
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyGroupName"));
 		}
 		
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			policies = MapperUtils.mapAuthPolicySearch(page.getContent());
-			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			if (policyGroupNameFilter != null) {
+				String value = policyGroupNameFilter.getValue();
+				policies = MapperUtils.mapAuthPolicySearch(page.getContent().stream()
+						.filter(f -> f.getPolicyGroup().getName().equals(value))
+						.collect(Collectors.toList()));
+			} else {
+				policies = MapperUtils.mapAuthPolicySearch(page.getContent());
+			}
+			pageDto = pageUtils.sortPage(policies, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_SUCCESS);
 		return pageDto;
