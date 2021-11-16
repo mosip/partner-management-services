@@ -1,7 +1,7 @@
 package io.mosip.pms.common.constant;
 
 public enum FilterTypeEnum {
-	CONTAINS("contains"), STARTSWITH("startsWith"), BETWEEN("between"), EQUALS("equals");
+	CONTAINS("contains"), STARTSWITH("startsWith"), BETWEEN("between"), EQUALS("equals"), IN("in");
 
 	private String type;
 

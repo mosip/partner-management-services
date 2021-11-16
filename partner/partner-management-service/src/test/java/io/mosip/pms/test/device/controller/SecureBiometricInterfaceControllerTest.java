@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -38,7 +37,6 @@ import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
-import io.mosip.pms.device.regdevice.service.RegSecureBiometricInterfaceService;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
@@ -46,13 +44,11 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest//(classes = PartnerManagementServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class SecureBiometricInterfaceControllerTest {
 	
 	@Autowired
@@ -66,9 +62,6 @@ public class SecureBiometricInterfaceControllerTest {
 	
     @MockBean	
    private  SecureBiometricInterfaceService secureBiometricInterfaceService;
-	
-    @MockBean	
-   private  RegSecureBiometricInterfaceService regSecureBiometricInterface;
     
     RequestWrapper<SecureBiometricInterfaceCreateDto> createRequest=null;
     RequestWrapper<SecureBiometricInterfaceUpdateDto> updateRequest=null;
@@ -83,9 +76,6 @@ public class SecureBiometricInterfaceControllerTest {
     	ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchResponseWrapper = new ResponseWrapper<>();
     	searchResponseWrapper.setResponse(searchresponse);
     	responseWrapper.setResponse(response);
-    	Mockito.when(regSecureBiometricInterface.searchSecureBiometricInterface(Mockito.any())).thenReturn(searchresponse);
-        Mockito.when(regSecureBiometricInterface.updateSecureBiometricInterface(Mockito.any())).thenReturn(response);
-        Mockito.when(regSecureBiometricInterface.createSecureBiometricInterface(Mockito.any())).thenReturn(response);
         Mockito.when(secureBiometricInterfaceService.searchSecureBiometricInterface(Mockito.any(), Mockito.any())).thenReturn(searchresponse);
         Mockito.when(secureBiometricInterfaceService.updateSecureBiometricInterface(Mockito.any())).thenReturn(response);
         Mockito.when(secureBiometricInterfaceService.createSecureBiometricInterface(Mockito.any())).thenReturn(response);

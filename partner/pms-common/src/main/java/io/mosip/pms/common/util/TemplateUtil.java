@@ -5,21 +5,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.logger.logback.factory.Logfactory;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.response.dto.NotificationDto;
@@ -28,7 +27,7 @@ import io.mosip.pms.common.response.dto.TemplatesResponseDto;
 @Component
 public class TemplateUtil {
 
-	private Logger log = Logfactory.getSlf4jLogger(TemplateUtil.class);
+	private Logger log = LoggerFactory.getLogger(TemplateUtil.class);
 
 	@Value("${resource.template.url}")
 	private String resourceUrl;

@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pms</groupId>
 	<artifactId>pms-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
@@ -33,6 +33,27 @@
                   <organizationUrl>https://github.com/mosip/partner-management-services</organizationUrl>
                 </developer>
         </developers>
+
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <name>CentralRepository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <layout>default</layout>
+            <snapshots>
+            <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>MavenCentral</name>
+            <layout>default</layout>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots>
+            <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 	
 	<distributionManagement>
                 <snapshotRepository>
@@ -43,23 +64,11 @@
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
-	</distributionManagement>
-	
-	<repositories>
-		<repository>
-		  <id>ossrh</id>
-		  <name>Central Repository</name>
-		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		  <layout>default</layout>
-		  <snapshots>
-			<enabled>true</enabled>
-		  </snapshots>
-		</repository>
-	</repositories>
+	</distributionManagement>	
 
 	<properties>
-		<kernel.version>1.2.0-rc2-SNAPSHOT</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.2.0-rc2-SNAPSHOT</kernel-dataaccess-hibernate.version>
+		<kernel.version>1.2.0-SNAPSHOT</kernel.version>		
+		<kernel-dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel-dataaccess-hibernate.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -68,12 +77,16 @@
 		<junit.version>4.12</junit.version>
 		<lombok.version>1.18.8</lombok.version>
 		<doclint>none</doclint>
-		<kernel-websubclient-api.version>1.2.0-rc2-SNAPSHOT</kernel-websubclient-api.version>
-		<kernel.templatemanager.velocity.version>1.2.0-rc2-SNAPSHOT</kernel.templatemanager.velocity.version>
+		<kernel-websubclient-api.version>1.2.0-SNAPSHOT</kernel-websubclient-api.version>
+		<kernel.templatemanager.velocity.version>1.2.0-SNAPSHOT</kernel.templatemanager.velocity.version>
 		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
 		<maven.jacoco.version>0.8.5</maven.jacoco.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
+		<sonar.test.exclusions>**/test/**/*.*</sonar.test.exclusions>
+		<sonar.coverage.exclusions>**io/mosip/pms/common/**,**io/mosip/pms/policy/validator/**,**/constant/**,**/config/**,**/dto/**,**/policy/errorMessages/**,**/policy/util/**,
+		**io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
+		</sonar.coverage.exclusions>
 	</properties>
 	
 	<modules>		
@@ -127,11 +140,6 @@
 		    <groupId>org.javassist</groupId>
 		    <artifactId>javassist</artifactId>
 		    <version>3.27.0-GA</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-logger-logback</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>	
 	<build>	

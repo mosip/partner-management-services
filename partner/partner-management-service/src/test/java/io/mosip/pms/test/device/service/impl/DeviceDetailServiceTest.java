@@ -25,6 +25,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 
 import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
+import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -194,7 +195,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(), Mockito.any());
 		deviceDetaillService.searchDeviceType(DeviceDetail.class, deviceSearchDto);
 	}
 
@@ -204,7 +205,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(),Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
 
@@ -214,7 +215,7 @@ public class DeviceDetailServiceTest {
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(), Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
 
@@ -227,13 +228,29 @@ public class DeviceDetailServiceTest {
 	}
 
 	@Test
+	public void deviceFilterValuesTest01() throws Exception {
+		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		FilterData filterData = new FilterData("test","test");		
+		List<FilterData> filtersData = new ArrayList<>();
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+//		 Mockito.doReturn(true).when(filterHelper).filterValuesWithCode(Mockito.any(),
+//		 Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+		deviceDetaillService.deviceFilterValues(deviceFilterDto);
+	}
+
+	@Test
 	public void deviceFilterValuesTest1() throws Exception {
 		deviceDetaillService.deviceFilterValues(deviceFilterDto);
 	}
 
 	@Test
-	public void deviceTypeFilterValuesTest() throws Exception {
+	public void deviceTypeFilterValuesTest() throws Exception {		
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.deviceTypeFilterValues(deviceFilterDto);
 	}
 
@@ -245,6 +262,10 @@ public class DeviceDetailServiceTest {
 	@Test
 	public void deviceSubTypeFilterValuesTest() throws Exception {
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.deviceSubTypeFilterValues(deviceFilterDto);
 	}
 
@@ -292,8 +313,10 @@ public class DeviceDetailServiceTest {
 		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
 	}
 
-	@Test
+	@Test(expected = RequestException.class)
 	public void createDeviceDetailAlreadyExistsTest() throws Exception {
+		Mockito.when(deviceDetailRepository.findUniqueDeviceDetail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString())).thenReturn(deviceDetail);
 		deviceDetaillService.createDeviceDetails(deviceDetailDto);
 	}
 

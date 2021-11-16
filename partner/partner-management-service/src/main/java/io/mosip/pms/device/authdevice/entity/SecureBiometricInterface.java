@@ -4,10 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,12 +20,9 @@ public class SecureBiometricInterface {
 	@Column(name = "sw_version", nullable = false, length = 64)
 	private String swVersion;
 	
-	@Column(name = "device_detail_id", nullable = false, length = 36)
+	@Column(name = "device_detail_id", nullable = false)
 	private String deviceDetailId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_detail_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private DeviceDetail deviceDetail;
 	
 	@Column(name = "sw_cr_dtimes")
 	private LocalDateTime swCreateDateTime;
@@ -83,7 +77,6 @@ public class SecureBiometricInterface {
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
 	}
-
 	
 
 	public String getDeviceDetailId() {

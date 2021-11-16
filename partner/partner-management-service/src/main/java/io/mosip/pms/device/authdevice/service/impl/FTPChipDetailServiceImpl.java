@@ -167,8 +167,10 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		entity.setActive(true);
 		entity.setDeleted(false);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		FTPChipDetail chipDetail = new FTPChipDetail();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
+			chipDetail.setCrBy(authN.getName());
 		}
 		entity.setCrDtimes(LocalDateTime.now());
 		entity.setId(partnerFromDb.getId());
@@ -176,8 +178,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			foundationalTrustProviderRepository.save(entity);
 		}
 		
-		FTPChipDetail chipDetail = new FTPChipDetail();
-		chipDetail.setCrBy(authN.getName());
 		chipDetail.setActive(false);
 		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
@@ -244,12 +244,16 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			entity.setId(partnerFromDb.getId());
 			//entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setActive(true);
-			entity.setCrBy(authN.getName());
+			if (!EmptyCheckUtils.isNullEmpty(authN)) {
+				entity.setCrBy(authN.getName());
+			}
 		}else {
 			entity = ftpProvider.get();
 			//entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setUpdDtimes(LocalDateTime.now());
-			entity.setUpdBy(authN.getName());
+			if (!EmptyCheckUtils.isNullEmpty(authN)) {
+				entity.setUpdBy(authN.getName());
+			}
 		}
 		foundationalTrustProviderRepository.save(entity);
 		FTPChipDetail updateObject = chipDetail.get();		
@@ -444,7 +448,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<FTPSearchResponseDto> partners=new ArrayList<>();
 		PageResponseDto<FTPSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto);
+		Page<E> page =searchHelper.search(entityManager,entity, dto, "ftpProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
 		}
@@ -462,7 +466,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	 * @throws Exception
 	 */
 	private String getPartnerCertFromChain(String certChain) throws Exception {
-		byte[] p7bBytes = CryptoUtil.decodeBase64(certChain);
+		byte[] p7bBytes = CryptoUtil.decodeURLSafeBase64(certChain);
 		try (ByteArrayInputStream certStream = new ByteArrayInputStream(p7bBytes)) {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 			Collection<?> p7bCertList = cf.generateCertificates(certStream);

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
@@ -22,9 +21,6 @@ import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pms.device.authdevice.service.DeviceDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.regdevice.entity.RegDeviceDetail;
-import io.mosip.pms.device.regdevice.entity.RegRegistrationDeviceSubType;
-import io.mosip.pms.device.regdevice.service.RegDeviceDetailService;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
@@ -50,9 +46,6 @@ public class DeviceDetailController {
 	@Autowired	
 	DeviceDetailService deviceDetaillService;
 	
-	@Autowired	
-	RegDeviceDetailService regDeviceDetaillService;
-	
 	/**
 	 * Post API to insert a new row of DeviceDetail data
 	 * 
@@ -76,14 +69,8 @@ public class DeviceDetailController {
 				DeviceConstant.CREATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				"AUT-001");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regDeviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
-			
-		}else {
 		responseWrapper
-				.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
-		}
+		.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -116,14 +103,8 @@ public class DeviceDetailController {
 				DeviceConstant.UPDATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
-		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regDeviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
-			
-		}else {
 		responseWrapper
-				.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
-		}
+		.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -152,14 +133,8 @@ public class DeviceDetailController {
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		if(deviceDetailRequestDto.getRequest().getIsItForRegistrationDevice()) {
-			responseWrapper
-			.setResponse(regDeviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
-			
-		}else {
-			responseWrapper
-			.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
-		}
+		responseWrapper
+		.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -176,10 +151,6 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())) {
-			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceDetails(RegDeviceDetail.class, request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(deviceDetaillService.searchDeviceDetails(DeviceDetail.class, request.getRequest()));
 		return responseWrapper;
 	}
@@ -191,10 +162,6 @@ public class DeviceDetailController {
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
-			responseWrapper.setResponse(regDeviceDetaillService.searchDeviceType(RegRegistrationDeviceSubType.class, request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(deviceDetaillService.searchDeviceType(RegistrationDeviceSubType.class, request.getRequest()));
 		return responseWrapper;
 	}
@@ -206,10 +173,6 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
-			responseWrapper.setResponse(regDeviceDetaillService.regDeviceFilterValues(request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(deviceDetaillService.deviceFilterValues(request.getRequest()));
 		return responseWrapper;
 
@@ -222,10 +185,6 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
-			responseWrapper.setResponse(regDeviceDetaillService.regDeviceTypeFilterValues(request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(deviceDetaillService.deviceTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}
@@ -237,10 +196,6 @@ public class DeviceDetailController {
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
-		if(request.getRequest().getPurpose().toString().equalsIgnoreCase(Purpose.REGISTRATION.toString())){
-			responseWrapper.setResponse(regDeviceDetaillService.regDeviceSubTypeFilterValues(request.getRequest()));
-			return responseWrapper;
-		} 
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}

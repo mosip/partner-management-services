@@ -249,11 +249,8 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','POLICYMANAGER','PARTNER_ADMIN')")
 	@Operation(summary = "Service to search policy", description = "Service to search policy")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
-			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
-		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY);
 		responseWrapper.setResponse(policyManagementService.searchPolicy(request.getRequest()));
 		return responseWrapper;

@@ -35,6 +35,7 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
+import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -45,6 +46,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -84,8 +86,7 @@ public class PartnerServiceController {
 	 * @param request
 	 *            this class contains partner details
 	 * @return response this class contains partner response
-	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER')")
+	 */	
 	@PostMapping
 	@Operation(summary = "partner self registration", description = "Saves partner details")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
@@ -290,13 +291,12 @@ public class PartnerServiceController {
 	 *         validity details
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
-	@RequestMapping(value = "/{partnerId}/apikey/{apikeyreqId}", method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key request status of partner", description = "Service to get api key request status of partner")
-	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> getAPIKeyRequestStatus(
-			@PathVariable String partnerId, @PathVariable String apikeyreqId) {
+	@RequestMapping(value = "/apikey/request/{apikeyreqId}", method = RequestMethod.GET)
+	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> getAPIKeyRequestStatus(@PathVariable String apikeyreqId) {
 		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
 		DownloadPartnerAPIkeyResponse aPIkeyRequests = null;
-		aPIkeyRequests = partnerService.getApikeyFromRequestKey(partnerId, apikeyreqId);
+		aPIkeyRequests = partnerService.getApikeyFromRequestKey(apikeyreqId);
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(aPIkeyRequests);
@@ -438,5 +438,26 @@ public class PartnerServiceController {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_APIKEY_REQUEST);
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeys(request.getRequest()));
 		return responseWrapper;
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
+			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
+			@PathVariable("policygroupName") @NotNull String policygroupName) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		response.setResponse(partnerService.updatePolicyGroup(partnerId, policygroupName));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}	
+
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
+	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
+			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
+		ResponseWrapper<EmailVerificationResponseDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

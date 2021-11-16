@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,14 +46,12 @@ import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PartnerManagementServiceTest.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
-@Ignore
 public class PartnerManagementControllerTest {
 
 	@Autowired
@@ -231,5 +228,5 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.getPartnerMappedPolicyFile("1234","asdsa","adfdsasd",false)).thenReturn(res);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/apikey/adsaASD/misp/QWETREWWEFG/validate"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
-	}
+	}	
 }

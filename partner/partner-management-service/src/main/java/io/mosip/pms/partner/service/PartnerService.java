@@ -26,6 +26,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -72,7 +73,7 @@ public interface PartnerService {
 	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
 	 */
 	
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String partnerId,String aPIKeyReqId);
+	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apiKeyReqId);
 	
 	/**
 	 * This method is used to retrieve all API key requests submitted by partner till date.
@@ -200,4 +201,19 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto);
+	
+	/**
+	 *  This one updates the policy group for a partner
+	 * @param partnerId
+	 * @param policyGroupId
+	 * @return
+	 */
+	public String updatePolicyGroup(String partnerId, String policygroupName);
+	
+	/**
+	 * This method will check weather a record exists with given email.
+	 * @param emailId
+	 * @return
+	 */
+	public EmailVerificationResponseDto isPartnerExistsWithEmail(String emailId);
 }

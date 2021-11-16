@@ -2,9 +2,6 @@ package io.mosip.pms.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
-
-import io.mosip.pms.config.AuthDeviceDaoConfig;
 
 
 @SpringBootApplication(scanBasePackages = {"io.mosip.pms"})

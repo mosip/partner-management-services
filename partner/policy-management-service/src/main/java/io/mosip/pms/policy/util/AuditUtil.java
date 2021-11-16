@@ -77,25 +77,25 @@ public class AuditUtil {
 	}
 	
 	public  void setAuditRequestDto(PolicyManageEnum PartnerManageEnum) {
-		AuditRequestDto auditRequestDto = new AuditRequestDto();
-
-		auditRequestDto.setHostIp(hostIpAddress);
-		auditRequestDto.setHostName(hostName);
-		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
-		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
-		auditRequestDto.setSessionUserId(getUserId());
-		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
-		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
-		auditRequestDto.setEventType(PartnerManageEnum.getType());
-		auditRequestDto.setEventName(PartnerManageEnum.getName());
-		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
-		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
-		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
-		auditRequestDto.setId(PartnerManageEnum.getId());
-		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
-		callAuditManager(auditRequestDto);
+//		AuditRequestDto auditRequestDto = new AuditRequestDto();
+//
+//		auditRequestDto.setHostIp(hostIpAddress);
+//		auditRequestDto.setHostName(hostName);
+//		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+//		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+//		auditRequestDto.setSessionUserId(getUserId());
+//		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+//		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+//		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+//		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+//		auditRequestDto.setEventType(PartnerManageEnum.getType());
+//		auditRequestDto.setEventName(PartnerManageEnum.getName());
+//		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+//		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+//		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+//		auditRequestDto.setId(PartnerManageEnum.getId());
+//		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
+//		callAuditManager(auditRequestDto);
 	}
 	
 	private void callAuditManager(AuditRequestDto auditRequestDto) {

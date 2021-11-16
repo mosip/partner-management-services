@@ -20,6 +20,7 @@ import io.mosip.pms.common.dto.DeviceFilterValueDto;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.helper.FilterHelper;
@@ -274,7 +275,20 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailSearchResponseDto> deviceDetails = new ArrayList<>();
 		PageResponseDto<DeviceDetailSearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<E> page = searchHelper.search(entityManager, entity, dto);
+		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName"))) {
+			List<SearchFilter> filters = new ArrayList<>();
+			SearchFilter searchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName")).findFirst().get();
+			SearchFilter partnerSearch = new SearchFilter();			
+			partnerSearch.setColumnName("deviceProviderId");
+			Partner partner = partnerRepository.findByName(searchFilter.getValue());
+			partnerSearch.setValue(partner.getId());
+			partnerSearch.setType("equals");
+			filters.addAll(dto.getFilters());
+			filters.add(partnerSearch);
+			dto.setFilters(filters);
+		}
+		Page<E> page = searchHelper.search(entityManager, entity, dto, "deviceProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -286,7 +300,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
 		List<RegistrationSubTypeDto> deviceSubTypes = new ArrayList<>();
 		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();
-		Page<E> page = searchHelper.search(entityManager, entity, dto);
+		Page<E> page = searchHelper.search(entityManager, entity, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceSubTypes = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
 			pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());

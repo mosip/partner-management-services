@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.logger.logback.factory.Logfactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.PartnerPolicy;
@@ -23,7 +23,7 @@ import io.mosip.pms.common.service.NotificatonService;
 @Component
 public class PartnerNotificationScheduledJob {
 
-	private Logger log = Logfactory.getSlf4jLogger(PartnerNotificationScheduledJob.class);
+	private Logger log = LoggerFactory.getLogger(PartnerNotificationScheduledJob.class);
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepo;

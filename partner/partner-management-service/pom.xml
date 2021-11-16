@@ -5,23 +5,24 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0-rc2-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 		
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<artifactId>partner-management-service</artifactId>
 	<name>partner-management-service</name>
 	
 	<dependencies>
-<!-- 	<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${kernel-dataaccess-hibernate.version}</version>
-		</dependency> -->
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>		
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -31,7 +32,7 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -83,13 +84,13 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
-		</dependency>
+			<version>1.2.0-SNAPSHOT</version>
+		</dependency>	
 		<dependency>
-			<groupId>org.apache.directory.api</groupId>
-			<artifactId>api-all</artifactId>
-			<version>2.0.0.AM2</version>
-		</dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>6.4</version>
+		</dependency>	
 	</dependencies>
 
 	<build>

@@ -1,6 +1,7 @@
 package io.mosip.pms.device.response.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -65,7 +67,17 @@ public class SbiSearchResponseDto {
 	private String updBy;
 
 	@Column(name="upd_dtimes")
-	private LocalDateTime updDtimes;	
+	private LocalDateTime updDtimes;
+	
+	List<DeviceDetail> deviceDetails;
+	
+	public void setDeviceDetails(List<DeviceDetail> deviceDetails) {
+		this.deviceDetails= deviceDetails;
+	}
+	
+	public List<DeviceDetail> getDeviceDetails(){
+		return deviceDetails;
+	}
 	
 	public boolean isDeleted() {
 		return isDeleted;
