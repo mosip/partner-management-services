@@ -55,7 +55,7 @@ public class SearchHelper {
 
 	private static final String IS_ACTIVE_COLUMN_NAME = "isActive";
 	
-	@Value("${mosip.pms.partneradmin.roleName:PARTNER_ADMIN}")	
+	@Value("${mosip.pms.partneradmin.role:PARTNER_ADMIN}")	
 	private String partnerAdminRole;  
 
 	/**

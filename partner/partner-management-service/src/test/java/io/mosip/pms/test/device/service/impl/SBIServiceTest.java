@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -176,13 +177,15 @@ public class SBIServiceTest {
     	deviceDetail.setMake("make");
     	deviceDetail.setModel("model");
     	deviceDetail.setPartnerOrganizationName("pog");
+    	List<DeviceDetail> deviceDetails = new ArrayList<>();
+    	deviceDetails.add(deviceDetail);
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).save(Mockito.any());
 		Mockito.doReturn(secureBiometricInterfaceHistory).when(sbiHistoryRepository).save(Mockito.any());
 		
-		Mockito.doReturn(deviceDetail).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
+		Mockito.doReturn(deviceDetails).when(deviceDetailRepository).findByIds(Mockito.anyList());
 		
 		}
 	
@@ -191,7 +194,7 @@ public class SBIServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 	
@@ -200,7 +203,7 @@ public class SBIServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 	
@@ -210,15 +213,15 @@ public class SBIServiceTest {
     }
 	
 	@Test(expected=RequestException.class)
-    public void createSBINoDviceTest() throws Exception {
-		Mockito.doReturn(null).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
+    public void createSBINoDeviceTest() throws Exception {
+		Mockito.doReturn(Collections.EMPTY_LIST).when(deviceDetailRepository).findByIds(Mockito.anyList());
 		
 		secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
     }
 	
 	@Test(expected=RequestException.class)
     public void updateSBINoDeviceTest() throws Exception {
-		Mockito.doReturn(null).when(deviceDetailRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
+		Mockito.doReturn(Collections.EMPTY_LIST).when(deviceDetailRepository).findByIds(Mockito.anyList());
 		
 		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }

@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,7 +22,6 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.helper.SearchHelper;
-import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
@@ -68,11 +69,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface sbi = null;
 		SecureBiometricInterface entity = new SecureBiometricInterface();
 		IdDto dto = new IdDto();
-		DeviceDetail deviceDetail = deviceDetailRepository
-				.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(sbiDto.getDeviceDetailId());
-		if (deviceDetail == null) {
+		List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiDto.getDeviceDetailId());
+		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(listOfDeviceDetails);
+		if(deviceDetails.isEmpty()) {
 			auditUtil.auditRequest(
-					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
@@ -80,9 +82,37 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"AUT-015");
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
-		} else {
-			entity.setDeviceDetailId(deviceDetail.getId());
 		}
+		// some details not exists in db
+		if(deviceDetails.size() != listOfDeviceDetails.size()) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
+							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
+					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
+		}
+		// device details should belongs to same provider
+		Map<String, Long> deviceDetailsGroupBy = deviceDetails.stream().collect(Collectors.groupingBy(DeviceDetail::getDeviceProviderId,Collectors.counting()));
+		if(deviceDetailsGroupBy.size() > 1) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+					SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage());
+			
+		}
+		entity.setDeviceDetailId(
+				deviceDetails.stream().map(dd -> String.valueOf(dd.getId())).collect(Collectors.joining(",")));
 		String id = UUID.randomUUID().toString();
 		entity.setId(id);
 		byte[] swNinaryHashArr = sbiDto.getSwBinaryHash().getBytes();
@@ -151,23 +181,49 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}
-		DeviceDetail deviceDetail = deviceDetailRepository
-				.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(sbiupdateDto.getDeviceDetailId());
-		if (deviceDetail == null) {
+		List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiupdateDto.getDeviceDetailId());
+		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(listOfDeviceDetails);
+		if(deviceDetails.isEmpty()) {
 			auditUtil.auditRequest(
-					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
-							String.format(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage(),
-									dto.getId())),
-					"AUT-018");
+							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage()),
+					"AUT-015");
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
-		} else {
-			entity.setDeviceDetailId(deviceDetail.getId());
 		}
-
+		if(deviceDetails.size() != listOfDeviceDetails.size()) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
+							SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
+					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
+		}
+		
+		Map<String, Long> deviceDetailsGroupBy = deviceDetails.stream().collect(Collectors.groupingBy(DeviceDetail::getDeviceProviderId,Collectors.counting()));
+		if(deviceDetailsGroupBy.size() > 1) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+							SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorCode(),
+					SecureBiometricInterfaceConstant.DIFFERENT_DEVICE_PROVIDERS.getErrorMessage());
+			
+		}
+		entity.setDeviceDetailId(
+				deviceDetails.stream().map(dd -> String.valueOf(dd.getId())).collect(Collectors.joining(",")));
 		entity.setId(sbiupdateDto.getId());
 		byte[] swNinaryHashArr = sbiupdateDto.getSwBinaryHash().getBytes();
 		entity.setSwBinaryHash(swNinaryHashArr);
@@ -281,11 +337,55 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			DeviceSearchDto dto) {
 		List<SbiSearchResponseDto> sbis = new ArrayList<>();
 		PageResponseDto<SbiSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page = searchHelper.search(entityManager, entity, dto, null);
+		Page<SecureBiometricInterface> page = searchHelper.search(entityManager, SecureBiometricInterface.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			sbis = MapperUtils.mapAll(page.getContent(), SbiSearchResponseDto.class);
-			pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
+			 sbis=mapSbiResponse(page.getContent());
+			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
 		}
 		return pageDto;
+	}
+	
+	/**
+	 * 
+	 * @param deviceDetails
+	 * @return
+	 */
+	private List<String> splitDeviceDetailsId(String deviceDetails) {
+		List<String> deviceDetailIds = new ArrayList<>();
+		String[] detailIds = deviceDetails.split(",");
+		for (String detailId : detailIds) {
+			deviceDetailIds.add(detailId);
+		}
+		return deviceDetailIds;
+	}
+	
+
+	private List<SbiSearchResponseDto> mapSbiResponse(List<SecureBiometricInterface> sbiDetails){
+		List<SbiSearchResponseDto> response = new ArrayList<>();
+		sbiDetails.forEach(sbi->{
+			//assuming inputed device details belong to same device provider
+			SbiSearchResponseDto dto = new SbiSearchResponseDto();			
+			List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(splitDeviceDetailsId(sbi.getDeviceDetailId()));
+			dto.setCrBy(sbi.getCrBy());
+			dto.setCrDtimes(sbi.getCrDtimes());
+			dto.setDelDtimes(sbi.getDelDtimes());
+			dto.setUpdBy(sbi.getUpdBy());
+			dto.setUpdDtimes(sbi.getUpdDtimes());
+			dto.setIsActive(sbi.isActive());
+			dto.setDeleted(sbi.isDeleted());
+			dto.setApprovalStatus(sbi.getApprovalStatus());
+			dto.setDeviceDetailId(sbi.getDeviceDetailId());	
+			dto.setDeviceDetails(deviceDetails);
+			dto.setDeviceProviderId(deviceDetails.isEmpty() ? "" : deviceDetails.get(0).getDeviceProviderId());
+			dto.setPartnerOrganizationName(
+					deviceDetails.isEmpty() ? "" : deviceDetails.get(0).getPartnerOrganizationName());
+			dto.setId(sbi.getId());
+			dto.setSwBinaryHash(sbi.getSwBinaryHash());
+			dto.setSwCreateDateTime(sbi.getSwCreateDateTime());
+			dto.setSwExpiryDateTime(sbi.getSwExpiryDateTime());
+			dto.setSwVersion(sbi.getSwVersion());
+			response.add(dto);
+		});
+		return response;
 	}
 }
