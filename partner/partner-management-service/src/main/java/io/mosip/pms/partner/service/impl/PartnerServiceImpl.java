@@ -1327,7 +1327,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @throws Exception
 	 */
 	private String getPartnerCertFromChain(String certChain) throws Exception {
-		byte[] p7bBytes = CryptoUtil.decodePlainBase64(certChain);
+		byte[] p7bBytes = CryptoUtil.decodeURLSafeBase64(certChain);
 		try (ByteArrayInputStream certStream = new ByteArrayInputStream(p7bBytes)) {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 			Collection<?> p7bCertList = cf.generateCertificates(certStream);
