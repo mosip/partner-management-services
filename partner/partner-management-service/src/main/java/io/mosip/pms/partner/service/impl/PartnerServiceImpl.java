@@ -1218,10 +1218,34 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto) {
 		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
 		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
+		SearchFilter partnerNameSearchFilter = null;
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
+			partnerNameSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		}
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
+			SearchFilter policyNameFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+			SearchFilter policyIdSearchFilter = new SearchFilter();
+			policyIdSearchFilter.setColumnName("policyId");
+			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
+			policyIdSearchFilter.setType("equals");
+			dto.getFilters().add(policyNameFilter);
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
 				"part_id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partnerPolicyRequests = mapPolicyRequests(page.getContent());
+			if (partnerNameSearchFilter != null) {
+				String value = partnerNameSearchFilter.getValue();
+				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
+						.filter(f -> f.getPartner().getName().equals(value))
+						.collect(Collectors.toList()));
+			}else {
+				partnerPolicyRequests = mapPolicyRequests(page.getContent());
+			}
 			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),
 					page.getTotalElements());
 		}
