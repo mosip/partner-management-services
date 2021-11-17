@@ -247,10 +247,12 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@ResponseFilter
+	@ResponseFilter	
 	@PostMapping("/search")
 	@Operation(summary = "Service to search policy", description = "Service to search policy")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
+			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
+		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY);
 		responseWrapper.setResponse(policyManagementService.searchPolicy(request.getRequest()));
 		return responseWrapper;
