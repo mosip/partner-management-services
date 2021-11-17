@@ -247,9 +247,8 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@ResponseFilter
+	@ResponseFilter	
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','POLICYMANAGER','PARTNER_ADMIN')")
 	@Operation(summary = "Service to search policy", description = "Service to search policy")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
 			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {

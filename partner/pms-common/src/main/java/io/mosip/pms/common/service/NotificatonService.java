@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.logger.logback.factory.Logfactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -24,7 +24,7 @@ import io.mosip.pms.common.util.TemplateUtil;
 @Component
 public class NotificatonService {
 
-	private Logger log = Logfactory.getSlf4jLogger(NotificatonService.class);
+	private Logger log = LoggerFactory.getLogger(NotificatonService.class);
 
 	@Autowired
 	NotificationUtil notificationUtil;

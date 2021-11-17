@@ -33,7 +33,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,7 +43,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
@@ -90,6 +88,7 @@ import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
@@ -119,6 +118,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -235,9 +235,19 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
+	
+	@Value("${partner.register.as.user.in.iam.enable:true}")
+	private boolean isPartnerToBeRegistredAsUserInIAM; 
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
+		// Registered partner cannot create another partner 
+		String loggedInUserEmail = getLoggedInUserEmail();
+		if(loggedInUserEmail != null && isPartnerExistsWithEmail(loggedInUserEmail).getEmailExists()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 		if (!validateMobileNumeber(request.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
@@ -270,11 +280,14 @@ public class PartnerServiceImpl implements PartnerService {
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired()) {
+		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup() != null
+				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup);
-		RegisterUserInKeycloak(partner);
+		if(isPartnerToBeRegistredAsUserInIAM) {
+			RegisterUserInKeycloak(partner);
+		}
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
@@ -331,7 +344,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
 		partner.setUserId(request.getPartnerId());
-		partner.setCrBy(getUser());
+		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
 		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		return partner;
@@ -472,7 +485,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, true);
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
-		partner.setUpdBy(getUser());
+		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
@@ -497,7 +510,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerAPIKeyRequest.getPolicyName());
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
-		partnerPolicyRequest.setCrBy(getUser());
+		partnerPolicyRequest.setCrBy(getLoggedInUserId());
 		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
 		partnerPolicyRequest.setPartner(partner);
@@ -578,11 +591,10 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String partnerId, String apikeyReqId) {
-		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
-				apikeyReqId);
+	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apikeyReqId) {
+		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByReqId(apikeyReqId);
 		if (partnerRequest == null) {
-			LOGGER.error("No apikey requests exists for partner {} and apiKeyReqId {}", partnerId, apikeyReqId);
+			LOGGER.error("No apikey requests exists for apiKeyReqId {}", apikeyReqId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -651,7 +663,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setAddress(request.getAddress());
 			contactsFromDb.setContactNo(request.getContactNumber());
 			contactsFromDb.setIsActive(request.getIs_Active());
-			contactsFromDb.setUpdBy(getUser());
+			contactsFromDb.setUpdBy(getLoggedInUserId());
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
 		} else {
@@ -660,7 +672,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setId(PartnerUtil.createPartnerId());
 			contactsFromDb.setAddress(request.getAddress());
 			contactsFromDb.setContactNo(request.getContactNumber());
-			contactsFromDb.setCrBy(getUser());
+			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
 			contactsFromDb.setEmailId(request.getEmailId());
@@ -714,6 +726,12 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
+		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorMessage());
+		}
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());
@@ -759,7 +777,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		uploadOtherDomainCertificate(signedPartnerCert, partnerCertRequesteDto.getPartnerId());
 		Partner updateObject = partner;
-		updateObject.setUpdBy(getUser());
+		updateObject.setUpdBy(getLoggedInUserId());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		updateObject.setIsActive(true);
@@ -886,13 +904,13 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			extractorProvider.setExtractorProvider(extractor.getExtractor().getProvider());
 			extractorProvider.setExtractorProviderVersion(extractor.getExtractor().getVersion());
-			extractorProvider.setCrBy(getUser());
+			extractorProvider.setCrBy(getLoggedInUserId());
 			extractorProvider.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			BiometricExtractorProvider extractorsFromDb = extractorProviderRepository
 					.findByPartnerAndPolicyIdAndAttributeName(partnerId, policyId, extractor.getAttributeName());
 			if (extractorsFromDb != null) {
 				extractorProvider.setId(extractorsFromDb.getId());
-				extractorProvider.setUpdBy(getUser());
+				extractorProvider.setUpdBy(getLoggedInUserId());
 				extractorProvider.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 				extractorProvider.setCrBy(extractorsFromDb.getCrBy());
 				extractorProvider.setCrDtimes(extractorsFromDb.getCrDtimes());
@@ -975,7 +993,7 @@ public class PartnerServiceImpl implements PartnerService {
 			filters.add(partnerTypeSearch);
 			dto.setFilters(filters);
 		}
-		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto);
+		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -988,7 +1006,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
 		List<PartnerType> partnerTypes = new ArrayList<>();
 		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
-		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto);
+		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
 			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -1014,7 +1032,7 @@ public class PartnerServiceImpl implements PartnerService {
 		key.setPartId(partnerId);
 		key.setPolicyId(policyId);
 		entity.setId(key);
-		entity.setCrBy(getUser());
+		entity.setCrBy(getLoggedInUserId());
 		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		entity.setIsActive(true);
 		entity.setIsDeleted(false);
@@ -1159,7 +1177,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
 		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto);
+		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto,"part_id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
 			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),
@@ -1200,9 +1218,34 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto) {
 		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
 		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto);
+		SearchFilter partnerNameSearchFilter = null;
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
+			partnerNameSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		}
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
+			SearchFilter policyNameFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+			SearchFilter policyIdSearchFilter = new SearchFilter();
+			policyIdSearchFilter.setColumnName("policyId");
+			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
+			policyIdSearchFilter.setType("equals");
+			dto.getFilters().add(policyNameFilter);
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}
+		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
+				"part_id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partnerPolicyRequests = mapPolicyRequests(page.getContent());
+			if (partnerNameSearchFilter != null) {
+				String value = partnerNameSearchFilter.getValue();
+				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
+						.filter(f -> f.getPartner().getName().equals(value))
+						.collect(Collectors.toList()));
+			}else {
+				partnerPolicyRequests = mapPolicyRequests(page.getContent());
+			}
 			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),
 					page.getTotalElements());
 		}
@@ -1246,16 +1289,13 @@ public class PartnerServiceImpl implements PartnerService {
 	 * 
 	 * @return
 	 */
-	public String getUser() {
-		if (Objects.nonNull(SecurityContextHolder.getContext())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
-			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-					.getUserId();
-		} else {
-			return "system";
-		}
+	private String getLoggedInUserId() {
+		return UserDetailUtil.getLoggedInUserId();
+	}
+	
+	private String getLoggedInUserEmail() {
+		return UserDetailUtil.getLoggedInUserDetails() != null ? UserDetailUtil.getLoggedInUserDetails().getMail()
+				: null;
 	}
 
 	/**
@@ -1311,7 +1351,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @throws Exception
 	 */
 	private String getPartnerCertFromChain(String certChain) throws Exception {
-		byte[] p7bBytes = CryptoUtil.decodeBase64(certChain);
+		byte[] p7bBytes = CryptoUtil.decodeURLSafeBase64(certChain);
 		try (ByteArrayInputStream certStream = new ByteArrayInputStream(p7bBytes)) {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 			Collection<?> p7bCertList = cf.generateCertificates(certStream);
@@ -1369,5 +1409,49 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		System.out.println(response.getDataShare().getUrl());
 		return response.getDataShare().getUrl();
+	}
+
+	/**
+	 * This method updates the policy group for not approved partners.
+	 */
+	@Override
+	public String updatePolicyGroup(String partnerId, String policyGroupName) {
+		Partner partner = getValidPartner(partnerId, true);
+		//Approved partners policy group should not be updated
+		if (partner.getIsActive()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorMessage());
+		}		
+		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());		
+		if (!partnerType.getIsPolicyRequired()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorCode(),
+					ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorMessage());
+		}		
+		PolicyGroup policyGroup = validateAndGetPolicyGroupByName(policyGroupName);
+		partner.setPolicyGroupId(policyGroup.getId());
+		partner.setUpdBy(getLoggedInUserId());
+		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		partnerRepository.save(partner);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS);
+		return "Success";
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public EmailVerificationResponseDto isPartnerExistsWithEmail(String emailId) {
+		EmailVerificationResponseDto response = new EmailVerificationResponseDto();
+		if (!validateEmail(emailId)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+		}
+		response.setEmailExists(!validatePartnerByEmail(emailId));
+		List<PartnerType> partnerTypesFromDb = partnerTypeRepository.findAll();
+		response.setPolicyRequiredPartnerTypes(partnerTypesFromDb.stream().filter(pt -> pt.getIsPolicyRequired())
+				.map(p -> p.getCode()).collect(Collectors.toList()));
+		return response;
 	}
 }

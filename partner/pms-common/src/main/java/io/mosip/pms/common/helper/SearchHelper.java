@@ -19,6 +19,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pms.common.constant.FilterTypeEnum;
 import io.mosip.pms.common.constant.OrderEnum;
@@ -36,6 +37,7 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.common.util.UserDetailUtil;
 
 /**
  * Generating dynamic query for partnerManagementData based on the search filters.
@@ -52,6 +54,9 @@ public class SearchHelper {
 	private static final String DECOMISSION = "isDeleted";
 
 	private static final String IS_ACTIVE_COLUMN_NAME = "isActive";
+	
+	@Value("${mosip.pms.partneradmin.role:PARTNER_ADMIN}")	
+	private String partnerAdminRole;  
 
 	/**
 	 * Field for interface used to interact with the persistence context.
@@ -59,8 +64,11 @@ public class SearchHelper {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto) {
+	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto, String partnerIdColumn) {
 		this.entityManager= entityManager;
+		if (partnerIdColumn != null) {
+			addPartnerFilter(searchDto, partnerIdColumn);
+		}
 		return search(entity,searchDto);
 	}
 
@@ -76,7 +84,7 @@ public class SearchHelper {
 	 */
 	public <E> Page<E> search(Class<E> entity, SearchDto searchDto) {
 		long rows = 0l;
-		List<E> result;
+		List<E> result;		
 		Objects.requireNonNull(entity, ENTITY_IS_NULL);
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
@@ -165,6 +173,10 @@ public class SearchHelper {
 		String columnName = filter.getColumnName();
 		String value = filter.getValue();
 		String filterType = filter.getType();
+		if(!filter.getValue().isEmpty() && (filter.getValues() != null) &&!filter.getValues().isEmpty()) {
+			throw new RequestException(SearchErrorCode.INVALID_VALUE_VALUES.getErrorCode(),
+					SearchErrorCode.INVALID_VALUE_VALUES.getErrorMessage());			
+		}
 		if (FilterTypeEnum.CONTAINS.name().equalsIgnoreCase(filterType)) {
 			Expression<String> lowerCase=null;
 			try {
@@ -189,6 +201,9 @@ public class SearchHelper {
 		if (FilterTypeEnum.EQUALS.name().equalsIgnoreCase(filterType)) {
 			return buildPredicate(builder, root, columnName, value);
 		}
+		if (FilterTypeEnum.IN.name().equalsIgnoreCase(filterType)) {
+			return buildPredicate(builder, root, columnName, filter.getValues());
+		}		
 		if (FilterTypeEnum.STARTSWITH.name().equalsIgnoreCase(filterType)) {
 			if (value.endsWith("*")) {
 				value = value.substring(0, value.length() - 1);
@@ -377,6 +392,24 @@ public class SearchHelper {
 		}
 		return predicate;
 	}
+	
+	/**
+	 * Method to create the predicate
+	 * 
+	 * @param builder used to construct criteria query
+	 * @param root    type in the from clause,always refers entity
+	 * @param column  name of the column
+	 * @param value   column value
+	 * @return {@link Predicate}
+	 */
+	private <E> Predicate buildPredicate(CriteriaBuilder builder, Root<E> root, String column, List<String> values) {
+		Predicate predicate = null;
+		Path<Object> path = root.get(column);
+		if (path != null) {	
+			predicate = root.get(column).in(values);
+		}
+		return predicate;
+	}
 
 	/**
 	 * Validate the filter column and values
@@ -416,6 +449,10 @@ public class SearchHelper {
 	 */
 	private boolean validateFilter(SearchFilter filter) {
 		boolean flag = false;
+		if(!filter.getValue().isEmpty() && (filter.getValues() != null) && !filter.getValues().isEmpty()) {
+			throw new RequestException(SearchErrorCode.INVALID_VALUE_VALUES.getErrorCode(),
+					SearchErrorCode.INVALID_VALUE_VALUES.getErrorMessage());			
+		}
 		if (FilterTypeEnum.EQUALS.name().equalsIgnoreCase(filter.getType())
 				&& filter.getColumnName().equalsIgnoreCase(IS_ACTIVE_COLUMN_NAME)) {
 			String value = filter.getValue();
@@ -427,6 +464,13 @@ public class SearchHelper {
 						SearchErrorCode.INVALID_VALUE.getErrorMessage());
 			}
 
+		} else if(FilterTypeEnum.IN.name().equalsIgnoreCase(filter.getType())) {
+			if(filter.getValues() != null && !filter.getValues().isEmpty() ) {
+				flag = true;
+			} else {
+				throw new RequestException(SearchErrorCode.INVALID_VALUES.getErrorCode(),
+						SearchErrorCode.INVALID_VALUES.getErrorMessage());
+			}			
 		} else if (!FilterTypeEnum.BETWEEN.name().equalsIgnoreCase(filter.getType())) {
 			String value = filter.getValue();
 			if (value != null && !value.trim().isEmpty()) {
@@ -467,5 +511,22 @@ public class SearchHelper {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
+		AuthUserDetails loggedInUserDetails = UserDetailUtil.getLoggedInUserDetails();
+		if (!(loggedInUserDetails.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)))) {
+			SearchFilter partnerIdSearchFilter = new SearchFilter();
+			partnerIdSearchFilter.setColumnName(partnerIdColumn);
+			partnerIdSearchFilter.setType("equals");
+			partnerIdSearchFilter.setValue(loggedInUserDetails.getUserId());
+			searchDto.getFilters().add(partnerIdSearchFilter);
+			return searchDto;
+		}
+		return searchDto;
+	}
 }

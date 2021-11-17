@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.partner.keycloak.service.RestInterceptor;
 
 @Configuration
@@ -15,12 +14,6 @@ public class KeycloakRestTemplateConfig {
 
 	@Autowired
 	private RestInterceptor restInterceptor;
-	
-	@Bean
-	public RestUtil getRestUtil() {
-		return new RestUtil();
-	}
-	
 	
 	@Bean(name = "keycloakRestTemplate")
 	public RestTemplate getRestTemplate() {

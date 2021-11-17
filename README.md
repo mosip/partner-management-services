@@ -41,7 +41,6 @@ In order to get started, please refer to the [Getting-Started](https://github.co
 ### Infra
 Automated scripts to build and deploy MOSIP modules are present in [mosip-infra](https://github.com/mosip/mosip-infra) repository.
 
-
 ---
 
 ### Contribute
