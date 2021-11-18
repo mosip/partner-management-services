@@ -50,6 +50,7 @@ import io.mosip.pms.policy.dto.ResponseWrapper;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 @RestController
@@ -67,6 +68,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@PostMapping(value = "/group/new")
+	@Operation(summary = "Service to create a new policy group", description = "Service to craete a new policy group")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
@@ -81,6 +83,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@PutMapping(value = "/group/{policygroupId}")
+	@Operation(summary = "Service to update a policy group", description = "Service to update a policy group")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policygroupId,
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
@@ -96,6 +99,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@PostMapping
+	@Operation(summary = "Service to create a new auth/datashare/ credential policy", description = "Service to create a new auth/datashare/ credential policy")
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
@@ -112,6 +116,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@PostMapping(value = "/{policyId}/group/{policygroupId}/publish")
+	@Operation(summary = "Service to publish policy", description = "Service to publish policy")
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();
@@ -123,6 +128,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
     @PutMapping(value ="/{policyId}")
+	@Operation(summary = "Service to update policy details", description = "Service to update policy details")
 	public ResponseWrapper<PolicyCreateResponseDto> updatePolicyDetails(
 			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
 			throws Exception {
@@ -140,6 +146,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@PatchMapping(value = "/{policyId}/group/{policygroupId}")
+	@Operation(summary = "Service to update policy status", description = "Service to update policy status")
 	public ResponseWrapper<PolicyStatusUpdateResponseDto> updatePolicyStatus(
 			@RequestBody RequestWrapper<PolicyStatusUpdateRequestDto> requestDto, @PathVariable String policygroupId,
 			@PathVariable String policyId) throws Exception {
@@ -156,6 +163,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping
+	@Operation(summary = "Service to get policies", description = "Service to get policies")
 	public ResponseWrapper<List<PolicyResponseDto>> getPolicies()
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<List<PolicyResponseDto>> response = new ResponseWrapper<>();
@@ -167,6 +175,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/{policyId}")
+	@Operation(summary = "Service to get policy", description = "Service to get policy")
 	public ResponseWrapper<PolicyResponseDto> getPolicy(@PathVariable String policyId) throws Exception {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
@@ -178,6 +187,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/apikey/{apikey}")
+	@Operation(summary = "Service to get mapped policy for given api key", description = "Service to get mapped policy for given api key")
 	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String apikey)
 			throws FileNotFoundException, IOException, ParseException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -190,6 +200,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@GetMapping(value = "/{policyId}/partner/{partnerId}")
+	@Operation(summary = "Service to get policy for given partner and policy id", description = "Service to get policy for given partner and policy id")
 	public ResponseWrapper<PolicyResponseDto> getPartnersPolicy(@PathVariable String partnerId,
 			@PathVariable String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
@@ -202,6 +213,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/group/{policygroupId}")
+	@Operation(summary = "Service to get policy group", description = "Service to get policy group")
 	public ResponseWrapper<PolicyWithAuthPolicyDto> getPolicyGroup(@PathVariable String policygroupId)
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyWithAuthPolicyDto> response = new ResponseWrapper<>();
@@ -213,6 +225,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/group/all")
+	@Operation(summary = "Service to get all policy groups", description = "Service to all policy groups")
 	public ResponseWrapper<List<PolicyWithAuthPolicyDto>> getPolicyGroup()
 			throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyWithAuthPolicyDto>> response = new ResponseWrapper<>();
@@ -224,6 +237,8 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/group/search")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@Operation(summary = "Service to search policy group", description = "Service to search policy group")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
@@ -232,8 +247,9 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@ResponseFilter
+	@ResponseFilter	
 	@PostMapping("/search")
+	@Operation(summary = "Service to search policy", description = "Service to search policy")
 	public ResponseWrapper<PageResponseDto<SearchAuthPolicy>> searchPolicy(
 			@RequestBody @Valid RequestWrapper<PolicySearchDto> request) {
 		ResponseWrapper<PageResponseDto<SearchAuthPolicy>> responseWrapper = new ResponseWrapper<>();
@@ -244,13 +260,16 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/config/{key}")
+	@Operation(summary = "Service to get value for a given config key", description = "Service to get value for a given config key")
 	public ResponseWrapper<KeyValuePair<String, Object>> getValueForKey(@PathVariable String key) {
 		ResponseWrapper<KeyValuePair<String, Object>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(policyManagementService.getValueForKey(key));
 		return responseWrapper;
 	}
 
-	@PostMapping("/group/filtervalues")	
+	@PostMapping("/group/filtervalues")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@Operation(summary = "Service to filter policy groups", description = "Service to filter policy groups")
 	public ResponseWrapper<FilterResponseCodeDto> policyGroupFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -259,7 +278,9 @@ public class PolicyManagementController {
 		return responseWrapper;
 	}
 
-	@PostMapping("/filtervalues")	
+	@PostMapping("/filtervalues")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@Operation(summary = "Service to filter policy details", description = "Service to filter policy details")
 	public ResponseWrapper<FilterResponseCodeDto> policyFilterValues(
 			@RequestBody @Valid RequestWrapper<PolicyFilterValueDto> requestWrapper) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -270,6 +291,7 @@ public class PolicyManagementController {
 	
 	@GetMapping("/active/group/{groupName}")
 	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','ABIS_PARTNER','MANUAL_ADJUDICATION','POLICYMANAGER')")
+	@Operation(summary = "Service to get active policy details for policy group name", description = "Service to get active policy details for policy group name")
 	public ResponseWrapper<List<PolicyDetailsDto>> getPoliciesByGroupName(@PathVariable String groupName) {
 		ResponseWrapper<List<PolicyDetailsDto>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");

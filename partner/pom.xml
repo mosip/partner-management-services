@@ -82,6 +82,7 @@
 		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
 		<maven.jacoco.version>0.8.5</maven.jacoco.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+		<springdoc.version>1.5.10</springdoc.version>
 		<sonar.test.exclusions>**/test/**/*.*</sonar.test.exclusions>
 		<sonar.coverage.exclusions>**io/mosip/pms/common/**,**io/mosip/pms/policy/validator/**,**/constant/**,**/config/**,**/dto/**,**/policy/errorMessages/**,**/policy/util/**,
 		**io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
@@ -95,19 +96,18 @@
 		<module>partner-management-service</module>
 	</modules>
 
-
-	<dependencies>	
+	<dependencies>		
 	<dependency>
 		<groupId>org.springdoc</groupId>
 		<artifactId>springdoc-openapi-ui</artifactId>
-		<version>1.5.10</version>
+		<version>${springdoc.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-configuration-processor</artifactId>
 		<version>2.0.2.RELEASE</version>
 		<optional>true</optional>
-	</dependency>	
+	</dependency>		
 	<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -40,10 +40,10 @@ import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping(value = "/ftpchipdetail")
@@ -68,7 +68,7 @@ public class FTPChipDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
-	@ApiOperation(value = "Service to save ftpChipDetail", notes = "Saves ftpChipDetail and return ftpChipDetail id")
+	@Operation(summary = "Service to save ftpChipDetail", description = "Saves ftpChipDetail and return ftpChipDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftpChipDetail successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating ftpChipDetail any error occured") })
@@ -102,7 +102,7 @@ public class FTPChipDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
-	@ApiOperation(value = "Service to update ftp chip detail", notes = "Updates ftp chip detail and returns success message")
+	@Operation(summary = "Service to update ftp chip detail", description =  "Updates ftp chip detail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating ftp chip detail any error occured") })
@@ -132,7 +132,7 @@ public class FTPChipDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
-	@ApiOperation(value = "Service to approve/reject ftp chip detail", notes = "Approve ftp chip detail and returns success message")
+	@Operation(summary = "Service to approve/reject ftp chip detail", description = "Approve ftp chip detail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting ftp chip detail any error occured") })
@@ -167,6 +167,7 @@ public class FTPChipDetailController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
+	@Operation(summary = "Service to upload certificate of ftp chip", description = "uploads the ftp chip certificate and returns success message")
 	public ResponseWrapper<FtpCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<FtpChipCertificateRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		auditUtil.auditRequest(
@@ -196,6 +197,7 @@ public class FTPChipDetailController {
 	 */
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
+	@Operation(summary = "Service to get certificate of ftp chip", description = "Returns the ftp chip certificate")
 	public ResponseWrapper<FtpCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download re-signed ftp chip certificate.")  @PathVariable("ftpChipDetailId") @NotNull String ftpChipDetailId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
 		ResponseWrapper<FtpCertDownloadResponeDto> response = new ResponseWrapper<>();
@@ -221,6 +223,7 @@ public class FTPChipDetailController {
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@Operation(summary = "Service to serach ftp chip details", description = "Service to serach ftp chip details")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();

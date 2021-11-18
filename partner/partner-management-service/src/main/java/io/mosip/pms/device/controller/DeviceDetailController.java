@@ -31,9 +31,9 @@ import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.RegistrationSubTypeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping(value = "/devicedetail")
@@ -57,7 +57,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
 	@PostMapping
-	@ApiOperation(value = "Service to save DeviceDetail", notes = "Saves DeviceDetail and return DeviceDetail id")
+	@Operation(summary = "Service to save DeviceDetail", description = "Saves DeviceDetail and return DeviceDetail id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating DeviceDetail any error occured") })
@@ -91,7 +91,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
 	@ResponseFilter
 	@PutMapping
-	@ApiOperation(value = "Service to update DeviceDetail", notes = "Updates DeviceDetail and returns success message")
+	@Operation(summary = "Service to update DeviceDetails", description = "Updates DeviceDetails")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating DeviceDetail any error occured") })
@@ -121,7 +121,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
 	@ResponseFilter
 	@PatchMapping
-	@ApiOperation(value = "Service to approve/reject DeviceDetail", notes = "Approve DeviceDetail and returns success message")
+	@Operation(summary = "Service to approve/reject DeviceDetail", description = "Approve DeviceDetail and returns success message")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting DeviceDetail any error occured") })
@@ -147,6 +147,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN')")
+	@Operation(summary = "Service to search DeviceDetails", description = "ervice to search DeviceDetails")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -157,6 +158,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PostMapping("/deviceType/search")
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	@Operation(summary = "Service to search DeviceTypes", description = "service to search DeviceTypes")
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> responseWrapper = new ResponseWrapper<>();
@@ -167,6 +169,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	@Operation(summary = "Service to filter DeviceDetails", description = "Service to filter DeviceDetails")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -178,6 +181,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PostMapping("/deviceType/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	@Operation(summary = "Service to filter DeviceTypes", description = "Service to filter DeviceTypes")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -188,6 +192,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PostMapping("/deviceSubType/filtervalues")
 	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	@Operation(summary = "Service to filter DeviceSubTypes", description = "Service to filter DeviceSubTypes")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
