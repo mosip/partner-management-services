@@ -393,8 +393,7 @@ public class PartnerServiceController {
 	}
 	
 	@ResponseFilter
-	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PostMapping("/filtervalues")	
 	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
