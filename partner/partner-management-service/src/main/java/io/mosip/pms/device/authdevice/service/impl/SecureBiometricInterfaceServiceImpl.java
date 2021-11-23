@@ -1,5 +1,6 @@
 package io.mosip.pms.device.authdevice.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface sbi = null;
 		SecureBiometricInterface entity = new SecureBiometricInterface();
 		IdDto dto = new IdDto();
+		validateDates(sbiDto.getSwCreateDateTime(),sbiDto.getSwExpiryDateTime());
 		List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiDto.getDeviceDetailId());
 		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(listOfDeviceDetails);
 		if(deviceDetails.isEmpty()) {
@@ -168,6 +170,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface sbi = null;
 		SecureBiometricInterface entity = new SecureBiometricInterface();
 		IdDto dto = new IdDto();
+		validateDates(sbiupdateDto.getSwCreateDateTime(), sbiupdateDto.getSwExpiryDateTime());
 		entity = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(sbiupdateDto.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
@@ -387,4 +390,38 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		});
 		return response;
 	}	
+	
+	/**
+	 * Validates the 2 dates
+	 * @param fromDate
+	 * @param toDate
+	 */
+	private void validateDates(LocalDateTime fromDate, LocalDateTime toDate) {
+		if (toDate.isBefore(fromDate)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode(),
+							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE
+									.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(
+					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode(),
+					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorMessage());
+		}
+		if (toDate.toLocalDate().isBefore(LocalDate.now())) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode(),
+							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE
+									.getErrorMessage()),
+					"AUT-015");
+			throw new RequestException(
+					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode(),
+					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorMessage());
+		}
+	}
 }

@@ -368,14 +368,16 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private PartnerType validateAndGetPartnerType(String partnerType) {
-		Optional<PartnerType> partnerTypeFromDb = partnerTypeRepository.findById(partnerType);
-		if (partnerTypeFromDb.isEmpty()) {
+		List<PartnerType> partnerTypesFromDb = getAllPartnerTypes();
+		Optional<PartnerType> validPartnerType = partnerTypesFromDb.stream()
+				.filter(pt -> pt.getCode().equalsIgnoreCase(partnerType)).findFirst();
+		if (validPartnerType.isEmpty()) {
 			LOGGER.error(partnerType + " : partnerType is not available.");
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());
 		}
-		return partnerTypeFromDb.get();
+		return validPartnerType.get();
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
@@ -1133,6 +1135,13 @@ public class PartnerServiceImpl implements PartnerService {
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			SearchFilter loggedInUserFilterDto = new SearchFilter();
+			loggedInUserFilterDto.setColumnName("id");
+			loggedInUserFilterDto.setValue(getLoggedInUserId());
+			loggedInUserFilterDto.setType("equals");
+			filterValueDto.getOptionalFilters().add(loggedInUserFilterDto);
+		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Partner.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, Partner.class,
@@ -1234,9 +1243,16 @@ public class PartnerServiceImpl implements PartnerService {
 			policyIdSearchFilter.setType("equals");
 			dto.getFilters().add(policyNameFilter);
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}		
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
+			if(loggedInPartner.isPresent()) {
+				partnerNameSearchFilter = new SearchFilter();
+				partnerNameSearchFilter.setValue(loggedInPartner.get().getName());
+			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
-				"part_id");
+				null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if (partnerNameSearchFilter != null) {
 				String value = partnerNameSearchFilter.getValue();
@@ -1449,9 +1465,13 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
 		response.setEmailExists(!validatePartnerByEmail(emailId));
-		List<PartnerType> partnerTypesFromDb = partnerTypeRepository.findAll();
+		List<PartnerType> partnerTypesFromDb = getAllPartnerTypes();
 		response.setPolicyRequiredPartnerTypes(partnerTypesFromDb.stream().filter(pt -> pt.getIsPolicyRequired())
-				.map(p -> p.getCode()).collect(Collectors.toList()));
+				.map(p -> p.getCode().toUpperCase()).collect(Collectors.toList()));
 		return response;
+	}
+	
+	private List<PartnerType> getAllPartnerTypes(){
+		return partnerTypeRepository.findAll();
 	}
 }
