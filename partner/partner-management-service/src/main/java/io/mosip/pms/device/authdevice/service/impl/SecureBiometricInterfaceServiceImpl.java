@@ -170,6 +170,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface sbi = null;
 		SecureBiometricInterface entity = new SecureBiometricInterface();
 		IdDto dto = new IdDto();
+		validateDates(sbiupdateDto.getSwCreateDateTime(), sbiupdateDto.getSwExpiryDateTime());
 		entity = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(sbiupdateDto.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
