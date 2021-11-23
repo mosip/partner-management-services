@@ -11,4 +11,9 @@ public class FilterData {
 		this.fieldCode = fieldCode;
 		this.fieldValue = fieldValue;
 	}
+	
+	public FilterData(String fieldCode, String fieldValue, String extColumn1, String extColumn2) {
+		this.fieldCode = fieldCode;
+		this.fieldValue = extColumn1 +" " + extColumn2;
+	}
 }

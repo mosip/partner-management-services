@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.helper.SearchHelper;
@@ -42,9 +43,7 @@ import io.mosip.pms.device.util.AuditUtil;
 
 @Component
 @Transactional
-public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
-
-	private static final String PENDING_APPROVAL = "Pending_Approval";
+public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {	
 	
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
@@ -132,7 +131,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 		entity.setActive(false);
 		entity.setDeleted(false);
-		entity.setApprovalStatus(PENDING_APPROVAL);
+		entity.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setCrBy(authN.getName());
@@ -299,7 +298,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		}
 
 		if (secureBiometricInterfaceDto.getApprovalStatus().equals(DeviceConstant.APPROVE)) {
-			entity.setApprovalStatus(DeviceConstant.APPROVED);
+			entity.setApprovalStatus(CommonConstant.APPROVED);
 			entity.setActive(true);
 			SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
 			history = getUpdateHistoryMapping(history, entity);
@@ -308,7 +307,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			return "Secure biometric details approved successfully.";
 		}
 		if (secureBiometricInterfaceDto.getApprovalStatus().equals(DeviceConstant.REJECT)) {
-			entity.setApprovalStatus(DeviceConstant.REJECTED);
+			entity.setApprovalStatus(CommonConstant.REJECTED);
 			entity.setActive(false);
 			SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
 			history = getUpdateHistoryMapping(history, entity);
@@ -387,5 +386,5 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			response.add(dto);
 		});
 		return response;
-	}
+	}	
 }
