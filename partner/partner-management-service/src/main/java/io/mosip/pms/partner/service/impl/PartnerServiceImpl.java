@@ -1133,6 +1133,13 @@ public class PartnerServiceImpl implements PartnerService {
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			SearchFilter loggedInUserFilterDto = new SearchFilter();
+			loggedInUserFilterDto.setColumnName("id");
+			loggedInUserFilterDto.setValue(getLoggedInUserId());
+			loggedInUserFilterDto.setType("equals");
+			filterValueDto.getOptionalFilters().add(loggedInUserFilterDto);
+		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Partner.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, Partner.class,
@@ -1234,9 +1241,16 @@ public class PartnerServiceImpl implements PartnerService {
 			policyIdSearchFilter.setType("equals");
 			dto.getFilters().add(policyNameFilter);
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}		
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
+			if(loggedInPartner.isPresent()) {
+				partnerNameSearchFilter = new SearchFilter();
+				partnerNameSearchFilter.setValue(loggedInPartner.get().getName());
+			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
-				"part_id");
+				null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if (partnerNameSearchFilter != null) {
 				String value = partnerNameSearchFilter.getValue();

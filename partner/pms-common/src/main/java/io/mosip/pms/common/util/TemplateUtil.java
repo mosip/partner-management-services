@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.response.dto.NotificationDto;
@@ -34,6 +36,9 @@ public class TemplateUtil {
 
 	@Value("${mosip.mandatory-languages}")
 	private String mandatoryLanguage;
+	
+	@Value("${mosip.notification.timezone}")
+	private String notificationTimeZone; 
 
 	@Autowired
 	private TemplateManager templateManager;
@@ -90,15 +95,24 @@ public class TemplateUtil {
 		responseMap.put("partnerId", acknowledgementDto.getPartnerId());
 		responseMap.put("partnerStatus", acknowledgementDto.getPartnerStatus());
 		responseMap.put("status", acknowledgementDto.getPartnerStatus());
-		responseMap.put("Date", DateUtils.getCurrentDateTimeString());
+		responseMap.put("Date", convertToZonedDateTime(LocalDateTime.now()));
 		responseMap.put("policyId", acknowledgementDto.getPolicyId());
 		responseMap.put("policyName", acknowledgementDto.getPolicyName());
 		responseMap.put("PolicyName", acknowledgementDto.getPolicyName());
 		responseMap.put("policyStatus", acknowledgementDto.getPolicyStatus());
 		responseMap.put("apiKey", acknowledgementDto.getApiKey());
 		responseMap.put("apiKeyStatus", acknowledgementDto.getApiKeyStatus());
-		responseMap.put("apiKeyExpiresOn", acknowledgementDto.getApiKeyExpiryDate());
-		responseMap.put("policyExpiresOn", acknowledgementDto.getPolicyExpiryDateTime());
+		responseMap.put("apiKeyExpiresOn", convertToZonedDateTime(acknowledgementDto.getApiKeyExpiryDate()));
+		responseMap.put("policyExpiresOn", convertToZonedDateTime(acknowledgementDto.getPolicyExpiryDateTime()));
 		return responseMap;
+	}
+	
+	
+	
+	private ZonedDateTime convertToZonedDateTime(LocalDateTime localDateTime) {
+		if(localDateTime != null) {	
+			return localDateTime.atZone(ZoneId.of(notificationTimeZone));
+		}
+		return null;
 	}
 }
