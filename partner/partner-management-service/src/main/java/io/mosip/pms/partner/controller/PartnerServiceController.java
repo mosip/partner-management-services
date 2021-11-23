@@ -450,7 +450,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	
 	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
