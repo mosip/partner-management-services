@@ -900,6 +900,7 @@ public class PolicyManagementService {
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> policies = new ArrayList<>();
 		SearchFilter policyGroupNameFilter = null;
+		SearchFilter policydescFilter = null;
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
 		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
@@ -915,6 +916,14 @@ public class PolicyManagementService {
 			policyGroupNameFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName")).findFirst().get();
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyGroupName"));
+		}
+		
+		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("desc"))) {			
+			policydescFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("desc")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("desc"));
+			policydescFilter.setColumnName("descr");
+			dto.getFilters().add(policydescFilter);
 		}
 		
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
