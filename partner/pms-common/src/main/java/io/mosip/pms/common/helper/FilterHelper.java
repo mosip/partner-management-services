@@ -127,7 +127,8 @@ public class FilterHelper  {
 			FilterValueDto filterValueDto, String fieldCodeColumnName) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		String columnName = filterDto.getColumnName();
+		String[] columnNames = filterDto.getColumnName().split(",");
+		String columnName = filterDto.getColumnName().split(",")[0];
 		String columnType = filterDto.getType();
 		Predicate caseSensitivePredicate = null;
 		List<FilterData> results;
@@ -136,10 +137,15 @@ public class FilterHelper  {
 		Root<E> rootType = criteriaQueryByType.from(entity);
 		
 		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+				.like(criteriaBuilder.lower(rootType.get(columnName)), criteriaBuilder.lower(
 						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
 
-		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
+		if (columnNames.length > 1) {
+			criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnNames[0]),
+					rootType.get(columnNames[1]), rootType.get(columnNames[2]));
+		} else {
+			criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
+		}
 
 		columnTypeValidator(rootType, columnName);
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
