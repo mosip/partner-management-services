@@ -319,7 +319,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
-					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldID(filterDto.getColumnName().split(",")[0]);
 					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});
