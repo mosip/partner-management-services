@@ -368,14 +368,16 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private PartnerType validateAndGetPartnerType(String partnerType) {
-		Optional<PartnerType> partnerTypeFromDb = partnerTypeRepository.findById(partnerType);
-		if (partnerTypeFromDb.isEmpty()) {
+		List<PartnerType> partnerTypesFromDb = getAllPartnerTypes();
+		Optional<PartnerType> validPartnerType = partnerTypesFromDb.stream()
+				.filter(pt -> pt.getCode().equalsIgnoreCase(partnerType)).findFirst();
+		if (validPartnerType.isEmpty()) {
 			LOGGER.error(partnerType + " : partnerType is not available.");
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());
 		}
-		return partnerTypeFromDb.get();
+		return validPartnerType.get();
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
@@ -1463,9 +1465,13 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
 		response.setEmailExists(!validatePartnerByEmail(emailId));
-		List<PartnerType> partnerTypesFromDb = partnerTypeRepository.findAll();
+		List<PartnerType> partnerTypesFromDb = getAllPartnerTypes();
 		response.setPolicyRequiredPartnerTypes(partnerTypesFromDb.stream().filter(pt -> pt.getIsPolicyRequired())
-				.map(p -> p.getCode()).collect(Collectors.toList()));
+				.map(p -> p.getCode().toUpperCase()).collect(Collectors.toList()));
 		return response;
+	}
+	
+	private List<PartnerType> getAllPartnerTypes(){
+		return partnerTypeRepository.findAll();
 	}
 }
