@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
@@ -52,8 +53,6 @@ import io.mosip.pms.device.util.DeviceUtil;
 @Service
 @Transactional
 public class DeviceDetailServiceImpl implements DeviceDetailService {
-
-	private static final String PENDING_APPROVAL = "Pending_Approval";	
 	
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
@@ -140,7 +139,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setIsDeleted(false);
-		deviceDetail.setApprovalStatus(PENDING_APPROVAL);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setCrBy(authN.getName());
@@ -245,13 +244,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		}
 
 		if (deviceDetails.getApprovalStatus().equals(DeviceConstant.APPROVE)) {
-			entity.setApprovalStatus(DeviceConstant.APPROVED);
+			entity.setApprovalStatus(CommonConstant.APPROVED);
 			entity.setIsActive(true);
 			deviceDetailRepository.save(entity);
 			return "Device details approved successfully.";
 		}
 		if (deviceDetails.getApprovalStatus().equals(DeviceConstant.REJECT)) {
-			entity.setApprovalStatus(DeviceConstant.REJECTED);
+			entity.setApprovalStatus(CommonConstant.REJECTED);
 			entity.setIsActive(false);
 			deviceDetailRepository.save(entity);
 			return "Device details rejected successfully.";
@@ -313,13 +312,14 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), DeviceDetail.class)) {
-			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
+			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {				
+				filterDto.setColumnName(filterDto.getColumnName() + "," + "make" + "," + "model");
 				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, DeviceDetail.class,
 						filterDto, deviceFilterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
-					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldID(filterDto.getColumnName().split(",")[0]);
 					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});

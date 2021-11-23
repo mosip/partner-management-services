@@ -19,6 +19,7 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
+import io.mosip.pms.partner.constant.PartnerConstants;
 
 @Component
 public class PartnerNotificationScheduledJob {
@@ -79,6 +80,9 @@ public class PartnerNotificationScheduledJob {
 		dto.setPartnerId(partnerPolicy.getPartner().getId());
 		dto.setPolicyExpiryDateTime(policy == null ? null : policy.getValidToDate());
 		dto.setPolicyId(partnerPolicy.getPolicyId());
+		dto.setPolicyName(policy.getName());
+		dto.setPolicyStatus(policy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		dto.setApiKeyStatus(partnerPolicy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		return dto;
 	}
 

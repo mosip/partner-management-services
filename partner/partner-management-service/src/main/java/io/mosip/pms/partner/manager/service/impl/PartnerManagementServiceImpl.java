@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
 
 import org.json.simple.JSONObject;
@@ -717,6 +716,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.error("Error occured while sending the apikey notifications.", e.getLocalizedMessage(),
 					e.getMessage());
 		}
-	}
+	}	
 }
 

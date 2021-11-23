@@ -376,7 +376,7 @@ public class SearchHelper {
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate buildPredicate(CriteriaBuilder builder, Root<E> root, String column, String value) {
-		Predicate predicate = null;
+		Predicate predicate = null;		
 		Path<Object> path = root.get(column);
 		if (path != null) {
 			Class<? extends Object> type = path.getJavaType();
@@ -518,8 +518,7 @@ public class SearchHelper {
 	 */
 	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
 		AuthUserDetails loggedInUserDetails = UserDetailUtil.getLoggedInUserDetails();
-		if (!(loggedInUserDetails.getAuthorities().stream()
-				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)))) {
+		if (isLoggedInUserFilterRequired()) {
 			SearchFilter partnerIdSearchFilter = new SearchFilter();
 			partnerIdSearchFilter.setColumnName(partnerIdColumn);
 			partnerIdSearchFilter.setType("equals");
@@ -528,5 +527,10 @@ public class SearchHelper {
 			return searchDto;
 		}
 		return searchDto;
+	}
+	
+	public boolean isLoggedInUserFilterRequired() {
+		return !(UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)));
 	}
 }

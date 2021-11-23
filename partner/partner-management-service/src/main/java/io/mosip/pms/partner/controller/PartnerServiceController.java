@@ -393,8 +393,7 @@ public class PartnerServiceController {
 	}
 	
 	@ResponseFilter
-	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PostMapping("/filtervalues")	
 	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
@@ -451,7 +450,8 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	
+	@Operation(summary = "To verify partner's email", description = "Service to verify partner email")
 	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
