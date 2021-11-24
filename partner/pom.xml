@@ -96,7 +96,6 @@
 		<module>partner-management-service</module>
 	</modules>
 
-
 	<dependencies>		
 	<dependency>
 		<groupId>org.springdoc</groupId>
