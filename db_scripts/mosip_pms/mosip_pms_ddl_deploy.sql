@@ -17,3 +17,11 @@
 \ir ddl/pms-partner_policy_credential_type.sql
 
 \ir ddl/pms-fk.sql
+
+
+\ir ddl/pms-device_detail.sql
+\ir ddl/pms-ftp_chip_detail.sql
+\ir ddl/pms-reg_device_sub_type.sql
+\ir ddl/pms-reg_device_type.sql
+\ir ddl/pms-secure_biometric_interface.sql
+\ir ddl/pms-secure_biometric_interface_h.sql
