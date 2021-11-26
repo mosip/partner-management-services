@@ -288,6 +288,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if(isPartnerToBeRegistredAsUserInIAM) {
 			RegisterUserInKeycloak(partner);
 		}
+		partner.setPartnerTypeCode(partnerType.getCode());
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
@@ -339,7 +340,6 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-		partner.setPartnerTypeCode(request.getPartnerType());
 		partner.setEmailId(request.getEmailId());
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
