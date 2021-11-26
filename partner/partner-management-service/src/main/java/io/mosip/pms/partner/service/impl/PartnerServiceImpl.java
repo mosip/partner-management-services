@@ -284,11 +284,10 @@ public class PartnerServiceImpl implements PartnerService {
 				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
-		Partner partner = mapPartnerFromRequest(request, policyGroup);
+		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
 		if(isPartnerToBeRegistredAsUserInIAM) {
 			RegisterUserInKeycloak(partner);
-		}
-		partner.setPartnerTypeCode(partnerType.getCode());
+		}		
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
 		PartnerResponse partnerResponse = new PartnerResponse();
@@ -333,7 +332,7 @@ public class PartnerServiceImpl implements PartnerService {
 		return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
-	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup) {
+	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup, String partnerType) {
 		Partner partner = new Partner();
 		partner.setId(request.getPartnerId());
 		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
@@ -341,6 +340,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
 		partner.setEmailId(request.getEmailId());
+		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
 		partner.setUserId(request.getPartnerId());
