@@ -539,6 +539,14 @@ public class PolicyManagementService {
 		Boolean status = statusUpdateRequest.getStatus().equalsIgnoreCase("De-Active") ? false : true;
 		AuthPolicy authPolicy = checkMappingExists(policyGroupId, policyId, false,
 				PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
+
+		//published policy status cannot be changed
+		if (authPolicy.getPolicySchema() != null) {
+			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
+			throw new PolicyManagementServiceException(ErrorMessages.PUBLISHED_POLICY_STATUS_UPDATE.getErrorCode(),
+					ErrorMessages.PUBLISHED_POLICY_STATUS_UPDATE.getErrorMessage());
+		}
+
 		// Unpublished policy cannot be made active
 		if (authPolicy.getPolicySchema() == null && status) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS_FAILURE);
