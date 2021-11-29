@@ -28,6 +28,7 @@ CREATE TABLE pms.partner_policy(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+	label character varying(36) NOT NULL,
 	CONSTRAINT pk_ppol PRIMARY KEY (policy_api_key),
 	CONSTRAINT uk_ppol UNIQUE (part_id,policy_id,valid_from_datetime)
 
