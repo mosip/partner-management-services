@@ -280,8 +280,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup() != null
-				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
+		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
@@ -1234,6 +1233,12 @@ public class PartnerServiceImpl implements PartnerService {
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
 		}
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("apikeyRequestId"))) {
+			SearchFilter apikeyRequestIdFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("apikeyRequestId")).findFirst().get();
+			apikeyRequestIdFilter.setColumnName("id");
+			dto.getFilters().add(apikeyRequestIdFilter);
+		}
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
 			SearchFilter policyNameFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
@@ -1242,7 +1247,7 @@ public class PartnerServiceImpl implements PartnerService {
 			policyIdSearchFilter.setColumnName("policyId");
 			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
 			policyIdSearchFilter.setType("equals");
-			dto.getFilters().add(policyNameFilter);
+			dto.getFilters().add(policyIdSearchFilter);
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
 		}		
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
