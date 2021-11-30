@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
+			<version>${kernel.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
