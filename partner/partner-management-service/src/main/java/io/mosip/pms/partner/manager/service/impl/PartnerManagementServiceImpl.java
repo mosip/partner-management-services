@@ -499,6 +499,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
 		PartnerCertDownloadResponeDto responseObject = null;
 		try {
+//			responseObject = mapper.readValue(getApiResponse.get("response").toString(),
+//					PartnerCertDownloadResponeDto.class);
+			
 			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
 					PartnerCertDownloadResponeDto.class);
 		} catch (IOException e) {

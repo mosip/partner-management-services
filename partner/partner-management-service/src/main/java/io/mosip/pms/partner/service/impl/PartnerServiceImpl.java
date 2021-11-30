@@ -280,7 +280,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired()) {
+		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup() != null
+				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
@@ -339,8 +340,9 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-        partner.setPartnerTypeCode(partnerType);
+    partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(request.getEmailId());
+		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
 		partner.setUserId(request.getPartnerId());

@@ -450,7 +450,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
-	
+	@Operation(summary = "To verify partner's email", description = "Service to verify partner email")
 	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
