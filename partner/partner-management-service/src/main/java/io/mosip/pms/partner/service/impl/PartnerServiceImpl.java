@@ -1238,6 +1238,7 @@ public class PartnerServiceImpl implements PartnerService {
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("apikeyRequestId")).findFirst().get();
 			apikeyRequestIdFilter.setColumnName("id");
 			dto.getFilters().add(apikeyRequestIdFilter);
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("apikeyRequestId"));
 		}
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
 			SearchFilter policyNameFilter = dto.getFilters().stream()
