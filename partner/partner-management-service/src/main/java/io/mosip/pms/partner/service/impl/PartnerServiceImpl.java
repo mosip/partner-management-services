@@ -551,6 +551,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
 		partnerPolicy.setIsActive(true);
 		partnerPolicy.setIsDeleted(false);
+		partnerPolicy.setLabel(partnerPolicyRequest.getRequestDetail());
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
