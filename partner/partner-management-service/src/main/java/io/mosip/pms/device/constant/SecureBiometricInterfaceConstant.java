@@ -7,7 +7,7 @@ public enum SecureBiometricInterfaceConstant {
 	SBI_STATUS_CODE("PMS_AUT_026","ApprovalStatus should be Activate / De-activate"),
 	DIFFERENT_DEVICE_PROVIDERS("PMS_AUT_506","Provide device details of same provider."),
 	SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE("PMS_AUT_507","ExpiryDate should be greaterthan createdDate"),
-	EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE("PMS_AUT_507","ExpiryDate should be greaterthan/equal Today.");
+	EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE("PMS_AUT_508","ExpiryDate should be greaterthan/equal Today.");
 	
 	/**
 	 * The error code.
