@@ -10,6 +10,8 @@ import io.mosip.pms.partner.manager.dto.PartnerPolicyResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
+import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 
 public interface PartnerManagerService {
 
@@ -87,6 +89,13 @@ public interface PartnerManagerService {
 	 * @param needPartnerCert
 	 * @return
 	 */
-	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId,boolean needPartnerCert);	
+	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId,boolean needPartnerCert);
+	
+	/**
+	 * This method will generate apikey for approved partner policy mapping
+	 * @param partnerId
+	 * @return
+	 */
+	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto);
 
 }

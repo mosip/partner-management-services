@@ -41,7 +41,7 @@ import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
+import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
@@ -50,7 +50,7 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
+import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
@@ -176,12 +176,12 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void submitPartnerApiKeyRequestTest() throws JsonProcessingException, Exception {
     	String apiRequestId = "873276828663";
-    	PartnerAPIKeyResponse response = new PartnerAPIKeyResponse();
+    	PartnerPolicyMappingResponse response = new PartnerPolicyMappingResponse();
     	response.setApiRequestId(apiRequestId);
     	response.setMessage("partnerAPIKeyRequest successfully created");
     	
     	Mockito.when(partnerService.submitPartnerApiKeyReq(Mockito.any(), Mockito.any())).thenReturn(response);
-    	RequestWrapper<PartnerAPIKeyRequest> request = createSubmitPartnerApiKeyRequest();
+    	RequestWrapper<PartnerPolicyMappingRequest> request = createSubmitPartnerApiKeyRequest();
     	
     	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/12345/apikey/request").contentType(MediaType.APPLICATION_JSON_VALUE)
                  .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
@@ -364,8 +364,8 @@ public class PartnerServiceControllerTest {
     }
     
     
-    private RequestWrapper<PartnerAPIKeyRequest> createSubmitPartnerApiKeyRequest(){
-    	RequestWrapper<PartnerAPIKeyRequest> request = new RequestWrapper<PartnerAPIKeyRequest>();
+    private RequestWrapper<PartnerPolicyMappingRequest> createSubmitPartnerApiKeyRequest(){
+    	RequestWrapper<PartnerPolicyMappingRequest> request = new RequestWrapper<PartnerPolicyMappingRequest>();
     	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
     	request.setMetadata("{}");
     	request.setRequest(createPartnerAPIKeyRequest());
@@ -375,8 +375,8 @@ public class PartnerServiceControllerTest {
     }
     
     
-    private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
-    	PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
+    private PartnerPolicyMappingRequest createPartnerAPIKeyRequest() {
+    	PartnerPolicyMappingRequest partnerAPIKeyRequest = new PartnerPolicyMappingRequest();
     	partnerAPIKeyRequest.setPolicyName("airtelIndPolicy");
     	partnerAPIKeyRequest.setUseCaseDescription("Need to submit the payment");
     	return partnerAPIKeyRequest;

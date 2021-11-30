@@ -17,7 +17,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
+import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
@@ -27,7 +27,7 @@ import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
+import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
@@ -64,7 +64,7 @@ public interface PartnerService {
 	 * @param partnerID this is unique id created after self registered by partner
 	 * @return partnerAPIKeyResponse this class contains partner request id and massage details
 	 */
-	public PartnerAPIKeyResponse submitPartnerApiKeyReq(PartnerAPIKeyRequest partnerAPIKeyRequest,String partnerId);
+	public PartnerPolicyMappingResponse submitPartnerApiKeyReq(PartnerPolicyMappingRequest partnerAPIKeyRequest,String partnerId);
 	
 	/**
 	 * This method is used to download Partner API key for the given APIKeyReqID.
@@ -216,4 +216,12 @@ public interface PartnerService {
 	 * @return
 	 */
 	public EmailVerificationResponseDto isPartnerExistsWithEmail(String emailId);
+	
+	/**
+	 * This method will request for policy and partner mapping
+	 * @param partnerAPIKeyRequest
+	 * @param partnerId
+	 * @return
+	 */
+	public PartnerPolicyMappingResponse requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest,String partnerId);
 }

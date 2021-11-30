@@ -24,8 +24,8 @@ public enum ErrorCode {
 	PARTNER_POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Partner policy is not active."),
 	MISP_LICENSE_KEY_NOT_EXISTS("PMS_PMP_020","MISP license key not exists."),
 	MISP_LICENSE_KEY_EXPIRED("PMS_PMP_021","MISP license key is expired."),
-	POLICY_GROUP_NOT_EXISTS("PMS_PMP_022","Policy not exists."),
-	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy is not active."),
+	POLICY_GROUP_NOT_EXISTS("PMS_PMP_022","Policy group not exists."),
+	POLICY_GROUP_NOT_ACTIVE("PMS_PMP_023","Policy group is not active."),
 	POLICY_FILE_PARSING_ERROR("PMS_PMP_024","Policy file is corrupted."),
 	MISP_IS_BLOCKED("PMS_PMP_025","License key of MISP is blocked"),
 	PARTNER_APIKEY_POLICY_MAPPING_NOTEXISTS("PMS_PMP_50","Given apikey,partner and policy mapping not exists."),
@@ -36,7 +36,9 @@ public enum ErrorCode {
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
-	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same.");
+	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same."),
+	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner");
+	
 
 	/**
 	 * The error code.

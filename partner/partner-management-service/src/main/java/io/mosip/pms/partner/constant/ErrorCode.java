@@ -58,7 +58,8 @@ public enum ErrorCode {
 	POLICY_GROUP_ALREADY_MAPPED("PMS_PRT_049","policy group mapping exists for given partner."),
 	POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER("PMS_PRT_050","Policy group cannot be updated for approved partner"),
 	POLICY_GROUP_NOT_MAPPED_PARTNER("PMS_PRT_051","Policy group not mapped for given partner"),
-	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_052","User not authorized.");
+	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_052","User not authorized."),
+	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Active mapping exists for given policy and partner.");
 
 	
 	/**

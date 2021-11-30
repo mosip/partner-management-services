@@ -8,10 +8,8 @@ import lombok.Data;
  */
 
 @Data
-public class PartnerAPIKeyResponse {
+public class PartnerPolicyMappingResponse {
 	
 	private String apiRequestId;
-	private String message;
-	private String apikeyId;
-		
+	private String message;	
 }

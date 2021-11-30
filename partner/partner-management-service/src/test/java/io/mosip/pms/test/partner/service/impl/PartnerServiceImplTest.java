@@ -67,7 +67,7 @@ import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
+import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
@@ -787,7 +787,7 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void submitPartnerApiKeyReqTest() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Partner part = createPartner(true);
 		AuthPolicy authPolicy =createAuthPolicy();		
@@ -799,7 +799,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest01() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Partner part = createPartner(true);
 		AuthPolicy authPolicy =createInactiveAuthPolicy();		
@@ -811,7 +811,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest02() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Partner part = createPartner(true);
 		AuthPolicy authPolicy =createTimeInvariantAuthPolicy();		
@@ -822,7 +822,7 @@ public class PartnerServiceImplTest {
 	}
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest03() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Partner part = createPartner(true);
 		AuthPolicy authPolicy =createInactiveGroupAuthPolicy();		
@@ -834,7 +834,7 @@ public class PartnerServiceImplTest {
 	
 	@Test
 	public void submitPartnerApiKeyReqTest04() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Partner part = createPartner(true);
 		PartnerPolicy partPolicy = new PartnerPolicy();
@@ -850,13 +850,13 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S1() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		pserviceImpl.submitPartnerApiKeyReq(req, "12345");
 	}
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S2() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
@@ -865,7 +865,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S3() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(false));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
@@ -874,7 +874,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S4() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
@@ -888,7 +888,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S5() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
@@ -903,7 +903,7 @@ public class PartnerServiceImplTest {
 	
 	@Test(expected = PartnerServiceException.class)
 	public void submitPartnerApiKeyReqTest_S6() {
-		PartnerAPIKeyRequest req = createPartnerAPIKeyRequest();
+		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
@@ -1036,8 +1036,8 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
 	}
 	
-	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
-		PartnerAPIKeyRequest req = new PartnerAPIKeyRequest();
+	private PartnerPolicyMappingRequest createPartnerAPIKeyRequest() {
+		PartnerPolicyMappingRequest req = new PartnerPolicyMappingRequest();
 		req.setPolicyName("Banking");
 		req.setUseCaseDescription("Banking Policy Description");
 		return req;

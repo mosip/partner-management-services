@@ -175,7 +175,15 @@ public enum PartnerServiceAuditEnum {
 	MAP_POLICY_GROUP_FAILURE("PMS_PRT_421", AuditConstant.AUDIT_SYSTEM, "PUT MAP POLICY GROUP",
 			"Mapping policy group to partner failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
-;
+	MAP_POLICY_PARTNER("PMS_PRT_122", AuditConstant.AUDIT_SYSTEM, "POST REQUEST FOR POLICY MAP",
+			"Requesting for policy mapping", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	MAP_POLICY_PARTNER_SUCCESS("PMS_PRT_222", AuditConstant.AUDIT_SYSTEM, "POST REQUEST FOR POLICY MAP",
+			"Requesting for policy mapping success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	MAP_POLICY_PARTNER_FAILURE("PMS_PRT_422", AuditConstant.AUDIT_SYSTEM, "POST REQUEST FOR POLICY MAP",
+			"Requesting for policy mapping failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
 	
 	private final String eventId;
 
