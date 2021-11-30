@@ -280,8 +280,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup() != null
-				&& !(request.getPolicyGroup().isEmpty() || request.getPolicyGroup().isBlank())) {
+		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
