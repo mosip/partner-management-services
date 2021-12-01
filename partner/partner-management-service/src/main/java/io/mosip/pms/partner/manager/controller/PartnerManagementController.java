@@ -295,14 +295,12 @@ public class PartnerManagementController {
 	@RequestMapping(value = "/{partnerId}/policy/{policyId}/apiKey/status", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to activate/de-activate partner api key", description = "Service to activate/de-activate partner api key")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,
-			@PathVariable String policyId, @PathVariable String label,
-			@RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
+			@PathVariable String policyId, @RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS);
-		response.setResponse(
-				partnerManagementService.updateAPIKeyStatus(partnerId, policyId, request.getRequest()));
+		response.setResponse(partnerManagementService.updateAPIKeyStatus(partnerId, policyId, request.getRequest()));
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
