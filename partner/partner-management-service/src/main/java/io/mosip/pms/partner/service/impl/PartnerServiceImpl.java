@@ -233,7 +233,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 	
-	@Value("${partner.register.as.user.in.iam.enable:true}")
+	@Value("${partner.register.as.user.in.iam.enable:false}")
 	private boolean isPartnerToBeRegistredAsUserInIAM; 
 
 	@Override
@@ -552,7 +552,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
 		partnerPolicy.setIsActive(true);
 		partnerPolicy.setIsDeleted(false);
-		partnerPolicy.setLabel(partnerPolicyRequest.getRequestDetail());
+		partnerPolicy.setLabel(partnerPolicyRequest.getId());
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
