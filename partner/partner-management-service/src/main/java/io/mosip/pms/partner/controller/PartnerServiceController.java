@@ -120,6 +120,7 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse this class contains partner request id and
 	 *         massage details
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to request api key", description = "Service to request api key")

@@ -37,7 +37,9 @@ public enum ErrorCode {
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
 	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same."),
-	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner");
+	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner"),
+	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
+	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination");
 	
 
 	/**
