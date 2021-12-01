@@ -535,6 +535,7 @@ public class PartnerServiceImpl implements PartnerService {
 			data.put("policyData",
 					MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())));
 			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
+			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
 			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
 			return partnerAPIKeyResponse;
 		}
