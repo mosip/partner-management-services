@@ -1,6 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class SecureBiometricInterfaceCreateDto {
 	@NotBlank(message="value is empty or null")
 	@Size(min = 1, max = 200000, message = "Length should be in between 1 and 200000 chars")
 	@ApiModelProperty(value = "deviceDetailId", required = true, dataType = "java.lang.String")
-	private String deviceDetailId;
+	private List<String> deviceDetailIds;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swCreateDateTime;
@@ -62,12 +63,12 @@ public class SecureBiometricInterfaceCreateDto {
 		this.swVersion = swVersion;
 	}
 
-	public String getDeviceDetailId() {
-		return deviceDetailId;
+	public List<String> getDeviceDetailIds() {
+		return deviceDetailIds;
 	}
 
-	public void setDeviceDetailId(String deviceDetailId) {
-		this.deviceDetailId = deviceDetailId;
+	public void setDeviceDetailIds(List<String> deviceDetailIds) {
+		this.deviceDetailIds = deviceDetailIds;
 	}
 
 	public LocalDateTime getSwCreateDateTime() {

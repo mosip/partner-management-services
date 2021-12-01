@@ -111,7 +111,9 @@ public class SBIServiceTest {
 		secureBiometricInterface.setSwVersion("v1");
 		secureBiometricInterface.setId("1234");
 		
-		sbidto.setDeviceDetailId("1234");
+    	List<String> deviceDetails = new ArrayList<>();
+    	deviceDetails.add("1234");
+    	sbidto.setDeviceDetailIds(deviceDetails);
 		sbidto.setSwBinaryHash("swb");
 		sbidto.setSwCreateDateTime(LocalDateTime.now());
 		sbidto.setSwExpiryDateTime(LocalDateTime.now());
@@ -156,8 +158,8 @@ public class SBIServiceTest {
 		    	deviceSearchDto.setSort(searchDtos1);
 		    	
 				
-		
-		sbicreatedto.setDeviceDetailId("1234");
+
+		sbicreatedto.setDeviceDetailIds(deviceDetails);		
 		sbicreatedto.setSwBinaryHash("swb");
 		sbicreatedto.setSwCreateDateTime(LocalDateTime.now());
 		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now());
@@ -177,15 +179,15 @@ public class SBIServiceTest {
     	deviceDetail.setMake("make");
     	deviceDetail.setModel("model");
     	deviceDetail.setPartnerOrganizationName("pog");
-    	List<DeviceDetail> deviceDetails = new ArrayList<>();
-    	deviceDetails.add(deviceDetail);
+    	List<DeviceDetail> deviceDetailsFromDb = new ArrayList<>();
+    	deviceDetailsFromDb.add(deviceDetail);
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).save(Mockito.any());
 		Mockito.doReturn(secureBiometricInterfaceHistory).when(sbiHistoryRepository).save(Mockito.any());
 		
-		Mockito.doReturn(deviceDetails).when(deviceDetailRepository).findByIds(Mockito.anyList());
+		Mockito.doReturn(deviceDetailsFromDb).when(deviceDetailRepository).findByIds(Mockito.anyList());
 		
 		}
 	

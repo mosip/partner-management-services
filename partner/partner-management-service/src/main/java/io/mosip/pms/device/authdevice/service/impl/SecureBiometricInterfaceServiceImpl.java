@@ -70,8 +70,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		SecureBiometricInterface entity = new SecureBiometricInterface();
 		IdDto dto = new IdDto();
 		validateDates(sbiDto.getSwCreateDateTime(),sbiDto.getSwExpiryDateTime());
-		List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiDto.getDeviceDetailId());
-		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(listOfDeviceDetails);
+		//List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiDto.getDeviceDetailId());
+		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(sbiDto.getDeviceDetailIds());
 		if(deviceDetails.isEmpty()) {
 			auditUtil.auditRequest(
 					String.format(
@@ -85,7 +85,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
 		}
 		// some details not exists in db
-		if(deviceDetails.size() != listOfDeviceDetails.size()) {
+		if(deviceDetails.size() != sbiDto.getDeviceDetailIds().size()) {
 			auditUtil.auditRequest(
 					String.format(
 							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -123,7 +123,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		dto.setId(sbi.getId());
 		SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
 		history = getCreateHistoryMapping(history, sbi);
-		history.setDeviceDetailId(sbiDto.getDeviceDetailId());
+		history.setDeviceDetailId(deviceDetails.stream().map(dd -> String.valueOf(dd.getId())).collect(Collectors.joining(",")));
 		sbiHistoryRepository.save(history);
 		return dto;
 	}
@@ -183,8 +183,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}
-		List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiupdateDto.getDeviceDetailId());
-		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(listOfDeviceDetails);
+		//List<String> listOfDeviceDetails = splitDeviceDetailsId(sbiupdateDto.getDeviceDetailIds());
+		List<DeviceDetail> deviceDetails = deviceDetailRepository.findByIds(sbiupdateDto.getDeviceDetailIds());
 		if(deviceDetails.isEmpty()) {
 			auditUtil.auditRequest(
 					String.format(
@@ -197,7 +197,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorCode(),
 					SecureBiometricInterfaceConstant.DEVICE_DETAIL_INVALID.getErrorMessage());
 		}
-		if(deviceDetails.size() != listOfDeviceDetails.size()) {
+		if(deviceDetails.size() != sbiupdateDto.getDeviceDetailIds().size()) {
 			auditUtil.auditRequest(
 					String.format(
 							DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -234,7 +234,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		dto.setId(sbi.getId());
 		SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
 		history = getUpdateHistoryMapping(history, sbi);
-		history.setDeviceDetailId(sbiupdateDto.getDeviceDetailId());
+		history.setDeviceDetailId(entity.getDeviceDetailId());
 		sbiHistoryRepository.save(history);
 		return dto;
 	}
