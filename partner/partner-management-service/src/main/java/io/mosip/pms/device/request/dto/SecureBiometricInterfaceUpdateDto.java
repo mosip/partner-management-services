@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,7 +31,8 @@ public class SecureBiometricInterfaceUpdateDto {
 	@ApiModelProperty(value = "softwareVersion", required = true, dataType = "java.lang.String")
 	private String swVersion;
 	
-	@NotBlank(message="value is empty or null")
+	@NotNull(message="value is empty or null")
+	@NotEmpty(message="value is empty or null")
 	@Size(min = 1, max = 200000, message = "Length should be in between 1 and 200000 chars")
 	@ApiModelProperty(value = "deviceDetailId", required = true, dataType = "java.lang.String")
 	private List<String> deviceDetailIds;
