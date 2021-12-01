@@ -165,8 +165,9 @@ public class SecureBiometricInterfaceControllerTest {
 
 	private SecureBiometricInterfaceUpdateDto createSBIUpdate(boolean isItForRegistrationDevice) {
 		SecureBiometricInterfaceUpdateDto sbidto = new SecureBiometricInterfaceUpdateDto();
-    	
-    	sbidto.setDeviceDetailId("1234");
+    	List<String> deviceDetails = new ArrayList<>();
+    	deviceDetails.add("1234");
+    	sbidto.setDeviceDetailIds(deviceDetails);
     	sbidto.setSwBinaryHash("swb");
     	sbidto.setSwCreateDateTime(LocalDateTime.now());
     	sbidto.setSwExpiryDateTime(LocalDateTime.now());
@@ -190,7 +191,9 @@ public class SecureBiometricInterfaceControllerTest {
     private SecureBiometricInterfaceCreateDto createSBIRequest(boolean isItForRegistrationDevice) {
     	SecureBiometricInterfaceCreateDto sbidto = new SecureBiometricInterfaceCreateDto();
     	
-    	sbidto.setDeviceDetailId("1234");
+    	List<String> deviceDetails = new ArrayList<>();
+    	deviceDetails.add("1234");
+    	sbidto.setDeviceDetailIds(deviceDetails);
     	sbidto.setSwBinaryHash("swb");
     	sbidto.setSwCreateDateTime(LocalDateTime.now());
     	sbidto.setSwExpiryDateTime(LocalDateTime.now());

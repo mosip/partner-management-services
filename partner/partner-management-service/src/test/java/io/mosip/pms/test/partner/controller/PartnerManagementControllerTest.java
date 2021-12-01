@@ -38,7 +38,7 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pms.partner.manager.dto.PartnerPolicyResponse;
@@ -119,12 +119,12 @@ public class PartnerManagementControllerTest {
 	public void activateDeactivateAuthEKYCPartnersTest() throws Exception {
 		String partnerID = "67899";
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
-		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto activateDeactivatePartnerRequest = new StatusRequestDto();
 		activateDeactivatePartnerRequest.setStatus("Active");
 		Mockito.when(
 				partnerManagementService.activateDeactivateAuthEKYCPartner(partnerID, activateDeactivatePartnerRequest))
 				.thenReturn(partnersPolicyMappingResponse);
-		RequestWrapper<ActivateDeactivatePartnerRequest> request = new RequestWrapper<ActivateDeactivatePartnerRequest>();
+		RequestWrapper<StatusRequestDto> request = new RequestWrapper<StatusRequestDto>();
 		request.setRequest(activateDeactivatePartnerRequest);
 		request.setId("mosip.partnermanagement.partners.policy.mapping");
 		request.setVersion("1.0");
@@ -141,12 +141,12 @@ public class PartnerManagementControllerTest {
 		String PartnerAPIKey = "45678";
 		String partnerID = "67899";
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
-		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto activateDeactivatePartnerRequest = new StatusRequestDto();
 		activateDeactivatePartnerRequest.setStatus("Active");
 		Mockito.when(partnerManagementService.activateDeactivatePartnerAPIKeyGivenPartner(partnerID,
 				activateDeactivatePartnerRequest, PartnerAPIKey)).thenReturn(partnersPolicyMappingResponse);
 
-		RequestWrapper<ActivateDeactivatePartnerRequest> request = new RequestWrapper<ActivateDeactivatePartnerRequest>();
+		RequestWrapper<StatusRequestDto> request = new RequestWrapper<StatusRequestDto>();
 		request.setRequest(activateDeactivatePartnerRequest);
 		request.setId("mosip.partnermanagement.partners.policy.mapping");
 		request.setVersion("1.0");
@@ -162,12 +162,12 @@ public class PartnerManagementControllerTest {
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest() throws Exception {
 		String partnerAPIKey = "45678";
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
-		ActivateDeactivatePartnerRequest activateDeactivatePartnerRequest = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto activateDeactivatePartnerRequest = new StatusRequestDto();
 		activateDeactivatePartnerRequest.setStatus("Active");
 		Mockito.when(partnerManagementService.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
 				activateDeactivatePartnerRequest, partnerAPIKey)).thenReturn(partnersPolicyMappingResponse);
 
-		RequestWrapper<ActivateDeactivatePartnerRequest> request = new RequestWrapper<ActivateDeactivatePartnerRequest>();
+		RequestWrapper<StatusRequestDto> request = new RequestWrapper<StatusRequestDto>();
 		request.setRequest(activateDeactivatePartnerRequest);
 		request.setId("mosip.partnermanagement.partners.policy.mapping");
 		request.setVersion("1.0");

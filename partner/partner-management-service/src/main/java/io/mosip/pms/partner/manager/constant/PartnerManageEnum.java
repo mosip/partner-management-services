@@ -66,6 +66,15 @@ public enum PartnerManageEnum {
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
 	GET_POLICY_FAILURE("PMS_PRT_487", AuditConstant.AUDIT_SYSTEM, "CREATE POLICY ",
 			"getting policy failure", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	GENERATE_API_KEY("PMS_PRT_179", AuditConstant.AUDIT_SYSTEM, "PATCH GENERATE API KEY",
+			"Generate API Key ", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	GENERATE_API_KEY_SUCCESS("PMS_PRT_279", AuditConstant.AUDIT_SYSTEM, "PATCH GENERATE API KEY",
+			"Generate API Key success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	GENERATE_API_KEY_FAILURE("PMS_PRT_779", AuditConstant.AUDIT_SYSTEM, "PATCH GENERATE API KEY",
+			"Generate API Key failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
 
 	private final String eventId;
