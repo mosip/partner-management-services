@@ -12,4 +12,5 @@ public class PartnerPolicyMappingResponse {
 	
 	private String apiRequestId;
 	private String message;	
+	private String apikeyId;
 }
