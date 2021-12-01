@@ -33,6 +33,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -470,11 +471,11 @@ public class PartnerServiceController {
 	
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
 	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
-	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponse>> mapPolicyToPartner(
+	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER);
-		ResponseWrapper<PartnerPolicyMappingResponse> response = new ResponseWrapper<>();
+		ResponseWrapper<PartnerPolicyMappingResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.requestForPolicyMapping(request.getRequest(), partnerId));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());

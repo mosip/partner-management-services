@@ -98,6 +98,7 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.MosipUserDto;
+import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -1480,7 +1481,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public PartnerPolicyMappingResponse requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
+	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
 		Partner partner = getValidPartner(partnerId, false);
 		if(partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
@@ -1498,7 +1499,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage());
 		}
-		PartnerPolicyMappingResponse response = new PartnerPolicyMappingResponse();
+		PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
 		partnerPolicyRequest.setCrBy(getLoggedInUserId());
@@ -1511,7 +1512,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setIsDeleted(false);
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS);
-		response.setApiRequestId(partnerPolicyRequest.getId());
+		response.setMappingkey(partnerPolicyRequest.getId());
 		response.setMessage("Policy mapping request submitted successfully.");
 		return response;
 	}
