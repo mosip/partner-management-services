@@ -322,7 +322,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','AUTH_PARTNER','PMS_USER','ID_AUTHENTICATION','ONLINE_VERIFICATION_PARTNER')")	
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")	
 	@RequestMapping(value = "/certificate/ca/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload ca certificate", description = "Service to upload ca certificate")
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
