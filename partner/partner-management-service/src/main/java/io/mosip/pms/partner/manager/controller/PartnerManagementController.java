@@ -278,7 +278,7 @@ public class PartnerManagementController {
 	}	
 	
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/apikey/{mappingkey}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/policy/{mappingkey}", method = RequestMethod.PUT)
 	@Operation(summary = "Service to approve/reject partner policy mapping", description = "Service to approve/reject partner policy mapping")
 	public ResponseEntity<ResponseWrapper<String>> approveRejectPolicyMappings(
 			@RequestBody @Valid RequestWrapper<StatusRequestDto> request,
