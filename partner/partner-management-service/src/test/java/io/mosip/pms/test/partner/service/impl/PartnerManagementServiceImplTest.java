@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.MISPLicenseKey;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
@@ -978,7 +977,7 @@ public class PartnerManagementServiceImplTest {
 	@Test(expected = PartnerManagerServiceException.class)
 	public void getPartnerMappedPolicyFileTest_S2() {		
 		MISPLicenseEntity license = mispLicense();
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}	
@@ -987,7 +986,7 @@ public class PartnerManagementServiceImplTest {
 	public void getPartnerMappedPolicyFileTest_S3() {
 		MISPLicenseEntity license = mispLicense();
 		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -996,7 +995,7 @@ public class PartnerManagementServiceImplTest {
 	public void getPartnerMappedPolicyFileTest_S34() {
 		MISPLicenseEntity license = mispLicense();
 		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(null);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(null);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -1006,7 +1005,7 @@ public class PartnerManagementServiceImplTest {
 		MISPLicenseEntity license = mispLicense();
 		license.setIsActive(false);
 		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -1016,7 +1015,7 @@ public class PartnerManagementServiceImplTest {
 		MISPLicenseEntity license = mispLicense();
 		license.setIsActive(true);
 		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(null);
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
@@ -1138,18 +1137,12 @@ public class PartnerManagementServiceImplTest {
 
 	private MISPLicenseEntity mispLicense() {
 		MISPLicenseEntity mispLices = new MISPLicenseEntity();
-		mispLices.setMispLicenseUniqueKey(mispLUniqueKey());
+		mispLices.setMispId("100");
+		mispLices.setLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
 		mispLices.setValidFromDate(LocalDateTime.now());
 		mispLices.setValidToDate(LocalDateTime.now().plusDays(90));
 		mispLices.setIsActive(true);
 		return mispLices;
-	}
-	
-	private MISPLicenseKey mispLUniqueKey() {
-		MISPLicenseKey unique = new MISPLicenseKey();
-		unique.setMisp_id("100");
-		unique.setLicense_key("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		return unique;
 	}
 	
 	private PolicyGroup getPolicyGroupData() {
