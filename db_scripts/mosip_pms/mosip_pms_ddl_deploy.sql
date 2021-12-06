@@ -25,3 +25,5 @@
 \ir ddl/pms-reg_device_type.sql
 \ir ddl/pms-secure_biometric_interface.sql
 \ir ddl/pms-secure_biometric_interface_h.sql
+
+\ir ddl/pms-device_detail_sbi.sql

@@ -18,6 +18,9 @@
 \ir ../ddl/pms-secure_biometric_interface.sql
 \ir ../ddl/pms-secure_biometric_interface_h.sql
 
+
+\ir ../ddl/pms-device_detail_sbi.sql
+
 -- object: fk_devdtl_id | type: CONSTRAINT --
 -- ALTER TABLE pms.device_detail DROP CONSTRAINT IF EXISTS fk_devdtl_id CASCADE;
 ALTER TABLE pms.device_detail ADD CONSTRAINT fk_devdtl_id FOREIGN KEY (dtype_code,dstype_code)
