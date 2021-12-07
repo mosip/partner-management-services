@@ -405,6 +405,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		deviceDetailSbiKey.setSbiId(validSbi.getId());
 		deviceDetailSbiMapping.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		deviceDetailSbiMapping.setId(deviceDetailSbiKey);
+		deviceDetailSbiMapping.setIsActive(true);
+		deviceDetailSbiMapping.setIsDeleted(false);
 		deviceDetailSbiMapping.setPartnerName(validSbi.getPartnerOrgName());
 		deviceDetailSbiRepository.save(deviceDetailSbiMapping);
 		return "Success";

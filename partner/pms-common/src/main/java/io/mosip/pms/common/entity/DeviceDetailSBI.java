@@ -29,6 +29,9 @@ public class DeviceDetailSBI implements Serializable{
 	@Column(name = "partner_org_name")
 	private String partnerName;
 
+	@Column(name="is_active")
+	private Boolean isActive;
+	
 	@Column(name="is_deleted")
 	private Boolean isDeleted;
 	
