@@ -115,7 +115,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
-		deviceDetailDto.setPartnerOrganizationName(partner.getName());
+		entity.setPartnerOrganizationName(partner.getName());
 		if (deviceDetailRepository.findUniqueDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
 				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
 				deviceDetailDto.getDeviceTypeCode()) != null) {
@@ -147,8 +147,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
 		deviceDetail.setMake(deviceDetailDto.getMake());
-		deviceDetail.setModel(deviceDetailDto.getModel());
-		deviceDetail.setPartnerOrganizationName(deviceDetailDto.getPartnerOrganizationName());
+		deviceDetail.setModel(deviceDetailDto.getModel());		
 		return deviceDetail;
 
 	}
@@ -187,19 +186,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
 			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
 		}
-		if ((partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
-				deviceDetailDto.getDeviceProviderId())) == null) {
-			auditUtil.auditRequest(
-					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
-					DeviceConstant.AUDIT_SYSTEM,
-					String.format(DeviceConstant.FAILURE_DESC,
-							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
-							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage()),
-					"AUT-010");
-			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
-					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
-		}
-
 		entity = getUpdateMapping(entity, deviceDetailDto);
 		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
@@ -213,11 +199,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			deviceDetail.setUpdBy(authN.getName());
 		}
-		deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+		deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));		
 		deviceDetail.setMake(deviceDetailDto.getMake());
-		deviceDetail.setModel(deviceDetailDto.getModel());
-		deviceDetail.setPartnerOrganizationName(deviceDetailDto.getPartnerOrganizationName());
+		deviceDetail.setModel(deviceDetailDto.getModel());		
 		return deviceDetail;
 
 	}

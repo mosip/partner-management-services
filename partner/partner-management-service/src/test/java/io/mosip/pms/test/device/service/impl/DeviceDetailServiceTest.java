@@ -110,14 +110,11 @@ public class DeviceDetailServiceTest {
 		partner.setId("1234");
 		registrationDeviceSubType.setCode("123");
 		registrationDeviceSubType.setDeviceTypeCode("123");
-		deviceDetailUpdateDto.setDeviceProviderId("1234");
 		deviceDetailUpdateDto.setDeviceSubTypeCode("123");
 		deviceDetailUpdateDto.setDeviceTypeCode("123");
 		deviceDetailUpdateDto.setId("121");
-		deviceDetailUpdateDto.setIsItForRegistrationDevice(false);
 		deviceDetailUpdateDto.setMake("make");
 		deviceDetailUpdateDto.setModel("model");
-		deviceDetailUpdateDto.setPartnerOrganizationName("pog");
 		deviceDetailDto.setDeviceProviderId("1234");
 		deviceDetailDto.setDeviceSubTypeCode("123");
 		deviceDetailDto.setDeviceTypeCode("123");
@@ -157,11 +154,9 @@ public class DeviceDetailServiceTest {
 		deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
 		pagination.setPageFetch(10);
 		pagination.setPageStart(0);
-
-		deviceDetailDto.setIsItForRegistrationDevice(false);
+		
 		deviceDetailDto.setMake("make");
 		deviceDetailDto.setModel("model");
-		deviceDetailDto.setPartnerOrganizationName("pog");
 		deviceDetail.setApprovalStatus("pending");
 		deviceDetail.setDeviceProviderId("1234");
 		deviceDetail.setDeviceSubTypeCode("123");
@@ -287,14 +282,6 @@ public class DeviceDetailServiceTest {
 				.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
 
 		deviceDetaillService.createDeviceDetails(deviceDetailDto);
-	}
-
-	@Test(expected = RequestException.class)
-	public void updateDeviceDetailNoPartnerTest() throws Exception {
-		Mockito.doReturn(null).when(partnerRepository)
-				.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
-
-		deviceDetaillService.updateDeviceDetails(deviceDetailUpdateDto);
 	}
 
 	@Test(expected = RequestException.class)

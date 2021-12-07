@@ -116,11 +116,8 @@ public class DeviceDetailControllerTest {
     	deviceDetailDto.setDeviceSubTypeCode("123");
     	deviceDetailDto.setDeviceTypeCode("123");
     	deviceDetailDto.setId("121");
-    	
-    	deviceDetailDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
     	deviceDetailDto.setMake("make");
     	deviceDetailDto.setModel("model");
-    	deviceDetailDto.setPartnerOrganizationName("pog");
         
         return deviceDetailDto;
     }
@@ -137,15 +134,11 @@ public class DeviceDetailControllerTest {
     
     private DeviceDetailUpdateDto updatedetailRequest(boolean isItForRegistrationDevice) {
     	DeviceDetailUpdateDto deviceDetailDto = new DeviceDetailUpdateDto();
-    	
-    	deviceDetailDto.setDeviceProviderId("1234");
     	deviceDetailDto.setDeviceSubTypeCode("123");
     	deviceDetailDto.setDeviceTypeCode("123");
     	deviceDetailDto.setId("121");
-    	deviceDetailDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
     	deviceDetailDto.setMake("make");
     	deviceDetailDto.setModel("model");
-    	deviceDetailDto.setPartnerOrganizationName("pog");
         
         return deviceDetailDto;
     }
@@ -164,7 +157,6 @@ public class DeviceDetailControllerTest {
     	UpdateDeviceDetailStatusDto dto = new UpdateDeviceDetailStatusDto();
     	dto.setApprovalStatus("Activate");
     	dto.setId("123456");
-    	dto.setIsItForRegistrationDevice(isItForRegistrationDevice);
     	return dto;
     }
     

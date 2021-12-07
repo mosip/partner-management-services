@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -28,8 +27,10 @@ import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
+import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
@@ -71,6 +72,9 @@ public class SBIServiceTest {
 	@Mock
 	SecureBiometricInterfaceHistoryRepository sbiHistoryRepository;
 	
+	@Mock
+	PartnerServiceRepository partnerRepository;
+	
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	DeviceDetail deviceDetail=new DeviceDetail();
 	SecureBiometricInterfaceCreateDto sbicreatedto = new SecureBiometricInterfaceCreateDto();
@@ -86,7 +90,8 @@ public class SBIServiceTest {
 	@Before
 	public void setup() {
 		secureBiometricInterfaceHistory.setApprovalStatus("pending");
-		secureBiometricInterfaceHistory.setDeviceDetailId("1234");
+		secureBiometricInterfaceHistory.setProviderId("1234");
+		secureBiometricInterfaceHistory.setPartnerOrgName("airtel");
 		secureBiometricInterfaceHistory.setSwBinaryHAsh("swb".getBytes());
 		secureBiometricInterfaceHistory.setEffectDateTime(LocalDateTime.now());
 		secureBiometricInterfaceHistory.setSwCreateDateTime(LocalDateTime.now());
@@ -99,7 +104,6 @@ public class SBIServiceTest {
 		secureBiometricInterfaceHistory.setSwVersion("v1");
 		secureBiometricInterfaceHistory.setId("1234");
 		secureBiometricInterface.setApprovalStatus("pending");
-		secureBiometricInterface.setDeviceDetailId("1234");
 		secureBiometricInterface.setSwBinaryHash("swb".getBytes());
 		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
 		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
@@ -110,15 +114,11 @@ public class SBIServiceTest {
 		secureBiometricInterface.setUpdBy("110005");
 		secureBiometricInterface.setSwVersion("v1");
 		secureBiometricInterface.setId("1234");
-		
-    	List<String> deviceDetails = new ArrayList<>();
-    	deviceDetails.add("1234");
-    	sbidto.setDeviceDetailIds(deviceDetails);
+
 		sbidto.setSwBinaryHash("swb");
 		sbidto.setSwCreateDateTime(LocalDateTime.now());
 		sbidto.setSwExpiryDateTime(LocalDateTime.now());
 		sbidto.setIsActive(true);
-		sbidto.setIsItForRegistrationDevice(false);
 		sbidto.setSwVersion("v1");
 		sbidto.setId("1234");
 		//Search
@@ -140,31 +140,27 @@ public class SBIServiceTest {
     	pagination.setPageFetch(10);
     	pagination.setPageStart(0);
 		//Filter
-				filterDto.setColumnName("model");
-		    	filterDto.setText("");
-		    	filterDto.setType("all");
-		    	searchDto.setColumnName("model");
-		    	searchDto.setFromValue("");
-		    	searchDto.setToValue("");
-		    	searchDto.setType("all");
-		    	searchDto.setValue("b");
-		    	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
-		    	filterDtos.add(filterDto);
-		    	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
-		    	searchDtos.add(searchDto);
-		    	deviceSearchDto.setFilters(searchfilterDtos);
-		    	deviceSearchDto.setPagination(pagination);
-		    	deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
-		    	deviceSearchDto.setSort(searchDtos1);
-		    	
+		filterDto.setColumnName("model");
+    	filterDto.setText("");
+    	filterDto.setType("all");
+    	searchDto.setColumnName("model");
+    	searchDto.setFromValue("");
+    	searchDto.setToValue("");
+    	searchDto.setType("all");
+    	searchDto.setValue("b");
+    	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
+    	filterDtos.add(filterDto);
+    	List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
+    	searchDtos.add(searchDto);
+    	deviceSearchDto.setFilters(searchfilterDtos);
+    	deviceSearchDto.setPagination(pagination);
+    	deviceSearchDto.setPurpose(Purpose.REGISTRATION.toString());
+    	deviceSearchDto.setSort(searchDtos1);
 				
-
-		sbicreatedto.setDeviceDetailIds(deviceDetails);		
 		sbicreatedto.setSwBinaryHash("swb");
 		sbicreatedto.setSwCreateDateTime(LocalDateTime.now());
 		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now());
-		
-		sbicreatedto.setIsItForRegistrationDevice(false);
+		sbicreatedto.setProviderId("1234");
 		sbicreatedto.setSwVersion("v1");
     	deviceDetail.setApprovalStatus("pending");
     	deviceDetail.setDeviceProviderId("1234");
@@ -179,16 +175,15 @@ public class SBIServiceTest {
     	deviceDetail.setMake("make");
     	deviceDetail.setModel("model");
     	deviceDetail.setPartnerOrganizationName("pog");
-    	List<DeviceDetail> deviceDetailsFromDb = new ArrayList<>();
-    	deviceDetailsFromDb.add(deviceDetail);
+    	Partner validPartner = new Partner();
+    	validPartner.setId("1234");
+    	validPartner.setName("partner");
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doNothing().when(auditUtil).auditRequest(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).save(Mockito.any());
 		Mockito.doReturn(secureBiometricInterfaceHistory).when(sbiHistoryRepository).save(Mockito.any());
-		
-		Mockito.doReturn(deviceDetailsFromDb).when(deviceDetailRepository).findByIds(Mockito.anyList());
-		
+		Mockito.doReturn(validPartner).when(partnerRepository).findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString());
 		}
 	
 	@Test
@@ -212,20 +207,6 @@ public class SBIServiceTest {
 	@Test
     public void createSBITest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto).getId().equals("1234"));
-    }
-	
-	@Test(expected=RequestException.class)
-    public void createSBINoDeviceTest() throws Exception {
-		Mockito.doReturn(Collections.EMPTY_LIST).when(deviceDetailRepository).findByIds(Mockito.anyList());
-		
-		secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
-    }
-	
-	@Test(expected=RequestException.class)
-    public void updateSBINoDeviceTest() throws Exception {
-		Mockito.doReturn(Collections.EMPTY_LIST).when(deviceDetailRepository).findByIds(Mockito.anyList());
-		
-		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }
 
 	@Test

@@ -1205,8 +1205,9 @@ public class PartnerServiceImpl implements PartnerService {
 		List<PartnerPolicySearchResponseDto> partnerPolicyList = new ArrayList<>();
 		content.forEach(partnerPolicy -> {
 			PartnerPolicySearchResponseDto searchResponse = new PartnerPolicySearchResponseDto();
-			searchResponse.setPolicyApiKey(partnerPolicy.getPolicyApiKey());
+			searchResponse.setLabel(partnerPolicy.getLabel());
 			searchResponse.setPartnerId(partnerPolicy.getPartner().getId());
+			searchResponse.setPartnerName(partnerPolicy.getPartner().getName());
 			searchResponse.setPolicyId(partnerPolicy.getPolicyId());
 			searchResponse.setValidFromDatetime(partnerPolicy.getValidFromDatetime());
 			searchResponse.setValidToDatetime(partnerPolicy.getValidToDatetime());

@@ -167,12 +167,10 @@ public class SecureBiometricInterfaceControllerTest {
 		SecureBiometricInterfaceUpdateDto sbidto = new SecureBiometricInterfaceUpdateDto();
     	List<String> deviceDetails = new ArrayList<>();
     	deviceDetails.add("1234");
-    	sbidto.setDeviceDetailIds(deviceDetails);
     	sbidto.setSwBinaryHash("swb");
     	sbidto.setSwCreateDateTime(LocalDateTime.now());
     	sbidto.setSwExpiryDateTime(LocalDateTime.now());
     	sbidto.setIsActive(true);
-    	sbidto.setIsItForRegistrationDevice(isItForRegistrationDevice);
     	sbidto.setSwVersion("v1");
     	sbidto.setId("1234");
         return sbidto;
@@ -190,15 +188,10 @@ public class SecureBiometricInterfaceControllerTest {
     
     private SecureBiometricInterfaceCreateDto createSBIRequest(boolean isItForRegistrationDevice) {
     	SecureBiometricInterfaceCreateDto sbidto = new SecureBiometricInterfaceCreateDto();
-    	
-    	List<String> deviceDetails = new ArrayList<>();
-    	deviceDetails.add("1234");
-    	sbidto.setDeviceDetailIds(deviceDetails);
+    	sbidto.setProviderId("1234");
     	sbidto.setSwBinaryHash("swb");
     	sbidto.setSwCreateDateTime(LocalDateTime.now());
-    	sbidto.setSwExpiryDateTime(LocalDateTime.now());
-    	
-    	sbidto.setIsItForRegistrationDevice(isItForRegistrationDevice);
+    	sbidto.setSwExpiryDateTime(LocalDateTime.now().plusYears(10));
     	sbidto.setSwVersion("v1");
         
         return sbidto;
@@ -218,7 +211,6 @@ public class SecureBiometricInterfaceControllerTest {
     	SecureBiometricInterfaceStatusUpdateDto dto = new SecureBiometricInterfaceStatusUpdateDto();
     	dto.setApprovalStatus("Activate");
     	dto.setId("123456");
-    	dto.setIsItForRegistrationDevice(isItForRegistrationDevice);
     	return dto;
     }
     

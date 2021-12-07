@@ -10,5 +10,8 @@ import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 public interface SecureBiometricInterfaceRepository extends JpaRepository<SecureBiometricInterface, String>{
 	@Query(value ="select * from  secure_biometric_interface d where d.id = ?1 AND (d.is_deleted is null or d.is_deleted = false)",nativeQuery = true)
 	SecureBiometricInterface findByIdAndIsDeletedFalseOrIsDeletedIsNull(String id);
+	
+	@Query(value ="select * from  secure_biometric_interface d where d.id = ?1 AND (d.is_deleted is null or d.is_deleted = false) AND d.is_active=true",nativeQuery = true)
+	SecureBiometricInterface findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(String id);
 
 }
