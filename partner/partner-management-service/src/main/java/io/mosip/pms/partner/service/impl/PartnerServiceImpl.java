@@ -477,6 +477,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest, String partnerId) {
+		validateLoggedInUserAuthorization(partnerId);
 		if (!validateMobileNumeber(partnerUpdateRequest.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
@@ -498,6 +499,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerPolicyMappingResponse submitPartnerApiKeyReq(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
+		validateLoggedInUserAuthorization(partnerId);
 		Map<String, Object> data = new HashMap<>();
 		PartnerPolicyMappingResponse partnerAPIKeyResponse = new PartnerPolicyMappingResponse();
 		Partner partner = getValidPartner(partnerId, false);
@@ -726,6 +728,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerCertificateResponseDto uploadPartnerCertificate(
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
@@ -1484,6 +1487,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
+		validateLoggedInUserAuthorization(partnerId);
 		Partner partner = getValidPartner(partnerId, false);
 		if(partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
@@ -1517,5 +1521,16 @@ public class PartnerServiceImpl implements PartnerService {
 		response.setMappingkey(partnerPolicyRequest.getId());
 		response.setMessage("Policy mapping request submitted successfully.");
 		return response;
+	}
+	
+	/**
+	 * validates the loggedInUser authorization
+	 * @param loggedInUserId
+	 */
+	public void validateLoggedInUserAuthorization(String loggedInUserId) {
+		if(partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 	}
 }
