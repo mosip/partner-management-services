@@ -1,31 +1,45 @@
 package io.mosip.pms.partner.misp.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.FilterData;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.MISPDataPublishDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.MISPLicenseKey;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.helper.FilterHelper;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.common.util.UserDetailUtil;
+import io.mosip.pms.common.validator.FilterColumnValidator;
+import io.mosip.pms.device.response.dto.ColumnCodeValue;
+import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
@@ -52,6 +66,21 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	@Autowired
 	private Environment environment;
 	
+	@Autowired
+	SearchHelper searchHelper;
+	
+	@Autowired
+	FilterColumnValidator filterColumnValidator;
+	
+	@Autowired
+	FilterHelper filterHelper;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	@Autowired
+	private PageUtils pageUtils;
+
 	public static final String APPROVED_STATUS = "approved";
 	public static final String REJECTED_STATUS = "rejected";
 	public static final String ACTIVE_STATUS = "active";
@@ -85,7 +114,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		}		
 		MISPLicenseEntity newLicenseKey =   generateLicense(mispId);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
-		response.setLicenseKey(newLicenseKey.getMispLicenseUniqueKey().getLicense_key());
+		response.setLicenseKey(newLicenseKey.getLicenseKey());
 		response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 		response.setLicenseKeyStatus("Active");
 		response.setProviderId(mispId);
@@ -117,15 +146,15 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
 		}
-		mispLicenseFromDb.setUpdatedBy(getUser());
+		mispLicenseFromDb.setUpdatedBy(getLoggedInUserId());
 		mispLicenseFromDb.setUpdatedDateTime(LocalDateTime.now());
 		mispLicenseFromDb.setIsActive(status.toLowerCase().equals(ACTIVE_STATUS) ? true : false);
 		mispLicenseRepository.save(mispLicenseFromDb);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
-		response.setLicenseKey(mispLicenseFromDb.getMispLicenseUniqueKey().getLicense_key());
+		response.setLicenseKey(mispLicenseFromDb.getLicenseKey());
 		response.setLicenseKeyExpiry(mispLicenseFromDb.getValidToDate());
 		response.setLicenseKeyStatus(mispLicenseFromDb.getIsActive() ? ACTIVE_STATUS : NOTACTIVE_STATUS);
-		response.setProviderId(mispLicenseFromDb.getMispLicenseUniqueKey().getMisp_id());
+		response.setProviderId(mispLicenseFromDb.getMispId());
 		notify(MapperUtils.mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
 		return response;
 
@@ -145,14 +174,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * @return
 	 */
 	private MISPLicenseEntity generateLicense(String mispId) {
-		MISPLicenseEntity entity = new MISPLicenseEntity();
-		MISPLicenseKey entityKey = new MISPLicenseKey();
-		entityKey.setLicense_key(generate());
-		entityKey.setMisp_id(mispId);
-		entity.setMispLicenseUniqueKey(entityKey);
+		MISPLicenseEntity entity = new MISPLicenseEntity();		
+		entity.setMispId(mispId);
+		entity.setLicenseKey(generate());
 		entity.setValidFromDate(LocalDateTime.now());
 		entity.setValidToDate(LocalDateTime.now().plusDays(mispLicenseExpiryInDays));
-		entity.setCreatedBy(getUser());
+		entity.setCreatedBy(getLoggedInUserId());
 		entity.setCreatedDateTime(LocalDateTime.now());
 		entity.setIsActive(true);
 		entity.setIsDeleted(false);
@@ -182,11 +209,11 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 					licenseKey.getValidToDate().isBefore(LocalDateTime.now())) {
 				isActiveLicenseExists =true;
 				licenseKey.setIsActive(false);
-				licenseKey.setUpdatedBy(getUser());
+				licenseKey.setUpdatedBy(getLoggedInUserId());
 				licenseKey.setUpdatedDateTime(LocalDateTime.now());
 				mispLicenseRepository.save(licenseKey);
 				MISPLicenseEntity newLicenseKey =   generateLicense(mispId);
-				response.setLicenseKey(newLicenseKey.getMispLicenseUniqueKey().getLicense_key());
+				response.setLicenseKey(newLicenseKey.getLicenseKey());
 				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
@@ -196,7 +223,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			if(licenseKey.getIsActive() && 
 					licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
 				isActiveLicenseExists =true;
-				response.setLicenseKey(licenseKey.getMispLicenseUniqueKey().getLicense_key());
+				response.setLicenseKey(licenseKey.getLicenseKey());
 				response.setLicenseKeyExpiry(licenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
@@ -215,16 +242,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * 
 	 * @return
 	 */
-	public String getUser() {
-		if (Objects.nonNull(SecurityContextHolder.getContext())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
-			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-					.getUserId();
-		} else {
-			return "system";
-		}
+	public String getLoggedInUserId() {
+		return UserDetailUtil.getLoggedInUserId();
 	}	
 	
 	/**
@@ -239,5 +258,44 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		Map<String,Object> data = new HashMap<>();
 		data.put("mispLicenseData", dataToPublish);
 		webSubPublisher.notify(eventType,data,type);		
+	}
+
+	@Override
+	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (searchHelper.isLoggedInUserFilterRequired()) {
+			SearchFilter loggedInUserFilterDto = new SearchFilter();
+			loggedInUserFilterDto.setColumnName("misp_id");
+			loggedInUserFilterDto.setValue(getLoggedInUserId());
+			loggedInUserFilterDto.setType("equals");
+			filterValueDto.getOptionalFilters().add(loggedInUserFilterDto);
+		}
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), MISPLicenseEntity.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager,
+						MISPLicenseEntity.class, filterDto, filterValueDto, "mispId");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
+	}
+
+	@Override
+	public PageResponseDto<MISPLicenseEntity> search(SearchDto dto) {
+		PageResponseDto<MISPLicenseEntity> pageDto = new PageResponseDto<>();
+		Page<MISPLicenseEntity> page = searchHelper.search(entityManager, MISPLicenseEntity.class, dto, "mispId");
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			pageDto = pageUtils.sortPage(page.getContent(), dto.getSort(), dto.getPagination(),
+					page.getTotalElements());
+		}
+		return pageDto;
 	}
 }

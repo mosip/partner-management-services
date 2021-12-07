@@ -600,7 +600,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
 					ErrorCode.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
 		}
-		validateMispProvider(mispLicense.getMispLicenseUniqueKey().getMisp_id());
+		validateMispProvider(mispLicense.getMispId());
 		return mispLicense;
 	}
 
