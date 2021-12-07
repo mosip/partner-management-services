@@ -33,7 +33,7 @@ public enum ErrorCode {
 	POLICY_NOT_EXIST("PMS_PRT_073","Policy not exists."),
 	EMAIL_EXISTS_IN_KEYCLOAK("PMS_PRT_074","User exists with same email(keycloak)"),
 	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_005","Partner does not exist"),
-	PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_005","No api key req exist"),
+	PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_006","No api key req exist"),
 	PARTNER_API_NOT_CREATED_EXCEPTION("PMS_PRT_105","Partner API KEY is not Created"),
 	PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP("PMS_PRT_001","Partner is already registered with Same policy Group"),
 	INVALID_PARTNER_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - for all attributes not as per defined data definition"),
@@ -57,8 +57,9 @@ public enum ErrorCode {
 	POLICY_GROUP_NOT_REQUIRED("PMS_PRT_048","policy group mapping is not required for given partner"),
 	POLICY_GROUP_ALREADY_MAPPED("PMS_PRT_049","policy group mapping exists for given partner."),
 	POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER("PMS_PRT_050","Policy group cannot be updated for approved partner"),
-	POLICY_GROUP_NOT_MAPPED_PARTNER("PMS_PRT_051","Policy group not mapped for given partner"),
-	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_052","User not authorized.");
+	POLICY_GROUP_NOT_MAPPED_PARTNER("PMS_PRT_054","Policy group not mapped for given partner"),
+	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
+	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Active mapping exists for given policy and partner.");
 
 	
 	/**

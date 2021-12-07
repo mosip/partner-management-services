@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
@@ -67,5 +71,25 @@ public class MISPLicenseController {
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
 		return response;
+	}	
+	
+	@PostMapping("/filtervalues")	
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
+	@Operation(summary = "Service to filter misp details", description = "Service to filter misp details")
+	public ResponseWrapper<FilterResponseCodeDto> filterValues(
+			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(infraProviderService.filterValues(request.getRequest()));
+		return responseWrapper;
+	}	
+	
+	@PostMapping("/search")
+	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','MISP_PARTNER','MISP')")
+	@Operation(summary = "Service to search misp details", description = "Service to search misp details")
+	public ResponseWrapper<PageResponseDto<MISPLicenseEntity>> search(
+			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		ResponseWrapper<PageResponseDto<MISPLicenseEntity>> responseWrapper = new ResponseWrapper<>();		
+		responseWrapper.setResponse(infraProviderService.search(request.getRequest()));
+		return responseWrapper;
 	}
 }

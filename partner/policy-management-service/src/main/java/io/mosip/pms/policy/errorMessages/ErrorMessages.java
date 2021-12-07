@@ -20,7 +20,7 @@ public enum ErrorMessages {
 	MISSING_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter - "),
 	INVALID_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - "),
 	INTERNAL_SERVER_ERROR("PMS_COR_003","Could not process the request"),
-	AUTH_POLICIES_NOT_DEFINED("PMS_POL_009", "Auth Policies are not defined against to policy"),
+	AUTH_POLICIES_NOT_DEFINED("PMS_POL_010", "Auth Policies are not defined against to policy"),
 	NO_POLICY_AGAINST_APIKEY("PMS_POL_013","No policy available for given PartnerAPIKey"),
 	POLICY_GROUP_NAME_DUPLICATE("PMS_POL_014","Policy group exists with name : "),
 	POLICY_GROUP_POLICY_NOT_MAPPED("PMS_POL_015","Policy group and policy not mapped."),
@@ -43,7 +43,8 @@ public enum ErrorMessages {
 	DRAFTED_POLICY_NOT_ACTIVE("PMS_POL_054","Cannot activate unpublished policy."),
 	PUBLISHED_POLICY_NOT_UPDATED("PMS_POL_055","Published policy cannot be updated."),
 	ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP("PMS_POL_056","Active policies exists under the policy group."),
-	ACTIVE_APIKEY_EXISTS_UNDER_POLICY("PMS_POL_057","Active apiKey exists under the policy.");
+	ACTIVE_APIKEY_EXISTS_UNDER_POLICY("PMS_POL_057","Active apiKey exists under the policy."),
+	PUBLISHED_POLICY_STATUS_UPDATE("PMS_POL_058","Status cannot be changed for published policy.");
 	
 	
 	private final String errorCode;

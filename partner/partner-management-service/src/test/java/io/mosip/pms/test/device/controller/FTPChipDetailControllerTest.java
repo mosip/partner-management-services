@@ -114,7 +114,6 @@ public class FTPChipDetailControllerTest {
 	 private FtpChipDetailDto createFTPChipDetailRequest(boolean isItForRegistrationDevice ) {
 		 FtpChipDetailDto ftpChipDetailDto = new FtpChipDetailDto();
 		 ftpChipDetailDto.setFtpProviderId("1234");
-		 ftpChipDetailDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
 		 ftpChipDetailDto.setMake("make");
 		 ftpChipDetailDto.setModel("model");
 		 return ftpChipDetailDto;
@@ -133,8 +132,6 @@ public class FTPChipDetailControllerTest {
 	    private FtpChipDetailUpdateDto updateFTPCHIPDetailRequest(boolean isItForRegistrationDevice) {
 	    	FtpChipDetailUpdateDto ftpChipDetailUpdateDto = new FtpChipDetailUpdateDto();
 	    	ftpChipDetailUpdateDto.setFtpChipDetailId("1234");
-	    	ftpChipDetailUpdateDto.setFtpProviderId("1234");
-	    	ftpChipDetailUpdateDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
 	    	ftpChipDetailUpdateDto.setMake("make");
 	    	ftpChipDetailUpdateDto.setModel("model");
 	    	return ftpChipDetailUpdateDto;
@@ -155,7 +152,6 @@ public class FTPChipDetailControllerTest {
 	    	FtpChipDetailStatusDto ftpChipDetailStatusDto = new FtpChipDetailStatusDto();
 	    	ftpChipDetailStatusDto.setApprovalStatus(true);
 	    	ftpChipDetailStatusDto.setFtpChipDetailId("1234");
-	    	ftpChipDetailStatusDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
 			return ftpChipDetailStatusDto;	
 	    }
 	    

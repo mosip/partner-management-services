@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.MISPLicenseKey;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
@@ -43,7 +42,7 @@ import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
@@ -513,7 +512,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S1() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-Active");
 		String partnerId = "12345";
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
@@ -521,7 +520,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	@Ignore
 	public void activateDeactivateAuthEKYCPartnerTest_S2() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-Active");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
@@ -531,7 +530,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S3() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("ctive");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
@@ -541,7 +540,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void activateDeactivateAuthEKYCPartnerTest_S4() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Active");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
@@ -551,7 +550,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S5() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Active");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
@@ -562,7 +561,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void activateDeactivateAuthEKYCPartnerTest_S6() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
@@ -578,7 +577,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S8() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
@@ -594,7 +593,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void activateDeactivateAuthEKYCPartnerTest_S7() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-active");
 		String partnerId = "12345";
 		Map<String, Object> response = new HashMap<>();
@@ -611,7 +610,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S1() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Active");
 		String partnerId = "12345";
 		String apiKey ="2345";
@@ -620,7 +619,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S2() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Active");
 		String partnerId = "12345";
 		String apiKey ="2345";
@@ -631,7 +630,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S3() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("ctive");
 		String partnerId = "123456";
 		String apiKey ="2345";
@@ -642,7 +641,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S4() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Active");
 		String partnerId = "123456";
 		String apiKey ="2345";
@@ -655,7 +654,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S5() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-Active");
 		String partnerId = "123456";
 		String apiKey ="2345";
@@ -668,7 +667,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S6() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("NOTActive");
 		String partnerId = "123456";
 		String apiKey ="2345";
@@ -824,7 +823,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S1() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-Active");
 		String partnerApiKey="2345";
 		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,partnerApiKey);
@@ -832,7 +831,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S2() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("De-Active");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
@@ -843,7 +842,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S3() throws IOException {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
@@ -866,7 +865,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S10() throws IOException {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
@@ -882,7 +881,7 @@ public class PartnerManagementServiceImplTest {
 	}
 	@Test(expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S11() throws IOException {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
@@ -908,7 +907,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	@Ignore
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S4() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Rejected");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
@@ -920,7 +919,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	@Ignore
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S5() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Approved");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
@@ -935,7 +934,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	@Ignore
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S6() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Approved");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
@@ -950,7 +949,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test (expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S7() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Rejected");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getApprovedPartnerPolicyRequestData()));
@@ -961,7 +960,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Test (expected = PartnerManagerServiceException.class)
 	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S8() {
-		ActivateDeactivatePartnerRequest req = new ActivateDeactivatePartnerRequest();
+		StatusRequestDto req = new StatusRequestDto();
 		req.setStatus("Rejected");
 		String apiKey ="2345";	
 		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getRejectedPartnerPolicyRequestData()));
@@ -978,7 +977,7 @@ public class PartnerManagementServiceImplTest {
 	@Test(expected = PartnerManagerServiceException.class)
 	public void getPartnerMappedPolicyFileTest_S2() {		
 		MISPLicenseEntity license = mispLicense();
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}	
@@ -987,7 +986,7 @@ public class PartnerManagementServiceImplTest {
 	public void getPartnerMappedPolicyFileTest_S3() {
 		MISPLicenseEntity license = mispLicense();
 		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -996,7 +995,7 @@ public class PartnerManagementServiceImplTest {
 	public void getPartnerMappedPolicyFileTest_S34() {
 		MISPLicenseEntity license = mispLicense();
 		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(null);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(null);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -1006,7 +1005,7 @@ public class PartnerManagementServiceImplTest {
 		MISPLicenseEntity license = mispLicense();
 		license.setIsActive(false);
 		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
 	}
@@ -1016,7 +1015,7 @@ public class PartnerManagementServiceImplTest {
 		MISPLicenseEntity license = mispLicense();
 		license.setIsActive(true);
 		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getMispLicenseUniqueKey().getLicense_key())).thenReturn(license);
+		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(null);
 		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
@@ -1138,18 +1137,12 @@ public class PartnerManagementServiceImplTest {
 
 	private MISPLicenseEntity mispLicense() {
 		MISPLicenseEntity mispLices = new MISPLicenseEntity();
-		mispLices.setMispLicenseUniqueKey(mispLUniqueKey());
+		mispLices.setMispId("100");
+		mispLices.setLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
 		mispLices.setValidFromDate(LocalDateTime.now());
 		mispLices.setValidToDate(LocalDateTime.now().plusDays(90));
 		mispLices.setIsActive(true);
 		return mispLices;
-	}
-	
-	private MISPLicenseKey mispLUniqueKey() {
-		MISPLicenseKey unique = new MISPLicenseKey();
-		unique.setMisp_id("100");
-		unique.setLicense_key("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		return unique;
 	}
 	
 	private PolicyGroup getPolicyGroupData() {

@@ -413,7 +413,8 @@ public class PolicyServiceTest {
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		AuthPolicy authPolicy = getAuthPolicy();
 		authPolicy.setIsActive(false);
-		authPolicy.setPolicySchema("publishedUrl");
+		request.setStatus("De-Active");
+		//authPolicy.setPolicySchema("publishedUrl");
 		Mockito.when(authPolicyRepository.findById("3456")).thenReturn(Optional.of(authPolicy));
 		service.updatePolicyStatus(request,"12345","3456");	
 	}

@@ -8,7 +8,7 @@ import lombok.Data;
  *
  */
 @Data
-public class ActivateDeactivatePartnerRequest {
+public class StatusRequestDto {
 	
 		@NotBlank(message="value is empty or null")
 		public String status;

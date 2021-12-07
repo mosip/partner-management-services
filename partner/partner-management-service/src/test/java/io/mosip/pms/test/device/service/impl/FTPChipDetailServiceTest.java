@@ -100,7 +100,6 @@ public class FTPChipDetailServiceTest {
 		ReflectionTestUtils.setField(ftpChipDetailService,"environment",environment);
 		Mockito.doNothing().when(audit).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 		ftpChipDetailDto.setFtpProviderId("1234");
-		ftpChipDetailDto.setIsItForRegistrationDevice(true);
 		ftpChipDetailDto.setMake("make");
 		ftpChipDetailDto.setModel("model");
 		foundationalTrustProvider.setActive(true);
@@ -162,20 +161,6 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);
 	}
 	
-	@Test(expected = RequestException.class) 
-	public void updateFtpChipDetailsTest01() {
-		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
-		FTPChipDetail ftpChipDetail = new FTPChipDetail();
-		ftpChipDetail.setFtpChipDetailId("12345");
-		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
-		FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
-		Optional<FoundationalTrustProvider> opt_foundational = Optional.of(foundationalTrustProvider);
-		Mockito.when(foundationalTrustProviderRepository.findById(Mockito.anyString())).thenReturn(opt_foundational);
-		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
-		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
-		ftpChipDetailService.updateFtpChipDetails(chipDetails);
-	}
-	
 	@Test (expected = RequestException.class)
 	public void updateFtpChipDetailsTest02() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
@@ -185,23 +170,6 @@ public class FTPChipDetailServiceTest {
 		Optional<FoundationalTrustProvider> opt_foundational = Optional.of(foundationalTrustProvider);
 		Mockito.when(foundationalTrustProviderRepository.findById(Mockito.anyString())).thenReturn(opt_foundational);
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
-		ftpChipDetailService.updateFtpChipDetails(chipDetails);
-	}
-	
-	@Test (expected = RequestException.class)
-	public void updateFtpChipDetailsTest03() {
-		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
-		FTPChipDetail ftpChipDetail = new FTPChipDetail();
-		ftpChipDetail.setFtpChipDetailId("12345");
-		FTPChipDetail newftp = new FTPChipDetail();
-		newftp.setFtpChipDetailId("123");
-		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
-		FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
-		Optional<FoundationalTrustProvider> opt_foundational = Optional.of(foundationalTrustProvider);
-		Mockito.when(foundationalTrustProviderRepository.findById(Mockito.anyString())).thenReturn(opt_foundational);
-		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
-		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(newftp);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);
 	}
@@ -270,8 +238,6 @@ public class FTPChipDetailServiceTest {
 	private FtpChipDetailUpdateDto createUpdateRequest() {
 		FtpChipDetailUpdateDto ChipDetailUpdateDto = new FtpChipDetailUpdateDto();
 		ChipDetailUpdateDto.setFtpChipDetailId("12345");
-		ChipDetailUpdateDto.setFtpProviderId("12345");
-		ChipDetailUpdateDto.setIsItForRegistrationDevice(true);
 		ChipDetailUpdateDto.setMake("make");
 		ChipDetailUpdateDto.setModel("model");
 		return ChipDetailUpdateDto;
@@ -281,7 +247,6 @@ public class FTPChipDetailServiceTest {
 		FtpChipDetailStatusDto ftpChipDetailStatusDto = new FtpChipDetailStatusDto();
 		ftpChipDetailStatusDto.setApprovalStatus(true);
 		ftpChipDetailStatusDto.setFtpChipDetailId("12345");
-		ftpChipDetailStatusDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
 		return ftpChipDetailStatusDto;
 	}
 	

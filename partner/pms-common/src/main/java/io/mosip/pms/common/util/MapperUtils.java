@@ -524,10 +524,10 @@ public class MapperUtils {
 	 */
 	public static MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
 		MISPDataPublishDto dataToPublish = new MISPDataPublishDto();
-		dataToPublish.setLicenseKey(entity.getMispLicenseUniqueKey().getLicense_key());
+		dataToPublish.setLicenseKey(entity.getLicenseKey());
 		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
 		dataToPublish.setMispExpiresOn(entity.getValidToDate());
-		dataToPublish.setMispId(entity.getMispLicenseUniqueKey().getMisp_id());
+		dataToPublish.setMispId(entity.getMispId());
 		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE: NOTACTIVE);
 		return dataToPublish;
 	}

@@ -33,21 +33,26 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
+import io.mosip.pms.partner.manager.service.PartnerManagerService;
+import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerAPIKeyRequest;
+import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerAPIKeyResponse;
+import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
@@ -71,6 +76,9 @@ public class PartnerServiceController {
 
 	@Autowired
 	PartnerService partnerService;
+	
+	@Autowired
+	PartnerManagerService partnerManagerService;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -113,14 +121,15 @@ public class PartnerServiceController {
 	 * @return partnerAPIKeyResponse this class contains partner request id and
 	 *         massage details
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to request api key", description = "Service to request api key")
-	public ResponseEntity<ResponseWrapper<PartnerAPIKeyResponse>> requestAPIKey(
-			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerAPIKeyRequest> request) {
-		ResponseWrapper<PartnerAPIKeyResponse> response = new ResponseWrapper<>();
-		PartnerAPIKeyResponse partnerAPIKeyResponse = null;
-		PartnerAPIKeyRequest partnerAPIKeyRequest = request.getRequest();
+	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponse>> requestAPIKey(
+			@PathVariable String partnerId, @RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
+		ResponseWrapper<PartnerPolicyMappingResponse> response = new ResponseWrapper<>();
+		PartnerPolicyMappingResponse partnerAPIKeyResponse = null;
+		PartnerPolicyMappingRequest partnerAPIKeyRequest = request.getRequest();
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST);
 		partnerAPIKeyResponse = partnerService.submitPartnerApiKeyReq(partnerAPIKeyRequest, partnerId);
 		response.setId(request.getId());
@@ -313,7 +322,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','AUTH_PARTNER','PMS_USER','ID_AUTHENTICATION','ONLINE_VERIFICATION_PARTNER')")	
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")	
 	@RequestMapping(value = "/certificate/ca/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload ca certificate", description = "Service to upload ca certificate")
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
@@ -450,7 +459,6 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 
-	
 	@Operation(summary = "To verify partner's email", description = "Service to verify partner email")
 	@RequestMapping(value = "/email/verify", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
@@ -458,6 +466,32 @@ public class PartnerServiceController {
 		ResponseWrapper<EmailVerificationResponseDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
+	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
+	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
+			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
+			@RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER);
+		ResponseWrapper<PartnerPolicyMappingResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.requestForPolicyMapping(request.getRequest(), partnerId));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
+	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
+	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
+			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
+			@RequestBody @Valid RequestWrapper<APIKeyGenerateRequestDto> request) {
+		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY);
+		response.setResponse(partnerManagerService.generateAPIKey(partnerId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

@@ -194,19 +194,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@Override
 	public IdDto updateFtpChipDetails(FtpChipDetailUpdateDto chipDetails) {
-		Partner partnerFromDb = partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(chipDetails.getFtpProviderId());
-		if(partnerFromDb == null) {
-			auditUtil.auditRequest(
-					String.format(
-							DeviceConstant.FAILURE_CREATE, FtpChipDetailUpdateDto.class.getCanonicalName()),
-					DeviceConstant.AUDIT_SYSTEM,
-					String.format(DeviceConstant.FAILURE_DESC,
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
-							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
-			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());
-		}
 		Optional<FTPChipDetail> chipDetail = ftpChipDetailRepository.findById(chipDetails.getFtpChipDetailId());
 		if(chipDetail.isEmpty()) {
 			auditUtil.auditRequest(
@@ -220,7 +207,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
-		FTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetails.getFtpProviderId(),
+		FTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetail.get().getFtpProviderId(),
 				chipDetails.getMake(), chipDetails.getModel());
 		if(uniqueChipDetail != null && !chipDetail.get().getFtpChipDetailId().equals(uniqueChipDetail.getFtpChipDetailId())){
 			auditUtil.auditRequest(
@@ -235,21 +222,19 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
 			
 		}
-		Optional<FoundationalTrustProvider> ftpProvider = foundationalTrustProviderRepository.findById(partnerFromDb.getId());
+		Optional<FoundationalTrustProvider> ftpProvider = foundationalTrustProviderRepository.findById(chipDetail.get().getFtpProviderId());
 		FoundationalTrustProvider entity = null;
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();		
 		if(ftpProvider.isEmpty()) {
 			entity = new FoundationalTrustProvider();
 			entity.setCrDtimes(LocalDateTime.now());
-			entity.setId(partnerFromDb.getId());
-			//entity.setPartnerOrganizationName(partnerFromDb.getName());
+			entity.setId(chipDetail.get().getFtpProviderId());
 			entity.setActive(true);
 			if (!EmptyCheckUtils.isNullEmpty(authN)) {
 				entity.setCrBy(authN.getName());
 			}
 		}else {
 			entity = ftpProvider.get();
-			//entity.setPartnerOrganizationName(partnerFromDb.getName());
 			entity.setUpdDtimes(LocalDateTime.now());
 			if (!EmptyCheckUtils.isNullEmpty(authN)) {
 				entity.setUpdBy(authN.getName());
@@ -263,7 +248,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		updateObject.setMake(chipDetails.getMake());
 		updateObject.setModel(chipDetails.getModel());
-		updateObject.setFtpProviderId(chipDetails.getFtpProviderId());
 		ftpChipDetailRepository.save(updateObject);
 		IdDto response = new IdDto();
 		response.setId(updateObject.getFtpChipDetailId());

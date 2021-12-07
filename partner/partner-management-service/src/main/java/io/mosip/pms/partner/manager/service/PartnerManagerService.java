@@ -3,13 +3,16 @@ package io.mosip.pms.partner.manager.service;
 import java.util.List;
 import java.util.Optional;
 
-import io.mosip.pms.partner.manager.dto.ActivateDeactivatePartnerRequest;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
 import io.mosip.pms.partner.manager.dto.PartnerPolicyResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
+import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 
 public interface PartnerManagerService {
 
@@ -30,7 +33,7 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public PartnersPolicyMappingResponse activateDeactivateAuthEKYCPartner(String partnerID, 
-			ActivateDeactivatePartnerRequest request);
+			StatusRequestDto request);
 	
 	/**
 	 * 
@@ -40,7 +43,7 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public PartnersPolicyMappingResponse activateDeactivatePartnerAPIKeyGivenPartner(String partnerID, 
-			ActivateDeactivatePartnerRequest request, String partnerAPIKey);
+			StatusRequestDto request, String partnerAPIKey);
 	
 	/**
 	 * 
@@ -77,7 +80,7 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public PartnersPolicyMappingResponse approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
-			ActivateDeactivatePartnerRequest request, String partnerAPIKey);
+			StatusRequestDto request, String partnerAPIKey);
 
 	/**
 	 * 
@@ -87,6 +90,30 @@ public interface PartnerManagerService {
 	 * @param needPartnerCert
 	 * @return
 	 */
-	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId,boolean needPartnerCert);	
+	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey,String policy_api_key, String partnerId,boolean needPartnerCert);
+	
+	/**
+	 * This method will generate apikey for approved partner policy mapping
+	 * @param partnerId
+	 * @return
+	 */
+	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto);	
+	
+	/**
+	 * 
+	 * @param mappingkey
+	 * @param statusRequest
+	 * @return
+	 */
+	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest);
+	
+	/**
+	 * 
+	 * @param partnerId
+	 * @param policyId
+	 * @param label
+	 * @return
+	 */
+	public String updateAPIKeyStatus(String partnerId, String policyId, APIkeyStatusUpdateRequestDto request);
 
 }

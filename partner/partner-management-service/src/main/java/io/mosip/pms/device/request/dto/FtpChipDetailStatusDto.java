@@ -16,36 +16,5 @@ public class FtpChipDetailStatusDto {
 	private String ftpChipDetailId;
 	
 	@NotNull(message="value is empty or null")		
-	private Boolean approvalStatus;
-		
-	@NotNull(message="value is empty or null")
-	private Boolean isItForRegistrationDevice;
-
-	public Boolean getIsItForRegistrationDevice() {
-		return isItForRegistrationDevice;
-	}
-
-	public void setIsItForRegistrationDevice(Boolean isItForRegistrationDevice) {
-		this.isItForRegistrationDevice = isItForRegistrationDevice;
-	}
-
-	public String getFtpChipDetailId() {
-		return ftpChipDetailId;
-	}
-
-	public void setFtpChipDetailId(String ftpChipDetailId) {
-		this.ftpChipDetailId = ftpChipDetailId;
-	}
-
-	public Boolean getApprovalStatus() {
-		return approvalStatus;
-	}
-
-	public void setApprovalStatus(Boolean approvalStatus) {
-		this.approvalStatus = approvalStatus;
-	}
-
-	public FtpChipDetailStatusDto() {
-		super();
-	}
+	private Boolean approvalStatus;		
 }

@@ -10,7 +10,7 @@ import lombok.Data;
  */
 
 @Data
-public class PartnerAPIKeyRequest {
+public class PartnerPolicyMappingRequest {
 	
 		@NotNull
 		public String policyName;

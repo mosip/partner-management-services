@@ -15,18 +15,13 @@ public class SecureBiometricInterfaceHistory {
 	private String id;
 
 	@Column(name = "eff_dtimes", nullable = false)
-	private LocalDateTime effectDateTime;
-	
+	private LocalDateTime effectDateTime;	
 	
 	@Column(name="sw_binary_hash",nullable=false)
 	private byte[] swBinaryHAsh;
 	
 	@Column(name = "sw_version", nullable = false, length = 64)
 	private String swVersion;
-	
-	
-	@Column(name = "device_detail_id",  nullable = false)
-	private String deviceDetailId;
 	
 	@Column(name = "sw_cr_dtimes")
 	private LocalDateTime swCreateDateTime;
@@ -58,6 +53,28 @@ public class SecureBiometricInterfaceHistory {
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
 
+	@Column(name = "provider_id")
+	private String providerId;
+	
+	@Column(name="partner_org_name")
+	private String partnerOrgName;
+	
+	public String getProviderId() {
+		return providerId;
+	}
+	
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
+	}
+	
+	public void setPartnerOrgName(String partnerOrgName) {
+		this.partnerOrgName = partnerOrgName;
+	}
+	
+	public String getPartnerOrgName() {
+		return partnerOrgName;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -88,14 +105,6 @@ public class SecureBiometricInterfaceHistory {
 
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
-	}
-
-	public String getDeviceDetailId() {
-		return deviceDetailId;
-	}
-
-	public void setDeviceDetailId(String deviceDetailId) {
-		this.deviceDetailId = deviceDetailId;
 	}
 
 	public LocalDateTime getSwCreateDateTime() {
