@@ -40,44 +40,46 @@ import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 
 @Component
-public class InfraProviderServiceImpl implements InfraServiceProviderService {	
-	
+public class InfraProviderServiceImpl implements InfraServiceProviderService {
+
 	@Value("${mosip.kernel.idgenerator.misp.license-key-length}")
 	private int licenseKeyLength;
-	
+
 	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
 	private int mispLicenseExpiryInDays;
-	
+
 	@Autowired
-	MispLicenseRepository mispLicenseRepository;	
-	
+	MispLicenseRepository mispLicenseRepository;
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
-	
+
 	@Autowired
 	private WebSubPublisher webSubPublisher;
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Autowired
 	SearchHelper searchHelper;
-	
+
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
-	
+
 	@Autowired
 	FilterHelper filterHelper;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private PageUtils pageUtils;
 
@@ -87,32 +89,34 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	public static final String NOTACTIVE_STATUS = "de-active";
 	public static final String ACTIVE = "ACTIVE";
 	public static final String NOTACTIVE = "NOT_ACTIVE";
-	
+
 	/**
 	 * 
 	 */
 	@Override
 	public MISPLicenseResponseDto approveInfraProvider(String mispId) {
+		validateLoggedInUserAuthorization(mispId);
 		Optional<Partner> partnerFromDb = partnerRepository.findById(mispId);
-		if(partnerFromDb.isEmpty()) {
+		if (partnerFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
 					MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
 		}
-		if(!partnerFromDb.get().getPartnerTypeCode().equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
+		if (!partnerFromDb.get().getPartnerTypeCode()
+				.equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_VALID.getErrorCode(),
 					MISPErrorMessages.MISP_ID_NOT_VALID.getErrorMessage());
 		}
-		if(!partnerFromDb.get().getIsActive()) {
+		if (!partnerFromDb.get().getIsActive()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
-					MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());			
+					MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
 		}
-		
+
 		List<MISPLicenseEntity> mispLicenseFromDb = mispLicenseRepository.findByMispId(mispId);
-		if(!mispLicenseFromDb.isEmpty()) {
+		if (!mispLicenseFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_EXISTS.getErrorCode(),
 					MISPErrorMessages.MISP_LICENSE_KEY_EXISTS.getErrorMessage());
-		}		
-		MISPLicenseEntity newLicenseKey =   generateLicense(mispId);
+		}
+		MISPLicenseEntity newLicenseKey = generateLicense(mispId);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		response.setLicenseKey(newLicenseKey.getLicenseKey());
 		response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
@@ -121,7 +125,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_GENERATED);
 		return response;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -129,20 +133,19 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	private String generate() {
 		return RandomStringUtils.randomAlphanumeric(licenseKeyLength);
 	}
-	
+
 	/**
 	 * 
 	 */
 	@Override
 	public MISPLicenseResponseDto updateInfraProvider(String id, String licenseKey, String status) {
-		if(!(status.toLowerCase().equals(ACTIVE_STATUS) || 
-				status.toLowerCase().equals(NOTACTIVE_STATUS))) {					
+		if (!(status.toLowerCase().equals(ACTIVE_STATUS) || status.toLowerCase().equals(NOTACTIVE_STATUS))) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorCode(),
 					MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorMessage());
 		}
-		
+
 		MISPLicenseEntity mispLicenseFromDb = mispLicenseRepository.findByIdAndKey(id, licenseKey);
-		if(mispLicenseFromDb == null) {
+		if (mispLicenseFromDb == null) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
 		}
@@ -165,7 +168,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public List<MISPLicenseEntity> getInfraProvider() {
-        return mispLicenseRepository.findAll();
+		return mispLicenseRepository.findAll();
 	}
 
 	/**
@@ -174,7 +177,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * @return
 	 */
 	private MISPLicenseEntity generateLicense(String mispId) {
-		MISPLicenseEntity entity = new MISPLicenseEntity();		
+		MISPLicenseEntity entity = new MISPLicenseEntity();
 		entity.setMispId(mispId);
 		entity.setLicenseKey(generate());
 		entity.setValidFromDate(LocalDateTime.now());
@@ -186,78 +189,76 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		mispLicenseRepository.save(entity);
 		return entity;
 	}
-	
+
 	/**
 	 * 
 	 */
 	@Override
 	public MISPLicenseResponseDto regenerateKey(String mispId) {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(mispId);
-		if(partnerFromDb.isEmpty()) {
+		if (partnerFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
 					MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
 		}
-		if(!partnerFromDb.get().getIsActive()) {
+		if (!partnerFromDb.get().getIsActive()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
 					MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
 		}
 		List<MISPLicenseEntity> mispLicenses = mispLicenseRepository.findByMispId(mispId);
 		boolean isActiveLicenseExists = false;
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
-		for(MISPLicenseEntity licenseKey : mispLicenses) {
-			if(licenseKey.getIsActive() && 
-					licenseKey.getValidToDate().isBefore(LocalDateTime.now())) {
-				isActiveLicenseExists =true;
+		for (MISPLicenseEntity licenseKey : mispLicenses) {
+			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isBefore(LocalDateTime.now())) {
+				isActiveLicenseExists = true;
 				licenseKey.setIsActive(false);
 				licenseKey.setUpdatedBy(getLoggedInUserId());
 				licenseKey.setUpdatedDateTime(LocalDateTime.now());
 				mispLicenseRepository.save(licenseKey);
-				MISPLicenseEntity newLicenseKey =   generateLicense(mispId);
+				MISPLicenseEntity newLicenseKey = generateLicense(mispId);
 				response.setLicenseKey(newLicenseKey.getLicenseKey());
 				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
 				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
 			}
-			
-			if(licenseKey.getIsActive() && 
-					licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
-				isActiveLicenseExists =true;
+
+			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
+				isActiveLicenseExists = true;
 				response.setLicenseKey(licenseKey.getLicenseKey());
 				response.setLicenseKeyExpiry(licenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
 			}
 		}
-		
-		if(!isActiveLicenseExists) {
+
+		if (!isActiveLicenseExists) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorCode(),
 					MISPErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorMessage());
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public String getLoggedInUserId() {
 		return UserDetailUtil.getLoggedInUserId();
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param dataToPublish
 	 * @param eventType
 	 */
-	private void notify(MISPDataPublishDto dataToPublish,EventType eventType) {
+	private void notify(MISPDataPublishDto dataToPublish, EventType eventType) {
 		Type type = new Type();
 		type.setName("InfraProviderServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
-		Map<String,Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("mispLicenseData", dataToPublish);
-		webSubPublisher.notify(eventType,data,type);		
+		webSubPublisher.notify(eventType, data, type);
 	}
 
 	@Override
@@ -297,5 +298,16 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 					page.getTotalElements());
 		}
 		return pageDto;
+	}
+	
+	/**
+	 * validates the loggedInUser authorization
+	 * @param loggedInUserId
+	 */
+	public void validateLoggedInUserAuthorization(String loggedInUserId) {
+		if(searchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 	}
 }
