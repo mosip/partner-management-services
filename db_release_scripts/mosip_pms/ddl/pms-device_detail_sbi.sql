@@ -17,10 +17,12 @@ CREATE TABLE pms.device_detail_sbi(
 	partner_org_name character varying(128),
 	device_detail_id character varying(36) NOT NULL,
 	sbi_id character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp
 
 );
