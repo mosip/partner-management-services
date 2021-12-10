@@ -339,7 +339,7 @@ jobs:
         run: |
           cd partner
           mvn -B package -Dgpg.skip -DskipTests --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
-          mvn -B -Dgpg.skip -DskipTests clean verify -P openapi-doc-generate-profile
+          mvn -B -Dgpg.skip -DskipTests clean verify --file pom.xml -s $GITHUB_WORKSPACE/settings.xml -P openapi-doc-generate-profile
           npm install -g redoc-cli
           redoc-cli bundle -o partner-management-service.html partner-management-service.json
 
