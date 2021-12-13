@@ -19,15 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.CommonConstant;
+import io.mosip.pms.common.dto.FilterData;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterfaceHistory;
@@ -43,6 +48,8 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
+import io.mosip.pms.device.response.dto.ColumnCodeValue;
+import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
@@ -75,6 +82,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	
 	@Autowired
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+	@Autowired
+	FilterColumnValidator filterColumnValidator;
+
+	@Autowired
+	FilterHelper filterHelper;
 
 	
 	@Override
@@ -304,7 +317,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			dto.setIsActive(sbi.isActive());
 			dto.setDeleted(sbi.isDeleted());
 			dto.setApprovalStatus(sbi.getApprovalStatus());
-			dto.setDeviceProviderId(sbi.getProviderId());
+			dto.setProviderId(sbi.getProviderId());
 			dto.setPartnerOrganizationName(sbi.getPartnerOrgName());
 			dto.setId(sbi.getId());
 			dto.setSwBinaryHash(sbi.getSwBinaryHash());
@@ -469,5 +482,26 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			response.add(output);
 		});
 		return response;
+	}
+
+	@Override
+	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), SecureBiometricInterface.class)) {
+			for (FilterDto filterDto : filterValueDto.getFilters()) {
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, SecureBiometricInterface.class,
+						filterDto, filterValueDto, "id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName().split(",")[0]);
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
+			}
+			filterResponseDto.setFilters(columnValueList);
+		}
+		return filterResponseDto;
 	}
 }
