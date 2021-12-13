@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -24,7 +25,6 @@ import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
-import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.helper.FilterHelper;
@@ -412,12 +412,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if(authN !=null) {
 			deviceDetailSbiMapping.setCrBy(authN.getName());
 		}
-		DeviceDetailSBIPK deviceDetailSbiKey = new DeviceDetailSBIPK();
-		deviceDetailSbiKey.setDeviceDetailId(input.getDeviceDetailId());
 		deviceDetailSbiMapping.setProviderId(validSbi.getProviderId());
-		deviceDetailSbiKey.setSbiId(validSbi.getId());
 		deviceDetailSbiMapping.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		deviceDetailSbiMapping.setId(deviceDetailSbiKey);
+		deviceDetailSbiMapping.setDeviceDetailId(input.getDeviceDetailId());
+		deviceDetailSbiMapping.setSbiId(validSbi.getId());
 		deviceDetailSbiMapping.setIsActive(true);
 		deviceDetailSbiMapping.setIsDeleted(false);
 		deviceDetailSbiMapping.setPartnerName(validSbi.getPartnerOrgName());
@@ -465,18 +463,22 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		List<SecureBiometricInterface> allSBIs = sbiRepository.findAll();
 		mappedDeviceDetails.forEach(sbi->{
 			MappedDeviceDetailsReponse output = new MappedDeviceDetailsReponse();
-			DeviceDetail deviceDetail = allDeviceDetails.stream().filter(f->f.getId().equals(sbi.getId().getDeviceDetailId())).findFirst().get();
-			SecureBiometricInterface secureBioInterface = allSBIs.stream().filter(f->f.getId().equals(sbi.getId().getSbiId())).findFirst().get();
+//			DeviceDetail deviceDetail = allDeviceDetails.stream().filter(f->f.getId().equals(sbi.getId().getDeviceDetailId())).findFirst().get();
+//			SecureBiometricInterface secureBioInterface = allSBIs.stream().filter(f->f.getId().equals(sbi.getId().getSbiId())).findFirst().get();
+			DeviceDetail deviceDetail = allDeviceDetails.stream().filter(f->f.getId().equals(sbi.getDeviceDetailId())).findFirst().get();
+			SecureBiometricInterface secureBioInterface = allSBIs.stream().filter(f->f.getId().equals(sbi.getSbiId())).findFirst().get();
 			output.setCrBy(sbi.getCrBy());
 			output.setCrDtimes(sbi.getCrDtimes());			
-			output.setDeviceDetailId(sbi.getId().getDeviceDetailId());
+//			output.setDeviceDetailId(sbi.getId().getDeviceDetailId());
+			output.setDeviceDetailId(sbi.getDeviceDetailId());
 			output.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
 			output.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
 			output.setMake(deviceDetail.getMake());
 			output.setModel(deviceDetail.getModel());
 			output.setProviderId(sbi.getProviderId());
 			output.setProviderName(sbi.getPartnerName());
-			output.setSbiId(sbi.getId().getSbiId());
+//			output.setSbiId(sbi.getId().getSbiId());
+			output.setSbiId(sbi.getSbiId());
 			output.setSwBinaryHash(secureBioInterface.getSwBinaryHash());
 			output.setSwVersion(secureBioInterface.getSwVersion());			
 			response.add(output);

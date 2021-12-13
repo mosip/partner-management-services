@@ -1188,9 +1188,50 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
 		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto,"part_id");
+		SearchFilter partnerSearchFilter = null;
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
+			partnerSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		}
+		
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerId"))) {
+			partnerSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst().get();
+			Optional<Partner> loggedInPartner = partnerRepository.findById(partnerSearchFilter.getValue());
+			if(loggedInPartner.isPresent()) {
+				partnerSearchFilter.setValue(loggedInPartner.get().getName());
+			}
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
+		}
+		
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
+			SearchFilter policyNameFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+			SearchFilter policyIdSearchFilter = new SearchFilter();
+			policyIdSearchFilter.setColumnName("policyId");
+			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
+			policyIdSearchFilter.setType("equals");
+			dto.getFilters().add(policyIdSearchFilter);
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
+			if(loggedInPartner.isPresent()) {
+				partnerSearchFilter = new SearchFilter();
+				partnerSearchFilter.setValue(loggedInPartner.get().getName());
+			}
+		}
+		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
+			if (partnerSearchFilter != null) {
+				String value = partnerSearchFilter.getValue();
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream()
+						.filter(f -> f.getPartner().getName().equals(value)).collect(Collectors.toList()));
+			} else {
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent());
+			}
 			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),
 					page.getTotalElements());
 		}
