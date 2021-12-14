@@ -6,10 +6,10 @@
   <parent>
     <groupId>io.mosip.pmp</groupId>
     <artifactId>pmp-parent</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.4.1</version>
   </parent>   
   <artifactId>pmp-policy-validator</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.4.1</version>
   <name>pmp-policy-validator</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
