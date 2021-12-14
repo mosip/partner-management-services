@@ -58,8 +58,8 @@
 	</repositories>
 
 	<properties>
-		<kernel.version>1.1.4.6</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.1.4.6</kernel-dataaccess-hibernate.version>
+		<kernel.version>1.1.4.4</kernel.version>		
+		<kernel-dataaccess-hibernate.version>1.1.4.4</kernel-dataaccess-hibernate.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -138,7 +138,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>1.1.5.3</version>
+			<version>1.1.4.4</version>
 		</dependency>
 	</dependencies>
 	
