@@ -11,6 +11,9 @@
 	<version>1.1.4</version>
 	<artifactId>pmp-policy-management-service</artifactId>
 	<name>pmp-policy-management-service</name>
+	<properties>
+    	<log4j2.version>2.16.0</log4j2.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.pmp</groupId>
@@ -97,11 +100,6 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
 		</dependency>		
 	</dependencies>
 	<build>
