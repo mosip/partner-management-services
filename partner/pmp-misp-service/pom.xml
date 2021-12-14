@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-licensekeygenerator-misp</artifactId>
-			<version>${kernel.version}</version>
+			<version>1.1.4</version>
 		</dependency>		
 		<dependency>
 			<groupId>javax.persistence</groupId>
