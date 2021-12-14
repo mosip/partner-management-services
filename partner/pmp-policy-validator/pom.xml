@@ -6,16 +6,17 @@
   <parent>
     <groupId>io.mosip.pmp</groupId>
     <artifactId>pmp-parent</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.4.1</version>
   </parent>   
   <artifactId>pmp-policy-validator</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.4.1</version>
   <name>pmp-policy-validator</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
     <jackson.datatype.version>2.9.8</jackson.datatype.version>
-    <json.version>20180813</json.version>     
+    <json.version>20180813</json.version>    
+    <log4j2.version>2.16.0</log4j2.version> 
   </properties>
   <dependencies>
     <dependency>
@@ -38,11 +39,6 @@
            <artifactId>json</artifactId>
             <version>${json.version}</version>
         </dependency>
-        <dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
