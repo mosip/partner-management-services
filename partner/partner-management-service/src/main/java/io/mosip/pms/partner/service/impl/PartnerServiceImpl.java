@@ -1020,7 +1020,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyId) {
+	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
 		validateCredentialTypes(credentialType);
 		Partner partner = getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
@@ -1029,12 +1029,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
 					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
 		}
-		validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyId);
+		AuthPolicy validPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyName);
 		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType(credentialType);
 		key.setPartId(partnerId);
-		key.setPolicyId(policyId);
+		key.setPolicyId(validPolicy.getId());
 		entity.setId(key);
 		entity.setCrBy(getLoggedInUserId());
 		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1188,9 +1188,63 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
 		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
-		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto,"part_id");
+		SearchFilter partnerNameSearchFilter = null;
+		SearchFilter partnerIdSearchFilter = null;
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
+			partnerNameSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		}
+		
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerId"))) {
+			partnerIdSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst().get();
+			Optional<Partner> loggedInPartner = partnerRepository.findById(partnerIdSearchFilter.getValue());
+			if(loggedInPartner.isPresent()) {
+				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
+			}
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
+		}
+		
+		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
+			SearchFilter policyNameFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+			SearchFilter policyIdSearchFilter = new SearchFilter();
+			policyIdSearchFilter.setColumnName("policyId");
+			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
+			policyIdSearchFilter.setType("equals");
+			dto.getFilters().add(policyIdSearchFilter);
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+		}
+		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
+			if(loggedInPartner.isPresent()) {
+				partnerIdSearchFilter = new SearchFilter();
+				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
+			}
+		}
+		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partnerMappedPolicies = mapPartnerPolicies(page.getContent());
+			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {
+				String nameValue = partnerNameSearchFilter.getValue();
+				String idValue = partnerIdSearchFilter.getValue();
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream().filter(
+						f -> f.getPartner().getName().equals(nameValue) && f.getPartner().getId().equals(idValue))
+						.collect(Collectors.toList()));
+			}
+			else if (partnerNameSearchFilter != null) {
+				String value = partnerNameSearchFilter.getValue();
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream()
+						.filter(f -> f.getPartner().getName().equals(value)).collect(Collectors.toList()));
+			} else if(partnerIdSearchFilter != null){
+				String value = partnerIdSearchFilter.getValue();
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream()
+						.filter(f -> f.getPartner().getId().equals(value)).collect(Collectors.toList()));				
+			}
+			else{
+				partnerMappedPolicies = mapPartnerPolicies(page.getContent());
+			}
 			pageDto = pageUtils.sortPage(partnerMappedPolicies, dto.getSort(), dto.getPagination(),
 					page.getTotalElements());
 		}
@@ -1231,6 +1285,7 @@ public class PartnerServiceImpl implements PartnerService {
 		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
 		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
 		SearchFilter partnerNameSearchFilter = null;
+		SearchFilter partnerIdSearchFilter = null;
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
 			partnerNameSearchFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
@@ -1253,23 +1308,41 @@ public class PartnerServiceImpl implements PartnerService {
 			policyIdSearchFilter.setType("equals");
 			dto.getFilters().add(policyIdSearchFilter);
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
-		}		
+		}	
+		if(dto.getFilters().stream().anyMatch(f ->f.getColumnName().equalsIgnoreCase("partnerId"))) {
+			partnerIdSearchFilter = dto.getFilters().stream()
+					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst().get();
+			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
+		}
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
 			if(loggedInPartner.isPresent()) {
-				partnerNameSearchFilter = new SearchFilter();
-				partnerNameSearchFilter.setValue(loggedInPartner.get().getName());
+				partnerIdSearchFilter = new SearchFilter();
+				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
 			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
 				null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			if (partnerNameSearchFilter != null) {
+			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {
+				String nameValue = partnerNameSearchFilter.getValue();
+				String idValue = partnerNameSearchFilter.getValue();
+				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
+						.filter(f -> f.getPartner().getName().equals(nameValue) &&
+								f.getPartner().getId().equals(idValue))
+						.collect(Collectors.toList()));				
+			}else if (partnerNameSearchFilter != null) {
 				String value = partnerNameSearchFilter.getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
 						.filter(f -> f.getPartner().getName().equals(value))
 						.collect(Collectors.toList()));
-			}else {
+			}else if(partnerIdSearchFilter != null){
+				String value = partnerIdSearchFilter.getValue();
+				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
+						.filter(f -> f.getPartner().getId().equals(value))
+						.collect(Collectors.toList()));				
+			}
+			else{
 				partnerPolicyRequests = mapPolicyRequests(page.getContent());
 			}
 			pageDto = pageUtils.sortPage(partnerPolicyRequests, dto.getSort(), dto.getPagination(),

@@ -42,7 +42,7 @@ public class SbiSearchResponseDto {
 	private String approvalStatus;
 	
 	@Column(name="dprovider_id",length=36,nullable=false)
-	private String deviceProviderId;
+	private String providerId;
 	
 	@Column(name="partner_org_name",length=128)
 	private String partnerOrganizationName;
