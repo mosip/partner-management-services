@@ -1020,7 +1020,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyId) {
+	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
 		validateCredentialTypes(credentialType);
 		Partner partner = getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
@@ -1029,12 +1029,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
 					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
 		}
-		validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyId);
+		AuthPolicy validPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyName);
 		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType(credentialType);
 		key.setPartId(partnerId);
-		key.setPolicyId(policyId);
+		key.setPolicyId(validPolicy.getId());
 		entity.setId(key);
 		entity.setCrBy(getLoggedInUserId());
 		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));

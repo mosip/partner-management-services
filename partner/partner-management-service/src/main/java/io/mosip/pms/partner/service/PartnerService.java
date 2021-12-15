@@ -162,7 +162,7 @@ public interface PartnerService {
 	 * 
 	 * @return
 	 */
-	public String mapPartnerPolicyCredentialType(String credentialType,String partnerId,String policyId);
+	public String mapPartnerPolicyCredentialType(String credentialType,String partnerId,String policyName);
 	
 	/**
 	 * 
