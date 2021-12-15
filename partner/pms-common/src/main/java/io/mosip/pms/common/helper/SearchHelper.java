@@ -120,10 +120,6 @@ public class SearchHelper {
 			throw new RequestException("PMS-MSD-394",
 					String.format(hibernateException.getMessage(), hibernateException.getLocalizedMessage()));
 		}
-		if(result.isEmpty()) {
-			throw new RequestException(SearchErrorCode.INVALID_COLUMN_VALUE.getErrorCode(),
-					String.format(SearchErrorCode.INVALID_COLUMN_VALUE.getErrorMessage()));
-		}
 		return new PageImpl<>(result,
 				PageRequest.of(searchDto.getPagination().getPageStart(), searchDto.getPagination().getPageFetch()),
 				rows);
