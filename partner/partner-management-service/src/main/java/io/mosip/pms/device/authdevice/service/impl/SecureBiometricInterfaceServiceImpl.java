@@ -465,7 +465,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("deviceDetailId"));
 		}
-		Page<DeviceDetailSBI> page = searchHelper.search(pmsEntityManager, DeviceDetailSBI.class, dto, "dprovider_id");
+		Page<DeviceDetailSBI> page = searchHelper.search(pmsEntityManager, DeviceDetailSBI.class, dto, "providerId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if(deviceDetailSearchFilter != null) {
 				String idValue = deviceDetailSearchFilter.getValue();
