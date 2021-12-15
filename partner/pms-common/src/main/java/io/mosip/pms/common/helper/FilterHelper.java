@@ -59,7 +59,7 @@ public class FilterHelper  {
 	private static final String WILD_CARD_CHARACTER = "%";
 	private static final String FILTER_VALUE_EMPTY = "";
 
-	@Value("${mosip.pms.filtervalue.max_columns:100}")
+	@Value("${mosip.pms.filtervalue.max_columns:500}")
 	int filterValueMaxColumns;
 
 	@SuppressWarnings("unchecked")
