@@ -893,7 +893,7 @@ public class PolicyServiceTest {
 		FilterData filterData = new FilterData("test","test");
 		List<FilterData> filterDataList = new ArrayList<>();
 		filterDataList.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filterDataList);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filterDataList);
 		service.policyFilterValues(filterValueDto);
 	}
 
@@ -943,7 +943,7 @@ public class PolicyServiceTest {
 		FilterData filterData = new FilterData("test","test");
 		List<FilterData> filterDataList = new ArrayList<>();
 		filterDataList.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filterDataList);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filterDataList);
 		service.policyGroupFilterValues(filterValueDto);
 	}
 

@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -52,7 +51,6 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@Transactional("authDeviceTransactionManager")
 public class DeviceDetailServiceTest {
 
 	@Mock
@@ -189,7 +187,7 @@ public class DeviceDetailServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
 				Mockito.any(), Mockito.any());
 		deviceDetaillService.searchDeviceType(DeviceDetail.class, deviceSearchDto);
 	}
@@ -199,7 +197,7 @@ public class DeviceDetailServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
 				Mockito.any(),Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
@@ -209,7 +207,7 @@ public class DeviceDetailServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(), Mockito.any(),
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
 				Mockito.any(), Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
@@ -228,7 +226,7 @@ public class DeviceDetailServiceTest {
 		FilterData filterData = new FilterData("test","test");		
 		List<FilterData> filtersData = new ArrayList<>();
 		filtersData.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 //		 Mockito.doReturn(true).when(filterHelper).filterValuesWithCode(Mockito.any(),
 //		 Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		deviceDetaillService.deviceFilterValues(deviceFilterDto);
@@ -245,7 +243,7 @@ public class DeviceDetailServiceTest {
 		List<FilterData> filtersData = new ArrayList<>();
 		FilterData filterData = new FilterData("test","test");
 		filtersData.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.deviceTypeFilterValues(deviceFilterDto);
 	}
 
@@ -260,7 +258,7 @@ public class DeviceDetailServiceTest {
 		List<FilterData> filtersData = new ArrayList<>();
 		FilterData filterData = new FilterData("test","test");
 		filtersData.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		deviceDetaillService.deviceSubTypeFilterValues(deviceFilterDto);
 	}
 

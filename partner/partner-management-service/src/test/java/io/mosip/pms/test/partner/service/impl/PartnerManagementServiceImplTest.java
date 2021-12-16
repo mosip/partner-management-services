@@ -22,9 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
@@ -42,8 +42,8 @@ import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
@@ -51,7 +51,6 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional("pmsPlatformTransactionManager")
 public class PartnerManagementServiceImplTest {
 	
 	@Autowired

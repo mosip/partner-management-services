@@ -16,9 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -148,9 +145,6 @@ public class PolicyManagementService {
 
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -985,7 +979,7 @@ public class PolicyManagementService {
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PolicyGroup.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, PolicyGroup.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(PolicyGroup.class,
 						filterDto, filterValueDto, "name");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
@@ -1021,7 +1015,7 @@ public class PolicyManagementService {
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), AuthPolicy.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, AuthPolicy.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(AuthPolicy.class,
 						filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();

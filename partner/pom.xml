@@ -115,6 +115,11 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		 <dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-dataaccess-hibernate</artifactId>
+			<version>${kernel-dataaccess-hibernate.version}</version>
+		</dependency>		
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>

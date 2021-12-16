@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,9 +73,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 	@Autowired
 	FilterHelper filterHelper;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Autowired
 	private PageUtils pageUtils;
@@ -274,8 +268,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), MISPLicenseEntity.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager,
-						MISPLicenseEntity.class, filterDto, filterValueDto, "mispId");
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(MISPLicenseEntity.class, filterDto, filterValueDto, "mispId");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
@@ -292,7 +285,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	@Override
 	public PageResponseDto<MISPLicenseEntity> search(SearchDto dto) {
 		PageResponseDto<MISPLicenseEntity> pageDto = new PageResponseDto<>();
-		Page<MISPLicenseEntity> page = searchHelper.search(entityManager, MISPLicenseEntity.class, dto, "mispId");
+		Page<MISPLicenseEntity> page = searchHelper.search(MISPLicenseEntity.class, dto, "mispId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			pageDto = pageUtils.sortPage(page.getContent(), dto.getSort(), dto.getPagination(),
 					page.getTotalElements());
