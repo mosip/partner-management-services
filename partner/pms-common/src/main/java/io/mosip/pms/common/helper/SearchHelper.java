@@ -64,8 +64,7 @@ public class SearchHelper {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public <E> Page<E> search(EntityManager entityManager,Class<E> entity, SearchDto searchDto, String partnerIdColumn) {
-		this.entityManager= entityManager;
+	public <E> Page<E> search(Class<E> entity, SearchDto searchDto, String partnerIdColumn) {		
 		if (partnerIdColumn != null) {
 			addPartnerFilter(searchDto, partnerIdColumn);
 		}

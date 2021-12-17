@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -20,15 +20,15 @@ public class DeviceDetailSBI implements Serializable{
 	 */
 	private static final long serialVersionUID = -6587350884850245583L;
 	
-//	@EmbeddedId
-//	private DeviceDetailSBIPK id; 
+	@EmbeddedId
+	private DeviceDetailSBIPK id; 
 	
-	@Id
-	@Column(name = "device_detail_id")
-	private String deviceDetailId;
-	
-	@Column(name = "sbi_id")
-	private String sbiId;
+//	@Id
+//	@Column(name = "device_detail_id")
+//	private String deviceDetailId;
+//	
+//	@Column(name = "sbi_id")
+//	private String sbiId;
 	
 	@Column(name = "dprovider_id")
 	private String providerId;

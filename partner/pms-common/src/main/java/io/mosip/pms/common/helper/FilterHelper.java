@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -39,6 +40,12 @@ public class FilterHelper  {
 
 	@Autowired
 	private SearchHelper masterdataSearchHelper;
+	
+	/**
+	 * Field for interface used to interact with the persistence context.
+	 */
+	@PersistenceContext
+	private EntityManager entityManager;
 
 
 	@PostConstruct
@@ -63,7 +70,7 @@ public class FilterHelper  {
 	int filterValueMaxColumns;
 
 	@SuppressWarnings("unchecked")
-	public <E, T> List<T> filterValues(EntityManager entityManager,Class<E> entity, FilterDto filterDto, FilterValueDto filterValueDto) {
+	public <E, T> List<T> filterValues(Class<E> entity, FilterDto filterDto, FilterValueDto filterValueDto) {
 		String columnName = filterDto.getColumnName();
 		String columnType = filterDto.getType();
 		List<Predicate> predicates = new ArrayList<>();
@@ -121,7 +128,7 @@ public class FilterHelper  {
 				|| columnType.equals(FILTER_VALUE_ALL) || columnType.equals(FILTER_VALUE_EMPTY));
 	}
 
-	public <E> List<FilterData> filterValuesWithCode(EntityManager entityManager,Class<E> entity, FilterDto filterDto,
+	public <E> List<FilterData> filterValuesWithCode(Class<E> entity, FilterDto filterDto,
 			FilterValueDto filterValueDto, String fieldCodeColumnName) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

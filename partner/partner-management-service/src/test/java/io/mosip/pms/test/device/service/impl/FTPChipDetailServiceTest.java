@@ -22,11 +22,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
-
 import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -47,13 +46,11 @@ import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailUpdateDto;
-
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@Transactional("authDeviceTransactionManager")
 public class FTPChipDetailServiceTest {
 	
 	@InjectMocks
@@ -214,7 +211,7 @@ public class FTPChipDetailServiceTest {
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("1234");
 		ftpChipDetail.setFtpProviderId("1234");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.anyString());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(), Mockito.anyString());
 		ftpChipDetailService.searchFTPChipDetails(FTPChipDetail.class, deviceSearchDto);	
 	}
 	

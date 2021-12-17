@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,9 +85,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     
 	private final static String LINE_SEPARATOR = "\n";
-		
-	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
-	private EntityManager entityManager;
 	
 	@Autowired
 	SearchHelper searchHelper;
@@ -432,7 +426,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<FTPSearchResponseDto> partners=new ArrayList<>();
 		PageResponseDto<FTPSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto, "ftpProviderId");
+		Page<E> page =searchHelper.search(entity, dto, "ftpProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
 		}

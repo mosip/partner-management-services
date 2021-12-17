@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,7 +49,6 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
-@Transactional("authDeviceTransactionManager")
 public class SBIServiceTest {
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -191,7 +189,7 @@ public class SBIServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(), Mockito.any());
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 	
@@ -200,7 +198,7 @@ public class SBIServiceTest {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(secureBiometricInterface))).when(searchHelper).search(Mockito.any(),Mockito.any(), Mockito.any());
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 	

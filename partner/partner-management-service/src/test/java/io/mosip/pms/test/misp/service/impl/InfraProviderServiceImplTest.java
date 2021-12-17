@@ -26,7 +26,6 @@ import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest//(classes = { PartnerManagementServiceTest.class })
-@Transactional("pmsPlatformTransactionManager")
 public class InfraProviderServiceImplTest {
 
 	@Autowired
