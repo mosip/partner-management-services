@@ -146,8 +146,11 @@
 		    <artifactId>javassist</artifactId>
 		    <version>3.27.0-GA</version>
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>2.12.0</version>
 			</dependency>
@@ -166,7 +169,8 @@
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>2.12.0</version>
 			</dependency>
-	</dependencies>	
+		</dependencies>
+	</dependencyManagement>	
 	<build>	
 		<plugins>
 			<plugin>
