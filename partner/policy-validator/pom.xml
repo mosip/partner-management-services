@@ -15,8 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
     <jackson.datatype.version>2.9.8</jackson.datatype.version>
-    <json.version>20180813</json.version>
-    <log4j2.version>2.16.0</log4j2.version>     
+    <json.version>20180813</json.version>     
   </properties>
   <dependencies>
     <dependency>
