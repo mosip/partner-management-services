@@ -42,10 +42,10 @@ import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.validator.FilterColumnValidator;
-import io.mosip.pms.policy.dto.AuthPolicyDto;
 import io.mosip.pms.policy.dto.FilterResponseCodeDto;
 import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyCreateResponseDto;
+import io.mosip.pms.policy.dto.PolicyDetailsDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateRequestDto;
 import io.mosip.pms.policy.dto.PolicyGroupCreateResponseDto;
 import io.mosip.pms.policy.dto.PolicyGroupUpdateRequestDto;
@@ -56,7 +56,6 @@ import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.policy.dto.ResponseWrapper;
-import io.mosip.pms.policy.dto.ShareableAttributesDto;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.test.PolicyServiceTest;
@@ -284,10 +283,10 @@ public class PolicyManagementControllerTest {
 	
 	@Test
 	@WithMockUser(roles = {"POLICYMANAGER"})
-	public void getPolicyWithApiKeyTest() throws Exception{
-		PolicyResponseDto response = new PolicyResponseDto();
-		Mockito.when(policyManagementService.findPolicy(Mockito.any())).thenReturn(response);		
-		mockMvc.perform(MockMvcRequestBuilders.get("/policies/apikey/12345")).
+	public void getPoliciesByGroupName() throws Exception{
+		List<PolicyDetailsDto> response = new ArrayList<>();
+		Mockito.when(policyManagementService.getActivePolicyDetailsByGroupName(Mockito.any())).thenReturn(response);		
+		mockMvc.perform(MockMvcRequestBuilders.get("/policies/active/group/12345")).
 		andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 	
@@ -335,44 +334,6 @@ public class PolicyManagementControllerTest {
         request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         request.setMetadata("{}");
         return request;
-	}
-
-	
-	
-//	private PolicyUpdateRequestDto createUpdatePolicyRequest() {
-//		PolicyUpdateRequestDto request = new PolicyUpdateRequestDto();
-//		request.setPolicies(createAuthPolicyInput());
-//		request.setDesc("Policy desc Updated.");
-//		request.setName("Updated Policy Name");
-//		return request;
-//	}
-
-//	private PolicyDto createAuthPolicyInput() {
-//		PolicyDto policy = new PolicyDto();
-//		policy.setAllowedKycAttributes(getAllowedKycAttributes());
-//		policy.setAuthPolicies(getAuthPolicies());
-//		return policy;
-//	}
-
-	@SuppressWarnings("unused")
-	private List<AuthPolicyDto> getAuthPolicies() {
-		List<AuthPolicyDto> authPolicies = new ArrayList<AuthPolicyDto>();
-		AuthPolicyDto dto = new AuthPolicyDto();		
-		dto.setAuthSubType("otp");
-		dto.setAuthSubType("none");
-		dto.setMandatory(true);
-		authPolicies.add(dto);		
-		return authPolicies;
-	}
-
-	@SuppressWarnings("unused")
-	private List<ShareableAttributesDto> getAllowedKycAttributes() {
-		List<ShareableAttributesDto> allowedKycList = new ArrayList<ShareableAttributesDto>();
-		ShareableAttributesDto dto =  new ShareableAttributesDto();
-		dto.setAttributeName("Name");
-		dto.setEncrypted(true);
-		allowedKycList.add(dto);
-		return allowedKycList;
 	}
 
 	private RequestWrapper<PolicyGroupCreateRequestDto> createPolicyGroupRequest() {

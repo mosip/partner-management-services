@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -288,7 +287,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			DeviceSearchDto dto) {
 		List<SbiSearchResponseDto> sbis = new ArrayList<>();
 		PageResponseDto<SbiSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<SecureBiometricInterface> page = searchHelper.search(SecureBiometricInterface.class, dto, null);
+		Page<SecureBiometricInterface> page = searchHelper.search(SecureBiometricInterface.class, dto, "providerId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 sbis=mapSbiResponse(page.getContent());
 			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -304,9 +303,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	private List<SbiSearchResponseDto> mapSbiResponse(List<SecureBiometricInterface> sbiDetails){
 		List<SbiSearchResponseDto> response = new ArrayList<>();
 		sbiDetails.forEach(sbi->{
-			//assuming inputed device details belong to same device provider
-			SbiSearchResponseDto dto = new SbiSearchResponseDto();	
-			
+			SbiSearchResponseDto dto = new SbiSearchResponseDto();				
 			dto.setCrBy(sbi.getCrBy());
 			dto.setCrDtimes(sbi.getCrDtimes());
 			dto.setDelDtimes(sbi.getDelDtimes());
@@ -450,10 +447,6 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("deviceDetailId"))) {
 			deviceDetailSearchFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("deviceDetailId")).findFirst().get();
-			Optional<Partner> loggedInPartner = partnerRepository.findById(deviceDetailSearchFilter.getValue());
-			if(loggedInPartner.isPresent()) {
-				deviceDetailSearchFilter.setValue(loggedInPartner.get().getId());
-			}
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("deviceDetailId"));
 		}
 		Page<DeviceDetailSBI> page = searchHelper.search(DeviceDetailSBI.class, dto, "providerId");

@@ -670,25 +670,6 @@ public class PolicyManagementService {
 	}
 
 	/**
-	 * This method is used to find policy mapped to partner api key.
-	 * 
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * 
-	 */
-	public PolicyResponseDto getAuthPolicyWithApiKey(String partnerApiKey)
-			throws FileNotFoundException, IOException, ParseException {
-		PartnerPolicy partnerPolicy = partnerPolicyRepository.findByApiKey(partnerApiKey);
-		if (partnerPolicy == null) {			
-			logger.error("The given apikey {} is not mapped to any policy and partner", partnerApiKey);
-			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorCode(),
-					ErrorMessages.NO_POLICY_AGAINST_APIKEY.getErrorMessage());
-		}
-		return findPolicy(partnerPolicy.getPolicyId());
-	}
-
-	/**
 	 * 
 	 * @param partnerId
 	 * @param policyId

@@ -185,19 +185,6 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/apikey/{apikey}")
-	@Operation(summary = "Service to get mapped policy for given api key", description = "Service to get mapped policy for given api key")
-	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String apikey)
-			throws FileNotFoundException, IOException, ParseException {
-		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
-		response.setResponse(policyGroup);
-		logger.info("Returning response from PolicyManagementController.");
-		return response;
-	}
-
 	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN','CREDENTIAL_ISSUANCE','CREATE_SHARE')")
 	@GetMapping(value = "/{policyId}/partner/{partnerId}")
 	@Operation(summary = "Service to get policy for given partner and policy id", description = "Service to get policy for given partner and policy id")

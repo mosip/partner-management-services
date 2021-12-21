@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +21,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.pms.common.constant.Purpose;
+import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
+import io.mosip.pms.common.entity.DeviceDetailSBI;
+import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
+import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
@@ -40,6 +45,9 @@ import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistory
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.authdevice.service.impl.SecureBiometricInterfaceServiceImpl;
+import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
+import io.mosip.pms.device.constant.SecureBiometricInterfaceConstant;
+import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
@@ -52,12 +60,18 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 public class SBIServiceTest {
 	@Autowired
 	private ObjectMapper objectMapper;
+	
 	@Mock
 	PageUtils pageUtils;
+	
 	@Mock
 	SearchHelper searchHelper;
+	
 	@Mock
 	FilterColumnValidator filterColumnValidator;
+	
+	@Mock
+	FilterHelper filterHelper;
 	
 	@InjectMocks
 	SecureBiometricInterfaceService secureBiometricInterfaceService=new SecureBiometricInterfaceServiceImpl();
@@ -72,6 +86,9 @@ public class SBIServiceTest {
 	
 	@Mock
 	PartnerServiceRepository partnerRepository;
+	
+	@Mock
+	DeviceDetailSbiRepository deviceDetailSbiRepository;
 	
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	DeviceDetail deviceDetail=new DeviceDetail();
@@ -206,6 +223,38 @@ public class SBIServiceTest {
     public void createSBITest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto).getId().equals("1234"));
     }
+	
+	@Test
+    public void createSBITest01() throws Exception {
+		sbicreatedto.setSwCreateDateTime(LocalDateTime.now());
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().minusDays(3));
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode()));
+		}
+    }
+	
+	@Test
+    public void createSBITest02() throws Exception {
+		sbicreatedto.setSwCreateDateTime(LocalDateTime.now().minusDays(4));
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().minusDays(3));
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode()));
+		}
+    }
+	
+	@Test
+    public void createSBITest03() throws Exception {
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(null);
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode()));
+		}
+    }
 
 	@Test
     public void updateDeviceDetailTest() throws Exception {
@@ -246,5 +295,170 @@ public class SBIServiceTest {
 		request.setApprovalStatus(status);
 		request.setId("121");
 		return request;
+	}
+	
+	@Test
+	public void mapDeviceDetailAndSbiTest01() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(new DeviceDetailSBI());
+		assertTrue(secureBiometricInterfaceService.mapDeviceDetailAndSbi(request).equals("Mapping already exists"));
+	}
+	
+	@Test
+	public void mapDeviceDetailAndSbiTest02() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getDeviceDetailId())).thenReturn(null);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void mapDeviceDetailAndSbiTest03() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(null);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void mapDeviceDetailAndSbiTest04() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		deviceDetail.setDeviceProviderId("12345");
+		secureBiometricInterface.setProviderId("3456");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(secureBiometricInterface);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.DD_SBI_PROVIDER_NOT_MATCHING.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void mapDeviceDetailAndSbiTest05() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		deviceDetail.setDeviceProviderId("12345");
+		secureBiometricInterface.setProviderId("12345");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(secureBiometricInterface);
+		assertTrue(secureBiometricInterfaceService.mapDeviceDetailAndSbi(request).equals("Success"));
+	}
+	
+	@Test
+	public void deleteDeviceDetailAndSbiMappingTest01() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");		
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		try {
+			secureBiometricInterfaceService.deleteDeviceDetailAndSbiMapping(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void deleteDeviceDetailAndSbiMappingTest02() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		DeviceDetailSBI validRecords = new DeviceDetailSBI();
+		DeviceDetailSBIPK key = new DeviceDetailSBIPK();
+		key.setDeviceDetailId("deviceDetailId");
+		key.setSbiId("sbiid");
+		validRecords.setId(key);		
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");		
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(validRecords);
+		assertTrue(secureBiometricInterfaceService.deleteDeviceDetailAndSbiMapping(request).equals("Success"));	
+	}
+	
+	@Test
+	public void searchMappedDeviceDetailsTest01() {
+		DeviceSearchDto searchDto = new DeviceSearchDto();
+		SearchFilter filterSearch = new SearchFilter();
+		filterSearch.setValue("Test");
+		filterSearch.setColumnName("deviceDetailId");
+		Partner validPartner = new Partner();
+		validPartner.setId("partner");
+		validPartner.setName("partnerName");
+		List<SearchFilter> searchFilters = new ArrayList<>();
+		searchFilters.add(filterSearch);
+		searchDto.setFilters(searchFilters);
+		DeviceDetailSBI validRecords = new DeviceDetailSBI();
+		DeviceDetailSBIPK key = new DeviceDetailSBIPK();
+		key.setDeviceDetailId("deviceDetailId");
+		key.setSbiId("sbiid");
+		validRecords.setId(key);
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(validRecords))).when(searchHelper).search(Mockito.any(),
+				Mockito.any(),Mockito.anyString());
+		secureBiometricInterfaceService.searchMappedDeviceDetails(DeviceDetailSBI.class, searchDto);				
+	}
+	
+	@Test
+	public void searchMappedDeviceDetailsTest02() {
+		DeviceSearchDto searchDto = new DeviceSearchDto();
+		SearchFilter filterSearch = new SearchFilter();
+		filterSearch.setValue("Test");
+		filterSearch.setColumnName("providerId");
+		Partner validPartner = new Partner();
+		validPartner.setId("partner");
+		validPartner.setName("partnerName");
+		List<SearchFilter> searchFilters = new ArrayList<>();
+		searchFilters.add(filterSearch);
+		searchDto.setFilters(searchFilters);
+		DeviceDetailSBI validRecords = new DeviceDetailSBI();
+		DeviceDetailSBIPK key = new DeviceDetailSBIPK();
+		key.setDeviceDetailId("deviceDetailId");
+		key.setSbiId("sbiid");
+		validRecords.setId(key);
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(validRecords))).when(searchHelper).search(Mockito.any(),
+				Mockito.any(),Mockito.anyString());
+		DeviceDetail deviceDetail = new DeviceDetail();
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		deviceDetail.setId("deviceDetailId");
+		deviceDetail.setMake("001");
+		deviceDetail.setModel("001");
+		sbi.setActive(true);
+		sbi.setId("sbiid");
+		sbi.setProviderId("12345");
+		Mockito.when(deviceDetailRepository.findAll()).thenReturn(List.of(deviceDetail));
+		Mockito.when(sbiRepository.findAll()).thenReturn(List.of(sbi));
+		secureBiometricInterfaceService.searchMappedDeviceDetails(DeviceDetailSBI.class, searchDto);				
+	}
+	
+	@Test
+	public void filterValuesTest() {
+		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		FilterValueDto filterValueDto = new FilterValueDto();
+		List<FilterDto> filterDtos = new ArrayList<FilterDto>();
+		filterDtos.add(filterDto);
+		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
+		searchDtos.add(searchDto);
+		filterValueDto.setFilters(filterDtos);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		secureBiometricInterfaceService.filterValues(filterValueDto);
 	}
 }
