@@ -20,8 +20,6 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -35,6 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.FilterData;
@@ -60,6 +59,7 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.policy.dto.ColumnCodeValue;
@@ -108,7 +108,7 @@ import io.mosip.pms.policy.validator.spi.PolicyValidator;
 @Service
 public class PolicyManagementService {
 
-	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementService.class);
+	private static final Logger logger = PMSLogger.getLogger(PolicyManagementService.class);
 
 	@Autowired
 	private AuthPolicyRepository authPolicyRepository;
