@@ -1,6 +1,5 @@
 package io.mosip.pms.test.device.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,9 +35,7 @@ import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
-import io.mosip.pms.device.authdevice.entity.FoundationalTrustProvider;
 import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
-import io.mosip.pms.device.authdevice.repository.FoundationalTrustProviderRepository;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
@@ -63,9 +60,6 @@ public class FTPChipDetailServiceTest {
 	PartnerServiceRepository partnerServiceRepository;
 	
 	@Mock
-	FoundationalTrustProviderRepository foundationalTrustProviderRepository;
-	
-	@Mock
 	RestUtil restUtil;
 	
 	@Mock
@@ -85,13 +79,11 @@ public class FTPChipDetailServiceTest {
 	DeviceSearchDto deviceSearchDto = new DeviceSearchDto();
 	SearchFilter searchDto = new SearchFilter();
 	Pagination pagination = new Pagination();
-	SearchSort searchSort = new SearchSort();
-	FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
+	SearchSort searchSort = new SearchSort();	
 	
 	@Before
 	public void setup() {
 		ReflectionTestUtils.setField(ftpChipDetailService, "partnerServiceRepository", partnerServiceRepository);
-		ReflectionTestUtils.setField(ftpChipDetailService, "foundationalTrustProviderRepository", foundationalTrustProviderRepository);
 		ReflectionTestUtils.setField(ftpChipDetailService,"searchHelper",searchHelper);
 		ReflectionTestUtils.setField(ftpChipDetailService,"restUtil",restUtil);
 		ReflectionTestUtils.setField(ftpChipDetailService,"environment",environment);
@@ -99,14 +91,6 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetailDto.setFtpProviderId("1234");
 		ftpChipDetailDto.setMake("make");
 		ftpChipDetailDto.setModel("model");
-		foundationalTrustProvider.setActive(true);
-		foundationalTrustProvider.setCrBy("admin");
-		foundationalTrustProvider.setId("1234");
-		foundationalTrustProvider.setCrDtimes(LocalDateTime.now());
-		foundationalTrustProvider.setDelDtimes(LocalDateTime.now());
-		foundationalTrustProvider.setDeleted(false);
-		foundationalTrustProvider.setUpdBy("system");
-		foundationalTrustProvider.setUpdDtimes(LocalDateTime.now());
 		
 		searchDto.setColumnName("model");
     	searchDto.setFromValue("");
@@ -132,14 +116,12 @@ public class FTPChipDetailServiceTest {
 	
 	@Test
 	public void createFTPChipDetailtest() {
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
-		Mockito.when(foundationalTrustProviderRepository.findByIdAndIsActiveTrue(Mockito.anyString())).thenReturn(foundationalTrustProvider);
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);		
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
 	}
 	
 	@Test(expected = RequestException.class)
-	public void createFTPChipDetailtest01() {
-		Mockito.when(foundationalTrustProviderRepository.findByIdAndIsActiveTrue(Mockito.anyString())).thenReturn(foundationalTrustProvider);
+	public void createFTPChipDetailtest01() {	
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
 	}	
 	
@@ -148,10 +130,7 @@ public class FTPChipDetailServiceTest {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
-		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
-		FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
-		Optional<FoundationalTrustProvider> opt_foundational = Optional.of(foundationalTrustProvider);
-		Mockito.when(foundationalTrustProviderRepository.findById(Mockito.anyString())).thenReturn(opt_foundational);
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);	
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
@@ -162,10 +141,7 @@ public class FTPChipDetailServiceTest {
 	public void updateFtpChipDetailsTest02() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
-		ftpChipDetail.setFtpChipDetailId("12345");
-		FoundationalTrustProvider foundationalTrustProvider = new FoundationalTrustProvider();
-		Optional<FoundationalTrustProvider> opt_foundational = Optional.of(foundationalTrustProvider);
-		Mockito.when(foundationalTrustProviderRepository.findById(Mockito.anyString())).thenReturn(opt_foundational);
+		ftpChipDetail.setFtpChipDetailId("12345");	
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);

@@ -3,12 +3,7 @@ package io.mosip.pms.device.response.dto;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import io.mosip.pms.device.authdevice.entity.FoundationalTrustProvider;
 
 public class FTPSearchResponseDto {
 	
@@ -51,10 +46,6 @@ public class FTPSearchResponseDto {
 
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "foundational_trust_provider_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private FoundationalTrustProvider ftpProvider;
 
 	public String getFtpChipDetailId() {
 		return ftpChipDetailId;
