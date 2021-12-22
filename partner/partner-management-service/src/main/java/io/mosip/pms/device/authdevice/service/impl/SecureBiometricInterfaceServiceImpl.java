@@ -6,12 +6,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -285,16 +281,13 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				String.format(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage(),
 						secureBiometricInterfaceDto.getId()));
 	}
-
-	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
-	private EntityManager entityManager;
-
+	
 	@Override
 	public <E> PageResponseDto<SbiSearchResponseDto> searchSecureBiometricInterface(Class<E> entity,
 			DeviceSearchDto dto) {
 		List<SbiSearchResponseDto> sbis = new ArrayList<>();
 		PageResponseDto<SbiSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<SecureBiometricInterface> page = searchHelper.search(entityManager, SecureBiometricInterface.class, dto, null);
+		Page<SecureBiometricInterface> page = searchHelper.search(SecureBiometricInterface.class, dto, "providerId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 sbis=mapSbiResponse(page.getContent());
 			 pageDto = pageUtils.sortPage(sbis, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -310,9 +303,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	private List<SbiSearchResponseDto> mapSbiResponse(List<SecureBiometricInterface> sbiDetails){
 		List<SbiSearchResponseDto> response = new ArrayList<>();
 		sbiDetails.forEach(sbi->{
-			//assuming inputed device details belong to same device provider
-			SbiSearchResponseDto dto = new SbiSearchResponseDto();	
-			
+			SbiSearchResponseDto dto = new SbiSearchResponseDto();				
 			dto.setCrBy(sbi.getCrBy());
 			dto.setCrDtimes(sbi.getCrDtimes());
 			dto.setDelDtimes(sbi.getDelDtimes());
@@ -447,9 +438,6 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		deviceDetailSbiRepository.delete(deviceDetailFromDb);
 		return "Success";
 	}
-
-	@PersistenceContext
-	private EntityManager pmsEntityManager;
 	
 	@Override
 	public <E> PageResponseDto<MappedDeviceDetailsReponse> searchMappedDeviceDetails(Class<E> entity, DeviceSearchDto dto) {		
@@ -459,13 +447,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("deviceDetailId"))) {
 			deviceDetailSearchFilter = dto.getFilters().stream()
 					.filter(cn -> cn.getColumnName().equalsIgnoreCase("deviceDetailId")).findFirst().get();
-			Optional<Partner> loggedInPartner = partnerRepository.findById(deviceDetailSearchFilter.getValue());
-			if(loggedInPartner.isPresent()) {
-				deviceDetailSearchFilter.setValue(loggedInPartner.get().getId());
-			}
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("deviceDetailId"));
 		}
-		Page<DeviceDetailSBI> page = searchHelper.search(pmsEntityManager, DeviceDetailSBI.class, dto, "providerId");
+		Page<DeviceDetailSBI> page = searchHelper.search(DeviceDetailSBI.class, dto, "providerId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if(deviceDetailSearchFilter != null) {
 				String idValue = deviceDetailSearchFilter.getValue();
@@ -512,7 +496,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), SecureBiometricInterface.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, SecureBiometricInterface.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(SecureBiometricInterface.class,
 						filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();

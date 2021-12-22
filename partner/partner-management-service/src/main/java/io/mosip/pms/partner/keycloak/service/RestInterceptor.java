@@ -5,8 +5,6 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +27,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.dto.AccessTokenResponse;
 
 /**
@@ -42,7 +42,7 @@ import io.mosip.pms.partner.dto.AccessTokenResponse;
 @Component
 public class RestInterceptor implements ClientHttpRequestInterceptor {
 
-	private static final Logger LOGGER= LoggerFactory.getLogger(RestInterceptor.class);
+	private static final Logger LOGGER= PMSLogger.getLogger(RestInterceptor.class);
 	
 	@Autowired
 	private MemoryCache<String, AccessTokenResponse> memoryCache;

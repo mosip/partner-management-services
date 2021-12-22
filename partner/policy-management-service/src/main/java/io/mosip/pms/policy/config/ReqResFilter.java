@@ -10,11 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
+
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 
 /**
  * @author Nagarjuna Kuchi
@@ -23,7 +23,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
  */
 public class ReqResFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReqResFilter.class);
+	private static final Logger logger = PMSLogger.getLogger(ReqResFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {

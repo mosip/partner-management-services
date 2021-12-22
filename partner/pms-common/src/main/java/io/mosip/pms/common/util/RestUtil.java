@@ -22,8 +22,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.TrustStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -40,6 +38,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.core.util.TokenHandlerUtil;
@@ -52,7 +51,7 @@ import io.mosip.pms.common.exception.ApiAccessibleException;
 @Component
 public class RestUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
+	private static final Logger logger = PMSLogger.getLogger(RestUtil.class);
 
 	@Autowired
 	private Environment environment;

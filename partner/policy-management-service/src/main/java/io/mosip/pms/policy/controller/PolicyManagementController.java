@@ -7,8 +7,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +22,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PolicyFilterValueDto;
@@ -31,6 +30,7 @@ import io.mosip.pms.common.dto.PolicySearchDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.policy.dto.FilterResponseCodeDto;
 import io.mosip.pms.policy.dto.KeyValuePair;
 import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
@@ -58,7 +58,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @Api(tags = { "policy management controller " })
 public class PolicyManagementController {
 
-	private static final Logger logger = LoggerFactory.getLogger(PolicyManagementController.class);
+	private static final Logger logger = PMSLogger.getLogger(PolicyManagementController.class);
 
 	@Autowired
 	private PolicyManagementService policyManagementService;
@@ -181,19 +181,6 @@ public class PolicyManagementController {
 		logger.info("Calling PolicyManagementService from PolicyManageController.");
 		PolicyResponseDto responseDto = policyManagementService.findPolicy(policyId);
 		response.setResponse(responseDto);
-		logger.info("Returning response from PolicyManagementController.");
-		return response;
-	}
-
-	@PreAuthorize("hasAnyRole('POLICYMANAGER','PARTNER_ADMIN')")
-	@GetMapping(value = "/apikey/{apikey}")
-	@Operation(summary = "Service to get mapped policy for given api key", description = "Service to get mapped policy for given api key")
-	public ResponseWrapper<PolicyResponseDto> getPolicyAgainstApiKey(@PathVariable String apikey)
-			throws FileNotFoundException, IOException, ParseException {
-		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<>();
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		PolicyResponseDto policyGroup = policyManagementService.getAuthPolicyWithApiKey(apikey);
-		response.setResponse(policyGroup);
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}

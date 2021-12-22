@@ -14,11 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -37,6 +32,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
@@ -51,11 +47,10 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
-import io.mosip.pms.device.authdevice.entity.FoundationalTrustProvider;
 import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
-import io.mosip.pms.device.authdevice.repository.FoundationalTrustProviderRepository;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
@@ -81,16 +76,13 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 @Transactional
 public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(FTPChipDetailServiceImpl.class);
+	private static final Logger LOGGER = PMSLogger.getLogger(FTPChipDetailServiceImpl.class);
 	
 	private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
 	
 	private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     
 	private final static String LINE_SEPARATOR = "\n";
-		
-	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
-	private EntityManager entityManager;
 	
 	@Autowired
 	SearchHelper searchHelper;
@@ -106,9 +98,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	
 	@Autowired
 	FTPChipDetailRepository ftpChipDetailRepository;
-	
-	@Autowired
-	FoundationalTrustProviderRepository foundationalTrustProviderRepository; 
 	
 	@Autowired
 	PartnerServiceRepository partnerServiceRepository;
@@ -162,22 +151,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
 			
 		}
-		FoundationalTrustProvider ftpProvider = foundationalTrustProviderRepository.findByIdAndIsActiveTrue(chipDetails.getFtpProviderId());
-		FoundationalTrustProvider entity = new FoundationalTrustProvider();
-		entity.setActive(true);
-		entity.setDeleted(false);
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		FTPChipDetail chipDetail = new FTPChipDetail();
-		if (!EmptyCheckUtils.isNullEmpty(authN)) {
-			entity.setCrBy(authN.getName());
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {			
 			chipDetail.setCrBy(authN.getName());
-		}
-		entity.setCrDtimes(LocalDateTime.now());
-		entity.setId(partnerFromDb.getId());
-		if(ftpProvider == null) {
-			foundationalTrustProviderRepository.save(entity);
-		}
-		
+		}		
 		chipDetail.setActive(false);
 		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
@@ -222,25 +200,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
 			
 		}
-		Optional<FoundationalTrustProvider> ftpProvider = foundationalTrustProviderRepository.findById(chipDetail.get().getFtpProviderId());
-		FoundationalTrustProvider entity = null;
-		Authentication authN = SecurityContextHolder.getContext().getAuthentication();		
-		if(ftpProvider.isEmpty()) {
-			entity = new FoundationalTrustProvider();
-			entity.setCrDtimes(LocalDateTime.now());
-			entity.setId(chipDetail.get().getFtpProviderId());
-			entity.setActive(true);
-			if (!EmptyCheckUtils.isNullEmpty(authN)) {
-				entity.setCrBy(authN.getName());
-			}
-		}else {
-			entity = ftpProvider.get();
-			entity.setUpdDtimes(LocalDateTime.now());
-			if (!EmptyCheckUtils.isNullEmpty(authN)) {
-				entity.setUpdBy(authN.getName());
-			}
-		}
-		foundationalTrustProviderRepository.save(entity);
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		FTPChipDetail updateObject = chipDetail.get();		
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			updateObject.setUpdBy(authN.getName());
@@ -432,7 +392,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<FTPSearchResponseDto> partners=new ArrayList<>();
 		PageResponseDto<FTPSearchResponseDto> pageDto = new PageResponseDto<>();		
-		Page<E> page =searchHelper.search(entityManager,entity, dto, "ftpProviderId");
+		Page<E> page =searchHelper.search(entity, dto, "ftpProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			 partners=MapperUtils.mapAll(page.getContent(), FTPSearchResponseDto.class);
 		}

@@ -12,14 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -29,7 +28,7 @@ import io.mosip.pms.common.response.dto.TemplatesResponseDto;
 @Component
 public class TemplateUtil {
 
-	private Logger log = LoggerFactory.getLogger(TemplateUtil.class);
+	private Logger log = PMSLogger.getLogger(TemplateUtil.class);
 
 	@Value("${resource.template.url}")
 	private String resourceUrl;

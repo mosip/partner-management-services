@@ -5,22 +5,22 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0-rc2-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 	
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>policy-validator</artifactId>
-            <version>1.2.0-rc2-SNAPSHOT</version>			
+            <version>1.2.0-SNAPSHOT</version>			
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -31,11 +31,6 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 			<version>1.4.2</version>
-		</dependency>
- 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${kernel-dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -98,11 +93,6 @@
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>6.4</version>
-		</dependency>	
 	</dependencies>
 	<build>
 		<plugins>

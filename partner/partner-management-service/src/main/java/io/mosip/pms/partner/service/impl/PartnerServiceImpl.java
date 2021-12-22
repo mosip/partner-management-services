@@ -19,14 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -43,6 +38,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
@@ -86,6 +82,7 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
@@ -133,7 +130,7 @@ import io.mosip.pms.partner.util.PartnerUtil;
 @Transactional
 public class PartnerServiceImpl implements PartnerService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerServiceImpl.class);
+	private static final Logger LOGGER = PMSLogger.getLogger(PartnerServiceImpl.class);
 
 	private static final String ALL = "all";
 
@@ -980,9 +977,6 @@ public class PartnerServiceImpl implements PartnerService {
 		return response;
 	}
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	@Override
 	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
 		List<PartnerSearchResponseDto> partners = new ArrayList<>();
@@ -997,7 +991,7 @@ public class PartnerServiceImpl implements PartnerService {
 			filters.add(partnerTypeSearch);
 			dto.setFilters(filters);
 		}
-		Page<Partner> page = partnerSearchHelper.search(entityManager, Partner.class, dto, "id");
+		Page<Partner> page = partnerSearchHelper.search(Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -1010,7 +1004,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerType> searchPartnerType(SearchDto dto) {
 		List<PartnerType> partnerTypes = new ArrayList<>();
 		PageResponseDto<PartnerType> pageDto = new PageResponseDto<>();
-		Page<PartnerType> page = partnerSearchHelper.search(entityManager, PartnerType.class, dto, null);
+		Page<PartnerType> page = partnerSearchHelper.search(PartnerType.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partnerTypes = MapperUtils.mapAll(page.getContent(), PartnerType.class);
 			pageDto = pageUtils.sortPage(partnerTypes, dto.getSort(), dto.getPagination(), page.getTotalElements());
@@ -1146,7 +1140,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Partner.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, Partner.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(Partner.class,
 						filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
@@ -1168,8 +1162,7 @@ public class PartnerServiceImpl implements PartnerService {
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PartnerPolicyRequest.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager,
-						PartnerPolicyRequest.class, filterDto, filterValueDto, "id");
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(PartnerPolicyRequest.class, filterDto, filterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());
@@ -1224,7 +1217,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
 			}
 		}
-		Page<PartnerPolicy> page = partnerSearchHelper.search(entityManager, PartnerPolicy.class, dto, null);
+		Page<PartnerPolicy> page = partnerSearchHelper.search(PartnerPolicy.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {
 				String nameValue = partnerNameSearchFilter.getValue();
@@ -1321,7 +1314,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
 			}
 		}
-		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(entityManager, PartnerPolicyRequest.class, dto,
+		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(PartnerPolicyRequest.class, dto,
 				null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {

@@ -3,23 +3,23 @@ package io.mosip.pms.common.helper;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.websub.spi.PublisherClient;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.Event;
 import io.mosip.pms.common.dto.EventModel;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.util.PMSLogger;
 
 public class WebSubPublisher {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebSubPublisher.class);
+	private static final Logger logger = PMSLogger.getLogger(WebSubPublisher.class);
 	
 	@Value("${websub.publish.url}")
 	private String webSubHubPublishUrl;

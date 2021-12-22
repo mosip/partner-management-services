@@ -19,8 +19,6 @@ import javax.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -30,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
@@ -58,6 +57,7 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerConstants;
@@ -83,7 +83,7 @@ import io.mosip.pms.partner.util.PartnerUtil;
 @Transactional
 public class PartnerManagementServiceImpl implements PartnerManagerService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerManagementServiceImpl.class);
+	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
 
 	@Autowired
 	private MispLicenseKeyRepository misplKeyRepository;

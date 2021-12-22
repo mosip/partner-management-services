@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,9 +29,7 @@ import io.mosip.pms.policy.validator.exception.ServiceError;
 import io.mosip.pms.policy.validator.spi.PolicyValidator;
 
 @Component
-public class PolicySchemaValidator implements PolicyValidator{
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PolicySchemaValidator.class);
+public class PolicySchemaValidator implements PolicyValidator{	
 
 	public static final String LEVEL = "level";
 	public static final String MESSAGE = "message";
@@ -59,11 +56,9 @@ public class PolicySchemaValidator implements PolicyValidator{
 			
 			  JsonNode jsonIdObjectNode = JsonLoader.fromString(json.toString());
 				ProcessingReport report = jsonSchema.validate(jsonIdObjectNode, true);
-				LOGGER.debug("schema validation report generated : " + report);
 				if(!report.isSuccess()) {
 					List<ServiceError> errorList = getErrorsList(report);
-					if(!errorList.isEmpty()) {
-						LOGGER.error("IdObject Validation Failed with errors : " + errorList);
+					if(!errorList.isEmpty()) {						
 						throw new PolicyObjectValidationFailedException(PolicyValidatorErrorConstant.POLICY_VALIDATION_FAILED, errorList);
 					}
 				}

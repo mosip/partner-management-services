@@ -5,9 +5,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -251,9 +248,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				.format(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage(), deviceDetails.getId()));
 	}
 
-	@PersistenceContext(unitName = "authDeviceEntityManagerFactory")
-	private EntityManager entityManager;
-
 	@Override
 	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailSearchResponseDto> deviceDetails = new ArrayList<>();
@@ -271,7 +265,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			filters.add(partnerSearch);
 			dto.setFilters(filters);
 		}
-		Page<E> page = searchHelper.search(entityManager, entity, dto, "deviceProviderId");
+		Page<E> page = searchHelper.search(entity, dto, "deviceProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceDetails = MapperUtils.mapAll(page.getContent(), DeviceDetailSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(deviceDetails, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -283,7 +277,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public <E> PageResponseDto<RegistrationSubTypeDto> searchDeviceType(Class<E> entity, DeviceSearchDto dto) {
 		List<RegistrationSubTypeDto> deviceSubTypes = new ArrayList<>();
 		PageResponseDto<RegistrationSubTypeDto> pageDto = new PageResponseDto<>();
-		Page<E> page = searchHelper.search(entityManager, entity, dto, null);
+		Page<E> page = searchHelper.search(entity, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			deviceSubTypes = MapperUtils.mapAll(page.getContent(), RegistrationSubTypeDto.class);
 			pageDto = pageUtils.sortPage(deviceSubTypes, dto.getSort(), dto.getPagination(),page.getTotalElements());
@@ -298,7 +292,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), DeviceDetail.class)) {
 			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {				
 				filterDto.setColumnName(filterDto.getColumnName() + "," + "make" + "," + "model");
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, DeviceDetail.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(DeviceDetail.class,
 						filterDto, deviceFilterValueDto, "id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
@@ -324,7 +318,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), RegistrationDeviceType.class)) {
 			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, RegistrationDeviceType.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(RegistrationDeviceType.class,
 						filterDto, deviceFilterValueDto, "code");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
@@ -350,7 +344,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, deviceFilterValueDto.getFilters(), RegistrationDeviceSubType.class)) {
 			for (FilterDto filterDto : deviceFilterValueDto.getFilters()) {
-				List<FilterData> filterValues = filterHelper.filterValuesWithCode(entityManager, RegistrationDeviceSubType.class,
+				List<FilterData> filterValues = filterHelper.filterValuesWithCode(RegistrationDeviceSubType.class,
 						filterDto, deviceFilterValueDto, "code");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
