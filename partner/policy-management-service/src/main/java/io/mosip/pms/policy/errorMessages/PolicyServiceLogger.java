@@ -1,11 +1,11 @@
 package io.mosip.pms.policy.errorMessages;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 
 public class PolicyServiceLogger {
 	
-	private static final Logger logger = LoggerFactory.getLogger(PolicyServiceLogger.class);
+	private static final Logger logger = PMSLogger.getLogger(PolicyServiceLogger.class);
 	
 	public static void error(String message){
 		

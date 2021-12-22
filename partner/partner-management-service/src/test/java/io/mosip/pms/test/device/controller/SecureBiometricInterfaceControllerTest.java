@@ -30,6 +30,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.constant.Purpose;
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -37,6 +39,7 @@ import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
+import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
@@ -46,7 +49,7 @@ import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest//(classes = PartnerManagementServiceTest.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
 public class SecureBiometricInterfaceControllerTest {
@@ -127,6 +130,36 @@ public class SecureBiometricInterfaceControllerTest {
         request.setMetadata("{}");
         return request;
 	}
+    
+    private RequestWrapper<FilterValueDto> createFilterRequest(){
+    	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
+    	request.setId("mosip.partnermanagement.sbi.filtervalues");
+    	request.setMetadata("{}");
+    	request.setRequest(filterValuesRequest());
+    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+    	request.setVersion("1.0");
+    	return request;
+    }
+    
+    private FilterValueDto filterValuesRequest() {
+    	FilterValueDto sbiFilterValueDto = new FilterValueDto();
+    	FilterDto filterDto = new FilterDto();
+    	SearchFilter searchFilter = new SearchFilter();
+    	searchFilter.setColumnName("name");
+		searchFilter.setFromValue("");
+		searchFilter.setToValue("");
+		searchFilter.setType("all");
+		searchFilter.setValue("m");
+		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
+    	searchDtos.add(searchFilter);
+    	filterDto.setColumnName("name");
+    	filterDto.setText("");
+    	filterDto.setType("all");
+    	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
+    	filterDtos.add(filterDto);
+    	sbiFilterValueDto.setFilters(filterDtos);    	
+    	return sbiFilterValueDto;
+    }
     
     private DeviceSearchDto searchRegSBIRequest () {
     	DeviceSearchDto dto = new DeviceSearchDto();
@@ -276,4 +309,45 @@ public class SecureBiometricInterfaceControllerTest {
     	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/search").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
+    
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void filterSecureBiometricTest() throws JsonProcessingException, Exception {
+    	RequestWrapper<FilterValueDto> createrequest=createFilterRequest();
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
+    }
+    
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void mapDeviceDetailsTest() throws JsonProcessingException, Exception {
+    	RequestWrapper<DeviceDetailSBIMappingDto> createrequest=createMappingRequest();
+    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
+    }
+    
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void removeMapDeviceDetailsTest() throws JsonProcessingException, Exception {
+    	RequestWrapper<DeviceDetailSBIMappingDto> removeMappingrequest=createMappingRequest();
+    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map/remove").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(removeMappingrequest))).andExpect(status().isOk());    	
+    }
+    
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void searchMappedDeviceDetailsSecureBiometricTest() throws JsonProcessingException, Exception {
+    	RequestWrapper<DeviceSearchDto> createrequest=searchRequest();
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/devicedetails/map/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
+    }
+
+	private RequestWrapper<DeviceDetailSBIMappingDto> createMappingRequest() {
+		RequestWrapper<DeviceDetailSBIMappingDto> request = new RequestWrapper<DeviceDetailSBIMappingDto>();
+		DeviceDetailSBIMappingDto mappingDto = new DeviceDetailSBIMappingDto();
+		mappingDto.setDeviceDetailId("devicedetailid");
+		mappingDto.setSbiId("sbiid");
+		request.setRequest(mappingDto);
+		return request;
+	}
 }

@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +26,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pms.common.dto.FilterDto;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.Pagination;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.dto.SearchSort;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
@@ -86,6 +97,53 @@ public class MISPLicenseControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/misps/12345/licenseKey")).andExpect(status().isOk());
 	}
 	
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void filterValues () throws Exception{
+		FilterResponseCodeDto response = new FilterResponseCodeDto();
+		Mockito.when(infraProvidertService.filterValues(createFilterRequest().getRequest())).thenReturn(response);		
+		mockMvc.perform(post("/misps/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createFilterRequest()))).andExpect(status().isOk());	
+	}
+	
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void search () throws Exception{
+		PageResponseDto<MISPLicenseEntity> response = new PageResponseDto<MISPLicenseEntity>();
+		Mockito.when(infraProvidertService.search(searchRequest().getRequest())).thenReturn(response);		
+		mockMvc.perform(post("/misps/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(searchRequest()))).andExpect(status().isOk());	
+	}
+	
+    private RequestWrapper<FilterValueDto> createFilterRequest(){
+    	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
+    	request.setId("mosip.partnermanagement.sbi.filtervalues");
+    	request.setMetadata("{}");
+    	request.setRequest(filterValuesRequest());
+    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+    	request.setVersion("1.0");
+    	return request;
+    }
+    
+    private FilterValueDto filterValuesRequest() {
+    	FilterValueDto sbiFilterValueDto = new FilterValueDto();
+    	FilterDto filterDto = new FilterDto();
+    	SearchFilter searchFilter = new SearchFilter();
+    	searchFilter.setColumnName("name");
+		searchFilter.setFromValue("");
+		searchFilter.setToValue("");
+		searchFilter.setType("all");
+		searchFilter.setValue("m");
+		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
+    	searchDtos.add(searchFilter);
+    	filterDto.setColumnName("name");
+    	filterDto.setText("");
+    	filterDto.setType("all");
+    	List<FilterDto> filterDtos = new ArrayList<FilterDto>();
+    	filterDtos.add(filterDto);
+    	sbiFilterValueDto.setFilters(filterDtos);    	
+    	return sbiFilterValueDto;
+    }
 	private RequestWrapper<MISPLicenseRequestDto> createRequest() {
 		RequestWrapper<MISPLicenseRequestDto> request = new RequestWrapper<MISPLicenseRequestDto>();
 		request.setId("mosip.partnerservice.MispLicense.create");
@@ -118,6 +176,40 @@ public class MISPLicenseControllerTest {
 		requestDto.setLicenseKeyStatus("active");
 		requestDto.setProviderId("1234");
 		return requestDto;
+	}
+	
+    private SearchDto searchMISPRequest () {
+    	SearchDto dto = new SearchDto();
+    	Pagination pagination = new Pagination();
+    	SearchSort searchSort = new SearchSort();
+    	SearchFilter searchFilter = new SearchFilter();
+    	searchSort.setSortField("model");
+    	searchSort.setSortType("asc");
+    	searchFilter.setColumnName("model");
+    	searchFilter.setFromValue("");
+    	searchFilter.setToValue("");
+    	searchFilter.setType("STARTSWITH");
+    	searchFilter.setValue("b");
+    	List<SearchSort> searchDtos1 = new ArrayList<SearchSort>();
+    	searchDtos1.add(searchSort);
+    	List<SearchFilter> searchfilterDtos = new ArrayList<SearchFilter>();
+    	searchfilterDtos.add(searchFilter);
+    	pagination.setPageFetch(10);
+    	pagination.setPageStart(0);
+    	dto.setFilters(searchfilterDtos);
+    	dto.setPagination(pagination);
+    	dto.setSort(searchDtos1);
+    	return dto;
+    }
+    
+    private RequestWrapper<SearchDto> searchRequest() {
+    	RequestWrapper<SearchDto> request = new RequestWrapper<SearchDto>();
+        request.setRequest(searchMISPRequest());
+        request.setId("mosip.partnermanagement.sbi.update");
+        request.setVersion("1.0");
+        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+        request.setMetadata("{}");
+        return request;
 	}
 
 	

@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.exception.AuthNException;
 import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.KeycloakPasswordDTO;
 import io.mosip.pms.partner.dto.KeycloakRequestDto;
@@ -76,7 +76,8 @@ public class KeycloakImpl{
 	private ObjectMapper objectMapper;
 
 	private String individualRoleID;
-	private static final Logger LOGGER= LoggerFactory.getLogger(KeycloakImpl.class);
+	
+	private static final Logger LOGGER= PMSLogger.getLogger(KeycloakImpl.class);
 	
 	public RolesListDto getAllRoles(String appId) {
 		Map<String, String> pathParams = new HashMap<>();

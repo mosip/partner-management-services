@@ -1,13 +1,12 @@
 package io.mosip.pms.partner.misp.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 
 public class MISPServiceException extends BaseUncheckedException {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MISPServiceException.class);
+	private static final Logger logger = PMSLogger.getLogger(MISPServiceException.class);
 	
 	/**
 	 * 

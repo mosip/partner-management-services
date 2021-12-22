@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -34,6 +32,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
@@ -48,6 +47,7 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.FoundationalTrustProvider;
@@ -78,7 +78,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 @Transactional
 public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(FTPChipDetailServiceImpl.class);
+	private static final Logger LOGGER = PMSLogger.getLogger(FTPChipDetailServiceImpl.class);
 	
 	private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
 	

@@ -17,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -34,7 +33,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 @Component
 public class NotificationUtil {
 
-	private Logger log = LoggerFactory.getLogger(NotificationUtil.class);
+	private Logger log = PMSLogger.getLogger(NotificationUtil.class);
 
 	@Value("${emailResourse.url}")
 	private String emailResourseUrl;

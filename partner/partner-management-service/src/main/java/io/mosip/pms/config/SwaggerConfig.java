@@ -1,11 +1,11 @@
 package io.mosip.pms.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class SwaggerConfig {
-	private static final Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
+	private static final Logger logger = PMSLogger.getLogger(SwaggerConfig.class);
 
 	@Autowired
 	private OpenApiProperties openApiProperties;

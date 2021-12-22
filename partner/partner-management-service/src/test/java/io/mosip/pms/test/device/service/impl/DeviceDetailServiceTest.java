@@ -193,7 +193,7 @@ public class DeviceDetailServiceTest {
 	}
 
 	@Test
-	public void searchDeviceDetailtest() throws Exception {
+	public void searchDeviceDetailTest() throws Exception {
 		objectMapper.writeValueAsString(deviceRequestDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
@@ -201,22 +201,11 @@ public class DeviceDetailServiceTest {
 				Mockito.any(),Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
-
-	@Test
-	public void searchDeviceDetailtest1() throws Exception {
-		objectMapper.writeValueAsString(deviceRequestDto);
-		DeviceDetail device = new DeviceDetail();
-		device.setId("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
-				Mockito.any(), Mockito.anyString());
-		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
-	}
+	
 
 	@Test
 	public void deviceFilterValuesTest() throws Exception {
 		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
-		// Mockito.doReturn(true).when(filterHelper).filterValuesWithCode(Mockito.any(),
-		// Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		deviceDetaillService.deviceFilterValues(deviceFilterDto);
 	}
 
@@ -227,8 +216,6 @@ public class DeviceDetailServiceTest {
 		List<FilterData> filtersData = new ArrayList<>();
 		filtersData.add(filterData);
 		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
-//		 Mockito.doReturn(true).when(filterHelper).filterValuesWithCode(Mockito.any(),
-//		 Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		deviceDetaillService.deviceFilterValues(deviceFilterDto);
 	}
 
@@ -249,7 +236,7 @@ public class DeviceDetailServiceTest {
 
 	@Test
 	public void deviceTypeFilterValuesTest1() throws Exception {
-		deviceDetaillService.deviceTypeFilterValues(deviceFilterDto);
+		deviceDetaillService.deviceTypeFilterValues(deviceFilterDto);		
 	}
 
 	@Test

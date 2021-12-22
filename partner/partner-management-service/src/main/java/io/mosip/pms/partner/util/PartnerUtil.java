@@ -1,13 +1,5 @@
 package io.mosip.pms.partner.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author sanjeev.shrivastava
  *
@@ -15,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 public class PartnerUtil {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerUtil.class);
-		
 	/**
 	 * @return partnerId.
 	 */
