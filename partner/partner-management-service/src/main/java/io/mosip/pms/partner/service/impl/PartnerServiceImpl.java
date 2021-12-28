@@ -119,7 +119,6 @@ import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
@@ -492,74 +491,6 @@ public class PartnerServiceImpl implements PartnerService {
 		updateResponse.setStatus(partner.getApprovalStatus());
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_SUCCESS);
 		return updateResponse;
-	}
-
-	@Override
-	public PartnerPolicyMappingResponse submitPartnerApiKeyReq(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
-		Map<String, Object> data = new HashMap<>();
-		PartnerPolicyMappingResponse partnerAPIKeyResponse = new PartnerPolicyMappingResponse();
-		Partner partner = getValidPartner(partnerId, false);
-		if(partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
-					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
-		}
-		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
-				partnerAPIKeyRequest.getPolicyName());
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
-		partnerPolicyRequest.setCrBy(getLoggedInUserId());
-		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
-		partnerPolicyRequest.setPartner(partner);
-		partnerPolicyRequest.setPolicyId(authPolicy.getId());
-		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
-		partnerPolicyRequest.setIsDeleted(false);
-		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, authPolicy.getId())
-				.isEmpty()) {
-			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(partnerPolicyRequest);
-			data.put("apiKeyData", MapperUtils.mapKeyDataToPublishDto(approvePartnerPolicy(partnerPolicyRequest)));
-			PartnerCertDownloadRequestDto certDownloadRequestDto = new PartnerCertDownloadRequestDto();
-			certDownloadRequestDto.setPartnerId(partnerPolicyRequest.getPartner().getId());
-			try {
-				data.put("partnerData", MapperUtils.mapDataToPublishDto(partnerPolicyRequest.getPartner(),
-						getPartnerCertificate(certDownloadRequestDto).getCertificateData()));
-			} catch (IOException e) {
-				LOGGER.error("Error occurred while getting the partnercert and mappingdata", e);
-				e.printStackTrace();
-			}
-			data.put("policyData",
-					MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())));
-			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
-			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
-			return partnerAPIKeyResponse;
-		}
-		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted.");
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS);
-		return partnerAPIKeyResponse;
-	}
-
-	private PartnerPolicy approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(partnerPolicyRequest.getId());
-		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
-		partnerPolicy.setIsActive(true);
-		partnerPolicy.setIsDeleted(false);
-		partnerPolicy.setLabel(partnerPolicyRequest.getId());
-		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
-		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
-		partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
-		partnerPolicyRepository.save(partnerPolicy);
-		LOGGER.info("PartnerAPIKeyRequest successfully submitted and approved.");
-		return partnerPolicy;
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {

@@ -62,7 +62,7 @@ public interface FtpChipDetailService {
      * @throws JsonMappingException 
      * @throws JsonParseException 
     */
-    public FtpCertificateResponseDto uploadPartnerCertificate(FtpChipCertificateRequestDto ftpChipCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+    public FtpCertificateResponseDto uploadCertificate(FtpChipCertificateRequestDto ftpChipCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
 
     /**
      * Function to Download Partner certificates
@@ -74,7 +74,7 @@ public interface FtpChipDetailService {
      * @throws JsonMappingException 
      * @throws JsonParseException 
     */
-    public FtpCertDownloadResponeDto getPartnerCertificate(FtpChipCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+    public FtpCertDownloadResponeDto getCertificate(FtpChipCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
     
     /**
      * 
