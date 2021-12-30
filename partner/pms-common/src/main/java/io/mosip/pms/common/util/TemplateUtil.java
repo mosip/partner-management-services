@@ -56,7 +56,7 @@ public class TemplateUtil {
 	 */
 	public String getTemplate(String langCode, String templatetypecode) {
 		Map<String, String> pathsegments = new HashMap<>();
-		pathsegments.put("langcode", mandatoryLanguage);
+		pathsegments.put("langcode", mandatoryLanguage.split(",")[0]);
 		pathsegments.put("templatetypecode", templatetypecode);
 		log.info("In getTemplate method of TemplateUtil service url:", resourceUrl);
 
