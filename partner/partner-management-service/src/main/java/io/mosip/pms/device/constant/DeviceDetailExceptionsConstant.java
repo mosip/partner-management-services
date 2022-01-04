@@ -7,7 +7,8 @@ public enum DeviceDetailExceptionsConstant {
 	DEVICE_DETAIL_EXIST("PMS_AUT_003","Device Details already exists"),
 	DUPLICATE_REQUEST("PMS_AUT_004","Duplicate request received"), 
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_005","Device detail for id %s does not exist"),
-	DEVICE_STATUS_CODE("PMS_AUT_025","ApprovalStatus should be Activate / De-activate");
+	DEVICE_STATUS_CODE("PMS_AUT_025","ApprovalStatus should be Activate / De-activate"),
+	DEVICE_DETAIL_NOT_APPROVED("PMS_AUT_027","Device details for id %s are not yet approved. Please provide approved details.");
 	
 	/**
 	 * The error code.

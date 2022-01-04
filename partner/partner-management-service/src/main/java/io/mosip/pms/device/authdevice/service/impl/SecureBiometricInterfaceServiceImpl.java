@@ -364,7 +364,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if(deviceDetailFromDb != null) {
 			return "Mapping already exists";			
 		}
-		DeviceDetail validDeviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(input.getDeviceDetailId());
+		DeviceDetail validDeviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(input.getDeviceDetailId());
 		if (validDeviceDetail == null) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
@@ -376,7 +376,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
-		
+		if(!validDeviceDetail.getIsActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
+					"AUT-008");
+			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(), String
+					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage(), input.getDeviceDetailId()));
+		}		
 		SecureBiometricInterface validSbi = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(input.getSbiId());
 		if (validSbi == null) {
 			auditUtil.auditRequest(

@@ -81,6 +81,7 @@ public class PartnerNotificationScheduledJob {
 		dto.setPolicyExpiryDateTime(policy == null ? null : policy.getValidToDate());
 		dto.setPolicyId(partnerPolicy.getPolicyId());
 		dto.setPolicyName(policy.getName());
+		dto.setLangCode(partnerPolicy.getPartner().getLangCode());
 		dto.setPolicyStatus(policy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKeyStatus(partnerPolicy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		return dto;

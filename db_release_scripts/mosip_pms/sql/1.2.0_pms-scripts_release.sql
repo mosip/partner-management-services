@@ -38,3 +38,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE pms.partner_policy ADD COLUMN label character varying(36);
 UPDATE pms.partner_policy SET label=policy_api_key;
 ALTER TABLE pms.partner_policy ALTER COLUMN label SET NOT NULL;
+
+ALTER TABLE pms.partner ADD COLUMN lang_code character varying(36);
+
+ALTER TABLE pms.partner_h ADD COLUMN lang_code character varying(36);

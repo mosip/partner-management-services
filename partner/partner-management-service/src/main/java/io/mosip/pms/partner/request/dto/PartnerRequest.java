@@ -35,5 +35,7 @@ public class PartnerRequest{
 	public String emailId;
 	
 	@NotBlank(message="value is empty or null")
-	public String partnerType;
+	public String partnerType;	
+	
+	public String langCode;
 }

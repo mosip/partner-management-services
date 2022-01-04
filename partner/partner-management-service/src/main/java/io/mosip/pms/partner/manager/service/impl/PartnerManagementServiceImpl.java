@@ -689,6 +689,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
 		dto.setEmailId(partner.getEmailId());
+		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
 		try {
@@ -706,6 +707,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
 		dto.setEmailId(partner.getEmailId());
+		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());
 		dto.setApiKeyExpiryDate(partnerPolicyFromDb.getValidToDatetime().toLocalDateTime());
@@ -724,7 +726,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto) {		
+	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto) {
+		if(!getUser().equals(partnerId)) {
+			throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 		AuthPolicy validPolicy = authPolicyRepository.findByPolicyName(requestDto.getPolicyName());
 		if(validPolicy == null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
