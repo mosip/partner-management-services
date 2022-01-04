@@ -30,10 +30,10 @@ public class SecureBiometricInterface {
 	private String approvalStatus;
 	
 	@Column(name="is_active",nullable=false)
-	private boolean isActive;
+	private Boolean isActive;
 	
 	@Column(name="is_deleted")
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	
 	@Column(name="cr_by",length=256,nullable=false)
 	private String crBy;
@@ -120,19 +120,19 @@ public class SecureBiometricInterface {
 		this.approvalStatus = approvalStatus;
 	}
 
-	public boolean isActive() {
+	public Boolean isActive() {
 		return isActive;
 	}
 
-	public void setActive(boolean isActive) {
+	public void setActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
 
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
