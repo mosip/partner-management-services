@@ -39,7 +39,8 @@ public enum ErrorCode {
 	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same."),
 	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner"),
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
-	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination");
+	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
+	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized.");
 	
 
 	/**

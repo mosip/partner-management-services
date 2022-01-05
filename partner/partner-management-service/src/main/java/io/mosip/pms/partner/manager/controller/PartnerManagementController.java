@@ -291,7 +291,7 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/policy/{policyId}/apiKey/status", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to activate/de-activate partner api key", description = "Service to activate/de-activate partner api key")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,

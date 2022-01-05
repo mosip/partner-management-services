@@ -469,6 +469,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER','PARTNER_ADMIN')")
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
 	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
@@ -482,6 +483,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(

@@ -66,6 +66,9 @@ public class Partner implements Serializable {
 
 	@Column(name="user_id")
 	private String userId;
+	
+	@Column(name = "lang_code")
+	private String langCode;
 
 	//bi-directional many-to-one association to PartnerPolicy
 	@OneToMany(mappedBy="partner")
@@ -156,6 +159,14 @@ public class Partner implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getLangCode() {
+		return this.langCode;
+	}
+
+	public void setLangCode(String langCode) {
+		this.langCode = langCode;
 	}
 	
 	public void setPartnerTypeCode(String partnerTypeCode) {
