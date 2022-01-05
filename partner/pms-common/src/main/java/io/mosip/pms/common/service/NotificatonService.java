@@ -29,9 +29,6 @@ public class NotificatonService {
 	@Autowired
 	NotificationUtil notificationUtil;
 
-	@Value("${mosip.mandatory-languages}")
-	private String mandatoryLanguage;
-
 	@Value("${partner.registration.sub-template}")
 	private String partnerRegistrationSubTemplate;
 
@@ -86,7 +83,7 @@ public class NotificatonService {
 	 */
 	private void sendNotications(List<NotificationDto> notificationDtos, String emialSubTemplate,
 			String emailBodyTemplate) {
-		String emailSubject = getEmailSubject(emialSubTemplate);
+		String emailSubject = getEmailSubject(emialSubTemplate, notificationDtos.get(0).getLangCode());
 		Map<NotificationDto, String> mailBodyWithData = getEmailBody(emailBodyTemplate, notificationDtos);
 		for (Entry<NotificationDto, String> notificationDto : mailBodyWithData.entrySet()) {
 			try {
@@ -107,7 +104,7 @@ public class NotificatonService {
 	 * @return
 	 */
 	private Map<NotificationDto, String> getEmailBody(String templateFor, List<NotificationDto> notificationDtos) {
-		String fileText = templateUtil.getTemplate(mandatoryLanguage, templateFor);
+		String fileText = templateUtil.getTemplate(notificationDtos.get(0).getLangCode(), templateFor);
 		return mergeTemplates(fileText, notificationDtos);
 	}
 
@@ -138,8 +135,8 @@ public class NotificatonService {
 	 * @param templateFor
 	 * @return
 	 */
-	private String getEmailSubject(String templateFor) {
-		return templateUtil.getTemplate(mandatoryLanguage, templateFor);
+	private String getEmailSubject(String templateFor, String langCode) {
+		return templateUtil.getTemplate(langCode, templateFor);
 	}
 
 }

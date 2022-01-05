@@ -9,9 +9,9 @@ public enum PolicyValidatorErrorConstant {
 
 	INVALID_POLICY_SCHEMA("PMS_PV_004", "Invalid policy schema"),
 	
-	INVALID_INPUT_PARAMETER("PMS-PV-005", "Invalid input parameter - %s"),
+	INVALID_INPUT_PARAMETER("PMS_PV_005", "Invalid input parameter - %s"),
 
-	MISSING_INPUT_PARAMETER("PMS-PV-006", "Missing input parameter - %s");
+	MISSING_INPUT_PARAMETER("PMS_PV_006", "Missing input parameter - %s");
 
 	private final String errorCode;
 

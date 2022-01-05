@@ -115,6 +115,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		entity.setId(id);
 		byte[] swNinaryHashArr = sbiDto.getSwBinaryHash().getBytes();
 		entity.setSwBinaryHash(swNinaryHashArr);
+		entity.setActive(false);
+		entity.setDeleted(false);
 		entity = getCreateMapping(entity, sbiDto);
 		sbi = sbiRepository.save(entity);
 		dto.setId(sbi.getId());
@@ -146,7 +148,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			SecureBiometricInterface entity) {
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
-		historyEntity.setDeleted(entity.isDeleted());
+		historyEntity.setDeleted(entity.isDeleted() == null ? false: entity.isDeleted());
 		historyEntity.setApprovalStatus(entity.getApprovalStatus());
 		historyEntity.setCrBy(entity.getCrBy());
 		historyEntity.setEffectDateTime(entity.getCrDtimes());
@@ -185,7 +187,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		}
 		entity.setId(sbiupdateDto.getId());
 		byte[] swNinaryHashArr = sbiupdateDto.getSwBinaryHash().getBytes();
-		entity.setSwBinaryHash(swNinaryHashArr);
+		entity.setSwBinaryHash(swNinaryHashArr);		
 		entity = getUpdateMapping(entity, sbiupdateDto);
 		sbi = sbiRepository.save(entity);
 		dto.setId(sbi.getId());
@@ -202,6 +204,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			entity.setUpdBy(authN.getName());
 		}
+		entity.setDeleted(false);
 		entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		entity.setSwVersion(dto.getSwVersion());
 		entity.setSwCreateDateTime(dto.getSwCreateDateTime());
@@ -310,7 +313,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			dto.setUpdBy(sbi.getUpdBy());
 			dto.setUpdDtimes(sbi.getUpdDtimes());
 			dto.setIsActive(sbi.isActive());
-			dto.setDeleted(sbi.isDeleted());
+			dto.setDeleted(sbi.isDeleted() == null ? false : sbi.isDeleted());
 			dto.setApprovalStatus(sbi.getApprovalStatus());
 			dto.setProviderId(sbi.getProviderId());
 			dto.setPartnerOrganizationName(sbi.getPartnerOrgName());
@@ -364,7 +367,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		if(deviceDetailFromDb != null) {
 			return "Mapping already exists";			
 		}
-		DeviceDetail validDeviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(input.getDeviceDetailId());
+		DeviceDetail validDeviceDetail = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(input.getDeviceDetailId());
 		if (validDeviceDetail == null) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
@@ -376,8 +379,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
-		
-		SecureBiometricInterface validSbi = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(input.getSbiId());
+		if(!validDeviceDetail.getIsActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
+					"AUT-008");
+			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(), String
+					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage(), input.getDeviceDetailId()));
+		}		
+		SecureBiometricInterface validSbi = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(input.getSbiId());
 		if (validSbi == null) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -388,8 +401,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"AUT-016");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId()));
+		}		
+		if (!validSbi.isActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(), String.format(
+									SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId())),
+					"AUT-016");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorMessage(), input.getSbiId()));
 		}
-		
 		if(!validDeviceDetail.getDeviceProviderId().equals(validSbi.getProviderId())) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),

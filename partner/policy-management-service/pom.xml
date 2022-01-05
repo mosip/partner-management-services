@@ -37,7 +37,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<version>5.4.0</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

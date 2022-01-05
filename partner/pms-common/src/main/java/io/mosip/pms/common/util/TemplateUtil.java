@@ -32,9 +32,6 @@ public class TemplateUtil {
 
 	@Value("${resource.template.url}")
 	private String resourceUrl;
-
-	@Value("${mosip.mandatory-languages}")
-	private String mandatoryLanguage;
 	
 	@Value("${mosip.notification.timezone}")
 	private String notificationTimeZone; 
@@ -56,9 +53,9 @@ public class TemplateUtil {
 	 */
 	public String getTemplate(String langCode, String templatetypecode) {
 		Map<String, String> pathsegments = new HashMap<>();
-		pathsegments.put("langcode", mandatoryLanguage.split(",")[0]);
+		pathsegments.put("langcode", langCode);
 		pathsegments.put("templatetypecode", templatetypecode);
-		log.info("In getTemplate method of TemplateUtil service url:", resourceUrl);
+		log.info("In getTemplate method of TemplateUtil service url:{}", resourceUrl);
 
 		TemplatesResponseDto templatesResponseDto = null;
 		try {

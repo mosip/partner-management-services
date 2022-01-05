@@ -41,6 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
@@ -264,7 +265,13 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-
+		if (request.getLangCode() != null && !getSystemMandatoryLanguageCodes().contains(request.getLangCode())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+		}else {
+			request.setLangCode(getSystemMandatoryLanguageCodes().get(0));
+		}
 		if (!validatePartnerId(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
@@ -332,11 +339,12 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-    partner.setPartnerTypeCode(partnerType);
+		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(request.getEmailId());
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
+		partner.setLangCode(request.getLangCode());
 		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
@@ -1356,6 +1364,7 @@ public class PartnerServiceImpl implements PartnerService {
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
 		dto.setEmailId(partner.getEmailId());
+		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
 		try {
@@ -1529,5 +1538,13 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getSystemMandatoryLanguageCodes() {		
+		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES).split(","));
 	}
 }

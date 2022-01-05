@@ -33,6 +33,7 @@ CREATE TABLE pms.partner_h(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+	lang_code character varying(36),
 	CONSTRAINT pk_parth PRIMARY KEY (id,eff_dtimes)
 	
 );
@@ -74,4 +75,6 @@ COMMENT ON COLUMN pms.partner_h.upd_dtimes IS 'Updated DateTimestamp : Date and 
 COMMENT ON COLUMN pms.partner_h.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
 -- ddl-end --
 COMMENT ON COLUMN pms.partner_h.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+COMMENT ON COLUMN pms.partner_h.lang_code IS 'lang_code : Used to send notifications';
 -- ddl-end --

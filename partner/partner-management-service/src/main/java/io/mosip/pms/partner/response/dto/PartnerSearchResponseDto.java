@@ -44,4 +44,6 @@ public class PartnerSearchResponseDto {
 	private Timestamp updDtimes;
 
 	private String userId;
+	
+	private String langCode;
 }

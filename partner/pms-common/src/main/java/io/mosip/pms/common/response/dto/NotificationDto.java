@@ -32,4 +32,6 @@ public class NotificationDto {
 	private String emailSubjectTemplate;
 
 	private String emailBodyTemplate;
+	
+	private String langCode;
 }
