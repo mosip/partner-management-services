@@ -229,7 +229,18 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());
 		}
-		
+		if(chipDetail.get().getCertificateAlias() == null && chipDetails.getApprovalStatus()) {
+			auditUtil.auditRequest(
+					String.format(
+							DeviceConstant.FAILURE_CREATE, FtpChipDetailStatusDto.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
+							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage()),
+					"AUT-003");
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage());
+		}
 		FTPChipDetail updateObject = chipDetail.get();
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -243,7 +254,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public FtpCertificateResponseDto uploadPartnerCertificate(FtpChipCertificateRequestDto ftpChipCertRequestDto)
+	public FtpCertificateResponseDto uploadCertificate(FtpChipCertificateRequestDto ftpChipCertRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Partner partnerFromDb = partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(ftpChipCertRequestDto.getFtpProviderId());
 		if(partnerFromDb == null) {
@@ -330,7 +341,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public FtpCertDownloadResponeDto getPartnerCertificate(FtpChipCertDownloadRequestDto certDownloadRequestDto)
+	public FtpCertDownloadResponeDto getCertificate(FtpChipCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Optional<FTPChipDetail> chipDetail = ftpChipDetailRepository.findById(certDownloadRequestDto.getFtpChipDetailId());
 		if(chipDetail.isEmpty()) {

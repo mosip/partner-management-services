@@ -1,8 +1,6 @@
 package io.mosip.pms.device.request.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,7 +26,4 @@ public class FtpChipCertDownloadRequestDto {
 	@ApiModelProperty(notes = "ftpChipDetailId", required = true)
 	@NotBlank
 	String ftpChipDetailId;
-	
-	@NotNull
-	Boolean isItForRegistrationDevice;
 }

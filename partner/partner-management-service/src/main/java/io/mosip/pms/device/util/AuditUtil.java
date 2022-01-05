@@ -3,17 +3,14 @@ package io.mosip.pms.device.util;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -65,14 +62,10 @@ public class AuditUtil {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private Environment env;
 
 	@Autowired
-	RestUtil restUtil;
+	RestUtil restUtil;	
 	
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditUtil.class);
 	/**
 	 * Audit request.
 	 *

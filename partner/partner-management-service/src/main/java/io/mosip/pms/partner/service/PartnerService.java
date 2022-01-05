@@ -28,7 +28,6 @@ import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
@@ -58,14 +57,6 @@ public interface PartnerService {
 	 * @return partnerResponse this class contains status of partner
 	 */
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest,String partnerId);
-	
-	/**
-	 * This method is used to submit Partner api key request.
-	 * @param partnerAPIKeyRequest this class contains partner policy and policy description details 
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @return partnerAPIKeyResponse this class contains partner request id and massage details
-	 */
-	public PartnerPolicyMappingResponse submitPartnerApiKeyReq(PartnerPolicyMappingRequest partnerAPIKeyRequest,String partnerId);
 	
 	/**
 	 * This method is used to download Partner API key for the given APIKeyReqID.

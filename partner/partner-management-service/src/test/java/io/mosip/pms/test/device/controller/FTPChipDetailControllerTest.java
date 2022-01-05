@@ -95,8 +95,8 @@ public class FTPChipDetailControllerTest {
 		 Mockito.when(ftpChipDetailServiceImpl.updateFtpChipDetails(Mockito.any())).thenReturn(response);
 		 Mockito.when(ftpChipDetailServiceImpl.updateFtpChipDetailStatus(Mockito.any())).thenReturn(stringResponse);
 		 Mockito.when(ftpChipDetailServiceImpl.searchFTPChipDetails(Mockito.any(), Mockito.any())).thenReturn(searchResponse);
-		 Mockito.when(ftpChipDetailServiceImpl.uploadPartnerCertificate(Mockito.any())).thenReturn(uploadResponse);
-		 Mockito.when(ftpChipDetailServiceImpl.getPartnerCertificate(Mockito.any())).thenReturn(getResponse);		 
+		 Mockito.when(ftpChipDetailServiceImpl.uploadCertificate(Mockito.any())).thenReturn(uploadResponse);
+		 Mockito.when(ftpChipDetailServiceImpl.getCertificate(Mockito.any())).thenReturn(getResponse);		 
 		 Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any());
 	     Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any(),any());
 	 }
@@ -263,7 +263,6 @@ public class FTPChipDetailControllerTest {
 	    private FtpChipCertDownloadRequestDto getCertRequest(boolean isItForRegistrationDevice) {
 	    	FtpChipCertDownloadRequestDto ftpChipCertDownloadRequestDto = new FtpChipCertDownloadRequestDto();
 	    	ftpChipCertDownloadRequestDto.setFtpChipDetailId(null);
-	    	ftpChipCertDownloadRequestDto.setIsItForRegistrationDevice(isItForRegistrationDevice);
 	    	return ftpChipCertDownloadRequestDto;
 	    
 	    }

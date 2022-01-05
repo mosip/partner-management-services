@@ -18,14 +18,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +57,8 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
@@ -67,7 +66,6 @@ import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
@@ -86,9 +84,6 @@ import io.mosip.pms.partner.service.impl.PartnerServiceImpl;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
-@EnableWebMvc
-@Ignore
 public class PartnerServiceImplTest {
 	
 	@Autowired
@@ -128,6 +123,9 @@ public class PartnerServiceImplTest {
 	
 	@MockBean
 	private KeycloakImpl keycloakImpl;
+	
+    @MockBean
+	AuditUtil auditUtil;
 	
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
@@ -191,6 +189,8 @@ public class PartnerServiceImplTest {
 		partnerCertificateRequestDto.setPartnerDomain("network");
 		partnerCertificateRequestDto.setPartnerId("id");
 		partnerCertificateRequestDto.setPartnerType("Auth");		
+		
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));
 	}
 
 	@Test(expected = PartnerServiceException.class) 
@@ -243,6 +243,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	@Ignore
 	public void searchPartnerApiKeyRequestsTest() throws Exception {
 		objectMapper.writeValueAsString(searchDto);
 		PartnerPolicyRequest partnerPolicy = new PartnerPolicyRequest();
@@ -253,6 +254,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	@Ignore
 	public void searchPartnerApiKeysTest() throws Exception {
 		objectMapper.writeValueAsString(searchDto);
 		PartnerPolicy policy = new PartnerPolicy();
@@ -281,6 +283,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	@Ignore
 	public void searchPartnerTypetest() throws Exception{
 		objectMapper.writeValueAsString(searchDto);
 		PartnerType partnerType = new PartnerType();
@@ -364,12 +367,12 @@ public class PartnerServiceImplTest {
 		userDto.setName("PARTNER");
 		userDto.setMobile("partner@gmail.com");
 		Mockito.doReturn(userDto).when(keycloakImpl).registerUser(Mockito.any(io.mosip.pms.partner.dto.UserRegistrationRequestDto.class));
-		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();
 		Partner partner = new Partner();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
 		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
-		Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
 		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
 		assertNotNull(savePartner);
 	}
@@ -381,7 +384,7 @@ public class PartnerServiceImplTest {
 		Partner partner = new Partner();
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
 		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
-		//Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
+		Mockito.when(partnerTypeRepository.findById("Auth")).thenReturn(Optional.of(getPartnerType()));
 		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
 		assertNotNull(savePartner);
 	}
@@ -782,140 +785,8 @@ public class PartnerServiceImplTest {
 		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
 		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerID)).thenReturn(partnerPolicyRequest);
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerID);
-		
 	}
 
-	@Test
-	public void submitPartnerApiKeyReqTest() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Partner part = createPartner(true);
-		AuthPolicy authPolicy =createAuthPolicy();		
-		Optional<Partner> partner = Optional.of(part);		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest01() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Partner part = createPartner(true);
-		AuthPolicy authPolicy =createInactiveAuthPolicy();		
-		Optional<Partner> partner = Optional.of(part);		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest02() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Partner part = createPartner(true);
-		AuthPolicy authPolicy =createTimeInvariantAuthPolicy();		
-		Optional<Partner> partner = Optional.of(part);		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest03() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Partner part = createPartner(true);
-		AuthPolicy authPolicy =createInactiveGroupAuthPolicy();		
-		Optional<Partner> partner = Optional.of(part);		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test
-	public void submitPartnerApiKeyReqTest04() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Partner part = createPartner(true);
-		PartnerPolicy partPolicy = new PartnerPolicy();
-		List<PartnerPolicy> partPolicyList = new ArrayList<>();
-		partPolicyList.add(partPolicy);
-		AuthPolicy authPolicy =createAuthPolicy();		
-		Optional<Partner> partner = Optional.of(part);		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(Mockito.anyString())).thenReturn(partPolicyList);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S1() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		pserviceImpl.submitPartnerApiKeyReq(req, "12345");
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S2() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S3() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(createPartner(false));		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S4() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(createPartner(true));		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
-		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
-		PartnerPolicyRequest request = createPartnerPolicyRequest("Approved");
-		requests.add(request);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S5() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(createPartner(true));		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
-		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
-		PartnerPolicyRequest request = createPartnerPolicyRequest("Rejected");
-		requests.add(request);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(requests);
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
-	
-	
-	@Test(expected = PartnerServiceException.class)
-	public void submitPartnerApiKeyReqTest_S6() {
-		PartnerPolicyMappingRequest req = createPartnerAPIKeyRequest();
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(createPartner(true));		
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("policyGroupId", "Banking")).thenReturn(createAuthPolicy());
-		List<PartnerPolicyRequest> requests = new ArrayList<PartnerPolicyRequest>();
-		PartnerPolicyRequest request = createPartnerPolicyRequest("in-progress");
-		requests.add(request);
-		PolicyGroup policyGroup = createPolicyGroup(Boolean.FALSE);
-		Mockito.when(policyGroupRepository.findByName(policyGroup.getName())).thenReturn(policyGroup);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(partnerId)).thenReturn(new ArrayList<PartnerPolicyRequest>());
-		pserviceImpl.submitPartnerApiKeyReq(req, partnerId);
-	}
 	
 	@Test(expected = PartnerServiceException.class)
 	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S1() {
@@ -1034,14 +905,7 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType("12345", "euin")).thenReturn(response);
 		Mockito.when(authPolicyRepository.findById("1234578")).thenReturn(Optional.of(createAuthPolicy()));
 		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
-	}
-	
-	private PartnerPolicyMappingRequest createPartnerAPIKeyRequest() {
-		PartnerPolicyMappingRequest req = new PartnerPolicyMappingRequest();
-		req.setPolicyName("Banking");
-		req.setUseCaseDescription("Banking Policy Description");
-		return req;
-	}
+	}	
 
 	private PartnerPolicy createPartnerPolicy() {
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
@@ -1069,49 +933,7 @@ public class PartnerServiceImplTest {
 		authPolicy.setIsActive(true);
 		authPolicy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
 		return authPolicy;
-	}
-	
-	private AuthPolicy createInactiveAuthPolicy() {
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("12345");
-		authPolicy.setName("Banking");
-		authPolicy.setValidToDate(LocalDateTime.now().plusYears(1));
-		authPolicy.setPolicyGroup(createPolicyGroup(true));
-		authPolicy.setIsActive(false);
-		authPolicy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
-		return authPolicy;
-	}
-	
-	private AuthPolicy createTimeInvariantAuthPolicy() {
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("12345");
-		authPolicy.setName("Banking");
-		authPolicy.setValidToDate(LocalDateTime.now().plusYears(-1));
-		authPolicy.setPolicyGroup(createPolicyGroup(true));
-		authPolicy.setIsActive(true);
-		authPolicy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
-		return authPolicy;
-	}
-
-	private AuthPolicy createInactiveGroupAuthPolicy() {
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("12345");
-		authPolicy.setName("Banking");
-		authPolicy.setValidToDate(LocalDateTime.now().plusYears(1));
-		authPolicy.setPolicyGroup(createPolicyGroup(false));
-		authPolicy.setIsActive(true);
-		authPolicy.setPolicyFileId("{\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true}],\"shareableAttributes\":[{\"encrypted\":false,\"format\":null,\"attributeName\":\"fullName\"},{\"encrypted\":false,\"format\":\"yyyy\",\"attributeName\":\"dateOfBirth\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"gender\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"phone\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"email\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"addressLine3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location1\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location2\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"location3\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"postalCode\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"face\"},{\"encrypted\":false,\"format\":\"extraction\",\"attributeName\":\"finger\"},{\"encrypted\":false,\"format\":null,\"attributeName\":\"iris\"}],\"dataSharePolicies\":{\"transactionsAllowed\":\"2\",\"shareDomain\":\"mosip.io\",\"encryptionType\":\"partnerBased\",\"validForInMinutes\":\"30\",\"typeOfShare\":\"dataShare\"}}");
-		return authPolicy;
-	}
-
-	
-	//
-//	private PartnerAPIKeyRequest createPartnerAPIKeyRequest() {
-//		PartnerAPIKeyRequest partnerAPIKeyRequest = new PartnerAPIKeyRequest();
-//		partnerAPIKeyRequest.setPolicyName("policyName");
-//		partnerAPIKeyRequest.setUseCaseDescription("useCaseDescription");
-//		return partnerAPIKeyRequest;
-//	}
+	}	
 
 	private ExtractorsDto getExtractorsInput() {
     	ExtractorsDto request = new ExtractorsDto();

@@ -3,9 +3,6 @@ package io.mosip.pms.partner.manager.service.impl;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +35,6 @@ import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
-import io.mosip.pms.common.entity.MISPEntity;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
@@ -47,7 +43,6 @@ import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
-import io.mosip.pms.common.repository.MispLicenseKeyRepository;
 import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.MispServiceRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
@@ -66,7 +61,6 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
@@ -84,9 +78,6 @@ import io.mosip.pms.partner.util.PartnerUtil;
 public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
-
-	@Autowired
-	private MispLicenseKeyRepository misplKeyRepository;
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
@@ -248,42 +239,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorMessage());
 	}
-
-	@Override
-	public PartnersPolicyMappingResponse activateDeactivatePartnerAPIKeyGivenPartner(String partnerId,
-			StatusRequestDto request, String partnerAPIKey) {
-		PartnerPolicy partnerPolicyFromDb = partnerPolicyRepository.findByPartnerIdAndApikey(partnerId, partnerAPIKey);
-		if (partnerPolicyFromDb == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_API_KEY_NOT_MAPPED.getErrorCode(),
-					ErrorCode.PARTNER_API_KEY_NOT_MAPPED.getErrorMessage());
-		}
-		partnerPolicyFromDb.setUpdBy(getUser());
-		partnerPolicyFromDb.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
-		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
-			partnerPolicyFromDb.setIsActive(true);
-			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
-			partnerPolicyRepository.save(partnerPolicyFromDb);
-			response.setMessage("Partner apikey activated successfully.");
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
-			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicyFromDb.getPartner(), partnerPolicyFromDb);
-			return response;
-		}
-		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
-			partnerPolicyFromDb.setIsActive(false);
-			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicyFromDb), EventType.APIKEY_UPDATED);
-			partnerPolicyRepository.save(partnerPolicyFromDb);
-			response.setMessage("Partner apikey de-activated successfully.");
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
-			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicyFromDb.getPartner(), partnerPolicyFromDb);
-			return response;
-		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED);
-		LOGGER.info(request.getStatus() + " : is Invalid Input Parameter, it should be (Active/De-Active)");
-		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode(),
-				ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorMessage());
-	}
+	
 
 	@Override
 	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup(Optional<String> partnerType) {
@@ -374,52 +330,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return apikeyRequest;
 	}
 
-	@Override
-	public PartnersPolicyMappingResponse approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(
-			StatusRequestDto request, String requestedApikey) {
-		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();
-		PartnerPolicyRequest updateObject = getValidApikeyRequestForStatusUpdate(requestedApikey);
-		AuthPolicy validPolicy = validatePolicy(updateObject.getPolicyId());		
-		if ((request.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			updateObject.setStatusCode(PartnerConstants.APPROVED);
-			PartnerPolicy partnerPolicy = new PartnerPolicy();
-			partnerPolicy.setPolicyApiKey(requestedApikey);
-			partnerPolicy.setPartner(updateObject.getPartner());
-			partnerPolicy.setPolicyId(updateObject.getPolicyId());
-			partnerPolicy.setIsActive(true);
-			partnerPolicy.setIsDeleted(false);
-			partnerPolicy.setLabel(requestedApikey);
-			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
-			partnerPolicy
-					.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
-			partnerPolicy.setCrBy(getUser());
-			partnerPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			partnerPolicyRequestRepository.save(updateObject);
-			partnerPolicyRepository.save(partnerPolicy);
-			response.setMessage("Apikey request approved successfully.");
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
-			notify(MapperUtils.mapDataToPublishDto(updateObject.getPartner(),getPartnerCertificate(updateObject.getPartner().getCertificateAlias())),
-					MapperUtils.mapPolicyToPublishDto(validPolicy, getPolicyObject(validPolicy.getPolicyFileId())),
-					MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_APPROVED);
-			return response;
-		}
-		if ((request.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			updateObject.setStatusCode(PartnerConstants.REJECTED);
-			partnerPolicyRequestRepository.save(updateObject);
-			response.setMessage("Apikey request rejected successfully.");
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
-			return response;
-		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-		LOGGER.info(request.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
-		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
-				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
-	}
-
 	private PartnerPolicyRequest getValidApikeyRequestForStatusUpdate(String requestedApikey) {
 		Optional<PartnerPolicyRequest> partnerPolicyRequestFromDb = partnerPolicyRequestRepository
 				.findById(requestedApikey);
@@ -453,30 +363,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return partnerPolicyRequestFromDb.get();
 	}
 
-	@Override
-	public PartnerPolicyResponse getPartnerMappedPolicyFile(String mispLicenseKey, String policy_api_key,
-			String partnerId, boolean needPartnerCert) {
-		Partner validPartner = validateAndGetPartner(partnerId);
-		MISPLicenseEntity validLicense = validateAndGetMispLicense(mispLicenseKey);
-		PartnerPolicy partnerPolicy = validateAndGetApikey(partnerId, policy_api_key);
-		AuthPolicy policy = validatePolicy(partnerPolicy.getPolicyId());
-		PartnerPolicyResponse response = new PartnerPolicyResponse();
-		if (needPartnerCert) {
-			response.setCertificateData(getPartnerCertificate(validPartner.getCertificateAlias()));
-		}
-		response.setPolicyId(policy.getId());
-		response.setPolicyDescription(policy.getPolicyGroup().getDesc());
-		response.setPolicy(getPolicyObject(policy.getPolicyFileId()));
-		response.setPolicyStatus(policy.getIsActive());
-		response.setPartnerId(validPartner.getId());
-		response.setPartnerName(validPartner.getName());
-		response.setPolicyName(policy.getName());
-		response.setMispExpiresOn(toISOFormat(validLicense.getValidToDate()));
-		response.setPolicyExpiresOn(toISOFormat(policy.getValidToDate()));
-		response.setApiKeyExpiresOn(toISOFormat(partnerPolicy.getValidToDatetime().toLocalDateTime()));
-		return response;
-	}
-
 	private JSONObject getPolicyObject(String policy) {
 		JSONParser parser = new JSONParser();
 		String error = null;
@@ -490,11 +376,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				ErrorCode.POLICY_PARSING_ERROR.getErrorMessage() + error);
 	}
 
-	private static LocalDateTime toISOFormat(LocalDateTime localDateTime) {
-		ZonedDateTime zonedtime = localDateTime.atZone(ZoneId.systemDefault());
-		ZonedDateTime converted = zonedtime.withZoneSameInstant(ZoneOffset.UTC);
-		return converted.toLocalDateTime();
-	}
 
 	@SuppressWarnings("unchecked")
 	private String getPartnerCertificate(String certificateAlias) {
@@ -503,10 +384,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		Map<String, Object> getApiResponse = restUtil
 				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
 		PartnerCertDownloadResponeDto responseObject = null;
-		try {
-//			responseObject = mapper.readValue(getApiResponse.get("response").toString(),
-//					PartnerCertDownloadResponeDto.class);
-			
+		try {			
 			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
 					PartnerCertDownloadResponeDto.class);
 		} catch (IOException e) {
@@ -531,26 +409,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 
 		return responseObject.getCertificateData();
-	}
-
-	private PartnerPolicy validateAndGetApikey(String partnerId, String policy_api_key) {
-		PartnerPolicy partnerPolicyFromDb = partnerPolicyRepository.findByPartnerIdAndApikey(partnerId, policy_api_key);
-		if (partnerPolicyFromDb == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
-		}
-		if (!partnerPolicyFromDb.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-		}
-		if (partnerPolicyFromDb.getValidToDatetime().before(Timestamp.valueOf(LocalDateTime.now()))) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());
-		}
-		return partnerPolicyFromDb;
 	}
 
 	private AuthPolicy validatePolicy(String policyId) {
@@ -581,55 +439,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());
 		}
 		return authPolicy.get();
-	}
-
-	private MISPLicenseEntity validateAndGetMispLicense(String mispLicenseKey) {
-		MISPLicenseEntity mispLicense = misplKeyRepository.findByLicensekey(mispLicenseKey);
-		if (mispLicense == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.MISP_LICENSE_KEY_NOT_EXISTS.getErrorCode(),
-					ErrorCode.MISP_LICENSE_KEY_NOT_EXISTS.getErrorMessage());
-		}
-		if (!mispLicense.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.MISP_IS_BLOCKED.getErrorCode(),
-					ErrorCode.MISP_IS_BLOCKED.getErrorMessage());
-		}
-		if (mispLicense.getValidToDate().isBefore(LocalDateTime.now())) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.MISP_LICENSE_KEY_EXPIRED.getErrorCode(),
-					ErrorCode.MISP_LICENSE_KEY_EXPIRED.getErrorMessage());
-		}
-		validateMispProvider(mispLicense.getMispId());
-		return mispLicense;
-	}
-
-	private void validateMispProvider(String misp_id) {
-		Optional<MISPEntity> mispFromDb = mispRepository.findById(misp_id);
-		if (mispFromDb.isEmpty()) {
-			validateAndGetPartner(misp_id);
-		} else {
-			if (!mispFromDb.get().getIsActive()) {
-				auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-				throw new PartnerManagerServiceException(ErrorCode.MISP_IS_BLOCKED.getErrorCode(),
-						ErrorCode.MISP_IS_BLOCKED.getErrorMessage());
-			}
-		}
-	}
-
-	private Partner validateAndGetPartner(String partnerId) {
-		Optional<Partner> partner = partnerRepository.findById(partnerId);
-		if (partner.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		if (!partner.get().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-		}
-		return partner.get();
 	}
 
 	public String getUser() {
