@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
@@ -19,12 +18,10 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.ConfigKeyConstants;
@@ -54,6 +51,7 @@ import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
@@ -442,16 +440,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	public String getUser() {
-		if (Objects.nonNull(SecurityContextHolder.getContext())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())
-				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				&& SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof AuthUserDetails) {
-			return ((AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-					.getUserId();
-		} else {
-			return null;
-		}
-	}	
+		return UserDetailUtil.getLoggedInUserId();
+	}
 	
 	/**
 	 * 
