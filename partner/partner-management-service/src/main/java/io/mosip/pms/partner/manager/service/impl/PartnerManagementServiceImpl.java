@@ -440,7 +440,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	public String getUser() {
-		return UserDetailUtil.getLoggedInUserId();
+		return UserDetailUtil.getLoggedInUser();
 	}
 	
 	/**
