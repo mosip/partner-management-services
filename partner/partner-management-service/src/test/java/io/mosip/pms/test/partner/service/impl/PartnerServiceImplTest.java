@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.Pagination;
@@ -44,6 +46,7 @@ import io.mosip.pms.common.entity.PartnerPolicyCredentialTypePK;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
@@ -124,6 +127,9 @@ public class PartnerServiceImplTest {
 	
     @MockBean
 	AuditUtil auditUtil;
+    
+    @Mock
+	FilterHelper filterHelper;
 	
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
@@ -149,6 +155,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "filterColumnValidator", filterColumnValidator);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerSearchHelper", partnerSearchHelper);
 		ReflectionTestUtils.setField(pserviceImpl, "pageUtils", pageUtils);
+		ReflectionTestUtils.setField(pserviceImpl, "filterHelper", filterHelper);
 		ReflectionTestUtils.setField(pserviceImpl, "restUtil", restUtil);
 		
 		//Filter_Test
@@ -279,11 +286,23 @@ public class PartnerServiceImplTest {
 	
 	@Test
 	public void partnerFilterValues_Test() {
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(filtersData);
 		pserviceImpl.filterValues(deviceFilterValueDto);
-		}
+	}
 	
 	@Test
 	public void apiKeyRequestFilterTest() {
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		Mockito.doReturn(true).when(filterColumnValidator).validate(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(filtersData);
 		pserviceImpl.apiKeyRequestFilter(deviceFilterValueDto);
 		}
 	
