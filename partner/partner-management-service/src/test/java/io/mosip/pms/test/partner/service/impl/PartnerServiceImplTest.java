@@ -644,57 +644,6 @@ public class PartnerServiceImplTest {
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 	}
 	
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPartnerPolicyNotFoundByPartnerIdTest() {
-		String partnerID = "id";
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(null);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPolicyRequestIdNotEqualsPartnerIdTest() {
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPartnerPolicyRequestNotFoundByAPIKeyReqIDTest() {
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partner_request = Optional.empty();
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPartnerPolicyIdNotEqualsPartnerIdTest() {
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.of(createPartnerPolicyRequest(""));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPartnerPolicyStatusIsNotApprovedTest() {
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.of(createPartnerPolicyRequest("Rejected"));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void throwExceptionWhenPartnerPolicyRequestIsNotFoundByAPIKeyReqIDTest() {
-		String aPIKeyReqID = "aPIKeyReqID";
-		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.empty();
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-	
 	@Test(expected = PartnerServiceException.class)
 	public void throwExceptionWhenPartnerPolicyRequestIsEmptyTest() {
 		String partnerID = "id";

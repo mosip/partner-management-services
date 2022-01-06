@@ -115,7 +115,6 @@ import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -527,27 +526,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
 		return authPolicyFromDb;
-	}
-
-	@Override
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apikeyReqId) {
-		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByReqId(apikeyReqId);
-		if (partnerRequest == null) {
-			LOGGER.error("No apikey requests exists for apiKeyReqId {}", apikeyReqId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-		response.setApikeyReqStatus(partnerRequest.getStatusCode());
-		response.setApiRequestKey(apikeyReqId);
-		if (partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
-			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
-			response.setValidityTill(approvedPolicy.getValidToDatetime());
-			response.setApikeyStatus(approvedPolicy.getIsActive());
-		}		
-		return response;
-	}
+	}	
 
 	/**
 	 * 
