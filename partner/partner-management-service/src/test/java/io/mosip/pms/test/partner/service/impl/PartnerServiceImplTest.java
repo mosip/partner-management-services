@@ -129,10 +129,8 @@ public class PartnerServiceImplTest {
 	AuditUtil auditUtil;
     
     @Mock
-	FilterHelper filterHelper;
-	
-    @MockBean
-	AuditUtil auditUtil;
+	FilterHelper filterHelper;	
+
 	
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
