@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -988,33 +989,49 @@ public class PartnerServiceImplTest {
 		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 	}
 	
-//	@Test	
-//	public void searchPartnerApiKeysTest() throws Exception {
-//		objectMapper.writeValueAsString(searchDto);
-//		PartnerPolicy policy = new PartnerPolicy();
-//		policy.setPolicyId("12345");
-//		policy.setPartner(createPartner(true));
-//		Mockito.doReturn(new PageImpl<>(Arrays.asList(policy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
-//		pserviceImpl.searchPartnerApiKeys(searchDto);
-//	}
-//	
-//	@Test
-//	public void searchPartnerTypetest() throws Exception{
-//		objectMapper.writeValueAsString(searchDto);
-//		PartnerType partnerType = new PartnerType();
-//		partnerType.setCode("1001");
-//		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
-//		pserviceImpl.searchPartnerType(searchDto);
-//	}
+	@Test
+	public void searchPartnerApiKeysTest() throws JsonProcessingException {
+		SearchFilter partnerNameSearchFilter = new SearchFilter();
+		partnerNameSearchFilter.setColumnName("partnerName");
+		partnerNameSearchFilter.setValue("m");
+		
+		SearchFilter apikeyRequestIdSearchFilter = new SearchFilter();
+		apikeyRequestIdSearchFilter.setColumnName("apikeyRequestId");
+		apikeyRequestIdSearchFilter.setValue("m");
+		
+		SearchFilter policyNameRequestIdSearchFilter = new SearchFilter();
+		policyNameRequestIdSearchFilter.setColumnName("policyName");
+		policyNameRequestIdSearchFilter.setValue("m");
+		
+		SearchFilter partnerIdRequestIdSearchFilter = new SearchFilter();
+		partnerIdRequestIdSearchFilter.setColumnName("partnerId");
+		partnerIdRequestIdSearchFilter.setValue("m");
+		
+		searchDto.getFilters().add(partnerIdRequestIdSearchFilter);
+		searchDto.getFilters().add(policyNameRequestIdSearchFilter);
+		searchDto.getFilters().add(apikeyRequestIdSearchFilter);
+		searchDto.getFilters().add(partnerNameSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		PartnerPolicy partnerPolicy = new PartnerPolicy();
+		partnerPolicy.setPolicyApiKey("12345");
+		partnerPolicy.setPartner(createPartner(true));
+		Mockito.when(partnerRepository.findById("m")).thenReturn(Optional.of(createPartner(true)));
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.when(authPolicyRepository.findByName("m")).thenReturn((createAuthPolicy()));
+		pserviceImpl.searchPartnerApiKeys(searchDto);
+		
+		searchDto.getFilters().add(partnerNameSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeys(searchDto);
+		
+		searchDto.getFilters().add(partnerIdRequestIdSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeys(searchDto);
+		
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeys(searchDto);
+	}	
 
-	
-//	private PartnerPolicy createPartnerPolicy() {
-//		PartnerPolicy partnerPolicy = new PartnerPolicy();
-//		partnerPolicy.setPolicyApiKey("12345");
-//		partnerPolicy.setIsActive(true);
-//		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now()));
-//		return partnerPolicy;
-//	}
 
 	private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
