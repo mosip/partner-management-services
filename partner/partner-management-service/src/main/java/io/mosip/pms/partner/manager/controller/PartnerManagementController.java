@@ -24,7 +24,6 @@ import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyRequestsResponse;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
@@ -114,85 +113,7 @@ public class PartnerManagementController {
 		response.setResponse(partnersPolicyMappingResponse);
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	 }
-	
-	/**
-	 * Partner Manager would be using this API to activate OR de-activate PartnerAPIKey for given partner.
-	 * @param partnerId this is unique id created after self registered by partner
-	 * @param request this class contains the status about activate OR de-activate PartnerAPIKey for given partner
-	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
-	 * @return response this class contains massage about Partner API Key status updated successfully
-	 */
-	@Deprecated
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/{partnerId}/apikey/{apikey}", method = RequestMethod.PATCH)
-	@Operation(summary = "Service to activate/de-activate api key", description = "Service to activate/de-activate api key")
-	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivateAPIKey(
-			@PathVariable String partnerId,
-			@RequestBody @Valid RequestWrapper<StatusRequestDto> request,
-			@PathVariable String apikey){
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
-		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS);
-		StatusRequestDto activateDeactivatePartnerRequest = request.getRequest();
-		partnersPolicyMappingResponse = partnerManagementService
-				.activateDeactivatePartnerAPIKeyGivenPartner(partnerId,activateDeactivatePartnerRequest,apikey);
-		response.setResponse(partnersPolicyMappingResponse);
-		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	/**
-	 * 
-	 * @param partnerId
-	 * @param partner_api_key
-	 * @param misp_license_key
-	 * @return
-	 */
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','ID_AUTHENTICATION','CREDENTIAL_ISSUANCE')")
-	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/misp/{misplicensekey}/validate", 
-			method = RequestMethod.GET)
-	@Operation(summary = "Service to validate partner and misp details", description = "Service to validate partner and misp details")
-	public ResponseEntity<ResponseWrapper<PartnerPolicyResponse>> validatePartnerAndMisp(
-			@PathVariable String partnerId, @PathVariable String apikey,
-			@PathVariable String misplicensekey,@RequestParam(defaultValue = "false", name ="needPartnerCert") boolean needPartnerCert){
-		ResponseWrapper<PartnerPolicyResponse> response = new ResponseWrapper<>();
-		PartnerPolicyResponse responseFromService = partnerManagementService.getPartnerMappedPolicyFile(misplicensekey,apikey,partnerId,needPartnerCert);
-		response.setResponse(responseFromService);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	/**
-	 * Partner Manager would be using this API to approve OR reject partner API key
-	 * requests based on API key request id. During approval process of the request
-	 * unique PartnerAPI Key is generated in Partner Management module, which is
-	 * mapped to requested policies. Partner API Key would be having default active
-	 * status, expiry of which would configurable.
-	 * 
-	 * @param request this class contains the status about approve OR reject partner API key requests
-	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
-	 * @return response this class contains massage about PartnerAPIKey approved successfully
-	 */
-	@Deprecated
-	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
-	@RequestMapping(value = "/apikey/{apikey}", method = RequestMethod.PATCH)
-	@Operation(summary = "Service to approve/reject api key requests", description = "Service to approve/reject api key requests")
-	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> approveRejectAPIKeyRequest(
-			@RequestBody @Valid RequestWrapper<StatusRequestDto> request,
-			@PathVariable String apikey){
-		ResponseWrapper<PartnersPolicyMappingResponse> response = new ResponseWrapper<>();
-		PartnersPolicyMappingResponse partnersPolicyMappingResponse = null;
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		StatusRequestDto activateDeactivatePartnerRequest = request.getRequest();
-		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API);
-		partnersPolicyMappingResponse = partnerManagementService
-				.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(activateDeactivatePartnerRequest,apikey);
-		response.setResponse(partnersPolicyMappingResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	 }	
 	
 	/** 
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.

@@ -1,9 +1,11 @@
 package io.mosip.pms.test.partner.service.impl;
 
-import java.io.IOException;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,6 @@ import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -33,7 +35,8 @@ import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
@@ -41,12 +44,14 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
+import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 
 
 @RunWith(SpringRunner.class)
@@ -71,8 +76,11 @@ public class PartnerManagementServiceImplTest {
 	@Mock
 	AuthPolicyRepository authPolicyRepository;
 	
+	@Mock	
+	MispLicenseRepository mispLicenseRepository;
+	
 	@Mock
-	private MispLicenseKeyRepository misplKeyRepository;
+	BiometricExtractorProviderRepository extractorProviderRepository;
 	
 	@Mock
 	private WebSubPublisher webSubPublisher;
@@ -98,7 +106,8 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "authPolicyRepository", authPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
-		ReflectionTestUtils.setField(partnerManagementImpl, "misplKeyRepository", misplKeyRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseRepository", mispLicenseRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
 //		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
@@ -515,17 +524,7 @@ public class PartnerManagementServiceImplTest {
 		req.setStatus("De-Active");
 		String partnerId = "12345";
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
-	}
-	@Test
-	@Ignore
-	public void activateDeactivateAuthEKYCPartnerTest_S2() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("De-Active");
-		String partnerId = "12345";
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
-	}
+	}	
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void activateDeactivateAuthEKYCPartnerTest_S3() {
@@ -544,6 +543,22 @@ public class PartnerManagementServiceImplTest {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
+		req.setStatus("De-Active");
+		partner.get().setPartnerTypeCode("MISP_Partner");
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		MISPLicenseEntity license = new MISPLicenseEntity();
+		license.setLicenseKey("qwertyhgfdsdfghb");
+		license.setIsActive(true);
+		license.setMispId("12345");
+		license.setValidFromDate(LocalDateTime.now().minusDays(1));
+		license.setValidToDate(LocalDateTime.now().plusDays(5));
+		Mockito.when(mispLicenseRepository.findByMispIdAndIsActive("123456")).thenReturn(List.of(license));
+		Map<String, Object> response = new HashMap<>();
+		response.put("response", getCertResponse());
+		response.put("id",null);
+		response.put("version", null);
+		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
 	}
 	
@@ -605,77 +620,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S1() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Active");
-		String partnerId = "12345";
-		String apiKey ="2345";
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S2() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Active");
-		String partnerId = "12345";
-		String apiKey ="2345";
-		Optional<PartnerPolicy> partnerPolicy = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById(apiKey)).thenReturn(partnerPolicy);
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S3() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("ctive");
-		String partnerId = "123456";
-		String apiKey ="2345";
-		Optional<PartnerPolicy> partnerPolicy = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById(apiKey)).thenReturn(partnerPolicy);
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
-	
-	@Test
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S4() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Active");
-		String partnerId = "123456";
-		String apiKey ="2345";
-		Optional<PartnerPolicy> partnerPolicy = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(), Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById(apiKey)).thenReturn(partnerPolicy);
-		Mockito.when(authPolicyRepository.findById(partnerPolicy.get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
-	
-	@Test
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S5() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("De-Active");
-		String partnerId = "123456";
-		String apiKey ="2345";
-		Optional<PartnerPolicy> partnerPolicy = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(), Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById(apiKey)).thenReturn(partnerPolicy);
-		Mockito.when(authPolicyRepository.findById(partnerPolicy.get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void activateDeactivatePartnerAPIKeyGivenPartnerTest_S6() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("NOTActive");
-		String partnerId = "123456";
-		String apiKey ="2345";
-		Optional<PartnerPolicy> partnerPolicy = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(), Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById(apiKey)).thenReturn(partnerPolicy);
-		Mockito.when(authPolicyRepository.findById(partnerPolicy.get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		partnerManagementImpl.activateDeactivatePartnerAPIKeyGivenPartner(partnerId, req, apiKey);
-	}
+	}	
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void getAllAuthEKYCPartnersForThePolicyGroupTest_S1() {
@@ -819,81 +764,240 @@ public class PartnerManagementServiceImplTest {
 		partnerManagementImpl.getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestId(apiKey);
 	}
 	
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S1() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("De-Active");
-		String partnerApiKey="2345";
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,partnerApiKey);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S2() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("De-Active");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
+	@Test
+	public void updateAPIKeyStatusTest01() {
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("De-Activate");
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
+				Mockito.any())).thenReturn(getPartnerPolicy());
+		try {
+		partnerManagementImpl.updateAPIKeyStatus("1234", "456",statusDto);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode()));
+		}
 	}
 	
 	@Test
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S3() throws IOException {
-		StatusRequestDto req = new StatusRequestDto();
-		Map<String, Object> response = new HashMap<>();
-		response.put("response", getCertResponse());
-		response.put("id",null);
-		response.put("version", null);
-		req.setStatus("Approved");
-		String apiKey ="2345";
-		PartnerCertDownloadResponeDto certDto = new PartnerCertDownloadResponeDto();
-		certDto.setCertificateData("sdfghjjhgffghjijhgrffghjhbvfghgftgbvgbghbvghjkjhb");
-		certDto.setTimestamp(LocalDateTime.now());
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findById(Optional.of(getPartnerPolicyRequestData()).get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
-//		Mockito.when(
-//				mapper.readValue(Mockito.anyString(), Mockito.eq(PartnerCertDownloadResponeDto.class)))
-//				.thenReturn(certDto);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
+	public void updateAPIKeyStatusTest02() {
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("De-Active");
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
+				Mockito.any())).thenReturn(getPartnerPolicy());
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
+	
+	@Test
+	public void updateAPIKeyStatusTest03() {
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("De-Active");
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
+				Mockito.any())).thenReturn(null);
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		try {
+		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void updateAPIKeyStatusTest04() {
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("Active");
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
+				Mockito.any())).thenReturn(getPartnerPolicy());
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
+	}
+	
+	@Test
+	public void approveRejectPartnerPolicyMappingTest01() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Approved");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+	}
+	
+	@Test
+	public void approveRejectPartnerPolicyMappingTest02() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Rejected");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+	}
+	
+	@Test
+	public void approveRejectPartnerPolicyMappingTest03() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Rejeted");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_STATUS_CODE.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void approveRejectPartnerPolicyMappingTest04() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Rejected");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_API_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+		}
+		PartnerPolicyRequest partnerPolicyRequestFromDb = getPartnerPolicyRequestData();
+		partnerPolicyRequestFromDb.setStatusCode("approved");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_REQUEST_ALREADY_APPROVED.getErrorCode()));
+		}			
+		partnerPolicyRequestFromDb.setStatusCode("rejected");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_REQUEST_ALREADY_REJECTED.getErrorCode()));
+		}		
 
+		PartnerPolicyRequest partnerPolicyRequestFromDb1 = getPartnerPolicyRequestData();
+		partnerPolicyRequestFromDb1.getPartner().setPartnerTypeCode("Credential_Partner");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb1));
+		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId(Mockito.any(),Mockito.any())).thenReturn(List.of());
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode()));
+		}
+	}
+	
 	@Test
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S10() throws IOException {
-		StatusRequestDto req = new StatusRequestDto();
+	public void approveRejectPartnerPolicyMappingTest05() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Approved");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode()));
+		}
+		AuthPolicy authPolicy = getAuthPolicies().get(0);
+		authPolicy.setIsActive(false);
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(authPolicy));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+		}
+		
+		authPolicy = getAuthPolicies().get(0);
+		authPolicy.setPolicyGroup(null);
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(authPolicy));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode()));
+		}
+		
+		authPolicy = getAuthPolicies().get(0);
+		authPolicy.getPolicyGroup().setIsActive(false);
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(authPolicy));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode()));
+		}
+		
+		authPolicy = getAuthPolicies().get(0);
+		authPolicy.setValidToDate(LocalDateTime.now().minusDays(1));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(authPolicy));
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorCode()));
+		}
+	}
+	
+	@Test
+	@WithMockUser(username = "partner")
+	public void generateAPIKeyTest() {
+		APIKeyGenerateRequestDto request = new APIKeyGenerateRequestDto();
+		request.setLabel("unique");
+		request.setPolicyName("policyName");		
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
+		Mockito.when(partnerRepository.findById("partner")).thenReturn(Optional.of(getPartner()));
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("partner","234","unique")).thenReturn(getPartnerPolicy());
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
-		req.setStatus("rejected");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findById(Optional.of(getPartnerPolicyRequestData()).get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}
-	@Test(expected = PartnerManagerServiceException.class)
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S11() throws IOException {
-		StatusRequestDto req = new StatusRequestDto();
-		Map<String, Object> response = new HashMap<>();
-		response.put("response", getCertResponse());
-		response.put("id",null);
-		response.put("version", null);
-		req.setStatus("notrejected");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		partnerManagementImpl.generateAPIKey("partner", request);		
+		try {
+			partnerManagementImpl.generateAPIKey("InvalidPartner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode()));
+		}
+		
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(null);
+		try {
+			partnerManagementImpl.generateAPIKey("partner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode()));
+		}
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(Collections.emptyList());
+		try {
+			partnerManagementImpl.generateAPIKey("partner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode()));
+		}
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
+		Mockito.when(partnerRepository.findById("partner")).thenReturn(Optional.empty());
+		try {
+			partnerManagementImpl.generateAPIKey("partner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+		}		
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
 		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findById(Optional.of(getPartnerPolicyRequestData()).get().getPolicyId())).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
+		partner.get().setIsActive(false);
+		Mockito.when(partnerRepository.findById("partner")).thenReturn(partner);
+		try {
+			partnerManagementImpl.generateAPIKey("partner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+		}
+		Mockito.when(authPolicyRepository.findByPolicyName(request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
+		Mockito.when(partnerRepository.findById("partner")).thenReturn(Optional.of(getPartner()));
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("123456","234","unique")).thenReturn(getPartnerPolicy());
+		try {
+			partnerManagementImpl.generateAPIKey("partner", request);
+		}catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode()));
+		}
 	}
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	private JSONObject getCertResponse() {
@@ -902,223 +1006,6 @@ public class PartnerManagementServiceImplTest {
 		obj.put("timestamp", "2021-09-02T07:43:15.577329");		
 		return obj;
 	}
-	
-	@Test
-	@Ignore
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S4() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Rejected");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}
-	
-	@Test
-	@Ignore
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S5() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Approved");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		String partnerId = "123456";
-		PartnerPolicy partnerFromDB = Optional.of(getPartnerPolicy()).get();
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerId)).thenReturn(partnerFromDB);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}	
-	
-	@Test
-	@Ignore
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S6() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Approved");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);	
-		Mockito.when(partnerPolicyRepository.findByPartnerId("7267132")).thenReturn(null);
-		Optional<PartnerPolicy> partnerFromDB1 = Optional.of(getPartnerPolicy());
-		Mockito.when(partnerPolicyRepository.findById("30636009")).thenReturn(partnerFromDB1);
-		Mockito.when(authPolicyRepository.findById("234")).thenReturn(Optional.of(getAuthPolicies().get(0)));
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}	
-	
-	@Test (expected = PartnerManagerServiceException.class)
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S7() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Rejected");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getApprovedPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}
-	
-	@Test (expected = PartnerManagerServiceException.class)
-	public void approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestIdTest_S8() {
-		StatusRequestDto req = new StatusRequestDto();
-		req.setStatus("Rejected");
-		String apiKey ="2345";	
-		Mockito.when(partnerPolicyRequestRepository.findById(apiKey)).thenReturn(Optional.of(getRejectedPartnerPolicyRequestData()));
-		Optional<Partner> partner = Optional.of(getPartner());
-		Mockito.when(partnerRepository.findById("123456")).thenReturn(partner);
-		partnerManagementImpl.approveRejectPartnerAPIKeyRequestsBasedOnAPIKeyRequestId(req,apiKey);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S1() {
-		partnerManagementImpl.getPartnerMappedPolicyFile("","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S2() {		
-		MISPLicenseEntity license = mispLicense();
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}	
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S3() {
-		MISPLicenseEntity license = mispLicense();
-		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S34() {
-		MISPLicenseEntity license = mispLicense();
-		license.setValidToDate(LocalDateTime.now().plusDays(-10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(null);
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S35() {
-		MISPLicenseEntity license = mispLicense();
-		license.setIsActive(false);
-		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S40() {
-		MISPLicenseEntity license = mispLicense();
-		license.setIsActive(true);
-		license.setValidToDate(LocalDateTime.now().plusDays(10));
-		Mockito.when(misplKeyRepository.findByLicensekey(license.getLicenseKey())).thenReturn(license);
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(null);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S41() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		PartnerPolicy partnerPolicy = getPartnerPolicy();
-		partnerPolicy.setIsActive(false);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(partnerPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S42() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		PartnerPolicy partnerPolicy = getPartnerPolicy();
-		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().minusDays(10)));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(partnerPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S51() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());		
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S52() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());		
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		authPolicy.get().setIsActive(false);
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S53() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		authPolicy.get().setPolicyGroup(null);
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S54() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		authPolicy.get().getPolicyGroup().setIsActive(false);
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test(expected = PartnerManagerServiceException.class)
-	public void getPartnerMappedPolicyFileTest_S55() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		authPolicy.get().setValidToDate(LocalDateTime.now().minusDays(10));
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test
-	public void getPartnerMappedPolicyFileTest_S61() {
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",false);
-	}
-	
-	@Test
-	public void getPartnerMappedPolicyFileTest_S62() {
-		Map<String, Object> response = new HashMap<>();
-		response.put("response", getCertResponse());
-		response.put("id",null);
-		response.put("version", null);
-		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
-		Mockito.when(misplKeyRepository.findByLicensekey(Mockito.anyString())).thenReturn(mispLicense());
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.of(getPartner()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndApikey(Mockito.anyString(),Mockito.anyString())).thenReturn(getPartnerPolicy());
-		Optional<AuthPolicy> authPolicy = Optional.of(getAuthPolicies().get(0));
-		Mockito.when(authPolicyRepository.findById(Mockito.anyString())).thenReturn(authPolicy);
-		partnerManagementImpl.getPartnerMappedPolicyFile("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy","","",true);
-	}	
-
 	
 	@Test(expected = PartnerManagerServiceException.class)
 	public void partnerApiKeyPolicyMappingsTest_S1() {
@@ -1131,17 +1018,6 @@ public class PartnerManagementServiceImplTest {
 		req.setOldPolicyID("1234");
 		req.setNewPolicyID("456");
 		return req;
-	}
-
-
-	private MISPLicenseEntity mispLicense() {
-		MISPLicenseEntity mispLices = new MISPLicenseEntity();
-		mispLices.setMispId("100");
-		mispLices.setLicenseKey("aaaaaaabghjiuytdsdfghjiuytfdcvbhjy");
-		mispLices.setValidFromDate(LocalDateTime.now());
-		mispLices.setValidToDate(LocalDateTime.now().plusDays(90));
-		mispLices.setIsActive(true);
-		return mispLices;
 	}
 	
 	private PolicyGroup getPolicyGroupData() {
@@ -1163,23 +1039,6 @@ public class PartnerManagementServiceImplTest {
 		return partnerPolicyRequest;
 	}
 	
-	private PartnerPolicyRequest getApprovedPartnerPolicyRequestData() {
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setId("1234456");
-		partnerPolicyRequest.setPartner(getPartner());
-		partnerPolicyRequest.setPolicyId("2345");
-		partnerPolicyRequest.setStatusCode("APPROVED");
-		return partnerPolicyRequest;
-	}
-	
-	private PartnerPolicyRequest getRejectedPartnerPolicyRequestData() {
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setId("1234456");
-		partnerPolicyRequest.setPartner(getPartner());
-		partnerPolicyRequest.setPolicyId("2345");
-		partnerPolicyRequest.setStatusCode("REJECTED");
-		return partnerPolicyRequest;
-	}
 	private List<AuthPolicy> getAuthPolicies(){
 		AuthPolicy policy = new AuthPolicy();
 		List<AuthPolicy> policies = new ArrayList<AuthPolicy>();
@@ -1191,8 +1050,7 @@ public class PartnerManagementServiceImplTest {
 		policy.setValidToDate(LocalDateTime.now().plusDays(5));
 		policy.setPolicyFileId("{\"authPolicies\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"demo\",\"authSubType\":null,\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"IRIS\",\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FACE\",\"mandatory\":false},{\"authType\":\"kyc\",\"authSubType\":null,\"mandatory\":false}],\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"required\":true},{\"attributeName\":\"dateOfBirth\",\"required\":true},{\"attributeName\":\"gender\",\"required\":true},{\"attributeName\":\"phone\",\"required\":true},{\"attributeName\":\"email\",\"required\":true},{\"attributeName\":\"addressLine1\",\"required\":true},{\"attributeName\":\"addressLine2\",\"required\":true},{\"attributeName\":\"addressLine3\",\"required\":true},{\"attributeName\":\"location1\",\"required\":true},{\"attributeName\":\"location2\",\"required\":true},{\"attributeName\":\"location3\",\"required\":true},{\"attributeName\":\"postalCode\",\"required\":false},{\"attributeName\":\"photo\",\"required\":true}]}");
 		policies.add(policy);
-		return policies;
-		
+		return policies;		
 	}
 	
 	private PolicyGroup policyGroupData() {

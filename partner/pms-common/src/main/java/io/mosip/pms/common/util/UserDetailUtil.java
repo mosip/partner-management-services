@@ -32,4 +32,17 @@ public class UserDetailUtil {
 		AuthUserDetails loggedInUser = getLoggedInUserDetails();
 		return loggedInUser != null ? loggedInUser.getUserId() : null;
 	}
+	
+	public static String getLoggedInUser() {
+		String loggedInUser = getLoggedInUserId();
+		if (loggedInUser != null) {
+			return loggedInUser;
+		}
+		if (Objects.nonNull(SecurityContextHolder.getContext())
+				&& Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) {
+			return SecurityContextHolder.getContext().getAuthentication().getName();
+		}
+
+		return null;
+	}
 }

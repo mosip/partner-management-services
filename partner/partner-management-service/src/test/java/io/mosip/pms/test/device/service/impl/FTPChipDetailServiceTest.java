@@ -1,5 +1,7 @@
 package io.mosip.pms.test.device.service.impl;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,7 +39,9 @@ import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
+import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
@@ -123,7 +126,20 @@ public class FTPChipDetailServiceTest {
 	@Test(expected = RequestException.class)
 	public void createFTPChipDetailtest01() {	
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
-	}	
+	}
+	
+	@Test
+	public void createFTPChipDetailTest02() {
+		FTPChipDetail uniqueChipDetail = new FTPChipDetail();
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
+		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.any(),
+				Mockito.any(), Mockito.any())).thenReturn(uniqueChipDetail);
+		try {
+			ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode()));
+		}
+	}
 	
 	@Test 
 	public void updateFtpChipDetailsTest() {
@@ -147,6 +163,24 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);
 	}
 	
+	@Test 
+	public void updateFtpChipDetailsTest03() {
+		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("3456");
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);	
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
+		FTPChipDetail ftpChipDetail1 = new FTPChipDetail();
+		ftpChipDetail1.setFtpChipDetailId("12345");		
+		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(ftpChipDetail1);
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);		
+		try {
+			ftpChipDetailService.updateFtpChipDetails(chipDetails);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode()));
+		}
+	}
+	
 	@Test
 	public void updateFtpChipDetailStatusTest() {
 		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
@@ -154,7 +188,11 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpChipDetailId("12345");
 		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
-		ftpChipDetailService.updateFtpChipDetailStatus(request);
+		try {
+			ftpChipDetailService.updateFtpChipDetailStatus(request);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode()));
+		}
 	}
 	
 	@Test(expected = RequestException.class)
@@ -162,6 +200,17 @@ public class FTPChipDetailServiceTest {
 		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetailService.updateFtpChipDetailStatus(request);
+	}
+	
+	@Test
+	public void updateFtpChipDetailStatusTest02() {
+		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetail.setCertificateAlias("certuploaded");
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		ftpChipDetailService.updateFtpChipDetailStatus(request);
 	}
 	
@@ -189,9 +238,8 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpProviderId("1234");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(), Mockito.anyString());
 		ftpChipDetailService.searchFTPChipDetails(FTPChipDetail.class, deviceSearchDto);	
-	}
+	}	
 	
-	@Ignore
 	@Test
 	public void uploadPartnerCertificateTest() throws Exception {
 		FtpChipCertificateRequestDto request = createUploadrequest(true);
@@ -204,9 +252,95 @@ public class FTPChipDetailServiceTest {
 		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(null);
+		try {
+			ftpChipDetailService.uploadCertificate(request);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void uploadPartnerCertificateTest01() throws Exception {
+		FtpChipCertificateRequestDto request = createUploadrequest(true);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetail.setFtpProviderId("12345");		
+		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
+		uploadApiResponse.put("response", 0);
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
-		ftpChipDetailService.uploadPartnerCertificate(request);	
-	}	
+		try {
+			ftpChipDetailService.uploadCertificate(request);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void uploadPartnerCertificateTest02() throws Exception {
+		FtpChipCertificateRequestDto request = createUploadrequest(true);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetail.setFtpProviderId("122345");
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
+		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
+		uploadApiResponse.put("response", 0);
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
+		try {
+			ftpChipDetailService.uploadCertificate(request);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void getChipCertificate() throws Exception {
+		FtpChipCertDownloadRequestDto request = new FtpChipCertDownloadRequestDto();
+		request.setFtpChipDetailId("12345");		
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetail.setFtpProviderId("122345");
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
+		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
+		uploadApiResponse.put("response", 0);
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
+		try {
+			ftpChipDetailService.getCertificate(request);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode()
+					.equals(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode()));
+		}
+	}
+	
+	@Test
+	public void getChipCertificate01() throws Exception {
+		FtpChipCertDownloadRequestDto request = new FtpChipCertDownloadRequestDto();
+		request.setFtpChipDetailId("12345");		
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("12345");
+		ftpChipDetail.setFtpProviderId("122345");
+		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
+		uploadApiResponse.put("response", 0);
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
+		try {
+			ftpChipDetailService.getCertificate(request);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode()
+					.equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode()));
+		}
+	}
 	
 	private FtpChipDetailUpdateDto createUpdateRequest() {
 		FtpChipDetailUpdateDto ChipDetailUpdateDto = new FtpChipDetailUpdateDto();
