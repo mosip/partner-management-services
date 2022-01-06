@@ -290,6 +290,7 @@ public class PartnerServiceControllerTest {
     }
     
     @Test    
+
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void generateAPIKey() throws Exception{ 
     	APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();

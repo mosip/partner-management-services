@@ -131,6 +131,9 @@ public class PartnerServiceImplTest {
     @Mock
 	FilterHelper filterHelper;
 	
+    @MockBean
+	AuditUtil auditUtil;
+	
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
@@ -1048,7 +1051,7 @@ public class PartnerServiceImplTest {
 		objectMapper.writeValueAsString(searchDto);
 		pserviceImpl.searchPartnerApiKeys(searchDto);
 	}	
-
+  
 	@Test
 	public void searchPartnerTypeTest() throws JsonProcessingException {
 		objectMapper.writeValueAsString(searchDto);
