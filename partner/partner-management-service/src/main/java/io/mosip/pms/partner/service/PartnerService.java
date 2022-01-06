@@ -26,7 +26,6 @@ import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -57,15 +56,6 @@ public interface PartnerService {
 	 * @return partnerResponse this class contains status of partner
 	 */
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest,String partnerId);
-	
-	/**
-	 * This method is used to download Partner API key for the given APIKeyReqID.
-	 * @param partnerID this is unique id created after self registered by partner
-	 * @param aPIKeyReqID this is unique id created after partner request for Partner API Key
-	 * @return downloadPartnerAPIkeyResponse this is unique id created once partner manager approved the partner API request
-	 */
-	
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apiKeyReqId);
 	
 	/**
 	 * This method is used to retrieve all API key requests submitted by partner till date.

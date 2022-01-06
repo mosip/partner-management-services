@@ -57,7 +57,6 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
@@ -213,14 +212,6 @@ public class PartnerServiceControllerTest {
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void viewApiKeyRequestStatusAndApiKey_Test() throws Exception{
-    	DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-        Mockito.when(partnerService.getApikeyFromRequestKey("123456")).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/request/123456")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
     public void searchPartnerTest() throws Exception{
     	RequestWrapper<PartnerSearchDto> request = createSearchPartnerRequest();
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/search").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -299,7 +290,8 @@ public class PartnerServiceControllerTest {
     }
     
     @Test    
-    @WithMockUser(roles = {"PARTNER"})
+
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void generateAPIKey() throws Exception{ 
     	APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
     	RequestWrapper<APIKeyGenerateRequestDto> request = new RequestWrapper<>();

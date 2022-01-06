@@ -194,9 +194,14 @@ public class DeviceDetailServiceTest {
 
 	@Test
 	public void searchDeviceDetailTest() throws Exception {
-		objectMapper.writeValueAsString(deviceRequestDto);
+		SearchFilter partnerOrganizationNameFilter = new SearchFilter();
+		partnerOrganizationNameFilter.setColumnName("partnerOrganizationName");
+		partnerOrganizationNameFilter.setValue("m");
+		deviceSearchDto.getFilters().add(partnerOrganizationNameFilter);
+		objectMapper.writeValueAsString(deviceSearchDto);
 		DeviceDetail device = new DeviceDetail();
 		device.setId("1001");
+		Mockito.when(partnerRepository.findByName("m")).thenReturn(partner);
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
 				Mockito.any(),Mockito.anyString());
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);

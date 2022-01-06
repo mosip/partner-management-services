@@ -50,7 +50,6 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
@@ -251,31 +250,6 @@ public class PartnerServiceController {
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(apikeyRequestsList);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	/**
-	 * This API would be used to view API key request status and API key (in case
-	 * request is approved).
-	 * 
-	 * @param partnerId
-	 *            this is unique id created after self registered by partner
-	 * @param apikeyreqId
-	 *            this is unique id created after partner request for Partner API
-	 *            Key
-	 * @return response this class contains partnerApiKey apiKeyRequestStatus and
-	 *         validity details
-	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
-	@Operation(summary = "Service to get api key request status of partner", description = "Service to get api key request status of partner")
-	@RequestMapping(value = "/apikey/request/{apikeyreqId}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseWrapper<DownloadPartnerAPIkeyResponse>> getAPIKeyRequestStatus(@PathVariable String apikeyreqId) {
-		ResponseWrapper<DownloadPartnerAPIkeyResponse> response = new ResponseWrapper<>();
-		DownloadPartnerAPIkeyResponse aPIkeyRequests = null;
-		aPIkeyRequests = partnerService.getApikeyFromRequestKey(apikeyreqId);
-		response.setId(msg);
-		response.setVersion(version);
-		response.setResponse(aPIkeyRequests);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
