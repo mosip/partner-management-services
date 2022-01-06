@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
@@ -36,7 +36,7 @@ import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
-import io.mosip.pms.common.repository.MispLicenseKeyRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
@@ -56,7 +56,6 @@ import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class PartnerManagementServiceImplTest {
 	
 	@Autowired
@@ -77,8 +76,8 @@ public class PartnerManagementServiceImplTest {
 	@Mock
 	AuthPolicyRepository authPolicyRepository;
 	
-	@Mock
-	private MispLicenseKeyRepository misplKeyRepository;
+	@Mock	
+	MispLicenseRepository mispLicenseRepository;
 	
 	@Mock
 	BiometricExtractorProviderRepository extractorProviderRepository;
@@ -108,6 +107,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseRepository", mispLicenseRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
 //		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
@@ -544,6 +544,22 @@ public class PartnerManagementServiceImplTest {
 		Optional<Partner> partner = Optional.of(getPartner());
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
+		req.setStatus("De-Active");
+		partner.get().setPartnerTypeCode("MISP_Partner");
+		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		MISPLicenseEntity license = new MISPLicenseEntity();
+		license.setLicenseKey("qwertyhgfdsdfghb");
+		license.setIsActive(true);
+		license.setMispId("12345");
+		license.setValidFromDate(LocalDateTime.now().minusDays(1));
+		license.setValidToDate(LocalDateTime.now().plusDays(5));
+		Mockito.when(mispLicenseRepository.findByMispIdAndIsActive("123456")).thenReturn(List.of(license));
+		Map<String, Object> response = new HashMap<>();
+		response.put("response", getCertResponse());
+		response.put("id",null);
+		response.put("version", null);
+		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
+		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
 	}
 	
 	@Test(expected = PartnerManagerServiceException.class)
@@ -978,9 +994,9 @@ public class PartnerManagementServiceImplTest {
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode()));
 		}
-
-
 	}
+	
+	
 	
 
 	@SuppressWarnings("unchecked")
