@@ -381,6 +381,22 @@ public class SBIServiceTest {
 		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
 		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(secureBiometricInterface);
 		assertTrue(secureBiometricInterfaceService.mapDeviceDetailAndSbi(request).equals("Success"));
+		deviceDetail.setIsActive(false);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode()));
+		}
+		deviceDetail.setIsActive(true);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		secureBiometricInterface.setActive(false);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(secureBiometricInterface);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode()));
+		}
 	}
 	
 	@Test
