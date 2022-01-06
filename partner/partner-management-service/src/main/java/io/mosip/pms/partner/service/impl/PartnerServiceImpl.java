@@ -1545,6 +1545,6 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @return
 	 */
 	public List<String> getSystemMandatoryLanguageCodes() {		
-		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES).split(","));
+		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES, "eng").split(","));
 	}
 }

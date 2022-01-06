@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -74,7 +73,6 @@ import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
@@ -246,28 +244,6 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
-	@Ignore
-	public void searchPartnerApiKeyRequestsTest() throws Exception {
-		objectMapper.writeValueAsString(searchDto);
-		PartnerPolicyRequest partnerPolicy = new PartnerPolicyRequest();
-		partnerPolicy.setId("12345");
-		partnerPolicy.setPartner(createPartner(true));
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
-		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
-	}
-	
-	@Test
-	@Ignore
-	public void searchPartnerApiKeysTest() throws Exception {
-		objectMapper.writeValueAsString(searchDto);
-		PartnerPolicy policy = new PartnerPolicy();
-		policy.setPolicyId("12345");
-		policy.setPartner(createPartner(true));
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(policy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
-		pserviceImpl.searchPartnerApiKeys(searchDto);
-	}
-	
-	@Test
 	public void searchPartnertest() throws Exception{
 		objectMapper.writeValueAsString(partnerSearchDto);
 		Partner partner = new Partner();
@@ -285,15 +261,6 @@ public class PartnerServiceImplTest {
 		pserviceImpl.searchPartner(partnerSearchDto1);
 	}
 	
-	@Test
-	@Ignore
-	public void searchPartnerTypetest() throws Exception{
-		objectMapper.writeValueAsString(searchDto);
-		PartnerType partnerType = new PartnerType();
-		partnerType.setCode("1001");
-		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
-		pserviceImpl.searchPartnerType(searchDto);
-	}
 	@Test
 	public void partnerFilterValues_Test() {
 		pserviceImpl.filterValues(deviceFilterValueDto);
@@ -677,33 +644,6 @@ public class PartnerServiceImplTest {
 	}
 	
 
-	@Test
-	@Ignore
-	public void downloadPartnerAPIkeyTest() {
-		String partnerID = "12345";
-		String aPIKeyReqID = "12345";
-		PartnerPolicy policy = new PartnerPolicy();
-		policy.setPolicyApiKey("12345");
-		policy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now()));
-		Partner part = createPartner(Boolean.TRUE);
-		part.setName("name");
-		PartnerPolicyRequest partnerRequestedData = new PartnerPolicyRequest();
-		partnerRequestedData.setPartner(part);
-		partnerRequestedData.setPolicyId("123456");
-		partnerRequestedData.setStatusCode("In-Progress");
-		List<PartnerPolicyRequest> request = new ArrayList<>();
-		request.add(partnerRequestedData);
-		Optional<PartnerPolicyRequest> partner_request = Optional.of(createPartnerPolicyRequest(""));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndReqId(Mockito.anyString(), Mockito.anyString())).thenReturn(createPartnerPolicyRequest("Approved"));
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(createPartnerPolicy());
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(Mockito.anyString(), Mockito.anyString())).thenReturn(request);
-		Mockito.when(partnerPolicyRepository.findByApiKey(Mockito.anyString())).thenReturn(policy);
-		DownloadPartnerAPIkeyResponse downloadPartnerAPIkey = pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-		assertNotNull(downloadPartnerAPIkey);
-		assertEquals(downloadPartnerAPIkey.getPartnerAPIKey(), createPartnerPolicy().getPolicyApiKey());
-	}
-
 	@Test(expected = PartnerServiceException.class)
 	public void throwExceptionWhenPartnerPolicyNotFoundByPartnerIdTest() {
 		String partnerID = "id";
@@ -728,34 +668,6 @@ public class PartnerServiceImplTest {
 		Optional<PartnerPolicyRequest> partner_request = Optional.empty();
 		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partner_request);
 		pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-	}
-
-	@Test
-	@Ignore
-	public void viewApiKeyRequestStatusApiKeyTest() {
-		String partnerID = "id";
-		String aPIKeyReqID = "aPIKeyReqID";
-		PartnerPolicy policy = new PartnerPolicy();
-		policy.setPolicyApiKey("12345");
-		policy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now()));
-		Partner part = createPartner(Boolean.TRUE);
-		part.setName("name");
-		PartnerPolicyRequest partnerRequestedData = new PartnerPolicyRequest();
-		partnerRequestedData.setPartner(part);
-		partnerRequestedData.setPolicyId("123456");
-		partnerRequestedData.setStatusCode("In-Progress");
-		List<PartnerPolicyRequest> request = new ArrayList<>();
-		request.add(partnerRequestedData);
-		Optional<PartnerPolicyRequest> partnerPolicyRequest = Optional.of(createPartnerPolicyRequest("Approved"));
-		Mockito.when(partnerPolicyRequestRepository.findById(aPIKeyReqID)).thenReturn(partnerPolicyRequest);
-		Mockito.when(partnerPolicyRepository.findByPartnerId(partnerID)).thenReturn(createPartnerPolicy());
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(Mockito.anyString(), Mockito.anyString())).thenReturn(request);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndReqId(Mockito.anyString(), Mockito.anyString())).thenReturn(createPartnerPolicyRequest("Approved"));
-		Mockito.when(partnerPolicyRepository.findByApiKey(Mockito.anyString())).thenReturn(policy);
-		DownloadPartnerAPIkeyResponse viewApiKeyRequestStatusApiKey = pserviceImpl.getApikeyFromRequestKey(aPIKeyReqID);
-		assertNotNull(viewApiKeyRequestStatusApiKey);
-		assertEquals(viewApiKeyRequestStatusApiKey.getApikeyReqStatus(), "Approved");
-		assertEquals(viewApiKeyRequestStatusApiKey.getPartnerAPIKey(), "12345");
 	}
 
 	@Test(expected = PartnerServiceException.class)
@@ -1034,13 +946,75 @@ public class PartnerServiceImplTest {
 		}
 	}
 	
-	private PartnerPolicy createPartnerPolicy() {
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey("12345");
-		partnerPolicy.setIsActive(true);
-		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now()));
-		return partnerPolicy;
+	@Test
+	public void searchPartnerApiKeyRequestsTest() throws Exception {
+		SearchFilter partnerNameSearchFilter = new SearchFilter();
+		partnerNameSearchFilter.setColumnName("partnerName");
+		partnerNameSearchFilter.setValue("m");
+		
+		SearchFilter apikeyRequestIdSearchFilter = new SearchFilter();
+		apikeyRequestIdSearchFilter.setColumnName("apikeyRequestId");
+		apikeyRequestIdSearchFilter.setValue("m");
+		
+		SearchFilter policyNameRequestIdSearchFilter = new SearchFilter();
+		policyNameRequestIdSearchFilter.setColumnName("policyName");
+		policyNameRequestIdSearchFilter.setValue("m");
+		
+		SearchFilter partnerIdRequestIdSearchFilter = new SearchFilter();
+		partnerIdRequestIdSearchFilter.setColumnName("partnerId");
+		partnerIdRequestIdSearchFilter.setValue("m");
+		
+		searchDto.getFilters().add(partnerIdRequestIdSearchFilter);
+		searchDto.getFilters().add(policyNameRequestIdSearchFilter);
+		searchDto.getFilters().add(apikeyRequestIdSearchFilter);
+		searchDto.getFilters().add(partnerNameSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		PartnerPolicyRequest partnerPolicy = new PartnerPolicyRequest();
+		partnerPolicy.setId("12345");
+		partnerPolicy.setPartner(createPartner(true));
+		Mockito.when(authPolicyRepository.findByName("m")).thenReturn((createAuthPolicy()));
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);		
+		
+		searchDto.getFilters().add(partnerNameSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+		
+		searchDto.getFilters().add(partnerIdRequestIdSearchFilter);
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+		
+		objectMapper.writeValueAsString(searchDto);
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 	}
+	
+//	@Test	
+//	public void searchPartnerApiKeysTest() throws Exception {
+//		objectMapper.writeValueAsString(searchDto);
+//		PartnerPolicy policy = new PartnerPolicy();
+//		policy.setPolicyId("12345");
+//		policy.setPartner(createPartner(true));
+//		Mockito.doReturn(new PageImpl<>(Arrays.asList(policy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
+//		pserviceImpl.searchPartnerApiKeys(searchDto);
+//	}
+//	
+//	@Test
+//	public void searchPartnerTypetest() throws Exception{
+//		objectMapper.writeValueAsString(searchDto);
+//		PartnerType partnerType = new PartnerType();
+//		partnerType.setCode("1001");
+//		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.anyString());
+//		pserviceImpl.searchPartnerType(searchDto);
+//	}
+
+	
+//	private PartnerPolicy createPartnerPolicy() {
+//		PartnerPolicy partnerPolicy = new PartnerPolicy();
+//		partnerPolicy.setPolicyApiKey("12345");
+//		partnerPolicy.setIsActive(true);
+//		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now()));
+//		return partnerPolicy;
+//	}
 
 	private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
