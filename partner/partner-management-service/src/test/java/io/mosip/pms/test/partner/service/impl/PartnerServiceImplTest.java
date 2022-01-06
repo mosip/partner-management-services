@@ -63,7 +63,6 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
@@ -122,9 +121,6 @@ public class PartnerServiceImplTest {
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	@MockBean
 	private WebSubPublisher webSubPublisher;
-	
-	@MockBean
-	private KeycloakImpl keycloakImpl;
 	
     @MockBean
 	AuditUtil auditUtil;
@@ -197,17 +193,23 @@ public class PartnerServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class) 
 	public void getPartnerCertificate_Test() throws Exception{
+		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
+		partnerCertDownloadRequestDto.setPartnerId("id");
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+		try {
+			pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
+		}catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+		}
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
 		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
-		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
-		partnerCertDownloadRequestDto.setPartnerId("id");
+		
 		PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(partnerCertDownloadResponeDto);
 		assertEquals(partnerCertDownloadResponeDto.getCertificateData(), "12345");
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
-
 	}
 	
 	@Test
@@ -225,6 +227,19 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerRepository.findById(par.getId())).thenReturn(partner);
 		Mockito.when(partnerContactRepository.findByPartnerAndEmail(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
 	    pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
+	    addContactRequestDto.setEmailId("email");
+	    try {
+	    	pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
+	    }catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode()));
+		}
+	    addContactRequestDto.setEmailId("email@gamil.com");
+	    addContactRequestDto.setContactNumber("09876543211234567");
+	    try {
+	    	pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
+	    }catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode()));
+		}
 	}
 	
 	@Test
@@ -336,8 +351,7 @@ public class PartnerServiceImplTest {
 	public void savePartnerTest() {
 		MosipUserDto userDto = new MosipUserDto();
 		userDto.setName("PARTNER");
-		userDto.setMobile("partner@gmail.com");
-		Mockito.doReturn(userDto).when(keycloakImpl).registerUser(Mockito.any(io.mosip.pms.partner.dto.UserRegistrationRequestDto.class));
+		userDto.setMobile("partner@gmail.com");		
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();
 		Partner partner = new Partner();
@@ -346,6 +360,34 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
 		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
 		assertNotNull(savePartner);
+		
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode()));
+		}		
+		policyGroup.setIsActive(false);
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode()));
+		}
+		
+		partnerRequest.setContactNumber("09876543212345889989");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode()));
+		}		
+		partnerRequest.setContactNumber("0987654321234588");
+		partnerRequest.setLangCode("iuy");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode()));
+		}
 	}
 	
 	@Test(expected = PartnerServiceException.class)
@@ -463,6 +505,13 @@ public class PartnerServiceImplTest {
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
 		assertEquals(updatePartnerDetail.getPartnerId(), "12345");
+		PartnerUpdateRequest req = createPartnerUpdateRequest();
+		req.setContactNumber("1234567890123456789");
+		try {
+			pserviceImpl.updatePartnerDetail(req, partnerId);
+		}catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode()));
+		}
 	}
 	
 	@Test(expected = PartnerServiceException.class)
@@ -981,7 +1030,18 @@ public class PartnerServiceImplTest {
 		pserviceImpl.searchPartnerApiKeys(searchDto);
 	}	
 
-
+	@Test
+	public void searchPartnerTypeTest() throws JsonProcessingException {
+		objectMapper.writeValueAsString(searchDto);
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Auth_Partner");
+		partnerType.setIsDeleted(false);
+		Mockito.when(partnerRepository.findById("m")).thenReturn(Optional.of(createPartner(true)));
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerType))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		Mockito.when(authPolicyRepository.findByName("m")).thenReturn((createAuthPolicy()));
+		pserviceImpl.searchPartnerType(searchDto);
+	}
+	
 	private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setId("12345");

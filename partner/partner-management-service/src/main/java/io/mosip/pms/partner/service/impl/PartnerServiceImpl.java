@@ -95,12 +95,9 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
-import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
-import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -196,9 +193,6 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	private NotificatonService notificationService;
 
-	@Autowired
-	private KeycloakImpl keycloakImpl;
-
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
@@ -228,9 +222,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
-	
-	@Value("${partner.register.as.user.in.iam.enable:false}")
-	private boolean isPartnerToBeRegistredAsUserInIAM; 
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
@@ -282,10 +273,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
-		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
-		if(isPartnerToBeRegistredAsUserInIAM) {
-			RegisterUserInKeycloak(partner);
-		}
+		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
 		partner.setPartnerTypeCode(partnerType.getCode());
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
@@ -317,18 +305,6 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setCrDtimes(Timestamp.valueOf(now));
 		partnerHistory.setId(partnerHPK);
 		partnerHRepository.save(partnerHistory);
-	}
-
-	private MosipUserDto RegisterUserInKeycloak(Partner partner) {
-		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
-		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
-		userRegistrationRequestDto.setContactNo(partner.getContactNo());
-		userRegistrationRequestDto.setEmailID(partner.getEmailId());
-		userRegistrationRequestDto.setFirstName(partner.getName());
-		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
-		userRegistrationRequestDto.setUserPassword(partner.getId());
-		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
-		return keycloakImpl.registerUser(userRegistrationRequestDto);
 	}
 
 	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup, String partnerType) {
