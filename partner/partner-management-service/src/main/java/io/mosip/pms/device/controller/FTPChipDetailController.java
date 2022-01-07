@@ -176,7 +176,7 @@ public class FTPChipDetailController {
 				DeviceConstant.CERTIFICATE_UPLOAD_API_IS_CALLED + FtpChipCertificateRequestDto.class.getCanonicalName(),
 				"AUT-006");
 		ResponseWrapper<FtpCertificateResponseDto> response = new ResponseWrapper<>();
-		response.setResponse(ftpChipDetaillService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
+		response.setResponse(ftpChipDetaillService.uploadCertificate(partnerCertRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_UPLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -210,7 +210,7 @@ public class FTPChipDetailController {
 				"AUT-006");
 
 		if(ftpChipDetaillService.getFtpChipDeatils(ftpChipDetailId) != null) {
-			response.setResponse(ftpChipDetaillService.getPartnerCertificate(requestDto));
+			response.setResponse(ftpChipDetaillService.getCertificate(requestDto));
 		}
 		auditUtil.auditRequest(
 				String.format(DeviceConstant.SUCCESSFUL_DOWNLOAD , FtpChipDetailStatusDto.class.getCanonicalName()),

@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -36,21 +37,27 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.manager.service.PartnerManagerService;
+import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
+import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
+import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
-import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
+import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
@@ -69,9 +76,20 @@ public class PartnerServiceControllerTest {
 
     @MockBean
     private PartnerService partnerService;
+    
+    @MockBean
+    PartnerManagerService partnerManagerService;
    
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @MockBean
+	AuditUtil auditUtil;
+	
+	@Before
+	public void setup() {
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));	
+	}
     
     
     @Test
@@ -171,21 +189,6 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(put("/partners/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void submitPartnerApiKeyRequestTest() throws JsonProcessingException, Exception {
-    	String apiRequestId = "873276828663";
-    	PartnerPolicyMappingResponse response = new PartnerPolicyMappingResponse();
-    	response.setApiRequestId(apiRequestId);
-    	response.setMessage("partnerAPIKeyRequest successfully created");
-    	
-    	Mockito.when(partnerService.submitPartnerApiKeyReq(Mockito.any(), Mockito.any())).thenReturn(response);
-    	RequestWrapper<PartnerPolicyMappingRequest> request = createSubmitPartnerApiKeyRequest();
-    	
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/12345/apikey/request").contentType(MediaType.APPLICATION_JSON_VALUE)
-                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
-    }
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
@@ -205,14 +208,6 @@ public class PartnerServiceControllerTest {
 		
        Mockito.when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(list_aPIkeyRequests);
        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/apikey/request")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-    
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void viewApiKeyRequestStatusAndApiKey_Test() throws Exception{
-    	DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-        Mockito.when(partnerService.getApikeyFromRequestKey("123456")).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/request/123456")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
@@ -262,7 +257,50 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/request/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
+    
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void updatePolicyGroup() throws Exception{    
+    	Mockito.when(partnerService.updatePolicyGroup(Mockito.any(),Mockito.any())).thenReturn("Success");
+    	mockMvc.perform(put("/partners/1234/policygroup/5678")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test    
+    @WithMockUser
+    public void isEmailExists() throws Exception{ 
+    	EmailVerificationResponseDto response = new EmailVerificationResponseDto();
+    	RequestWrapper<EmailVerificationRequestDto> request = new RequestWrapper<>();
+    	EmailVerificationRequestDto requestDto = new EmailVerificationRequestDto();
+    	request.setRequest(requestDto);
+    	Mockito.when(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId())).thenReturn(response);
+    	mockMvc.perform(put("/partners/email/verify").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
+    @Test    
+    @WithMockUser(roles = {"PARTNER"})
+    public void mapPolicyToPartner() throws Exception{ 
+    	PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
+    	RequestWrapper<PartnerPolicyMappingRequest> request = new RequestWrapper<>();
+    	PartnerPolicyMappingRequest requestDto = new PartnerPolicyMappingRequest();
+    	request.setRequest(requestDto);
+    	Mockito.when(partnerService.requestForPolicyMapping(request.getRequest(),"1234")).thenReturn(response);
+    	mockMvc.perform(post("/partners/1234/policy/map").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test    
+
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void generateAPIKey() throws Exception{ 
+    	APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
+    	RequestWrapper<APIKeyGenerateRequestDto> request = new RequestWrapper<>();
+    	APIKeyGenerateRequestDto requestDto = new APIKeyGenerateRequestDto();
+    	request.setRequest(requestDto);
+    	Mockito.when(partnerManagerService.generateAPIKey("1234",requestDto)).thenReturn(response);
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    }
     
     private RequestWrapper<FilterValueDto> createFilterRequest(){
     	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
@@ -361,25 +399,6 @@ public class PartnerServiceControllerTest {
     	partnerSearchDto.setSort(sortDtos);
     	return partnerSearchDto;
     	
-    }
-    
-    
-    private RequestWrapper<PartnerPolicyMappingRequest> createSubmitPartnerApiKeyRequest(){
-    	RequestWrapper<PartnerPolicyMappingRequest> request = new RequestWrapper<PartnerPolicyMappingRequest>();
-    	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
-    	request.setMetadata("{}");
-    	request.setRequest(createPartnerAPIKeyRequest());
-    	request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-    	request.setVersion("1.0");
-    	return request;
-    }
-    
-    
-    private PartnerPolicyMappingRequest createPartnerAPIKeyRequest() {
-    	PartnerPolicyMappingRequest partnerAPIKeyRequest = new PartnerPolicyMappingRequest();
-    	partnerAPIKeyRequest.setPolicyName("airtelIndPolicy");
-    	partnerAPIKeyRequest.setUseCaseDescription("Need to submit the payment");
-    	return partnerAPIKeyRequest;
     }
     
     private RequestWrapper<PartnerRequest> createRequest() {

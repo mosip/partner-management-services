@@ -41,6 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
@@ -94,12 +95,9 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
-import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
-import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -114,12 +112,10 @@ import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.DownloadPartnerAPIkeyResponse;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyMappingResponse;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
@@ -197,9 +193,6 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	private NotificatonService notificationService;
 
-	@Autowired
-	private KeycloakImpl keycloakImpl;
-
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
@@ -229,9 +222,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
-	
-	@Value("${partner.register.as.user.in.iam.enable:false}")
-	private boolean isPartnerToBeRegistredAsUserInIAM; 
 
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
@@ -253,7 +243,11 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
-
+		if(isInputStringContainsSpaces(request.getPartnerId())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
+					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage() + partnerIdMaxLength);
+		}		
 		if (!validatePartnerIdLength(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
@@ -265,7 +259,13 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-
+		if (request.getLangCode() != null && !getSystemMandatoryLanguageCodes().contains(request.getLangCode())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+		}else {
+			request.setLangCode(getSystemMandatoryLanguageCodes().get(0));
+		}
 		if (!validatePartnerId(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
@@ -277,10 +277,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
-		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
-		if(isPartnerToBeRegistredAsUserInIAM) {
-			RegisterUserInKeycloak(partner);
-		}
+		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
 		partner.setPartnerTypeCode(partnerType.getCode());
 		partnerRepository.save(partner);
 		saveToPartnerH(partner);
@@ -314,18 +311,6 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHRepository.save(partnerHistory);
 	}
 
-	private MosipUserDto RegisterUserInKeycloak(Partner partner) {
-		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
-		userRegistrationRequestDto.setAppId("PARTNER_MANAGEMENT");
-		userRegistrationRequestDto.setContactNo(partner.getContactNo());
-		userRegistrationRequestDto.setEmailID(partner.getEmailId());
-		userRegistrationRequestDto.setFirstName(partner.getName());
-		userRegistrationRequestDto.setRole(partner.getPartnerTypeCode().toUpperCase());
-		userRegistrationRequestDto.setUserPassword(partner.getId());
-		userRegistrationRequestDto.setUserName(partner.getId().toLowerCase());
-		return keycloakImpl.registerUser(userRegistrationRequestDto);
-	}
-
 	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup, String partnerType) {
 		Partner partner = new Partner();
 		partner.setId(request.getPartnerId());
@@ -333,11 +318,12 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setName(request.getOrganizationName());
 		partner.setAddress(request.getAddress());
 		partner.setContactNo(request.getContactNumber());
-    partner.setPartnerTypeCode(partnerType);
+		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(request.getEmailId());
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
+		partner.setLangCode(request.getLangCode());
 		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
@@ -494,74 +480,6 @@ public class PartnerServiceImpl implements PartnerService {
 		return updateResponse;
 	}
 
-	@Override
-	public PartnerPolicyMappingResponse submitPartnerApiKeyReq(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
-		Map<String, Object> data = new HashMap<>();
-		PartnerPolicyMappingResponse partnerAPIKeyResponse = new PartnerPolicyMappingResponse();
-		Partner partner = getValidPartner(partnerId, false);
-		if(partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
-					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
-		}
-		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
-				partnerAPIKeyRequest.getPolicyName());
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
-		partnerPolicyRequest.setCrBy(getLoggedInUserId());
-		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
-		partnerPolicyRequest.setPartner(partner);
-		partnerPolicyRequest.setPolicyId(authPolicy.getId());
-		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
-		partnerPolicyRequest.setIsDeleted(false);
-		if (!partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, authPolicy.getId())
-				.isEmpty()) {
-			partnerPolicyRequest.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(partnerPolicyRequest);
-			data.put("apiKeyData", MapperUtils.mapKeyDataToPublishDto(approvePartnerPolicy(partnerPolicyRequest)));
-			PartnerCertDownloadRequestDto certDownloadRequestDto = new PartnerCertDownloadRequestDto();
-			certDownloadRequestDto.setPartnerId(partnerPolicyRequest.getPartner().getId());
-			try {
-				data.put("partnerData", MapperUtils.mapDataToPublishDto(partnerPolicyRequest.getPartner(),
-						getPartnerCertificate(certDownloadRequestDto).getCertificateData()));
-			} catch (IOException e) {
-				LOGGER.error("Error occurred while getting the partnercert and mappingdata", e);
-				e.printStackTrace();
-			}
-			data.put("policyData",
-					MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())));
-			partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-			partnerAPIKeyResponse.setApikeyId(partnerPolicyRequest.getId());
-			partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted and approved.");
-			return partnerAPIKeyResponse;
-		}
-		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		partnerAPIKeyResponse.setApiRequestId(partnerPolicyRequest.getId());
-		partnerAPIKeyResponse.setMessage("PartnerAPIKeyRequest successfully submitted.");
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS);
-		return partnerAPIKeyResponse;
-	}
-
-	private PartnerPolicy approvePartnerPolicy(PartnerPolicyRequest partnerPolicyRequest) {
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(partnerPolicyRequest.getId());
-		partnerPolicy.setPartner(partnerPolicyRequest.getPartner());
-		partnerPolicy.setPolicyId(partnerPolicyRequest.getPolicyId());
-		partnerPolicy.setIsActive(true);
-		partnerPolicy.setIsDeleted(false);
-		partnerPolicy.setLabel(partnerPolicyRequest.getId());
-		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
-		partnerPolicy.setCrBy(partnerPolicyRequest.getCrBy());
-		partnerPolicy.setCrDtimes(partnerPolicyRequest.getCrDtimes());
-		partnerPolicyRepository.save(partnerPolicy);
-		LOGGER.info("PartnerAPIKeyRequest successfully submitted and approved.");
-		return partnerPolicy;
-	}
-
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
 		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, policyName);
 		if (authPolicyFromDb == null) {
@@ -588,27 +506,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
 		return authPolicyFromDb;
-	}
-
-	@Override
-	public DownloadPartnerAPIkeyResponse getApikeyFromRequestKey(String apikeyReqId) {
-		PartnerPolicyRequest partnerRequest = partnerPolicyRequestRepository.findByReqId(apikeyReqId);
-		if (partnerRequest == null) {
-			LOGGER.error("No apikey requests exists for apiKeyReqId {}", apikeyReqId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		DownloadPartnerAPIkeyResponse response = new DownloadPartnerAPIkeyResponse();
-		response.setApikeyReqStatus(partnerRequest.getStatusCode());
-		response.setApiRequestKey(apikeyReqId);
-		if (partnerRequest.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED)) {
-			PartnerPolicy approvedPolicy = getPartnerMappedPolicy(apikeyReqId);
-			response.setPartnerAPIKey(approvedPolicy.getPolicyApiKey());
-			response.setValidityTill(approvedPolicy.getValidToDatetime());
-			response.setApikeyStatus(approvedPolicy.getIsActive());
-		}		
-		return response;
-	}
+	}	
 
 	/**
 	 * 
@@ -1425,6 +1323,7 @@ public class PartnerServiceImpl implements PartnerService {
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
 		dto.setEmailId(partner.getEmailId());
+		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
 		try {
@@ -1598,5 +1497,25 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getSystemMandatoryLanguageCodes() {		
+		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES, "eng").split(","));
+	}
+	
+	/**
+	 * 
+	 * @param inputString
+	 * @return
+	 */
+	private boolean isInputStringContainsSpaces(String inputString) {
+		if (inputString.matches(".*\\s.*")) {
+			return true;
+		}
+		return false;
 	}
 }
