@@ -108,6 +108,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"AUT-003");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
+		}		
+		List<SecureBiometricInterface> existsRecordsFromDb = sbiRepository.findByProviderIdAndSwVersion(sbiDto.getProviderId(), sbiDto.getSwVersion());
+		if(existsRecordsFromDb.size() > 0) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
+							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage()),
+					"AUT-005");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
+					SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage());
 		}
 		entity.setProviderId(partner.getId());
 		entity.setPartnerOrgName(partner.getName());
@@ -180,10 +192,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"AUT-016");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId()));
-		}
-		
-		if(!entity.getApprovalStatus().equalsIgnoreCase(CommonConstant.APPROVED) && sbiupdateDto.getIsActive()) {
-			
+		}		
+		List<SecureBiometricInterface> existsRecordsFromDb = sbiRepository.findByProviderIdAndSwVersion(entity.getProviderId(), sbiupdateDto.getSwVersion());
+		if(!existsRecordsFromDb.isEmpty() && !existsRecordsFromDb.stream().anyMatch(s->s.getId().equals(sbiupdateDto.getId()))) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
+							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage()),
+					"AUT-005");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
+					SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage());
 		}
 		entity.setId(sbiupdateDto.getId());
 		byte[] swNinaryHashArr = sbiupdateDto.getSwBinaryHash().getBytes();

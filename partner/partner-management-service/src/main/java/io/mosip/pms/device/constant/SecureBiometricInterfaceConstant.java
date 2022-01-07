@@ -10,7 +10,8 @@ public enum SecureBiometricInterfaceConstant {
 	EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE("PMS_AUT_508","ExpiryDate should be greaterthan/equal Today."),
 	DD_SBI_PROVIDER_NOT_MATCHING("PMS_AUT_509","Device Details and SBI are not belongs to same provider."),
 	DD_SBI_MAPPING_NOT_EXISTS("PMS_AUT_510","Mapping not exists for given data."),
-	SBI_NOT_APPROVED("PMS_AUT_511","Given sbi details are approved");
+	SBI_NOT_APPROVED("PMS_AUT_511","Given sbi details are approved"),
+	SBI_RECORDS_EXISTS("PMS_AUT_512","Sbi details exists for given version. Can't add the records with the same version.");
 	
 	/**
 	 * The error code.
