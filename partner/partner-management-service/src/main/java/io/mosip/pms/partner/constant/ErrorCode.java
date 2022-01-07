@@ -60,7 +60,8 @@ public enum ErrorCode {
 	POLICY_GROUP_NOT_MAPPED_PARTNER("PMS_PRT_054","Policy group not mapped for given partner"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
 	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Active mapping exists for given policy and partner."),
-	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported");
+	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
+	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces");
 
 	
 	/**
