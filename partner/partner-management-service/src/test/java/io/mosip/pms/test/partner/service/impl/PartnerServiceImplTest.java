@@ -408,6 +408,15 @@ public class PartnerServiceImplTest {
 		}catch(PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode()));
 		}
+		partnerRequest.setContactNumber("0987654321234588");
+		partnerRequest.setLangCode("iuy");
+		partnerRequest.setPartnerId("auth partner");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode()));
+		}
+		
 	}
 	
 	@Test(expected = PartnerServiceException.class)

@@ -243,7 +243,11 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
-
+		if(isInputStringContainsSpaces(request.getPartnerId())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
+					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage() + partnerIdMaxLength);
+		}		
 		if (!validatePartnerIdLength(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
@@ -1501,5 +1505,17 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	public List<String> getSystemMandatoryLanguageCodes() {		
 		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES, "eng").split(","));
+	}
+	
+	/**
+	 * 
+	 * @param inputString
+	 * @return
+	 */
+	private boolean isInputStringContainsSpaces(String inputString) {
+		if (inputString.matches(".*\\s.*")) {
+			return true;
+		}
+		return false;
 	}
 }
