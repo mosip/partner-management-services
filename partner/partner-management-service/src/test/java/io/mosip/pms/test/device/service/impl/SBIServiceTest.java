@@ -223,6 +223,12 @@ public class SBIServiceTest {
 	@Test
     public void createSBITest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto).getId().equals("1234"));
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+		}
     }
 	
 	@Test
@@ -260,6 +266,14 @@ public class SBIServiceTest {
 	@Test
     public void updateDeviceDetailTest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto).getId().equals("1234"));
+		SecureBiometricInterface sbiFromDb = secureBiometricInterface;
+		sbiFromDb.setId("789");
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(sbiFromDb));
+		try {
+			secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+		}				
     }
 	
 	@Test(expected=RequestException.class)
