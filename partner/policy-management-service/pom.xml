@@ -35,14 +35,9 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
-			<version>5.4.0</version>
+			<version>5.0.5.RELEASE</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-core</artifactId>
-		    <version>5.3.3.RELEASE</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -114,4 +109,88 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>openapi-doc-generate-profile</id>
+			<dependencies>
+				<dependency>
+					<groupId>io.mosip.kernel</groupId>
+					<artifactId>kernel-auth-adapter</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<version>1.4.200</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>${spring.boot.version}</version>
+						<configuration>
+							<executable>true</executable>
+							<layout>ZIP</layout>
+							<wait>1000</wait>
+							<maxAttempts>100</maxAttempts>
+						</configuration>
+						<executions>
+							<execution>
+								<id>pre-integration-test</id>
+								<goals>
+									<goal>start</goal>
+								</goals>
+								<configuration>
+									<folders>
+										<folder>src/test/resources</folder>
+									</folders>
+									<profiles>
+										<profile>openapi-profile</profile>
+									</profiles>
+									<arguments>
+										<argument>--server.port=8090</argument>
+										<argument>--server.servlet.context-path=/app/generic</argument>
+									</arguments>
+
+								</configuration>
+							</execution>
+							<execution>
+								<id>post-integration-test</id>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+							<execution>
+								<goals>
+									<goal>build-info</goal>
+									<goal>repackage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.springdoc</groupId>
+						<artifactId>springdoc-openapi-maven-plugin</artifactId>
+						<version>0.2</version>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<apiDocsUrl>http://localhost:8090/app/generic/v3/api-docs</apiDocsUrl>
+							<outputFileName>${name}-openapi.json</outputFileName>
+							<outputDir>${project.build.directory}</outputDir>
+							<skip>false</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

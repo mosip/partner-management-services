@@ -288,4 +288,24 @@ public class InfraProviderServiceImplTest {
 		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
+	
+	@Test
+	public void filterValuesTest01() {		
+		List<FilterData> filtersData = new ArrayList<>();
+		FilterData filterData = new FilterData("test","test");
+		filtersData.add(filterData);
+		FilterDto filterDto = new FilterDto();
+		filterDto.setColumnName("licenseKey");
+    	filterDto.setText("");
+    	filterDto.setType("all");
+		SearchFilter searchDto = new SearchFilter();
+		FilterValueDto filterValueDto = new FilterValueDto();
+		List<FilterDto> filterDtos = new ArrayList<FilterDto>();
+		filterDtos.add(filterDto);
+		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
+		searchDtos.add(searchDto);
+		filterValueDto.setFilters(filterDtos);
+		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		infraProviderServiceImpl.filterValues(filterValueDto);
+	}
 }
