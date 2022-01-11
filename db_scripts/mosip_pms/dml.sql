@@ -40,7 +40,7 @@ TRUNCATE TABLE pms.device_detail cascade ;
 \COPY pms.device_detail (id,dprovider_id,dtype_code,dstype_code,make,model,partner_org_name,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-device_detail.csv' delimiter ',' HEADER  csv;
 
 TRUNCATE TABLE pms.secure_biometric_interface cascade ;
-\COPY pms.secure_biometric_interface (id,sw_binary_hash,sw_version,device_detail_id,sw_cr_dtimes,sw_expiry_dtimes,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-secure_biometric_interface.csv' delimiter ',' HEADER  csv;
+\COPY pms.secure_biometric_interface (id,sw_binary_hash,sw_version,sw_cr_dtimes,sw_expiry_dtimes,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-secure_biometric_interface.csv' delimiter ',' HEADER  csv;
 
 TRUNCATE TABLE pms.secure_biometric_interface_h cascade ;
-\COPY pms.secure_biometric_interface_h (id,sw_binary_hash,sw_version,device_detail_id,sw_cr_dtimes,sw_expiry_dtimes,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,eff_dtimes) FROM './dml/pms-secure_biometric_interface_h.csv' delimiter ',' HEADER  csv;
+\COPY pms.secure_biometric_interface_h (id,sw_binary_hash,sw_version,sw_cr_dtimes,sw_expiry_dtimes,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,eff_dtimes) FROM './dml/pms-secure_biometric_interface_h.csv' delimiter ',' HEADER  csv;
