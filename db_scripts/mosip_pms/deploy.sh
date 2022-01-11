@@ -1,4 +1,4 @@
-
+#!/bin/sh
 ## Properties file
 set -e
 properties_file="$1"

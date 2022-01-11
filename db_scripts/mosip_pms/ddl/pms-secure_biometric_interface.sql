@@ -1,3 +1,4 @@
+-- TODO: check if provider_id non null constraint is required.
 CREATE TABLE pms.secure_biometric_interface(
 	id character varying(36) NOT NULL,
 	sw_binary_hash bytea NOT NULL,
@@ -12,7 +13,8 @@ CREATE TABLE pms.secure_biometric_interface(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	provider_id character varying(36) NOT NULL,
+	-- provider_id character varying(36) NOT NULL,
+	provider_id character varying(36),
 	partner_org_name character varying(128),
 	CONSTRAINT pk_sbi_id PRIMARY KEY (id)
 
