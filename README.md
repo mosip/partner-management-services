@@ -3,7 +3,7 @@
 This repository contains the source code and design documents for MOSIP partner management. For an overview refer [here](https://nayakrounak.gitbook.io/mosip-docs/modules/partner-management)
 
 Partnermanagement module contains following services:
-1. partner management service
+1. Partner management service
 2. Policy management service
 
 # Database
