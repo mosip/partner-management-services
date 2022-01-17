@@ -7,7 +7,7 @@ Partnermanagement module contains following services:
 2. Policy management service
 
 # Database
- See DB guide
+ See [DB guide](db_scripts/README.md)
  
 # Build
 The project requires JDK 1.11. 
