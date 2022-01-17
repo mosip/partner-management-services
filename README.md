@@ -1,58 +1,68 @@
-# partner-management-services
+# Partner-management-services
 
-This repository contains the source code and design documents for MOSIP partner management. To know more about MOSIP, its architecture, external integrations, releases, etc., please check the [Platform Documentation](https://github.com/mosip/mosip-docs/wiki)
+This repository contains the source code and design documents for MOSIP partner management. For an overview refer [here](https://nayakrounak.gitbook.io/mosip-docs/modules/partner-management)
 
-### Dependencies
-Partner services dependencies are mentioned below.  For all Kernel services refer to [commons repo](https://github.com/mosip/commons)  
-* misp-service
-  * kernel-idgenerator-mispid -- for misp id generation
-  * kernel-licensekeygenerator-misp -- for misp license key generation
-### Roles
-	* MISP
-	* PolicyManager
-	* PartnerManager
-	* Partner
+Partnermanagement module contains following services:
+1. partner management service
+2. Policy management service
 
-### Build
-The following commands should be run in the parent project to build all the modules - 
-`mvn clean install`
-The above command can be used to build individual modules when run in their respective folders
+# Database
+ See DB guide
+ 
+# Build
+The project requires JDK 1.11. 
+1. To build jars:
+    ```
+    $ cd partner
+    $ mvn clean install 
+    ```
+1. To skip JUnit tests and Java Docs:
+    ```
+    $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+    ```
+1. To build Docker for a service:
+    ```
+    $ cd <service folder>
+    $ docker build -f Dockerfile
+    ```
 
-### Deploy
-The following command should be executed to run any service locally in specific profile and local configurations - 
-`java -Dspring.profiles.active=<profile> -jar <jar-name>.jar`
+# Deploy
 
-The following command should be executed to run any service locally in specific profile and `remote` configurations - 
-`java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <jar-name>.jar`
+## PMS in Sandbix
+To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0-rc2/deployment/v3)
 
-The following command should be executed to run a docker image - 
-`docker run -it -p <host-port>:<container-port> -e active_profile_env={profile} -e spring_config_label_env= {branch} -e spring_config_url_env={config_server_url} <docker-registry-IP:docker-registry-port/<dcker-image>`
+## Developer
 
-### Configurations
-All the configurations used by the codebase in `mosip-platform` is present in [mosip-config](https://github.com/mosip/mosip-config) repository.
+1. As a developer, to run a service jar individually:
+    ```
+    `java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <jar-name>.jar`
+    ```
+    Example:  
+        _profile_: `env` (extension used on configuration property files*)    
+        _config_label_: `master` (git branch of config repo*)  
+        _config-url_: `http://localhost:51000` (Url of the config server*)  
+	
+1. Note that you will have to run the dependent services like kernel-config-server to run any service successfully.
 
-### Functional Test-cases
-Functional tests run against the codebase in `mosip-platform` is present in [mosip-functional-tests](https://github.com/mosip/mosip-functional-tests) repository.
+# Dependencies
 
-### Documentation
-Relevant documents to get started with MOSIP can be found in [mosip-docs](https://github.com/mosip/mosip-docs) repository. 
-In order to get started, please refer to the [Getting-Started](https://github.com/mosip/mosip-docs/wiki/Getting-Started) guide.
+Partner management module dependends on following services.
+ 
+ 1. kernel-keymanager-service
+ 2. kernel-notification-service
+ 3. kernel-auth-service
+ 4. datashare service
+ 5. websub 
+ 
+# Configuration
+ 
+Refer to the [configuration guide](docs/configuration.md).
 
-### Infra
-Automated scripts to build and deploy MOSIP modules are present in [mosip-infra](https://github.com/mosip/mosip-infra) repository.
+# Test
+Automated functaionl tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests)
 
----
+# APIs
+API documentation available on Wiki: [Partner-management APIs]
 
-### Contribute
-You can contribute to MOSIP! 
-
-We want to engage constructively with the community.  If you find a **vulnerability** or issue, please file a bug with the respective repository.  We welcome pull requests with fixes too.  Please see the [Contributor Guide](https://github.com/mosip/mosip-docs/wiki/Contributor-Guide) on how to file bugs, contribute code, and more.
-
-### License
+# License
 This project is licensed under the terms of [Mozilla Public License 2.0](https://github.com/mosip/mosip-platform/blob/master/LICENSE)
-
-### Communication
-Join the [developer mailing list](https://groups.io/g/mosip-dev)
-
-
-You may also be interested in joining our community room on Gitter via [![Gitter](https://badges.gitter.im/mosip-community/community.svg)](https://gitter.im/mosip-community/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)  where you could get some great community support
