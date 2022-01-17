@@ -9,7 +9,7 @@ Partnermanagement module contains following services:
 # Database
  See [DB guide](db_scripts/README.md)
  
-# Build
+# Build & run (for developers)
 The project requires JDK 1.11. 
 1. To build jars:
     ```
@@ -28,7 +28,7 @@ The project requires JDK 1.11.
 
 # Deploy
 
-## PMS in Sandbix
+## PMS in Sandbox
 To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0-rc2/deployment/v3)
 
 ## Developer
