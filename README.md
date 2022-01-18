@@ -43,16 +43,6 @@ To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https:/
         _config-url_: `http://localhost:51000` (Url of the config server*)  
 	
 1. Note that you will have to run the dependent services like kernel-config-server to run any service successfully.
-
-# Dependencies
-
-Partner management module dependends on following services.
- 
- 1. kernel-keymanager-service
- 2. kernel-notification-service
- 3. kernel-auth-service
- 4. datashare service
- 5. websub 
  
 # Configuration
  
