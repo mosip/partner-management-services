@@ -223,6 +223,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
+	private String emptySpacesRegex = ".*\\s.*";
+	
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		// Registered partner cannot create another partner 
@@ -1513,7 +1515,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @return
 	 */
 	private boolean isInputStringContainsSpaces(String inputString) {
-		if (inputString.matches(".*\\s.*")) {
+		if (inputString.matches(emptySpacesRegex)) {
 			return true;
 		}
 		return false;

@@ -1,5 +1,7 @@
 package io.mosip.pms.partner.util;
 
+import java.security.SecureRandom;
+
 /**
  * @author sanjeev.shrivastava
  *
@@ -12,8 +14,7 @@ public class PartnerUtil {
 	 */
 	
 	public static String createPartnerId(){
-	    int id = (int)(Math.random()*1000000);
-	    return id+"";
+		return getSecureRandomId(1000000);
 	}
 	
 	/**
@@ -21,8 +22,7 @@ public class PartnerUtil {
 	 * @return
 	 */
 	public static String createPartnerApiKey() {
-		int id = (int) (Math.random() * 100000000);
-		return id + "";
+		return getSecureRandomId(1000000);
 	}
 	
 	/**
@@ -30,8 +30,7 @@ public class PartnerUtil {
 	 * @return
 	 */
 	public static String generateId(){
-	    int id = (int)(Math.random()*1000000);
-	    return id +"";
+		return getSecureRandomId(1000000);
 	}
 	
 	/**
@@ -39,16 +38,24 @@ public class PartnerUtil {
 	 */
 	
 	public static String createAuthPolicyId(){
-	    int id = (int)(Math.random()*1000000);
-	    return id+"";
+		return getSecureRandomId(1000000);
 	}
 	
 	/**
 	 * @return PartnerPolicyRequestId.
 	 */
 	
-	public static String createPartnerPolicyRequestId(){
-	    int id = (int)(Math.random()*1000000);
-	    return id+"";
+	public static String createPartnerPolicyRequestId(){	    
+	    return getSecureRandomId(1000000);
+	}
+	
+	/**
+	 * Will generate secure random integer
+	 * @param length
+	 * @return
+	 */
+	private static String getSecureRandomId(int length) {
+		SecureRandom random = new SecureRandom();
+		return random.nextInt(length) + "";
 	}
 }

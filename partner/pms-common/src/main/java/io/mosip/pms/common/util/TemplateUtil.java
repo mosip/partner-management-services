@@ -64,7 +64,6 @@ public class TemplateUtil {
 					TemplatesResponseDto.class);
 		} catch (Exception e) {
 			log.error("Error occured while parsing the response from template api", e.getLocalizedMessage());
-			e.printStackTrace();
 		}
 		if(templatesResponseDto == null) {
 			log.error("Template not found" , langCode,templatetypecode);
