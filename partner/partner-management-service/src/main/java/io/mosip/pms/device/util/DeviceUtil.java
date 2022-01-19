@@ -1,5 +1,7 @@
 package io.mosip.pms.device.util;
 
+import java.security.SecureRandom;
+
 public class DeviceUtil {
 
 	/**
@@ -7,7 +9,7 @@ public class DeviceUtil {
 	 * @return
 	 */
 	public static String generateId(){
-	    int id = (int)(Math.random()*1000000);
-	    return id +"";
+		SecureRandom random = new SecureRandom();
+		return random.nextInt((100000)) + "";
 	}
 }
