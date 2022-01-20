@@ -239,7 +239,7 @@ public class RestUtil {
 				while (iterator.hasNext()) {
 					String key = iterator.next();
 					if (!(headers.containsKey("Content-Type") && key.equals("Content-Type")))
-						if (!httpHeader.isEmpty()) {
+						if (!httpHeader.isEmpty() && httpHeader.get(key) != null) {
 							headers.add(key, httpHeader.get(key).get(0));
 						}
 				}
