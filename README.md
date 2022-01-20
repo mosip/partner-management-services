@@ -10,7 +10,25 @@ Partnermanagement module contains following services:
  See [DB guide](db_scripts/README.md)
  
 # Build & run (for developers)
-The project requires JDK 1.11. 
+
+## Prerequisites
+### Java 
+    JDK 1.11.
+### Database
+    Should able to connect to 'mosip_pms' database.(either local or hosted)
+    
+### Dependent Services
+    Make sure that following services are running.(eithe local or hosted)
+    1. kernel-auth-service
+    2. kernel-keymanager-service
+    3. kerenel-audit-service
+    4. datashare service
+    
+### Configurations
+    Copy the following configurations from 'mosip_config' repo of respective branch.
+    1. application-default.properties
+    2. partner-management-default.properties
+    
 1. To build jars:
     ```
     $ cd partner
@@ -25,15 +43,8 @@ The project requires JDK 1.11.
     $ cd <service folder>
     $ docker build -f Dockerfile
     ```
+1. To run a service jar individually
 
-# Deploy
-
-## PMS in Sandbox
-To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0-rc2/deployment/v3)
-
-## Developer
-
-1. As a developer, to run a service jar individually:
     ```
     `java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <jar-name>.jar`
     ```
@@ -41,8 +52,12 @@ To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https:/
         _profile_: `env` (extension used on configuration property files*)    
         _config_label_: `master` (git branch of config repo*)  
         _config-url_: `http://localhost:51000` (Url of the config server*)  
-	
-1. Note that you will have to run the dependent services like kernel-config-server to run any service successfully.
+
+
+# Deploy
+
+## PMS in Sandbox
+To deploy PMS on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0-rc2/deployment/v3)
  
 # Configuration
  
