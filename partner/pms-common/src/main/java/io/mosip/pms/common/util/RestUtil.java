@@ -238,8 +238,10 @@ public class RestUtil {
 				Iterator<String> iterator = httpHeader.keySet().iterator();
 				while (iterator.hasNext()) {
 					String key = iterator.next();
-					if (!(headers.containsKey("Content-Type") && key == "Content-Type"))
-						headers.add(key, httpHeader.get(key).get(0));
+					if (!(headers.containsKey("Content-Type") && key.equals("Content-Type")))
+						if (!httpHeader.isEmpty()) {
+							headers.add(key, httpHeader.get(key).get(0));
+						}
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
 			} catch (ClassCastException e) {				
