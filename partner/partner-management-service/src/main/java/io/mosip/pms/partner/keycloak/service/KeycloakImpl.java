@@ -219,17 +219,17 @@ public class KeycloakImpl{
 	private KeycloakRequestDto mapUserRequestToKeycloakRequestDto(UserRegistrationRequestDto userRegDto) {
 		KeycloakRequestDto keycloakRequestDto = new KeycloakRequestDto();
 		List<String> roles = new ArrayList<>();
-		List<KeycloakPasswordDTO> credentialObject = null;
-		KeycloakPasswordDTO dto = null;
+		List<KeycloakPasswordDTO> credentialObject = new ArrayList<>();
 		
 		if (userRegDto.getAppId().equalsIgnoreCase("PARTNER_MANAGEMENT")) {
 			roles.add(userRegDto.getRole());
 			credentialObject = new ArrayList<>();
-			dto = new KeycloakPasswordDTO();
+			KeycloakPasswordDTO dto = new KeycloakPasswordDTO();
 			dto.setType("password");
 			dto.setValue(userRegDto.getUserPassword());
+			credentialObject.add(dto);
 		}
-		credentialObject.add(dto);
+		
 		List<Object> contactNoList = new ArrayList<>();
 		List<Object> genderList = new ArrayList<>();
 		genderList.add(userRegDto.getGender());
@@ -244,7 +244,7 @@ public class KeycloakImpl{
 		keycloakRequestDto.setRealmRoles(roles);
 		keycloakRequestDto.setAttributes(attributes);
 		keycloakRequestDto.setEnabled(true);
-		if (credentialObject != null) {
+		if (!credentialObject.isEmpty()) {
 			keycloakRequestDto.setCredentials(credentialObject);
 		}
 		return keycloakRequestDto;

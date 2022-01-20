@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -486,16 +487,13 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public <E> PageResponseDto<MappedDeviceDetailsReponse> searchMappedDeviceDetails(Class<E> entity, DeviceSearchDto dto) {		
 		PageResponseDto<MappedDeviceDetailsReponse> pageDto = new PageResponseDto<>();	
 		List<MappedDeviceDetailsReponse> mappedRecords = new ArrayList<>();
-		SearchFilter deviceDetailSearchFilter = null;
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("deviceDetailId"))) {
-			deviceDetailSearchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("deviceDetailId")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("deviceDetailId"));
-		}
+		Optional<SearchFilter> deviceDetailSearchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("deviceDetailId")).findFirst();		
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("deviceDetailId"));		
 		Page<DeviceDetailSBI> page = searchHelper.search(DeviceDetailSBI.class, dto, "providerId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			if(deviceDetailSearchFilter != null) {
-				String idValue = deviceDetailSearchFilter.getValue();
+			if(deviceDetailSearchFilter.isPresent()) {
+				String idValue = deviceDetailSearchFilter.get().getValue();
 				mappedRecords = mapMappedDeviceDetailsResponse(page.getContent().stream().filter(
 						f -> f.getId().getDeviceDetailId().equals(idValue))
 						.collect(Collectors.toList()));

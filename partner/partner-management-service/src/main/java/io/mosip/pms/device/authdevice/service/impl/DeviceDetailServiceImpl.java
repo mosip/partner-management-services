@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -251,14 +252,14 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Override
 	public <E> PageResponseDto<DeviceDetailSearchResponseDto> searchDeviceDetails(Class<E> entity, DeviceSearchDto dto) {
 		List<DeviceDetailSearchResponseDto> deviceDetails = new ArrayList<>();
-		PageResponseDto<DeviceDetailSearchResponseDto> pageDto = new PageResponseDto<>();
-		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName"))) {
+		PageResponseDto<DeviceDetailSearchResponseDto> pageDto = new PageResponseDto<>();		
+		Optional<SearchFilter> searchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName")).findFirst();
+		if(searchFilter.isPresent()) {
 			List<SearchFilter> filters = new ArrayList<>();
-			SearchFilter searchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName")).findFirst().get();
-			SearchFilter partnerSearch = new SearchFilter();			
+			SearchFilter partnerSearch = new SearchFilter();
 			partnerSearch.setColumnName("deviceProviderId");
-			Partner partner = partnerRepository.findByName(searchFilter.getValue());
+			Partner partner = partnerRepository.findByName(searchFilter.get().getValue());
 			partnerSearch.setValue(partner.getId());
 			partnerSearch.setType("equals");
 			filters.addAll(dto.getFilters());
