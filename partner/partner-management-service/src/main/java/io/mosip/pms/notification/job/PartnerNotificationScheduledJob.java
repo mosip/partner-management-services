@@ -82,7 +82,7 @@ public class PartnerNotificationScheduledJob {
 		dto.setPolicyId(partnerPolicy.getPolicyId());
 		dto.setPolicyName(policy == null ? null : policy.getName());
 		dto.setLangCode(partnerPolicy.getPartner().getLangCode());
-		dto.setPolicyStatus(policy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		dto.setPolicyStatus((policy != null && policy.getIsActive() == true) ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKeyStatus(partnerPolicy.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		return dto;
 	}
