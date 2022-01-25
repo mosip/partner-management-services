@@ -1111,8 +1111,10 @@ public class PartnerServiceImpl implements PartnerService {
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {				
-				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
+			if(loggedInPartner.isPresent()) {	
+				SearchFilter loggedInUserSearchFilter = new SearchFilter();
+				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
+				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
 			}
 		}
 		Page<PartnerPolicy> page = partnerSearchHelper.search(PartnerPolicy.class, dto, null);
@@ -1208,7 +1210,9 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
 			if(loggedInPartner.isPresent()) {				
-				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
+				SearchFilter loggedInUserSearchFilter = new SearchFilter();
+				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
+				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
 			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(PartnerPolicyRequest.class, dto,
