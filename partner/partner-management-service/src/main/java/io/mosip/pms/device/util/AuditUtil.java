@@ -55,7 +55,7 @@ public class AuditUtil {
 
 	private String hostName = null;
 
-	private volatile AtomicInteger eventCounter;
+	private AtomicInteger eventCounter;
 
 	@Value("${mosip.kernel.masterdata.audit-url}")
 	private String auditUrl;

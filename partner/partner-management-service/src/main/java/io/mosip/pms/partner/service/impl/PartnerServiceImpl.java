@@ -1111,7 +1111,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {				
+			if(partnerIdSearchFilter.isPresent() && loggedInPartner.isPresent()) {				
 				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
 			}
 		}
@@ -1207,7 +1207,7 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {				
+			if(partnerIdSearchFilter.isPresent() && loggedInPartner.isPresent()) {				
 				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
 			}
 		}
