@@ -31,9 +31,9 @@ public class PolicyObjectValidationFailedException extends BaseCheckedException 
 	 * @param errors        the errors
 	 */
 	public PolicyObjectValidationFailedException(PolicyValidatorErrorConstant errorConstant, List<ServiceError> errors) {
+		super(errors.get(0).getErrorCode(),errors.get(0).getMessage());
 		errors.stream().forEach(error -> super.addInfo(error.getErrorCode(), error.getMessage()));
 		errors.stream().forEach(error -> serviceErrors.add(new ServiceError(error.getErrorCode(), error.getMessage())));
-		new PolicyObjectValidationFailedException(errors.get(0).getErrorCode(),errors.get(0).getMessage());
 	}
 
 	public List<ServiceError> getServiceErrors(){

@@ -386,10 +386,9 @@ public class PolicyManagementService {
 		authPolicy.setUpdDtimes(LocalDateTime.now());
 		authPolicyRepository.save(authPolicy);
 		insertIntoAuthPolicyH(authPolicy);
-		notify(authPolicy.getId());
-		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.getPolicyGroup().getId());
+		notify(authPolicy.getId());		
 		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS);
-		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy);
+		return mapPolicyAndPolicyGroup(authPolicy);
 	}
 
 	/**
@@ -401,21 +400,21 @@ public class PolicyManagementService {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private PolicyResponseDto mapPolicyAndPolicyGroup(PolicyGroup policyGroup, AuthPolicy authPolicy)
+	private PolicyResponseDto mapPolicyAndPolicyGroup(AuthPolicy authPolicy)
 			throws JsonParseException, JsonMappingException, IOException {
 		PolicyResponseDto response = new PolicyResponseDto();
 		response.setCr_by(authPolicy.getCrBy());
 		response.setCr_dtimes(getLocalDateTime(authPolicy.getCrDtimes()));
 		response.setIs_Active(authPolicy.getIsActive());
 		response.setPolicyDesc(authPolicy.getDescr());
-		response.setPolicyGroupDesc(policyGroup.getDesc());
-		response.setPolicyGroupId(policyGroup.getId());
-		response.setPolicyGroupName(policyGroup.getName());
-		response.setPolicyGroupStatus(policyGroup.getIsActive());
-		response.setPolicyGroup_cr_by(policyGroup.getCrBy());
-		response.setPolicyGroup_cr_dtimes(policyGroup.getCrDtimes());
-		response.setPolicyGroup_up_by(policyGroup.getUpdBy());
-		response.setPolicyGroup_upd_dtimes(policyGroup.getUpdDtimes());
+		response.setPolicyGroupDesc(authPolicy.getPolicyGroup().getDesc());
+		response.setPolicyGroupId(authPolicy.getPolicyGroup().getId());
+		response.setPolicyGroupName(authPolicy.getPolicyGroup().getName());
+		response.setPolicyGroupStatus(authPolicy.getPolicyGroup().getIsActive());
+		response.setPolicyGroup_cr_by(authPolicy.getPolicyGroup().getCrBy());
+		response.setPolicyGroup_cr_dtimes(authPolicy.getPolicyGroup().getCrDtimes());
+		response.setPolicyGroup_up_by(authPolicy.getPolicyGroup().getUpdBy());
+		response.setPolicyGroup_upd_dtimes(authPolicy.getPolicyGroup().getUpdDtimes());
 		response.setPolicyId(authPolicy.getId());
 		response.setPolicyName(authPolicy.getName());
 		response.setPolicyType(authPolicy.getPolicy_type());
@@ -460,7 +459,7 @@ public class PolicyManagementService {
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
-			authPolicy.setId(authPolicyId == "" ? PolicyUtil.generateId() : authPolicyId);
+			authPolicy.setId((authPolicyId == null || authPolicyId.isBlank() || authPolicyId.isEmpty()) ? PolicyUtil.generateId() : authPolicyId);
 			authPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
@@ -576,8 +575,8 @@ public class PolicyManagementService {
 	 */
 	private AuthPolicy checkMappingExists(String uniquePolicyGroupAttribute, String uniquePolicyAttribute,
 			boolean hasToCheckWithName,PolicyManageEnum auditEnum) {
-		Optional<PolicyGroup> policyGroup = null;
-		Optional<AuthPolicy> authPolicy = null;
+		Optional<PolicyGroup> policyGroup = Optional.empty();
+		Optional<AuthPolicy> authPolicy = Optional.empty();
 		if (hasToCheckWithName) {
 			policyGroup = Optional.of(policyGroupRepository.findByName(uniquePolicyGroupAttribute));
 			authPolicy = Optional.of(authPolicyRepository.findByName(uniquePolicyAttribute));
@@ -617,9 +616,8 @@ public class PolicyManagementService {
 	 * @throws FileNotFoundException
 	 */
 	public PolicyResponseDto findPolicy(String policyId) throws FileNotFoundException, IOException, ParseException {
-		AuthPolicy authPolicy = getAuthPolicy(policyId);
-		PolicyGroup policyGroup = getPolicyGroup(authPolicy.getPolicyGroup().getId());				
-		return mapPolicyAndPolicyGroup(policyGroup, authPolicy);
+		AuthPolicy authPolicy = getAuthPolicy(policyId);					
+		return mapPolicyAndPolicyGroup(authPolicy);
 	}
 
 	/**
@@ -693,8 +691,7 @@ public class PolicyManagementService {
 					ErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage());
 
 		}
-		Optional<PolicyGroup> policyGroup = policyGroupRepository.findById(authPolicy.get().getPolicyGroup().getId());
-		return mapPolicyAndPolicyGroup(policyGroup.get(), authPolicy.get());
+		return mapPolicyAndPolicyGroup(authPolicy.get());
 	}
 
 	/**
@@ -882,8 +879,6 @@ public class PolicyManagementService {
 
 	public PageResponseDto<SearchAuthPolicy> searchPolicy(PolicySearchDto dto) {
 		List<SearchAuthPolicy> policies = new ArrayList<>();
-		SearchFilter policyGroupNameFilter = null;
-		SearchFilter policydescFilter = null;
 		PageResponseDto<SearchAuthPolicy> pageDto = new PageResponseDto<>();
 		if (!dto.getPolicyType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
@@ -895,24 +890,22 @@ public class PolicyManagementService {
 			filters.add(authtypeSearch);
 			dto.setFilters(filters);
 		}		
-		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName"))) {			
-			policyGroupNameFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyGroupName"));
-		}
 		
-		if (dto.getFilters().stream().anyMatch(cn -> cn.getColumnName().equalsIgnoreCase("desc"))) {			
-			policydescFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("desc")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("desc"));
-			policydescFilter.setColumnName("descr");
-			dto.getFilters().add(policydescFilter);
+		Optional<SearchFilter> policyGroupNameFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyGroupName")).findFirst();
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyGroupName"));		
+		Optional<SearchFilter> policydescFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("desc")).findFirst();		
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("desc"));
+		if(policydescFilter.isPresent()) {
+			policydescFilter.get().setColumnName("descr");
+			dto.getFilters().add(policydescFilter.get());
 		}
 		
 		Page<AuthPolicy> page = searchHelper.search(AuthPolicy.class, dto);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			if (policyGroupNameFilter != null) {
-				String value = policyGroupNameFilter.getValue();
+			if (policyGroupNameFilter.isPresent()) {
+				String value = policyGroupNameFilter.get().getValue();
 				policies = MapperUtils.mapAuthPolicySearch(page.getContent().stream()
 						.filter(f -> f.getPolicyGroup().getName().equals(value))
 						.collect(Collectors.toList()));

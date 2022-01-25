@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.misp.service.impl;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -125,7 +125,11 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * @return
 	 */
 	private String generate() {
-		return RandomStringUtils.randomAlphanumeric(licenseKeyLength);
+		String chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    SecureRandom secureRandom = new SecureRandom();
+	    String customTag = secureRandom.ints(licenseKeyLength, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+	      .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+	    return customTag;
 	}
 
 	/**
