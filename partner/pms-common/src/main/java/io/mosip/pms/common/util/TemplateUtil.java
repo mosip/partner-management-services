@@ -71,7 +71,8 @@ public class TemplateUtil {
 					ApiAccessibleExceptionConstant.TEMPLATE_NOT_FOUND.getErrorMessage());
 		}
 
-		return templatesResponseDto.getTemplates().get(0).getFileText().replaceAll("^\"|\"$", "");
+		// Trim surrounding double quotes and then return
+		return templatesResponseDto.getTemplates().get(0).getFileText().replaceAll("(^\")|(\"$)", ""); 
 	}
 
 	public String templateMerge(String fileText, NotificationDto acknowledgementDTO) throws IOException {
