@@ -512,9 +512,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setApiKeyExpiryDate(partnerPolicyFromDb.getValidToDatetime().toLocalDateTime());
 		dto.setApiKeyStatus(partnerPolicyFromDb.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setPolicyId(partnerPolicyFromDb.getPolicyId());
-		dto.setPolicyName(authPolicy.get().getName());
-		dto.setPolicyExpiryDateTime(authPolicy.get().getValidToDate());
-		dto.setPolicyStatus(authPolicy.get().getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+		dto.setPolicyName(authPolicy.isPresent() ? authPolicy.get().getName() : null);
+		dto.setPolicyExpiryDateTime(authPolicy.isPresent() ? authPolicy.get().getValidToDate() : null);
+		dto.setPolicyStatus((authPolicy.isPresent() && authPolicy.get().getIsActive() == true) ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
 		try {
 			notificationService.sendNotications(eventType, notificationDtos);

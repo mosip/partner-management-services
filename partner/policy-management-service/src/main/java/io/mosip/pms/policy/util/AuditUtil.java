@@ -24,8 +24,10 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pms.common.exception.ValidationException;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.policy.dto.AuditRequestDto;
 import io.mosip.pms.policy.dto.AuditResponseDto;
@@ -35,6 +37,8 @@ import io.mosip.pms.policy.dto.PolicyManageEnum;
 @Component
 public class AuditUtil {	
 
+	private Logger log = PMSLogger.getLogger(AuditUtil.class);
+	
 	@Autowired
 	RestTemplate restTemplate;
 	
@@ -77,25 +81,24 @@ public class AuditUtil {
 	}
 	
 	public  void setAuditRequestDto(PolicyManageEnum PartnerManageEnum) {
-//		AuditRequestDto auditRequestDto = new AuditRequestDto();
-//
-//		auditRequestDto.setHostIp(hostIpAddress);
-//		auditRequestDto.setHostName(hostName);
-//		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
-//		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
-//		auditRequestDto.setSessionUserId(getUserId());
-//		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
-//		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-//		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
-//		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
-//		auditRequestDto.setEventType(PartnerManageEnum.getType());
-//		auditRequestDto.setEventName(PartnerManageEnum.getName());
-//		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
-//		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
-//		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
-//		auditRequestDto.setId(PartnerManageEnum.getId());
-//		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
-//		callAuditManager(auditRequestDto);
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(getUserId());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(PartnerManageEnum.getId());
+		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
+		callAuditManager(auditRequestDto);
 	}
 	
 	private void callAuditManager(AuditRequestDto auditRequestDto) {
@@ -107,7 +110,7 @@ public class AuditUtil {
 			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);		
 			getAuditDetailsFromResponse(response);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Error occured while calling audit service", ex);
 		}
 	}
 	

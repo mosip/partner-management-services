@@ -223,6 +223,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
+	private String emptySpacesRegex = ".*\\s.*";
+	
 	@Override
 	public PartnerResponse savePartner(PartnerRequest request) {
 		// Registered partner cannot create another partner 
@@ -1079,57 +1081,57 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerPolicySearchResponseDto> searchPartnerApiKeys(SearchDto dto) {
 		List<PartnerPolicySearchResponseDto> partnerMappedPolicies = new ArrayList<>();
 		PageResponseDto<PartnerPolicySearchResponseDto> pageDto = new PageResponseDto<>();
-		SearchFilter partnerNameSearchFilter = null;
-		SearchFilter partnerIdSearchFilter = null;
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
-			partnerNameSearchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
-		}
+		Optional<SearchFilter> partnerNameSearchFilter = Optional.empty();
+		Optional<SearchFilter> partnerIdSearchFilter = Optional.empty();
+		partnerNameSearchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst();;
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
 		
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerId"))) {
-			partnerIdSearchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst().get();
-			Optional<Partner> loggedInPartner = partnerRepository.findById(partnerIdSearchFilter.getValue());
-			if(loggedInPartner.isPresent()) {
-				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
+		partnerIdSearchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst();
+		if(partnerIdSearchFilter.isPresent()) {
+			Optional<Partner> loggedInPartner = partnerRepository.findById(partnerIdSearchFilter.get().getValue());
+			if (loggedInPartner.isPresent()) {
+				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
 			}
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
+			dto.getFilters().removeIf(f -> f.getColumnName().equalsIgnoreCase("partnerId"));
 		}
 		
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
-			SearchFilter policyNameFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
-			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+		Optional<SearchFilter> policyNameFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst();;
+		if (policyNameFilter.isPresent()) {
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.get().getValue());
 			SearchFilter policyIdSearchFilter = new SearchFilter();
 			policyIdSearchFilter.setColumnName("policyId");
 			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
 			policyIdSearchFilter.setType("equals");
 			dto.getFilters().add(policyIdSearchFilter);
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
+			dto.getFilters().removeIf(f -> f.getColumnName().equalsIgnoreCase("policyName"));
 		}
+
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {
-				partnerIdSearchFilter = new SearchFilter();
-				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
+			if(loggedInPartner.isPresent()) {	
+				SearchFilter loggedInUserSearchFilter = new SearchFilter();
+				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
+				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
 			}
 		}
 		Page<PartnerPolicy> page = partnerSearchHelper.search(PartnerPolicy.class, dto, null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {
-				String nameValue = partnerNameSearchFilter.getValue();
-				String idValue = partnerIdSearchFilter.getValue();
+			if(partnerNameSearchFilter.isPresent() && partnerIdSearchFilter.isPresent()) {
+				String nameValue = partnerNameSearchFilter.get().getValue();
+				String idValue = partnerIdSearchFilter.get().getValue();
 				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream().filter(
 						f -> f.getPartner().getName().equals(nameValue) && f.getPartner().getId().equals(idValue))
 						.collect(Collectors.toList()));
 			}
-			else if (partnerNameSearchFilter != null) {
-				String value = partnerNameSearchFilter.getValue();
+			else if (partnerNameSearchFilter.isPresent()) {
+				String value = partnerNameSearchFilter.get().getValue();
 				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream()
 						.filter(f -> f.getPartner().getName().equals(value)).collect(Collectors.toList()));
-			} else if(partnerIdSearchFilter != null){
-				String value = partnerIdSearchFilter.getValue();
+			} else if(partnerIdSearchFilter.isPresent()){
+				String value = partnerIdSearchFilter.get().getValue();
 				partnerMappedPolicies = mapPartnerPolicies(page.getContent().stream()
 						.filter(f -> f.getPartner().getId().equals(value)).collect(Collectors.toList()));				
 			}
@@ -1175,60 +1177,61 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PolicyRequestSearchResponseDto> searchPartnerApiKeyRequests(SearchDto dto) {
 		List<PolicyRequestSearchResponseDto> partnerPolicyRequests = new ArrayList<>();
 		PageResponseDto<PolicyRequestSearchResponseDto> pageDto = new PageResponseDto<>();
-		SearchFilter partnerNameSearchFilter = null;
-		SearchFilter partnerIdSearchFilter = null;
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("partnerName"))) {
-			partnerNameSearchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		Optional<SearchFilter> partnerNameSearchFilter = Optional.empty();
+		Optional<SearchFilter> partnerIdSearchFilter = Optional.empty();
+		partnerNameSearchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerName")).findFirst();
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerName"));
+		
+		Optional<SearchFilter> apikeyRequestIdFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("apikeyRequestId")).findFirst();
+		if (apikeyRequestIdFilter.isPresent()) {
+			apikeyRequestIdFilter.get().setColumnName("id");
+			dto.getFilters().add(apikeyRequestIdFilter.get());
+			dto.getFilters().removeIf(f -> f.getColumnName().equalsIgnoreCase("apikeyRequestId"));
 		}
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("apikeyRequestId"))) {
-			SearchFilter apikeyRequestIdFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("apikeyRequestId")).findFirst().get();
-			apikeyRequestIdFilter.setColumnName("id");
-			dto.getFilters().add(apikeyRequestIdFilter);
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("apikeyRequestId"));
-		}
-		if (dto.getFilters().stream().anyMatch(f -> f.getColumnName().equalsIgnoreCase("policyName"))) {
-			SearchFilter policyNameFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst().get();
-			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.getValue());
+		
+		Optional<SearchFilter> policyNameFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("policyName")).findFirst();
+		if(policyNameFilter.isPresent()) {
+			AuthPolicy authPolicyFromDb = authPolicyRepository.findByName(policyNameFilter.get().getValue());
 			SearchFilter policyIdSearchFilter = new SearchFilter();
 			policyIdSearchFilter.setColumnName("policyId");
 			policyIdSearchFilter.setValue(authPolicyFromDb.getId());
 			policyIdSearchFilter.setType("equals");
 			dto.getFilters().add(policyIdSearchFilter);
 			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("policyName"));
-		}	
-		if(dto.getFilters().stream().anyMatch(f ->f.getColumnName().equalsIgnoreCase("partnerId"))) {
-			partnerIdSearchFilter = dto.getFilters().stream()
-					.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst().get();
-			dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
 		}
+			
+		partnerIdSearchFilter = dto.getFilters().stream()
+				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst();
+		dto.getFilters().removeIf(f->f.getColumnName().equalsIgnoreCase("partnerId"));
+		
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {
-				partnerIdSearchFilter = new SearchFilter();
-				partnerIdSearchFilter.setValue(loggedInPartner.get().getId());
+			if(loggedInPartner.isPresent()) {				
+				SearchFilter loggedInUserSearchFilter = new SearchFilter();
+				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
+				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
 			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(PartnerPolicyRequest.class, dto,
 				null);
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			if(partnerNameSearchFilter != null && partnerIdSearchFilter != null) {
-				String nameValue = partnerNameSearchFilter.getValue();
-				String idValue = partnerNameSearchFilter.getValue();
+			if(partnerNameSearchFilter.isPresent() && partnerIdSearchFilter.isPresent()) {
+				String nameValue = partnerNameSearchFilter.get().getValue();
+				String idValue = partnerNameSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
 						.filter(f -> f.getPartner().getName().equals(nameValue) &&
 								f.getPartner().getId().equals(idValue))
 						.collect(Collectors.toList()));				
-			}else if (partnerNameSearchFilter != null) {
-				String value = partnerNameSearchFilter.getValue();
+			}else if (partnerNameSearchFilter.isPresent()) {
+				String value = partnerNameSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
 						.filter(f -> f.getPartner().getName().equals(value))
 						.collect(Collectors.toList()));
-			}else if(partnerIdSearchFilter != null){
-				String value = partnerIdSearchFilter.getValue();
+			}else if(partnerIdSearchFilter.isPresent()){
+				String value = partnerIdSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
 						.filter(f -> f.getPartner().getId().equals(value))
 						.collect(Collectors.toList()));				
@@ -1513,7 +1516,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @return
 	 */
 	private boolean isInputStringContainsSpaces(String inputString) {
-		if (inputString.matches(".*\\s.*")) {
+		if (inputString.matches(emptySpacesRegex)) {
 			return true;
 		}
 		return false;

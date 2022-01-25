@@ -75,7 +75,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 			boolean refreshTokenExpired = isExpired(accessTokenResponse.getRefresh_token());
 			LOGGER.info("access token expired: " + accessTokenExpired + " ,refresh token expired: " + refreshTokenExpired);
 			if (refreshTokenExpired){
-				accessTokenResponse = getAdminToken(false, null);
+				accessTokenResponse = getAdminToken(false, null);				
 			} else if (accessTokenExpired) {
 				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
 			}
@@ -83,7 +83,8 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 			accessTokenResponse = getAdminToken(false, null);
 		}
 		memoryCache.put("adminToken", accessTokenResponse);
-		request.getHeaders().add("Authorization", "Bearer " + accessTokenResponse.getAccess_token());
+		request.getHeaders().add("Authorization",
+				"Bearer " + (accessTokenResponse != null ? accessTokenResponse.getAccess_token() : null));
 		return execution.execute(request, body);
 	}
 
@@ -106,11 +107,11 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		try {
 		 response = restTemplate.postForEntity(
 				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
+		 return response.getBody();
 		}catch(HttpServerErrorException | HttpClientErrorException ex) {
 			LOGGER.error(ex.getMessage());
 		}
-		
-		return response.getBody();
+		return null;
 	}
 
 	private MultiValueMap<String, String> getAdminValueMap() {

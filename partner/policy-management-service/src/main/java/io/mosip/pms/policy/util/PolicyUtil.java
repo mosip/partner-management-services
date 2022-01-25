@@ -1,5 +1,7 @@
 package io.mosip.pms.policy.util;
 
+import java.security.SecureRandom;
+
 /**
  * 
  * @author Nagarjuna
@@ -8,7 +10,7 @@ package io.mosip.pms.policy.util;
 public class PolicyUtil {
 	
 	public static String generateId() {
-		int id = (int) (Math.random() * 1000000);
-		return id + "";
+		SecureRandom random = new SecureRandom();
+		return random.nextInt(100000) + "";
 	}
 }
