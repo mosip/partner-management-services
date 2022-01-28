@@ -1,12 +1,11 @@
 # Partner Management Configuration Guide
 
-
 ## Property files
-
 The configuration of the services is controlled by the following property files:
-* [`application-default.propertes`](https://github.com/mosip/mosip-config/blob/1.2.0_v3/application-default.properties)
-* [`partner-management-default.properties`](https://github.com/mosip/mosip-config/blob/1.2.0_v3/partner-management-default.properties)
+* `application-default.propertes`
+* `partner-management-default.properties`
 
+See [Module Configuration](https://docs.mosip.io/1.2.0/modules/module-configuration) for location of these files.
 
 ## Important configurations
 |Property|Description|
