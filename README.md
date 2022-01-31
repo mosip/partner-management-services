@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/mosip/partner-management-services.svg?branch=master)](https://travis-ci.org/mosip/partner-management-services)
+[![Build Status](https://travis-ci.org/mosip/partner-management-services.svg?branch=1.2.0-rc2)](https://travis-ci.org/mosip/partner-management-services)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?id=mosip_partner-management-services)
 [![Join the chat at https://gitter.im/mosip-community/partner-management-services](https://badges.gitter.im/mosip-community/partner-management-services.svg)](https://gitter.im/mosip-community/partner-management-services?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
