@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/mosip/partner-management-services.svg?branch=1.2.0-rc2)](https://travis-ci.org/mosip/partner-management-services)
+[![Build Status](https://travis-ci.com/mosip/partner-management-services.svg?branch=master)](https://app.travis-ci.com/mosip/partner-management-services)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?id=mosip_partner-management-services)
 
 # Partner Management Services (PMS)
