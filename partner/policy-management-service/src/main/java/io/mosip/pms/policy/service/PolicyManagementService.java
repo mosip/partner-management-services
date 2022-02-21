@@ -907,7 +907,7 @@ public class PolicyManagementService {
 			if (policyGroupNameFilter.isPresent()) {
 				String value = policyGroupNameFilter.get().getValue();
 				policies = MapperUtils.mapAuthPolicySearch(page.getContent().stream()
-						.filter(f -> f.getPolicyGroup().getName().equals(value))
+						.filter(f -> f.getPolicyGroup().getName().contains(value))
 						.collect(Collectors.toList()));
 			} else {
 				policies = MapperUtils.mapAuthPolicySearch(page.getContent());
