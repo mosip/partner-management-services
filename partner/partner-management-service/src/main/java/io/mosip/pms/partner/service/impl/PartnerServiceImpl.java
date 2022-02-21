@@ -1228,13 +1228,13 @@ public class PartnerServiceImpl implements PartnerService {
 				String nameValue = partnerNameSearchFilter.get().getValue();
 				String idValue = partnerNameSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
-						.filter(f -> f.getPartner().getName().equals(nameValue) &&
+						.filter(f -> f.getPartner().getName().contains(nameValue) &&
 								f.getPartner().getId().contains(idValue))
 						.collect(Collectors.toList()));				
 			}else if (partnerNameSearchFilter.isPresent()) {
 				String value = partnerNameSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
-						.filter(f -> f.getPartner().getName().equals(value))
+						.filter(f -> f.getPartner().getName().contains(value))
 						.collect(Collectors.toList()));
 			}else if(partnerIdSearchFilter.isPresent()){
 				String value = partnerIdSearchFilter.get().getValue();
