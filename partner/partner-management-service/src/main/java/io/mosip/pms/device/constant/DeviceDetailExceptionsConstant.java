@@ -8,7 +8,8 @@ public enum DeviceDetailExceptionsConstant {
 	DUPLICATE_REQUEST("PMS_AUT_004","Duplicate request received"), 
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_005","Device detail for id %s does not exist"),
 	DEVICE_STATUS_CODE("PMS_AUT_025","ApprovalStatus should be Activate / De-activate"),
-	DEVICE_DETAIL_NOT_APPROVED("PMS_AUT_027","Device details for id %s are not yet approved. Please provide approved details.");
+	DEVICE_DETAIL_NOT_APPROVED("PMS_AUT_027","Device details for id %s are not yet approved. Please provide approved details."),
+	DEVICE_DETAIL_REJECTED("PMS_AUT_028","Device details for id %s are rejected. Cann't use same details for mapping.");
 	
 	/**
 	 * The error code.

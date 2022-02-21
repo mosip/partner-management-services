@@ -400,17 +400,28 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
+		if(!validDeviceDetail.getIsActive() && validDeviceDetail.getApprovalStatus().equalsIgnoreCase(CommonConstant.REJECTED)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorCode(),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorMessage()),
+					"AUT-008");
+			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorCode(), String
+					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorMessage(), input.getDeviceDetailId()));
+		}
 		if(!validDeviceDetail.getIsActive()) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC,
-							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
-							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(),
+							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage()),
 					"AUT-008");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage(), input.getDeviceDetailId()));
-		}		
+		}
 		SecureBiometricInterface validSbi = sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(input.getSbiId());
 		if (validSbi == null) {
 			auditUtil.auditRequest(

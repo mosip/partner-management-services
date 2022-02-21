@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.constant.Purpose;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
@@ -396,6 +397,16 @@ public class SBIServiceTest {
 		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNullAndIsActiveTrue(request.getSbiId())).thenReturn(secureBiometricInterface);
 		assertTrue(secureBiometricInterfaceService.mapDeviceDetailAndSbi(request).equals("Success"));
 		deviceDetail.setIsActive(false);
+		deviceDetail.setApprovalStatus(CommonConstant.REJECTED);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorCode()));
+		}
+		
+		deviceDetail.setIsActive(false);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
 		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
 		try {
 			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
