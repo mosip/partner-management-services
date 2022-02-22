@@ -262,11 +262,15 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			SearchFilter partnerSearch = new SearchFilter();
 			partnerSearch.setColumnName("deviceProviderId");
 			List<String> partnersFromDb = partnerRepository.findByNameIgnoreCase(searchFilter.get().getValue());
-			partnerSearch.setValues(partnersFromDb);
-			partnerSearch.setType("in");
-			filters.addAll(dto.getFilters());
-			filters.add(partnerSearch);
-			dto.setFilters(filters);
+			if(!partnersFromDb.isEmpty()) {
+				partnerSearch.setValues(partnersFromDb);
+				partnerSearch.setType("in");
+				filters.addAll(dto.getFilters());
+				filters.add(partnerSearch);
+				dto.setFilters(filters);
+			} else {
+				return new PageResponseDto<>();
+			}
 		}
 		Page<E> page = searchHelper.search(entity, dto, "deviceProviderId");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {

@@ -9,9 +9,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1010,9 +1010,13 @@ public class PartnerServiceImplTest {
 		PartnerPolicyRequest partnerPolicy = new PartnerPolicyRequest();
 		partnerPolicy.setId("12345");
 		partnerPolicy.setPartner(createPartner(true));
-		Mockito.when(authPolicyRepository.findByName("m")).thenReturn((createAuthPolicy()));
+		Mockito.when(authPolicyRepository.findByNameIgnoreCase("m")).thenReturn(List.of(createAuthPolicy()));
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
 		pserviceImpl.searchPartnerApiKeyRequests(searchDto);		
+		
+		Mockito.when(authPolicyRepository.findByNameIgnoreCase("m")).thenReturn(Collections.emptyList());
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(partnerPolicy))).when(partnerSearchHelper).search(Mockito.any(),Mockito.any(),Mockito.any());
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 		
 		searchDto.getFilters().add(partnerNameSearchFilter);
 		objectMapper.writeValueAsString(searchDto);
