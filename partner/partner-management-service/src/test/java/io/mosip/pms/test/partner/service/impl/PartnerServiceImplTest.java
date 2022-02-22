@@ -63,6 +63,7 @@ import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -859,7 +860,7 @@ public class PartnerServiceImplTest {
 		partner.get().setPartnerTypeCode("Auth_Partner");
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
 		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(createAuthPolicy());
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345","123","approved")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("12345","123")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
 		pserviceImpl.requestForPolicyMapping(request, "12345");
 		partner.get().setPolicyGroupId(null);
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
@@ -870,12 +871,21 @@ public class PartnerServiceImplTest {
 		}
 		partner.get().setPolicyGroupId("12345");
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
-		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345","12345","approved")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
 		}
+		partner.get().setPolicyGroupId("12345");
+		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("12345","12345")).thenReturn(List.of(createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS)));
+		try {
+			pserviceImpl.requestForPolicyMapping(request, "12345");
+		}catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
+		}
+		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(Optional.empty());		
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");

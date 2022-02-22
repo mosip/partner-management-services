@@ -31,5 +31,7 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 	
 	@Query(value = "select * from partner ppr where ppr.id IN :partnerIds and (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
 	List<Partner> findByPartnerIds(@Param("partnerIds") List<String> partnerIds);
-
+	
+	@Query(value="select p.id from partner p where lower(p.name) like lower(concat('%', concat(?1, '%')))", nativeQuery = true)
+	List<String> findByNameIgnoreCase(String name);
 }
