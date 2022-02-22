@@ -207,6 +207,21 @@ public class DeviceDetailServiceTest {
 		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
 	}
 	
+	@Test
+	public void searchDeviceDetailTestS() throws Exception {
+		SearchFilter partnerOrganizationNameFilter = new SearchFilter();
+		partnerOrganizationNameFilter.setColumnName("partnerOrganizationName");
+		partnerOrganizationNameFilter.setValue("m");
+		deviceSearchDto.getFilters().add(partnerOrganizationNameFilter);
+		objectMapper.writeValueAsString(deviceSearchDto);
+		DeviceDetail device = new DeviceDetail();
+		device.setId("1001");
+		Mockito.when(partnerRepository.findByNameIgnoreCase("m")).thenReturn(List.of("1234"));
+		Mockito.doReturn(new PageImpl<>(Arrays.asList(device))).when(searchHelper).search(Mockito.any(),
+				Mockito.any(),Mockito.anyString());
+		deviceDetaillService.searchDeviceDetails(DeviceDetail.class, deviceSearchDto);
+	}
+	
 
 	@Test
 	public void deviceFilterValuesTest() throws Exception {
