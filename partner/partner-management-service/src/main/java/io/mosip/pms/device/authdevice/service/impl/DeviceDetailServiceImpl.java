@@ -257,6 +257,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		Optional<SearchFilter> searchFilter = dto.getFilters().stream()
 				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerOrganizationName")).findFirst();
 		if (searchFilter.isPresent()) {
+			dto.getFilters().removeIf(f -> f.getColumnName().equalsIgnoreCase("partnerOrganizationName"));
 			List<SearchFilter> filters = new ArrayList<>();
 			SearchFilter partnerSearch = new SearchFilter();
 			partnerSearch.setColumnName("deviceProviderId");

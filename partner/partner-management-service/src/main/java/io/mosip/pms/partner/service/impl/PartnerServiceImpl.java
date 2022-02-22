@@ -1226,20 +1226,20 @@ public class PartnerServiceImpl implements PartnerService {
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			if(partnerNameSearchFilter.isPresent() && partnerIdSearchFilter.isPresent()) {
 				String nameValue = partnerNameSearchFilter.get().getValue();
-				String idValue = partnerNameSearchFilter.get().getValue();
+				String idValue = partnerIdSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
 						.filter(f -> f.getPartner().getName().contains(nameValue) &&
-								f.getPartner().getId().contains(idValue))
+								f.getPartner().getId().equals(idValue))
 						.collect(Collectors.toList()));				
 			}else if (partnerNameSearchFilter.isPresent()) {
 				String value = partnerNameSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
-						.filter(f -> f.getPartner().getName().contains(value))
+						.filter(f -> f.getPartner().getName().toLowerCase().contains(value.toLowerCase()))
 						.collect(Collectors.toList()));
 			}else if(partnerIdSearchFilter.isPresent()){
 				String value = partnerIdSearchFilter.get().getValue();
 				partnerPolicyRequests = mapPolicyRequests(page.getContent().stream()
-						.filter(f -> f.getPartner().getId().contains(value))
+						.filter(f -> f.getPartner().getId().equals(value))
 						.collect(Collectors.toList()));				
 			}
 			else{
@@ -1257,30 +1257,32 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param content
 	 * @return
 	 */
-	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {		
-		List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));		
+	private List<PolicyRequestSearchResponseDto> mapPolicyRequests(List<PartnerPolicyRequest> content) {
 		List<PolicyRequestSearchResponseDto> policyRequestList = new ArrayList<>();
-		content.forEach(policyRequest -> {
-			PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
-			searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
-			searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
-			searchPolicyRequest.setPartnerName(policyRequest.getPartner().getName());
-			searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
-			Optional<AuthPolicy> authPolicy = authPolices.stream()
-					.filter(p -> p.getId().equals(policyRequest.getPolicyId()))
-					.findFirst();			
-			searchPolicyRequest.setPolicyName(authPolicy.isPresent() ? authPolicy.get().getName() : "");			
-			searchPolicyRequest.setRequestDatetimes(policyRequest.getRequestDatetimes());
-			searchPolicyRequest.setRequestDetail(policyRequest.getRequestDetail());
-			searchPolicyRequest.setStatusCode(policyRequest.getStatusCode());
-			searchPolicyRequest.setCrBy(policyRequest.getCrBy());
-			searchPolicyRequest.setCrDtimes(policyRequest.getCrDtimes());
-			searchPolicyRequest.setUpdBy(policyRequest.getUpdBy());
-			searchPolicyRequest.setUpdDtimes(policyRequest.getUpdDtimes());
-			searchPolicyRequest.setIsDeleted(policyRequest.getIsDeleted());
-			searchPolicyRequest.setDelDtimes(policyRequest.getDelDtimes());
-			policyRequestList.add(searchPolicyRequest);
-		});
+		if (content.size() > 0) {
+			List<AuthPolicy> authPolices = authPolicyRepository.findAllByPolicyIds(
+					content.stream().map(PartnerPolicyRequest::getPolicyId).collect(Collectors.toList()));
+			content.forEach(policyRequest -> {
+				PolicyRequestSearchResponseDto searchPolicyRequest = new PolicyRequestSearchResponseDto();
+				searchPolicyRequest.setApikeyRequestId(policyRequest.getId());
+				searchPolicyRequest.setPartnerId(policyRequest.getPartner().getId());
+				searchPolicyRequest.setPartnerName(policyRequest.getPartner().getName());
+				searchPolicyRequest.setPolicyId(policyRequest.getPolicyId());
+				Optional<AuthPolicy> authPolicy = authPolices.stream()
+						.filter(p -> p.getId().equals(policyRequest.getPolicyId())).findFirst();
+				searchPolicyRequest.setPolicyName(authPolicy.isPresent() ? authPolicy.get().getName() : "");
+				searchPolicyRequest.setRequestDatetimes(policyRequest.getRequestDatetimes());
+				searchPolicyRequest.setRequestDetail(policyRequest.getRequestDetail());
+				searchPolicyRequest.setStatusCode(policyRequest.getStatusCode());
+				searchPolicyRequest.setCrBy(policyRequest.getCrBy());
+				searchPolicyRequest.setCrDtimes(policyRequest.getCrDtimes());
+				searchPolicyRequest.setUpdBy(policyRequest.getUpdBy());
+				searchPolicyRequest.setUpdDtimes(policyRequest.getUpdDtimes());
+				searchPolicyRequest.setIsDeleted(policyRequest.getIsDeleted());
+				searchPolicyRequest.setDelDtimes(policyRequest.getDelDtimes());
+				policyRequestList.add(searchPolicyRequest);
+			});
+		}
 		return policyRequestList;
 	}
 
