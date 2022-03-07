@@ -36,6 +36,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.Type;
@@ -164,6 +165,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
+		chipDetail.setApprovalStatus(CommonConstant.PENDING_CERT_UPLOAD);
 		ftpChipDetailRepository.save(chipDetail);
 		IdDto response = new IdDto();
 		response.setId(chipDetail.getFtpChipDetailId());
@@ -248,6 +250,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		updateObject.setActive(chipDetails.getApprovalStatus());
+		updateObject.setApprovalStatus(
+				chipDetails.getApprovalStatus() == true ? CommonConstant.APPROVED : CommonConstant.REJECTED);
 		ftpChipDetailRepository.save(updateObject);
 		return "Status updated successfully.";
 	}
@@ -326,6 +330,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
 			updateObject.setUpdBy(authN.getName());
 		}
+		updateObject.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		ftpChipDetailRepository.save(updateObject);
 		try {
