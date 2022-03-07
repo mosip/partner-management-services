@@ -46,6 +46,9 @@ public class FTPSearchResponseDto {
 
 	@Column(name="upd_dtimes")
 	private LocalDateTime updDtimes;
+	
+	@Column(name="approval_status",length=36,nullable=false)
+	private String approvalStatus;
 
 	public String getFtpChipDetailId() {
 		return ftpChipDetailId;
@@ -149,5 +152,13 @@ public class FTPSearchResponseDto {
 
 	public void setUpdDtimes(LocalDateTime updDtimes) {
 		this.updDtimes = updDtimes;
+	}
+	
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
 	}
 }
