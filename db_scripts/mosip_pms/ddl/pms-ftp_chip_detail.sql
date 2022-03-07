@@ -26,6 +26,7 @@ CREATE TABLE pms.ftp_chip_detail(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+	approval_status character varying(36) NOT NULL,
 	CONSTRAINT pk_fcdtl_id PRIMARY KEY (id),
 	CONSTRAINT uk_fcdtl_id UNIQUE (foundational_trust_provider_id,make,model)
 
@@ -58,4 +59,6 @@ COMMENT ON COLUMN pms.ftp_chip_detail.upd_dtimes IS 'Updated DateTimestamp : Dat
 COMMENT ON COLUMN pms.ftp_chip_detail.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
 -- ddl-end --
 COMMENT ON COLUMN pms.ftp_chip_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.approval_status IS 'approval_status : Status of the record. Status will be pending_cert_upload,pending_approval,approved or rejected';
 -- ddl-end --
