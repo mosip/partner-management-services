@@ -41,7 +41,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
-import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
@@ -216,6 +215,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${pms.certs.datashare.subscriberId}")
 	private String subscriberId;
+	
+	@Value("${mosip.mandatory-languages}")
+	private String mandatoryLanguges;
+
+	@Value("${mosip.optional-languages}")
+	private String optionalLanguges;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -261,12 +266,12 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-		if (request.getLangCode() != null && !getSystemMandatoryLanguageCodes().contains(request.getLangCode())) {
+		if (request.getLangCode() != null && !getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
 					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
 		}else {
-			request.setLangCode(getSystemMandatoryLanguageCodes().get(0));
+			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
@@ -1519,8 +1524,8 @@ public class PartnerServiceImpl implements PartnerService {
 	 * 
 	 * @return
 	 */
-	public List<String> getSystemMandatoryLanguageCodes() {		
-		return List.of(environment.getProperty(ConfigKeyConstants.MOSIP_MANDATORY_LANGUAGES, "eng").split(","));
+	public List<String> getSystemSupportedLanguageCodes() {
+		return List.of((mandatoryLanguges + "," + optionalLanguges).split(","));
 	}
 	
 	/**
