@@ -1525,7 +1525,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @return
 	 */
 	public List<String> getSystemSupportedLanguageCodes() {
-		return List.of(mandatoryLanguges + "," + optionalLanguges);
+		return List.of((mandatoryLanguges + "," + optionalLanguges).split(","));
 	}
 	
 	/**
