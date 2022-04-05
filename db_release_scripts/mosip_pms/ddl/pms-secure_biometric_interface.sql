@@ -41,8 +41,6 @@ COMMENT ON COLUMN pms.secure_biometric_interface.sw_binary_hash IS 'Software Bin
 -- ddl-end --
 COMMENT ON COLUMN pms.secure_biometric_interface.sw_version IS 'Software Version : Version of the stored software';
 -- ddl-end --
-COMMENT ON COLUMN pms.secure_biometric_interface.device_detail_id IS 'Device Detail ID:';
--- ddl-end --
 COMMENT ON COLUMN pms.secure_biometric_interface.sw_cr_dtimes IS 'Software Created Date Time: Date and Time on which this software is created';
 -- ddl-end --
 COMMENT ON COLUMN pms.secure_biometric_interface.sw_expiry_dtimes IS 'Software Expiry Date Time: Expiry date and time of the device software';
