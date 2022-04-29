@@ -239,7 +239,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key requests of partner", description = "Service to get api key requests of partner")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
@@ -285,7 +285,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/certificate/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload partner certificate", description = "Service to upload partner certificate")
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
@@ -306,7 +306,7 @@ public class PartnerServiceController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/certificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner certificate", description = "Service to get partner certificate")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
@@ -320,7 +320,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search partner details", description = "Service to search partner details")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
@@ -367,7 +367,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/request/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search api key requests", description = "Service to search api key requests")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -379,7 +379,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search api key", description = "Service to search api key")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -389,7 +389,7 @@ public class PartnerServiceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
@@ -410,7 +410,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER','PARTNER_ADMIN')")
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
 	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
@@ -424,7 +424,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(

@@ -224,7 +224,7 @@ public class PolicyManagementController {
 
 	@ResponseFilter
 	@PostMapping("/group/search")
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','POLICYMANAGER','PARTNER_ADMIN')")
 	@Operation(summary = "Service to search policy group", description = "Service to search policy group")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
