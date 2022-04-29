@@ -124,12 +124,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * 
 	 * @return
 	 */
-	private String generate() {
+	private String generateLicenseKey() {
 		String chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	    SecureRandom secureRandom = new SecureRandom();
-	    String customTag = secureRandom.ints(licenseKeyLength, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
-	      .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
-	    return customTag;
+		SecureRandom secureRandom = new SecureRandom();
+		String licenseKey = secureRandom.ints(licenseKeyLength, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+		return licenseKey;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	private MISPLicenseEntity generateLicense(String mispId) {
 		MISPLicenseEntity entity = new MISPLicenseEntity();
 		entity.setMispId(mispId);
-		entity.setLicenseKey(generate());
+		entity.setLicenseKey(generateLicenseKey());
 		entity.setValidFromDate(LocalDateTime.now());
 		entity.setValidToDate(LocalDateTime.now().plusDays(mispLicenseExpiryInDays));
 		entity.setCreatedBy(getLoggedInUserId());
