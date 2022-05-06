@@ -86,7 +86,7 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(getUserId());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
 		auditRequestDto.setEventType(PartnerManageEnum.getType());
 		auditRequestDto.setEventName(PartnerManageEnum.getName());
