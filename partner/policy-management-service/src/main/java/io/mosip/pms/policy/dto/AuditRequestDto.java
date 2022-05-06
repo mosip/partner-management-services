@@ -1,11 +1,7 @@
 package io.mosip.pms.policy.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,8 +27,7 @@ public class AuditRequestDto {
 	private String eventType;
 
 	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private LocalDateTime actionTimeStamp;
+	private String actionTimeStamp;
 
 	@NotNull
 	@Size(min = 1, max = 128)
