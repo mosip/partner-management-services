@@ -110,7 +110,7 @@ public class AuditUtil {
 		auditRequestDto.setModuleId("PMP-AUT");
 		auditRequestDto.setModuleName("partner service");
 		auditRequestDto.setDescription(description);
-		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		auditRequestDto.setHostIp(hostIpAddress);
 		auditRequestDto.setHostName(hostName);
 		auditRequestDto.setApplicationId(APPLICATION_ID);
@@ -130,7 +130,7 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
 		auditRequestDto.setEventType(PartnerManageEnum.getType());
 		auditRequestDto.setEventName(PartnerManageEnum.getName());
@@ -151,7 +151,7 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
 		auditRequestDto.setEventType(PartnerManageEnum.getType());
 		auditRequestDto.setEventName(PartnerManageEnum.getName());
