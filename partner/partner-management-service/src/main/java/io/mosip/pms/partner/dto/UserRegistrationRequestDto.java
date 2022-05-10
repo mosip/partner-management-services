@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegistrationRequestDto {
+	
 	@NotBlank(message = "should not be null or empty")
 	private String userName;
 

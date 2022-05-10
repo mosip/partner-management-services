@@ -68,6 +68,8 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 				Arrays.asList(new SimpleGrantedAuthority("PARTNER"))));
 		users.add(new User("zonal-admin", "admin",
 				Arrays.asList(new SimpleGrantedAuthority("ZONAL_ADMIN"))));
+		users.add(new User("partner-admin", "admin",
+				Arrays.asList(new SimpleGrantedAuthority("PARTNER_ADMIN"))));
 		return new InMemoryUserDetailsManager(users);
 	}
 }
