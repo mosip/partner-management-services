@@ -50,6 +50,10 @@ public class AuditUtil {
 
 	/** The Constant UNKNOWN_HOST. */
 	private static final String UNKNOWN_HOST = "Unknown Host";
+	
+	private static final String NOID = "NO_ID";
+	
+	private static final String NOIDTYPE= "NO_ID_TYPE";
 
 	private String hostIpAddress = null;
 
@@ -84,11 +88,15 @@ public class AuditUtil {
 
 	public void auditRequest(String eventName, String eventType, String description) {
 		String eventId = "ADM-" + eventCounter.incrementAndGet();
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId, NOID, NOIDTYPE);
 	}
 
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId, NOID, NOIDTYPE);
+	}
+	
+	public void auditRequest(String eventName, String eventType, String description, String eventId, String refId, String refIdType) {
+		setAuditRequestDto(eventName, eventType, description, eventId, refId, refIdType);
 	}
 
 	/**
@@ -96,15 +104,15 @@ public class AuditUtil {
 	 *
 	 * @param auditRequestDto the new audit request dto
 	 */
-	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId) {
+	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId, String refId, String refIdType) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		if (!validateSecurityContextHolder()) {
 
 		}
 
 		auditRequestDto.setEventId(eventId);
-		auditRequestDto.setId("NO_ID");
-		auditRequestDto.setIdType("NO_ID_TYPE");
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
 		auditRequestDto.setEventName(eventName);
 		auditRequestDto.setEventType(eventType);
 		auditRequestDto.setModuleId("PMP-AUT");
@@ -142,6 +150,27 @@ public class AuditUtil {
 		callAuditManager(auditRequestDto);
 	}
 	
+	public void setAuditRequestDto(io.mosip.pms.partner.manager.constant.PartnerManageEnum PartnerManageEnum, String refId, String refIdType) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+	
 	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		auditRequestDto.setHostIp(hostIpAddress);
@@ -160,6 +189,27 @@ public class AuditUtil {
 		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
 		auditRequestDto.setId(PartnerManageEnum.getId());
 		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
+		callAuditManager(auditRequestDto);
+	}
+	
+	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum, String refId, String refIdType) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refId);
 		callAuditManager(auditRequestDto);
 	}
 

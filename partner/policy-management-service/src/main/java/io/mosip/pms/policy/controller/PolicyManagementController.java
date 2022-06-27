@@ -72,7 +72,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -87,7 +87,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyGroupCreateResponseDto> updatePolicyGroup(@PathVariable String policygroupId,
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policygroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -104,7 +104,7 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY, createRequest.getRequest().getName(), "policyName");
 		PolicyCreateResponseDto responseDto = policyManagementService.
 				createPolicies(createRequest.getRequest());		
 		response.setId(createRequest.getId());
@@ -120,7 +120,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyResponseDto> publishPolicy(@PathVariable @Valid String policygroupId,
 			@PathVariable @Valid String policyId) throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<PolicyResponseDto> response = new ResponseWrapper<PolicyResponseDto>();
-		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY, policyId, "policyId");
 		PolicyResponseDto responseDto = policyManagementService.publishPolicy(policygroupId, policyId);
 		response.setResponse(responseDto);
 		return response;
@@ -133,7 +133,7 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY, updateRequestDto.getRequest().getName(), "policyName");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),
 				policyId);
@@ -152,7 +152,7 @@ public class PolicyManagementController {
 			@PathVariable String policyId) throws Exception {
 		PolicyStatusUpdateRequestDto statusUpdateRequest = requestDto.getRequest();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS);
+		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_STATUS, policyId, "policyId");
 		ResponseWrapper<PolicyStatusUpdateResponseDto> response =  policyManagementService.
 				updatePolicyStatus(statusUpdateRequest,policygroupId,policyId);	
 		response.setId(requestDto.getId());

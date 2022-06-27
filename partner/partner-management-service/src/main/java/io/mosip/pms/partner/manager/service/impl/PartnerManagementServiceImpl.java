@@ -131,13 +131,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		PartnerPolicy partnerPolicyFromDb = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndApikey(partnerId,
 				request.getOldPolicyID(), partnerApikey);
 		if (partnerPolicyFromDb == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_POLICY_MAPPING_NOTEXISTS.getErrorCode(),
 					ErrorCode.PARTNER_APIKEY_POLICY_MAPPING_NOTEXISTS.getErrorMessage());
 
 		}
 		if (!partnerPolicyFromDb.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
@@ -151,26 +151,26 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		partnersPolicyMappingResponse.setMessage("Given apikey updated with policy successfully. ");
 		notify(null, null, MapperUtils.mapKeyDataToPublishDto(updateObject), EventType.APIKEY_UPDATED);
-		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_SUCCESS, partnerId, "partnerId");
 		return partnersPolicyMappingResponse;
 	}
 
 	private AuthPolicy validateAndGetPolicyOfPolicyGroup(String policyGroupId, String policyId) {
 		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndId(policyGroupId, policyId);
 		if (authPolicy == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage() + policyId);
 
 		}
 		if (!authPolicy.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage() + policyId);
 
 		}
 		if (!authPolicy.getPolicyGroup().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage() + policyId);
 		}
@@ -182,7 +182,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			StatusRequestDto request) {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 		if (partnerFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);			
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE, partnerId, "partnerId");			
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
@@ -203,7 +203,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			}
 			response.setMessage("Partner activated successfully");			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS, partnerId, "partnerId");
 			return response;
 		}
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
@@ -229,10 +229,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				sendNotifications(EventType.PARTNER_UPDATED, updatePartnerObject);
 			}
 			response.setMessage("Partner de-activated successfully");
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_SUCCESS, partnerId, "partnerId");
 			return response;
 		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_KYC_PARTNERS_FAILURE, partnerId, "partnerId");
 		LOGGER.info(request.getStatus() + " : is Invalid Input Parameter, it should be (Active/De-Active)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorMessage());
@@ -412,27 +412,27 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private AuthPolicy validatePolicy(String policyId) {
 		Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(policyId);
 		if (authPolicy.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_EXCEPTION.getErrorMessage());
 		}
 		if (!authPolicy.get().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 		if (authPolicy.get().getPolicyGroup() == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
 		}
 		if (!authPolicy.get().getPolicyGroup().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
 		if (authPolicy.get().getValidToDate().isBefore(LocalDateTime.now())) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GET_PARTNER_POLICY_MAPPING_FAILURE, policyId, "policyId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_EXPIRED_EXCEPTION.getErrorMessage());
 		}
@@ -532,7 +532,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		AuthPolicy validPolicy = authPolicyRepository.findByPolicyName(requestDto.getPolicyName());
 		if(validPolicy == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());			
 		}		
@@ -540,25 +540,25 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, validPolicy.getId(),
 						PartnerConstants.APPROVED);
 		if (approvedMappedPolicy.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}		
 		Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 		if (partnerFromDb.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		if (!partnerFromDb.get().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
 				partnerFromDb.get().getId(), validPolicy.getId(), requestDto.getLabel());
 		if(policyByLabel != null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorMessage());
 		}
@@ -583,7 +583,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		response.setLabel(partnerPolicy.getLabel());
 		response.setPartnerId(partnerId);
 		response.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
 		return response;	
 	}
 
@@ -596,7 +596,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(updateObject);			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping approved successfully";
 		}
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
@@ -604,10 +604,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.REJECTED);
 			partnerPolicyRequestRepository.save(updateObject);			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping rejected successfully";
 		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
 		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
@@ -618,7 +618,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId,
 				request.getLabel());
 		if(policyByLabel == null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorMessage());
 		}
@@ -628,7 +628,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			policyByLabel.setIsActive(true);
 			notify(null, null, MapperUtils.mapKeyDataToPublishDto(policyByLabel), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(policyByLabel);			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS, partnerId, "partnerId");
 			sendNotifications(EventType.APIKEY_STATUS_UPDATED, policyByLabel.getPartner(), policyByLabel);
 			return "Partner apikey activated successfully.";
 		}
@@ -636,11 +636,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			policyByLabel.setIsActive(false);
 			notify(null, null, MapperUtils.mapKeyDataToPublishDto(policyByLabel), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(policyByLabel);			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS, partnerId, "partnerId");
 			sendNotifications(EventType.APIKEY_STATUS_UPDATED, policyByLabel.getPartner(), policyByLabel);
 			return "Partner apikey de-activated successfully.";
 		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED, partnerId, "partnerId");
 		LOGGER.info(request.getStatus() + " : is Invalid Input Parameter, it should be (Active/De-Active)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorMessage());

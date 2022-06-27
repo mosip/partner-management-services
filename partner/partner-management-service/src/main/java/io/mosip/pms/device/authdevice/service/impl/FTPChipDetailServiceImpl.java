@@ -132,7 +132,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpProviderId(), "partnerId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());
 
@@ -147,7 +147,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpProviderId(), "partnerId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
 			
@@ -183,7 +183,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
@@ -197,7 +197,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorMessage());		
 			
@@ -227,7 +227,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());
 		}
@@ -239,7 +239,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", chipDetails.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage());
 		}
@@ -269,7 +269,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", ftpChipCertRequestDto.getFtpChipDeatilId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorMessage());
 		}
@@ -282,7 +282,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", ftpChipCertRequestDto.getFtpChipDeatilId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
@@ -294,7 +294,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", ftpChipCertRequestDto.getFtpChipDeatilId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorMessage());		
 			
@@ -357,7 +357,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", certDownloadRequestDto.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
 		}
@@ -369,7 +369,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
 							FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", certDownloadRequestDto.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage());		
 	

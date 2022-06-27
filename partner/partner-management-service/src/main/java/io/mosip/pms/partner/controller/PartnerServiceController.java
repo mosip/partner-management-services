@@ -96,7 +96,8 @@ public class PartnerServiceController {
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, request.getRequest().getPartnerId(),
+				"partnerId");
 		partnerResponse = partnerService.savePartner(partnerRequest);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -117,7 +118,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS, partnerId, "partnerId");
 		response.setResponse(partnerService.addBiometricExtractors(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -153,7 +154,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE, partnerId, "partnerId");
 		response.setResponse(partnerService.mapPartnerPolicyCredentialType(credentialType, partnerId, policyName));
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
@@ -178,7 +179,7 @@ public class PartnerServiceController {
 	@Operation(summary = "Service to add additional contact deatils of partner", description = "Service to add additional contact deatils of partner")
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS, partnerId, "partnerId");
 		response.setResponse(partnerService.createAndUpdateContactDetails(request.getRequest(),partnerId));
 		response.setId(request.getId());
 																																																										response.setVersion(request.getVersion());
@@ -201,7 +202,7 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerUpdateRequest partnerRequest = request.getRequest();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER, partnerId, "partnerId");
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -291,7 +292,7 @@ public class PartnerServiceController {
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateUploadRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT, partnerCertRequestDto.getRequest().getPartnerId(),"partnerId");
 		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		return response;
 	}
@@ -395,7 +396,7 @@ public class PartnerServiceController {
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
 			@PathVariable("policygroupName") @NotNull String policygroupName) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, partnerId, "partnerId");
 		response.setResponse(partnerService.updatePolicyGroup(partnerId, policygroupName));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
@@ -405,7 +406,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
 		ResponseWrapper<EmailVerificationResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, request.getRequest().getEmailId(), "email");
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -416,7 +417,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER, partnerId, "partnerId");
 		ResponseWrapper<PartnerPolicyMappingResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.requestForPolicyMapping(request.getRequest(), partnerId));
 		response.setId(request.getId());
@@ -431,7 +432,7 @@ public class PartnerServiceController {
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<APIKeyGenerateRequestDto> request) {
 		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
 		response.setResponse(partnerManagerService.generateAPIKey(partnerId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
