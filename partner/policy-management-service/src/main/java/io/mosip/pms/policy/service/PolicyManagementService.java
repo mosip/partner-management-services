@@ -376,7 +376,7 @@ public class PolicyManagementService {
 			throws JsonParseException, JsonMappingException, IOException {
 		AuthPolicy authPolicy = checkMappingExists(policyGroupName, policyName, false,PolicyManageEnum.PUBLISH_POLICY_FAILURE);
 		if (authPolicy.getPolicySchema() != null) {			
-			auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_FAILURE, policyName, "policyName");
+			auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_FAILURE, policyName, "policyId");
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_PUBLISHED.getErrorCode(),
 					ErrorMessages.POLICY_PUBLISHED.getErrorMessage());
 		}
@@ -387,7 +387,7 @@ public class PolicyManagementService {
 		authPolicyRepository.save(authPolicy);
 		insertIntoAuthPolicyH(authPolicy);
 		notify(authPolicy.getId());		
-		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS, policyName, "policyName");
+		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS, policyName, "policyId");
 		return mapPolicyAndPolicyGroup(authPolicy);
 	}
 
