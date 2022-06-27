@@ -60,7 +60,7 @@ public class SecureBiometricInterfaceController {
 				DeviceConstant.CREATE_API_IS_CALLED + SecureBiometricInterfaceCreateDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.CREATE_API_IS_CALLED + SecureBiometricInterfaceCreateDto.class.getCanonicalName(),
-				"AUT-011");
+				"AUT-011", secureBiometricInterfaceCreateDto.getRequest().getProviderId(), "partnerId");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(secureBiometricInterface
 				.createSecureBiometricInterface(secureBiometricInterfaceCreateDto.getRequest()));
@@ -69,7 +69,7 @@ public class SecureBiometricInterfaceController {
 						SecureBiometricInterfaceCreateDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM, String.format(DeviceConstant.SUCCESSFUL_CREATE,
 						SecureBiometricInterfaceCreateDto.class.getCanonicalName()),
-				"AUT-012");
+				"AUT-012", secureBiometricInterfaceCreateDto.getRequest().getProviderId(), "partnerId");
 		return responseWrapper;
 
 	}
@@ -87,7 +87,7 @@ public class SecureBiometricInterfaceController {
 				DeviceConstant.UPDATE_API_IS_CALLED + SecureBiometricInterfaceUpdateDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.UPDATE_API_IS_CALLED + SecureBiometricInterfaceUpdateDto.class.getCanonicalName(),
-				"AUT-013");
+				"AUT-013", secureBiometricInterfaceUpdateDto.getRequest().getId(), "sbiId");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(secureBiometricInterface
 				.updateSecureBiometricInterface(secureBiometricInterfaceUpdateDto.getRequest()));
@@ -96,7 +96,7 @@ public class SecureBiometricInterfaceController {
 						SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM, String.format(DeviceConstant.SUCCESSFUL_UPDATE,
 						SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
-				"AUT-012");
+				"AUT-012", secureBiometricInterfaceUpdateDto.getRequest().getId(), "sbiId");
 		return responseWrapper;
 	}
 
@@ -113,7 +113,7 @@ public class SecureBiometricInterfaceController {
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
-				"AUT-006");
+				"AUT-006", secureBiometricInterfaceStatusUpdateDto.getRequest().getId(), "sbiId");
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(secureBiometricInterface
 				.updateSecureBiometricInterfaceStatus(secureBiometricInterfaceStatusUpdateDto.getRequest()));
@@ -121,7 +121,7 @@ public class SecureBiometricInterfaceController {
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE, UpdateDeviceDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE, UpdateDeviceDetailStatusDto.class.getCanonicalName()),
-				"AUT-007");
+				"AUT-007", secureBiometricInterfaceStatusUpdateDto.getRequest().getId(), "sbiId");
 
 		return responseWrapper;
 	}

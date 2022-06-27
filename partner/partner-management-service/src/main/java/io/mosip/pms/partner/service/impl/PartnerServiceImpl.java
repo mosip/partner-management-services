@@ -235,46 +235,54 @@ public class PartnerServiceImpl implements PartnerService {
 		// Registered partner cannot create another partner 
 		String loggedInUserEmail = getLoggedInUserEmail();
 		if(loggedInUserEmail != null && isPartnerExistsWithEmail(loggedInUserEmail).getEmailExists()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
 		if (!validateMobileNumeber(request.getContactNumber())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
 
 		if (!validateEmail(request.getEmailId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
 		if(isInputStringContainsSpaces(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
 					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage() + partnerIdMaxLength);
 		}		
 		if (!validatePartnerIdLength(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
 		}
 
 		if (!validatePartnerByEmail(request.getEmailId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
 		if (request.getLangCode() != null && !getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
 					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
 		}else {
 			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
@@ -292,7 +300,8 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerResponse.setPartnerId(partner.getId());
 		partnerResponse.setStatus(partner.getApprovalStatus());
 		sendNotifications(EventType.PARTNER_REGISTRED, partner);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_SUCCESS, request.getPartnerId(),
+				"partnerId");
 		return partnerResponse;
 	}
 
@@ -342,13 +351,13 @@ public class PartnerServiceImpl implements PartnerService {
 		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(policyGroupName);
 		if (policyGroupFromDb == null) {
 			LOGGER.error(policyGroupName + " : Policy Group is not available");
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, policyGroupName, "policyGroupName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
 		}
 		if(!policyGroupFromDb.getIsActive()) {
 			LOGGER.error("Policy group with name" + policyGroupName + " : is not active");
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, policyGroupName, "policyGroupName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());			
 		}
@@ -361,7 +370,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.filter(pt -> pt.getCode().equalsIgnoreCase(partnerType)).findFirst();
 		if (validPartnerType.isEmpty()) {
 			LOGGER.error(partnerType + " : partnerType is not available.");
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerType, "partnerType");
 			throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorCode(),
 					ErrorCode.PARTNER_TYPE_DOES_NOT_EXIST.getErrorMessage());
 		}
@@ -441,13 +450,13 @@ public class PartnerServiceImpl implements PartnerService {
 	private Partner getValidPartner(String partnerId, boolean isToRetrieve) {
 		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
 		if (partnerById.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		if (!isToRetrieve) {
 			if (!partnerById.get().getIsActive()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
 				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
@@ -469,7 +478,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest, String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
 		if (!validateMobileNumeber(partnerUpdateRequest.getContactNumber())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		};
@@ -483,32 +492,32 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerResponse updateResponse = new PartnerResponse();
 		updateResponse.setPartnerId(partner.getId());
 		updateResponse.setStatus(partner.getApprovalStatus());
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_SUCCESS, partnerId, "partnerId");
 		return updateResponse;
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
 		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, policyName);
 		if (authPolicyFromDb == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
 					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
 		}
 
 		if (!authPolicyFromDb.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 
 		}
 		if (authPolicyFromDb.getValidToDate().isBefore(LocalDateTime.now())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorCode(),
 					ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorMessage());
 
 		}
 		if (!authPolicyFromDb.getPolicyGroup().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
@@ -551,13 +560,13 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
 		if (!validateEmail(request.getEmailId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 		}
 
 		if (!validateMobileNumeber(request.getContactNumber())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
@@ -586,7 +595,7 @@ public class PartnerServiceImpl implements PartnerService {
 			resultMessage = "Contacts details added successfully.";
 		}
 		partnerContactRepository.save(contactsFromDb);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_SUCCESS, partnerId, "partnerId");
 		return resultMessage;
 	}
 
@@ -634,7 +643,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorMessage());
 		}
@@ -657,17 +666,17 @@ public class PartnerServiceImpl implements PartnerService {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
 		if (responseObject == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
@@ -676,7 +685,7 @@ public class PartnerServiceImpl implements PartnerService {
 		try {
 			signedPartnerCert = getPartnerCertFromChain(responseObject.getSignedCertificateData());
 		} catch (Exception ex) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 			LOGGER.error("Error occured while extracting the leaf cert", ex);
 			throw new PartnerServiceException(ErrorCode.P7B_CERTDATA_ERROR.getErrorCode(),
 					ErrorCode.P7B_CERTDATA_ERROR.getErrorMessage());
@@ -692,7 +701,7 @@ public class PartnerServiceImpl implements PartnerService {
 		notify(MapperUtils.mapDataToPublishDto(updateObject, signedPartnerCert), EventType.PARTNER_UPDATED);
 		notify(getDataShareurl(responseObject.getSignedCertificateData()), partnerCertRequesteDto.getPartnerDomain());
 		responseObject.setSignedCertificateData(signedPartnerCert);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_SUCCESS, partnerCertRequesteDto.getPartnerId(), "partnerId");
 		return responseObject;
 	}	
 
@@ -717,7 +726,7 @@ public class PartnerServiceImpl implements PartnerService {
 			responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
 					CACertificateResponseDto.class);
 		} catch (Exception e) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerId, "partnerId");
 			LOGGER.error("Error occured while mapping the response of upload other domain cert api ", e);
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
@@ -727,11 +736,11 @@ public class PartnerServiceImpl implements PartnerService {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerId, "partnerId");
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerId, "partnerId");
 				LOGGER.error("Error occured while mapping the response of upload other domain cert api ",
 						certServiceErrorList);
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
@@ -739,7 +748,7 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 		}
 		if (responseObject == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerId, "partnerId");
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
@@ -793,7 +802,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
 		if (isApprovedPolicyRequestExists(partnerId, policyId)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorMessage());
 		}
@@ -824,7 +833,7 @@ public class PartnerServiceImpl implements PartnerService {
 			extractorProvider.setIsDeleted(false);
 			extractorProviderRepository.save(extractorProvider);
 		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_SUCCESS, partnerId, "partnerId");
 		return "Extractors added successfully.";
 
 	}
@@ -924,7 +933,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
 					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
 		}
@@ -946,7 +955,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private void validateCredentialTypes(String credentialType) {
 		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, credentialType, "credentialType");
 			throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
 					ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
 		}
@@ -1350,7 +1359,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 
-	/**
+	/** 
 	 * Method to extract the leaf certificate from complete chain of a certificate.
 	 * 
 	 * @param certChain
@@ -1426,13 +1435,13 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_MAP_ACTIVE_PARTNER.getErrorMessage());
 		}		
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());		
 		if (!partnerType.getIsPolicyRequired()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_REQUIRED.getErrorMessage());
 		}		
@@ -1441,7 +1450,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerRepository.save(partner);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS, partnerId, "partnerId");
 		return "Success";
 	}
 
@@ -1471,7 +1480,7 @@ public class PartnerServiceImpl implements PartnerService {
 		validateLoggedInUserAuthorization(partnerId);
 		Partner partner = getValidPartner(partnerId, false);
 		if(partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
 					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
 		}
@@ -1482,12 +1491,12 @@ public class PartnerServiceImpl implements PartnerService {
 				.findByPartnerIdAndPolicyId(partnerId, authPolicy.getId());
 		
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.IN_PROGRESS))) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
 		}
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED))) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.APPROVED));
 		}
@@ -1503,7 +1512,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
 		partnerPolicyRequest.setIsDeleted(false);
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS, partnerId, "partnerId");
 		response.setMappingkey(partnerPolicyRequest.getId());
 		response.setMessage("Policy mapping request submitted successfully.");
 		return response;

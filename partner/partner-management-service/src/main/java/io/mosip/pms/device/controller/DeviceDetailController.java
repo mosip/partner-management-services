@@ -67,7 +67,7 @@ public class DeviceDetailController {
 				DeviceConstant.CREATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.CREATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
-				"AUT-001");
+				"AUT-001", deviceDetailRequestDto.getRequest().getDeviceProviderId(), "partnerId");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 		.setResponse(deviceDetaillService.createDeviceDetails(deviceDetailRequestDto.getRequest()));
@@ -75,7 +75,7 @@ public class DeviceDetailController {
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
 				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
-				"AUT-005");
+				"AUT-005", deviceDetailRequestDto.getRequest().getDeviceProviderId(), "partnerId");
 		return responseWrapper;
 
 	}
@@ -101,7 +101,7 @@ public class DeviceDetailController {
 				DeviceConstant.UPDATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.UPDATE_API_IS_CALLED + DeviceDetailDto.class.getCanonicalName(),
-				"AUT-006");
+				"AUT-006", deviceDetailRequestDto.getRequest().getId(), "deviceDetailId");
 		ResponseWrapper<IdDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 		.setResponse(deviceDetaillService.updateDeviceDetails(deviceDetailRequestDto.getRequest()));
@@ -109,7 +109,7 @@ public class DeviceDetailController {
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetailDto.class.getCanonicalName()),
-				"AUT-007");
+				"AUT-007", deviceDetailRequestDto.getRequest().getId(), "deviceDetailId");
 		return responseWrapper;
 	}
 	
@@ -131,7 +131,7 @@ public class DeviceDetailController {
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
 				DeviceConstant.STATUS_UPDATE_API_IS_CALLED + UpdateDeviceDetailStatusDto.class.getCanonicalName(),
-				"AUT-006");
+				"AUT-006", deviceDetailRequestDto.getRequest().getId(), "deviceDetailId");
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 		.setResponse(deviceDetaillService.updateDeviceDetailStatus(deviceDetailRequestDto.getRequest()));
@@ -139,7 +139,7 @@ public class DeviceDetailController {
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
 				DeviceConstant.AUDIT_SYSTEM,
 				String.format(DeviceConstant.SUCCESSFUL_UPDATE , UpdateDeviceDetailStatusDto.class.getCanonicalName()),
-				"AUT-007");
+				"AUT-007", deviceDetailRequestDto.getRequest().getId(), "deviceDetailId");
 
 		return responseWrapper;
 	}
