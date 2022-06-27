@@ -209,7 +209,7 @@ public class AuditUtil {
 		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
 		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
 		auditRequestDto.setId(refId);
-		auditRequestDto.setIdType(refId);
+		auditRequestDto.setIdType(refIdType);
 		callAuditManager(auditRequestDto);
 	}
 
