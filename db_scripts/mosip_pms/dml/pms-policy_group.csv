@@ -5,3 +5,4 @@ mpolicygroup-deafult-print,mpolicygroup-deafult-print,mpolicygroup-deafult-print
 mpolicygroup-default-mockdevice,mmpolicygroup-default-mockdevice,mpolicygroup-default-mockdevice,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-deafult-resident,mpolicygroup-deafult-resident,mpolicygroup-deafult-resident,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-adjudication,mpolicygroup-default-adjudication, mpolicygroup-deafult-resident,superadmin,TRUE,superadmin,now(),superadmin,now()
+mpolicygroup-deafult-digitalcard,mpolicygroup-deafult-digitalcard,mpolicygroup-deafult-digitalcard,superadmin,TRUE,superadmin,now(),superadmin,now()

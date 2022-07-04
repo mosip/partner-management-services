@@ -11,3 +11,6 @@ id,part_id,policy_id,attribute_name,extractor_provider,extractor_provider_versio
 146107,mpartner-default-print,mpolicy-default-reprint,photo,mock,1.1,face,,admin,now(),admin,now()
 146108,mpartner-default-print,mpolicy-default-reprint,iris,mock,1.1,iris,,admin,now(),admin,now()
 146109,mpartner-default-print,mpolicy-default-reprint,fingerprint,mock,1.1,finger,,admin,now(),admin,now()
+146110,mpartner-default-digitalcard,mpolicy-default-PDFCard,photo,mock,1.1,face,,admin,now(),admin,now()
+146111,mpartner-default-digitalcard,mpolicy-default-PDFCard,iris,mock,1.1,iris,,admin,now(),admin,now()
+146112,mpartner-default-digitalcard,mpolicy-default-PDFCard,fingerprint,mock,1.1,finger,,admin,now(),admin,now()
