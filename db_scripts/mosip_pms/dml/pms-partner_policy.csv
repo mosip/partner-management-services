@@ -7,3 +7,4 @@ mpolicy_part_reprint_api,mpartner-default-print,mpolicy-default-reprint,now(),12
 mpolicy_part_resident_api,mpartner-default-resident,mpolicy-default-resident,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_adjudica_api,mpartner-default-adjudication,mpolicy-default-adjudication,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_PDFCard_api,mpartner-default-digitalcard,mpolicy-default-PDFCard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_digitalcard_api,mpartner-default-print,mpolicy-default-digitalcard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
