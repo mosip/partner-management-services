@@ -9,3 +9,5 @@ mpartner_policy_ajudica_req,mpartner-default-adjudication,mpolicy-default-adjudi
 mpartner_policy_cert_req,mpartner-default-cert,mpolicy-default-cert,now(),mpolicy-default-cert,approved,admin,now(),admin,now()
 mpartner_policy_eUIN_with_QR_req,mpartner-default-print,mpolicy-default-eUIN_with_QR,now(),mpolicy-default-eUIN_with_QR,approved,admin,now(),admin,now()
 mpartner_policy_eUIN_with_faceQR_req,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,now(),mpolicy-default-eUIN_with_faceQR,approved,admin,now(),admin,now()
+mpartner_policy_PDFCard_req,mpartner-default-digitalcard,mpolicy-default-PDFCard,now(),mpolicy-default-PDFCard,Approved,admin,now(),admin,now()
+mpartner_policy_digitalcard_req,mpartner-default-digitalcard,mpolicy-default-digitalcard,now(),mpolicy-default-digitalcard,Approved,admin,now(),admin,now()
