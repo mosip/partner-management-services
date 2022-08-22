@@ -17,3 +17,6 @@ id,part_id,policy_id,attribute_name,extractor_provider,extractor_provider_versio
 146113,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,photo,mock,1.1,face,,admin,now(),admin,now()
 146114,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,iris,mock,1.1,iris,,admin,now(),admin,now()
 146115,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,fingerprint,mock,1.1,finger,,admin,now(),admin,now()
+146116,mpartner-default-digitalcard,mpolicy-default-PDFCard,photo,mock,1.1,face,,admin,now(),admin,now()
+146117,mpartner-default-digitalcard,mpolicy-default-PDFCard,iris,mock,1.1,iris,,admin,now(),admin,now()
+146118,mpartner-default-digitalcard,mpolicy-default-PDFCard,fingerprint,mock,1.1,finger,,admin,now(),admin,now()
