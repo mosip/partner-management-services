@@ -77,6 +77,12 @@ public class Partner implements Serializable {
 	//bi-directional many-to-one association to PartnerPolicyRequest
 	@OneToMany(mappedBy="partner")
 	private List<PartnerPolicyRequest> partnerPolicyRequests;
+	
+	@Column(name = "logo_url")
+	private String logoUrl;
+	
+	@Column(name = "addl_info")
+	private String additionalInfo;
 
 	public Partner() {
 	}
@@ -177,6 +183,14 @@ public class Partner implements Serializable {
 		return this.partnerTypeCode;
 	}
 	
+	public String getLogoUrl() {
+		return this.logoUrl;
+	}
+	
+	public String getAdditionalInfo() {
+		return this.additionalInfo;
+	}
+	
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
@@ -231,6 +245,14 @@ public class Partner implements Serializable {
 
 	public void setPartnerPolicies(List<PartnerPolicy> partnerPolicies) {
 		this.partnerPolicies = partnerPolicies;
+	}
+	
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+	
+	public void setAdditionalInfo(String additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 
 	public PartnerPolicy addPartnerPolicy(PartnerPolicy partnerPolicy) {

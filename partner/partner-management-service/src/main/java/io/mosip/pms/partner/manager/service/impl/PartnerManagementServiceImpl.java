@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -59,6 +60,8 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsDto;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
@@ -242,20 +245,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Override
 	public RetrievePartnerDetailsResponse getAllAuthEKYCPartnersForThePolicyGroup(Optional<String> partnerType) {
 		RetrievePartnerDetailsResponse partnersResponse = new RetrievePartnerDetailsResponse();
-		List<RetrievePartnersDetails> partners = new ArrayList<RetrievePartnersDetails>();
-		List<Partner> partnersFromDb = null;
-		if (partnerType.isPresent() && !partnerType.get().trim().isEmpty()) {
-			partnersFromDb = partnerRepository.findByPartnerType(partnerType.get());
-		} else {
-			partnersFromDb = partnerRepository.findAll();
-		}
+		List<RetrievePartnersDetails> partners = new ArrayList<RetrievePartnersDetails>();		
+		Iterator<Partner> partnerIterat = getPartnersByPartnerType(partnerType).iterator();
 		Partner partner = null;
-		if (partnersFromDb.isEmpty()) {
-			LOGGER.error("Partners not exists in database");
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		Iterator<Partner> partnerIterat = partnersFromDb.iterator();
 		while (partnerIterat.hasNext()) {
 			RetrievePartnersDetails retrievePartnersDetails = new RetrievePartnersDetails();
 			partner = partnerIterat.next();
@@ -271,6 +263,67 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		partnersResponse.setPartners(partners);
 		return partnersResponse;
+	}
+
+	/**
+	 * 
+	 * @param partnerType
+	 * @return
+	 */
+	@Override
+	public PartnerDetailsResponse getPartners(Optional<String> partnerType) {
+		PartnerDetailsResponse partnersResponse = new PartnerDetailsResponse();
+		List<PartnerDetailsDto> partners = new ArrayList<PartnerDetailsDto>();		
+		Iterator<Partner> partnerIterat = getPartnersByPartnerType(partnerType).iterator();
+		Partner partner = null;
+		while (partnerIterat.hasNext()) {
+			PartnerDetailsDto retrievePartnersDetails = new PartnerDetailsDto();
+			partner = partnerIterat.next();
+			retrievePartnersDetails.setPartnerID(partner.getId());
+			retrievePartnersDetails
+			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
+			retrievePartnersDetails.setOrganizationName(partner.getName());
+			retrievePartnersDetails.setContactNumber(partner.getContactNo());
+			retrievePartnersDetails.setEmailId(partner.getEmailId());
+			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
+			retrievePartnersDetails.setLogoUrl(partner.getLogoUrl());
+			retrievePartnersDetails.setAdditionalInfo(
+					partner.getAdditionalInfo() == null ? null : getValidJson(partner.getAdditionalInfo()));
+			partners.add(retrievePartnersDetails);
+		}
+		partnersResponse.setPartners(partners);
+		return partnersResponse;
+
+	}
+	
+	private JsonNode getValidJson(String jsonInString) {
+		try {
+			return mapper.readTree(jsonInString);
+		} catch (IOException e) {
+			LOGGER.error("Given addtional info is not a valid json object ", e);			
+			throw new PartnerManagerServiceException(ErrorCode.JSON_NOT_VALID.getErrorCode(),
+					ErrorCode.JSON_NOT_VALID.getErrorMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param partnerType
+	 * @return
+	 */
+	private List<Partner> getPartnersByPartnerType(Optional<String> partnerType) {
+		List<Partner> partnersFromDb = null;
+		if (partnerType.isPresent() && !partnerType.get().trim().isEmpty()) {
+			partnersFromDb = partnerRepository.findByPartnerType(partnerType.get());
+		} else {
+			partnersFromDb = partnerRepository.findAll();
+		}		
+		if (partnersFromDb.isEmpty()) {
+			LOGGER.error("Partners not exists in database");
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		return partnersFromDb;
 	}
 
 	@Override

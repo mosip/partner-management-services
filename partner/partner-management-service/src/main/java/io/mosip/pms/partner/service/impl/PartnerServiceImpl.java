@@ -107,6 +107,7 @@ import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
+import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
@@ -231,7 +232,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private String emptySpacesRegex = ".*\\s.*";
 	
 	@Override
-	public PartnerResponse savePartner(PartnerRequest request) {
+	public PartnerResponse registerPartner(PartnerRequestDto request) {
 		// Registered partner cannot create another partner 
 		String loggedInUserEmail = getLoggedInUserEmail();
 		if(loggedInUserEmail != null && isPartnerExistsWithEmail(loggedInUserEmail).getEmailExists()) {
@@ -286,6 +287,10 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
 		}
+		
+		if(request.getAdditionalInfo() != null) {
+			isJSONValid(request.getAdditionalInfo().toString());
+		}
 
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
@@ -324,10 +329,12 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setCrBy(partner.getCrBy());
 		partnerHistory.setCrDtimes(Timestamp.valueOf(now));
 		partnerHistory.setId(partnerHPK);
+		partnerHistory.setLogoUrl(partner.getLogoUrl());
+		partnerHistory.setAdditionalInfo(partner.getAdditionalInfo());
 		partnerHRepository.save(partnerHistory);
 	}
 
-	private Partner mapPartnerFromRequest(PartnerRequest request, PolicyGroup policyGroup, String partnerType) {
+	private Partner mapPartnerFromRequest(PartnerRequestDto request, PolicyGroup policyGroup, String partnerType) {
 		Partner partner = new Partner();
 		partner.setId(request.getPartnerId());
 		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
@@ -343,6 +350,8 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setUserId(request.getPartnerId());
 		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
+		partner.setLogoUrl(request.getLogoUrl());
+		partner.setAdditionalInfo(request.getAdditionalInfo()== null ? "[]" : request.getAdditionalInfo().toString());
 		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		return partner;
 	}
@@ -1547,5 +1556,33 @@ public class PartnerServiceImpl implements PartnerService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public PartnerResponse savePartner(PartnerRequest request) {
+		PartnerRequestDto input = new PartnerRequestDto();
+		input.setAddress(request.getAddress());
+		input.setContactNumber(request.getContactNumber());
+		input.setEmailId(request.getEmailId());
+		input.setLangCode(request.getLangCode());
+		input.setOrganizationName(request.getOrganizationName());
+		input.setPartnerId(request.getPartnerId());
+		input.setPartnerType(request.getPartnerType());
+		input.setPolicyGroup(request.getPolicyGroup());
+		return registerPartner(input);
+	}
+	
+	/**
+	 *  Validates string is valid json or not
+	 * @param jsonInString
+	 */
+	private void isJSONValid(String jsonInString) {
+		try {
+			mapper.readTree(jsonInString);
+		} catch (IOException e) {
+			LOGGER.error("Given additionalinfo is not a valid json object ", e);
+			throw new PartnerServiceException(ErrorCode.JSON_NOT_VALID.getErrorCode(),
+					ErrorCode.JSON_NOT_VALID.getErrorMessage());
+		}
 	}
 }

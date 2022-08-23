@@ -40,7 +40,8 @@ public enum ErrorCode {
 	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner"),
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
 	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
-	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized.");
+	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid");
 	
 
 	/**
