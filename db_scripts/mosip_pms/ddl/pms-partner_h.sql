@@ -19,6 +19,8 @@ CREATE TABLE pms.partner_h(
     is_deleted boolean DEFAULT FALSE,
     del_dtimes timestamp,
     lang_code character varying(36),
+	logo_url character varying(256),
+	addl_info character varying,
     CONSTRAINT pk_parth PRIMARY KEY (id,eff_dtimes)
 );
 
