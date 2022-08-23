@@ -81,7 +81,7 @@ public class Partner implements Serializable {
 	@Column(name = "logo_url")
 	private String logoUrl;
 	
-	@Column(name = "addtl_info")
+	@Column(name = "addl_info")
 	private String additionalInfo;
 
 	public Partner() {
