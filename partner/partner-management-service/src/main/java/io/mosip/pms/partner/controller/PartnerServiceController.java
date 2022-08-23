@@ -45,6 +45,7 @@ import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
+import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
@@ -99,6 +100,21 @@ public class PartnerServiceController {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, request.getRequest().getPartnerId(),
 				"partnerId");
 		partnerResponse = partnerService.savePartner(partnerRequest);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setResponse(partnerResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@Operation(summary = "partner registration", description = "Registers partner details")
+	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerRegistration(
+			@RequestBody @Valid RequestWrapper<PartnerRequestDto> request) {
+		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
+		PartnerResponse partnerResponse = null;
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, request.getRequest().getPartnerId(),
+				"partnerId");
+		partnerResponse = partnerService.registerPartner(request.getRequest());
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);

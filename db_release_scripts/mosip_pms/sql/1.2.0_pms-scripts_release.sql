@@ -6,6 +6,8 @@
 -- Created Date		: Dec-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
+-- 15-07-2022           Nagarjuna K          Added dml insert scripts 
+-- 15-07-2022           Nagarjuna K          Merged 1.2.0.1 changes to 1.2.0 release patch
 -- -------------------------------------------------------------------------------------------------
 
 \c mosip_pms sysadmin
@@ -42,6 +44,22 @@ ALTER TABLE pms.partner_policy ALTER COLUMN label SET NOT NULL;
 ALTER TABLE pms.partner ADD COLUMN lang_code character varying(36);
 
 ALTER TABLE pms.partner_h ADD COLUMN lang_code character varying(36);
+
+TRUNCATE TABLE pms.reg_device_type cascade ;
+\COPY pms.reg_device_type (code,name,descr,is_active,cr_by,cr_dtimes) FROM '../dml/pms-reg_device_type.csv' delimiter ',' HEADER  csv;
+
+TRUNCATE TABLE pms.reg_device_sub_type cascade ;
+\COPY pms.reg_device_sub_type (code,dtyp_code,name,descr,is_active,cr_by,cr_dtimes) FROM '../dml/pms-reg_device_sub_type.csv' delimiter ',' HEADER  csv;
+
+TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
+\COPY pms.partner_policy_credential_type (part_id,policy_id,credential_type,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) FROM '../dml/pms-partner_policy_credential_type.csv' delimiter ',' HEADER  csv;
+
+
+ALTER TABLE pms.ftp_chip_detail ADD COLUMN approval_status character varying(36);
+UPDATE pms.ftp_chip_detail SET approval_status='pending_cert_upload' where certificate_alias is null;
+UPDATE pms.ftp_chip_detail SET approval_status='pending_approval' where certificate_alias is not null and is_active =false;
+UPDATE pms.ftp_chip_detail SET approval_status='approved' where certificate_alias is not null and is_active = true;
+ALTER TABLE pms.ftp_chip_detail ALTER COLUMN approval_status SET NOT NULL;
 
 INSERT INTO pms.partner
 (id, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)

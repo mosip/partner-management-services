@@ -61,7 +61,8 @@ public enum ErrorCode {
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
 	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Mapping exists for given policy and partner and is in %s state."),	
 	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
-	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces");
+	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces"),
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid");
 
 	
 	/**
