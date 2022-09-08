@@ -47,6 +47,7 @@ import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
+import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
@@ -220,6 +221,21 @@ public class PartnerServiceController {
 		PartnerUpdateRequest partnerRequest = request.getRequest();
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER, partnerId, "partnerId");
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerId);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setResponse(partnerResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
+	@RequestMapping(value = "/new/{partnerId}", method = RequestMethod.PUT)
+	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
+	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerInfo(
+			@RequestBody @Valid RequestWrapper<PartnerUpdateDto> request, @PathVariable String partnerId) {
+		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
+		PartnerResponse partnerResponse = null;		
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER, partnerId, "partnerId");
+		partnerResponse = partnerService.updatePartnerDetails(request.getRequest(), partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
