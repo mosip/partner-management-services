@@ -109,6 +109,7 @@ import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
+import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -484,7 +485,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest, String partnerId) {
+	public PartnerResponse updatePartnerDetails(PartnerUpdateDto partnerUpdateRequest, String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
 		if (!validateMobileNumeber(partnerUpdateRequest.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE, partnerId, "partnerId");
@@ -492,8 +493,13 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		};
 		Partner partner = getValidPartner(partnerId, true);
+		if(partnerUpdateRequest.getAdditionalInfo() != null) {
+			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
+		}
 		partner.setAddress(partnerUpdateRequest.getAddress());
 		partner.setContactNo(partnerUpdateRequest.getContactNumber());
+		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
+		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerRepository.save(partner);
@@ -1584,5 +1590,15 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.JSON_NOT_VALID.getErrorCode(),
 					ErrorCode.JSON_NOT_VALID.getErrorMessage());
 		}
+	}
+
+	@Override
+	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest, String partnerId) {
+		PartnerUpdateDto updateRequest = new PartnerUpdateDto();
+		updateRequest.setAddress(partnerUpdateRequest.getAddress());
+		updateRequest.setContactNumber(partnerUpdateRequest.getContactNumber());
+		updateRequest.setAdditionalInfo(null);
+		updateRequest.setLogoUrl(null);	
+		return updatePartnerDetails(updateRequest, partnerId);
 	}
 }

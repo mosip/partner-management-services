@@ -24,6 +24,7 @@ import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
+import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -57,6 +58,7 @@ public interface PartnerService {
 	 * @return partnerResponse this class contains status of partner
 	 */
 	public PartnerResponse updatePartnerDetail(PartnerUpdateRequest partnerUpdateRequest,String partnerId);
+	public PartnerResponse updatePartnerDetails(PartnerUpdateDto partnerUpdateRequest,String partnerId);
 	
 	/**
 	 * This method is used to retrieve all API key requests submitted by partner till date.
