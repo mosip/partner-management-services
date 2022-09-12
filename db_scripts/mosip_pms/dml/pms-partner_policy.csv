@@ -11,3 +11,4 @@ mpolicy_part_eUIN_with_QR_api,mpolicy_part_eUIN_with_QR_api,mpartner-default-pri
 mpolicy_part_eUIN_with_faceQR_api,mpolicy_part_eUIN_with_faceQR_api,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_PDFCard_api,mpolicy_part_PDFCard_api,mpartner-default-digitalcard,mpolicy-default-PDFCard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_digitalcard_api,mpolicy_part_PDFCard_api,mpartner-default-digitalcard,mpolicy-default-digitalcard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_mobile_api,mpolicy_part_mobile_api,mpartner-default-mobile,mpolicy-default-mobile,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
