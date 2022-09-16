@@ -5,24 +5,19 @@ import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.SSLContext;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.TrustStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -48,10 +43,21 @@ import io.mosip.pms.common.dto.SecretKeyRequest;
 import io.mosip.pms.common.dto.TokenRequestDTO;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 
+
 @Component
 public class RestUtil {
 
 	private static final Logger logger = PMSLogger.getLogger(RestUtil.class);
+	
+	
+	
+	private RestTemplate localRestTemplate;
+	
+	@Value("${pms.default.httpclient.connections.max.per.host:20}")
+	private int maxConnectionPerRoute;
+
+	@Value("${pms.default.httpclient.connections.max:100}")
+	private int totalMaxConnection;
 
 	@Autowired
 	private Environment environment;
@@ -207,14 +213,15 @@ public class RestUtil {
 	 * @throws KeyStoreException
 	 */
 	public RestTemplate getRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
-				.build();
-		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+	if(localRestTemplate==null) {
+		HttpClientBuilder httpClientBuilder = HttpClients.custom()
+				.setMaxConnPerRoute(maxConnectionPerRoute)
+				.setMaxConnTotal(totalMaxConnection).disableCookieManagement();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);
-		return new RestTemplate(requestFactory);
+		requestFactory.setHttpClient(httpClientBuilder.build());
+		localRestTemplate= new RestTemplate(requestFactory);
+	}
+	return localRestTemplate;
 	}
 
 	/**
