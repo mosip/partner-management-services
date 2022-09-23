@@ -17,3 +17,7 @@ ALTER TABLE pms.partner_h DROP COLUMN logo_url;
 ALTER TABLE pms.partner DROP COLUMN addl_info;
 
 ALTER TABLE pms.partner_h DROP COLUMN addl_info;
+
+UPDATE pms.partner_type SET is_active=false,upd_dtimes =now(), upd_by ='superadmin' WHERE code ='MISP_Partner'
+
+ALTER TABLE pms.misp_license DROP COLUMN policy_id;
