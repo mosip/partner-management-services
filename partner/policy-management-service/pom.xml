@@ -5,28 +5,28 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.1-SNAPSHOT</version>
+		<version>1.2.0.1-B2-SNAPSHOT</version>
 	</parent>
 	
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.0.1-B2-SNAPSHOT</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
 	   <dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-openid-bridge-api</artifactId>
-			<version>1.2.1-SNAPSHOT</version>
+			<version>1.2.0.1-B2-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>policy-validator</artifactId>
-            <version>1.2.1-SNAPSHOT</version>			
+            <version>1.2.0.1-B2-SNAPSHOT</version>			
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.1-SNAPSHOT</version>
+			<version>1.2.0.1-B2-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
