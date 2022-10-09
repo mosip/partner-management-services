@@ -23,6 +23,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.TrustStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -54,6 +55,14 @@ public class RestUtil {
 	private Environment environment;
 
 	private static final String AUTHORIZATION = "Authorization=";
+	
+	private RestTemplate localRestTemplate;
+
+	@Value("${pms.default.httpclient.connections.max.per.host:20}")
+	private int maxConnectionPerRoute;
+
+	@Value("${pms.default.httpclient.connections.max:100}")
+	private int totalMaxConnection;
 
 	@SuppressWarnings("unchecked")
 	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
@@ -169,16 +178,15 @@ public class RestUtil {
 	}
 
 	public RestTemplate getRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
-				.build();
-		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);
-
-		return new RestTemplate(requestFactory);
-
+		if(localRestTemplate==null) {
+			HttpClientBuilder httpClientBuilder = HttpClients.custom()
+					.setMaxConnPerRoute(maxConnectionPerRoute)
+					.setMaxConnTotal(totalMaxConnection).disableCookieManagement();
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClientBuilder.build());
+			localRestTemplate= new RestTemplate(requestFactory);
+		}
+		return localRestTemplate;
 	}
 
 	@SuppressWarnings("unchecked")
