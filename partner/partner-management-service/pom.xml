@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0.1-B1</version>
+		<version>1.2.0.1-SNAPSHOT</version>
 	</parent>
 		
-	<version>1.2.0.1-B1</version>
+	<version>1.2.0.1-SNAPSHOT</version>
 	<artifactId>partner-management-service</artifactId>
 	<name>partner-management-service</name>
 	
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.0.1-B1</version>
+			<version>1.2.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
