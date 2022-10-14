@@ -102,7 +102,6 @@ public class RestUtil {
 				restTemplate = getRestTemplate();
 				result = (T) restTemplate.postForObject(builder.toUriString(), setRequestHeader(requestType, mediaType),
 						responseClass);
-
 			} catch (Exception e) {
 				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
 				throw new ApiAccessibleException(
@@ -111,6 +110,46 @@ public class RestUtil {
 			}
 		}
 		return result;
+	}
+
+	public void putApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
+			MediaType mediaType, Object requestType, Class<?> responseClass) {
+		
+		UriComponentsBuilder builder = null;
+		if (apiUrl != null)
+			builder = UriComponentsBuilder.fromUriString(apiUrl);
+		if (builder != null) {
+
+			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
+				for (String segment : pathsegments) {
+					if (!((segment == null) || (("").equals(segment)))) {
+						builder.pathSegment(segment);
+					}
+				}
+
+			}
+			if (!((queryParamName == null) || (("").equals(queryParamName)))) {
+				String[] queryParamNameArr = queryParamName.split(",");
+				String[] queryParamValueArr = queryParamValue.split(",");
+
+				for (int i = 0; i < queryParamNameArr.length; i++) {
+					builder.queryParam(queryParamNameArr[i], queryParamValueArr[i]);
+				}
+			}
+
+			RestTemplate restTemplate;
+
+			try {
+				restTemplate = getRestTemplate();
+				restTemplate.put(builder.toUriString(), setRequestHeader(requestType, mediaType),
+						responseClass);
+			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
+				throw new ApiAccessibleException(
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+			}
+		}
 	}
 
 	/**

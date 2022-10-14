@@ -62,7 +62,11 @@ public enum ErrorCode {
 	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Mapping exists for given policy and partner and is in %s state."),	
 	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
 	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces"),
-	JSON_NOT_VALID("PMS_PRT_096","Json is not valid");
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
+	DUPLICATE_CLIENT_NAME("PMS_IDP_001","Client name already exists."),
+	PARTNER_POLICY_NOT_APPROVED("PMS_IDP_002","Partner policy mapping is not approved. Please check mapping status."),
+	POLICY_HAVING_MANDATORY_AUTHS("PMS_IDP_003","Policy having mandatory auths. So client can't be created for the same."),
+	CLIENT_NOT_EXISTS("PMS_IDP_001","Client not exists with given id.");
 
 	
 	/**
