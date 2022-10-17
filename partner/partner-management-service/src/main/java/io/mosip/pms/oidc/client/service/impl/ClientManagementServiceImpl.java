@@ -135,8 +135,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setPolicyId(policyFromDb.getId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
-		clientDetail.setClaims(String.join(",", getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null)));
+		clientDetail.setClaims(String.join(",", authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
+				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null))));
 		clientDetail.setAcrValues(String.join(",", authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
 				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY))));		
 		clientDetail.setStatus("ACTIVE");
@@ -144,6 +144,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setCreatedBy(getLoggedInUserId());
+		authenticationContextClassRefUtil.getPolicySupportedClaims(Arrays.asList(clientDetail.getClaims()));
 		callIdpService(clientDetail, environment.getProperty("pmp-idp.oidc.client.create.rest.uri"), true);
 		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb, clientDetail);
 		clientDetailRepository.save(clientDetail);
@@ -189,7 +190,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
-		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString());
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
