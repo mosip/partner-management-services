@@ -113,7 +113,7 @@ jobs:
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
-        cd partner && mvn deploy  -DaltDeploymentRepository=ossrh::default::${{ secrets.OSSRH_SNAPSHOT_URL }} -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
+        cd partner && mvn deploy  -DaltDeploymentRepository=ossrh::default::${{ secrets.RELEASE_URL }} -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
       env:
         GPG_TTY: $(tty)
         
