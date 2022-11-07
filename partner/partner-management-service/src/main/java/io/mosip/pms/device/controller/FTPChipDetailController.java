@@ -65,7 +65,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetail())")
 	@ResponseFilter
 	@PostMapping
 	@Operation(summary = "Service to save ftpChipDetail", description = "Saves ftpChipDetail and return ftpChipDetail id")
@@ -99,7 +99,7 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutftpchipdetail())")
 	@ResponseFilter
 	@PutMapping
 	@Operation(summary = "Service to update ftp chip detail", description =  "Updates ftp chip detail and returns success message")
@@ -129,7 +129,7 @@ public class FTPChipDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchftpchipdetail())")
 	@ResponseFilter
 	@PatchMapping
 	@Operation(summary = "Service to approve/reject ftp chip detail", description = "Approve ftp chip detail and returns success message")
@@ -165,7 +165,7 @@ public class FTPChipDetailController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailuploadcertificate())")
 	@RequestMapping(value = "/uploadcertificate", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload certificate of ftp chip", description = "uploads the ftp chip certificate and returns success message")
 	public ResponseWrapper<FtpCertificateResponseDto> uploadPartnerCertificate(
@@ -195,7 +195,7 @@ public class FTPChipDetailController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftpchipdetailgetpartnercertificate())")
 	@RequestMapping(value = "/getPartnerCertificate/{ftpChipDetailId}", method = RequestMethod.GET)
 	@Operation(summary = "Service to get certificate of ftp chip", description = "Returns the ftp chip certificate")
 	public ResponseWrapper<FtpCertDownloadResponeDto> getPartnerCertificate(
@@ -222,7 +222,7 @@ public class FTPChipDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailsearch())")
 	@Operation(summary = "Service to serach ftp chip details", description = "Service to serach ftp chip details")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
