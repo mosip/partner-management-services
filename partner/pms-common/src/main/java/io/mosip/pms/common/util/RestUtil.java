@@ -60,7 +60,7 @@ public class RestUtil {
 	private static final String BEARER = "Bearer ";
 
 	/**
-	 * 
+	 *
 	 * @param <T>
 	 * @param apiUrl
 	 * @param pathsegments
@@ -73,7 +73,7 @@ public class RestUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
-			MediaType mediaType, Object requestType, Class<?> responseClass) {
+						 MediaType mediaType, Object requestType, Class<?> responseClass) {
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiUrl != null)
@@ -154,7 +154,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param <T>
 	 * @param apiName
 	 * @param pathsegments
@@ -165,7 +165,7 @@ public class RestUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
-			Class<?> responseType) {
+						Class<?> responseType) {
 		String apiHostIpPort = environment.getProperty(apiName);
 		T result = null;
 		UriComponentsBuilder builder = null;
@@ -209,7 +209,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param <T>
 	 * @param apiUrl
 	 * @param pathsegments
@@ -240,7 +240,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws KeyManagementException
 	 * @throws NoSuchAlgorithmException
@@ -258,7 +258,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestType
 	 * @param mediaType
 	 * @return
@@ -288,7 +288,7 @@ public class RestUtil {
 					}
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
-			} catch (ClassCastException e) {				
+			} catch (ClassCastException e) {
 				return new HttpEntity<Object>(requestType, headers);
 			}
 		} else
@@ -296,7 +296,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws IOException
 	 */
@@ -339,7 +339,7 @@ public class RestUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private SecretKeyRequest setSecretKeyRequestDTO() {
