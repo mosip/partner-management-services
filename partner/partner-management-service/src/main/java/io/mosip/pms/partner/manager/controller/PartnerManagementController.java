@@ -71,7 +71,7 @@ public class PartnerManagementController {
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains massage about API key created successfully
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnersapikeypolicies())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/policies", method = RequestMethod.PUT)
 	@Operation(summary = "Service to update policies against to api key", description = "Service to update policies against to api key")
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
@@ -97,7 +97,7 @@ public class PartnerManagementController {
 	 * @param request this class contains the status of activate/deactivate Auth/E-KYC Partners
 	 * @return respons this class contains massage about Partner status updated successfully
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartners())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to activate/de-activate partner", description = "Service to activate/de-activate partner")
 	 public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> activateDeactivatePartner(
@@ -120,7 +120,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartners())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE','ID_REPOSITORY')")
 	@RequestMapping(method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details", description = "Service to get partner details")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
@@ -138,7 +138,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersnew())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE','ID_REPOSITORY')")
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details", description = "Service to get partners details")
 	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
@@ -163,7 +163,7 @@ public class PartnerManagementController {
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
 	 * @return response this class contains partnerID and policyId
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}" , method = RequestMethod.GET)
 	@Operation(summary = "Service to get policy for given api key", description = "Service to get policy for given api key")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getPolicyMappedToAPIKey(
@@ -183,7 +183,7 @@ public class PartnerManagementController {
 	 * This API would be used to retrieve all Partner API Key requests as received by partner manager
 	 * @return response this class contains all Partner API Key requests as received by partner manager
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/apikey" , method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key requests", description = "Service to get api key requests")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
@@ -203,7 +203,7 @@ public class PartnerManagementController {
 	 * @param apiKeyReqId this is unique id created after partner request for Partner API Key
 	 * @return response this class contains details related to Partner API key to Policy Mappings
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/apikey/{apikey}" , method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key request", description = "Service to get api key request")
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getAPIKeyRequest(
@@ -217,7 +217,7 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response , HttpStatus.OK);
 	}	
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnerspolicymapping())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@RequestMapping(value = "/policy/{mappingkey}", method = RequestMethod.PUT)
 	@Operation(summary = "Service to approve/reject partner policy mapping", description = "Service to approve/reject partner policy mapping")
 	public ResponseEntity<ResponseWrapper<String>> approveRejectPolicyMappings(
@@ -231,7 +231,7 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnerspolicyapikeystatus())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/policy/{policyId}/apiKey/status", method = RequestMethod.PATCH)
 	@Operation(summary = "Service to activate/de-activate partner api key", description = "Service to activate/de-activate partner api key")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,

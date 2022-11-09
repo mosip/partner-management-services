@@ -59,7 +59,7 @@ public class RestUtil {
 	private static final String AUTHORIZATION = "Authorization=";
 
 	/**
-	 *
+	 * 
 	 * @param <T>
 	 * @param apiUrl
 	 * @param pathsegments
@@ -72,7 +72,7 @@ public class RestUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
-						 MediaType mediaType, Object requestType, Class<?> responseClass) {
+			MediaType mediaType, Object requestType, Class<?> responseClass) {
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiUrl != null)
@@ -102,6 +102,7 @@ public class RestUtil {
 				restTemplate = getRestTemplate();
 				result = (T) restTemplate.postForObject(builder.toUriString(), setRequestHeader(requestType, mediaType),
 						responseClass);
+
 			} catch (Exception e) {
 				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
 				throw new ApiAccessibleException(
@@ -112,48 +113,8 @@ public class RestUtil {
 		return result;
 	}
 
-	public void putApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
-					   MediaType mediaType, Object requestType, Class<?> responseClass) {
-
-		UriComponentsBuilder builder = null;
-		if (apiUrl != null)
-			builder = UriComponentsBuilder.fromUriString(apiUrl);
-		if (builder != null) {
-
-			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
-				for (String segment : pathsegments) {
-					if (!((segment == null) || (("").equals(segment)))) {
-						builder.pathSegment(segment);
-					}
-				}
-
-			}
-			if (!((queryParamName == null) || (("").equals(queryParamName)))) {
-				String[] queryParamNameArr = queryParamName.split(",");
-				String[] queryParamValueArr = queryParamValue.split(",");
-
-				for (int i = 0; i < queryParamNameArr.length; i++) {
-					builder.queryParam(queryParamNameArr[i], queryParamValueArr[i]);
-				}
-			}
-
-			RestTemplate restTemplate;
-
-			try {
-				restTemplate = getRestTemplate();
-				restTemplate.put(builder.toUriString(), setRequestHeader(requestType, mediaType),
-						responseClass);
-			} catch (Exception e) {
-				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
-				throw new ApiAccessibleException(
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
-			}
-		}
-	}
-
 	/**
-	 *
+	 * 
 	 * @param <T>
 	 * @param apiName
 	 * @param pathsegments
@@ -164,7 +125,7 @@ public class RestUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
-						Class<?> responseType) {
+			Class<?> responseType) {
 		String apiHostIpPort = environment.getProperty(apiName);
 		T result = null;
 		UriComponentsBuilder builder = null;
@@ -208,7 +169,7 @@ public class RestUtil {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param <T>
 	 * @param apiUrl
 	 * @param pathsegments
@@ -239,7 +200,7 @@ public class RestUtil {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 * @throws KeyManagementException
 	 * @throws NoSuchAlgorithmException
@@ -257,7 +218,7 @@ public class RestUtil {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param requestType
 	 * @param mediaType
 	 * @return
@@ -266,15 +227,13 @@ public class RestUtil {
 	@SuppressWarnings("unchecked")
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		final String token = getToken();
-		headers.add("Cookie",token);
-		headers.add("Authorization", token.replace(AUTHORIZATION,"Bearer " ) );
+		headers.add("Cookie", getToken());
 		if (mediaType != null) {
 			headers.add("Content-Type", mediaType.toString());
 		}
 		if (requestType != null) {
 			try {
-				HttpEntity<Object> httpEntity = new HttpEntity<Object> (requestType);
+				HttpEntity<Object> httpEntity = (HttpEntity<Object>) requestType;
 				HttpHeaders httpHeader = httpEntity.getHeaders();
 				Iterator<String> iterator = httpHeader.keySet().iterator();
 				while (iterator.hasNext()) {
@@ -287,7 +246,7 @@ public class RestUtil {
 					}
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
-			} catch (ClassCastException e) {
+			} catch (ClassCastException e) {				
 				return new HttpEntity<Object>(requestType, headers);
 			}
 		} else
@@ -295,11 +254,11 @@ public class RestUtil {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
-	private String getToken() throws IOException {
+	public String getToken() throws IOException {
 		String token = System.getProperty("token");
 		boolean isValid = false;
 
@@ -338,7 +297,7 @@ public class RestUtil {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	private SecretKeyRequest setSecretKeyRequestDTO() {

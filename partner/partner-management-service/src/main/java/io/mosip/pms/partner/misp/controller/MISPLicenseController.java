@@ -36,7 +36,7 @@ public class MISPLicenseController {
 	@Autowired
 	InfraServiceProviderService infraProviderService;
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisplicense())")
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@PostMapping
 	@Operation(summary = "Service to generate license for misp", description = "Service to generate license for misp")
 	public ResponseWrapper<MISPLicenseResponseDto> generateLicense(@RequestBody @Valid RequestWrapper<MISPLicenseRequestDto> request){	
@@ -45,7 +45,7 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutmisplicense())")
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@PutMapping
 	@Operation(summary = "Service to update license details of misp", description = "Service to update license details of misp")
 	public ResponseWrapper<MISPLicenseResponseDto> updateLicenseDetails(@RequestBody @Valid RequestWrapper<MISPLicenseUpdateRequestDto> request){
@@ -55,7 +55,7 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicense())")
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@GetMapping
 	@Operation(summary = "Service to get license details of misp", description = "Service to get license details of misp")
 	public ResponseWrapper<List<MISPLicenseEntity>> getLicenseDetails(){
@@ -64,7 +64,7 @@ public class MISPLicenseController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensekey())")
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN')")
 	@GetMapping(value = "/{mispId}/licenseKey")
 	@Operation(summary = "Service to get/regenarate license details of misp", description = "Service to get/regenarate license details of misp")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
@@ -74,7 +74,7 @@ public class MISPLicenseController {
 	}	
 	
 	@PostMapping("/filtervalues")	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispfiltervalues())")
+	@PreAuthorize("hasAnyRole('MISP_PARTNER','MISP','PARTNERMANAGER','PARTNER_ADMIN')")
 	@Operation(summary = "Service to filter misp details", description = "Service to filter misp details")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
@@ -84,7 +84,7 @@ public class MISPLicenseController {
 	}	
 	
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispsearch())")
+	@PreAuthorize("hasAnyRole('PARTNER','PARTNER_ADMIN','MISP_PARTNER','MISP')")
 	@Operation(summary = "Service to search misp details", description = "Service to search misp details")
 	public ResponseWrapper<PageResponseDto<MISPLicenseEntity>> search(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
