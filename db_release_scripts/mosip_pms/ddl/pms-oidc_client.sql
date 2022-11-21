@@ -16,11 +16,11 @@
 -- object: oidc_client.oidc_client | type: TABLE --
 -- DROP TABLE IF EXISTS oidc_client.oidc_client CASCADE;
 CREATE TABLE oidc_client(
-	id character varying(50) NOT NULL,
+	id character varying(100) NOT NULL,
 	name character varying(256) NOT NULL,
-	rp_id character varying(50) NOT NULL,
+	rp_id character varying(100) NOT NULL,
 	policy_id character varying(50) NOT NULL,
-	logo_uri character varying(256) NOT NULL,
+	logo_uri character varying(2048) NOT NULL,
 	redirect_uris character varying NOT NULL,
 	claims character varying NOT NULL,
 	acr_values character varying NOT NULL,
@@ -34,7 +34,8 @@ CREATE TABLE oidc_client(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_oidc_client PRIMARY KEY (id)
+	CONSTRAINT pk_oidc_client PRIMARY KEY (id),
+	CONSTRAINT uq_oidc_client_public_key UNIQUE (public_key)
 );
 -- ddl-end --
 COMMENT ON TABLE oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';

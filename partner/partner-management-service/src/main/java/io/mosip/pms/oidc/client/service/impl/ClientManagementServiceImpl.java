@@ -261,17 +261,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			List<Map<String, Object>> idpServiceErrorList = (List<Map<String, Object>>) idpClientResponse
 					.get(PartnerConstants.ERRORS);
 			if (!idpServiceErrorList.isEmpty()) {
-				LOGGER.error(("IDAServiceResponse:: Idp service response contains errors."));
+				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
-				LOGGER.error(("IDAServiceResponse:: Idp service response contains errors."));
+				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
 		if (response == null) {
-			LOGGER.error(("IDAServiceResponse:: Idp service response is null"));
+			LOGGER.error(("IDPServiceResponse:: Idp service response is null"));
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
