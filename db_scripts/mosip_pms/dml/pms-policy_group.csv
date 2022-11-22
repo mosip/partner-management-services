@@ -6,5 +6,5 @@ mpolicygroup-default-mockdevice,mmpolicygroup-default-mockdevice,mpolicygroup-de
 mpolicygroup-default-resident,mpolicygroup-default-resident,mpolicygroup-default-resident,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-adjudication,mpolicygroup-default-adjudication, mpolicygroup-default-adjudication,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-cert,mpolicygroup-default-cert,mpolicygroup-default-cert,superadmin,TRUE,superadmin,now(),superadmin,now()
-mpolicygroup-deafult-digitalcard,mpolicygroup-deafult-digitalcard,mpolicygroup-deafult-digitalcard,superadmin,TRUE,superadmin,now(),superadmin,now()
+mpolicygroup-default-digitalcard,mpolicygroup-default-digitalcard,mpolicygroup-default-digitalcard,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-mobile,mpolicygroup-default-mobile,mpolicygroup-default-mobile,superadmin,TRUE,superadmin,now(),superadmin,now()

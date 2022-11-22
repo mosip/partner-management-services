@@ -57,6 +57,7 @@ public class RestUtil {
 	private Environment environment;
 
 	private static final String AUTHORIZATION = "Authorization=";
+	private static final String BEARER = "Bearer ";
 
 	/**
 	 * 
@@ -266,13 +267,15 @@ public class RestUtil {
 	@SuppressWarnings("unchecked")
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add("Cookie", getToken());
+		final String token = getToken();
+		headers.add("Cookie",token);
+		headers.add("Authorization", token.replace(AUTHORIZATION,BEARER ) );
 		if (mediaType != null) {
 			headers.add("Content-Type", mediaType.toString());
 		}
 		if (requestType != null) {
 			try {
-				HttpEntity<Object> httpEntity = (HttpEntity<Object>) requestType;
+				HttpEntity<Object> httpEntity =new HttpEntity<Object> (requestType);
 				HttpHeaders httpHeader = httpEntity.getHeaders();
 				Iterator<String> iterator = httpHeader.keySet().iterator();
 				while (iterator.hasNext()) {
@@ -297,7 +300,7 @@ public class RestUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public String getToken() throws IOException {
+	private String getToken() throws IOException {
 		String token = System.getProperty("token");
 		boolean isValid = false;
 
