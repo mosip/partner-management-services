@@ -21,7 +21,7 @@ ALTER TABLE pms.partner_h ADD COLUMN addl_info character varying;
 INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) VALUES
 	 ('Print_Partner','Print Partner',true,true,'superadmin',now(),NULL,NULL,false,NULL);
 
-UPDATE pms.partner_type SET is_active=true, upd_dtimes =now(), upd_by ='superadmin' WHERE code='MISP_Partner';
+UPDATE pms.partner_type SET is_policy_required=true, upd_dtimes =now(), upd_by ='superadmin' WHERE code='MISP_Partner';
 
 ALTER TABLE pms.misp_license ADD COLUMN policy_id character varchar(36);
 
