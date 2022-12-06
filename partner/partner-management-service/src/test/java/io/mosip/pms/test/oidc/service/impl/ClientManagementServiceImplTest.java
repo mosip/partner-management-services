@@ -68,7 +68,7 @@ public class ClientManagementServiceImplTest {
 	@Test
 	public void createClientTest() throws Exception {
 		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
-		System.out.println(public_key);
+		request.setPublicKey(public_key);
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {

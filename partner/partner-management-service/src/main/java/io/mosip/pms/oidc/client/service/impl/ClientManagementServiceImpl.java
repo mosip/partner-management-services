@@ -13,10 +13,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
@@ -51,6 +55,8 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
+import org.bouncycastle.util.encoders.UTF8;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.json.simple.JSONArray;
@@ -95,12 +101,13 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
-		
-		Optional<ClientDetail> result = clientDetailRepository.findByName(createRequest.getName());
+		String publicKey = getJWKString(createRequest.getPublicKey());
+		String clientId = HMACUtils2.encodeBase64String(HMACUtils2.generateHash(publicKey.getBytes()));
+		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
-			LOGGER.error("createOIDCClient::Clinet with name {} already exists", createRequest.getName());
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT_NAME.getErrorCode(),
-					ErrorCode.DUPLICATE_CLIENT_NAME.getErrorMessage());
+			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
+			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
+					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
 		AuthPolicy policyFromDb = authPolicyRepository.findByName(createRequest.getPolicyName());
 		if (policyFromDb == null) {
@@ -128,8 +135,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setPublicKey(getJWKString(createRequest.getPublicKey()));
-		clientDetail.setId(UUID.randomUUID().toString());
+		clientDetail.setPublicKey(publicKey);
+		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getRelyingPartyId());
 		clientDetail.setPolicyId(policyFromDb.getId());
@@ -164,18 +171,16 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @throws Exception
 	 */
 	private static List<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
-			String childAttribute, String childAttribute1) throws Exception {
+			String childAttribute, String filterAttribute) throws Exception {
 		List<String> attributes = new ArrayList<>();
 		JSONArray parentAttributeObject = (JSONArray) policyObject.get(parentAttribute);
 		for (int i = 0; i < parentAttributeObject.size(); i++) {
 			JSONObject childJsonArray = (JSONObject) parentAttributeObject.get(i);
 			String key = (String) childJsonArray.get(childAttribute);
-			if (childAttribute1 != null) {
-				if ((boolean) childJsonArray.get(childAttribute1)) {
-					LOGGER.error("createOIDCClient::Policy is having mandatory auth. So client cannot be created.");
-					throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
-							ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
-				}
+			if (filterAttribute != null && (boolean) childJsonArray.get(filterAttribute)) {
+				LOGGER.error("createOIDCClient::Policy is having mandatory auth. So client cannot be created.");
+				throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
+						ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
 			}
 			attributes.add(key);
 		}
@@ -186,9 +191,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws Exception  
 	 */
 	@SuppressWarnings("unchecked")
-	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) {
+	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
@@ -196,12 +202,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
 		dto.setLogoUri(request.getLogoUri());
-		try {
-			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
 		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));

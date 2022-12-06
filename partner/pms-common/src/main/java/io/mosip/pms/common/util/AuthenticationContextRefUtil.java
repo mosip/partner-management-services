@@ -37,11 +37,11 @@ public class AuthenticationContextRefUtil {
 	@Value("${mosip.pms.idp.acr-amr-mappings}")
 	String acr_amr_values;
 
-	@Value("${mosip.pms.idp.supported-claims}")
-	String supportedClaims;
-
-	@Value("${mosip.pms.idp.claims-mappings}")
-	String supportedClaimsMapping;
+//	@Value("${mosip.pms.idp.supported-claims}")
+//	String supportedClaims;
+//
+//	@Value("${mosip.pms.idp.claims-mappings}")
+//	String supportedClaimsMapping;
 	
 	@Autowired
 	ObjectMapper objectMapper;
