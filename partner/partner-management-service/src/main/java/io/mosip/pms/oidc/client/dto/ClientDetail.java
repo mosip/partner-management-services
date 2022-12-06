@@ -16,7 +16,7 @@ public class ClientDetail {
     private String name;
     private String policyId;
     private String policyName;
-    private String relayingPartyId;
+    private String relyingPartyId;
     private String logoUri;
     private List<String> redirectUris;
     private String publicKey;

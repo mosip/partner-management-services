@@ -8,7 +8,7 @@ import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
 public interface ClientManagementService {
 	
     /**
-     * API to register Relaying party client
+     * API to register Relying party client
      * @param clientDetailCreateRequest
      * @return
      * @throws Exception 
@@ -17,7 +17,7 @@ public interface ClientManagementService {
     ClientDetailResponse createOIDCClient(ClientDetailCreateRequest clientDetailCreateRequest) throws Exception;
 
     /**
-     * API to update registered Relaying party client
+     * API to update registered Relying party client
      * @param clientId
      * @param clientDetailCreateRequest
      * @return

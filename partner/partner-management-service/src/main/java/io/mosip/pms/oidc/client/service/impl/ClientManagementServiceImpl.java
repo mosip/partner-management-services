@@ -110,10 +110,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyId(createRequest.getRelayingPartyId(), policyFromDb.getId());
+				.findByPartnerIdAndPolicyId(createRequest.getRelyingPartyId(), policyFromDb.getId());
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
-					createRequest.getPolicyName(), createRequest.getRelayingPartyId());
+					createRequest.getPolicyName(), createRequest.getRelyingPartyId());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -121,7 +121,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved")) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyName(), createRequest.getRelayingPartyId(),
+					createRequest.getPolicyName(), createRequest.getRelyingPartyId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
@@ -131,7 +131,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setPublicKey(getJWKString(createRequest.getPublicKey()));
 		clientDetail.setId(UUID.randomUUID().toString());
 		clientDetail.setName(createRequest.getName());
-		clientDetail.setRpId(createRequest.getRelayingPartyId());
+		clientDetail.setRpId(createRequest.getRelyingPartyId());
 		clientDetail.setPolicyId(policyFromDb.getId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
@@ -443,7 +443,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setName(result.get().getName());
 		dto.setPolicyId(result.get().getPolicyId());
 		dto.setPolicyName(policyFromDb.isEmpty() ? "" : policyFromDb.get().getName());
-		dto.setRelayingPartyId(result.get().getRpId());
+		dto.setRelyingPartyId(result.get().getRpId());
 		dto.setLogoUri(result.get().getLogoUri());
 		dto.setStatus(result.get().getStatus());
 		dto.setPublicKey(result.get().getPublicKey());
