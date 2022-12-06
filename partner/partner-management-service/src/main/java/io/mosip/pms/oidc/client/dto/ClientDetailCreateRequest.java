@@ -31,7 +31,7 @@ public class ClientDetailCreateRequest {
     private Map<String, @NotNull Object> publicKey;
 
     @NotBlank
-    private String relayingPartyId;
+    private String relyingPartyId;
 
     @NotNull
     @NotBlank
