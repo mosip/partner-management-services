@@ -17,3 +17,5 @@ ALTER TABLE pms.partner_h DROP COLUMN logo_url;
 ALTER TABLE pms.partner DROP COLUMN addl_info;
 
 ALTER TABLE pms.partner_h DROP COLUMN addl_info;
+
+DROP TABLE IF EXISTS pms.oidc_client; 
