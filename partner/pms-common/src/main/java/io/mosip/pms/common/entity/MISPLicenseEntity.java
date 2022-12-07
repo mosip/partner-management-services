@@ -33,6 +33,9 @@ public class MISPLicenseEntity implements Serializable {
 	@Column(name = "misp_id")	
 	private String mispId;	
 	
+	@Column(name = "policy_id")
+	private String policyId;
+	
 	@NotNull
     @Column(name = "license_key")
 	private String licenseKey;

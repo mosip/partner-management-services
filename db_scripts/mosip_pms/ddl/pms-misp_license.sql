@@ -11,6 +11,7 @@
 -- Aug-2020             Sadanndegowda       Updated Schema name 
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5  
+-- Sep-2022		Nagarjuna 		Added column policy id changes for 1.2.1
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.misp_license | type: TABLE --
@@ -18,6 +19,7 @@
 CREATE TABLE pms.misp_license(
 	misp_id character varying(36) NOT NULL,
 	license_key character varying(128) NOT NULL,
+	policy_id character varying(128) NULL,
 	valid_from_date timestamp NOT NULL,
 	valid_to_date timestamp,
 	is_active boolean NOT NULL,
