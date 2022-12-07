@@ -23,3 +23,4 @@
 \ir ddl/pms-secure_biometric_interface.sql
 \ir ddl/pms-secure_biometric_interface_h.sql
 \ir ddl/pms-tspid_seq.sql
+\ir ddl/pms-oidc_client.sql

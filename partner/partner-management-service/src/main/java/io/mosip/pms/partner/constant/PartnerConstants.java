@@ -33,4 +33,6 @@ public final class PartnerConstants {
 	public static final String CERT_CHAIN_DATA_SHARE_URL = "certChainDatashareUrl";
 	
 	public static final String PARTNER_DOMAIN = "partnerDomain";
+	
+	public static final String CLIENT_DATA="clientData";
 }

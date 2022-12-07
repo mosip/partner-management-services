@@ -9,6 +9,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -23,12 +24,14 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.dto.APIKeyDataPublishDto;
+import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.MISPDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BaseEntity;
+import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
@@ -515,6 +518,31 @@ public class MapperUtils {
 		dataToPublish.setApiKeyId(entity.getPolicyApiKey());
 		dataToPublish.setApiKeyStatus(entity.getIsActive() == true ? "ACTIVE" : "DEACTIVE");
 		return dataToPublish;
+	}
+	
+	/**
+	 * 
+	 * @param clientData
+	 * @return
+	 */
+	public static ClientPublishDto mapClientDataToPublishDto(ClientDetail clientData) {
+		ClientPublishDto dataToPublish = new ClientPublishDto();
+		dataToPublish.setClientId(clientData.getId());
+		dataToPublish.setClientName(clientData.getName());
+		dataToPublish.setAuthContextRefs(convertStringToList(clientData.getAcrValues()));
+		dataToPublish.setClientAuthMethods(convertStringToList(clientData.getClientAuthMethods()));
+		dataToPublish.setUserClaims(convertStringToList(clientData.getClaims()));
+		dataToPublish.setClientStatus(clientData.getStatus());
+		return dataToPublish;
+	}
+	
+	/**
+	 * 
+	 * @param commaSeparatedString
+	 * @return
+	 */
+	private static List<String> convertStringToList(String commaSeparatedString){
+		return Arrays.asList(commaSeparatedString.split(","));
 	}
 	
 	/**

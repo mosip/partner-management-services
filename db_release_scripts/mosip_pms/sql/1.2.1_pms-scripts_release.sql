@@ -36,4 +36,4 @@ ALTER TABLE pms.misp_license ADD COLUMN policy_id character varchar(36);
 UPDATE pms.misp_license SET policy_id = (select id from pms.auth_policy ap where ap.name = 'mpolicy-default-misp')
 where misp_id IN(SELECT p.id  FROM pms.partner p INNER JOIN pms.misp_license ml ON ml.misp_id = p.id where p.partner_type_code ='MISP_Partner')
 	 
-
+\ir ../ddl/pms-oidc_client.sql
