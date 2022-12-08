@@ -1,30 +1,28 @@
 package io.mosip.pms.common.util;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import io.mosip.pms.common.dto.AuthenticationFactor;
-import io.mosip.pms.common.dto.Claims;
-
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import io.mosip.pms.common.dto.AuthenticationFactor;
+import io.mosip.pms.common.dto.Claims;
 
 @Component
 public class AuthenticationContextRefUtil {
@@ -36,12 +34,6 @@ public class AuthenticationContextRefUtil {
 	
 	@Value("${mosip.pms.idp.acr-amr-mappings}")
 	String acr_amr_values;
-
-//	@Value("${mosip.pms.idp.supported-claims}")
-//	String supportedClaims;
-//
-//	@Value("${mosip.pms.idp.claims-mappings}")
-//	String supportedClaimsMapping;
 	
 	@Autowired
 	ObjectMapper objectMapper;
