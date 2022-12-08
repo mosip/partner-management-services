@@ -1,5 +1,6 @@
 package io.mosip.pms.test.oidc.service.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
@@ -25,7 +26,6 @@ import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
 import io.mosip.pms.oidc.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.test.config.TestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,7 +62,14 @@ public class ClientManagementServiceImplTest {
 		ReflectionTestUtils.setField(serviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
-		public_key = TestUtil.generateJWK_RSA().toJSONObject();
+		
+		public_key = new HashMap<>();
+		public_key.put("kty","RSA");
+		public_key.put("e","AQAB");
+		public_key.put( "use", "sig");
+		public_key.put(  "kid", "1bbdc9de-c24f-4801-b6b3-691ac07641af");
+		public_key.put( "alg", "RS256");
+		public_key.put(  "n","wXGQA574CU-WTWPILd4S3_1sJf0Yof0kwMeNctXc1thQo70Ljfn9f4igpRe7f8qNs_W6dLuLWemFhGJBQBQ7vvickECKNJfo_EzSD_yyPCg7k_AGbTWTkuoObHrpilwJGyKVSkOIujH_FqHIVkwkVXjWc25Lsb8Gq4nAHNQEqqgaYPLEi5evCR6S0FzcXTPuRh9zH-cM0Onjv4orrfYpEr61HcRp5MXL55b7yBoIYlXD8NfalcgdrWzp4VZHvQ8yT9G5eaf27XUn6ZBeBf7VnELcKFTyw1pK2wqoOxRBc8Y1wO6rEy8PlCU6wD-mbIzcjG1wUfnbgvJOM4A5G41quQ");
 	}
 
 	@Test
