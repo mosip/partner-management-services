@@ -61,7 +61,7 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 	public UserDetailsService userDetailsService() {
 		List<UserDetails> users = new ArrayList<>();
 		users.add(new User("misp-user", "misp",
-				Arrays.asList(new SimpleGrantedAuthority("MISP"))));
+				Arrays.asList(new SimpleGrantedAuthority("ROLE_MISP"))));
 		users.add(new User("policy", "policy",
 				Arrays.asList(new SimpleGrantedAuthority("POLICYMANAGER"))));
 		users.add(new User("partner", "partner",
@@ -69,7 +69,7 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 		users.add(new User("zonal-admin", "admin",
 				Arrays.asList(new SimpleGrantedAuthority("ZONAL_ADMIN"))));
 		users.add(new User("partner-admin", "admin",
-				Arrays.asList(new SimpleGrantedAuthority("PARTNER_ADMIN"))));
+				Arrays.asList(new SimpleGrantedAuthority("ROLE_PARTNER_ADMIN"))));
 		return new InMemoryUserDetailsManager(users);
 	}
 }
