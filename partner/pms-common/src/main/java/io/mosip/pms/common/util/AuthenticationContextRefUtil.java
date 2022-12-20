@@ -38,17 +38,22 @@ public class AuthenticationContextRefUtil {
 	@Autowired
 	ObjectMapper objectMapper;
 	 
-	 @Value("${mosip.idp.claims-mapping-file-url:}")
+	 @Value("${mosip.idp.claims-mapping-file-url}")
 	 private String claimsMappingFileUrl;
+	 
+	 @Value("${mosip.idp.amr-acr-mapping-file-url}")
+	 private String acrMappingFileUrl;
 	 
 	 @Autowired
 	 RestTemplate restTemplate;
 	 
 	 private String claimsMappingJson;
 	 
+	 private String acrMappingJson;
+	 
 	private Map<String, List<AuthenticationFactor>> getAllAMRs() {
 		try {
-			ObjectNode objectNode = objectMapper.readValue(acr_amr_values, new TypeReference<ObjectNode>() {
+			ObjectNode objectNode = objectMapper.readValue(getAcrMappingJson(), new TypeReference<ObjectNode>() {
 			});
 			return objectMapper.convertValue(objectNode.get(AMR_KEY),
 					new TypeReference<Map<String, List<AuthenticationFactor>>>() {
@@ -59,24 +64,32 @@ public class AuthenticationContextRefUtil {
 		}
 	}
 
+	private String getAcrMappingJson() {
+        if(StringUtils.isEmpty(acrMappingJson)) {
+            logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
+            acrMappingJson = restTemplate.getForObject(acrMappingFileUrl, String.class);
+        }
+        return acrMappingJson.toLowerCase();
+    }
+	
 	private String getClaimsMappingJson() {
         if(StringUtils.isEmpty(claimsMappingJson)) {
             logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
             claimsMappingJson = restTemplate.getForObject(claimsMappingFileUrl, String.class);
         }
-        return claimsMappingJson;
+        return claimsMappingJson.toLowerCase();
     }
 	
 	private Map<List<String>, String> getAllClaims() {
 		try {
 			ObjectNode objectNode = objectMapper.readValue(getClaimsMappingJson(), new TypeReference<ObjectNode>() {
 			});
-			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(CLAIMSMAPPING),
+			Map<String, Claims> map = objectMapper.convertValue(objectNode.get("identity"),
 					new TypeReference<Map<String,Claims >>() {
 					});
 			Map<List<String>, String> claimsMap = new HashMap<>();
 			for(Map.Entry<String,Claims> mapElement : map.entrySet()) {
-				claimsMap.put(convertStringToList(mapElement.getValue().getAttributeName()),mapElement.getKey());
+				claimsMap.put(convertStringToList(mapElement.getValue().getValue()),mapElement.getKey());
 			}
 			return claimsMap;
 		} catch (IOException e) {
@@ -112,7 +125,7 @@ public class AuthenticationContextRefUtil {
 				List<String> authFactorNames = acr_amr_mappings.getOrDefault(supportedACRValue,
 						Collections.emptyList());
 				for (AuthenticationFactor authFactor : authFactors) {
-					if (authFactorNames.contains(authFactor.getType())) {
+					if (authFactorNames.contains(authFactor.getType().toLowerCase())) {
 						result.add(supportedACRValue);
 					}
 				}
@@ -128,7 +141,7 @@ public class AuthenticationContextRefUtil {
 		Set<String> filteredClaims = new HashSet<String>();
 		for(String claim:claimsFromPolicy) {
 			for(Map.Entry<List<String>,String> mapElement : map.entrySet()) {
-				if(mapElement.getKey().contains(claim)) {
+				if(mapElement.getKey().contains(claim.toLowerCase())) {
 					filteredClaims.add(mapElement.getValue());
 				}
 			}

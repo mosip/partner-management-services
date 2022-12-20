@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Claims {
-	private String attributeName;
+	private String value;
 }
