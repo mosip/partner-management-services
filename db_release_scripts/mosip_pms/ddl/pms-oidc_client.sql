@@ -15,7 +15,7 @@
 
 -- object: oidc_client.oidc_client | type: TABLE --
 -- DROP TABLE IF EXISTS oidc_client.oidc_client CASCADE;
-CREATE TABLE oidc_client(
+CREATE TABLE pms.oidc_client(
 	id character varying(100) NOT NULL,
 	name character varying(256) NOT NULL,
 	rp_id character varying(100) NOT NULL,
