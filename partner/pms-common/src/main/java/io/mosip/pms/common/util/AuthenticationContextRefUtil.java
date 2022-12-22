@@ -1,8 +1,8 @@
 package io.mosip.pms.common.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +30,7 @@ public class AuthenticationContextRefUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationContextRefUtil.class);
 	private static final String AMR_KEY = "amr";
 	private static final String ACR_AMR = "acr_amr";
-	private static final String IDENTITY = "identity";
+	private static final String IDPCLAIMSMAPPING = "idp-claims-mapping";
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -66,7 +66,7 @@ public class AuthenticationContextRefUtil {
             logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
             acrMappingJson = restTemplate.getForObject(acrMappingFileUrl, String.class);
         }
-        return acrMappingJson.toLowerCase();
+        return acrMappingJson;
     }
 	
 	private String getClaimsMappingJson() {
@@ -74,19 +74,19 @@ public class AuthenticationContextRefUtil {
             logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
             claimsMappingJson = restTemplate.getForObject(claimsMappingFileUrl, String.class);
         }
-        return claimsMappingJson.toLowerCase();
+        return claimsMappingJson;
     }
 	
 	private Map<List<String>, String> getAllClaims() {
 		try {
 			ObjectNode objectNode = objectMapper.readValue(getClaimsMappingJson(), new TypeReference<ObjectNode>() {
 			});
-			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(IDENTITY),
+			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(IDPCLAIMSMAPPING),
 					new TypeReference<Map<String,Claims >>() {
 					});
 			Map<List<String>, String> claimsMap = new HashMap<>();
 			for(Map.Entry<String,Claims> mapElement : map.entrySet()) {
-				claimsMap.put(convertStringToList(mapElement.getValue().getValue()),mapElement.getKey());
+				claimsMap.put(convertStringToList(mapElement.getValue().getAttributeName()),mapElement.getKey());
 			}
 			return claimsMap;
 		} catch (IOException e) {
@@ -116,18 +116,22 @@ public class AuthenticationContextRefUtil {
 		Map<String, List<AuthenticationFactor>> amr_mappings = getAllAMRs();
 		Map<String, List<String>> acr_amr_mappings = getAllACR_AMR_Mapping();
 		Set<String> result = new HashSet<>();
+		List<String> amrvalues = new ArrayList<String>();
 		for (String acrFromPolicy : policyACRs) {
-			List<AuthenticationFactor> authFactors = amr_mappings.getOrDefault(acrFromPolicy, Collections.emptyList());
-			for (String supportedACRValue : getSupportedACRValues()) {
-				List<String> authFactorNames = acr_amr_mappings.getOrDefault(supportedACRValue,
-						Collections.emptyList());
-				for (AuthenticationFactor authFactor : authFactors) {
-					if (authFactorNames.contains(authFactor.getType().toLowerCase())) {
-						result.add(supportedACRValue);
+			for(Map.Entry<String, List<AuthenticationFactor>> mapElement : amr_mappings.entrySet()) {
+				for(AuthenticationFactor authFactor: mapElement.getValue()) {
+					if(authFactor.getType().equalsIgnoreCase(acrFromPolicy)) {
+						amrvalues.add(mapElement.getKey());
 					}
 				}
 			}
-
+		}
+		for(String amr:amrvalues) {
+			for(Map.Entry<String, List<String>> mapElement : acr_amr_mappings.entrySet()) {
+				if(mapElement.getValue().contains(amr)) {
+					result.add(mapElement.getKey());
+				}
+			}
 		}
 		return result;
 	}
@@ -138,7 +142,7 @@ public class AuthenticationContextRefUtil {
 		Set<String> filteredClaims = new HashSet<String>();
 		for(String claim:claimsFromPolicy) {
 			for(Map.Entry<List<String>,String> mapElement : map.entrySet()) {
-				if(mapElement.getKey().contains(claim.toLowerCase())) {
+				if(mapElement.getKey().stream().anyMatch(claim::equalsIgnoreCase)) {
 					filteredClaims.add(mapElement.getValue());
 				}
 			}

@@ -190,7 +190,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
 						ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
 			}
-			attributes.add(key);
+			if(!attributes.contains(key)) {
+		         attributes.add(key);
+			}
 		}
 		return attributes;
 	}
@@ -271,8 +273,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					.get(PartnerConstants.ERRORS);
 			if (!idpServiceErrorList.isEmpty()) {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
-				throw new ApiAccessibleException(idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-						idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				throw new ApiAccessibleException((String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE),
+						(String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE));
 			} else {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
