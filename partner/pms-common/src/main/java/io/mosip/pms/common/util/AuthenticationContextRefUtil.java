@@ -30,10 +30,7 @@ public class AuthenticationContextRefUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationContextRefUtil.class);
 	private static final String AMR_KEY = "amr";
 	private static final String ACR_AMR = "acr_amr";
-	private static final String CLAIMSMAPPING = "idp-claims-mapping";
-	
-	@Value("${mosip.pms.idp.acr-amr-mappings}")
-	String acr_amr_values;
+	private static final String IDENTITY = "identity";
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -84,7 +81,7 @@ public class AuthenticationContextRefUtil {
 		try {
 			ObjectNode objectNode = objectMapper.readValue(getClaimsMappingJson(), new TypeReference<ObjectNode>() {
 			});
-			Map<String, Claims> map = objectMapper.convertValue(objectNode.get("identity"),
+			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(IDENTITY),
 					new TypeReference<Map<String,Claims >>() {
 					});
 			Map<List<String>, String> claimsMap = new HashMap<>();
@@ -99,7 +96,7 @@ public class AuthenticationContextRefUtil {
 	}
 	private Map<String, List<String>> getAllACR_AMR_Mapping() {
 		try {
-			ObjectNode objectNode = objectMapper.readValue(acr_amr_values, new TypeReference<ObjectNode>() {
+			ObjectNode objectNode = objectMapper.readValue(getAcrMappingJson(), new TypeReference<ObjectNode>() {
 			});
 			return objectMapper.convertValue(objectNode.get(ACR_AMR), new TypeReference<Map<String, List<String>>>() {
 			});
