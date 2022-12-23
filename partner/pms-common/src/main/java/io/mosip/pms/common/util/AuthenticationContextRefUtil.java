@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,27 +114,15 @@ public class AuthenticationContextRefUtil {
 	
 
 	public Set<String> getAuthFactors(List<String> policyACRs) {
-		Map<String, List<AuthenticationFactor>> amr_mappings = getAllAMRs();
-		Map<String, List<String>> acr_amr_mappings = getAllACR_AMR_Mapping();
-		Set<String> result = new HashSet<>();
-		List<String> amrvalues = new ArrayList<String>();
-		for (String acrFromPolicy : policyACRs) {
-			for(Map.Entry<String, List<AuthenticationFactor>> mapElement : amr_mappings.entrySet()) {
-				for(AuthenticationFactor authFactor: mapElement.getValue()) {
-					if(authFactor.getType().equalsIgnoreCase(acrFromPolicy)) {
-						amrvalues.add(mapElement.getKey());
-					}
-				}
-			}
-		}
-		for(String amr:amrvalues) {
-			for(Map.Entry<String, List<String>> mapElement : acr_amr_mappings.entrySet()) {
-				if(mapElement.getValue().contains(amr)) {
-					result.add(mapElement.getKey());
-				}
-			}
-		}
-		return result;
+		Set<String> matchedAMRs = getAllAMRs().entrySet().stream()
+		        .filter( entry -> entry.getValue().stream().allMatch( factor -> policyACRs.contains(factor.getType().toLowerCase())))
+		        .map(Map.Entry::getKey)
+		        .collect(Collectors.toSet());
+		Set<String> matchedACRs = getAllACR_AMR_Mapping().entrySet().stream()
+		        .filter( entry -> entry.getValue().stream().allMatch(amr -> matchedAMRs.contains(amr)))
+		        .map(Map.Entry::getKey)
+		        .collect(Collectors.toSet());
+		return matchedACRs;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
