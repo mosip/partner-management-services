@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
@@ -98,7 +99,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		String publicKey = getJWKString(createRequest.getPublicKey());
-		String clientId = HMACUtils2.encodeBase64String(HMACUtils2.generateHash(publicKey.getBytes()));
+		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
