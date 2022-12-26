@@ -3,22 +3,19 @@ package io.mosip.pms.oidc.client.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
@@ -56,7 +53,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.bouncycastle.util.encoders.UTF8;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.json.simple.JSONArray;
@@ -117,10 +113,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyId(createRequest.getRelyingPartyId(), policyFromDb.getId());
+				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.getId());
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
-					createRequest.getPolicyName(), createRequest.getRelyingPartyId());
+					createRequest.getPolicyName(), createRequest.getAuthPartnerId());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -128,7 +124,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved")) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyName(), createRequest.getRelyingPartyId(),
+					createRequest.getPolicyName(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
@@ -138,20 +134,33 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setPublicKey(publicKey);
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
-		clientDetail.setRpId(createRequest.getRelyingPartyId());
+		clientDetail.setRpId(createRequest.getAuthPartnerId());
 		clientDetail.setPolicyId(policyFromDb.getId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
-		clientDetail.setClaims(String.join(",", authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null))));
-		clientDetail.setAcrValues(String.join(",", authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY))));		
+		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
+				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
+		if (claims.isEmpty()) {
+			LOGGER.error(
+					"createOIDCClient::Partner has no User Claims");
+			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_CLAIMS.getErrorCode(),
+					ErrorCode.PARTNER_HAVING_NO_CLAIMS.getErrorMessage());
+		}
+		clientDetail.setClaims(String.join(",",claims));
+		Set<String> acrValues = authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
+				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
+		if (acrValues.isEmpty()) {
+			LOGGER.error(
+					"createOIDCClient::Partner has no User Claims");
+			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorCode(),
+					ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorMessage());
+		}
+		clientDetail.setAcrValues( String.join(",",acrValues));		
 		clientDetail.setStatus("ACTIVE");
 		clientDetail.setGrantTypes(String.join(",", createRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setCreatedBy(getLoggedInUserId());
-		authenticationContextClassRefUtil.getPolicySupportedClaims(Arrays.asList(clientDetail.getClaims()));
 		callIdpService(clientDetail, environment.getProperty("pmp-idp.oidc.client.create.rest.uri"), true);
 		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb, clientDetail);
 		clientDetailRepository.save(clientDetail);
@@ -170,9 +179,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private static List<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
-			String childAttribute, String filterAttribute) throws Exception {
-		List<String> attributes = new ArrayList<>();
+	private static Set<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
+			String childAttribute, String filterAttribute) {
+		Set<String> attributes = new HashSet<>();
 		JSONArray parentAttributeObject = (JSONArray) policyObject.get(parentAttribute);
 		for (int i = 0; i < parentAttributeObject.size(); i++) {
 			JSONObject childJsonArray = (JSONObject) parentAttributeObject.get(i);
@@ -182,7 +191,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
 						ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
 			}
-			attributes.add(key);
+		    attributes.add(key);
 		}
 		return attributes;
 	}
@@ -263,8 +272,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					.get(PartnerConstants.ERRORS);
 			if (!idpServiceErrorList.isEmpty()) {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
-				throw new ApiAccessibleException(idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-						idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				throw new ApiAccessibleException((String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE),
+						(String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE));
 			} else {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),

@@ -1,13 +1,14 @@
 package io.mosip.pms.common.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,25 +31,27 @@ public class AuthenticationContextRefUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationContextRefUtil.class);
 	private static final String AMR_KEY = "amr";
 	private static final String ACR_AMR = "acr_amr";
-	private static final String CLAIMSMAPPING = "idp-claims-mapping";
-	
-	@Value("${mosip.pms.idp.acr-amr-mappings}")
-	String acr_amr_values;
+	private static final String IDPCLAIMSMAPPING = "idp-claims-mapping";
 	
 	@Autowired
 	ObjectMapper objectMapper;
 	 
-	 @Value("${mosip.idp.claims-mapping-file-url:}")
+	 @Value("${mosip.idp.claims-mapping-file-url}")
 	 private String claimsMappingFileUrl;
+	 
+	 @Value("${mosip.idp.amr-acr-mapping-file-url}")
+	 private String acrMappingFileUrl;
 	 
 	 @Autowired
 	 RestTemplate restTemplate;
 	 
 	 private String claimsMappingJson;
 	 
+	 private String acrMappingJson;
+	 
 	private Map<String, List<AuthenticationFactor>> getAllAMRs() {
 		try {
-			ObjectNode objectNode = objectMapper.readValue(acr_amr_values, new TypeReference<ObjectNode>() {
+			ObjectNode objectNode = objectMapper.readValue(getAcrMappingJson(), new TypeReference<ObjectNode>() {
 			});
 			return objectMapper.convertValue(objectNode.get(AMR_KEY),
 					new TypeReference<Map<String, List<AuthenticationFactor>>>() {
@@ -59,6 +62,14 @@ public class AuthenticationContextRefUtil {
 		}
 	}
 
+	private String getAcrMappingJson() {
+        if(StringUtils.isEmpty(acrMappingJson)) {
+            logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
+            acrMappingJson = restTemplate.getForObject(acrMappingFileUrl, String.class);
+        }
+        return acrMappingJson;
+    }
+	
 	private String getClaimsMappingJson() {
         if(StringUtils.isEmpty(claimsMappingJson)) {
             logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
@@ -71,7 +82,7 @@ public class AuthenticationContextRefUtil {
 		try {
 			ObjectNode objectNode = objectMapper.readValue(getClaimsMappingJson(), new TypeReference<ObjectNode>() {
 			});
-			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(CLAIMSMAPPING),
+			Map<String, Claims> map = objectMapper.convertValue(objectNode.get(IDPCLAIMSMAPPING),
 					new TypeReference<Map<String,Claims >>() {
 					});
 			Map<List<String>, String> claimsMap = new HashMap<>();
@@ -86,7 +97,7 @@ public class AuthenticationContextRefUtil {
 	}
 	private Map<String, List<String>> getAllACR_AMR_Mapping() {
 		try {
-			ObjectNode objectNode = objectMapper.readValue(acr_amr_values, new TypeReference<ObjectNode>() {
+			ObjectNode objectNode = objectMapper.readValue(getAcrMappingJson(), new TypeReference<ObjectNode>() {
 			});
 			return objectMapper.convertValue(objectNode.get(ACR_AMR), new TypeReference<Map<String, List<String>>>() {
 			});
@@ -102,33 +113,25 @@ public class AuthenticationContextRefUtil {
 	}
 	
 
-	public Set<String> getAuthFactors(List<String> policyACRs) {
-		Map<String, List<AuthenticationFactor>> amr_mappings = getAllAMRs();
-		Map<String, List<String>> acr_amr_mappings = getAllACR_AMR_Mapping();
-		Set<String> result = new HashSet<>();
-		for (String acrFromPolicy : policyACRs) {
-			List<AuthenticationFactor> authFactors = amr_mappings.getOrDefault(acrFromPolicy, Collections.emptyList());
-			for (String supportedACRValue : getSupportedACRValues()) {
-				List<String> authFactorNames = acr_amr_mappings.getOrDefault(supportedACRValue,
-						Collections.emptyList());
-				for (AuthenticationFactor authFactor : authFactors) {
-					if (authFactorNames.contains(authFactor.getType())) {
-						result.add(supportedACRValue);
-					}
-				}
-			}
-
-		}
-		return result;
+	public Set<String> getAuthFactors(Set<String> policyACRs) {
+		Set<String> matchedAMRs = getAllAMRs().entrySet().stream()
+		        .filter( entry -> entry.getValue().stream().allMatch( factor -> policyACRs.contains(factor.getType().toLowerCase())))
+		        .map(Map.Entry::getKey)
+		        .collect(Collectors.toSet());
+		Set<String> matchedACRs = getAllACR_AMR_Mapping().entrySet().stream()
+		        .filter( entry -> entry.getValue().stream().allMatch(amr -> matchedAMRs.contains(amr)))
+		        .map(Map.Entry::getKey)
+		        .collect(Collectors.toSet());
+		return matchedACRs;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set<String> getPolicySupportedClaims(List<String> claimsFromPolicy) {		
+	public Set<String> getPolicySupportedClaims(Set<String> claimsFromPolicy) {		
 		Map<List<String>, String> map = getAllClaims();
 		Set<String> filteredClaims = new HashSet<String>();
 		for(String claim:claimsFromPolicy) {
 			for(Map.Entry<List<String>,String> mapElement : map.entrySet()) {
-				if(mapElement.getKey().contains(claim)) {
+				if(mapElement.getKey().stream().anyMatch(claim::equalsIgnoreCase)) {
 					filteredClaims.add(mapElement.getValue());
 				}
 			}

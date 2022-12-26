@@ -66,8 +66,9 @@ public enum ErrorCode {
 	DUPLICATE_CLIENT("PMS_IDP_001","Client public key already exists."),
 	PARTNER_POLICY_NOT_APPROVED("PMS_IDP_002","Partner policy mapping is not approved. Please check mapping status."),
 	POLICY_HAVING_MANDATORY_AUTHS("PMS_IDP_003","Policy having mandatory auths. So client can't be created for the same."),
-	CLIENT_NOT_EXISTS("PMS_IDP_001","Client not exists with given id.");
-
+	CLIENT_NOT_EXISTS("PMS_IDP_004","Client not exists with given id."),
+	PARTNER_HAVING_NO_CLAIMS("PMS_IDP_005","Partner has no user claims"),
+	PARTNER_HAVING_NO_ACRVALUES("PMS_IDP_005","Partner has no Authentication Context Refrences");
 	
 	/**
 	 * The error code.
