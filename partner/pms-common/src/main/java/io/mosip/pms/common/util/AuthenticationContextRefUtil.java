@@ -113,7 +113,7 @@ public class AuthenticationContextRefUtil {
 	}
 	
 
-	public Set<String> getAuthFactors(List<String> policyACRs) {
+	public Set<String> getAuthFactors(Set<String> policyACRs) {
 		Set<String> matchedAMRs = getAllAMRs().entrySet().stream()
 		        .filter( entry -> entry.getValue().stream().allMatch( factor -> policyACRs.contains(factor.getType().toLowerCase())))
 		        .map(Map.Entry::getKey)
@@ -126,7 +126,7 @@ public class AuthenticationContextRefUtil {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set<String> getPolicySupportedClaims(List<String> claimsFromPolicy) {		
+	public Set<String> getPolicySupportedClaims(Set<String> claimsFromPolicy) {		
 		Map<List<String>, String> map = getAllClaims();
 		Set<String> filteredClaims = new HashSet<String>();
 		for(String claim:claimsFromPolicy) {

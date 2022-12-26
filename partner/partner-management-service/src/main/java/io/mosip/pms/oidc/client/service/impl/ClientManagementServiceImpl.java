@@ -3,6 +3,7 @@ package io.mosip.pms.oidc.client.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,7 +140,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
 		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
 				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
-		if (claims.isEmpty() || claims.size()<1) {
+		if (claims.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
 			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_CLAIMS.getErrorCode(),
@@ -148,7 +149,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClaims(String.join(",",claims));
 		Set<String> acrValues = authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
 				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
-		if (acrValues.isEmpty() || acrValues.size()<1) {
+		if (acrValues.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
 			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorCode(),
@@ -178,9 +179,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private static List<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
-			String childAttribute, String filterAttribute) throws Exception {
-		List<String> attributes = new ArrayList<>();
+	private static Set<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
+			String childAttribute, String filterAttribute) {
+		Set<String> attributes = new HashSet<>();
 		JSONArray parentAttributeObject = (JSONArray) policyObject.get(parentAttribute);
 		for (int i = 0; i < parentAttributeObject.size(); i++) {
 			JSONObject childJsonArray = (JSONObject) parentAttributeObject.get(i);
