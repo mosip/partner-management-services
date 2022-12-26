@@ -23,7 +23,7 @@ INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_act
 
 UPDATE pms.partner_type SET is_policy_required=true, upd_dtimes =now(), upd_by ='superadmin' WHERE code='MISP_Partner';
 
-ALTER TABLE pms.misp_license ADD COLUMN policy_id character varchar(36);
+ALTER TABLE pms.misp_license ADD COLUMN policy_id character varying(36);
 
 
 \COPY pms.policy_group (id,name,descr,user_id,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM '../dml/pms-policy_group.csv' delimiter ',' HEADER  csv;
