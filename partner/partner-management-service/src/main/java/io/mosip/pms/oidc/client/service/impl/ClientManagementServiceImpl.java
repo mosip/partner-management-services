@@ -191,9 +191,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
 						ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
 			}
-			if(!attributes.contains(key)) {
-		         attributes.add(key);
-			}
+		    attributes.add(key);
 		}
 		return attributes;
 	}
