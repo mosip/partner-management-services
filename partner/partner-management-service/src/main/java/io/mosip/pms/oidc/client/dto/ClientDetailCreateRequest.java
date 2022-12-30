@@ -21,33 +21,37 @@ public class ClientDetailCreateRequest {
 
     @NotNull
     @NotBlank
+    @Size(min = 1, max = 256)
     private String name;
     
     @NotNull
     @NotBlank
+    @Size(min = 1, max = 128)
     private String policyName;
 
     @NotEmpty
     private Map<String, @NotNull Object> publicKey;
 
     @NotBlank
+    @Size(min = 1, max = 100)
     private String authPartnerId;
 
     @NotNull
     @NotBlank
     @URL   
+    @Size(max = 2048)
     private String logoUri;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 5)
     private List<String> redirectUris;
     
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 3)
     private List<String> grantTypes;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 3)
     private List<String> clientAuthMethods;
 
 }
