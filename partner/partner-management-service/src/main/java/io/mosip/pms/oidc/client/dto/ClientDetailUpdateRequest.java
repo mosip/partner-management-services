@@ -17,10 +17,11 @@ public class ClientDetailUpdateRequest {
     @NotNull
     @NotBlank
     @URL
+    @Size( max = 2048)
     private String logoUri;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 5)
     private List<@NotBlank String> redirectUris;
 
     @NotNull
@@ -29,7 +30,7 @@ public class ClientDetailUpdateRequest {
     private String status;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 3)
     private List<String> grantTypes;
 
     @NotNull
@@ -37,6 +38,6 @@ public class ClientDetailUpdateRequest {
     private String clientName;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 3)
     private List<String> clientAuthMethods;
 }

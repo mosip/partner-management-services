@@ -71,6 +71,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String ALLOWED_AUTH_TYPES = "allowedAuthTypes";
 	private static final String AUTH_TYPE = "authType";
 	private static final String MANDATORY = "mandatory";
+	private static final String AUTH_POLICY_TYPE = "Auth";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -112,7 +113,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
-
+		if(!policyFromDb.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
+			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policyFromDb.getPolicy_type());
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
+		}
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
 				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.getId());
 		if (policyMappingReqFromDb.isEmpty()) {
@@ -192,7 +197,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorCode(),
 						ErrorCode.POLICY_HAVING_MANDATORY_AUTHS.getErrorMessage());
 			}
-		    attributes.add(key);
+		    attributes.add(key.toLowerCase());
 		}
 		return attributes;
 	}
