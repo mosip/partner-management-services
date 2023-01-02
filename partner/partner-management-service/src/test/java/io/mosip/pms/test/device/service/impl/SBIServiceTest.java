@@ -13,9 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -76,12 +78,20 @@ public class SBIServiceTest {
 	
 	@InjectMocks
 	SecureBiometricInterfaceService secureBiometricInterfaceService=new SecureBiometricInterfaceServiceImpl();
+	
+	@Autowired
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate restTemplate;
+	
 	@Mock
 	DeviceDetailRepository deviceDetailRepository;
+	
 	@Mock
 	AuditUtil auditUtil;
+	
 	@Mock
 	SecureBiometricInterfaceRepository sbiRepository;
+	
 	@Mock
 	SecureBiometricInterfaceHistoryRepository sbiHistoryRepository;
 	

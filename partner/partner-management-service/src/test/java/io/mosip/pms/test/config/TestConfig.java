@@ -37,4 +37,8 @@ public class TestConfig {
 		return new RestTemplate(requestFactory);
 
 	}
+	
+	@Bean
+	public RestTemplate selfTokenRestTemplate() { return new RestTemplate(); }
+
 }

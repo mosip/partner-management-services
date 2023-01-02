@@ -24,6 +24,7 @@ import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyRequestsResponse;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
@@ -131,7 +132,25 @@ public class PartnerManagementController {
 		response.setVersion(version);
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}	
+	}
+	
+	/** 
+	 * This API would be used to retrieve all Auth/E-KYC Partners for the policy group.
+	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
+	 */
+	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE','ID_REPOSITORY')")
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	@Operation(summary = "Service to get partner details", description = "Service to get partners details")
+	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
+			@RequestParam("partnerType") Optional<String> partnerType){
+		ResponseWrapper<PartnerDetailsResponse> response=new ResponseWrapper<>();
+		PartnerDetailsResponse retrievePartnerDetailsResponse = null;
+		retrievePartnerDetailsResponse = partnerManagementService.getPartners(partnerType);
+		response.setId(msg);
+		response.setVersion(version);
+		response.setResponse(retrievePartnerDetailsResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 	
 	/**

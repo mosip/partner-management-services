@@ -63,6 +63,12 @@ public class PartnerH implements Serializable {
 
 	@Column(name="user_id")
 	private String userId;
+	
+	@Column(name = "logo_url")
+	private String logoUrl;
+	
+	@Column(name = "addl_info")
+	private String additionalInfo;
 
 	public PartnerH() {
 	}
@@ -130,6 +136,14 @@ public class PartnerH implements Serializable {
 	public void setDelDtimes(Timestamp delDtimes) {
 		this.delDtimes = delDtimes;
 	}
+	
+	public String getLogoUrl() {
+		return this.logoUrl;
+	}
+	
+	public String getAdditionalInfo() {
+		return this.additionalInfo;
+	}
 
 	public String getEmailId() {
 		return this.emailId;
@@ -173,6 +187,14 @@ public class PartnerH implements Serializable {
 
 	public String getPolicyGroupId() {
 		return this.policyGroupId;
+	}
+	
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+	
+	public void setAdditionalInfo(String additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 
 	public void setPolicyGroupId(String policyGroupId) {

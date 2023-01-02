@@ -16,13 +16,15 @@ public final class PartnerConstants {
 
 	public static final String ERRORCODE = "errorCode";
 
-	public static final String ERRORMESSAGE = "message";
+	public static final String ERRORMESSAGE = "errorMessage";
 
 	public static final String ACTIVE = "active";
 
 	public static final String DEACTIVE = "De-active";
 	
-	public static final String PARTNER_DATA = "partnerData";
+	public static final String PARTNER_DATA = "partnerData"; 
+	
+	public static final String MISP_DATA = "mispLicenseData";
 	
 	public static final String POLICY_DATA = "policyData";
 	
@@ -31,4 +33,6 @@ public final class PartnerConstants {
 	public static final String CERT_CHAIN_DATA_SHARE_URL = "certChainDatashareUrl";
 	
 	public static final String PARTNER_DOMAIN = "partnerDomain";
+	
+	public static final String CLIENT_DATA="clientData";
 }

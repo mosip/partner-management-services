@@ -27,8 +27,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.FilterTypeEnum;
 import io.mosip.pms.common.constant.OrderEnum;
 import io.mosip.pms.common.constant.SearchErrorCode;

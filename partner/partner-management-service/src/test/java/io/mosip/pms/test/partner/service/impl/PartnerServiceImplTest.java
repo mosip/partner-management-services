@@ -19,9 +19,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -60,6 +65,7 @@ import io.mosip.pms.common.repository.PartnerTypeRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
@@ -81,15 +87,22 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.impl.PartnerServiceImpl;
+import io.mosip.pms.test.PartnerManagementServiceTest;
+import io.mosip.pms.test.config.TestSecurityConfig;
 
 
 /**
  * @author sanjeev.shrivastava
  *
  */
+@SpringBootTest(classes =PartnerManagementServiceTest.class)
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@AutoConfigureMockMvc
+@Import(TestSecurityConfig.class)
 public class PartnerServiceImplTest {
+	
+	@Value("${pmp.allowed.credential.types}")
+	private String allowedCredentialTypes;
 	
 	@Autowired
 	private PartnerServiceImpl pserviceImpl;
@@ -125,7 +138,8 @@ public class PartnerServiceImplTest {
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	@MockBean
 	private WebSubPublisher webSubPublisher;
-	
+	@MockBean
+	UserDetailUtil userDetailUtil;
     @MockBean
 	AuditUtil auditUtil;
     
@@ -159,7 +173,8 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "pageUtils", pageUtils);
 		ReflectionTestUtils.setField(pserviceImpl, "filterHelper", filterHelper);
 		ReflectionTestUtils.setField(pserviceImpl, "restUtil", restUtil);
-		
+		ReflectionTestUtils.setField(pserviceImpl, "allowedCredentialTypes", allowedCredentialTypes);
+
 		//Filter_Test
 		searchFilter.setColumnName("name");
 		searchFilter.setFromValue("");
@@ -369,6 +384,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
+	@WithUserDetails("partner")
 	public void savePartnerTest() {
 		MosipUserDto userDto = new MosipUserDto();
 		userDto.setName("PARTNER");
@@ -526,7 +542,8 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerDetails("12345");
 	}
 
-	@Test	
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void updatePartnerDetailsTest_S1() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));
@@ -552,6 +569,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test	
+	@WithMockUser(roles = {"PARTNER"})
 	public void updatePartnerDetailTest_S3() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
 		String partnerId = "12345";
@@ -563,6 +581,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void updatePartnerDetailTest_S4() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
 		String partnerId = "12345";
@@ -706,6 +725,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));
@@ -1135,11 +1155,14 @@ public class PartnerServiceImplTest {
 		partner.setContactNo("47384384");
 		partner.setEmailId("xyz@hotmail.com");
 		partner.setName("name");
+		partner.setUserId("partner");
 		partner.setPolicyGroupId("12345");
 		partner.setIsActive(isActive);
 		partner.setUpdBy("Partner Service");
 		partner.setUpdDtimes(Timestamp.valueOf(now));
 		partner.setPartnerTypeCode("Credential_Partner");
+		partner.setApprovalStatus("Approved");
+		partner.setCrBy("Partner");
 		return partner;
 	}
 	
