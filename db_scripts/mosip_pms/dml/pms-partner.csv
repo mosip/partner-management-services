@@ -8,3 +8,4 @@ mpartner-default-adjudication,mpolicygroup-default-adjudication,mpartner-default
 mpartner-default-cert,mpolicygroup-default-cert,mpartner-default-cert,mpartner-default-cert,9232121212,info@mosip.io,,mpartner-default-cert,Internal_Partner,approved,TRUE,superadmin,now(),superadmin,now()
 mpartner-default-digitalcard,mpolicygroup-default-digitalcard,IITB,mpartner-default-digitalcard,9232121212,digitalcard@mosip.io,,mpartner-default-digitalcard,Credential_Partner,Activated,TRUE,superadmin,now(),superadmin,now()
 mpartner-default-mobile,mpolicygroup-default-mobile,residentapp-partner,mpartner-default-mobile,9232121212,info@mosip.io,,mpartner-default-mobile,Credential_Partner,approved,TRUE,superadmin,now(),superadmin,now()
+
