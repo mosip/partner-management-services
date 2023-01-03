@@ -139,7 +139,7 @@ public class PartnerManagementController {
 	 * @return response this class contains list of Auth/E-KYC Partners for the policy group
 	 */
 	@PreAuthorize("hasAnyRole('PARTNERMANAGER','PARTNER_ADMIN','partnermanager','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT','CREDENTIAL_ISSUANCE','ID_REPOSITORY')")
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	@RequestMapping(value = "/v2", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details", description = "Service to get partners details")
 	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
 			@RequestParam("partnerType") Optional<String> partnerType){
