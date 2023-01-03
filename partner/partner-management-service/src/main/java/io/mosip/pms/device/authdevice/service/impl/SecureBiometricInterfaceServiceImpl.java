@@ -106,7 +106,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", sbiDto.getProviderId(), "partnerId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}		
@@ -118,7 +118,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
 							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage()),
-					"AUT-005");
+					"AUT-005", sbiDto.getProviderId(), "partnerId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
 					SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage());
 		}
@@ -190,7 +190,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(), String.format(
 									SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId())),
-					"AUT-016");
+					"AUT-016", sbiupdateDto.getId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}		
@@ -202,7 +202,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
 							SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage()),
-					"AUT-005");
+					"AUT-005", sbiupdateDto.getId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode(),
 					SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorMessage());
 		}
@@ -263,7 +263,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 							String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(),
 									secureBiometricInterfaceDto.getId())),
-					"AUT-016");
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(),
 							secureBiometricInterfaceDto.getId()));
@@ -300,7 +300,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				String.format(DeviceConstant.FAILURE_DESC,
 						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
 						SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage()),
-				"AUT-008");
+				"AUT-008", secureBiometricInterfaceDto.getId(), "sbiId");
 		throw new RequestException(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorCode(),
 				String.format(SecureBiometricInterfaceConstant.SBI_STATUS_CODE.getErrorMessage(),
 						secureBiometricInterfaceDto.getId()));
@@ -396,7 +396,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
-					"AUT-008");
+					"AUT-008", input.getSbiId(), "sbiId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
@@ -407,7 +407,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorMessage()),
-					"AUT-008");
+					"AUT-008", input.getSbiId(), "sbiId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_REJECTED.getErrorMessage(), input.getDeviceDetailId()));
 		}
@@ -418,7 +418,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage()),
-					"AUT-008");
+					"AUT-008", input.getSbiId(), "sbiId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_APPROVED.getErrorMessage(), input.getDeviceDetailId()));
 		}
@@ -430,7 +430,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(), String.format(
 									SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId())),
-					"AUT-016");
+					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId()));
 		}		
@@ -441,7 +441,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(), String.format(
 									SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId())),
-					"AUT-016");
+					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorMessage(), input.getSbiId()));
 		}
@@ -452,7 +452,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.DD_SBI_PROVIDER_NOT_MATCHING.getErrorCode(), String.format(
 									SecureBiometricInterfaceConstant.DD_SBI_PROVIDER_NOT_MATCHING.getErrorMessage(), input.getSbiId())),
-					"AUT-016");
+					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.DD_SBI_PROVIDER_NOT_MATCHING.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.DD_SBI_PROVIDER_NOT_MATCHING.getErrorMessage(), input.getSbiId()));			
 		}
@@ -485,7 +485,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorCode(), String.format(
 									SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId())),
-					"AUT-016");
+					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId()));			
 			

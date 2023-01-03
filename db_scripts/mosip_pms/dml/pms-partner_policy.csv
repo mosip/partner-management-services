@@ -7,4 +7,8 @@ mpolicy_part_reprint_api,mpolicy_part_reprint_api,mpartner-default-print,mpolicy
 mpolicy_part_resident_api,mpolicy_part_resident_api,mpartner-default-resident,mpolicy-default-resident,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_adjudica_api,mpolicy_part_adjudica_api,mpartner-default-adjudication,mpolicy-default-adjudication,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_cert_api,mpolicy_part_cert_api,mpartner-default-cert,mpolicy-default-cert,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_eUIN_with_QR_api,mpolicy_part_eUIN_with_QR_api,mpartner-default-print,mpolicy-default-eUIN_with_QR,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_eUIN_with_faceQR_api,mpolicy_part_eUIN_with_faceQR_api,mpartner-default-print,mpolicy-default-eUIN_with_faceQR,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_PDFCard_api,mpolicy_part_PDFCard_api,mpartner-default-digitalcard,mpolicy-default-PDFCard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
+mpolicy_part_digitalcard_api,mpolicy_part_PDFCard_api,mpartner-default-digitalcard,mpolicy-default-digitalcard,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()
 mpolicy_part_mobile_api,mpolicy_part_mobile_api,mpartner-default-mobile,mpolicy-default-mobile,now(),12-01-2025 05:31,TRUE,admin,now(),admin,now()

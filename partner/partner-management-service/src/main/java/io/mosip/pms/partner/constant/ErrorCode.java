@@ -31,6 +31,7 @@ public enum ErrorCode {
 	POLICY_PARSING_ERROR("PMS_PRT_071","Error occured while parsing policy string to json object"),
 	CREDENTIAL_TYPE_NOT_ALLOWED("PMS_PRT_072","Given credential type is not allowed. Allowed credential types : "),
 	POLICY_NOT_EXIST("PMS_PRT_073","Policy not exists."),
+	PARTNER_POLICY_TYPE_MISMATCH("PMS_PRT_057","Policy Type Mismatch. Only Auth policy can be used to create OIDC Client."),	
 	EMAIL_EXISTS_IN_KEYCLOAK("PMS_PRT_074","User exists with same email(keycloak)"),
 	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_005","Partner does not exist"),
 	PARTNER_API_KET_REQ_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_006","No api key req exist"),
@@ -61,8 +62,14 @@ public enum ErrorCode {
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
 	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Mapping exists for given policy and partner and is in %s state."),	
 	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
-	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces");
-
+	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces"),
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
+	DUPLICATE_CLIENT("PMS_IDP_001","Client public key already exists."),
+	PARTNER_POLICY_NOT_APPROVED("PMS_IDP_002","Partner policy mapping is not approved. Please check mapping status."),
+	POLICY_HAVING_MANDATORY_AUTHS("PMS_IDP_003","Policy having mandatory auths. So client can't be created for the same."),
+	CLIENT_NOT_EXISTS("PMS_IDP_004","Client not exists with given id."),
+	PARTNER_HAVING_NO_CLAIMS("PMS_IDP_005","Partner has no user claims"),
+	PARTNER_HAVING_NO_ACRVALUES("PMS_IDP_005","Partner has no Authentication Context Refrences");
 	
 	/**
 	 * The error code.

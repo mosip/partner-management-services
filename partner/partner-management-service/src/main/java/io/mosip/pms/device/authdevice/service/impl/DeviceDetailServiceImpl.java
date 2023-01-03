@@ -93,7 +93,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage()),
-					"AUT-002");
+					"AUT-002", deviceDetailDto.getDeviceProviderId(), "partnerId");
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
 		} else {
@@ -109,7 +109,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage()),
-					"AUT-003");
+					"AUT-003", deviceDetailDto.getDeviceProviderId(), "partnerId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
@@ -123,7 +123,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage()),
-					"AUT-004");
+					"AUT-004", deviceDetailDto.getDeviceProviderId(), "partnerId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
 		}
@@ -163,7 +163,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
-					"AUT-008");
+					"AUT-008", deviceDetailDto.getId(), "deviceDetailId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), dto.getId()));
 		}
@@ -177,7 +177,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage()),
-					"AUT-009");
+					"AUT-009", deviceDetailDto.getId(), "deviceDetailId");
 			throw new RequestException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
 		} else {
@@ -214,7 +214,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					String.format(DeviceConstant.FAILURE_DESC,
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 							DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage()),
-					"AUT-008");
+					"AUT-008", deviceDetails.getId(), "deviceDetailId");
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(),
 					String.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(),
 							deviceDetails.getId()));
@@ -244,7 +244,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				String.format(DeviceConstant.FAILURE_DESC,
 						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(),
 						DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage()),
-				"AUT-008");
+				"AUT-008", deviceDetails.getId(), "deviceDetailId");
 		throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorCode(), String
 				.format(DeviceDetailExceptionsConstant.DEVICE_STATUS_CODE.getErrorMessage(), deviceDetails.getId()));
 	}

@@ -3,6 +3,7 @@ package io.mosip.pms.device.util;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -10,9 +11,12 @@ import java.util.function.Predicate;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +55,10 @@ public class AuditUtil {
 
 	/** The Constant UNKNOWN_HOST. */
 	private static final String UNKNOWN_HOST = "Unknown Host";
+	
+	private static final String NOID = "NO_ID";
+	
+	private static final String NOIDTYPE= "NO_ID_TYPE";
 
 	private String hostIpAddress = null;
 
@@ -65,6 +74,10 @@ public class AuditUtil {
 
 	@Autowired
 	RestUtil restUtil;	
+	
+	@Autowired
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate restTemplate;
 	
 	/**
 	 * Audit request.
@@ -84,11 +97,15 @@ public class AuditUtil {
 
 	public void auditRequest(String eventName, String eventType, String description) {
 		String eventId = "ADM-" + eventCounter.incrementAndGet();
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId, NOID, NOIDTYPE);
 	}
 
 	public void auditRequest(String eventName, String eventType, String description, String eventId) {
-		setAuditRequestDto(eventName, eventType, description, eventId);
+		setAuditRequestDto(eventName, eventType, description, eventId, NOID, NOIDTYPE);
+	}
+	
+	public void auditRequest(String eventName, String eventType, String description, String eventId, String refId, String refIdType) {
+		setAuditRequestDto(eventName, eventType, description, eventId, refId, refIdType);
 	}
 
 	/**
@@ -96,15 +113,15 @@ public class AuditUtil {
 	 *
 	 * @param auditRequestDto the new audit request dto
 	 */
-	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId) {
+	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId, String refId, String refIdType) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		if (!validateSecurityContextHolder()) {
 
 		}
 
 		auditRequestDto.setEventId(eventId);
-		auditRequestDto.setId("NO_ID");
-		auditRequestDto.setIdType("NO_ID_TYPE");
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
 		auditRequestDto.setEventName(eventName);
 		auditRequestDto.setEventType(eventType);
 		auditRequestDto.setModuleId("PMP-AUT");
@@ -142,6 +159,27 @@ public class AuditUtil {
 		callAuditManager(auditRequestDto);
 	}
 	
+	public void setAuditRequestDto(io.mosip.pms.partner.manager.constant.PartnerManageEnum PartnerManageEnum, String refId, String refIdType) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+	
 	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		auditRequestDto.setHostIp(hostIpAddress);
@@ -160,6 +198,27 @@ public class AuditUtil {
 		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
 		auditRequestDto.setId(PartnerManageEnum.getId());
 		auditRequestDto.setIdType(PartnerManageEnum.getIdType());
+		callAuditManager(auditRequestDto);
+	}
+	
+	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum, String refId, String refIdType) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
 		callAuditManager(auditRequestDto);
 	}
 
@@ -225,13 +284,15 @@ public class AuditUtil {
 		RequestWrapper<AuditRequestDto> auditReuestWrapper = new RequestWrapper<>();
 		auditReuestWrapper.setRequest(auditRequestDto);
 		HttpEntity<RequestWrapper<AuditRequestDto>> httpEntity = new HttpEntity<>(auditReuestWrapper);
-		String response =null;
+		ResponseEntity<String> response =null;
 		try {
-			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);
+			response =  restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
+
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			handlException(ex);
 		}
-		getAuditDetailsFromResponse(response);
+		String responseBody = response.getBody();
+		getAuditDetailsFromResponse(responseBody);
 
 	}
 

@@ -19,11 +19,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,10 +57,13 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.test.PartnerManagementServiceTest;
+import io.mosip.pms.test.config.TestSecurityConfig;
 
-
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
+@Import(TestSecurityConfig.class)
 public class PartnerManagementServiceImplTest {
 	
 	@Autowired
@@ -85,6 +93,9 @@ public class PartnerManagementServiceImplTest {
 	@Mock
 	private WebSubPublisher webSubPublisher;
 	
+	@Autowired
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate restTemplate;
 
 	@MockBean
 	private AuditUtil audit;
@@ -933,7 +944,7 @@ public class PartnerManagementServiceImplTest {
 	}
 	
 	@Test
-	@WithMockUser(username = "partner")
+	@WithUserDetails("partner")
 	public void generateAPIKeyTest() {
 		APIKeyGenerateRequestDto request = new APIKeyGenerateRequestDto();
 		request.setLabel("unique");
