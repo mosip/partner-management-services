@@ -64,6 +64,8 @@ public enum ErrorCode {
 	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
 	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces"),
 	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
+	INVALID_PARTNERID("PMS_PRT_058","AuthPartner doesn't exists with this Id - %s."),
+	INVALID_PARTNER_TYPE("PMS_PRT_059","Only Auth_partner can Create OIDC Client. %s is not allowed to create OIDC Client."),
 	DUPLICATE_CLIENT("PMS_IDP_001","Client public key already exists."),
 	PARTNER_POLICY_NOT_APPROVED("PMS_IDP_002","Partner policy mapping is not approved. Please check mapping status."),
 	POLICY_HAVING_MANDATORY_AUTHS("PMS_IDP_003","Policy having mandatory auths. So client can't be created for the same."),

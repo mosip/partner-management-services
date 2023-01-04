@@ -27,7 +27,7 @@ public class ClientDetailCreateRequest {
     @NotNull
     @NotBlank
     @Size(min = 1, max = 128)
-    private String policyName;
+    private String policyId;
 
     @NotEmpty
     private Map<String, @NotNull Object> publicKey;

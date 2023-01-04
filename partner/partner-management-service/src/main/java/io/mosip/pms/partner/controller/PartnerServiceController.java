@@ -107,7 +107,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/v2", method = RequestMethod.POST)
 	@Operation(summary = "partner registration", description = "Registers partner details")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequestDto> request) {
@@ -228,7 +228,7 @@ public class PartnerServiceController {
 	}
 	
 	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
-	@RequestMapping(value = "/new/{partnerId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/v2/{partnerId}", method = RequestMethod.PUT)
 	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerInfo(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateDto> request, @PathVariable String partnerId) {
