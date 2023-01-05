@@ -34,7 +34,7 @@ today=`date '+%d%m%Y_%H%M%S'`;
 LOG="${LOG_PATH}${MOSIP_DB_NAME}-release-${release_version}-${today}.log"
 touch $LOG
 
-SERVICE=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -t -c "select count(1) from pg_roles where rolname IN('sysadmin')";exit; > /dev/null)
+SERVICE=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -v dbport="'$DB_PORT'" -v dbhost="'$DB_SERVERIP'" -v dbuser="'$SU_USER'" -v dbpassword="'$SU_USER_PWD'" -t -c "select count(1) from pg_roles where rolname IN('sysadmin')";exit; > /dev/null)
   
 if [ "$SERVICE" -eq 0 ] || [ "$SERVICE" -eq 1 ]
 then
