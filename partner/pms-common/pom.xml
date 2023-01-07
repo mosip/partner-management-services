@@ -6,10 +6,10 @@
   <parent>
     <groupId>io.mosip.pms</groupId>
     <artifactId>pms-parent</artifactId>
-    <version>1.2.0.1-B2-SNAPSHOT</version>
+    <version>1.2.0.1-B2</version>
   </parent>   
   <artifactId>pms-common</artifactId>
-  <version>1.2.0.1-B2-SNAPSHOT</version>
+  <version>1.2.0.1-B2</version>
   <name>pms-common</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,7 +21,7 @@
   	   <dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-openid-bridge-api</artifactId>
-			<version>1.2.0.1-B2-SNAPSHOT</version>
+			<version>1.2.0.1-B2</version>
 			<scope>provided</scope>
 		</dependency>
   		<dependency>
