@@ -4,7 +4,8 @@ import java.util.Objects;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+
 
 public class UserDetailUtil {
 	

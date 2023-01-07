@@ -45,7 +45,9 @@ import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
+import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
+import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
@@ -96,8 +98,24 @@ public class PartnerServiceController {
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
 		partnerRequest = request.getRequest();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, request.getRequest().getPartnerId(),
+				"partnerId");
 		partnerResponse = partnerService.savePartner(partnerRequest);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setResponse(partnerResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/v2", method = RequestMethod.POST)
+	@Operation(summary = "partner registration", description = "Registers partner details")
+	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerRegistration(
+			@RequestBody @Valid RequestWrapper<PartnerRequestDto> request) {
+		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
+		PartnerResponse partnerResponse = null;
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, request.getRequest().getPartnerId(),
+				"partnerId");
+		partnerResponse = partnerService.registerPartner(request.getRequest());
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
@@ -117,7 +135,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS, partnerId, "partnerId");
 		response.setResponse(partnerService.addBiometricExtractors(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
@@ -153,7 +171,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE, partnerId, "partnerId");
 		response.setResponse(partnerService.mapPartnerPolicyCredentialType(credentialType, partnerId, policyName));
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
@@ -178,7 +196,7 @@ public class PartnerServiceController {
 	@Operation(summary = "Service to add additional contact deatils of partner", description = "Service to add additional contact deatils of partner")
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS, partnerId, "partnerId");
 		response.setResponse(partnerService.createAndUpdateContactDetails(request.getRequest(),partnerId));
 		response.setId(request.getId());
 																																																										response.setVersion(request.getVersion());
@@ -201,8 +219,23 @@ public class PartnerServiceController {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerUpdateRequest partnerRequest = request.getRequest();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER, partnerId, "partnerId");
 		partnerResponse = partnerService.updatePartnerDetail(partnerRequest, partnerId);
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		response.setResponse(partnerResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
+	@RequestMapping(value = "/v2/{partnerId}", method = RequestMethod.PUT)
+	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
+	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerInfo(
+			@RequestBody @Valid RequestWrapper<PartnerUpdateDto> request, @PathVariable String partnerId) {
+		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
+		PartnerResponse partnerResponse = null;		
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER, partnerId, "partnerId");
+		partnerResponse = partnerService.updatePartnerDetails(request.getRequest(), partnerId);
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		response.setResponse(partnerResponse);
@@ -216,7 +249,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','RESIDENT','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','SDK_PARTNER','MANUAL_ADJUDICATION','MISP_PARTNER')")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	@Operation(summary = "Service to get deatils of partner", description = "Service to get deatils of partner")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
@@ -239,7 +272,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key requests of partner", description = "Service to get api key requests of partner")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
@@ -285,13 +318,13 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/certificate/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload partner certificate", description = "Service to upload partner certificate")
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
 			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<PartnerCertificateUploadRequestDto> partnerCertRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		ResponseWrapper<PartnerCertificateResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT, partnerCertRequestDto.getRequest().getPartnerId(),"partnerId");
 		response.setResponse(partnerService.uploadPartnerCertificate(partnerCertRequestDto.getRequest()));
 		return response;
 	}
@@ -306,7 +339,7 @@ public class PartnerServiceController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/certificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner certificate", description = "Service to get partner certificate")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
@@ -320,7 +353,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','SDK_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','PARTNER_ADMIN','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search partner details", description = "Service to search partner details")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
@@ -367,7 +400,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/request/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search api key requests", description = "Service to search api key requests")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -379,7 +412,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/search")
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "Service to search api key", description = "Service to search api key")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -389,13 +422,13 @@ public class PartnerServiceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','CREATE_SHARE','ID_AUTHENTICATION','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('PARTNER','PMS_USER','AUTH_PARTNER','CREDENTIAL_PARTNER','PARTNER_ADMIN','ONLINE_VERIFICATION_PARTNER')")
 	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
 			@PathVariable("policygroupName") @NotNull String policygroupName) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, partnerId, "partnerId");
 		response.setResponse(partnerService.updatePolicyGroup(partnerId, policygroupName));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
@@ -405,18 +438,18 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<EmailVerificationResponseDto>> isEmailExists(
 			@RequestBody @Valid RequestWrapper<EmailVerificationRequestDto> request) {
 		ResponseWrapper<EmailVerificationResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, request.getRequest().getEmailId(), "email");
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER','PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER','PARTNER_ADMIN')")
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
 	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER, partnerId, "partnerId");
 		ResponseWrapper<PartnerPolicyMappingResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.requestForPolicyMapping(request.getRequest(), partnerId));
 		response.setId(request.getId());
@@ -424,14 +457,14 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('AUTH_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
+	@PreAuthorize("hasAnyRole('AUTH_PARTNER','ABIS_PARTNER','CREDENTIAL_PARTNER','CREDENTIAL_ISSUANCE','ONLINE_VERIFICATION_PARTNER')")
 	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<APIKeyGenerateRequestDto> request) {
 		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
 		response.setResponse(partnerManagerService.generateAPIKey(partnerId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());

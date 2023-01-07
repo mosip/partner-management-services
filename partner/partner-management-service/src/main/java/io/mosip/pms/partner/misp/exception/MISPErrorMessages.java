@@ -13,7 +13,10 @@ public enum MISPErrorMessages {
 	MISP_STATUS_CODE_EXCEPTION("PMS_MSP_407","mispStatus either Active or De-active."),
 	MISP_LICENSE_ARE_NOT_ACTIVE("PMS_MSP_413","misp license all are inactive."),
 	MISPID_FETCH_EXCEPTION("PMP-MSP-001", "Error Occur While Fetching Id"),
-	MISP_LICENSE_KEY_EXISTS("PMS_MSP_416","License key exists for the given provider.");
+	MISP_LICENSE_KEY_EXISTS("PMS_MSP_416","License key exists for the given provider."),
+	MISP_POLICY_NOT_MAPPED("PMS_MSP_417", "Policy not mapped."),
+	MISP_POLICY_NOT_APPROVED("PMS_MSP_418", "Policy not approved."),
+	MISP_POLICY_NOT_EXISTS("PMS_MSP_419", "Policy not exists.");
 
 
 	private final String errorCode;

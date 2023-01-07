@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
@@ -85,5 +86,12 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public String updateAPIKeyStatus(String partnerId, String policyId, APIkeyStatusUpdateRequestDto request);
+	
+	/**
+	 * 
+	 * @param partnerType
+	 * @return
+	 */
+	public PartnerDetailsResponse getPartners(Optional<String> partnerType);
 
 }

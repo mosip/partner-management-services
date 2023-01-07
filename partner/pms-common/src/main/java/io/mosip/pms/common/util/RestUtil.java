@@ -57,6 +57,7 @@ public class RestUtil {
 	private Environment environment;
 
 	private static final String AUTHORIZATION = "Authorization=";
+	private static final String BEARER = "Bearer ";
 
 	/**
 	 * 
@@ -102,7 +103,6 @@ public class RestUtil {
 				restTemplate = getRestTemplate();
 				result = (T) restTemplate.postForObject(builder.toUriString(), setRequestHeader(requestType, mediaType),
 						responseClass);
-
 			} catch (Exception e) {
 				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
 				throw new ApiAccessibleException(
@@ -111,6 +111,46 @@ public class RestUtil {
 			}
 		}
 		return result;
+	}
+
+	public void putApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
+			MediaType mediaType, Object requestType, Class<?> responseClass) {
+		
+		UriComponentsBuilder builder = null;
+		if (apiUrl != null)
+			builder = UriComponentsBuilder.fromUriString(apiUrl);
+		if (builder != null) {
+
+			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
+				for (String segment : pathsegments) {
+					if (!((segment == null) || (("").equals(segment)))) {
+						builder.pathSegment(segment);
+					}
+				}
+
+			}
+			if (!((queryParamName == null) || (("").equals(queryParamName)))) {
+				String[] queryParamNameArr = queryParamName.split(",");
+				String[] queryParamValueArr = queryParamValue.split(",");
+
+				for (int i = 0; i < queryParamNameArr.length; i++) {
+					builder.queryParam(queryParamNameArr[i], queryParamValueArr[i]);
+				}
+			}
+
+			RestTemplate restTemplate;
+
+			try {
+				restTemplate = getRestTemplate();
+				restTemplate.put(builder.toUriString(), setRequestHeader(requestType, mediaType),
+						responseClass);
+			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", builder.toUriString().toString(), e);
+				throw new ApiAccessibleException(
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+			}
+		}
 	}
 
 	/**
@@ -227,13 +267,15 @@ public class RestUtil {
 	@SuppressWarnings("unchecked")
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add("Cookie", getToken());
+		final String token = getToken();
+		headers.add("Cookie",token);
+		headers.add("Authorization", token.replace(AUTHORIZATION,BEARER ) );
 		if (mediaType != null) {
 			headers.add("Content-Type", mediaType.toString());
 		}
 		if (requestType != null) {
 			try {
-				HttpEntity<Object> httpEntity = (HttpEntity<Object>) requestType;
+				HttpEntity<Object> httpEntity =new HttpEntity<Object> (requestType);
 				HttpHeaders httpHeader = httpEntity.getHeaders();
 				Iterator<String> iterator = httpHeader.keySet().iterator();
 				while (iterator.hasNext()) {
@@ -258,7 +300,7 @@ public class RestUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public String getToken() throws IOException {
+	private String getToken() throws IOException {
 		String token = System.getProperty("token");
 		boolean isValid = false;
 

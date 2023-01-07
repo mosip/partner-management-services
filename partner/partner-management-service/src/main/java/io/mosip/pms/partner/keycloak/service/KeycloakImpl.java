@@ -221,23 +221,24 @@ public class KeycloakImpl{
 		List<String> roles = new ArrayList<>();
 		List<KeycloakPasswordDTO> credentialObject = new ArrayList<>();
 		
-		if (userRegDto.getAppId().equalsIgnoreCase("PARTNER_MANAGEMENT")) {
-			roles.add(userRegDto.getRole());
-			credentialObject = new ArrayList<>();
-			KeycloakPasswordDTO dto = new KeycloakPasswordDTO();
-			dto.setType("password");
-			dto.setValue(userRegDto.getUserPassword());
-			credentialObject.add(dto);
-		}
+		roles.add(userRegDto.getRole());
+		credentialObject = new ArrayList<>();
+		KeycloakPasswordDTO dto = new KeycloakPasswordDTO();
+		dto.setType("password");
+		dto.setValue(userRegDto.getUserPassword());
+		credentialObject.add(dto);
 		
 		List<Object> contactNoList = new ArrayList<>();
-		List<Object> genderList = new ArrayList<>();
-		genderList.add(userRegDto.getGender());
+		List<Object> orgNameList = new ArrayList<>();
+		List<Object> partnerIdList = new ArrayList<>();
+		orgNameList.add(userRegDto.getOrganizationName());
 		contactNoList.add(userRegDto.getContactNo());
+		partnerIdList.add(userRegDto.getPartnerId());
 		HashMap<String, List<Object>> attributes = new HashMap<>();
 		attributes.put("mobile", contactNoList);
 
-		attributes.put("gender", genderList);
+		attributes.put("organizationName", orgNameList);
+		attributes.put("partnerId", partnerIdList);
 		keycloakRequestDto.setUsername(userRegDto.getUserName());
 		keycloakRequestDto.setFirstName(userRegDto.getFirstName());
 		keycloakRequestDto.setEmail(userRegDto.getEmailID());

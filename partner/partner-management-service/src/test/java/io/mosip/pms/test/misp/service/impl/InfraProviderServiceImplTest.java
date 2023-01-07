@@ -20,12 +20,17 @@ import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.MispLicenseRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
@@ -43,6 +48,13 @@ public class InfraProviderServiceImplTest {
 
 	@Mock
 	PartnerServiceRepository partnerRepository;
+	
+	@Mock
+	private PartnerPolicyRequestRepository partnerPolicyRequestRepository; 
+	
+	@Mock
+	private AuthPolicyRepository  authPolicyRepository; 
+	
 
 	@Mock
 	MispLicenseRepository mispLicenseRepository;
@@ -60,6 +72,8 @@ public class InfraProviderServiceImplTest {
 	public void setUp() {
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "partnerRepository", partnerRepository);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "mispLicenseRepository", mispLicenseRepository);
+		ReflectionTestUtils.setField(infraProviderServiceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
+		ReflectionTestUtils.setField(infraProviderServiceImpl, "authPolicyRepository", authPolicyRepository);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "searchHelper", searchHelper);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "filterColumnValidator", filterColumnValidator);
@@ -79,11 +93,43 @@ public class InfraProviderServiceImplTest {
 		partner.setId(misp_Id);
 		partner.setIsActive(true);
 		partner.setPartnerTypeCode("MISP_Partner");
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setPartner(partner);
+		partnerPolicyRequest.setPolicyId("1234");
+		partnerPolicyRequest.setStatusCode("approved");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("1234");
+		List<PartnerPolicyRequest> partnerPolicyRequests = new ArrayList<>();
+		partnerPolicyRequests.add(partnerPolicyRequest);
 		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
 		mispLicenseEntity.setIsActive(true);
 		Optional<Partner> opt_partner = Optional.of(partner);
-		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);
+		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);		
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerId(misp_Id)).thenReturn(partnerPolicyRequests);
+		Mockito.when(authPolicyRepository.findById("1234")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		infraProviderServiceImpl.approveInfraProvider(misp_Id);
+	}
+	
+	private PolicyGroup policyGroupData() {
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("12345");
+		policyGroup.setName("Test");
+		policyGroup.setIsActive(true);
+		return policyGroup;
+	}
+	
+	private List<AuthPolicy> getAuthPolicies(){
+		AuthPolicy policy = new AuthPolicy();
+		List<AuthPolicy> policies = new ArrayList<AuthPolicy>();
+		policy.setPolicyGroup(policyGroupData());
+		policy.setId("234");
+		policy.setName("Test");
+		policy.setDescr("Policy Desc");
+		policy.setIsActive(true);
+		policy.setValidToDate(LocalDateTime.now().plusDays(5));
+		policy.setPolicyFileId("{\"authPolicies\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":true},{\"authType\":\"demo\",\"authSubType\":null,\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FINGER\",\"mandatory\":true},{\"authType\":\"bio\",\"authSubType\":\"IRIS\",\"mandatory\":false},{\"authType\":\"bio\",\"authSubType\":\"FACE\",\"mandatory\":false},{\"authType\":\"kyc\",\"authSubType\":null,\"mandatory\":false}],\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"required\":true},{\"attributeName\":\"dateOfBirth\",\"required\":true},{\"attributeName\":\"gender\",\"required\":true},{\"attributeName\":\"phone\",\"required\":true},{\"attributeName\":\"email\",\"required\":true},{\"attributeName\":\"addressLine1\",\"required\":true},{\"attributeName\":\"addressLine2\",\"required\":true},{\"attributeName\":\"addressLine3\",\"required\":true},{\"attributeName\":\"location1\",\"required\":true},{\"attributeName\":\"location2\",\"required\":true},{\"attributeName\":\"location3\",\"required\":true},{\"attributeName\":\"postalCode\",\"required\":false},{\"attributeName\":\"photo\",\"required\":true}]}");
+		policies.add(policy);
+		return policies;		
 	}
 
 	@Test(expected = MISPServiceException.class)
