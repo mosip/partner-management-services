@@ -20,6 +20,7 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
@@ -107,14 +108,26 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
-		AuthPolicy policyFromDb = authPolicyRepository.findByName(createRequest.getPolicyName());
-		if (policyFromDb == null) {
-			LOGGER.error("createOIDCClient::Policy with name {} not exists", createRequest.getPolicyName());
+		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
+		if(partner.isEmpty()) {
+			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(), String
+					.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), createRequest.getAuthPartnerId()));
+		}
+		if(!partner.get().getPartnerTypeCode().equalsIgnoreCase(AUTH_PARTNER_TYPE)) {
+			LOGGER.error("createOIDCClient::{} cannot create OIDC Client", partner.get().getPartnerTypeCode());
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
+					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
+		}
+		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
+		if (!policyFromDb.isPresent()) {
+			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
-		if(!policyFromDb.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
-			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policyFromDb.getPolicy_type());
+		AuthPolicy policy = policyFromDb.get();
+		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
+			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
@@ -127,7 +140,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
 
-		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved")) {
+		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
 					createRequest.getPolicyName(), createRequest.getAuthPartnerId(),
@@ -211,7 +224,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
-		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
@@ -230,7 +243,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	private void makeUpdateIDPServiceCall(ClientDetail request, String calleeApi) {
 		RequestWrapper<UpdateClientRequestDto> updateRequestwrapper = new RequestWrapper<>();
-		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString());
+		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
 		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
 		updateRequest.setClientName(request.getName());
