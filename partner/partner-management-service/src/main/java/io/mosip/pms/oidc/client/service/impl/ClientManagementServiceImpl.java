@@ -20,6 +20,7 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
@@ -124,13 +125,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
 		}
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
-				if (policyFromDb == null) {
+		if (!policyFromDb.isPresent()) {
 			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
-		if(!policyFromDb.get().getPolicy_type().equals(AUTH_POLICY_TYPE)) {
-			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policyFromDb.get().getPolicy_type());
+		AuthPolicy policy = policyFromDb.get();
+		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
+			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
@@ -143,7 +145,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
 
-		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved")) {
+		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
@@ -227,7 +229,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
-		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
@@ -246,7 +248,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	private void makeUpdateIDPServiceCall(ClientDetail request, String calleeApi) {
 		RequestWrapper<UpdateClientRequestDto> updateRequestwrapper = new RequestWrapper<>();
-		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
 		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
 		updateRequest.setClientName(request.getName());

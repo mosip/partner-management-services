@@ -19,12 +19,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClientDetailCreateRequest {
 
-    @NotNull
     @NotBlank
     @Size(min = 1, max = 256)
     private String name;
     
-    @NotNull
     @NotBlank
     @Size(min = 1, max = 128)
     private String policyId;
@@ -33,10 +31,9 @@ public class ClientDetailCreateRequest {
     private Map<String, @NotNull Object> publicKey;
 
     @NotBlank
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 36)
     private String authPartnerId;
 
-    @NotNull
     @NotBlank
     @URL   
     @Size(max = 2048)
