@@ -24,14 +24,14 @@ public class ClientDetailCreateRequest {
     private String name;
     
     @NotBlank
-    @Size(min = 1, max = 128)
-    private String policyName;
+    @Size(min = 1, max = 36)
+    private String policyId;
 
     @NotEmpty
     private Map<String, @NotNull Object> publicKey;
 
     @NotBlank
-    @Size(min = 1, max = 36)
+    @Size(min = 1, max = 100)
     private String authPartnerId;
 
     @NotBlank
