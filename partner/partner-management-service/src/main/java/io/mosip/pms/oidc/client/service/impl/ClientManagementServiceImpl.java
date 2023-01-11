@@ -35,6 +35,7 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
@@ -84,6 +85,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
+	
+	@Autowired
+	PartnerRepository partnerRepository;
 
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
@@ -134,10 +138,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.getId());
+				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.get().getId());
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
-					createRequest.getPolicyName(), createRequest.getAuthPartnerId());
+					createRequest.getPolicyId(), createRequest.getAuthPartnerId());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -145,7 +149,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyName(), createRequest.getAuthPartnerId(),
+					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
@@ -160,7 +164,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
 		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
+				getPolicyObject(policyFromDb.get().getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
 		if (claims.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
@@ -169,7 +173,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		clientDetail.setClaims(String.join(",",claims));
 		Set<String> acrValues = authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
+				getPolicyObject(policyFromDb.get().getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
 		if (acrValues.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
@@ -316,10 +320,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * 
 	 * @param clinetData
 	 */
-	private void publishClientData(Partner partnerData, AuthPolicy policyData, ClientDetail clinetData) {
+	private void publishClientData(Partner partnerData, AuthPolicy policyData, ClientDetail clientData) {
 		notify(MapperUtils.mapDataToPublishDto(partnerData, getPartnerCertificate(partnerData.getCertificateAlias())),
 				MapperUtils.mapPolicyToPublishDto(policyData, getPolicyObject(policyData.getPolicyFileId())),
-				MapperUtils.mapClientDataToPublishDto(clinetData), EventType.OIDC_CLIENT_CREATED);
+				MapperUtils.mapClientDataToPublishDto(clientData), EventType.OIDC_CLIENT_CREATED);
 	}
 
 	@SuppressWarnings("unchecked")
