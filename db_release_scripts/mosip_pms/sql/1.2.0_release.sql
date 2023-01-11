@@ -59,6 +59,7 @@ ALTER TABLE pms.ftp_chip_detail ADD COLUMN approval_status character varying(36)
 UPDATE pms.ftp_chip_detail SET approval_status='pending_cert_upload' where certificate_alias is null;
 UPDATE pms.ftp_chip_detail SET approval_status='pending_approval' where certificate_alias is not null and is_active =false;
 UPDATE pms.ftp_chip_detail SET approval_status='approved' where certificate_alias is not null and is_active = true;
+
 ALTER TABLE pms.ftp_chip_detail ALTER COLUMN approval_status SET NOT NULL;
 
 INSERT INTO pms.partner
@@ -121,4 +122,3 @@ VALUES('mpartner_policy_PDFCard_req', 'mpartner-default-digitalcard', 'mpolicy-d
 INSERT INTO pms.partner_policy_request
 (id, part_id, policy_id, request_datetimes, request_detail, status_code, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpartner_policy_digitalcard_req', 'mpartner-default-digitalcard', 'mpolicy-default-digitalcard', '2022-02-21 07:02:26.292', 'mpolicy-default-digitalcard', 'approved', 'admin', '2022-02-21 07:02:26.292', 'admin', '2022-02-21 07:02:26.292', NULL, NULL);
-

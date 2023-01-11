@@ -1,6 +1,8 @@
 package io.mosip.pms.test.oidc.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -76,10 +78,19 @@ public class ClientManagementServiceImplTest {
 	public void createClientTest() throws Exception {
 		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
 		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		List<String> clientAuthMethods = new ArrayList<String>();
+		clientAuthMethods.add("ClientAuthMethod");
+		request.setClientAuthMethods(clientAuthMethods);;
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		request.setName("ClientName");
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_NOT_EXIST.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
 		}
 	}
 
