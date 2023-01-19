@@ -16,7 +16,7 @@ public final class PartnerConstants {
 
 	public static final String ERRORCODE = "errorCode";
 
-	public static final String ERRORMESSAGE = "errorMessage";
+	public static final String ERRORMESSAGE = "message";
 
 	public static final String ACTIVE = "active";
 
