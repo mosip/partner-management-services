@@ -73,6 +73,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_TYPE = "authType";
 	private static final String MANDATORY = "mandatory";
 	private static final String AUTH_POLICY_TYPE = "Auth";
+	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -292,7 +294,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			if (!idpServiceErrorList.isEmpty()) {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException((String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE),
-						(String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE));
+						(String) idpServiceErrorList.get(0).get(ERROR_MESSAGE));
 			} else {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
