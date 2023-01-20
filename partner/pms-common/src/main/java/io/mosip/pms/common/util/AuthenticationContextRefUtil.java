@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -32,6 +34,9 @@ public class AuthenticationContextRefUtil {
 	private static final String AMR_KEY = "amr";
 	private static final String ACR_AMR = "acr_amr";
 	private static final String IDPCLAIMSMAPPING = "idp-claims-mapping";
+	private static final String CLAIMS_SUPPORTED = "claims_supported";
+	@Autowired
+	RestUtil restUtil;
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -70,6 +75,13 @@ public class AuthenticationContextRefUtil {
         return acrMappingJson;
     }
 	
+	@SuppressWarnings("unchecked")
+	@Cacheable
+	private List<String> getSupportedClaims(){
+		Map<String, Object> idpClientResponse = restUtil.getApi("mosip.oidc.config.rest.uri", null, "", "", Map.class);
+		return (List<String>) idpClientResponse.get(CLAIMS_SUPPORTED);
+	}
+	
 	private String getClaimsMappingJson() {
         if(StringUtils.isEmpty(claimsMappingJson)) {
             logger.info("Fetching Claims mapping json from : {}", claimsMappingFileUrl);
@@ -86,8 +98,11 @@ public class AuthenticationContextRefUtil {
 					new TypeReference<Map<String,Claims >>() {
 					});
 			Map<List<String>, String> claimsMap = new HashMap<>();
+			List<String> allowedClaims = getSupportedClaims();
 			for(Map.Entry<String,Claims> mapElement : map.entrySet()) {
-				claimsMap.put(convertStringToList(mapElement.getValue().getAttributeName()),mapElement.getKey());
+				if(allowedClaims.contains(mapElement.getKey())) {
+					claimsMap.put(convertStringToList(mapElement.getValue().getAttributeName()),mapElement.getKey());
+				}
 			}
 			return claimsMap;
 		} catch (IOException e) {

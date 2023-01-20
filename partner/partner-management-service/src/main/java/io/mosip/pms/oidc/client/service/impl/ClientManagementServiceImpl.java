@@ -160,7 +160,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
-		clientDetail.setPolicyId(policyFromDb.get().getId());
+		clientDetail.setPolicyId(createRequest.getPolicyId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
 		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
