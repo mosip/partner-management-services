@@ -68,7 +68,7 @@
 		<junit.version>4.12</junit.version>
 		<lombok.version>1.18.8</lombok.version>
 		<doclint>none</doclint>
-		<kernel-websubclient-api.version>1.1.5.5-SNAPSHOT</kernel-websubclient-api.version>
+		<kernel-websubclient-api.version>1.1.5.5</kernel-websubclient-api.version>
 	</properties>
 	
 	<modules>		
