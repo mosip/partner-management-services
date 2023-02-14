@@ -82,10 +82,6 @@ INSERT INTO pms.partner_policy
 (policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicy_part_PDFCard_api', 'mpartner-default-digitalcard', 'mpolicy-default-digitalcard', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'admin', '2022-02-21 07:02:26.223', 'admin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
 
-INSERT INTO pms.partner_policy
-(policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicy_part_esignet_api', 'mpartner-default-esignet', 'mpolicy-default-esignet', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'superadmin', '2022-02-21 07:02:26.223', 'superadmin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
-
 INSERT INTO pms.partner_policy_bioextract
 (id, part_id, policy_id, attribute_name, extractor_provider, extractor_provider_version, biometric_modality, biometric_sub_types, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('146110', 'mpartner-default-digitalcard', 'mpolicy-default-PDFCard', 'photo', 'mock', '1.1', 'face', NULL, 'admin', '2022-02-21 07:02:26.256', 'admin', '2022-02-21 07:02:26.256', false, NULL) ON CONFLICT (id) DO NOTHING;
