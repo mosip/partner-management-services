@@ -160,7 +160,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
-		clientDetail.setPolicyId(policyFromDb.get().getId());
+		clientDetail.setPolicyId(createRequest.getPolicyId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
 		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
@@ -186,7 +186,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setCreatedBy(getLoggedInUserId());
-		callIdpService(clientDetail, environment.getProperty("pmp-idp.oidc.client.create.rest.uri"), true);
+		callIdpService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"), true);
 		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb.get(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -378,7 +378,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setStatus(updateRequest.getStatus());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
-		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("pmp-idp.oidc.client.update.rest.uri"));
+		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
