@@ -8,4 +8,3 @@ mpolicygroup-default-adjudication,mpolicygroup-default-adjudication, mpolicygrou
 mpolicygroup-default-cert,mpolicygroup-default-cert,mpolicygroup-default-cert,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-digitalcard,mpolicygroup-default-digitalcard,mpolicygroup-default-digitalcard,superadmin,TRUE,superadmin,now(),superadmin,now()
 mpolicygroup-default-mobile,mpolicygroup-default-mobile,mpolicygroup-default-mobile,superadmin,TRUE,superadmin,now(),superadmin,now()
-mpolicygroup-default-esignet,mpolicygroup-default-esignet,mpolicygroup-default-esignet,superadmin,TRUE,superadmin,now(),superadmin,now()

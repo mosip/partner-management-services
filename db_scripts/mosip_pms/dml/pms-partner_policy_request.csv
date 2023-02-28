@@ -12,4 +12,3 @@ mpartner_policy_eUIN_with_faceQR_req,mpartner-default-print,mpolicy-default-eUIN
 mpartner_policy_PDFCard_req,mpartner-default-digitalcard,mpolicy-default-PDFCard,now(),mpolicy-default-PDFCard,Approved,admin,now(),admin,now()
 mpartner_policy_digitalcard_req,mpartner-default-digitalcard,mpolicy-default-digitalcard,now(),mpolicy-default-digitalcard,Approved,admin,now(),admin,now()
 mpartner_policy_mobile_req,mpartner-default-mobile,mpolicy-default-mobile,now(),mpolicy-default-mobile,approved,admin,now(),admin,now()
-mpartner_policy_esignet_req,mpartner-default-esignet,mpolicy-default-esignet,now(),mpolicy-default-esignet,approved,admin,now(),admin,now()
