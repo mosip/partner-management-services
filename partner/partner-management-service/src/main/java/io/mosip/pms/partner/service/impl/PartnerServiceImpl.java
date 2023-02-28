@@ -295,13 +295,13 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup().isEmpty()) {
+		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup()==null) {
 			LOGGER.error("Policy Group is mandatory for "+partnerType.getCode());
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorCode(),
 					String.format(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorMessage(),partnerType.getCode()));
 		}
-		if(!request.getPolicyGroup().isEmpty()) {
+		if(request.getPolicyGroup()!=null) {
 			if(partnerType.getIsPolicyRequired() ) {
 				policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 			}
