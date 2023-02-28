@@ -31,7 +31,7 @@ VALUES('mpartner-default-digitalcard', 'mpolicygroup-default-digitalcard', 'IITB
 
 INSERT INTO pms.partner
 (id, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpartner-default-esignet', 'mpolicygroup-default-esignet', 'IITB', 'mpartner-default-esignet', '7363038999', 'esignetpartner@mosip.io', '94d4be61-31f0-42db-97be-8f4953f41fc6', 'esignet-partner', 'MISP_Partner', 'approved', true, 'superadmin', '2020-12-16 12:30:13.973', 'superadmin', '2022-06-01 08:01:35.025', false, NULL) ON CONFLICT (id) DO NOTHING;
+VALUES('esignet-partner', 'esignet-policygroup', 'IITB', 'esignet-partner', '7363038999', 'esignetpartner@mosip.io', '94d4be61-31f0-42db-97be-8f4953f41fc6', 'esignet-partner', 'MISP_Partner', 'approved', true, 'superadmin', '2020-12-16 12:30:13.973', 'superadmin', '2022-06-01 08:01:35.025', false, NULL) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pms.partner_h
 (id, eff_dtimes, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -39,7 +39,7 @@ VALUES('mpartner-default-digitalcard', '2020-12-16 12:30:14.306', 'mpolicygroup-
 
 INSERT INTO pms.partner_h
 (id, eff_dtimes, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpartner-default-esignet', '2022-12-16 12:30:14.306', 'mpolicygroup-default-esignet', 'mpartner-default-esignet', 'mpartner-default-esignet', '7363038999', 'esignetpartner@mosip.io', NULL, 'mpartner-default-resident', 'MISP_Partner', 'Activated', true, 'superadmin', '2020-12-16 12:30:14.306', 'superadmin', '2020-12-16 12:30:14.306', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
+VALUES('esignet-partner', '2022-12-16 12:30:14.306', 'esignet-policygroup', 'esignet-partner', 'esignet-partner', '7363038999', 'esignetpartner@mosip.io', NULL, 'mpartner-default-resident', 'MISP_Partner', 'Activated', true, 'superadmin', '2020-12-16 12:30:14.306', 'superadmin', '2020-12-16 12:30:14.306', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
 
 INSERT INTO pms.policy_group
 (id, "name", descr, user_id, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -47,7 +47,7 @@ VALUES('mpolicygroup-deafult-digitalcard', 'mpolicygroup-deafult-digitalcard', '
 
 INSERT INTO pms.policy_group
 (id, "name", descr, user_id, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicygroup-default-esignet', 'mpolicygroup-default-esignet', 'mpolicygroup-default-esignet', 'superadmin', true, 'superadmin', '2020-12-16 12:30:14.100', 'superadmin', '2020-12-16 12:30:14.100', NULL, NULL) ON CONFLICT (id) DO NOTHING;
+VALUES('esignet-policygroup', 'esignet-policygroup', 'esignet-policygroup', 'superadmin', true, 'superadmin', '2020-12-16 12:30:14.100', 'superadmin', '2020-12-16 12:30:14.100', NULL, NULL) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pms.auth_policy
 (id, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -59,7 +59,7 @@ VALUES('mpolicy-default-PDFCard', 'mpolicygroup-deafult-digitalcard', 'string', 
 
 INSERT INTO pms.auth_policy
 (id, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicy-default-esignet', 'mpolicygroup-default-esignet', 'mpolicy-default-esignet', 'string', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', 'string', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.183', '2028-04-28 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.183', 'service-account-mosip-creser-client', '2021-02-09 06:50:22.065', false, NULL) ON CONFLICT (id) DO NOTHING;
+VALUES('esignet-policy', 'esignet-policygroup', 'esignet-policy', 'string', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', 'string', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.183', '2028-04-28 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.183', 'service-account-mosip-creser-client', '2021-02-09 06:50:22.065', false, NULL) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pms.auth_policy_h
 (id, eff_dtimes, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -72,7 +72,7 @@ VALUES('mpolicy-default-PDFCard', '2020-11-13 05:58:00.000', 'mpolicygroup-deafu
 
 INSERT INTO pms.auth_policy_h
 (id, eff_dtimes, policy_group_id, name, descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicy-default-esignet', '2020-11-13 05:58:00.000', 'mpolicygroup-default-esignet', 'mpolicy-default-esignet', 'mpolicy-default-esignet', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', '1', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.343', '2028-05-01 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.343', 'service-account-mosip-creser-client', '2020-12-16 12:30:14.343', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
+VALUES('esignet-policy', '2020-11-13 05:58:00.000', 'esignet-policygroup', 'esignet-policy', 'esignet-policy', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', '1', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.343', '2028-05-01 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.343', 'service-account-mosip-creser-client', '2020-12-16 12:30:14.343', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
 
 INSERT INTO pms.partner_policy
 (policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -84,7 +84,7 @@ VALUES('mpolicy_part_PDFCard_api', 'mpartner-default-digitalcard', 'mpolicy-defa
 
 INSERT INTO pms.partner_policy
 (policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicy_part_esignet_api', 'mpartner-default-esignet', 'mpolicy-default-esignet', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'superadmin', '2022-02-21 07:02:26.223', 'superadmin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
+VALUES('mpolicy_part_PDFCard_api', 'esignet-partner', 'esignet-policy', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'superadmin', '2022-02-21 07:02:26.223', 'superadmin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
 
 INSERT INTO pms.partner_policy_bioextract
 (id, part_id, policy_id, attribute_name, extractor_provider, extractor_provider_version, biometric_modality, biometric_sub_types, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -110,4 +110,4 @@ VALUES('mpartner_policy_digitalcard_req', 'mpartner-default-digitalcard', 'mpoli
 
 INSERT INTO pms.partner_policy_request
 (id, part_id, policy_id, request_datetimes, request_detail, status_code, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpartner_policy_esignet_req', 'mpartner-default-esignet', 'mpolicy-default-esignet', '2022-02-21 07:02:26.292', 'mapping Partner to policyName', 'approved', 'superadmin', '2022-02-21 07:02:26.292', 'superadmin', '2022-02-21 07:02:26.292', NULL, NULL) ON CONFLICT (id) DO NOTHING;
+VALUES('esignet_policy_req', 'esignet-partner', 'esignet-policy', '2022-02-21 07:02:26.292', 'mapping Partner to policyName', 'approved', 'superadmin', '2022-02-21 07:02:26.292', 'superadmin', '2022-02-21 07:02:26.292', NULL, NULL) ON CONFLICT (id) DO NOTHING;
