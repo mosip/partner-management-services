@@ -293,10 +293,14 @@ public class PartnerServiceImpl implements PartnerService {
 			isJSONValid(request.getAdditionalInfo().toString());
 		}
 
+		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(request.getPolicyGroup());
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
 		if (partnerType.getIsPolicyRequired()) {
 			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
+		}
+		else {
+			policyGroup=validatePolicyGroupByName(policyGroupFromDb)?policyGroupFromDb:null;
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
 		partner.setPartnerTypeCode(partnerType.getCode());
@@ -372,6 +376,13 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());			
 		}
 		return policyGroupFromDb;
+	}
+	
+	private Boolean validatePolicyGroupByName(PolicyGroup policyGroupFromDb) {
+		if (policyGroupFromDb == null || !policyGroupFromDb.getIsActive()) {
+			return false;
+			}
+		return true;
 	}
 
 	private PartnerType validateAndGetPartnerType(String partnerType) {
