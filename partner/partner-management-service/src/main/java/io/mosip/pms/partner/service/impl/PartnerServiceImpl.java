@@ -302,15 +302,7 @@ public class PartnerServiceImpl implements PartnerService {
 					String.format(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorMessage(),partnerType.getCode()));
 		}
 		if(request.getPolicyGroup()!=null) {
-			if(partnerType.getIsPolicyRequired() ) {
-				policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
-			}
-			else {
-				PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(request.getPolicyGroup());
-				if (policyGroupFromDb != null && policyGroupFromDb.getIsActive()) {
-					policyGroup = policyGroupFromDb;
-				}
-			}
+			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
 		partner.setPartnerTypeCode(partnerType.getCode());
