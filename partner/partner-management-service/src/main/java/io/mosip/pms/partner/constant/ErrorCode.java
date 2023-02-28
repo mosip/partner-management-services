@@ -4,6 +4,7 @@ public enum ErrorCode {
 
 	MISSING_PARTNER_INPUT_PARAMETER("PMS_COR_001","Missing Input Parameter"),
 	POLICY_GROUP_DOES_NOT_EXIST("PMS_PRT_002", "Policy group does not exist"),
+	POLICY_GROUP_IS_MANDATORY("PMS_PRT_108", "Policy group is Mandatory for %s"),
 	PARTNER_TYPE_DOES_NOT_EXIST("PMS_PRT_010", "Partner Type does not exist"),
 	INVALID_COLUMN("PMS_PRT_310", "Invalid column received : %s"),
 	INVALID_PAGINATION_VALUE("PMS_PRT_313", "Invalid pagination value received pagestart:%d and pagefetch:%d"),

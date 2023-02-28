@@ -292,15 +292,25 @@ public class PartnerServiceImpl implements PartnerService {
 		if(request.getAdditionalInfo() != null) {
 			isJSONValid(request.getAdditionalInfo().toString());
 		}
-
-		PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(request.getPolicyGroup());
+		
 		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
 		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired()) {
-			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
+		if (partnerType.getIsPolicyRequired() && request.getPolicyGroup().isEmpty()) {
+			LOGGER.error("Policy Group is mandatory for "+partnerType.getCode());
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorCode(),
+					String.format(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorMessage(),partnerType.getCode()));
 		}
-		else {
-			policyGroup=validatePolicyGroupByName(policyGroupFromDb)?policyGroupFromDb:null;
+		if(!request.getPolicyGroup().isEmpty()) {
+			if(partnerType.getIsPolicyRequired() ) {
+				policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
+			}
+			else {
+				PolicyGroup policyGroupFromDb = policyGroupRepository.findByName(request.getPolicyGroup());
+				if (policyGroupFromDb != null && policyGroupFromDb.getIsActive()) {
+					policyGroup = policyGroupFromDb;
+				}
+			}
 		}
 		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
 		partner.setPartnerTypeCode(partnerType.getCode());
@@ -376,13 +386,6 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());			
 		}
 		return policyGroupFromDb;
-	}
-	
-	private Boolean validatePolicyGroupByName(PolicyGroup policyGroupFromDb) {
-		if (policyGroupFromDb == null || !policyGroupFromDb.getIsActive()) {
-			return false;
-			}
-		return true;
 	}
 
 	private PartnerType validateAndGetPartnerType(String partnerType) {
