@@ -101,7 +101,9 @@ public class AuthenticationContextRefUtil {
 			Map<List<String>, String> claimsMap = new HashMap<>();
 			List<String> allowedClaims = getSupportedClaims();
 			for(String claim:allowedClaims) {
-				claimsMap.put(convertStringToList(map.get(claim).getValue()),claim);
+				if(map.get(claim).getValue()!=null) {
+					claimsMap.put(convertStringToList(map.get(claim).getValue()),claim);
+				}
 			}
 			return claimsMap;
 		} catch (IOException e) {
