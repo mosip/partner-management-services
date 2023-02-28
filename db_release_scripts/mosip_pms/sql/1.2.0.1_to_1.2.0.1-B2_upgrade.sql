@@ -29,25 +29,14 @@ INSERT INTO pms.partner
 (id, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpartner-default-digitalcard', 'mpolicygroup-default-digitalcard', 'IITB', 'mpartner-default-digitalcard', '9232121212', 'digitalcard@mosip.io', '94d4ae61-31f0-42ca-97ae-8f4953f41fb6', 'mpartner-default-digitalcard', 'Credential_Partner', 'approved', true, 'superadmin', '2020-12-16 12:30:13.973', '110006', '2022-06-01 08:01:35.025', false, NULL) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO pms.partner
-(id, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet-partner', 'esignet-policygroup', 'IITB', 'esignet-partner', '7363038999', 'esignetpartner@mosip.io', '94d4be61-31f0-42db-97be-8f4953f41fc6', 'esignet-partner', 'MISP_Partner', 'approved', true, 'superadmin', '2020-12-16 12:30:13.973', 'superadmin', '2022-06-01 08:01:35.025', false, NULL) ON CONFLICT (id) DO NOTHING;
-
 INSERT INTO pms.partner_h
 (id, eff_dtimes, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpartner-default-digitalcard', '2020-12-16 12:30:14.306', 'mpolicygroup-deafult-digitalcard', 'mpartner-default-digitalcard', 'mpartner-default-digitalcard', '9232121212', 'digitalcard@mosip.io', NULL, 'mpartner-default-resident', 'Credential_Partner', 'Activated', true, 'superadmin', '2020-12-16 12:30:14.306', 'superadmin', '2020-12-16 12:30:14.306', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
-
-INSERT INTO pms.partner_h
-(id, eff_dtimes, policy_group_id, "name", address, contact_no, email_id, certificate_alias, user_id, partner_type_code, approval_status, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet-partner', '2022-12-16 12:30:14.306', 'esignet-policygroup', 'esignet-partner', 'esignet-partner', '7363038999', 'esignetpartner@mosip.io', NULL, 'mpartner-default-resident', 'MISP_Partner', 'Activated', true, 'superadmin', '2020-12-16 12:30:14.306', 'superadmin', '2020-12-16 12:30:14.306', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
 
 INSERT INTO pms.policy_group
 (id, "name", descr, user_id, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicygroup-deafult-digitalcard', 'mpolicygroup-deafult-digitalcard', 'mpolicygroup-deafult-digitalcard', 'superadmin', true, 'superadmin', '2020-12-16 12:30:14.100', 'superadmin', '2020-12-16 12:30:14.100', NULL, NULL) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO pms.policy_group
-(id, "name", descr, user_id, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet-policygroup', 'esignet-policygroup', 'esignet-policygroup', 'superadmin', true, 'superadmin', '2020-12-16 12:30:14.100', 'superadmin', '2020-12-16 12:30:14.100', NULL, NULL) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pms.auth_policy
 (id, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -56,10 +45,6 @@ VALUES('mpolicy-default-digitalcard', 'mpolicygroup-deafult-digitalcard', 'mpoli
 INSERT INTO pms.auth_policy
 (id, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicy-default-PDFCard', 'mpolicygroup-deafult-digitalcard', 'string', 'string', '{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"firstName","filter":[{"language":"eng"}]},{"attribute":"middleName","filter":[{"language":"eng"}]},{"attribute":"lastName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"mobileno"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"permanentAddressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"presentAddressLine1"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"presentProvince"},{"attribute":"permanentProvince"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"permanentCity"},{"attribute":"presentCity"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"presentZipcode","filter":[{"language":"eng"}]},{"attribute":"permanentZipcode","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"}]}],"encrypted":false,"format":"extraction"}],"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}', 'DataShare', 'string', 'https://schemas.mosip.io/v1/auth-policy', '2020-12-16 12:30:14.183', '2025-04-28 09:37:00.000', true, 'admin', '2020-12-16 12:30:14.183', 'service-account-mosip-creser-client', '2021-02-09 06:50:22.065', false, NULL) ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO pms.auth_policy
-(id, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet-policy', 'esignet-policygroup', 'esignet-policy', 'string', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', 'string', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.183', '2028-04-28 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.183', 'service-account-mosip-creser-client', '2021-02-09 06:50:22.065', false, NULL) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pms.auth_policy_h
 (id, eff_dtimes, policy_group_id, "name", descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -70,10 +55,6 @@ INSERT INTO pms.auth_policy_h
 (id, eff_dtimes, policy_group_id, name, descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicy-default-PDFCard', '2020-11-13 05:58:00.000', 'mpolicygroup-deafult-digitalcard', 'mpolicy-default-PDFCard', 'mpolicy-default-PDFCard', '{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}', 'DataShare', '1', 'https://schemas.mosip.io/v1/auth-policy', '2020-12-16 12:30:14.343', '2025-05-01 09:37:00.000', true, 'admin', '2020-12-16 12:30:14.343', 'admin', '2020-12-16 12:30:14.343', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
 
-INSERT INTO pms.auth_policy_h
-(id, eff_dtimes, policy_group_id, name, descr, policy_file_id, policy_type, "version", policy_schema, valid_from_date, valid_to_date, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet-policy', '2020-11-13 05:58:00.000', 'esignet-policygroup', 'esignet-policy', 'esignet-policy', '{"trustBindedAuthVerificationToken":true,"allowAuthRequestDelegation":true,"allowKycRequestDelegation":true}', 'MISP', '1', 'https://schemas.mosip.io/v1/auth-policy', '2023-12-16 12:30:14.343', '2028-05-01 09:37:00.000', true, 'admin', '2022-12-16 12:30:14.343', 'service-account-mosip-creser-client', '2020-12-16 12:30:14.343', NULL, NULL) ON CONFLICT (id, eff_dtimes) DO NOTHING;
-
 INSERT INTO pms.partner_policy
 (policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicy_part_digitalcard_api', 'mpartner-default-digitalcard', 'mpolicy-default-digitalcard', '2022-04-04 13:21:20.172', '2022-07-03 13:21:20.172', true, 'service-account-mosip-regproc-client', '2022-04-04 13:21:20.172', NULL, NULL, false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
@@ -82,9 +63,6 @@ INSERT INTO pms.partner_policy
 (policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpolicy_part_PDFCard_api', 'mpartner-default-digitalcard', 'mpolicy-default-digitalcard', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'admin', '2022-02-21 07:02:26.223', 'admin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
 
-INSERT INTO pms.partner_policy
-(policy_api_key, part_id, policy_id, valid_from_datetime, valid_to_datetime, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('mpolicy_part_PDFCard_api', 'esignet-partner', 'esignet-policy', '2022-02-21 07:02:26.223', '2025-12-01 05:31:00.000', true, 'superadmin', '2022-02-21 07:02:26.223', 'superadmin', '2022-02-21 07:02:26.223', false, NULL) ON CONFLICT (policy_api_key) DO NOTHING;
 
 INSERT INTO pms.partner_policy_bioextract
 (id, part_id, policy_id, attribute_name, extractor_provider, extractor_provider_version, biometric_modality, biometric_sub_types, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
@@ -107,7 +85,3 @@ VALUES('mpartner_policy_PDFCard_req', 'mpartner-default-digitalcard', 'mpolicy-d
 INSERT INTO pms.partner_policy_request
 (id, part_id, policy_id, request_datetimes, request_detail, status_code, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
 VALUES('mpartner_policy_digitalcard_req', 'mpartner-default-digitalcard', 'mpolicy-default-digitalcard', '2022-02-21 07:02:26.292', 'mpolicy-default-digitalcard', 'approved', 'admin', '2022-02-21 07:02:26.292', 'admin', '2022-02-21 07:02:26.292', NULL, NULL) ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO pms.partner_policy_request
-(id, part_id, policy_id, request_datetimes, request_detail, status_code, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
-VALUES('esignet_policy_req', 'esignet-partner', 'esignet-policy', '2022-02-21 07:02:26.292', 'mapping Partner to policyName', 'approved', 'superadmin', '2022-02-21 07:02:26.292', 'superadmin', '2022-02-21 07:02:26.292', NULL, NULL) ON CONFLICT (id) DO NOTHING;
