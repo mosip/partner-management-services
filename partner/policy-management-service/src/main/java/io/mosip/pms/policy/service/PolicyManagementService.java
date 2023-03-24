@@ -386,7 +386,7 @@ public class PolicyManagementService {
 		authPolicy.setUpdDtimes(LocalDateTime.now());
 		authPolicyRepository.save(authPolicy);
 		insertIntoAuthPolicyH(authPolicy);
-		notify(authPolicy.getId());		
+		notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));		
 		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS, policyName, "policyId");
 		return mapPolicyAndPolicyGroup(authPolicy);
 	}
