@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0.1-B2</version>
+		<version>1.2.0.1-B3</version>
 	</parent>
 	
-	<version>1.2.0.1-B2</version>
+	<version>1.2.0.1-B3</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
