@@ -377,10 +377,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		String status=updateRequest.getStatus().toUpperCase();
-		if(status.contentEquals(ACTIVE)||status.contentEquals(INACTIVE)) {
-			clientDetail.setStatus(status);
-		}
+		clientDetail.setStatus(status.toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
