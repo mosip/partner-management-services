@@ -77,7 +77,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
-	public static final String INACTIVE = "INACTIVE";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -377,7 +376,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(status.toUpperCase());
+		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
