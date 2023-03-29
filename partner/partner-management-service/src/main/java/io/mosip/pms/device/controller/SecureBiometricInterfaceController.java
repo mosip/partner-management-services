@@ -47,7 +47,7 @@ public class SecureBiometricInterfaceController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterface())")
 	@ResponseFilter
 	@PostMapping
 	@Operation(summary = "Service to save SecureBiometricInterfaceCreateDto", description = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
@@ -74,7 +74,7 @@ public class SecureBiometricInterfaceController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterface())")
 	@ResponseFilter
 	@PutMapping
 	@Operation(summary = "Service to update SecureBiometricInterface", description = "Updates SecureBiometricInterface and returns success message")
@@ -100,7 +100,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchsecurebiometricinterface())")
 	@ResponseFilter
 	@PatchMapping
 	@Operation(summary = "Service to approve/reject SecureBiometricInterface", description = "Approve SecureBiometricInterface and returns success message")
@@ -128,7 +128,7 @@ public class SecureBiometricInterfaceController {
 
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacesearch())")
 	@Operation(summary = "Service to search SecureBiometricInterface details", description = "Service to search SecureBiometricInterface details")
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
@@ -140,7 +140,7 @@ public class SecureBiometricInterfaceController {
 
 	@ResponseFilter
 	@PutMapping("/devicedetails/map")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmap())")
 	@Operation(summary = "Service to map device details with sbi", description = "Service to map device details with sbi")
 	public ResponseWrapper<String> mapDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
@@ -151,7 +151,7 @@ public class SecureBiometricInterfaceController {
 
 	@ResponseFilter
 	@PutMapping("/devicedetails/map/remove")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmapremove())")
 	@Operation(summary = "Service to remove mapped device details with sbi", description = "Service to remove mapped device details with sbi")
 	public ResponseWrapper<String> removeMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
@@ -162,7 +162,7 @@ public class SecureBiometricInterfaceController {
 
 	@ResponseFilter
 	@PostMapping("/devicedetails/map/search")
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER','PARTNER_ADMIN','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacedevicedetailsmapsearch())")
 	@Operation(summary = "Service to search mapped device details and SecureBiometricInterface details", description = "Service to search mapped device details and SecureBiometricInterface details")
 	public ResponseWrapper<PageResponseDto<MappedDeviceDetailsReponse>> searchMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
@@ -174,7 +174,7 @@ public class SecureBiometricInterfaceController {
 	
 	@ResponseFilter
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('PARTNER_ADMIN','DEVICE_PROVIDER','FTM_PROVIDER')")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacefiltervalues())")
 	@Operation(summary = "Service to filter SBI's", description = "Service to filter SBI's")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {

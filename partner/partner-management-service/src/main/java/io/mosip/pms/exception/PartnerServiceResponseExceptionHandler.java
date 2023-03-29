@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.exception.ValidationException;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
@@ -153,6 +154,19 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(DeviceServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final DeviceServiceException exception) {
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(exception.getErrorCode());
+		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
+		responseError.getErrors().add(errorResponse);
+		return new ResponseEntity<>(responseError, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(ApiAccessibleException.class)
+	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
+			final HttpServletRequest httpServletRequest, final ApiAccessibleException exception) {
 		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());

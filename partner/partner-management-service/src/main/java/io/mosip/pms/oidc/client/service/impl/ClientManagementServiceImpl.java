@@ -20,6 +20,7 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
@@ -34,6 +35,7 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
@@ -72,6 +74,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_TYPE = "authType";
 	private static final String MANDATORY = "mandatory";
 	private static final String AUTH_POLICY_TYPE = "Auth";
+	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -81,6 +85,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
+	
+	@Autowired
+	PartnerRepository partnerRepository;
 
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
@@ -107,30 +114,42 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
-		AuthPolicy policyFromDb = authPolicyRepository.findByName(createRequest.getPolicyName());
-		if (policyFromDb == null) {
-			LOGGER.error("createOIDCClient::Policy with name {} not exists", createRequest.getPolicyName());
+		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
+		if(partner.isEmpty()) {
+			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(), String
+					.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), createRequest.getAuthPartnerId()));
+		}
+		if(!partner.get().getPartnerTypeCode().equalsIgnoreCase(AUTH_PARTNER_TYPE)) {
+			LOGGER.error("createOIDCClient::{} cannot create OIDC Client", partner.get().getPartnerTypeCode());
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
+					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
+		}
+		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
+		if (!policyFromDb.isPresent()) {
+			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
-		if(!policyFromDb.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
-			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policyFromDb.getPolicy_type());
+		AuthPolicy policy = policyFromDb.get();
+		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
+			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.getId());
+				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.get().getId());
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
-					createRequest.getPolicyName(), createRequest.getAuthPartnerId());
+					createRequest.getPolicyId(), createRequest.getAuthPartnerId());
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
 
-		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved")) {
+		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
 			LOGGER.error(
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyName(), createRequest.getAuthPartnerId(),
+					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
@@ -141,11 +160,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
-		clientDetail.setPolicyId(policyFromDb.getId());
+		clientDetail.setPolicyId(createRequest.getPolicyId());
 		clientDetail.setLogoUri(createRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", createRequest.getRedirectUris()));
 		Set<String> claims =  authenticationContextClassRefUtil.getPolicySupportedClaims(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
+				getPolicyObject(policyFromDb.get().getPolicyFileId()), ALLOWED_KYC_ATTRIBUTES, ATTRIBUTE_NAME, null));
 		if (claims.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
@@ -154,7 +173,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		clientDetail.setClaims(String.join(",",claims));
 		Set<String> acrValues = authenticationContextClassRefUtil.getAuthFactors(getReqAttributeFromPolicyJson(
-				getPolicyObject(policyFromDb.getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
+				getPolicyObject(policyFromDb.get().getPolicyFileId()), ALLOWED_AUTH_TYPES, AUTH_TYPE, MANDATORY));
 		if (acrValues.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
@@ -167,8 +186,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setCreatedBy(getLoggedInUserId());
-		callIdpService(clientDetail, environment.getProperty("pmp-idp.oidc.client.create.rest.uri"), true);
-		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb, clientDetail);
+		callIdpService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"), true);
+		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb.get(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
@@ -211,7 +230,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
-		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
@@ -230,7 +249,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	private void makeUpdateIDPServiceCall(ClientDetail request, String calleeApi) {
 		RequestWrapper<UpdateClientRequestDto> updateRequestwrapper = new RequestWrapper<>();
-		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString());
+		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
 		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
 		updateRequest.setClientName(request.getName());
@@ -279,7 +298,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			if (!idpServiceErrorList.isEmpty()) {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException((String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORCODE),
-						(String) idpServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE));
+						(String) idpServiceErrorList.get(0).get(ERROR_MESSAGE));
 			} else {
 				LOGGER.error(("IDPServiceResponse:: Idp service response contains errors."));
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
@@ -301,10 +320,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * 
 	 * @param clinetData
 	 */
-	private void publishClientData(Partner partnerData, AuthPolicy policyData, ClientDetail clinetData) {
+	private void publishClientData(Partner partnerData, AuthPolicy policyData, ClientDetail clientData) {
 		notify(MapperUtils.mapDataToPublishDto(partnerData, getPartnerCertificate(partnerData.getCertificateAlias())),
 				MapperUtils.mapPolicyToPublishDto(policyData, getPolicyObject(policyData.getPolicyFileId())),
-				MapperUtils.mapClientDataToPublishDto(clinetData), EventType.OIDC_CLIENT_CREATED);
+				MapperUtils.mapClientDataToPublishDto(clientData), EventType.OIDC_CLIENT_CREATED);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -359,7 +378,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setStatus(updateRequest.getStatus());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
-		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("pmp-idp.oidc.client.update.rest.uri"));
+		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
