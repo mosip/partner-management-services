@@ -1,4 +1,4 @@
-package io.mosip.pms.policy;
+package io.mosip.pms.policy.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
