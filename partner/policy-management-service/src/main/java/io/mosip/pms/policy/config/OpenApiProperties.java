@@ -1,4 +1,4 @@
-package io.mosip.pms.policy;
+package io.mosip.pms.policy.config;
 
 import java.util.List;
 
