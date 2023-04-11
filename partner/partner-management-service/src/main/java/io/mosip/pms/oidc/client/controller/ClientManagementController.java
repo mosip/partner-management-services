@@ -36,13 +36,10 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseWrapper<ClientDetailResponse>> createClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequest> requestWrapper) throws Exception {
-		//var clientRespDto = clientManagementService.createOIDCClient(requestWrapper.getRequest());
 		ResponseWrapper<ClientDetailResponse> response = new ResponseWrapper<>();
-		//var response = new ResponseWrapper<ClientDetailResponse>();
 		ClientDetailResponse clientDetailResponse = null;
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT,requestWrapper.getRequest().getName(),"clientID");
 		clientDetailResponse = clientManagementService.createOIDCClient(requestWrapper.getRequest());
-		//response.setResponse(clientRespDto);
 		response.setId(requestWrapper.getId());
 		response.setVersion(requestWrapper.getVersion());
 		response.setResponse(clientDetailResponse);
@@ -52,9 +49,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseWrapper<ClientDetailResponse>> updateClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
-		//var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		ResponseWrapper<ClientDetailResponse> response = new ResponseWrapper<>();
-		//var response = new ResponseWrapper<ClientDetailResponse>();
 		ClientDetailResponse clientDetailResponse = null;
 		ClientDetailUpdateRequest updateRequest = requestWrapper.getRequest();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
@@ -71,7 +66,6 @@ public class ClientManagementController {
 		ResponseWrapper<ClientDetail> response = new ResponseWrapper<>();
 		ClientDetail clientDetail = null;
 		clientDetail = clientManagementService.getClientDetails(clientId);
-		//var response = new ResponseWrapper<ClientDetail>();
 		response.setId(msg);
 		response.setVersion(version);
 		response.setResponse(clientDetail);
