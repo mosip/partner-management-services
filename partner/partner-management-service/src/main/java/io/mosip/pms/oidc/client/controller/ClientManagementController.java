@@ -42,7 +42,7 @@ public class ClientManagementController {
 
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
-			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
+															  @Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
