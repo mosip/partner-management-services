@@ -36,30 +36,16 @@ public class ClientManagementController {
 		var clientRespDto = clientManagementService.createOIDCClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT,requestWrapper.getRequest().getName(),"clientID");
-<<<<<<< HEAD
-=======
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
->>>>>>> 4357b0a6 (Updated the return type in the controller)
 		response.setResponse(clientRespDto);
 		return response;
 	}
 
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
-<<<<<<< HEAD
 															  @Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
-=======
-			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
-		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
-		var response = new ResponseWrapper<ClientDetailResponse>();
-		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
->>>>>>> 4357b0a6 (Updated the return type in the controller)
 		response.setResponse(clientRespDto);
 		return response;
 	}
@@ -69,11 +55,6 @@ public class ClientManagementController {
 			throws Exception {
 		var response = new ResponseWrapper<ClientDetail>();
 		response.setResponse(clientManagementService.getClientDetails(clientId));
-<<<<<<< HEAD
-=======
-		response.setId(msg);
-		response.setVersion(version);
->>>>>>> 4357b0a6 (Updated the return type in the controller)
 		return response;
 	}
 }
