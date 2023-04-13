@@ -29,9 +29,6 @@ public class ClientManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	String msg = "mosip.clientmanagement.clients.retrieve";
-
-	String version = "1.0";
 
 	@RequestMapping(value = "/oidc/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createClient(
@@ -39,8 +36,6 @@ public class ClientManagementController {
 		var clientRespDto = clientManagementService.createOIDCClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT,requestWrapper.getRequest().getName(),"clientID");
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
 		response.setResponse(clientRespDto);
 		return response;
 	}
@@ -51,8 +46,6 @@ public class ClientManagementController {
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
 		response.setResponse(clientRespDto);
 		return response;
 	}
@@ -62,8 +55,6 @@ public class ClientManagementController {
 			throws Exception {
 		var response = new ResponseWrapper<ClientDetail>();
 		response.setResponse(clientManagementService.getClientDetails(clientId));
-		response.setId(msg);
-		response.setVersion(version);
 		return response;
 	}
 }
