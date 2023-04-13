@@ -34,41 +34,36 @@ public class ClientManagementController {
 	String version = "1.0";
 
 	@RequestMapping(value = "/oidc/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ResponseWrapper<ClientDetailResponse>> createClient(
+	public ResponseWrapper<ClientDetailResponse> createClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequest> requestWrapper) throws Exception {
-		ResponseWrapper<ClientDetailResponse> response = new ResponseWrapper<>();
-		ClientDetailResponse clientDetailResponse = null;
+		var clientRespDto = clientManagementService.createOIDCClient(requestWrapper.getRequest());
+		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT,requestWrapper.getRequest().getName(),"clientID");
-		clientDetailResponse = clientManagementService.createOIDCClient(requestWrapper.getRequest());
 		response.setId(requestWrapper.getId());
 		response.setVersion(requestWrapper.getVersion());
-		response.setResponse(clientDetailResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		response.setResponse(clientRespDto);
+		return response;
 	}
 
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ResponseWrapper<ClientDetailResponse>> updateClient(@PathVariable("client_id") String clientId,
+	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
-		ResponseWrapper<ClientDetailResponse> response = new ResponseWrapper<>();
-		ClientDetailResponse clientDetailResponse = null;
-		ClientDetailUpdateRequest updateRequest = requestWrapper.getRequest();
+		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
+		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
-		clientDetailResponse = clientManagementService.updateOIDCClient(clientId, updateRequest);
 		response.setId(requestWrapper.getId());
 		response.setVersion(requestWrapper.getVersion());
-		response.setResponse(clientDetailResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		response.setResponse(clientRespDto);
+		return response;
 	}
 
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ResponseWrapper<ClientDetail>> getClient(@PathVariable("client_id") String clientId)
+	public ResponseWrapper<ClientDetail> getClient(@PathVariable("client_id") String clientId)
 			throws Exception {
-		ResponseWrapper<ClientDetail> response = new ResponseWrapper<>();
-		ClientDetail clientDetail = null;
-		clientDetail = clientManagementService.getClientDetails(clientId);
+		var response = new ResponseWrapper<ClientDetail>();
+		response.setResponse(clientManagementService.getClientDetails(clientId));
 		response.setId(msg);
 		response.setVersion(version);
-		response.setResponse(clientDetail);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return response;
 	}
 }
