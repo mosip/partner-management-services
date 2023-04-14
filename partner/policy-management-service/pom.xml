@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0.1-B3-SNAPSHOT</version>
+		<version>1.2.0.1-B3</version>
 	</parent>
 	
-	<version>1.2.0.1-B3-SNAPSHOT</version>
+	<version>1.2.0.1-B3</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>policy-validator</artifactId>
-            <version>1.2.0.1-B3-SNAPSHOT</version>			
+            <version>1.2.0.1-B3</version>			
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.0.1-B3-SNAPSHOT</version>
+			<version>1.2.0.1-B3</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
