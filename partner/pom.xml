@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pms</groupId>
 	<artifactId>pms-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.0.1-B3-SNAPSHOT</version>
+	<version>1.2.0.1-B3</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>

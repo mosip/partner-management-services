@@ -6,10 +6,10 @@
   <parent>
     <groupId>io.mosip.pms</groupId>
     <artifactId>pms-parent</artifactId>
-    <version>1.2.0.1-B3-SNAPSHOT</version>
+    <version>1.2.0.1-B3</version>
   </parent>   
   <artifactId>policy-validator</artifactId>
-  <version>1.2.0.1-B3-SNAPSHOT</version>
+  <version>1.2.0.1-B3</version>
   <name>policy-validator</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
