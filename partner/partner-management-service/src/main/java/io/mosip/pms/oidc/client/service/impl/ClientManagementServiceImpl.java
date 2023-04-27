@@ -66,6 +66,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.validation.constraints.NotNull;
+
 @Service
 public class ClientManagementServiceImpl implements ClientManagementService {
 
@@ -228,8 +230,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private static Set<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
-			String childAttribute, String filterAttribute) {
+	private static Set<String> getReqAttributeFromPolicyJson(@NotNull JSONObject policyObject, String parentAttribute,
+															 String childAttribute, String filterAttribute) {
 		Set<String> attributes = new HashSet<>();
 		JSONArray parentAttributeObject = (JSONArray) policyObject.get(parentAttribute);
 		for (int i = 0; i < parentAttributeObject.size(); i++) {

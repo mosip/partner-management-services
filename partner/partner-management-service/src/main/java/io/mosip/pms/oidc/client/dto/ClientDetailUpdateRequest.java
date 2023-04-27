@@ -26,7 +26,7 @@ public class ClientDetailUpdateRequest {
 
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^(ACTIVE)|(INACTIVE)$", flags = Pattern.Flag.CASE_INSENSITIVE)
+    @Pattern(regexp = "(ACTIVE)|(INACTIVE)", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String status;
 
     @NotNull
