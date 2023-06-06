@@ -42,13 +42,13 @@ ALTER TABLE pms.partner ADD COLUMN lang_code character varying(36);
 ALTER TABLE pms.partner_h ADD COLUMN lang_code character varying(36);
 
 TRUNCATE TABLE pms.reg_device_type cascade ;
-\COPY pms.reg_device_type (code,name,descr,is_active,cr_by,cr_dtimes) FROM '../dml/pms-reg_device_type.csv' delimiter ',' HEADER  csv;
+\COPY pms.reg_device_type  FROM '../dml/pms-reg_device_type.csv' WITH (FORMAT CSV, HEADER);
 
 TRUNCATE TABLE pms.reg_device_sub_type cascade ;
-\COPY pms.reg_device_sub_type (code,dtyp_code,name,descr,is_active,cr_by,cr_dtimes) FROM '../dml/pms-reg_device_sub_type.csv' delimiter ',' HEADER  csv;
+\COPY pms.reg_device_sub_type FROM '../dml/pms-reg_device_sub_type.csv' WITH (FORMAT CSV, HEADER);
 
 TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
-\COPY pms.partner_policy_credential_type (part_id,policy_id,credential_type,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) FROM '../dml/pms-partner_policy_credential_type.csv' delimiter ',' HEADER  csv;
+\COPY pms.partner_policy_credential_typeFROM '../dml/pms-partner_policy_credential_type.csv' WITH (FORMAT CSV, HEADER);
 
 \COPY pms.device_detail FROM '../dml/auth-device_detail.csv' WITH (FORMAT CSV, HEADER);
 
