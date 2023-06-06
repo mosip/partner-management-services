@@ -7,3 +7,4 @@
 \COPY authdevice.ftp_chip_detail TO 'dml/auth-ftp_chip_detail.csv' WITH (FORMAT CSV, HEADER);
 
 \COPY (select dd.dprovider_id,dd.partner_org_name,dd.id,sbi.id,sbi.is_active,sbi.cr_by,sbi.cr_dtimes,sbi.upd_by,sbi.upd_dtimes,sbi.is_deleted,sbi.del_dtimes from authdevice.secure_biometric_interface sbi inner join authdevice.device_detail dd on  device_detail_id = dd.id) TO 'dml/auth-device_detail_sbi.csv' WITH (FORMAT CSV, HEADER);
+
