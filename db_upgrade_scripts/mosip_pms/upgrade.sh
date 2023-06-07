@@ -30,8 +30,7 @@ if [ "$ACTION" == "upgrade" ]; then
   UPGRADE_SCRIPT_FILE="sql/${CURRENT_VERSION}_to_${UPGRADE_VERSION}_upgrade.sql"
   if [ -f "$UPGRADE_SCRIPT_FILE" ]; then
     echo "Executing upgrade script $UPGRADE_SCRIPT_FILE"
-    if [ "$UPGRADE_VERSION" == "1.2.0.1-B1" && "$CURRENT_VERSION" == "1.1.5.5" ]
-	then
+    if [ "$UPGRADE_VERSION" == "1.2.0.1-B1" ] && [ "$CURRENT_VERSION" == "1.1.5.5" ]; then
 		PGPASSWORD=$SU_USER_PWD psql -v ON_ERROR_STOP=1 --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$SOURCE_DB1_NAME -a -b -f $SOURCE_DB1_SUPPORT_FILE
 		PGPASSWORD=$SU_USER_PWD psql -v ON_ERROR_STOP=1 --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$SOURCE_DB2_NAME -a -b -f $SOURCE_DB2_SUPPORT_FILE
 	fi
