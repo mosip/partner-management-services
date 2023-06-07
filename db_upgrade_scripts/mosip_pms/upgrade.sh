@@ -1,6 +1,10 @@
 #!/bin/bash
 
 set -e
+SOURCE_DB1_NAME=mosip_authdevice
+SOURCE_DB2_NAME=mosip_regdevice
+SOURCE_DB1_SUPPORT_FILE=sql/1.1.5.5_to_1.2.0.1-B1_pms-authdevice-support.sql
+SOURCE_DB2_SUPPORT_FILE=sql/1.1.5.5_to_1.2.0.1-B1_pms-regdevice-support.sql
 properties_file="$1"
 echo `date "+%m/%d/%Y %H:%M:%S"` ": $properties_file"
 if [ -f "$properties_file" ]
