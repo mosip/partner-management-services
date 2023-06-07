@@ -42,4 +42,12 @@ elif [ "$ACTION" == "rollback" ]; then
     REVOKE_SCRIPT_FILE="sql/${CURRENT_VERSION}_to_${UPGRADE_VERSION}_rollback.sql"
     if [ -f "$REVOKE_SCRIPT_FILE" ]; then
         echo "Executing rollback script $REVOKE_SCRIPT_FILE"
-        PGPASSWORD="$SU_USER_PWD" psql -v ON_ERROR
+        PGPASSWORD="$SU_USER_PWD" psql -v ON_ERROR_STOP=1 --username="$SU_USER" --host="$DB_SERVERIP" --port="$DB_PORT" --dbname="$DEFAULT_DB_NAME" -a -b -f "$REVOKE_SCRIPT_FILE"
+    else
+        echo "Rollback script not found, exiting."
+        exit 1
+    fi
+else
+    echo "Unknown action: $ACTION, must be 'upgrade' or 'rollback'."
+    exit 1
+fi
