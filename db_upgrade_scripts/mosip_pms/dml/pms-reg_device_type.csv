@@ -1,4 +1,4 @@
-﻿code,name,descr,is_active,cr_by,cr_dtimes
-Finger,Finger,Fingerprint Biometric,TRUE,now(),now()
-Face,Face,Face Biometric,TRUE,now(),now()
-Iris,Iris,Iris Biomertric,TRUE,now(),now()
+﻿code,name,descr,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
+Finger,Finger,Fingerprint Biometric,TRUE,superadmin,now(),,,FALSE,
+Face,Face,Face Biometric,TRUE,superadmin,now(),,,FALSE,
+Iris,Iris,Iris Biomertric,TRUE,superadmin,now(),,,FALSE,

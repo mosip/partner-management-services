@@ -41,49 +41,14 @@ ALTER TABLE pms.partner ADD COLUMN lang_code character varying(36);
 
 ALTER TABLE pms.partner_h ADD COLUMN lang_code character varying(36);
 
-TRUNCATE TABLE pms.reg_device_type cascade ;
-\COPY pms.reg_device_type  FROM '../dml/pms-reg_device_type.csv' WITH (FORMAT CSV, HEADER);
-
-TRUNCATE TABLE pms.reg_device_sub_type cascade ;
-\COPY pms.reg_device_sub_type FROM '../dml/pms-reg_device_sub_type.csv' WITH (FORMAT CSV, HEADER);
-
-TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
-\COPY pms.partner_policy_credential_typeFROM '../dml/pms-partner_policy_credential_type.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.device_detail FROM '../dml/auth-device_detail.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.secure_biometric_interface FROM '../dml/auth-secure_biometric_interface.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.secure_biometric_interface_h FROM '../dml/auth-secure_biometric_interface_h.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.device_detail_sbi FROM '../dml/auth-device_detail_sbi.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.ftp_chip_detail FROM '../dml/auth-ftp_chip_detail.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.device_detail FROM '../dml/reg-device_detail.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.secure_biometric_interface FROM '../dml/reg-secure_biometric_interface.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.secure_biometric_interface_h FROM '../dml/reg-secure_biometric_interface_h.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.device_detail_sbi FROM '../dml/reg-device_detail_sbi.csv' WITH (FORMAT CSV, HEADER);
-
-\COPY pms.ftp_chip_detail FROM '../dml/reg-ftp_chip_detail.csv' WITH (FORMAT CSV, HEADER);
-
-ALTER TABLE pms.ftp_chip_detail ADD COLUMN approval_status character varying(36);
-UPDATE pms.ftp_chip_detail SET approval_status='pending_cert_upload' where certificate_alias is null;
-UPDATE pms.ftp_chip_detail SET approval_status='pending_approval' where certificate_alias is not null and is_active =false;
-UPDATE pms.ftp_chip_detail SET approval_status='approved' where certificate_alias is not null and is_active = true;
-ALTER TABLE pms.ftp_chip_detail ALTER COLUMN approval_status SET NOT NULL;
-
 INSERT INTO pms.policy_group (id,name,descr,user_id,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) 
 VALUES('mpolicygroup-default-cert','mpolicygroup-default-cert','mpolicygroup-default-cert','superadmin',true,'superadmin',now(),'superadmin',now(),false,NULL);
 
 INSERT INTO pms.partner (id,policy_group_id,name,address,contact_no,email_id,certificate_alias,user_id,partner_type_code,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes,lang_code) 
-VALUES('mpartner-default-cert','mpolicygroup-default-cert','mpartner-default-cert','mpartner-default-cert','9232121212','info@mosip.io',NULL,'mpartner-default-cert','Internal_Partner','approved',true,'superadmin',now(),'superadmin',now(),false,NULL,NULL);
+VALUES('mpartner-default-cert','mpolicygroup-default-cert','mpartner-default-cert','mpartner-default-cert','9232121212','info@mosip.io',NULL,'mpartner-default-cert','Credential_Partner','approved',true,'superadmin',now(),'superadmin',now(),false,NULL,NULL);
 
 INSERT INTO pms.partner_h (id,eff_dtimes,policy_group_id,name,address,contact_no,email_id,certificate_alias,user_id,partner_type_code,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes,lang_code) 
-VALUES('mpartner-default-cert',now(),'mpolicygroup-default-cert','mpartner-default-cert','mpartner-default-cert','9232121212','info@mosip.io',NULL,'mpartner-default-cert','Internal_Partner','approved',true,'superadmin',now(),'superadmin',now(),false,NULL,NULL);
+VALUES('mpartner-default-cert',now(),'mpolicygroup-default-cert','mpartner-default-cert','mpartner-default-cert','9232121212','info@mosip.io',NULL,'mpartner-default-cert','Credential_Partner','approved',true,'superadmin',now(),'superadmin',now(),false,NULL,NULL);
 
 
 INSERT INTO pms.auth_policy (id,policy_group_id,name,descr,policy_file_id,policy_type,"version",policy_schema,valid_from_date,valid_to_date,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) 
@@ -95,4 +60,40 @@ VALUES('mpartner_policy_cert_req','mpartner-default-cert','mpolicy-default-cert'
 INSERT INTO pms.partner_policy (policy_api_key,part_id,policy_id,valid_from_datetime,valid_to_datetime,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes,"label") 
 VALUES('mpolicy_part_cert_api','mpartner-default-cert','mpolicy-default-cert',now(),now()+interval '12 years',true,'admin',now(),'admin',now(),false,NULL,'mpolicy_part_cert_api');
 
+
+
+TRUNCATE TABLE pms.reg_device_type cascade ;
+\COPY pms.reg_device_type  FROM 'dml/pms-reg_device_type.csv' WITH (FORMAT CSV, HEADER);
+
+TRUNCATE TABLE pms.reg_device_sub_type cascade ;
+\COPY pms.reg_device_sub_type FROM 'dml/pms-reg_device_sub_type.csv' WITH (FORMAT CSV, HEADER);
+
+TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
+\COPY pms.partner_policy_credential_type FROM 'dml/pms-partner_policy_credential_type.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.device_detail FROM 'dml/auth-device_detail.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.secure_biometric_interface FROM 'dml/auth-secure_biometric_interface.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.secure_biometric_interface_h FROM 'dml/auth-secure_biometric_interface_h.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.device_detail_sbi FROM 'dml/auth-device_detail_sbi.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.ftp_chip_detail FROM 'dml/auth-ftp_chip_detail.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.device_detail FROM 'dml/reg-device_detail.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.secure_biometric_interface FROM 'dml/reg-secure_biometric_interface.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.secure_biometric_interface_h FROM 'dml/reg-secure_biometric_interface_h.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.device_detail_sbi FROM 'dml/reg-device_detail_sbi.csv' WITH (FORMAT CSV, HEADER);
+
+\COPY pms.ftp_chip_detail FROM 'dml/reg-ftp_chip_detail.csv' WITH (FORMAT CSV, HEADER);
+
+ALTER TABLE pms.ftp_chip_detail ADD COLUMN approval_status character varying(36);
+UPDATE pms.ftp_chip_detail SET approval_status='pending_cert_upload' where certificate_alias is null;
+UPDATE pms.ftp_chip_detail SET approval_status='pending_approval' where certificate_alias is not null and is_active =false;
+UPDATE pms.ftp_chip_detail SET approval_status='approved' where certificate_alias is not null and is_active = true;
+ALTER TABLE pms.ftp_chip_detail ALTER COLUMN approval_status SET NOT NULL;
 
