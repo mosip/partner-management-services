@@ -1,3 +1,5 @@
+\c mosip_pms
+
 DROP TABLE IF EXISTS pms.device_detail;
 DROP TABLE IF EXISTS pms.device_detail_sbi;
 DROP TABLE IF EXISTS pms.ftp_chip_detail;

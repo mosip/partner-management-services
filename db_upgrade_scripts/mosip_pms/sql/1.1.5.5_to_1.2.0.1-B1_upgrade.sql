@@ -1,11 +1,14 @@
+\c mosip_pms
 
-ALTER DATABASE mosip_pms OWNER TO postgres;
+REASSIGN OWNED BY sysadmin TO postgres;
 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms FROM pmsuser;
 
-REVOKE ALL PRIVILEGES ON DATABASE mosip_pms FROM pmsuser, sysadmin;
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms FROM sysadmin;
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHEMA pms TO pmsuser;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
 
 \ir ../ddl/pms-device_detail.sql
 \ir ../ddl/pms-ftp_chip_detail.sql
