@@ -1,15 +1,11 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_pms
--- Release Version 	: 1.2.0
--- Purpose    		    : Database Alter scripts for the release for PMS DB.       
--- Create By   		: Balaji A
--- Created Date		: May 2023
--- 
--- Modified Date        Modified By         Comments / Remarks
--------------------------------------------------------------------------------------------------
 
-\c mosip_pms sysadmin
+ALTER DATABASE mosip_pms OWNER TO postgres;
 
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
+
+REVOKE ALL PRIVILEGES ON DATABASE mosip_pms FROM pmsuser, sysadmin;
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHEMA pms TO pmsuser;
 
 \ir ../ddl/pms-device_detail.sql
 \ir ../ddl/pms-ftp_chip_detail.sql
