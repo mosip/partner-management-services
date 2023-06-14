@@ -1,14 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_pms
--- Release Version 	: 1.2.0
--- Purpose    		: Revoking Database Alter deployement done for release in PMS DB.       
--- Create By   		: Balaji A
--- Created Date		: May-2023
--- 
--- Modified Date        Modified By         Comments / Remarks
--- -------------------------------------------------------------------------------------------------
-
-\c mosip_pms sysadmin
+\c mosip_pms
 
 DROP TABLE IF EXISTS pms.device_detail;
 DROP TABLE IF EXISTS pms.device_detail_sbi;
