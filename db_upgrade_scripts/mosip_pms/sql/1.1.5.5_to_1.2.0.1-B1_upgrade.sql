@@ -17,6 +17,7 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
 \ir ../ddl/pms-secure_biometric_interface.sql
 \ir ../ddl/pms-secure_biometric_interface_h.sql
 \ir ../ddl/pms-device_detail_sbi.sql
+\ir ../ddl/pms-oidc_client.sql
 
 -- object: fk_devdtl_id | type: CONSTRAINT --
 -- ALTER TABLE pms.device_detail DROP CONSTRAINT IF EXISTS fk_devdtl_id CASCADE;
