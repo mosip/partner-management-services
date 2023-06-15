@@ -1,5 +1,9 @@
 \c mosip_pms
 
+REASSIGN OWNED BY postgres TO sysadmin;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO sysadmin;
+
 DROP TABLE IF EXISTS pms.device_detail;
 DROP TABLE IF EXISTS pms.device_detail_sbi;
 DROP TABLE IF EXISTS pms.ftp_chip_detail;
