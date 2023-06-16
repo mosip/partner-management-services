@@ -1,1 +1,3 @@
-\echo 'Upgrade Queries not required for transition from $CURRENT_VERSION to $UPGRADE_VERSION'
+CREATE TABLE pms.oidc_client(id character varying(100) NOT NULL, name character varying(256) NOT NULL, rp_id character varying(100) NOT NULL, policy_id character varying(50) NOT NULL, logo_uri character varying(2048) NOT NULL, redirect_uris character varying NOT NULL, claims character varying NOT NULL, acr_values character varying NOT NULL, public_key character varying NOT NULL, grant_types character varying(256) NOT NULL, auth_methods character varying(256) NOT NULL, status character varying(20) NOT NULL, cr_by character varying(256) NOT NULL, cr_dtimes timestamp NOT NULL, upd_by character varying(256), upd_dtimes timestamp, is_deleted boolean DEFAULT FALSE, del_dtimes timestamp);
+ALTER TABLE pms.oidc_client ADD CONSTRAINT pk_oidc_client PRIMARY KEY (id);
+ALTER TABLE pms.oidc_client ADD CONSTRAINT uq_oidc_client_public_key UNIQUE (public_key);
