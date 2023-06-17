@@ -1,3 +1,4 @@
+\c mosip_pms
 -- object: pms.oidc_client | type: TABLE --
 -- DROP TABLE IF EXISTS pms.oidc_client CASCADE;
 CREATE TABLE pms.oidc_client(
