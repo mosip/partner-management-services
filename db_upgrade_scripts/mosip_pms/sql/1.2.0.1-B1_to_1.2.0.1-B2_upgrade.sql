@@ -24,7 +24,7 @@ CREATE TABLE pms.oidc_client(
 	CONSTRAINT uq_oidc_client_public_key UNIQUE (public_key)
 );
 -- ddl-end --
-COMMENT ON TABLE oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';
+COMMENT ON COLUMN oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';
 -- ddl-end --
 COMMENT ON COLUMN oidc_client.name IS 'Client Name: Registered name of OIDC client.';
 -- ddl-end --
