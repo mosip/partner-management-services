@@ -1,4 +1,15 @@
 \c mosip_pms
+
+ALTER TABLE pms.partner ADD COLUMN logo_url character varying(256);
+
+ALTER TABLE pms.partner_h ADD COLUMN logo_url character varying(256);
+
+ALTER TABLE pms.partner ADD COLUMN addl_info character varying;
+
+ALTER TABLE pms.partner_h ADD COLUMN addl_info character varying;
+
+ALTER TABLE pms.misp_license ADD COLUMN policy_id character varying(36);
+
 -- object: pms.oidc_client | type: TABLE --
 -- DROP TABLE IF EXISTS pms.oidc_client CASCADE;
 CREATE TABLE pms.oidc_client(
