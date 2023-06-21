@@ -10,13 +10,320 @@ GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHE
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
 
-\ir ../ddl/pms-device_detail.sql
-\ir ../ddl/pms-ftp_chip_detail.sql
-\ir ../ddl/pms-reg_device_sub_type.sql
-\ir ../ddl/pms-reg_device_type.sql
-\ir ../ddl/pms-secure_biometric_interface.sql
-\ir ../ddl/pms-secure_biometric_interface_h.sql
-\ir ../ddl/pms-device_detail_sbi.sql
+-- object: pms.device_detail | type: TABLE --
+-- DROP TABLE IF EXISTS pms.device_detail CASCADE;
+CREATE TABLE pms.device_detail(
+	id character varying(36) NOT NULL,
+	dprovider_id character varying(36) NOT NULL,
+	dtype_code character varying(36) NOT NULL,
+	dstype_code character varying(36) NOT NULL,
+	make character varying(36) NOT NULL,
+	model character varying(36) NOT NULL,
+	partner_org_name character varying(128),
+	approval_status character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	CONSTRAINT pk_devdtl_id PRIMARY KEY (id),
+	CONSTRAINT uk_devdtl_id UNIQUE (dprovider_id,dtype_code,dstype_code,make,model)
+
+);
+-- ddl-end --
+COMMENT ON TABLE pms.device_detail IS 'Device Detail : Details of the device like device provider id, make , model, device type, device sub type, approval status are stored here.';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.id IS 'ID: Unigue service ID, Service ID is geerated by the MOSIP system';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.dprovider_id IS 'Device Provider ID : Device provider ID, Referenced from master.device_provider.id';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.dtype_code IS 'Device Type Code: Code of the device type, Referenced from master.reg_device_type.code';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.dstype_code IS ' Device Sub Type Code: Code of the device sub type, Referenced from master.reg_device_sub_type.code';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.make IS 'Make: Make of the device';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.model IS ' Model: Model of the device';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.partner_org_name IS 'Partner Organisation Name';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.approval_status IS 'Approval Status';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.device_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+
+-- object: pms.device_detail | type: TABLE --
+-- DROP TABLE IF EXISTS pms.device_detail_sbi CASCADE;
+CREATE TABLE pms.device_detail_sbi(
+	dprovider_id character varying(36) NOT NULL,
+	partner_org_name character varying(128),
+	device_detail_id character varying(36) NOT NULL,
+	sbi_id character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp
+
+);
+-- ddl-end --
+
+
+-- object: pms.ftp_chip_detail | type: TABLE --
+-- DROP TABLE IF EXISTS pms.ftp_chip_detail CASCADE;
+CREATE TABLE pms.ftp_chip_detail(
+	id character varying(36) NOT NULL,
+	foundational_trust_provider_id character varying(36) NOT NULL,
+	make character varying(36),
+	model character varying(36),
+	certificate_alias character varying(36),
+	partner_org_name character varying(128),
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	CONSTRAINT pk_fcdtl_id PRIMARY KEY (id),
+	CONSTRAINT uk_fcdtl_id UNIQUE (foundational_trust_provider_id,make,model)
+
+);
+-- ddl-end --
+COMMENT ON TABLE pms.ftp_chip_detail IS 'Foundational Trust Provider Chip Details : To store all foundational trust provider chip details like make, model and certificate.';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.id IS 'Foundational Trust Provider ID: Unique ID of the trust provider, Trust provider id is generated by MOSIP system.';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.foundational_trust_provider_id IS 'Foundational Trust Provider ID: This is the partner id who provide chip and required certificates for L1 devices. This is soft referenced from Partner Management Service database.';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.make IS 'Chip Make: Make of the chip provided by the foundational trust provider';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.model IS 'Model : Model of the chip which is provided by the foundational trust provider';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.certificate_alias IS 'Certificate Alias : Its certificate alias which is stored in some key store and provided by MOSIP to a trust provider';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.partner_org_name IS 'Partner Organisation Name';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+COMMENT ON COLUMN pms.ftp_chip_detail.approval_status IS 'approval_status : Status of the record. Status will be pending_cert_upload,pending_approval,approved or rejected';
+-- ddl-end --
+
+-- object: pms.reg_device_sub_type | type: TABLE --
+-- DROP TABLE IF EXISTS pms.reg_device_sub_type CASCADE;
+CREATE TABLE pms.reg_device_sub_type(
+	code character varying(36) NOT NULL,
+	dtyp_code character varying(36) NOT NULL,
+	name character varying(64) NOT NULL,
+	descr character varying(512),
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	CONSTRAINT pk_rdstyp_code PRIMARY KEY (code,dtyp_code)
+
+);
+-- ddl-end --
+COMMENT ON TABLE pms.reg_device_sub_type IS 'Device Type : Sub types of devices that are supported by the MOSIP system,  like  Slab, Single, Touchless...etc';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.code IS 'Device Sub Type Code: Sub types of devices used for registration processes, authentication...etc for ex., SLB, SINGLE, FULLFACE... etc';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.dtyp_code IS 'Device Type Code : Code of the device type where this sub type belongs to. refers to master.reg_device_type.code';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.name IS 'Device Name: Name of the device sub type';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.descr IS 'Device description: Device sub type description';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_sub_type.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+
+-- object: pms.reg_device_type | type: TABLE --
+-- DROP TABLE IF EXISTS pms.reg_device_type CASCADE;
+CREATE TABLE pms.reg_device_type(
+	code character varying(36) NOT NULL,
+	name character varying(64) NOT NULL,
+	descr character varying(512),
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	CONSTRAINT pk_rdtyp_code PRIMARY KEY (code)
+
+);
+-- ddl-end --
+COMMENT ON TABLE pms.reg_device_type IS 'Device Type : Types of devices that are supported by the MOSIP system,  like  scanning, finger, face, iris etc';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.code IS 'Device Type Code: Types of devices used for registration processes, authentication...etc for ex., FNR, FACE, IRIS... etc';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.name IS 'Device Name: Name of the device type';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.descr IS 'Device description: Device sub type description';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.reg_device_type.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+
+-- object: pms.secure_biometric_interface | type: TABLE --
+-- DROP TABLE IF EXISTS pms.secure_biometric_interface CASCADE;
+CREATE TABLE pms.secure_biometric_interface(
+	id character varying(36) NOT NULL,
+	sw_binary_hash bytea NOT NULL,
+	sw_version character varying(64) NOT NULL,
+	sw_cr_dtimes timestamp,
+	sw_expiry_dtimes timestamp,
+	approval_status character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	provider_id character varying(36),
+	partner_org_name character varying(128),
+	CONSTRAINT pk_sbi_id PRIMARY KEY (id)
+);
+-- ddl-end --
+COMMENT ON TABLE pms.secure_biometric_interface IS 'Secure Biometric Interface : Secure Biometric Interface to have all the details about the device types, provider and software details';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.id IS 'ID: Unigue service ID, Service ID is geerated by the MOSIP system';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.sw_binary_hash IS 'Software Binary Hash : Its is a software binary stored in MOSIP system for the devices';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.sw_version IS 'Software Version : Version of the stored software';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.sw_cr_dtimes IS 'Software Created Date Time: Date and Time on which this software is created';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.sw_expiry_dtimes IS 'Software Expiry Date Time: Expiry date and time of the device software';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.approval_status IS 'Approval Status:';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+
+
+-- object: pms.secure_biometric_interface_h | type: TABLE --
+-- DROP TABLE IF EXISTS pms.secure_biometric_interface_h CASCADE;
+CREATE TABLE pms.secure_biometric_interface_h(
+	id character varying(36) NOT NULL,
+	sw_binary_hash bytea NOT NULL,
+	sw_version character varying(64) NOT NULL,
+	sw_cr_dtimes timestamp,
+	sw_expiry_dtimes timestamp,
+	approval_status character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	eff_dtimes timestamp NOT NULL,
+	provider_id character varying(36),
+	partner_org_name character varying(128),
+	CONSTRAINT pk_mdsh_id PRIMARY KEY (id,eff_dtimes)
+);
+-- ddl-end --
+COMMENT ON TABLE pms.secure_biometric_interface_h IS 'MOSIP Secure Biometric Interface History : History of changes of any MOSIP secure biometric interface will be stored in history table to track any chnages for future validations.';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.id IS 'ID: Unigue service ID, Service ID is geerated by the MOSIP system';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.sw_binary_hash IS 'Software Binary Hash : Its is a software binary stored in MOSIP system for the devices';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.sw_version IS 'Software Version : Version of the stored software';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.sw_cr_dtimes IS 'Software Created Date Time: Date and Time on which this software is created';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.sw_expiry_dtimes IS 'Software Expiry Date Time: Expiry date and time of the device software';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.approval_status IS 'Approval Status';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.is_active IS 'IS_Active : Flag to mark whether the record/device is Active or In-active';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.cr_by IS 'Created By : ID or name of the user who create / insert record';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+-- ddl-end --
+COMMENT ON COLUMN pms.secure_biometric_interface_h.eff_dtimes IS 'Effective Date Timestamp : This to track master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ).  The current record is effective from this date-time.';
+-- ddl-end --
+
 
 -- object: fk_devdtl_id | type: CONSTRAINT --
 -- ALTER TABLE pms.device_detail DROP CONSTRAINT IF EXISTS fk_devdtl_id CASCADE;
