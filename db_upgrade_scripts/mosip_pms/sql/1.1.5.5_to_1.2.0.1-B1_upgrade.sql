@@ -134,8 +134,6 @@ COMMENT ON COLUMN pms.ftp_chip_detail.is_deleted IS 'IS_Deleted : Flag to mark w
 -- ddl-end --
 COMMENT ON COLUMN pms.ftp_chip_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
-COMMENT ON COLUMN pms.ftp_chip_detail.approval_status IS 'approval_status : Status of the record. Status will be pending_cert_upload,pending_approval,approved or rejected';
--- ddl-end --
 
 -- object: pms.reg_device_sub_type | type: TABLE --
 -- DROP TABLE IF EXISTS pms.reg_device_sub_type CASCADE;
@@ -402,4 +400,7 @@ UPDATE pms.ftp_chip_detail SET approval_status='pending_cert_upload' where certi
 UPDATE pms.ftp_chip_detail SET approval_status='pending_approval' where certificate_alias is not null and is_active =false;
 UPDATE pms.ftp_chip_detail SET approval_status='approved' where certificate_alias is not null and is_active = true;
 ALTER TABLE pms.ftp_chip_detail ALTER COLUMN approval_status SET NOT NULL;
+
+COMMENT ON COLUMN pms.ftp_chip_detail.approval_status IS 'approval_status : Status of the record. Status will be pending_cert_upload,pending_approval,approved or rejected';
+-- ddl-end --
 
