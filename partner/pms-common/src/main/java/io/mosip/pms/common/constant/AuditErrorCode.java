@@ -1,4 +1,4 @@
-package io.mosip.pms.device.constant;
+package io.mosip.pms.common.constant;
 
 public enum AuditErrorCode {
 	
