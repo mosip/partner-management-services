@@ -11,27 +11,35 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.pms.common.constant.AuditErrorCode;
 import io.mosip.pms.common.exception.ValidationException;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.policy.dto.AuditRequestDto;
 import io.mosip.pms.policy.dto.AuditResponseDto;
 import io.mosip.pms.policy.dto.PolicyManageEnum;
+import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 
 
 @Component
@@ -122,17 +130,17 @@ public class AuditUtil {
 		callAuditManager(auditRequestDto);
 	}
 
-	private void callAuditManager(AuditRequestDto auditRequestDto) {
+	private void callAuditManager(AuditRequestDto auditRequestDto)  {
 		RequestWrapper<AuditRequestDto> auditReuestWrapper = new RequestWrapper<>();
 		auditReuestWrapper.setRequest(auditRequestDto);
 		HttpEntity<RequestWrapper<AuditRequestDto>> httpEntity = new HttpEntity<>(auditReuestWrapper);
-		String response =null;
+		ResponseEntity<String> response =null;
 		try {
-			response = restUtil.postApi(auditUrl, null, "", "", MediaType.APPLICATION_JSON, httpEntity, String.class);		
-			getAuditDetailsFromResponse(response);
+			response =  restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
+			getAuditDetailsFromResponse(response.getBody());
 		} catch (Exception ex) {
-			log.error("Error occured while calling audit service", ex);
-		}
+			handlException(ex);
+			}
 	}
 	
 	private AuditResponseDto getAuditDetailsFromResponse(String responseBody) throws Exception {
@@ -150,7 +158,8 @@ public class AuditUtil {
 					});
 			auditResponseDto = responseObject.getResponse();
 		} catch (IOException | NullPointerException exception) {
-			throw exception;
+			throw new PolicyManagementServiceException(AuditErrorCode.AUDIT_PARSE_EXCEPTION.getErrorCode(),
+					AuditErrorCode.AUDIT_PARSE_EXCEPTION.getErrorMessage());
 		}
 
 		return auditResponseDto;
@@ -167,4 +176,27 @@ public class AuditUtil {
 			return SecurityContextHolder.getContext().getAuthentication().getName();
 		}
 	}
+	
+	private void handlException(HttpStatusCodeException ex) {
+		List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
+
+		if (ex.getRawStatusCode() == 401) {
+			if (!validationErrorsList.isEmpty()) {
+				throw new AuthNException(validationErrorsList);
+			} else {
+				throw new BadCredentialsException("Authentication failed from AuthManager");
+			}
+		}
+		if (ex.getRawStatusCode() == 403) {
+			if (!validationErrorsList.isEmpty()) {
+				throw new AuthZException(validationErrorsList);
+			} else {
+				throw new AccessDeniedException("Access denied from AuthManager");
+			}
+		}
+		throw new PolicyManagementServiceException(AuditErrorCode.AUDIT_EXCEPTION.getErrorCode(),
+				AuditErrorCode.AUDIT_EXCEPTION.getErrorMessage() + ex);
+
+	}
+
 }
