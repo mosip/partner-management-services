@@ -139,7 +139,7 @@ public class AuditUtil {
 			response =  restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
 			getAuditDetailsFromResponse(response.getBody());
 		} catch (Exception ex) {
-			handlException(ex);
+			handlException((HttpStatusCodeException) ex);
 			}
 	}
 	
