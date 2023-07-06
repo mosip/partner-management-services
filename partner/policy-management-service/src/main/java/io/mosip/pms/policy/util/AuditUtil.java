@@ -17,6 +17,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -138,9 +140,11 @@ public class AuditUtil {
 		try {
 			response =  restTemplate.exchange(auditUrl, HttpMethod.POST, httpEntity, String.class);
 			getAuditDetailsFromResponse(response.getBody());
-		} catch (Exception ex) {
-			handlException(ex);
-			}
+		} catch (HttpClientErrorException | HttpServerErrorException ex) {
+			handlException( ex);
+		} catch (Exception e) {
+			log.error("Failed  to get response from audit manager", e);
+		}
 	}
 	
 	private AuditResponseDto getAuditDetailsFromResponse(String responseBody) throws Exception {
