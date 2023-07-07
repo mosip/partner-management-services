@@ -6,6 +6,9 @@ REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms FROM pmsuser;
 
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms FROM sysadmin;
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHEMA pms TO pmsuser;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
 
 -- object: pms.device_detail | type: TABLE --
 -- DROP TABLE IF EXISTS pms.device_detail CASCADE;
@@ -63,6 +66,10 @@ COMMENT ON COLUMN pms.device_detail.is_deleted IS 'IS_Deleted : Flag to mark whe
 COMMENT ON COLUMN pms.device_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.device_detail TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.device_detail TO postgres;
+
 -- object: pms.device_detail | type: TABLE --
 -- DROP TABLE IF EXISTS pms.device_detail_sbi CASCADE;
 CREATE TABLE pms.device_detail_sbi(
@@ -81,6 +88,9 @@ CREATE TABLE pms.device_detail_sbi(
 );
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.device_detail_sbi TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.device_detail_sbi TO postgres;
 
 -- object: pms.ftp_chip_detail | type: TABLE --
 -- DROP TABLE IF EXISTS pms.ftp_chip_detail CASCADE;
@@ -132,6 +142,10 @@ COMMENT ON COLUMN pms.ftp_chip_detail.is_deleted IS 'IS_Deleted : Flag to mark w
 COMMENT ON COLUMN pms.ftp_chip_detail.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.ftp_chip_detail TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.ftp_chip_detail TO postgres;
+
 -- object: pms.reg_device_sub_type | type: TABLE --
 -- DROP TABLE IF EXISTS pms.reg_device_sub_type CASCADE;
 CREATE TABLE pms.reg_device_sub_type(
@@ -175,6 +189,10 @@ COMMENT ON COLUMN pms.reg_device_sub_type.is_deleted IS 'IS_Deleted : Flag to ma
 COMMENT ON COLUMN pms.reg_device_sub_type.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.reg_device_sub_type TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.reg_device_sub_type TO postgres;
+
 -- object: pms.reg_device_type | type: TABLE --
 -- DROP TABLE IF EXISTS pms.reg_device_type CASCADE;
 CREATE TABLE pms.reg_device_type(
@@ -214,6 +232,10 @@ COMMENT ON COLUMN pms.reg_device_type.is_deleted IS 'IS_Deleted : Flag to mark w
 -- ddl-end --
 COMMENT ON COLUMN pms.reg_device_type.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.reg_device_type TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.reg_device_type pms TO postgres;
 
 -- object: pms.secure_biometric_interface | type: TABLE --
 -- DROP TABLE IF EXISTS pms.secure_biometric_interface CASCADE;
@@ -265,6 +287,9 @@ COMMENT ON COLUMN pms.secure_biometric_interface.is_deleted IS 'IS_Deleted : Fla
 COMMENT ON COLUMN pms.secure_biometric_interface.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface pms TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.secure_biometric_interface TO postgres;
 
 -- object: pms.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS pms.secure_biometric_interface_h CASCADE;
@@ -319,6 +344,9 @@ COMMENT ON COLUMN pms.secure_biometric_interface_h.del_dtimes IS 'Deleted DateTi
 COMMENT ON COLUMN pms.secure_biometric_interface_h.eff_dtimes IS 'Effective Date Timestamp : This to track master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ).  The current record is effective from this date-time.';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface_h TO pmsuser;
+
+GRANT ALL PRIVILEGES ON pms.secure_biometric_interface_h TO postgres;
 
 -- object: fk_devdtl_id | type: CONSTRAINT --
 -- ALTER TABLE pms.device_detail DROP CONSTRAINT IF EXISTS fk_devdtl_id CASCADE;
@@ -470,8 +498,5 @@ INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_act
 INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) VALUES
 	 ('SDK_Partner','SDK Partner',true,true,'superadmin',now(),NULL,NULL,false,NULL) ON CONFLICT (code) DO NOTHING;
 
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHEMA pms TO pmsuser;
-
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pms TO postgres;
 -- ddl-end --
 
