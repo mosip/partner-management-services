@@ -68,8 +68,6 @@ COMMENT ON COLUMN pms.device_detail.del_dtimes IS 'Deleted DateTimestamp : Date 
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.device_detail TO pmsuser;
 
-GRANT ALL PRIVILEGES ON pms.device_detail TO postgres;
-
 -- object: pms.device_detail | type: TABLE --
 -- DROP TABLE IF EXISTS pms.device_detail_sbi CASCADE;
 CREATE TABLE pms.device_detail_sbi(
@@ -89,8 +87,6 @@ CREATE TABLE pms.device_detail_sbi(
 -- ddl-end --
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.device_detail_sbi TO pmsuser;
-
-GRANT ALL PRIVILEGES ON pms.device_detail_sbi TO postgres;
 
 -- object: pms.ftp_chip_detail | type: TABLE --
 -- DROP TABLE IF EXISTS pms.ftp_chip_detail CASCADE;
@@ -144,8 +140,6 @@ COMMENT ON COLUMN pms.ftp_chip_detail.del_dtimes IS 'Deleted DateTimestamp : Dat
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.ftp_chip_detail TO pmsuser;
 
-GRANT ALL PRIVILEGES ON pms.ftp_chip_detail TO postgres;
-
 -- object: pms.reg_device_sub_type | type: TABLE --
 -- DROP TABLE IF EXISTS pms.reg_device_sub_type CASCADE;
 CREATE TABLE pms.reg_device_sub_type(
@@ -191,8 +185,6 @@ COMMENT ON COLUMN pms.reg_device_sub_type.del_dtimes IS 'Deleted DateTimestamp :
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.reg_device_sub_type TO pmsuser;
 
-GRANT ALL PRIVILEGES ON pms.reg_device_sub_type TO postgres;
-
 -- object: pms.reg_device_type | type: TABLE --
 -- DROP TABLE IF EXISTS pms.reg_device_type CASCADE;
 CREATE TABLE pms.reg_device_type(
@@ -234,8 +226,6 @@ COMMENT ON COLUMN pms.reg_device_type.del_dtimes IS 'Deleted DateTimestamp : Dat
 -- ddl-end --
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.reg_device_type TO pmsuser;
-
-GRANT ALL PRIVILEGES ON pms.reg_device_type pms TO postgres;
 
 -- object: pms.secure_biometric_interface | type: TABLE --
 -- DROP TABLE IF EXISTS pms.secure_biometric_interface CASCADE;
@@ -288,8 +278,6 @@ COMMENT ON COLUMN pms.secure_biometric_interface.del_dtimes IS 'Deleted DateTime
 -- ddl-end --
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface pms TO pmsuser;
-
-GRANT ALL PRIVILEGES ON pms.secure_biometric_interface TO postgres;
 
 -- object: pms.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS pms.secure_biometric_interface_h CASCADE;
@@ -345,8 +333,6 @@ COMMENT ON COLUMN pms.secure_biometric_interface_h.eff_dtimes IS 'Effective Date
 -- ddl-end --
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface_h TO pmsuser;
-
-GRANT ALL PRIVILEGES ON pms.secure_biometric_interface_h TO postgres;
 
 -- object: fk_devdtl_id | type: CONSTRAINT --
 -- ALTER TABLE pms.device_detail DROP CONSTRAINT IF EXISTS fk_devdtl_id CASCADE;
