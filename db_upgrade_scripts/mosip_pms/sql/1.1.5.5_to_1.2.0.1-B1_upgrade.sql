@@ -378,13 +378,50 @@ VALUES('mpolicy_part_cert_api','mpartner-default-cert','mpolicy-default-cert',no
 
 
 TRUNCATE TABLE pms.reg_device_type cascade ;
-\COPY pms.reg_device_type  FROM 'dml/pms-reg_device_type.csv' WITH (FORMAT CSV, HEADER);
+
+INSERT INTO pms.reg_device_type(code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Finger', 'Finger', 'Fingerprint Biometric', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code) DO NOTHING;
+	
+INSERT INTO pms.reg_device_type(code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Face', 'Face', 'Face Biometric', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code) DO NOTHING;
+	
+INSERT INTO pms.reg_device_type(code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Iris', 'Iris', 'Iris Biometric', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code) DO NOTHING;
 
 TRUNCATE TABLE pms.reg_device_sub_type cascade ;
-\COPY pms.reg_device_sub_type FROM 'dml/pms-reg_device_sub_type.csv' WITH (FORMAT CSV, HEADER);
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Slap', 'Finger', 'Slap', 'Fingerprint Slap', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Single', 'Finger', 'Single', 'Fingerprint Single Finger', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Touchless', 'Finger', 'Touchless', 'Touch Fingerprint', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Single', 'Iris', 'Single', 'Single Iris', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Double', 'Iris', 'Double', 'Double Iris', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;
+
+INSERT INTO pms.reg_device_sub_type(code, dtyp_code, name, descr, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('Full face', 'Face', 'Full face', 'Full face', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (code, dtyp_code) DO NOTHING;	
+
 
 TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
-\COPY pms.partner_policy_credential_type FROM 'dml/pms-partner_policy_credential_type.csv' WITH (FORMAT CSV, HEADER);
+
+INSERT INTO pms.partner_policy_credential_type(part_id, policy_id, credential_type, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('mpartner-default-print', 'mpolicy-default-qrcode', 'qrcode', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (part_id, policy_id, credential_type) DO NOTHING;
+	
+INSERT INTO pms.partner_policy_credential_type(part_id, policy_id, credential_type, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('mpartner-default-print', 'mpolicy-default-euin', 'euin', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (part_id, policy_id, credential_type) DO NOTHING;
+	
+INSERT INTO pms.partner_policy_credential_type(part_id, policy_id, credential_type, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('mpartner-default-print', 'mpolicy-default-reprint', 'reprint', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (part_id, policy_id, credential_type) DO NOTHING;
+	
+INSERT INTO pms.partner_policy_credential_type(part_id, policy_id, credential_type, is_active, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+	VALUES ('mpartner-default-auth', 'mpolicy-default-auth', 'auth', true, 'superadmin', '2022-12-16 12:30:14.100', NULL, NULL, false, NULL) ON CONFLICT (part_id, policy_id, credential_type) DO NOTHING;
 
 \COPY pms.device_detail FROM 'dml/auth-device_detail.csv' WITH (FORMAT CSV, HEADER);
 
