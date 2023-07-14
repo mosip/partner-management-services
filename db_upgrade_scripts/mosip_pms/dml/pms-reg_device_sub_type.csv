@@ -1,7 +1,0 @@
-code,dtyp_code,name,descr,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-Slap,Finger,Slap,Fingerprint Slap,TRUE,superadmin,now(),,,FALSE,
-Single,Finger,Single,Fingerprint Single Finger,TRUE,superadmin,now(),,,FALSE,
-Touchless,Finger,Touchless,Touch Fingerprint,TRUE,superadmin,now(),,,FALSE,
-Single,Iris,Single,Single,TRUE,superadmin,now(),,,FALSE,
-Double,Iris,Double,Double,TRUE,superadmin,now(),,,FALSE,
-Full face,Face,Full face,Full Face,TRUE,superadmin,now(),,,FALSE,
