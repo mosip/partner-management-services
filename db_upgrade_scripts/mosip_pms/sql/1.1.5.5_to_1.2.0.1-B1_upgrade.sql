@@ -277,7 +277,7 @@ COMMENT ON COLUMN pms.secure_biometric_interface.is_deleted IS 'IS_Deleted : Fla
 COMMENT ON COLUMN pms.secure_biometric_interface.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface pms TO pmsuser;
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.secure_biometric_interface TO pmsuser;
 
 -- object: pms.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS pms.secure_biometric_interface_h CASCADE;
