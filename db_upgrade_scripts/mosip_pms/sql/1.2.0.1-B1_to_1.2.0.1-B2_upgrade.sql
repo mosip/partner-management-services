@@ -59,3 +59,7 @@ COMMENT ON COLUMN oidc_client.claims IS 'Requested Claims: claims json as per po
 -- ddl-end --
 COMMENT ON COLUMN oidc_client.acr_values IS 'Allowed Authentication context References(acr) json';
 -- ddl-end --
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.oidc_client TO pmsuser;
+
+GRANT ALL ON TABLE pms.oidc_client TO postgres;
