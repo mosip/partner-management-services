@@ -19,7 +19,7 @@
 CREATE TABLE pms.misp_license(
 	misp_id character varying(36) NOT NULL,
 	license_key character varying(128) NOT NULL,
-	policy_id character varying(128) NULL,
+	policy_id character varying(36) NULL,
 	valid_from_date timestamp NOT NULL,
 	valid_to_date timestamp,
 	is_active boolean NOT NULL,
