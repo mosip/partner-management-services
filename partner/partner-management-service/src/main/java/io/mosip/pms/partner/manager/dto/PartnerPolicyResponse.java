@@ -23,7 +23,7 @@ public class PartnerPolicyResponse {
 	
 	private String partnerName;
 	
-	private LocalDateTime mispExpiresOn;	
+	//private LocalDateTime mispExpiresOn;
 	
 	private LocalDateTime apiKeyExpiresOn;
 	

@@ -60,8 +60,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	@Value("${mosip.kernel.idgenerator.misp.license-key-length}")
 	private int licenseKeyLength;
 
-	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
-	private int mispLicenseExpiryInDays;
+	/*@Value("${mosip.pmp.misp.license.expiry.period.indays}")
+	private int mispLicenseExpiryInDays;*/
 
 	@Autowired
 	MispLicenseRepository mispLicenseRepository;
@@ -145,7 +145,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		MISPLicenseEntity newLicenseKey = generateLicense(mispId, policyId);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		response.setLicenseKey(newLicenseKey.getLicenseKey());
-		response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
+		//response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 		response.setLicenseKeyStatus("Active");
 		response.setProviderId(mispId);
 		if(mispPolicyFromDb.isPresent()) {
@@ -209,7 +209,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		mispLicenseRepository.save(mispLicenseFromDb);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		response.setLicenseKey(mispLicenseFromDb.getLicenseKey());
-		response.setLicenseKeyExpiry(mispLicenseFromDb.getValidToDate());
+		//response.setLicenseKeyExpiry(mispLicenseFromDb.getValidToDate());
 		response.setLicenseKeyStatus(mispLicenseFromDb.getIsActive() ? ACTIVE_STATUS : NOTACTIVE_STATUS);
 		response.setProviderId(mispLicenseFromDb.getMispId());
 		notify(MapperUtils.mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
@@ -235,7 +235,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		entity.setMispId(mispId);
 		entity.setLicenseKey(generateLicenseKey());
 		entity.setValidFromDate(LocalDateTime.now());
-		entity.setValidToDate(LocalDateTime.now().plusDays(mispLicenseExpiryInDays));
+		//entity.setValidToDate(LocalDateTime.now().plusDays(mispLicenseExpiryInDays));
 		entity.setCreatedBy(getLoggedInUserId());
 		entity.setCreatedDateTime(LocalDateTime.now());
 		entity.setIsActive(true);
@@ -271,7 +271,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				mispLicenseRepository.save(licenseKey);
 				MISPLicenseEntity newLicenseKey = generateLicense(mispId, licenseKey.getPolicyId());
 				response.setLicenseKey(newLicenseKey.getLicenseKey());
-				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
+				//response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
 				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
@@ -280,7 +280,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
 				isActiveLicenseExists = true;
 				response.setLicenseKey(licenseKey.getLicenseKey());
-				response.setLicenseKeyExpiry(licenseKey.getValidToDate());
+				//response.setLicenseKeyExpiry(licenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
 			}
