@@ -1,15 +1,22 @@
 package io.mosip.pms.test.partner.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.partner.manager.controller.PartnerManagementController;
+import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -64,38 +71,38 @@ public class PartnerManagementControllerTest {
 	PartnerManagerService partnerManagementService;
 
 	@Mock
-	private MispLicenseKeyRepository misplKeyRepository;	
-	
+	private MispLicenseKeyRepository misplKeyRepository;
+
 	@Mock
 	PartnerPolicyRepository partnerPolicyRepository;
 
 	@Mock
 	PartnerRepository partnerRepository;
-	
+
 	@Mock
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
-	
+
 	@Mock
 	PolicyGroupRepository policyGroupRepository;
-	
+
 	@Mock
 	AuthPolicyRepository authPolicyRepository;
-	
+
 	@Autowired
-	private ObjectMapper objectMapper;	
-	
+	private ObjectMapper objectMapper;
+
 	@Autowired
 	@Qualifier("selfTokenRestTemplate")
 	private RestTemplate restTemplate;
-	
+
 	@MockBean
 	private AuditUtil audit;
-	
+
 	@Before
 	public void setUp() {
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
@@ -115,12 +122,12 @@ public class PartnerManagementControllerTest {
 		PartnersPolicyMappingResponse partnersPolicyMappingResponse = new PartnersPolicyMappingResponse();
 		Mockito.when(partnerManagementService.updatePolicyAgainstApikey(partnersPolicyMappingRequest,partnerID,
 				partnerAPIKey)).thenReturn(partnersPolicyMappingResponse);
-		
+
 		mockMvc.perform(put("/partners/67899/apikey/45678/policies").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
-	
-	
+
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void activateDeactivateAuthEKYCPartnersTest() throws Exception {
@@ -129,7 +136,7 @@ public class PartnerManagementControllerTest {
 		StatusRequestDto activateDeactivatePartnerRequest = new StatusRequestDto();
 		activateDeactivatePartnerRequest.setStatus("Active");
 		Mockito.when(
-				partnerManagementService.activateDeactivateAuthEKYCPartner(partnerID, activateDeactivatePartnerRequest))
+						partnerManagementService.activateDeactivateAuthEKYCPartner(partnerID, activateDeactivatePartnerRequest))
 				.thenReturn(partnersPolicyMappingResponse);
 		RequestWrapper<StatusRequestDto> request = new RequestWrapper<StatusRequestDto>();
 		request.setRequest(activateDeactivatePartnerRequest);
@@ -162,7 +169,7 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/67899/apikey/56789"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getAllPartnerAPIKeyRequestsAsReceivedByPartnerManagerTest() throws Exception {
@@ -172,7 +179,7 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getTheRequestForPartnerAPIKeyToPolicyMappingsForGivenRequestIdTest() throws Exception {
@@ -183,7 +190,7 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/56789"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void approveRejectPolicyMappings() throws JsonProcessingException, Exception{
@@ -197,11 +204,11 @@ public class PartnerManagementControllerTest {
 		request.setMetadata("{}");
 		Mockito.when(partnerManagementService.approveRejectPartnerPolicyMapping(mappingKey,requestDto))
 				.thenReturn("Success");
-		
+
 		mockMvc.perform(MockMvcRequestBuilders.put("/partners/policy/56789").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void activateDeactivatePartnerAPIKey() throws Exception {
@@ -214,8 +221,126 @@ public class PartnerManagementControllerTest {
 		request.setMetadata("{}");
 		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",requestDto))
 				.thenReturn("Success");
-		
+
 		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@Test (expected = Exception.class)
+	public void testGetPartnersDetails() {
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+		partnerManagementController.getPartnersDeatils(Optional.of("1234"));
+	}
+
+	@Test (expected = Exception.class)
+	public void testApproveRejectPolicyMappings() {
+
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+
+		StatusRequestDto statusRequestDto = new StatusRequestDto();
+		statusRequestDto.setStatus("Status");
+
+		RequestWrapper<StatusRequestDto> requestWrapper = new RequestWrapper<>();
+		requestWrapper.setId("mosip.partnermanagement.partners.policy.mapping");
+		requestWrapper.setMetadata("{}");
+		requestWrapper.setRequest(statusRequestDto);
+		requestWrapper.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		requestWrapper.setVersion("1.0");
+		partnerManagementController.approveRejectPolicyMappings(requestWrapper, "MappingKey");
+	}
+
+	@Test (expected = Exception.class)
+	public void testApproveRejectPolicyMappings2() {
+
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+
+		StatusRequestDto statusRequestDto = new StatusRequestDto();
+		statusRequestDto.setStatus("Status");
+		RequestWrapper<StatusRequestDto> requestWrapper = (RequestWrapper<StatusRequestDto>) mock(RequestWrapper.class);
+		when(requestWrapper.getId()).thenReturn("mosip.partnermanagement.partners.policy.mapping");
+		when(requestWrapper.getVersion()).thenReturn("1.0");
+		doNothing().when(requestWrapper).setId((String) any());
+		doNothing().when(requestWrapper).setMetadata((Object) any());
+		doNothing().when(requestWrapper).setRequest((StatusRequestDto) any());
+		doNothing().when(requestWrapper).setRequesttime((LocalDateTime) any());
+		doNothing().when(requestWrapper).setVersion((String) any());
+		requestWrapper.setId("mosip.partnermanagement.partners.policy.mapping");
+		requestWrapper.setMetadata("{}");
+		requestWrapper.setRequest(statusRequestDto);
+		requestWrapper.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		requestWrapper.setVersion("1.0");
+		partnerManagementController.approveRejectPolicyMappings(requestWrapper, "MappingKey");
+	}
+
+	@SneakyThrows
+	@Test
+	public void testActivateDeactivatePartnerAPIKey() {
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+
+		APIkeyStatusUpdateRequestDto apIkeyStatusUpdateRequestDto = new APIkeyStatusUpdateRequestDto();
+		apIkeyStatusUpdateRequestDto.setLabel("Label");
+		apIkeyStatusUpdateRequestDto.setStatus("Status");
+
+		RequestWrapper<APIkeyStatusUpdateRequestDto> requestWrapper = new RequestWrapper<>();
+		requestWrapper.setId("mosip.partnermanagement.partners.policy.mapping");
+		requestWrapper.setMetadata("{}");
+		requestWrapper.setRequest(apIkeyStatusUpdateRequestDto);
+		requestWrapper.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		requestWrapper.setVersion("1.0");
+		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",apIkeyStatusUpdateRequestDto))
+				.thenReturn("Success");
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	}
+
+	@SneakyThrows
+	@Test (expected = Exception.class)
+	public void testActivateDeactivatePartnerAPIKey2() {
+
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+
+		APIkeyStatusUpdateRequestDto apIkeyStatusUpdateRequestDto = new APIkeyStatusUpdateRequestDto();
+		apIkeyStatusUpdateRequestDto.setLabel("Label");
+		apIkeyStatusUpdateRequestDto.setStatus("Status");
+		RequestWrapper<APIkeyStatusUpdateRequestDto> requestWrapper = (RequestWrapper<APIkeyStatusUpdateRequestDto>) mock(RequestWrapper.class);
+		when(requestWrapper.getId()).thenReturn("id");
+		when(requestWrapper.getVersion()).thenReturn("1.0");
+		doNothing().when(requestWrapper).setId((String) any());
+		doNothing().when(requestWrapper).setMetadata((Object) any());
+		doNothing().when(requestWrapper).setRequest((APIkeyStatusUpdateRequestDto) any());
+		doNothing().when(requestWrapper).setRequesttime((LocalDateTime) any());
+		doNothing().when(requestWrapper).setVersion((String) any());
+		requestWrapper.setId("mosip.partnermanagement.partners.policy.mapping");
+		requestWrapper.setMetadata("{}");
+		requestWrapper.setRequest(apIkeyStatusUpdateRequestDto);
+		requestWrapper.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		requestWrapper.setVersion("1.0");
+		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",apIkeyStatusUpdateRequestDto))
+				.thenReturn("Success");
+
+		partnerManagementController.activateDeactivatePartnerAPIKey("1234", "456", requestWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test (expected = Exception.class)
+	public void testActivateDeactivatePartnerAPIKey3() {
+
+		PartnerManagementController partnerManagementController = new PartnerManagementController();
+
+		APIkeyStatusUpdateRequestDto apIkeyStatusUpdateRequestDto = new APIkeyStatusUpdateRequestDto();
+		apIkeyStatusUpdateRequestDto.setLabel("Label");
+		apIkeyStatusUpdateRequestDto.setStatus("Status");
+
+		RequestWrapper<APIkeyStatusUpdateRequestDto> requestWrapper = new RequestWrapper<>();
+		requestWrapper.setId("mosip.partnermanagement.partners.policy.mapping");
+		requestWrapper.setMetadata("{}");
+		requestWrapper.setRequest(apIkeyStatusUpdateRequestDto);
+		requestWrapper.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		requestWrapper.setVersion("1.0");
+		partnerManagementController.activateDeactivatePartnerAPIKey("123", "456", requestWrapper);
+
+	}
+
 }
