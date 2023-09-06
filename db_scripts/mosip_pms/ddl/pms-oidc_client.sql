@@ -38,7 +38,7 @@ CREATE TABLE pms.oidc_client(
 	CONSTRAINT uq_oidc_client_public_key UNIQUE (public_key)
 );
 -- ddl-end --
-COMMENT ON TABLE pms.oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';
+COMMENT ON TABLE pms.oidc_client IS 'Client ID: Unique id assigned to registered OIDC client.';
 -- ddl-end --
 COMMENT ON COLUMN pms.oidc_client.name IS 'Client Name: Registered name of OIDC client.';
 -- ddl-end --
@@ -62,4 +62,3 @@ COMMENT ON COLUMN pms.oidc_client.claims IS 'Requested Claims: claims json as pe
 -- ddl-end --
 COMMENT ON COLUMN pms.oidc_client.acr_values IS 'Allowed Authentication context References(acr) json';
 -- ddl-end --
-
