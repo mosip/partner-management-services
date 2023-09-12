@@ -10,8 +10,10 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.oidc.client.dto.ClientDetail;
 import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequestV2;
 import io.mosip.pms.oidc.client.dto.ClientDetailResponse;
 import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
+import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequestV2;
 import io.mosip.pms.oidc.client.service.ClientManagementService;
 
 import javax.validation.Valid;
@@ -39,6 +41,15 @@ public class ClientManagementController {
 		response.setResponse(clientRespDto);
 		return response;
 	}
+	
+	@RequestMapping(value = "/oidc/client/v2", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseWrapper<ClientDetailResponse> createClientV2(
+			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
+		var clientRespDto = clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
+		var response = new ResponseWrapper<ClientDetailResponse>();
+		response.setResponse(clientRespDto);
+		return response;
+	}
 
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
@@ -46,6 +57,15 @@ public class ClientManagementController {
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
+		response.setResponse(clientRespDto);
+		return response;
+	}
+	
+	@RequestMapping(value = "/oidc/client/v2/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseWrapper<ClientDetailResponse> updateClientV2(@PathVariable("client_id") String clientId,
+			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
+		var clientRespDto = clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
+		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
 		return response;
 	}

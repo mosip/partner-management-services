@@ -5,13 +5,19 @@
  */
 package io.mosip.pms.oidc.client.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientDetailUpdateRequest {
 
     @NotNull
