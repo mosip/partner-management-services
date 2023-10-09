@@ -594,7 +594,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
-		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupAndName(partnerFromDb.get().getPolicyGroupId(),requestDto.getPolicyName());
+		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupIdAndName(partnerFromDb.get().getPolicyGroupId(),requestDto.getPolicyName());
 		if(validPolicy == null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
