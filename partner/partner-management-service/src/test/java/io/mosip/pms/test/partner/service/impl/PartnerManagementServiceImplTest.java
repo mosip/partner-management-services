@@ -951,7 +951,7 @@ public class PartnerManagementServiceImplTest {
 		request.setPolicyName("policyName");
 		Optional<Partner> newPartner = Optional.of(getPartner());
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(newPartner.get().getPolicyGroupId(),request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(newPartner.get().getPolicyGroupId(),request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
 		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("partner","234","unique")).thenReturn(getPartnerPolicy());
 		Map<String, Object> response = new HashMap<>();
@@ -980,21 +980,21 @@ public class PartnerManagementServiceImplTest {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(null);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(null);
 		try {
 			partnerManagementImpl.generateAPIKey("partner", request);
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode()));
 		}
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(newPartner.get().getPolicyGroupId(),request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(newPartner.get().getPolicyGroupId(),request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
 		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(Collections.emptyList());
 		try {
 			partnerManagementImpl.generateAPIKey("partner", request);
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode()));
 		}
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(getAuthPolicies().get(0));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(getAuthPolicies().get(0));
 		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(Optional.of(getPartner()));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("123456","234","unique")).thenReturn(getPartnerPolicy());
