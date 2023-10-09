@@ -13,7 +13,7 @@ import io.mosip.pms.common.entity.AuthPolicy;
 public interface AuthPolicyRepository extends JpaRepository<AuthPolicy, String>{
 
 	@Query(value = "select * from auth_policy ap where ap.policy_group_id=?1 and ap.name = ?2",nativeQuery = true)
-	AuthPolicy findByPolicyGroupAndName(String policyGroupId, String name);
+	AuthPolicy findByPolicyGroupIdAndName(String policyGroupId, String name);
 	
 	@Query(value = "select * from auth_policy ap where ap.policy_group_id=?1 and ap.id = ?2",nativeQuery = true)
 	AuthPolicy findByPolicyGroupAndId(String policyGroupId, String policyId);
