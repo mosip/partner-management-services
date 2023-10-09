@@ -338,7 +338,7 @@ public class PolicyServiceTest {
 		PolicyCreateRequestDto request = createPoliciesRequest();
 		request.setPolicyType("Data_Share");
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","Test_001")).thenReturn(getAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","Test_001")).thenReturn(getAuthPolicy());
 		service.createPolicies(request);
 	}
 	
@@ -376,7 +376,7 @@ public class PolicyServiceTest {
 		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
 		Mockito.when(policyGroupRepository.findByName("Test_Policy_Group_001")).thenReturn(policyGroupData());
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(getAuthPolicy());
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","Test")).thenReturn(getAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","Test")).thenReturn(getAuthPolicy());
 		try {
 			service.createPolicies(request);
 		}catch (PolicyManagementServiceException e) {
@@ -571,7 +571,7 @@ public class PolicyServiceTest {
 		AuthPolicy authPolicyName = getAuthPolicy();
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(authPolicyName);
 		service.updatePolicies(request, "12345");
 	}
 
@@ -597,7 +597,7 @@ public class PolicyServiceTest {
 		AuthPolicy authPolicyName = getAuthPolicy();
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(authPolicyName);
 		service.updatePolicies(request, "12345");
 	}
 	
@@ -625,7 +625,7 @@ public class PolicyServiceTest {
 		authPolicyName.setPolicySchema("localhost");
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(authPolicyName);
 		service.updatePolicies(request, "12345");
 	}
 	
@@ -654,7 +654,7 @@ public class PolicyServiceTest {
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
 		authPolicyName.setPolicy_type("Auth");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicyName);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(authPolicyName);
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
 		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
@@ -686,7 +686,7 @@ public class PolicyServiceTest {
 		authPolicyName.getPolicyGroup().setId("12345");
 		authPolicyName.setName("Test_01");
 		authPolicyName.setPolicy_type("Auth");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test_01")).thenReturn(authPolicyName);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test_01")).thenReturn(authPolicyName);
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode actualObj = objectMapper.readTree(authPolicySchema);
 		Mockito.when(mapper.readValue(new URL("http://localhost:8999/schema"), JsonNode.class)).thenReturn(actualObj);
@@ -738,7 +738,7 @@ public class PolicyServiceTest {
 		Mockito.when(authPolicyRepository.findByName("Test")).thenReturn(authPolicy);
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policy.get());
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(getAuthPolicy());
 		service.publishPolicy("Test", "Test");
 	}
 	
@@ -762,7 +762,7 @@ public class PolicyServiceTest {
 		Mockito.when(authPolicyRepository.findById("Test")).thenReturn(Optional.of(authPolicy));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("Test")).thenReturn(policy);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(getAuthPolicy());
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		service.publishPolicy("Test", "Test");
 	}
@@ -788,7 +788,7 @@ public class PolicyServiceTest {
 		Mockito.when(authPolicyRepository.findById("Test")).thenReturn(Optional.of(authPolicy));
 		Optional<PolicyGroup> policy = Optional.of(policyGroup);
 		Mockito.when(policyGroupRepository.findById("Test")).thenReturn(policy);
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(getAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(getAuthPolicy());
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		try {
 		service.publishPolicy("Test", "Test");
@@ -821,7 +821,7 @@ public class PolicyServiceTest {
 		AuthPolicy authPolicy01 = getAuthPolicy();
 		authPolicy01.setIsActive(false);
 		authPolicy01.setPolicySchema("localhost");
-		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345", "Test")).thenReturn(authPolicy01);
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Test")).thenReturn(authPolicy01);
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policy);
 		service.publishPolicy("Test", "Test");
 	}
