@@ -518,7 +518,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
-		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, policyName);
+		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupIdAndName(policyGroupId, policyName);
 		if (authPolicyFromDb == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
