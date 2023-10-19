@@ -789,7 +789,7 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		Mockito.when(authPolicyRepository
-				.findByPolicyGroupIdAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(createAuthPolicy());
+				.findByPolicyGroupAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(createAuthPolicy());
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345");
 	}
 	
@@ -879,7 +879,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(true));	
 		partner.get().setPartnerTypeCode("Auth_Partner");
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(createAuthPolicy());
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(createAuthPolicy());
 		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("12345","123")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
 		pserviceImpl.requestForPolicyMapping(request, "12345");
 		partner.get().setPolicyGroupId(null);
@@ -921,7 +921,7 @@ public class PartnerServiceImplTest {
 		}
 		partner.get().setIsActive(true);
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
-		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(null);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(null);
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
@@ -929,7 +929,7 @@ public class PartnerServiceImplTest {
 		}
 		AuthPolicy authPolicy = createAuthPolicy();
 		authPolicy.setIsActive(false);
-		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(authPolicy);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(authPolicy);
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
@@ -938,7 +938,7 @@ public class PartnerServiceImplTest {
 		authPolicy = createAuthPolicy();
 		authPolicy.setIsActive(true);
 		authPolicy.setValidToDate(LocalDateTime.now().minusMonths(3));
-		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(authPolicy);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(authPolicy);
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
@@ -947,7 +947,7 @@ public class PartnerServiceImplTest {
 		authPolicy = createAuthPolicy();
 		authPolicy.setIsActive(true);
 		authPolicy.getPolicyGroup().setIsActive(false);
-		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(authPolicy);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndName("12345","policyName")).thenReturn(authPolicy);
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
