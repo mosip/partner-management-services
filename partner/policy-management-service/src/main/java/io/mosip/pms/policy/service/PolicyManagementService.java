@@ -294,7 +294,7 @@ public class PolicyManagementService {
 			throw new PolicyManagementServiceException(ErrorMessages.PUBLISHED_POLICY_NOT_UPDATED.getErrorCode(),
 					ErrorMessages.PUBLISHED_POLICY_NOT_UPDATED.getErrorMessage());
 		}
-		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupIdAndName(policyGroup.getId(),
+		AuthPolicy mappedPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroup.getId(),
 				requestDto.getName());
 		if (mappedPolicy != null && !mappedPolicy.getName().equals(authPolicy.getName())) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_FAILURE, requestDto.getName(), "policyName");
@@ -354,7 +354,7 @@ public class PolicyManagementService {
 	 * @return
 	 */
 	private void validateAuthPolicyName(String policyGroupId, String auth_policy_name) {
-		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupIdAndName(policyGroupId, auth_policy_name);
+		AuthPolicy auth_policy_by_name = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, auth_policy_name);
 		if (auth_policy_by_name != null) {
 			auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE, auth_policy_name, "policyName");
 			throw new PolicyManagementServiceException(
@@ -445,7 +445,7 @@ public class PolicyManagementService {
 	private PolicyCreateResponseDto savePolicy(JSONObject policyJson, String oldPolicyName, String newPolicyName,
 			String policyDesc, String policyGroupId, String policyType, String policyGroupName, String version,
 			String authPolicyId) throws PolicyManagementServiceException, Exception {
-		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupIdAndName(policyGroupId, oldPolicyName);
+		AuthPolicy authPolicy = authPolicyRepository.findByPolicyGroupAndName(policyGroupId, oldPolicyName);
 		if (authPolicy != null) {
 			authPolicy.setId(authPolicy.getId());
 			authPolicy.setDescr(policyDesc);
