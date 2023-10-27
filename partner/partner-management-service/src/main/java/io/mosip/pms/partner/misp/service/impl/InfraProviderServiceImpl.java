@@ -274,7 +274,30 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
 				response.setLicenseKeyStatus("Active");
 				response.setProviderId(mispId);
-				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
+				List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
+				Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
+				if(!approvedPolicyMappedReq.isEmpty()) {
+					if(!approvedPolicyMappedReq.stream().allMatch(p->p.getStatusCode().equalsIgnoreCase(APPROVED_STATUS))){
+						throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
+								MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
+					}
+					
+					mispPolicyFromDb = authPolicyRepository.findById(approvedPolicyMappedReq.get(0).getPolicyId());
+					if(mispPolicyFromDb.isEmpty()) {
+						throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
+								MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
+					}
+				}
+				
+				String policyId = mispPolicyFromDb.isPresent()?mispPolicyFromDb.get().getId():null;
+				if(mispPolicyFromDb.isPresent()) {
+					notify(MapperUtils.mapDataToPublishDto(newLicenseKey), MapperUtils.mapPolicyToPublishDto(mispPolicyFromDb.get(),
+							getPolicyObject(mispPolicyFromDb.get().getPolicyFileId())), EventType.MISP_LICENSE_UPDATED);
+				}
+				else {
+					notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
+				}
+				
 			}
 
 			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
