@@ -13,5 +13,5 @@ public class MISPLicenseResponseDto {
 	
 	private String licenseKeyStatus;
 	
-	private LocalDateTime licenseKeyExpiry; 
+	//private LocalDateTime licenseKeyExpiry;
 }

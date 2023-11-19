@@ -13,7 +13,7 @@ public class MISPDataPublishDto {
 	
 	private LocalDateTime mispCommenceOn;
 	
-	private LocalDateTime mispExpiresOn;
+	//private LocalDateTime mispExpiresOn;
 	
 	private String mispStatus;
 }
