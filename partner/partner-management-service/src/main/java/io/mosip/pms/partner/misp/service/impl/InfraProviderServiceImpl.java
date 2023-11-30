@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import io.mosip.pms.common.constant.ConfigKeyConstants;
@@ -86,12 +87,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 	@Autowired
 	private PageUtils pageUtils;
-	
+
 	@Autowired
-	private PartnerPolicyRequestRepository partnerPolicyRequestRepository; 
-	
+	private PartnerPolicyRequestRepository partnerPolicyRequestRepository;
+
 	@Autowired
-	private AuthPolicyRepository  authPolicyRepository; 
+	private AuthPolicyRepository  authPolicyRepository;
 
 	public static final String APPROVED_STATUS = "approved";
 	public static final String REJECTED_STATUS = "rejected";
@@ -101,7 +102,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	public static final String NOTACTIVE = "NOT_ACTIVE";
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public MISPLicenseResponseDto approveInfraProvider(String mispId) {
@@ -133,14 +134,14 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
 						MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
 			}
-			
+
 			mispPolicyFromDb = authPolicyRepository.findById(approvedPolicyMappedReq.get(0).getPolicyId());
 			if(mispPolicyFromDb.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
 						MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
 			}
 		}
-		
+
 		String policyId = mispPolicyFromDb.isPresent()?mispPolicyFromDb.get().getId():null;
 		MISPLicenseEntity newLicenseKey = generateLicense(mispId, policyId);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
@@ -158,9 +159,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 		return response;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param policy
 	 * @return
 	 */
@@ -171,13 +172,13 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			return ((JSONObject) parser.parse(policy));
 		} catch (ParseException e) {
 			error = e.getMessage();
-		}		
+		}
 		throw new MISPServiceException(ErrorCode.POLICY_PARSING_ERROR.getErrorCode(),
 				ErrorCode.POLICY_PARSING_ERROR.getErrorMessage() + error);
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private String generateLicenseKey() {
@@ -189,7 +190,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public MISPLicenseResponseDto updateInfraProvider(String id, String licenseKey, String status) {
@@ -218,7 +219,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public List<MISPLicenseEntity> getInfraProvider() {
@@ -226,11 +227,11 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param mispId
 	 * @return
 	 */
-	private MISPLicenseEntity generateLicense(String mispId, String policyId) {
+	private MISPLicenseEntity generateLicense(String mispId,@Nullable String policyId) {
 		MISPLicenseEntity entity = new MISPLicenseEntity();
 		entity.setMispId(mispId);
 		entity.setLicenseKey(generateLicenseKey());
@@ -246,7 +247,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public MISPLicenseResponseDto regenerateKey(String mispId) {
@@ -259,66 +260,57 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
 					MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
 		}
-		List<MISPLicenseEntity> mispLicenses = mispLicenseRepository.findByMispId(mispId);
-		boolean isActiveLicenseExists = false;
+		List<MISPLicenseEntity> mispValidLicenses = mispLicenseRepository.findByMispIdandExpirydate(mispId);
+		if(mispLicenseRepository.findByMispId(mispId).isEmpty()) {
+			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
+					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
+		}
+		List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
+		String policyId = (!approvedPolicyMappedReq.isEmpty() && !approvedPolicyMappedReq.get(0).getPolicyId().isBlank())?approvedPolicyMappedReq.get(0).getPolicyId():null;
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
-		for (MISPLicenseEntity licenseKey : mispLicenses) {
-			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isBefore(LocalDateTime.now())) {
-				isActiveLicenseExists = true;
-				licenseKey.setIsActive(false);
-				licenseKey.setUpdatedBy(getLoggedInUserId());
-				licenseKey.setUpdatedDateTime(LocalDateTime.now());
-				mispLicenseRepository.save(licenseKey);
-				MISPLicenseEntity newLicenseKey = generateLicense(mispId, licenseKey.getPolicyId());
-				response.setLicenseKey(newLicenseKey.getLicenseKey());
-				response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
-				response.setLicenseKeyStatus("Active");
-				response.setProviderId(mispId);
-				List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
-				Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
-				if(!approvedPolicyMappedReq.isEmpty()) {
-					if(!approvedPolicyMappedReq.stream().allMatch(p->p.getStatusCode().equalsIgnoreCase(APPROVED_STATUS))){
-						throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
-								MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
-					}
-					
-					mispPolicyFromDb = authPolicyRepository.findById(approvedPolicyMappedReq.get(0).getPolicyId());
-					if(mispPolicyFromDb.isEmpty()) {
-						throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
-								MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
-					}
+		if (mispValidLicenses.isEmpty()) {
+			MISPLicenseEntity newLicenseKey = generateLicense(mispId, policyId);
+			response.setLicenseKey(newLicenseKey.getLicenseKey());
+			response.setLicenseKeyExpiry(newLicenseKey.getValidToDate());
+			response.setLicenseKeyStatus("Active");
+			response.setProviderId(mispId);
+
+			Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
+			if(!approvedPolicyMappedReq.isEmpty()) {
+				if(!approvedPolicyMappedReq.stream().allMatch(p->p.getStatusCode().equalsIgnoreCase(APPROVED_STATUS))){
+					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
+							MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
 				}
-				
-				String policyId = mispPolicyFromDb.isPresent()?mispPolicyFromDb.get().getId():null;
-				if(mispPolicyFromDb.isPresent()) {
-					notify(MapperUtils.mapDataToPublishDto(newLicenseKey), MapperUtils.mapPolicyToPublishDto(mispPolicyFromDb.get(),
-							getPolicyObject(mispPolicyFromDb.get().getPolicyFileId())), EventType.MISP_LICENSE_UPDATED);
+
+				mispPolicyFromDb = authPolicyRepository.findById(approvedPolicyMappedReq.get(0).getPolicyId());
+				if(mispPolicyFromDb.isEmpty()) {
+					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
+							MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
 				}
-				else {
-					notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
-				}
-				
 			}
 
-			if (licenseKey.getIsActive() && licenseKey.getValidToDate().isAfter(LocalDateTime.now())) {
-				isActiveLicenseExists = true;
-				response.setLicenseKey(licenseKey.getLicenseKey());
-				response.setLicenseKeyExpiry(licenseKey.getValidToDate());
-				response.setLicenseKeyStatus("Active");
-				response.setProviderId(mispId);
+			if(mispPolicyFromDb.isPresent()) {
+				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), MapperUtils.mapPolicyToPublishDto(mispPolicyFromDb.get(),
+						getPolicyObject(mispPolicyFromDb.get().getPolicyFileId())), EventType.MISP_LICENSE_UPDATED);
 			}
+			else {
+				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
+			}
+
+		}
+		else {
+			response.setLicenseKey(mispValidLicenses.get(0).getLicenseKey());
+			response.setLicenseKeyExpiry(mispValidLicenses.get(0).getValidToDate());
+			response.setLicenseKeyStatus("Active");
+			response.setProviderId(mispId);
 		}
 
-		if (!isActiveLicenseExists) {
-			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorCode(),
-					MISPErrorMessages.MISP_LICENSE_ARE_NOT_ACTIVE.getErrorMessage());
-		}
 
 		return response;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLoggedInUserId() {
@@ -326,7 +318,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dataToPublish
 	 * @param eventType
 	 */
@@ -338,13 +330,13 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		data.put("mispLicenseData", dataToPublish);
 		webSubPublisher.notify(eventType, data, type);
 	}
-	
+
 	private void notify(MISPDataPublishDto dataToPublish, PolicyPublishDto policyDataToPublish,EventType eventType) {
 		Type type = new Type();
 		type.setName("InfraProviderServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
 		Map<String, Object> data = new HashMap<>();
-		data.put("mispLicenseData", dataToPublish);		
+		data.put("mispLicenseData", dataToPublish);
 		if (dataToPublish != null) {
 			data.put(PartnerConstants.MISP_DATA, dataToPublish);
 		}
@@ -391,7 +383,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		}
 		return pageDto;
 	}
-	
+
 	/**
 	 * validates the loggedInUser authorization
 	 * @param loggedInUserId
