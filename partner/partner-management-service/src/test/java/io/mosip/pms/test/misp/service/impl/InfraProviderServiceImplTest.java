@@ -240,6 +240,7 @@ public class InfraProviderServiceImplTest {
 		mispLicense.add(mispLicenseEntity);
 		Optional<Partner> opt_partner = Optional.of(partner);
 		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);
+		Mockito.when(mispLicenseRepository.findByMispIdandExpirydate(misp_Id)).thenReturn(mispLicense);
 		Mockito.when(mispLicenseRepository.findByMispId(misp_Id)).thenReturn(mispLicense);
 		infraProviderServiceImpl.regenerateKey(misp_Id);
 	}
@@ -260,6 +261,7 @@ public class InfraProviderServiceImplTest {
 		mispLicense.add(mispLicenseEntity);
 		Optional<Partner> opt_partner = Optional.of(partner);
 		Mockito.when(partnerRepository.findById(misp_Id)).thenReturn(opt_partner);
+		Mockito.when(mispLicenseRepository.findByMispIdandExpirydate(misp_Id)).thenReturn(mispLicense);
 		Mockito.when(mispLicenseRepository.findByMispId(misp_Id)).thenReturn(mispLicense);
 		infraProviderServiceImpl.regenerateKey(misp_Id);
 	}
