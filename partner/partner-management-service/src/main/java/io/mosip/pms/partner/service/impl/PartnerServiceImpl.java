@@ -446,13 +446,9 @@ public class PartnerServiceImpl implements PartnerService {
 		return true;
 	}
 
-	public String getUser() {
-		return UserDetailUtil.getLoggedInUser();
-	}
-
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
-		if(!getUser().equals(partnerId)) {
+		if(!getLoggedInUserId()().equals(partnerId)) {
 			throw new PartnerManagerServiceException(io.mosip.pms.partner.manager.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					io.mosip.pms.partner.manager.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
