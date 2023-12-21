@@ -68,9 +68,9 @@
 
 	<properties>
 		<kernel.version>1.2.0.1-B4</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.2.0.1-B4</kernel-dataaccess-hibernate.version>
-		<kernel-websubclient-api.version>1.2.0.1-B4</kernel-websubclient-api.version>
-		<kernel.templatemanager.velocity.version>1.2.0.1-B4</kernel.templatemanager.velocity.version>
+		<kernel-dataaccess-hibernate.version>1.2.0.1-B2</kernel-dataaccess-hibernate.version>
+		<kernel-websubclient-api.version>1.2.0.1-B1</kernel-websubclient-api.version>
+		<kernel.templatemanager.velocity.version>1.2.0.1-B2</kernel.templatemanager.velocity.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
