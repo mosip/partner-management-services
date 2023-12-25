@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.0.1-SNAPSHOT</version>
+		<version>1.2.0.1-B4</version>
 	</parent>
 		
-	<version>1.2.0.1-SNAPSHOT</version>
+	<version>1.2.0.1-B4</version>
 	<artifactId>partner-management-service</artifactId>
 	<name>partner-management-service</name>
 	
@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-openid-bridge-api</artifactId>
-			<version>1.2.0.1-SNAPSHOT</version>
+			<version>1.2.0.1-B3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.0.1-SNAPSHOT</version>
+			<version>1.2.0.1-B4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
