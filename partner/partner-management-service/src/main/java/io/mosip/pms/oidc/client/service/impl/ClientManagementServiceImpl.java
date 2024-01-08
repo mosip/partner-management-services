@@ -135,7 +135,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public ClientDetailResponse createOIDCClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
-		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-v2-url"), true, createRequest.getClientNameLangMap());
+		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -480,7 +480,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
-		makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-v2-url"), updateRequest.getClientNameLangMap());
+		makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), updateRequest.getClientNameLangMap());
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
