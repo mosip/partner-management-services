@@ -42,7 +42,7 @@ public class ClientManagementController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/oidc/client/v2", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createClientV2(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
@@ -61,7 +61,7 @@ public class ClientManagementController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/oidc/client/v2/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateClientV2(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
