@@ -79,6 +79,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_POLICY_TYPE = "Auth";
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
+	public static final String ACTIVE = "ACTIVE";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -203,7 +204,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorMessage());
 		}
 		clientDetail.setAcrValues( String.join(",",acrValues));		
-		clientDetail.setStatus("ACTIVE");
+		clientDetail.setStatus(ACTIVE);
 		clientDetail.setGrantTypes(String.join(",", createRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
@@ -400,7 +401,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(updateRequest.getStatus());
+		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
