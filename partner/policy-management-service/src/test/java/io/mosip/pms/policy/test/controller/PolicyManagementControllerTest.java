@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
-import org.jose4j.json.JsonUtil;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
