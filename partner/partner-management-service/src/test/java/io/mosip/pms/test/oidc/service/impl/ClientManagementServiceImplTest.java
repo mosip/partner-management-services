@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,12 +52,15 @@ public class ClientManagementServiceImplTest {
 	private RestUtil restUtil;
 
 	@Mock
-	private ObjectMapper objectMapper;	
+	private ObjectMapper objectMapper;
 
 	@Mock
 	private WebSubPublisher webSubPublisher;
-	
+
 	Map<String, Object> public_key;
+
+	@MockBean
+	AuditUtil auditUtil;
 
 	@Before
 	public void setUp() {
@@ -64,7 +70,7 @@ public class ClientManagementServiceImplTest {
 		ReflectionTestUtils.setField(serviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
-		
+
 		public_key = new HashMap<>();
 		public_key.put("kty","RSA");
 		public_key.put("e","AQAB");
@@ -82,11 +88,12 @@ public class ClientManagementServiceImplTest {
 		request.setAuthPartnerId("authPartnerId");
 		List<String> clientAuthMethods = new ArrayList<String>();
 		clientAuthMethods.add("ClientAuthMethod");
-		request.setClientAuthMethods(clientAuthMethods);;
+		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(clientAuthMethods);
 		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
 		request.setRedirectUris(clientAuthMethods);
 		request.setName("ClientName");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {
