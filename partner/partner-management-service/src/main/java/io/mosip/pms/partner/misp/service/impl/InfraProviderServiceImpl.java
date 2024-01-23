@@ -266,7 +266,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
 		}
 		List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
-		String policyId = (!approvedPolicyMappedReq.isEmpty() && !approvedPolicyMappedReq.get(0).getPolicyId().isBlank())?approvedPolicyMappedReq.get(0).getPolicyId():null;
+		PartnerPolicyRequest mispPolicy= approvedPolicyMappedReq.get(0);
+		String policyId = (!approvedPolicyMappedReq.isEmpty() && !mispPolicy.getPolicyId().isBlank())?mispPolicy.getPolicyId():null;
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		if (mispValidLicenses.isEmpty()) {
 			MISPLicenseEntity newLicenseKey = generateLicense(mispId, policyId);
@@ -277,12 +278,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 			Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
 			if(!approvedPolicyMappedReq.isEmpty()) {
-				if(!approvedPolicyMappedReq.stream().allMatch(p->p.getStatusCode().equalsIgnoreCase(APPROVED_STATUS))){
+				if(!mispPolicy.getStatusCode().equalsIgnoreCase(APPROVED_STATUS)){
 					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
 							MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
 				}
 
-				mispPolicyFromDb = authPolicyRepository.findById(approvedPolicyMappedReq.get(0).getPolicyId());
+				mispPolicyFromDb = authPolicyRepository.findById(mispPolicy.getPolicyId());
 				if(mispPolicyFromDb.isEmpty()) {
 					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
 							MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
@@ -296,7 +297,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			else {
 				notify(MapperUtils.mapDataToPublishDto(newLicenseKey), EventType.MISP_LICENSE_UPDATED);
 			}
-
 		}
 		else {
 			response.setLicenseKey(mispValidLicenses.get(0).getLicenseKey());
