@@ -266,8 +266,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
 		}
 		List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
-		PartnerPolicyRequest mispPolicy= approvedPolicyMappedReq.get(0);
-		String policyId = (!approvedPolicyMappedReq.isEmpty() && !mispPolicy.getPolicyId().isBlank())?mispPolicy.getPolicyId():null;
+		PartnerPolicyRequest mispPolicy= new  PartnerPolicyRequest();
+		String policyId = null;
+		if(!approvedPolicyMappedReq.isEmpty() && !mispPolicy.getPolicyId().isBlank()) {
+			mispPolicy= approvedPolicyMappedReq.get(0);
+			policyId = mispPolicy.getId();
+		}
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		if (mispValidLicenses.isEmpty()) {
 			MISPLicenseEntity newLicenseKey = generateLicense(mispId, policyId);
