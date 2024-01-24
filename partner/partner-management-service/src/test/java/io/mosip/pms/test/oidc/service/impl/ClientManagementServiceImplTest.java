@@ -31,6 +31,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,6 +81,9 @@ public class ClientManagementServiceImplTest {
 
 	@MockBean
 	private RestUtil restUtil;
+	
+	@MockBean
+	private AuditUtil auditUtil;
 
 	@Mock
 	private ObjectMapper objectMapper;	
@@ -120,6 +124,7 @@ public class ClientManagementServiceImplTest {
 		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
 		request.setRedirectUris(clientAuthMethods);
 		request.setName("ClientName");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {
