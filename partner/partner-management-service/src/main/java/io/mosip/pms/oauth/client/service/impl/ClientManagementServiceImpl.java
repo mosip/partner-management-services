@@ -132,7 +132,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
 	@Override
-	public ClientDetailResponse createOAUTHClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception {
+	public ClientDetailResponse createOAUTHClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
@@ -476,7 +476,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	
 	@Override
-	public ClientDetailResponse updateOAUTHClientV2(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+	public ClientDetailResponse updateOAUTHClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);

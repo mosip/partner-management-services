@@ -43,9 +43,9 @@ public class ClientManagementController {
 	}
 	
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseWrapper<ClientDetailResponse> createOAUTHClientV2(
+	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
-		var clientRespDto = clientManagementService.createOAUTHClientV2(requestWrapper.getRequest());
+		var clientRespDto = clientManagementService.createOAUTHClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
 		return response;
@@ -63,9 +63,9 @@ public class ClientManagementController {
 	}
 	
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseWrapper<ClientDetailResponse> updateOAUTHClientV2(@PathVariable("client_id") String clientId,
+	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
-		var clientRespDto = clientManagementService.updateOAUTHClientV2(clientId, requestWrapper.getRequest());
+		var clientRespDto = clientManagementService.updateOAUTHClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
 		return response;
