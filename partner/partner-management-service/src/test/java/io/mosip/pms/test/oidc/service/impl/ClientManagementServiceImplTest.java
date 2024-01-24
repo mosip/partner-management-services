@@ -95,10 +95,7 @@ public class ClientManagementServiceImplTest {
 	private WebSubPublisher webSubPublisher;
 
 	Map<String, Object> public_key;
-
-	@MockBean
-	AuditUtil auditUtil;
-
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
