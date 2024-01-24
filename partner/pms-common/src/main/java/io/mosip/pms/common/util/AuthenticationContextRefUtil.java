@@ -64,7 +64,8 @@ public class AuthenticationContextRefUtil {
 					});
 		} catch (IOException e) {
 			logger.error("Failed to load / parse amr mappings", e);
-			return null;
+			throw new RequestException(SearchErrorCode.FAILED_TO_FETCH_AMR.getErrorCode(),
+					SearchErrorCode.FAILED_TO_FETCH_AMR.getErrorMessage());
 		}
 	}
 
