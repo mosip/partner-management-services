@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
@@ -93,6 +96,9 @@ public class ClientManagementServiceImplTest {
 	
 	Map<String, Object> public_key;
 
+	@MockBean
+	AuditUtil auditUtil;
+
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -119,7 +125,7 @@ public class ClientManagementServiceImplTest {
 		request.setAuthPartnerId("authPartnerId");
 		List<String> clientAuthMethods = new ArrayList<String>();
 		clientAuthMethods.add("ClientAuthMethod");
-		request.setClientAuthMethods(clientAuthMethods);;
+		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(clientAuthMethods);
 		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
 		request.setRedirectUris(clientAuthMethods);
