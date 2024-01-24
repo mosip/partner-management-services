@@ -1,4 +1,4 @@
-package io.mosip.pms.test.oidc.service.impl;
+package io.mosip.pms.test.oauth.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -55,7 +55,8 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.oidc.client.service.impl.ClientManagementServiceImpl;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.springframework.web.multipart.MultipartFile;

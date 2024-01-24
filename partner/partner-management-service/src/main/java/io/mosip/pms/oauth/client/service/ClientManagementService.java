@@ -1,11 +1,11 @@
-package io.mosip.pms.oidc.client.service;
+package io.mosip.pms.oauth.client.service;
 
-import io.mosip.pms.oidc.client.dto.ClientDetail;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequestV2;
-import io.mosip.pms.oidc.client.dto.ClientDetailResponse;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequestV2;
+import io.mosip.pms.oauth.client.dto.ClientDetail;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
+import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
 
 public interface ClientManagementService {
 	
@@ -43,7 +43,7 @@ public interface ClientManagementService {
      * @return
      * @throws Exception
      */
-	ClientDetailResponse createOIDCClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception;
+	ClientDetailResponse createOAUTHClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception;
 
 	/**
 	 * API to update OIDC Client with new Client Name Lang Map 
@@ -53,6 +53,6 @@ public interface ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	ClientDetailResponse updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+	ClientDetailResponse updateOAUTHClientV2(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception;
 }

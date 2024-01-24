@@ -1,20 +1,19 @@
-package io.mosip.pms.oidc.client.controller;
-
+package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import io.mosip.pms.oauth.client.service.ClientManagementService;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.oidc.client.dto.ClientDetail;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequestV2;
-import io.mosip.pms.oidc.client.dto.ClientDetailResponse;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequestV2;
-import io.mosip.pms.oidc.client.service.ClientManagementService;
+import io.mosip.pms.oauth.client.dto.ClientDetail;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
+import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
 
 import javax.validation.Valid;
 
@@ -32,6 +31,7 @@ public class ClientManagementController {
 	AuditUtil auditUtil;
 
 
+	@Deprecated()
 	@RequestMapping(value = "/oidc/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequest> requestWrapper) throws Exception {
@@ -43,14 +43,15 @@ public class ClientManagementController {
 	}
 	
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseWrapper<ClientDetailResponse> createClientV2(
+	public ResponseWrapper<ClientDetailResponse> createOAUTHClientV2(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
-		var clientRespDto = clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
+		var clientRespDto = clientManagementService.createOAUTHClientV2(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
 		return response;
 	}
 
+	@Deprecated()
 	@RequestMapping(value = "/oidc/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
@@ -62,9 +63,9 @@ public class ClientManagementController {
 	}
 	
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseWrapper<ClientDetailResponse> updateClientV2(@PathVariable("client_id") String clientId,
+	public ResponseWrapper<ClientDetailResponse> updateOAUTHClientV2(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
-		var clientRespDto = clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
+		var clientRespDto = clientManagementService.updateOAUTHClientV2(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
 		return response;

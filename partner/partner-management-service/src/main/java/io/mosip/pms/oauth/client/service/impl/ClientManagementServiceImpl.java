@@ -1,4 +1,4 @@
-package io.mosip.pms.oidc.client.service.impl;
+package io.mosip.pms.oauth.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,18 +44,18 @@ import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequestV2;
-import io.mosip.pms.oidc.client.dto.ClientDetailResponse;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequestV2;
-import io.mosip.pms.oidc.client.dto.CreateClientRequestDto;
-import io.mosip.pms.oidc.client.dto.CreateClientRequestV2Dto;
-import io.mosip.pms.oidc.client.dto.ProcessedClientDetail;
-import io.mosip.pms.oidc.client.dto.RequestWrapper;
-import io.mosip.pms.oidc.client.dto.UpdateClientRequestDto;
-import io.mosip.pms.oidc.client.dto.UpdateClientRequestV2Dto;
-import io.mosip.pms.oidc.client.service.ClientManagementService;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
+import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
+import io.mosip.pms.oauth.client.dto.CreateClientRequestDto;
+import io.mosip.pms.oauth.client.dto.CreateClientRequestV2Dto;
+import io.mosip.pms.oauth.client.dto.ProcessedClientDetail;
+import io.mosip.pms.oauth.client.dto.RequestWrapper;
+import io.mosip.pms.oauth.client.dto.UpdateClientRequestDto;
+import io.mosip.pms.oauth.client.dto.UpdateClientRequestV2Dto;
+import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -132,7 +132,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
 	@Override
-	public ClientDetailResponse createOIDCClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception {
+	public ClientDetailResponse createOAUTHClientV2(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
@@ -476,7 +476,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	
 	@Override
-	public ClientDetailResponse updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+	public ClientDetailResponse updateOAUTHClientV2(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
@@ -588,7 +588,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public io.mosip.pms.oidc.client.dto.ClientDetail getClientDetails(String clientId) {
+	public io.mosip.pms.oauth.client.dto.ClientDetail getClientDetails(String clientId) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("getClientDetails::Client not exists with id {}", clientId);
@@ -596,7 +596,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
 
-		io.mosip.pms.oidc.client.dto.ClientDetail dto = new io.mosip.pms.oidc.client.dto.ClientDetail();
+		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
 		dto.setName(result.get().getName());

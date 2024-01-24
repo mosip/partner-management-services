@@ -1,4 +1,4 @@
-package io.mosip.pms.oidc.client.dto;
+package io.mosip.pms.oauth.client.dto;
 
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
