@@ -79,9 +79,6 @@ public class ClientManagementServiceImplTest {
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 
 	@MockBean
-	private AuditUtil auditUtil;
-
-	@MockBean
 	private RestUtil restUtil;
 
 	@Mock
