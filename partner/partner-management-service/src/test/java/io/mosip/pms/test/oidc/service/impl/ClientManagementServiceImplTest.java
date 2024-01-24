@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.ClientPublishDto;
@@ -86,13 +89,13 @@ public class ClientManagementServiceImplTest {
 	private AuditUtil auditUtil;
 
 	@Mock
-	private ObjectMapper objectMapper;	
+	private ObjectMapper objectMapper;
 
 	@Mock
 	private WebSubPublisher webSubPublisher;
-	
-	Map<String, Object> public_key;
 
+	Map<String, Object> public_key;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -101,7 +104,7 @@ public class ClientManagementServiceImplTest {
 		ReflectionTestUtils.setField(serviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
-		
+
 		public_key = new HashMap<>();
 		public_key.put("kty","RSA");
 		public_key.put("e","AQAB");
@@ -119,7 +122,7 @@ public class ClientManagementServiceImplTest {
 		request.setAuthPartnerId("authPartnerId");
 		List<String> clientAuthMethods = new ArrayList<String>();
 		clientAuthMethods.add("ClientAuthMethod");
-		request.setClientAuthMethods(clientAuthMethods);;
+		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(clientAuthMethods);
 		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
 		request.setRedirectUris(clientAuthMethods);

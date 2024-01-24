@@ -18,7 +18,7 @@ public class UpdateClientRequestDto {
     private List<@NotBlank String> redirectUris;
 
     @NotBlank
-    @Pattern(regexp = "^(ACTIVE)|(INACTIVE)$")
+    @Pattern(regexp = "(ACTIVE)|(INACTIVE)")
     private String status;
 
     @NotNull
