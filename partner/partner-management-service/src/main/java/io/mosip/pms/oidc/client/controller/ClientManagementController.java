@@ -1,5 +1,9 @@
 package io.mosip.pms.oidc.client.controller;
 
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
@@ -22,11 +26,16 @@ public class ClientManagementController {
 	@Autowired
 	ClientManagementService clientManagementService;
 
+	@Autowired
+	AuditUtil auditUtil;
+
+
 	@RequestMapping(value = "/oidc/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequest> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.createOIDCClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
+		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT,requestWrapper.getRequest().getName(),"clientID");
 		response.setResponse(clientRespDto);
 		return response;
 	}
@@ -36,6 +45,7 @@ public class ClientManagementController {
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
+		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");
 		response.setResponse(clientRespDto);
 		return response;
 	}

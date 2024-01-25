@@ -73,6 +73,7 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
@@ -324,6 +325,7 @@ public class PartnerServiceImplTest {
 		}
 	
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void getPartnerDetailsWithName_Test(){
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
@@ -345,6 +347,7 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test (expected = PartnerServiceException.class)
+	@WithMockUser(roles = {"PARTNER"})
 	public void getPartnerDetailsWithName_Test01(){
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
@@ -523,6 +526,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void getPartnerDetailsTest() {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
@@ -536,6 +540,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test(expected = PartnerServiceException.class)
+	@WithMockUser(roles = {"PARTNER"})
 	public void throwExceptionWhenPartnerDetailsIsEmptyTest() {
 		Optional<Partner> partner = Optional.empty();
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);

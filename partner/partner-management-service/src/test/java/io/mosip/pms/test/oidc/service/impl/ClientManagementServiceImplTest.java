@@ -1,21 +1,52 @@
 package io.mosip.pms.test.oidc.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.sql.Ref;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
+
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.ClientPublishDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
+import io.mosip.pms.common.dto.PolicyPublishDto;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.ClientDetail;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.exception.ApiAccessibleException;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.util.MapperUtils;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import io.mosip.pms.oidc.client.dto.*;
+import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import org.json.simple.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import static org.junit.Assert.assertTrue;
+
+import static io.mosip.pms.common.util.UserDetailUtil.getLoggedInUserId;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,10 +55,10 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
 import io.mosip.pms.oidc.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,6 +66,12 @@ public class ClientManagementServiceImplTest {
 
 	@Autowired
 	private ClientManagementServiceImpl serviceImpl;
+
+	@Mock
+	private Environment environment;
+
+	@Mock
+	PartnerRepository partnerRepository;
 
 	@Mock
 	ClientDetailRepository clientDetailRepository;
@@ -47,15 +84,18 @@ public class ClientManagementServiceImplTest {
 
 	@MockBean
 	private RestUtil restUtil;
+	
+	@MockBean
+	private AuditUtil auditUtil;
 
 	@Mock
-	private ObjectMapper objectMapper;	
+	private ObjectMapper objectMapper;
 
 	@Mock
 	private WebSubPublisher webSubPublisher;
-	
-	Map<String, Object> public_key;
 
+	Map<String, Object> public_key;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -64,7 +104,7 @@ public class ClientManagementServiceImplTest {
 		ReflectionTestUtils.setField(serviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
-		
+
 		public_key = new HashMap<>();
 		public_key.put("kty","RSA");
 		public_key.put("e","AQAB");
@@ -82,16 +122,16 @@ public class ClientManagementServiceImplTest {
 		request.setAuthPartnerId("authPartnerId");
 		List<String> clientAuthMethods = new ArrayList<String>();
 		clientAuthMethods.add("ClientAuthMethod");
-		request.setClientAuthMethods(clientAuthMethods);;
+		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(clientAuthMethods);
 		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
 		request.setRedirectUris(clientAuthMethods);
 		request.setName("ClientName");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
 		}
 	}
-
 }

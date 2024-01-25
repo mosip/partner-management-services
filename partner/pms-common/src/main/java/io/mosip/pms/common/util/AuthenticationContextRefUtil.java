@@ -64,7 +64,8 @@ public class AuthenticationContextRefUtil {
 					});
 		} catch (IOException e) {
 			logger.error("Failed to load / parse amr mappings", e);
-			return null;
+			throw new RequestException(SearchErrorCode.FAILED_TO_FETCH_AMR.getErrorCode(),
+					SearchErrorCode.FAILED_TO_FETCH_AMR.getErrorMessage());
 		}
 	}
 
@@ -101,7 +102,7 @@ public class AuthenticationContextRefUtil {
 			Map<List<String>, String> claimsMap = new HashMap<>();
 			List<String> allowedClaims = getSupportedClaims();
 			for(String claim:allowedClaims) {
-				if(map.get(claim).getValue()!=null) {
+				if(map.containsKey(claim)) {
 					claimsMap.put(convertStringToList(map.get(claim).getValue()),claim);
 				}
 			}

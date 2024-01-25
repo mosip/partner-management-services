@@ -62,4 +62,3 @@ COMMENT ON COLUMN pms.oidc_client.claims IS 'Requested Claims: claims json as pe
 -- ddl-end --
 COMMENT ON COLUMN pms.oidc_client.acr_values IS 'Allowed Authentication context References(acr) json';
 -- ddl-end --
-

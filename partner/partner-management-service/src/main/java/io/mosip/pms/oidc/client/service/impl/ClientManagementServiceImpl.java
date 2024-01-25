@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -63,6 +66,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.validation.constraints.NotNull;
+
 @Service
 public class ClientManagementServiceImpl implements ClientManagementService {
 
@@ -76,6 +81,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_POLICY_TYPE = "Auth";
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
+	public static final String ACTIVE = "ACTIVE";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -96,6 +102,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	RestUtil restUtil;
 
 	@Autowired
+	AuditUtil auditUtil;
+
+	@Autowired
 	private Environment environment;
 
 	@Autowired
@@ -111,29 +120,39 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
 			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), createRequest.getAuthPartnerId()));
 		}
 		if(!partner.get().getPartnerTypeCode().equalsIgnoreCase(AUTH_PARTNER_TYPE)) {
 			LOGGER.error("createOIDCClient::{} cannot create OIDC Client", partner.get().getPartnerTypeCode());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
 		}
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
 		if (!policyFromDb.isPresent()) {
 			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
 		AuthPolicy policy = policyFromDb.get();
 		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
 			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
@@ -142,6 +161,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -151,6 +172,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					"clientID");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
 		}
@@ -168,6 +191,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (claims.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_CLAIMS.getErrorCode(),
 					ErrorCode.PARTNER_HAVING_NO_CLAIMS.getErrorMessage());
 		}
@@ -177,11 +201,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (acrValues.isEmpty()) {
 			LOGGER.error(
 					"createOIDCClient::Partner has no User Claims");
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorCode(),
 					ErrorCode.PARTNER_HAVING_NO_ACRVALUES.getErrorMessage());
 		}
 		clientDetail.setAcrValues( String.join(",",acrValues));		
-		clientDetail.setStatus("ACTIVE");
+		clientDetail.setStatus(ACTIVE);
 		clientDetail.setGrantTypes(String.join(",", createRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
@@ -191,7 +216,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
-		response.setStatus(clientDetail.getStatus());		
+		response.setStatus(clientDetail.getStatus());
+		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_SUCCESS,createRequest.getName(),
+				"clientID");
 		return response;
 	}
 
@@ -204,8 +231,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private static Set<String> getReqAttributeFromPolicyJson(JSONObject policyObject, String parentAttribute,
-			String childAttribute, String filterAttribute) {
+	private static Set<String> getReqAttributeFromPolicyJson(@NotNull JSONObject policyObject, String parentAttribute,
+															 String childAttribute, String filterAttribute) {
 		Set<String> attributes = new HashSet<>();
 		JSONArray parentAttributeObject = (JSONArray) policyObject.get(parentAttribute);
 		for (int i = 0; i < parentAttributeObject.size(); i++) {
@@ -366,6 +393,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("updateOIDCClient::Client not exists with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
@@ -375,7 +403,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(updateRequest.getStatus());
+		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
@@ -384,8 +412,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setClientId(clientDetail.getId());
 		response.setStatus(clientDetail.getStatus());
 		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_SUCCESS);
 		return response;
-	}	
+	}
 	
 	/**
 	 * 

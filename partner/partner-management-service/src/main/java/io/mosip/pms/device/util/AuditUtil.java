@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,11 +35,11 @@ import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.pms.common.constant.AuditErrorCode;
 import io.mosip.pms.common.exception.ValidationException;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.device.constant.AuditErrorCode;
 import io.mosip.pms.device.exception.DeviceServiceException;
 import io.mosip.pms.device.util.dto.AuditRequestDto;
 import io.mosip.pms.device.util.dto.AuditResponseDto;
@@ -341,4 +342,43 @@ public class AuditUtil {
 
 	}
 
+	public void setAuditRequestDto(ClientServiceAuditEnum clientServiceAuditEnum, String refId, String refIdType) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);;
+		auditRequestDto.setApplicationId(clientServiceAuditEnum.getApplicationId());
+		auditRequestDto.setApplicationName(clientServiceAuditEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(clientServiceAuditEnum.getDescription());
+		auditRequestDto.setEventType(clientServiceAuditEnum.getType());
+		auditRequestDto.setEventName(clientServiceAuditEnum.getName());
+		auditRequestDto.setModuleId(clientServiceAuditEnum.getModuleId());
+		auditRequestDto.setModuleName(clientServiceAuditEnum.getModuleName());
+		auditRequestDto.setEventId(clientServiceAuditEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+
+	public void setAuditRequestDto(ClientServiceAuditEnum clientServiceAuditEnum) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);;
+		auditRequestDto.setApplicationId(clientServiceAuditEnum.getApplicationId());
+		auditRequestDto.setApplicationName(clientServiceAuditEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(clientServiceAuditEnum.getDescription());
+		auditRequestDto.setEventType(clientServiceAuditEnum.getType());
+		auditRequestDto.setEventName(clientServiceAuditEnum.getName());
+		auditRequestDto.setModuleId(clientServiceAuditEnum.getModuleId());
+		auditRequestDto.setModuleName(clientServiceAuditEnum.getModuleName());
+		auditRequestDto.setEventId(clientServiceAuditEnum.getEventId());
+		callAuditManager(auditRequestDto);
+	}
 }
