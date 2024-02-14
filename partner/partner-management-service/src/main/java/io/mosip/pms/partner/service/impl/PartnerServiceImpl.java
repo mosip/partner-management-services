@@ -520,7 +520,18 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private AuthPolicy validatePolicyGroupAndPolicy(String policyGroupId, String policyName) {
+		List <AuthPolicy> authPoliciesFromDb = authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(policyName);
+		if (authPoliciesFromDb.isEmpty() || authPoliciesFromDb == null){
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
+			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
+		}
 		AuthPolicy authPolicyFromDb = authPolicyRepository.findByPolicyGroupIdAndName(policyGroupId, policyName);
+		for (AuthPolicy authPolicy: authPoliciesFromDb){
+			if (authPolicy.getPolicyGroup() != null && authPolicy.getPolicyGroup().getId().equals(policyGroupId)){
+				authPolicyFromDb = authPolicy;
+			}
+		}
 		if (authPolicyFromDb == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
 			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
@@ -1502,13 +1513,13 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
 		Partner partner = getValidPartner(partnerId, false);
+		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
+				partnerAPIKeyRequest.getPolicyName());
 		if(partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
 					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
 		}
-		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
-				partnerAPIKeyRequest.getPolicyName());
 		
 		List<PartnerPolicyRequest> mappingRequests = partnerPolicyRequestRepository
 				.findByPartnerIdAndPolicyId(partnerId, authPolicy.getId());
