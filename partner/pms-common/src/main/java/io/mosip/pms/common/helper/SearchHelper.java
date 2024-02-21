@@ -137,13 +137,13 @@ public class SearchHelper {
 			CriteriaQuery<Long> countQuery, List<SearchFilter> filters) {
 		final List<Predicate> predicates = new ArrayList<>();
 		if (filters != null && !filters.isEmpty()) {
+			Field[] childFields = entity.getDeclaredFields();
+			Field[] superFields = entity.getSuperclass().getDeclaredFields();
+			List<Field> fieldList = new ArrayList<>();
+			fieldList.addAll(Arrays.asList(childFields));
+			if (superFields != null)
+				fieldList.addAll(Arrays.asList(superFields));
 			for (SearchFilter filter : filters) {
-				Field[] childFields = entity.getDeclaredFields();
-				Field[] superFields = entity.getSuperclass().getDeclaredFields();
-				List<Field> fieldList = new ArrayList<>();
-				fieldList.addAll(Arrays.asList(childFields));
-				if (superFields != null)
-					fieldList.addAll(Arrays.asList(superFields));
 				Optional<Field> field = fieldList.stream()
 						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName())).findFirst();
 				if (!field.isPresent()) {
