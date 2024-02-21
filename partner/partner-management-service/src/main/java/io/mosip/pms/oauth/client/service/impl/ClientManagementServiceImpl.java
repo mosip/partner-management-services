@@ -2,6 +2,7 @@ package io.mosip.pms.oauth.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -61,6 +63,7 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -122,7 +125,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
-		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"), true);
+		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"),false);
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -135,7 +138,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
-		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
+		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -145,14 +148,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		
 	}
 	
-	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
+	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
 		String publicKey = getJWKString(createRequest.getPublicKey());
 		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
@@ -160,14 +163,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if(partner.isEmpty()) {
 			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), createRequest.getAuthPartnerId()));
 		}
 		if(!partner.get().getPartnerTypeCode().equalsIgnoreCase(AUTH_PARTNER_TYPE)) {
 			LOGGER.error("createOIDCClient::{} cannot create OIDC Client", partner.get().getPartnerTypeCode());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
 		}
@@ -175,7 +178,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!policyFromDb.isPresent()) {
 			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
@@ -183,7 +186,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
 			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
@@ -193,7 +196,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -204,7 +207,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
 		}
@@ -283,8 +286,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception  
 	 */
+	@SafeVarargs
 	@SuppressWarnings("unchecked")
-	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
+	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
@@ -292,61 +296,38 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
 		dto.setLogoUri(request.getLogoUri());
-		dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
+		try {
+			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
 		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(request.getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		createRequestwrapper.setRequest(dto);
+		if(Boolean.TRUE.equals(isOAuthClient) &&  clientNameLangMap.length>0) {
+			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto,clientNameLangMap[0]);
+			createRequestwrapper.setRequest(dtoV2);
+		}
+		else createRequestwrapper.setRequest(dto);
 		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+		
 
 	}
 	
-	@SuppressWarnings("unchecked")
-	private ClientDetailResponse callEsignetServiceV2(ClientDetail request, String calleeApi, boolean isItForCreate, Map<String,String> clientNameLangMap) throws Exception {
-		RequestWrapper<CreateClientRequestDtoV2> createRequestwrapper = new RequestWrapper<>();
-		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
-		CreateClientRequestDtoV2 dto = new CreateClientRequestDtoV2();
-		dto.setClientId(request.getId());
-		dto.setClientName(request.getName());
-		dto.setRelyingPartyId(request.getRpId());
-		dto.setLogoUri(request.getLogoUri());
-		dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
-		dto.setUserClaims(convertStringToList(request.getClaims()));
-		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
-		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));
-		dto.setGrantTypes(convertStringToList(request.getGrantTypes()));
-		dto.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		dto.setClientNameLangMap(clientNameLangMap);
-		createRequestwrapper.setRequest(dto);
-		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
-
-	}
 	
-	private void makeUpdateEsignetServiceCall(ClientDetail request, String calleeApi) {
+	@SafeVarargs
+	private void makeUpdateEsignetServiceCall(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<UpdateClientRequestDto> updateRequestwrapper = new RequestWrapper<>();
 		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		UpdateClientRequestDto updateRequest = mapUpdateClientRequestDto(request);
-		updateRequestwrapper.setRequest(updateRequest);
-		
-		List<String> pathsegments = new ArrayList<>();
-		pathsegments.add(request.getId());
-		try {
-			restUtil.putApi(calleeApi, pathsegments, null, null, MediaType.APPLICATION_JSON, updateRequestwrapper, Map.class);
-		}catch (Exception e) {
-			LOGGER.error("callIdpService::Error from idp service {} ", e.getMessage(), e);
-			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+		if(Boolean.TRUE.equals(isOAuthClient) && clientNameLangMap.length>0) {
+			UpdateClientRequestDtoV2 updateRequestV2 = new UpdateClientRequestDtoV2(updateRequest, clientNameLangMap[0]);
+			updateRequestwrapper.setRequest(updateRequestV2);
 		}
-	}
-	
-	private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, Map<String,String> clientNameLangMap) {
-		RequestWrapper<UpdateClientRequestDtoV2> updateRequestwrapper = new RequestWrapper<>();
-		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
-		UpdateClientRequestDto updateRequest = mapUpdateClientRequestDto(request);
-		UpdateClientRequestDtoV2 updateRequestV2 = new UpdateClientRequestDtoV2(updateRequest, clientNameLangMap);
-		updateRequestwrapper.setRequest(updateRequestV2);
+		else updateRequestwrapper.setRequest(updateRequest);
+		
 		List<String> pathsegments = new ArrayList<>();
 		pathsegments.add(request.getId());
 		try {
@@ -465,7 +446,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
-		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
+		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"),false);
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
@@ -480,7 +461,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
-		makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), updateRequest.getClientNameLangMap());
+		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
@@ -517,12 +498,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getJWKString(Map<String, Object> jwk) throws Exception {
+	private String getJWKString(Map<String, Object> jwk) {
 		try {
 			RsaJsonWebKey jsonWebKey = new RsaJsonWebKey(jwk);
 			return jsonWebKey.toJson();
 		} catch (JoseException e) {
-			throw new Exception();
+			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
+			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
+					ErrorCode.FAILED_TO_PROCESS_JWK.getErrorMessage());
 		}
 	}
 
@@ -536,7 +519,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		try {
 			return ((JSONObject) parser.parse(policy));
 		} catch (ParseException e) {
-			return null;
+			return (JSONObject) Collections.emptyMap();
 		}
 	}
 

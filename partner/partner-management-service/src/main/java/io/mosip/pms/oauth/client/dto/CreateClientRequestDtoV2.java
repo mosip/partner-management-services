@@ -26,5 +26,11 @@ public class CreateClientRequestDtoV2 extends CreateClientRequestDto {
 				logoUri, redirectUris, grantTypes, clientAuthMethods);
 				this.clientNameLangMap = clientNameLangMap;
 			}
+
+	public CreateClientRequestDtoV2(CreateClientRequestDto createRequest, Map<String, String> clientNameLangMap) {
+		super(createRequest.getClientId(), createRequest.getClientName(), createRequest.getPublicKey(), createRequest.getRelyingPartyId(), createRequest.getUserClaims(), 
+				createRequest.getAuthContextRefs(), createRequest.getLogoUri(), createRequest.getRedirectUris(), createRequest.getGrantTypes(), createRequest.getClientAuthMethods());
+				this.clientNameLangMap = clientNameLangMap;
+	}
 	
 }

@@ -67,12 +67,13 @@ public enum ErrorCode {
 	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
 	INVALID_PARTNERID("PMS_PRT_058","AuthPartner doesn't exists with this Id - %s."),
 	INVALID_PARTNER_TYPE("PMS_PRT_059","Only Auth_partner can Create OIDC Client. %s is not allowed to create OIDC Client."),
-	DUPLICATE_CLIENT("PMS_IDP_001","Client public key already exists."),
-	PARTNER_POLICY_NOT_APPROVED("PMS_IDP_002","Partner policy mapping is not approved. Please check mapping status."),
-	POLICY_HAVING_MANDATORY_AUTHS("PMS_IDP_003","Policy having mandatory auths. So client can't be created for the same."),
-	CLIENT_NOT_EXISTS("PMS_IDP_004","Client not exists with given id."),
-	PARTNER_HAVING_NO_CLAIMS("PMS_IDP_005","Partner has no user claims"),
-	PARTNER_HAVING_NO_ACRVALUES("PMS_IDP_005","Partner has no Authentication Context Refrences");
+	DUPLICATE_CLIENT("PMS_ESI_001","Client public key already exists."),
+	PARTNER_POLICY_NOT_APPROVED("PMS_ESI_002","Partner policy mapping is not approved. Please check mapping status."),
+	POLICY_HAVING_MANDATORY_AUTHS("PMS_ESI_003","Policy having mandatory auths. So client can't be created for the same."),
+	CLIENT_NOT_EXISTS("PMS_ESI_004","Client not exists with given id."),
+	PARTNER_HAVING_NO_CLAIMS("PMS_ESI_005","Partner has no user claims"),
+	PARTNER_HAVING_NO_ACRVALUES("PMS_ESI_006","Partner has no Authentication Context Refrences"),
+	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key");
 	
 	/**
 	 * The error code.
