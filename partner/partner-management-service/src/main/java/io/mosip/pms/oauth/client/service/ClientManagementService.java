@@ -43,7 +43,7 @@ public interface ClientManagementService {
      * @return
      * @throws Exception
      */
-	ClientDetailResponse createOAUTHClient(ClientDetailCreateRequestV2 createRequest) throws Exception;
+	ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception;
 
 	/**
 	 * API to update OIDC Client with new Client Name Lang Map 
@@ -53,6 +53,6 @@ public interface ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	ClientDetailResponse updateOAUTHClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+	ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception;
 }

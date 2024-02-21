@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateClientRequestV2Dto extends CreateClientRequestDto {
+public class CreateClientRequestDtoV2 extends CreateClientRequestDto {
 
 	@NotEmpty
 	 private Map<@Size(min=3, max=3) String, @NotBlank String> clientNameLangMap;
 	
-	 public CreateClientRequestV2Dto(String clientId, String clientName, Map<String, Object> publicKey, String relyingPartyId,
+	 public CreateClientRequestDtoV2(String clientId, String clientName, Map<String, Object> publicKey, String relyingPartyId,
 			 List<String> userClaims, List<String> authContextRefs, String logoUri, List<String> redirectUris, List<String> grantTypes, List<String> clientAuthMethods,
              Map<String, String> clientNameLangMap) {
 				super(clientId, clientName, publicKey, relyingPartyId, userClaims, authContextRefs,

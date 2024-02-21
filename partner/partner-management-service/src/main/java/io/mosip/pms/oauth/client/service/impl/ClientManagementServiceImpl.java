@@ -50,11 +50,11 @@ import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
 import io.mosip.pms.oauth.client.dto.CreateClientRequestDto;
-import io.mosip.pms.oauth.client.dto.CreateClientRequestV2Dto;
+import io.mosip.pms.oauth.client.dto.CreateClientRequestDtoV2;
 import io.mosip.pms.oauth.client.dto.ProcessedClientDetail;
 import io.mosip.pms.oauth.client.dto.RequestWrapper;
 import io.mosip.pms.oauth.client.dto.UpdateClientRequestDto;
-import io.mosip.pms.oauth.client.dto.UpdateClientRequestV2Dto;
+import io.mosip.pms.oauth.client.dto.UpdateClientRequestDtoV2;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
@@ -132,7 +132,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
 	@Override
-	public ClientDetailResponse createOAUTHClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
+	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
@@ -305,9 +305,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callEsignetServiceV2(ClientDetail request, String calleeApi, boolean isItForCreate, Map<String,String> clientNameLangMap) throws Exception {
-		RequestWrapper<CreateClientRequestV2Dto> createRequestwrapper = new RequestWrapper<>();
+		RequestWrapper<CreateClientRequestDtoV2> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
-		CreateClientRequestV2Dto dto = new CreateClientRequestV2Dto();
+		CreateClientRequestDtoV2 dto = new CreateClientRequestDtoV2();
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
@@ -342,10 +342,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
 	private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, Map<String,String> clientNameLangMap) {
-		RequestWrapper<UpdateClientRequestV2Dto> updateRequestwrapper = new RequestWrapper<>();
+		RequestWrapper<UpdateClientRequestDtoV2> updateRequestwrapper = new RequestWrapper<>();
 		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		UpdateClientRequestDto updateRequest = mapUpdateClientRequestDto(request);
-		UpdateClientRequestV2Dto updateRequestV2 = new UpdateClientRequestV2Dto(updateRequest, clientNameLangMap);
+		UpdateClientRequestDtoV2 updateRequestV2 = new UpdateClientRequestDtoV2(updateRequest, clientNameLangMap);
 		updateRequestwrapper.setRequest(updateRequestV2);
 		List<String> pathsegments = new ArrayList<>();
 		pathsegments.add(request.getId());
@@ -476,7 +476,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	
 	@Override
-	public ClientDetailResponse updateOAUTHClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+	public ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);

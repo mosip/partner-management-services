@@ -15,19 +15,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateClientRequestV2Dto extends UpdateClientRequestDto{
+public class UpdateClientRequestDtoV2 extends UpdateClientRequestDto{
 
 	@NotEmpty
 	private Map<@Size(min=3, max=3) String, @NotBlank String> clientNameLangMap;
 
-	public UpdateClientRequestV2Dto(String logoUri, @NotNull List<@NotBlank String> redirectUris, String status,
+	public UpdateClientRequestDtoV2(String logoUri, @NotNull List<@NotBlank String> redirectUris, String status,
 			@NotNull List<String> grantTypes, String clientName, List<String> userClaims, List<String> authContextRefs,
 			@NotNull List<String> clientAuthMethods, Map<String, String> clientNameLangMap) {
 		super(logoUri, redirectUris, status, grantTypes, clientName, userClaims, authContextRefs, clientAuthMethods);
 		this.clientNameLangMap = clientNameLangMap;
 	}
 
-	public UpdateClientRequestV2Dto(UpdateClientRequestDto updateRequest, Map<String, String> clientNameLangMap) {
+	public UpdateClientRequestDtoV2(UpdateClientRequestDto updateRequest, Map<String, String> clientNameLangMap) {
 		super(updateRequest.getLogoUri(), updateRequest.getRedirectUris(), updateRequest.getStatus(), updateRequest.getGrantTypes(), updateRequest.getClientName(), 
 				updateRequest.getUserClaims(), updateRequest.getAuthContextRefs(), updateRequest.getClientAuthMethods());
 		this.clientNameLangMap = clientNameLangMap;
