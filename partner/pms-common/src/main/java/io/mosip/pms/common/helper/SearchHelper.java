@@ -1,10 +1,9 @@
 package io.mosip.pms.common.helper;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -19,6 +18,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import io.mosip.kernel.core.exception.ServiceError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
@@ -95,7 +95,7 @@ public class SearchHelper {
 		countQuery.select(criteriaBuilder.count(countQuery.from(entity)));
 		// applying filters
 		if (!searchDto.getFilters().isEmpty())
-			filterQuery(criteriaBuilder, rootQuery, selectQuery, countQuery, searchDto.getFilters());
+			filterQuery(entity, criteriaBuilder, rootQuery, selectQuery, countQuery, searchDto.getFilters());
 
 		// applying sorting
 		if(!searchDto.getSort().isEmpty())
@@ -133,10 +133,24 @@ public class SearchHelper {
 	 * @param countQuery  criteria count query
 	 * @param filters     list of {@link SearchFilter}
 	 */
-	private <E> void filterQuery(CriteriaBuilder builder, Root<E> root, CriteriaQuery<E> selectQuery,
+	private <E> void filterQuery(Class<E> entity, CriteriaBuilder builder, Root<E> root, CriteriaQuery<E> selectQuery,
 			CriteriaQuery<Long> countQuery, List<SearchFilter> filters) {
 		final List<Predicate> predicates = new ArrayList<>();
 		if (filters != null && !filters.isEmpty()) {
+			Field[] childFields = entity.getDeclaredFields();
+			Field[] superFields = entity.getSuperclass().getDeclaredFields();
+			List<Field> fieldList = new ArrayList<>();
+			fieldList.addAll(Arrays.asList(childFields));
+			if (superFields != null)
+				fieldList.addAll(Arrays.asList(superFields));
+			for (SearchFilter filter : filters) {
+				Optional<Field> field = fieldList.stream()
+						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName())).findFirst();
+				if (!field.isPresent()) {
+					throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
+							String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), filter.getColumnName()));
+				}
+			}
 			filters.stream().filter(this::validateFilters).map(i -> buildFilters(builder, root, i))
 					.filter(Objects::nonNull).collect(Collectors.toCollection(() -> predicates));
 		}
