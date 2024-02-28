@@ -67,10 +67,11 @@
 	</distributionManagement>	
 
 	<properties>
-		<kernel.version>1.2.0.1-B2</kernel.version>		
-		<kernel-dataaccess-hibernate.version>1.2.0.1-B2</kernel-dataaccess-hibernate.version>
-		<kernel-websubclient-api.version>1.2.0.1-B2</kernel-websubclient-api.version>
-		<kernel.templatemanager.velocity.version>1.2.0.1-B2</kernel.templatemanager.velocity.version>
+		<kernel.version>1.2.0.1-SNAPSHOT</kernel.version>	
+		<kernel-openid-bridge.version>1.2.0.1-SNAPSHOT</kernel-openid-bridge.version>		
+		<kernel-dataaccess-hibernate.version>1.2.0.1-SNAPSHOT</kernel-dataaccess-hibernate.version>
+		<kernel-websubclient-api.version>1.2.0.1-SNAPSHOT</kernel-websubclient-api.version>
+		<kernel.templatemanager.velocity.version>1.2.0.1-SNAPSHOT</kernel.templatemanager.velocity.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
