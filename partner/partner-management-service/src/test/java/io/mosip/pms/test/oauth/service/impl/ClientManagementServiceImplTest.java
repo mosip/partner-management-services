@@ -1,36 +1,13 @@
-package io.mosip.pms.test.oidc.service.impl;
+package io.mosip.pms.test.oauth.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.sql.Ref;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.mosip.pms.common.constant.EventType;
-import io.mosip.pms.common.dto.ClientPublishDto;
-import io.mosip.pms.common.dto.PartnerDataPublishDto;
-import io.mosip.pms.common.dto.PolicyPublishDto;
-import io.mosip.pms.common.dto.Type;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.ClientDetail;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PolicyGroup;
-import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.repository.PartnerRepository;
-import io.mosip.pms.common.util.MapperUtils;
-import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
-import io.mosip.pms.oidc.client.dto.*;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import org.json.simple.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -40,13 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import static io.mosip.pms.common.util.UserDetailUtil.getLoggedInUserId;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,11 +26,14 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.oidc.client.service.impl.ClientManagementServiceImpl;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
+import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

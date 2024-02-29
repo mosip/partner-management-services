@@ -1,13 +1,19 @@
-package io.mosip.pms.oidc.client.dto;
+package io.mosip.pms.oauth.client.dto;
 
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateClientRequestDto {    
     private String clientId;
     private String clientName;
