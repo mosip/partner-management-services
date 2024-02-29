@@ -1,7 +1,8 @@
-package io.mosip.pms.oidc.client.service.impl;
+package io.mosip.pms.oauth.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -44,18 +46,24 @@ import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
-import io.mosip.pms.oidc.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oidc.client.dto.ClientDetailResponse;
-import io.mosip.pms.oidc.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oidc.client.dto.CreateClientRequestDto;
-import io.mosip.pms.oidc.client.dto.RequestWrapper;
-import io.mosip.pms.oidc.client.dto.UpdateClientRequestDto;
-import io.mosip.pms.oidc.client.service.ClientManagementService;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
+import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
+import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
+import io.mosip.pms.oauth.client.dto.CreateClientRequestDto;
+import io.mosip.pms.oauth.client.dto.CreateClientRequestDtoV2;
+import io.mosip.pms.oauth.client.dto.ProcessedClientDetail;
+import io.mosip.pms.oauth.client.dto.RequestWrapper;
+import io.mosip.pms.oauth.client.dto.UpdateClientRequestDto;
+import io.mosip.pms.oauth.client.dto.UpdateClientRequestDtoV2;
+import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -115,13 +123,39 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
+		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
+		ClientDetail clientDetail = processedClientDetail.getClientDetail();
+		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"),false);
+		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
+		clientDetailRepository.save(clientDetail);
+		var response = new ClientDetailResponse();
+		response.setClientId(clientDetail.getId());
+		response.setStatus(clientDetail.getStatus());		
+		return response;
+	}
+	
+	@Override
+	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
+		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
+		ClientDetail clientDetail = processedClientDetail.getClientDetail();
+		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
+		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
+		clientDetailRepository.save(clientDetail);
+		var response = new ClientDetailResponse();
+		response.setClientId(clientDetail.getId());
+		response.setStatus(clientDetail.getStatus());		
+		return response;
+		
+	}
+	
+	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
 		String publicKey = getJWKString(createRequest.getPublicKey());
 		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
@@ -129,14 +163,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if(partner.isEmpty()) {
 			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), createRequest.getAuthPartnerId()));
 		}
 		if(!partner.get().getPartnerTypeCode().equalsIgnoreCase(AUTH_PARTNER_TYPE)) {
 			LOGGER.error("createOIDCClient::{} cannot create OIDC Client", partner.get().getPartnerTypeCode());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
 		}
@@ -144,7 +178,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!policyFromDb.isPresent()) {
 			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
 					ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 		}
@@ -152,7 +186,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if(!policy.getPolicy_type().equals(AUTH_POLICY_TYPE)) {
 			LOGGER.error("createOIDCClient::Policy Type Mismatch. {} policy cannot be used to create OIDC Client",policy.getPolicy_type());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorCode(), String
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
@@ -162,7 +196,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId());
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
@@ -173,7 +207,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
 					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					"clientID");
+					clientId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
 		}
@@ -211,16 +245,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", createRequest.getClientAuthMethods()));
 		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setCreatedBy(getLoggedInUserId());
-		callIdpService(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-create-url"), true);
-		publishClientData(policyMappingReqFromDb.get(0).getPartner(), policyFromDb.get(), clientDetail);
-		clientDetailRepository.save(clientDetail);
-		var response = new ClientDetailResponse();
-		response.setClientId(clientDetail.getId());
-		response.setStatus(clientDetail.getStatus());
-		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_SUCCESS,createRequest.getName(),
-				"clientID");
-		return response;
+		ProcessedClientDetail processedClientDetail = new ProcessedClientDetail();
+		processedClientDetail.setClientDetail(clientDetail);
+		processedClientDetail.setPartner(policyMappingReqFromDb.get(0).getPartner());
+		processedClientDetail.setPolicy(policyFromDb.get());
+		return processedClientDetail;
 	}
+	
+	
 
 	/**
 	 * 
@@ -254,8 +286,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception  
 	 */
+	@SafeVarargs
 	@SuppressWarnings("unchecked")
-	private ClientDetailResponse callIdpService(ClientDetail request, String calleeApi, boolean isItForCreate) throws Exception {
+	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 		CreateClientRequestDto dto = new CreateClientRequestDto();
@@ -263,30 +296,37 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
 		dto.setLogoUri(request.getLogoUri());
-		dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
+		try {
+			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
 		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(request.getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		createRequestwrapper.setRequest(dto);
-		return makeCreateIDPServiceCall(createRequestwrapper, calleeApi);
+		if(Boolean.TRUE.equals(isOAuthClient) &&  clientNameLangMap.length>0) {
+			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto,clientNameLangMap[0]);
+			createRequestwrapper.setRequest(dtoV2);
+		}
+		else createRequestwrapper.setRequest(dto);
+		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+		
 
 	}
 	
-	private void makeUpdateIDPServiceCall(ClientDetail request, String calleeApi) {
+	
+	@SafeVarargs
+	private void makeUpdateEsignetServiceCall(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<UpdateClientRequestDto> updateRequestwrapper = new RequestWrapper<>();
 		updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
-		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
-		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		updateRequest.setClientName(request.getName());
-		updateRequest.setGrantTypes(convertStringToList(request.getGrantTypes()));
-		updateRequest.setLogoUri(request.getLogoUri());
-		updateRequest.setRedirectUris(convertStringToList(request.getRedirectUris()));
-		updateRequest.setStatus(request.getStatus());
-		updateRequest.setUserClaims(convertStringToList(request.getClaims()));
-		updateRequest.setAuthContextRefs(convertStringToList(request.getAcrValues()));
-		updateRequestwrapper.setRequest(updateRequest);
+		UpdateClientRequestDto updateRequest = mapUpdateClientRequestDto(request);
+		if(Boolean.TRUE.equals(isOAuthClient) && clientNameLangMap.length>0) {
+			UpdateClientRequestDtoV2 updateRequestV2 = new UpdateClientRequestDtoV2(updateRequest, clientNameLangMap[0]);
+			updateRequestwrapper.setRequest(updateRequestV2);
+		}
+		else updateRequestwrapper.setRequest(updateRequest);
 		
 		List<String> pathsegments = new ArrayList<>();
 		pathsegments.add(request.getId());
@@ -299,13 +339,27 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 	}
 	
+	
+	private UpdateClientRequestDto mapUpdateClientRequestDto(ClientDetail request) {
+		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
+		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
+		updateRequest.setClientName(request.getName());
+		updateRequest.setGrantTypes(convertStringToList(request.getGrantTypes()));
+		updateRequest.setLogoUri(request.getLogoUri());
+		updateRequest.setRedirectUris(convertStringToList(request.getRedirectUris()));
+		updateRequest.setStatus(request.getStatus());
+		updateRequest.setUserClaims(convertStringToList(request.getClaims()));
+		updateRequest.setAuthContextRefs(convertStringToList(request.getAcrValues()));
+		return updateRequest;
+	}
+	
 	/**
 	 * 
 	 * @param request
 	 * @param calleeApi
 	 * @return
 	 */
-	private ClientDetailResponse makeCreateIDPServiceCall(Object request, String calleeApi) {
+	private ClientDetailResponse makeCreateEsignetServiceCall(Object request, String calleeApi) {
 		ClientDetailResponse response = null;		
 		Map<String, Object> idpClientResponse = restUtil.postApi(calleeApi, null, "", "", MediaType.APPLICATION_JSON,
 				request, Map.class);
@@ -390,6 +444,35 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Override
 	public ClientDetailResponse updateOIDCClient(String clientId, ClientDetailUpdateRequest updateRequest)
 			throws Exception {
+		
+		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
+		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"),false);
+		clientDetail = clientDetailRepository.save(clientDetail);
+		var response = new ClientDetailResponse();
+		response.setClientId(clientDetail.getId());
+		response.setStatus(clientDetail.getStatus());
+		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+		return response;
+	}	
+	
+	
+	@Override
+	public ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+			throws Exception {
+		
+		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
+		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
+		clientDetail = clientDetailRepository.save(clientDetail);
+		var response = new ClientDetailResponse();
+		response.setClientId(clientDetail.getId());
+		response.setStatus(clientDetail.getStatus());
+		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+		return response;
+	}	
+	
+	
+	
+	public ClientDetail processUpdateOIDCClient(String clientId, ClientDetailUpdateRequest updateRequest) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("updateOIDCClient::Client not exists with id {}", clientId);
@@ -406,14 +489,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
-		makeUpdateIDPServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oidc-client-update-url"));
-		clientDetail = clientDetailRepository.save(clientDetail);
-		var response = new ClientDetailResponse();
-		response.setClientId(clientDetail.getId());
-		response.setStatus(clientDetail.getStatus());
-		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
-		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_SUCCESS);
-		return response;
+		return clientDetail;
 	}
 	
 	/**
@@ -422,12 +498,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getJWKString(Map<String, Object> jwk) throws Exception {
+	private String getJWKString(Map<String, Object> jwk) {
 		try {
 			RsaJsonWebKey jsonWebKey = new RsaJsonWebKey(jwk);
 			return jsonWebKey.toJson();
 		} catch (JoseException e) {
-			throw new Exception();
+			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
+			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
+					ErrorCode.FAILED_TO_PROCESS_JWK.getErrorMessage());
 		}
 	}
 
@@ -441,7 +519,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		try {
 			return ((JSONObject) parser.parse(policy));
 		} catch (ParseException e) {
-			return null;
+			return (JSONObject) Collections.emptyMap();
 		}
 	}
 
@@ -493,7 +571,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public io.mosip.pms.oidc.client.dto.ClientDetail getClientDetails(String clientId) {
+	public io.mosip.pms.oauth.client.dto.ClientDetail getClientDetails(String clientId) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("getClientDetails::Client not exists with id {}", clientId);
@@ -501,7 +579,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
 
-		io.mosip.pms.oidc.client.dto.ClientDetail dto = new io.mosip.pms.oidc.client.dto.ClientDetail();
+		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
 		dto.setName(result.get().getName());

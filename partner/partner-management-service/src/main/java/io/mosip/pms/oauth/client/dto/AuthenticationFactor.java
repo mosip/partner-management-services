@@ -1,4 +1,4 @@
-package io.mosip.pms.oidc.client.dto;
+package io.mosip.pms.oauth.client.dto;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
