@@ -538,7 +538,8 @@ public class SearchHelper {
 	}
 	
 	public boolean isLoggedInUserFilterRequired() {
-		return !(UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
-				.anyMatch(r -> r.getAuthority().equalsIgnoreCase("ROLE_" + partnerAdminRole)));
+		List<String> roles = Arrays.asList(partnerAdminRole.split(","));
+		return UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
+				.anyMatch(authority -> roles.contains(authority.getAuthority()));
 	}
 }
