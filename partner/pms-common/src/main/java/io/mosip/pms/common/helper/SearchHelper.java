@@ -55,8 +55,8 @@ public class SearchHelper {
 
 	private static final String IS_ACTIVE_COLUMN_NAME = "isActive";
 	
-	@Value("${mosip.pms.partneradmin.role:PARTNER_ADMIN}")	
-	private String partnerAdminRole;  
+	@Value("${mosip.pms.required.roles:PARTNER_ADMIN}")
+	private List<String> requiredroles;
 
 	/**
 	 * Field for interface used to interact with the persistence context.
@@ -538,8 +538,7 @@ public class SearchHelper {
 	}
 	
 	public boolean isLoggedInUserFilterRequired() {
-		List<String> roles = Arrays.asList(partnerAdminRole.split(","));
 		return UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
-				.anyMatch(authority -> roles.contains(authority.getAuthority()));
+				.anyMatch(authority -> requiredroles.contains(authority.getAuthority()));
 	}
 }
