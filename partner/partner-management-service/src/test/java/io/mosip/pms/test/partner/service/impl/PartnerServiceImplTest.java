@@ -788,7 +788,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_001() {		
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
@@ -876,7 +876,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
 	}	
 
-	@Test
+	@Test (expected = PartnerServiceException.class)
 	public void requestForPolicyMappingTest() {
 		PartnerPolicyMappingRequest request = new PartnerPolicyMappingRequest();
 		request.setPolicyName("policyName");
