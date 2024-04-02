@@ -571,7 +571,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		Type type = new Type();
 		type.setName("PartnerManagementServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
-		//webSubPublisher.notify(eventType, data, type);
+		webSubPublisher.notify(eventType, data, type);
 	}
 
 	@Override
