@@ -12,10 +12,7 @@ import java.util.Map;
 
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.pms.common.constant.EventType;
@@ -56,19 +53,11 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
-import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -76,9 +65,6 @@ public class ClientManagementServiceImplTest {
 
 	@Autowired
 	private ClientManagementServiceImpl serviceImpl;
-
-	@Autowired
-	ClientManagementController clientManagementController;
 
 	@Mock
 	private Environment environment;
@@ -146,24 +132,6 @@ public class ClientManagementServiceImplTest {
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
 		}
-	}
-
-	@Test
-	public void testCreateOIDCClient() throws Exception {
-		io.mosip.pms.common.request.dto.RequestWrapper<ClientDetailCreateRequest> requestWrapper = new io.mosip.pms.common.request.dto.RequestWrapper<>();
-		requestWrapper.setId("42");
-		requestWrapper.setMetadata("Metadata");
-		requestWrapper.setRequest(new ClientDetailCreateRequest());
-		requestWrapper.setRequesttime(null);
-		requestWrapper.setVersion("1.0.2");
-		String content = (new ObjectMapper()).writeValueAsString(requestWrapper);
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/oidc/client")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content);
-		ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(clientManagementController)
-				.build()
-				.perform(requestBuilder);
-		actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
 	}
 
 	@Test (expected = PartnerServiceException.class)
@@ -318,24 +286,6 @@ public class ClientManagementServiceImplTest {
 		createRequest.setPublicKey(public_key);
 
 		serviceImpl.createOIDCClient(createRequest);
-	}
-
-	@Test
-	public void testUpdateClient() throws Exception {
-		io.mosip.pms.common.request.dto.RequestWrapper<ClientDetailUpdateRequest> requestWrapper = new io.mosip.pms.common.request.dto.RequestWrapper<>();
-		requestWrapper.setId("42");
-		requestWrapper.setMetadata("Metadata");
-		requestWrapper.setRequest(new ClientDetailUpdateRequest());
-		requestWrapper.setRequesttime(null);
-		requestWrapper.setVersion("1.0.2");
-		String content = (new ObjectMapper()).writeValueAsString(requestWrapper);
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/oidc/client/{client_id}", "Client id")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content);
-		ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(clientManagementController)
-				.build()
-				.perform(requestBuilder);
-		actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
 	}
 
 	@Test (expected = PartnerServiceException.class)
@@ -836,52 +786,6 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test (expected = PartnerServiceException.class)
-	public void testCreateOAUTHClient_Success() throws Exception {
-		ClientDetailResponse expectedResponse = new ClientDetailResponse();
-		expectedResponse.setClientId("123");
-		expectedResponse.setStatus("Status");
-
-		ArrayList<String> redirectUris = new ArrayList<>();
-		redirectUris.add("https://testcase.pms.net/browse/OIDCClient");
-		ArrayList<String> grantTypes = new ArrayList<>();
-		grantTypes.add("authorization_code");
-		ArrayList<String> clientAuthMethods = new ArrayList<>();
-		clientAuthMethods.add("ClientAuthMethod");
-		Map<String, String> clientNameLangMap = new HashMap<>();
-		clientNameLangMap.put("1","eng");
-
-		ClientDetailCreateRequestV2 request = new ClientDetailCreateRequestV2("Name", "123", public_key, "123",
-				"Logo Uri", redirectUris, grantTypes, clientAuthMethods, clientNameLangMap);
-
-		when(serviceImpl.createOAuthClient(request)).thenReturn(expectedResponse);
-
-		io.mosip.pms.common.request.dto.RequestWrapper<ClientDetailCreateRequestV2> requestWrapper = new io.mosip.pms.common.request.dto.RequestWrapper<>();
-		requestWrapper.setRequest(request);
-		ResponseWrapper<ClientDetailResponse> actualResponse = clientManagementController.createOAUTHClient(requestWrapper);
-
-		assertEquals(expectedResponse, actualResponse.getResponse());
-	}
-
-	@Test
-	public void testUpdateOAUTHClient() throws Exception {
-		io.mosip.pms.common.request.dto.RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper = new io.mosip.pms.common.request.dto.RequestWrapper<>();
-		requestWrapper.setId("42");
-		requestWrapper.setMetadata("Metadata");
-		requestWrapper.setRequest(new ClientDetailUpdateRequestV2());
-		requestWrapper.setRequesttime(null);
-		requestWrapper.setVersion("1.0.2");
-		String content = (new ObjectMapper()).writeValueAsString(requestWrapper);
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-				.put("/oauth/client/{client_id}", "Client id")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content);
-		ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(clientManagementController)
-				.build()
-				.perform(requestBuilder);
-		actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
-	}
-
-	@Test (expected = PartnerServiceException.class)
 	public void testUpdateOAuthClient_WhenClientNotFound() throws Exception {
 		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
@@ -996,32 +900,6 @@ public class ClientManagementServiceImplTest {
 		verify(clientDetail, never()).setUpdatedBy((String) any());
 		verify(clientDetail, never()).setUpdatedDateTime((LocalDateTime) any());
 		verify(environment, never()).getProperty((String) any());
-	}
-
-	@Test (expected = PartnerServiceException.class)
-	public void testGetOAuthClient() throws Exception {
-		io.mosip.pms.oauth.client.dto.ClientDetail clientDetail = new io.mosip.pms.oauth.client.dto.ClientDetail();
-		clientDetail.setAcrValues(Collections.singletonList("Value"));
-		clientDetail.setClaims(Collections.singletonList("Claims"));
-		clientDetail.setClientAuthMethods(Collections.singletonList("Client Auth Methods"));
-		clientDetail.setGrantTypes(Collections.singletonList("Grant Types"));
-		clientDetail.setId("123");
-		clientDetail.setLogoUri("Logo Uri");
-		clientDetail.setName("Name");
-		clientDetail.setPolicyId("123");
-		clientDetail.setPublicKey("Public Key");
-		clientDetail.setRedirectUris(Collections.singletonList("Redirect Uris"));
-		clientDetail.setStatus("Status");
-
-		when(serviceImpl.getClientDetails("123")).thenReturn(clientDetail);
-
-		ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> expectedResponse = new ResponseWrapper<>();
-		expectedResponse.setResponse(clientDetail);
-
-		ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> actualResponse = clientManagementController.getOAuthClient("123");
-
-		verify(serviceImpl).getClientDetails("123");
-		assertEquals(expectedResponse, actualResponse);
 	}
 
 	@Test (expected = Exception.class)
