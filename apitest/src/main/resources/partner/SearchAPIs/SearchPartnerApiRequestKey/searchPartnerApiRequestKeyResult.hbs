@@ -1,0 +1,13 @@
+{
+  "response": {
+    "data": [
+     {{#each data}}
+      {
+        "apikeyRequestId": "{{apikeyRequestId}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ]
+  },
+  "errors": "$IGNORE$"
+}

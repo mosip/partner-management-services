@@ -1,0 +1,41 @@
+UploadPartnerCert:
+   Partner_UploadCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/mispPartner/UploadCert/uploadCert
+      outputTemplate: partner/mispPartner/UploadCert/uploadCertResult
+      input: '{
+  "partnerId": "MISP",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'  
+   Partner_UploadCert_MispLicense_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/mispPartner/UploadCert/uploadCert2
+      outputTemplate: partner/mispPartner/UploadCert/uploadCertResult
+      input: '{
+  "partnerId": "MISP2",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'  
+
+   Partner_UploadCert_MispLicense_MISP3_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/mispPartner/UploadCert/uploadCert2
+      outputTemplate: partner/mispPartner/UploadCert/uploadCertResult
+      input: '{
+  "partnerId": "MISP3",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'  

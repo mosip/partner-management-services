@@ -1,0 +1,35 @@
+GenerateApiKeysforApprovedPolicies:
+   Partner_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid:
+      endPoint: /v1/partnermanager/partners/partner-111997/generate/apikey
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/GenerateApiKeyForApprovedPolicies/GenerateApiKey/generateApiKey
+      outputTemplate: partner/GenerateApiKeyForApprovedPolicies/GenerateApiKey/generateApiKeyResult
+      input: '{
+    "policyName": "mosip policy",
+    "label": "string",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "partnerId": "partner-111997",
+    "label": "string"    
+}'
+   Partner_GenerateApiKeysforApprovedPolicies_InValid_policy:
+      endPoint: /v1/partnermanager/partners/partner-111997/generate/apikey
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/GenerateApiKeyForApprovedPolicies/GenerateApiKey/generateApiKey
+      outputTemplate: partner/error
+      input: '{
+    "policyName": "dfbgafb",
+    "label": "string",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_014",
+      "message": "Policy does not exist"
+    }
+  ] 
+}'

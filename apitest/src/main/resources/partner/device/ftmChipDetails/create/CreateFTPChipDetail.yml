@@ -1,0 +1,57 @@
+CreateFTPChipDetail:
+   Partner_CreateFTPChipDetail_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetailResult
+      input: '{
+    "ftpProviderId": "FTP",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "id": "$IGNORE$"
+}'
+
+   Partner_CreateFTPChipDetail_Missing_InputParameter_ftpProviderId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "FTP",
+    "make": "$REMOVE$",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_CreateFTPChipDetail_Missing_InputParameter_ftpId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "$REMOVE$",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

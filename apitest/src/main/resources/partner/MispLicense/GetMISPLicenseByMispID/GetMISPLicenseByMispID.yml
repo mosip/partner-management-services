@@ -1,0 +1,45 @@
+GetMISPLicenseByMispID:
+   Partner_GetMISPLicenseByMispID__Deactive_allValid_smoke:
+      endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      role: partner
+      restMethod: get
+      inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
+      outputTemplate: partner/error
+      input: '{
+    "mispId": "MISP"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS_MSP_413"
+    }
+  ]
+    }'
+   Partner_GetMISPLicenseByMispID__Active_allValid_smoke:
+      endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      role: partner
+      restMethod: get
+      inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
+      outputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispIDResult
+      input: '{
+    "mispId": "MISP2"
+}'
+      output: '{
+    "providerId": "MISP2"
+    }'
+   Partner_GetMISPLicenseByMispID_inValid_smoke:
+      endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      role: partner
+      restMethod: get
+      inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
+      outputTemplate: partner/error
+      input: '{
+    "mispId": "abc"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_MSP_005"
+    }
+  ]
+}'

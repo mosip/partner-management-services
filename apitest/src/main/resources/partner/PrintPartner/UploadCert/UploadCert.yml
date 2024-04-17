@@ -1,0 +1,13 @@
+UploadPartnerCert:
+   Partner_UploadCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/PrintPartner/UploadCert/uploadCert
+      outputTemplate: partner/PrintPartner/UploadCert/uploadCertResult
+      input: '{
+  		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'   
