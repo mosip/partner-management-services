@@ -1,0 +1,39 @@
+GetPartnersPolicy:
+   partner_GetPartnersPolicy_allValid_smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetPartnersPolicy/getPartnersPolicy
+      outputTemplate: partner/GetPartnersPolicy/getPartnersPolicyResult
+      input: '{
+    "partnerId": "mpartner-default-auth",
+    "policyId": "mpolicy-default-auth",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "policyGroupId": "mpolicygroup-default-auth",
+    "policyGroupName": "mpolicygroup-default-auth",
+    "policyId": "$IGNORE$",
+    "policyName": "$IGNORE$",
+    "status": "PUBLISHED"
+}'
+
+   partner_GetPartnersPolicy_invalid_partnerId:
+      endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
+      role: partner
+      restMethod: get
+      inputTemplate: partner/GetPartnersPolicy/getPartnersPolicy
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "abcd",
+    "policyId": "mpolicy-default-auth",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_017"
+    }
+  ]
+}'

@@ -1,0 +1,69 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_PrintPartner_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/v2
+      role: partner
+      restMethod: post
+      inputTemplate: partner/PrintPartner/CreatePartner/createPartner
+      outputTemplate: partner/PrintPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "mosipprint@gmail.com",
+    "organizationName": "mosipprint",
+    "partnerId": "mosipprint",
+    "partnerType": "Print_Partner",
+    "policyGroup":"mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+     "partnerId": "mosipprint",
+     "status": "InProgress"
+    }'
+    
+   Partner_PartnerSelfRegistration_PrintPartner_DublicateEmail_Neg:
+      endPoint: /v1/partnermanager/partners/v2
+      role: partner
+      restMethod: post
+      inputTemplate: partner/PrintPartner/CreatePartner/createPartner
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "mosipprint@gmail.com",
+    "organizationName": "mosipprint",
+    "partnerId": "mosipprint",
+    "partnerType": "Print_Partner",
+    "policyGroup":"mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS_PRT_011"
+    }
+  ]
+    }'
+    
+   Partner_PartnerSelfRegistration_PrintPartner_SpaceIn_PartnerId_Neg:
+      endPoint: /v1/partnermanager/partners/v2
+      role: partner
+      restMethod: post
+      inputTemplate: partner/PrintPartner/CreatePartner/createPartner
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "mosipprsint@gmail.com",
+    "organizationName": "mosipprint",
+    "partnerId": "mosip print",
+    "partnerType": "Print_Partner",
+    "policyGroup":"mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+     "errors": [
+    {
+      "errorCode": "PMS_PRT_066"
+    }
+  ]
+    }'

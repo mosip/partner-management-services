@@ -1,0 +1,13 @@
+{
+  "response": {
+    "data": [
+     {{#each data}}
+      {
+        "version": "{{version}}",
+        "schema": "{{schema}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ]
+  }
+}

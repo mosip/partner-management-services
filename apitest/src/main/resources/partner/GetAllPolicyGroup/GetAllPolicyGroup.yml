@@ -1,0 +1,13 @@
+GetAllPolicyGroup:
+   partner_GetAllPolicyGroup_allValid_smoke:
+      endPoint: /v1/policymanager/policies/group/all
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetAllPolicyGroup/getAllPolicyGroup
+      outputTemplate: partner/GetAllPolicyGroup/getAllPolicyGroupResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    } '

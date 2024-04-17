@@ -1,0 +1,34 @@
+rejectFtpChipDetail:
+   Partner_rejectFtpChipDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/ftmChipDetails/reject/rejectFtpChipDetail
+      outputTemplate: partner/device/ftmChipDetails/reject/rejectFtpChipDetailResult
+      input: '{
+    "approvalStatus": false,
+    "ftpChipDetailId": "$ID:CreateFTPChipDetail_All_Valid_Smoke_sid_id$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+
+   Partner_rejectFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/ftmChipDetails/reject/rejectFtpChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": true,
+    "ftpChipDetailId": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

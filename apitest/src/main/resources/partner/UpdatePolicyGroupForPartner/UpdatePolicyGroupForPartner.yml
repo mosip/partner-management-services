@@ -1,0 +1,66 @@
+UpdatePolicyGroupForPartner:
+   Partner_UpdatePolicyGroupForPartner_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartnerResult
+      input: '{
+    "partnerId": "updatepolicy",
+    "policygroupName": "update_policy_group"
+}'
+      output: '{
+   "response": "$IGNORE$"
+}'
+   Partner_UpdatePolicyGroupForPartner_InValid_ApprovedPartner:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "MOVP",
+    "policygroupName": "mosip policy group updated"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_050"
+    }
+  ]
+}'
+   Partner_UpdatePolicyGroupForPartner_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "asfvgb",
+    "policygroupName": "mosip policy group updated"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_005"
+    }
+  ]      
+}'
+   Partner_UpdatePolicyGroupForPartner_InValid_PolicyGroup:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "updatepolicy",
+    "policygroupName": "dsfgeagb"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_002"
+    }
+  ]   
+}'
