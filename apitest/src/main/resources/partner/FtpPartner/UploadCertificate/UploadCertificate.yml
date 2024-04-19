@@ -1,0 +1,26 @@
+uploadCert:
+   Partner_UploadCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+   "status": "Upload Success."
+}'  
+   Partner_UploadSUBCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FtpPartner/UploadCertificate/uploadSUBCACertificate
+      outputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+   "status": "Upload Success."
+}'  
+      

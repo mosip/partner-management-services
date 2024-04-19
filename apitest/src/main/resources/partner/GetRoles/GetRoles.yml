@@ -1,0 +1,13 @@
+GetRoles:
+   Partner_GetRoles_allValid_smoke:
+      endPoint: /v1/partnermanager/roles
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetRoles/getRoles
+      outputTemplate: partner/GetRoles/getRolesResult
+      input: '{
+    
+}'
+      output: '{
+}'

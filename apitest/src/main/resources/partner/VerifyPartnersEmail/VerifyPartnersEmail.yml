@@ -1,0 +1,14 @@
+VerifyPartnersEmail:
+   Partner_VerifyPartnersEmail_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: partner
+      restMethod: put
+      inputTemplate: partner/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: partner/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "print@mosip.io",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'

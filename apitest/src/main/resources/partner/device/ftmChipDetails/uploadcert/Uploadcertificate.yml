@@ -1,0 +1,41 @@
+UploadCertificateOfFtpChip:
+   Partner_UploadCertificate_InValid_ftpProviderId:
+      endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/uploadcert/uploadcertificate
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "asdgfb",
+    "ftpChipDeatilId": "$ID:CreateFTPChipDetail_All_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "organizationName": "ftp",
+    "partnerDomain": "DEVICE"
+  }'
+      output: ' {
+  "errors": [
+    {
+      "errorCode": "PMP_AUT_030"
+    }
+  ]
+}' 
+   Partner_UploadCertificate_InValid_ftpChipId:
+      endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/uploadcert/uploadcertificate
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "FTP",
+    "ftpChipDeatilId": "asdf",
+    "isItForRegistrationDevice": true,
+    "organizationName": "ftp",
+    "partnerDomain": "DEVICE"
+  }'
+      output: ' {
+  "errors": [
+    {
+      "errorCode": "PMP_AUT_031"
+    }
+  ]
+}'  

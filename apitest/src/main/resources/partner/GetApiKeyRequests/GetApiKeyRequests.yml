@@ -1,0 +1,12 @@
+GetApiKeyRequests:
+   Partner_GetApiKeyRequests_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/apikey
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetApiKeyRequests/getApiKeyRequests
+      outputTemplate: partner/GetApiKeyRequests/getApiKeyRequestsResult
+      input: '{
+}'
+      output: '{
+}'
