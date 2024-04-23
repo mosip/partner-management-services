@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pms</groupId>
 	<artifactId>pms-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.0.1</version>
+	<version>1.2.1.0-SNAPSHOT</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
@@ -89,6 +89,7 @@
 		**io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
 		</sonar.coverage.exclusions>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+		<kernel-auth-adapter.version>1.2.0.1</kernel-auth-adapter.version>
 	</properties>
 	
 	<modules>		
