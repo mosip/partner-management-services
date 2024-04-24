@@ -81,7 +81,7 @@ RequestAPIKeyForAuthPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_PRT_098"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'

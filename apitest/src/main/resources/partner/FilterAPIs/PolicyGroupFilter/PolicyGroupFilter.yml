@@ -45,7 +45,7 @@ PolicyGroupFilter:
       }
     ]
 }'
-   partner_PolicyGroupFilter_using_desc_Valid_Smoke:
+   partner_PolicyGroupFilter_using_name_with_columnname_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/filtervalues
       role: partner
       restMethod: post
@@ -53,8 +53,8 @@ PolicyGroupFilter:
       outputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilterResult
       input: '{
   "filters": [{
-    "columnName": "descr",
-    "type": "unique",
+    "columnName": "name",
+    "type": "all",
     "text": "mpolicygroup-default-auth"
   }],
   "requesttime": "$TIMESTAMP$"

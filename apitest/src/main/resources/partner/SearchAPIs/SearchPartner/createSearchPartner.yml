@@ -448,7 +448,7 @@ createSearchPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS-MSD-311"
+      "errorCode": "PMS-MSD-310"
     }
   ]
 }'

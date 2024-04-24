@@ -725,12 +725,13 @@ defineDataSharePolicy:
    Partner_DefineDataSharePolicy_without_policyId:
       endPoint: /v1/policymanager/policies
       role: partner
+      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
 		"desc": "mosip data share policy",
-		"name": "mosip data share policy",
+		"name": "mosip data share policy without policy id",
 		"policyId": "$REMOVE$",
 		"policyGroupName": "mosip policy group",
 		"policyType": "DataShare",
