@@ -26,9 +26,10 @@ MapDeviceWithSBI:
       output: '{
     }'
     
-   Partner_MapDeviceWithSBI_Multiple_map_smoke:
+   Partner_MapDeviceWithSBI_Multiple_map:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
       role: partner
+      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: partner/error
@@ -37,6 +38,11 @@ MapDeviceWithSBI:
     "sbiId": "$ID:SaveSecureBiometricInterface_TO_Map_sid_id$"
   }'
       output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_511"
+    }
+  ]
     }'
     
    Partner_MapDeviceWithSBI_Multiple_MapDeviceWith_Diff_Provider:
