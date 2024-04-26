@@ -599,9 +599,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setGrantTypes(convertStringToList(result.get().getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(result.get().getClientAuthMethods()));
 		try {
-			Map<String,String> clientNameLangMap = objectMapper.readValue(result.get().getClientNameLang(), new TypeReference<Map<String, String>>() {
-			});
-			dto.setClientNameLangMap(clientNameLangMap);
+			if(result.get().getClientNameLang()!=null){
+				Map<String,String> clientNameLangMap = objectMapper.readValue(result.get().getClientNameLang(),Map.class);
+				dto.setClientNameLangMap(clientNameLangMap);
+			}
 		} catch(Exception e) {
 			LOGGER.error("getClientDetails::Error while parsing clientNameLangMap {}", e.getMessage());
 		}
