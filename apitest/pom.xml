@@ -18,8 +18,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/mosip/mosip-functional-tests.git</connection>
-		<developerConnection>scm:git:ssh://github.com:mosip/mosip-functional-tests.git</developerConnection>
+		<connection>scm:git:git://github.com/mosip/partner-management-services.git</connection>
+		<developerConnection>scm:git:ssh://github.com:mosip/partner-management-services.git</developerConnection>
 		<url>https://github.com/mosip/partner-management-services</url>
 		<tag>HEAD</tag>
 	</scm>
