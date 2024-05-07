@@ -102,6 +102,12 @@
 		<groupId>org.springdoc</groupId>
 		<artifactId>springdoc-openapi-ui</artifactId>
 		<version>${springdoc.version}</version>
+		<exclusions>
+			<exclusion>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+			</exclusion>
+		</exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -164,22 +170,18 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
-				<version>2.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
