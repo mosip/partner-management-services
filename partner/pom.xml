@@ -80,7 +80,7 @@
 		<lombok.version>1.18.32</lombok.version>
 		<doclint>none</doclint>		
 		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-		<maven.jacoco.version>0.8.5</maven.jacoco.version>
+		<maven.jacoco.version>0.8.11</maven.jacoco.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 		<sonar.test.exclusions>**/test/**/*.*</sonar.test.exclusions>
