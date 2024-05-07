@@ -48,26 +48,26 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	String msg = "mosip.partnermanagement";
 	String version = "1.0";
 
-	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		Map<String, Object> body = new LinkedHashMap<>();
-		body.put("id", null);
-		body.put("version", null);
-		body.put("metadata", null);
-		body.put("response", null);
-		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        FieldError fieldError = fieldErrors.get(0);
-        
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
-		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
-		List<ErrorResponse> errors = new ArrayList<>();
-		errors.add(errorResponse);
-		body.put("errors", errors);
-		return new ResponseEntity<>(body, headers, HttpStatus.OK);
-	}
+//	@Override
+//	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+//			HttpHeaders headers, HttpStatus status, WebRequest request) {
+//		Map<String, Object> body = new LinkedHashMap<>();
+//		body.put("id", null);
+//		body.put("version", null);
+//		body.put("metadata", null);
+//		body.put("response", null);
+//		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
+//        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+//        FieldError fieldError = fieldErrors.get(0);
+//
+//		ErrorResponse errorResponse = new ErrorResponse();
+//		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
+//		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
+//		List<ErrorResponse> errors = new ArrayList<>();
+//		errors.add(errorResponse);
+//		body.put("errors", errors);
+//		return new ResponseEntity<>(body, headers, HttpStatus.OK);
+//	}
 	
 	@ExceptionHandler(MISPServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(

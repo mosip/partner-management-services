@@ -253,7 +253,7 @@ public class RestUtil {
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
 		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);
+		requestFactory.setHttpClient((org.apache.hc.client5.http.classic.HttpClient) httpClient);
 		return new RestTemplate(requestFactory);
 	}
 

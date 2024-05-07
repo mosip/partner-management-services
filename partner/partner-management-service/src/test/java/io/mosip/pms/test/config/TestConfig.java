@@ -8,6 +8,7 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -33,7 +34,7 @@ public class TestConfig {
 		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
-		requestFactory.setHttpClient(httpClient);
+		requestFactory.setHttpClient((HttpClient) httpClient);
 		return new RestTemplate(requestFactory);
 
 	}
