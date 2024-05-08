@@ -14,8 +14,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
-    <jackson.datatype.version>2.9.8</jackson.datatype.version>
-    <json.version>20180813</json.version>     
   </properties>
   <dependencies>
     <dependency>
@@ -26,7 +24,6 @@
 		<dependency>
            <groupId>org.json</groupId>
            <artifactId>json</artifactId>
-            <version>${json.version}</version>
         </dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

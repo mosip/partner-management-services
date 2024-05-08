@@ -12,7 +12,6 @@ public class PolicyGroupUpdateRequestDto {
 
 	@NotBlank(message="value is empty or null")
 	@Size(min = 1, max = 128, message = "Length should be between 1 and 128 chars")
-	@Type(type="string")
 	private String name;
 	
 	@NotBlank(message="value is empty or null")
