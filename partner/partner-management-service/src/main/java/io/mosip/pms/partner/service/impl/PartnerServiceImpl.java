@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -19,6 +22,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.partner.dto.CertificateDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,6 +34,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -1619,5 +1626,68 @@ public class PartnerServiceImpl implements PartnerService {
 		updateRequest.setAdditionalInfo(null);
 		updateRequest.setLogoUrl(null);	
 		return updatePartnerDetails(updateRequest, partnerId);
+	}
+
+	@Override
+	public List<CertificateDto> getPartnerCertificates() {
+		List<CertificateDto> certificateDtoList = new ArrayList<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (!partnerList.isEmpty()) {
+				for (Partner partner : partnerList) {
+					CertificateDto certificateDto = new CertificateDto();
+					try {
+						PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+						requestDto.setPartnerId(partner.getId());
+						PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = getPartnerCertificate(requestDto);
+						String certificateData = partnerCertDownloadResponeDto.getCertificateData();
+						certificateData = certificateData.replaceAll("-----BEGIN CERTIFICATE-----", "")
+								.replaceAll("-----END CERTIFICATE-----", "")
+								.replaceAll("\n", "");
+
+						byte[] decodedCertificate = Base64.getDecoder().decode(certificateData);
+
+						CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+						X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
+
+						certificateDto.setIsCertificateAvailable(true);
+						certificateDto.setValidFrom(formatDate(cert.getNotBefore()));
+						certificateDto.setValidTo(formatDate(cert.getNotAfter()));
+						certificateDto.setPartnerId(partner.getId());
+						certificateDto.setPartnerType(partner.getPartnerTypeCode());
+					} catch (Exception ex) {
+						LOGGER.info("Could not fetch partner certificate :" + ex.getMessage());
+						certificateDto.setIsCertificateAvailable(false);
+						certificateDto.setPartnerId(partner.getId());
+						certificateDto.setPartnerType(partner.getPartnerTypeCode());
+					}
+					certificateDtoList.add(certificateDto);
+				}
+			} else {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+			}
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerCertificates method of PartnerServiceImpl - " + ex.getMessage());
+			throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
+					ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
+		}
+		return certificateDtoList;
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
+
+	public static String formatDate(Date date) {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+		return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
 }
