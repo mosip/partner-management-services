@@ -71,23 +71,15 @@
 		<kernel-dataaccess-hibernate.version>1.2.1-java21-SNAPSHOT</kernel-dataaccess-hibernate.version>
 		<kernel-websubclient-api.version>1.2.1-java21-SNAPSHOT</kernel-websubclient-api.version>
 		<kernel.templatemanager.velocity.version>1.2.1-java21-SNAPSHOT</kernel.templatemanager.velocity.version>
-		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.13.0</maven.compiler.version>
-		<junit.version>4.12</junit.version>
-		<lombok.version>1.18.32</lombok.version>
 		<doclint>none</doclint>		
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-		<maven.jacoco.version>0.8.11</maven.jacoco.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-		<springdoc.version>1.5.10</springdoc.version>
 		<sonar.test.exclusions>**/test/**/*.*</sonar.test.exclusions>
 		<sonar.coverage.exclusions>**io/mosip/pms/common/**,**io/mosip/pms/policy/validator/**,**/constant/**,**/config/**,**/dto/**,**/policy/errorMessages/**,**/policy/util/**,
 		**io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
 		</sonar.coverage.exclusions>
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 	</properties>
 	
 	<modules>		
@@ -101,24 +93,15 @@
 	<dependency>
 		<groupId>org.springdoc</groupId>
 		<artifactId>springdoc-openapi-ui</artifactId>
-		<version>${springdoc.version}</version>
-		<exclusions>
-			<exclusion>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-			</exclusion>
-		</exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-configuration-processor</artifactId>
-		<version>2.0.2.RELEASE</version>
 		<optional>true</optional>
 	</dependency>		
 	<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		 <dependency>
@@ -129,28 +112,23 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>javax.activation</groupId>
 		    <artifactId>activation</artifactId>
-		    <version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-core</artifactId>
-		    <version>2.22.0</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.javassist</groupId>
 		    <artifactId>javassist</artifactId>
-		    <version>3.27.0-GA</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
@@ -197,7 +175,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 					<skip>false</skip>
@@ -209,7 +186,6 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${maven.jacoco.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -237,7 +213,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
 				<executions>
 					<execution>
 					 	<id>attach-javadocs</id>
@@ -253,7 +228,6 @@
 			<plugin>
 				  <groupId>org.sonatype.plugins</groupId>
 				  <artifactId>nexus-staging-maven-plugin</artifactId>
-				  <version>1.6.7</version>
 				  <extensions>true</extensions>
 				  <configuration>
 					<serverId>ossrh</serverId>
@@ -264,7 +238,6 @@
 		 	<plugin>
 				  <groupId>org.apache.maven.plugins</groupId>
 				  <artifactId>maven-source-plugin</artifactId>
-				  <version>2.2.1</version>
 				  <executions>
 					<execution>
 						<id>attach-sources</id>
@@ -278,7 +251,6 @@
 	                <plugin>
 				  <groupId>org.apache.maven.plugins</groupId>
 				  <artifactId>maven-gpg-plugin</artifactId>
-				  <version>1.5</version>
 				  <executions>
 					<execution>
 						  <id>sign-artifacts</id>
@@ -298,7 +270,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven.jar.plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -315,7 +286,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven.war.plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -332,7 +302,6 @@
 			<plugin>
     			<groupId>pl.project13.maven</groupId>
 			<artifactId>git-commit-id-plugin</artifactId>
-			<version>3.0.1</version>
 			<executions>
         			<execution>
 			        	<id>get-the-git-infos</id>
