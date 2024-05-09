@@ -472,16 +472,16 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/getPartnerCertificates")
-	@Operation(summary = "Get partner certificate", description = "fetch partner certificates")
+	@GetMapping(value = "/getAllCertificateDetails")
+	@Operation(summary = "Get partner certificates", description = "fetch partner certificates")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<List<CertificateDto>> getPartnerCertificates() {
+	public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
 		ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(partnerService.getPartnerCertificates());
+		responseWrapper.setResponse(partnerService.getAllCertificateDetails());
 		return responseWrapper;
 	}
 }

@@ -145,6 +145,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private final static String LINE_SEPARATOR = "\n";
 
+	public static final String BLANK_STRING="";
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -1629,7 +1631,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public List<CertificateDto> getPartnerCertificates() {
+	public List<CertificateDto> getAllCertificateDetails() {
 		List<CertificateDto> certificateDtoList = new ArrayList<>();
 		try {
 			String userId = getUserId();
@@ -1638,12 +1640,17 @@ public class PartnerServiceImpl implements PartnerService {
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
+						if (Objects.nonNull(partner.getId()) && !partner.getId().equals(BLANK_STRING)) {
+							LOGGER.info("Partner Id is null or empty for user id : " + userId);
+							throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+									ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+						}
 						PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 						requestDto.setPartnerId(partner.getId());
 						PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = getPartnerCertificate(requestDto);
 						String certificateData = partnerCertDownloadResponeDto.getCertificateData();
-						certificateData = certificateData.replaceAll("-----BEGIN CERTIFICATE-----", "")
-								.replaceAll("-----END CERTIFICATE-----", "")
+						certificateData = certificateData.replaceAll(BEGIN_CERTIFICATE, "")
+								.replaceAll(END_CERTIFICATE, "")
 								.replaceAll("\n", "");
 
 						byte[] decodedCertificate = Base64.getDecoder().decode(certificateData);
@@ -1652,11 +1659,11 @@ public class PartnerServiceImpl implements PartnerService {
 						X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
 
 						certificateDto.setIsCertificateAvailable(true);
-						certificateDto.setValidFrom(formatDate(cert.getNotBefore()));
-						certificateDto.setValidTo(formatDate(cert.getNotAfter()));
+						certificateDto.setCertificateUploadDate(cert.getNotBefore());
+						certificateDto.setCertificateExpiryDate(cert.getNotAfter());
 						certificateDto.setPartnerId(partner.getId());
 						certificateDto.setPartnerType(partner.getPartnerTypeCode());
-					} catch (Exception ex) {
+					} catch (PartnerServiceException ex) {
 						LOGGER.info("Could not fetch partner certificate :" + ex.getMessage());
 						certificateDto.setIsCertificateAvailable(false);
 						certificateDto.setPartnerId(partner.getId());
@@ -1666,11 +1673,15 @@ public class PartnerServiceImpl implements PartnerService {
 				}
 			} else {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
+		} catch (PartnerServiceException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getPartnerCertificates method of PartnerServiceImpl - " + ex.getMessage());
+					"In getAllCertificateDetails method of PartnerServiceImpl - " + ex.getMessage());
 			throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
 					ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
 		}
@@ -1684,10 +1695,5 @@ public class PartnerServiceImpl implements PartnerService {
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
-	}
-
-	public static String formatDate(Date date) {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-		return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
 }

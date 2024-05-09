@@ -221,6 +221,6 @@ public interface PartnerService {
 	/**
 	 * @return
 	 */
-	public List<CertificateDto> getPartnerCertificates();
+	public List<CertificateDto> getAllCertificateDetails();
 
 }

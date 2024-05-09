@@ -10,8 +10,8 @@ import java.util.Date;
 @Getter
 @Setter
 public class CertificateDto {
-    private String validFrom;
-    private String validTo;
+    private Date certificateUploadDate;
+    private Date certificateExpiryDate;
     private String partnerType;
     private String partnerId;
     private Boolean isCertificateAvailable;
