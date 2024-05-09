@@ -73,8 +73,11 @@ public enum ErrorCode {
 	CLIENT_NOT_EXISTS("PMS_ESI_004","Client not exists with given id."),
 	PARTNER_HAVING_NO_CLAIMS("PMS_ESI_005","Partner has no user claims"),
 	PARTNER_HAVING_NO_ACRVALUES("PMS_ESI_006","Partner has no Authentication Context Refrences"),
-	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key");
-	
+	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key"),
+	PARTNER_CERTIFICATES_FETCH_ERROR("PMS_CERTIFICATE_ERROR_001","Error while fetching partner certificates."),
+	USER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_002","User Id does not exists."),
+	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty.");
+
 	/**
 	 * The error code.
 	 */
