@@ -1677,6 +1677,7 @@ public class PartnerServiceImpl implements PartnerService {
 						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
 		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of PartnerServiceImpl - " + ex.getMessage());
 			throw ex;
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
