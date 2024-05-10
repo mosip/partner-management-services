@@ -1640,7 +1640,7 @@ public class PartnerServiceImpl implements PartnerService {
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
-						if (Objects.nonNull(partner.getId()) && !partner.getId().equals(BLANK_STRING)) {
+						if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
 							LOGGER.info("Partner Id is null or empty for user id : " + userId);
 							throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
 									ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
