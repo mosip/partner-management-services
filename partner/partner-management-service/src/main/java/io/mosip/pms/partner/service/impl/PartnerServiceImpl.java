@@ -1659,6 +1659,7 @@ public class PartnerServiceImpl implements PartnerService {
 						X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
 
 						certificateDto.setIsCertificateAvailable(true);
+						certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
 						certificateDto.setCertificateUploadDate(cert.getNotBefore());
 						certificateDto.setCertificateExpiryDate(cert.getNotAfter());
 						certificateDto.setPartnerId(partner.getId());
@@ -1696,5 +1697,15 @@ public class PartnerServiceImpl implements PartnerService {
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
+	}
+
+	public static String getCertificateName(String subjectDN) {
+		String[] parts = subjectDN.split(",");
+		for (String part : parts) {
+			if (part.trim().startsWith("CN=")) {
+				return part.trim().substring(3);
+			}
+		}
+		return BLANK_STRING;
 	}
 }
