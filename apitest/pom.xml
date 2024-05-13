@@ -2,10 +2,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.mosip.testrig.apirig.apitests.partner</groupId>
-	<artifactId>apitest-partner</artifactId>
+	<groupId>io.mosip.partner</groupId>
+	<artifactId>apitest-pms</artifactId>
 	<packaging>jar</packaging>
-	<name>apitest-partner</name>
+	<name>apitest-pms</name>
 	<description>Parent project of MOSIP Partner Management Services apitests</description>
 	<url>https://github.com/mosip/partner-management-services</url>
 	<version>1.2.1-java21-SNAPSHOT</version>
@@ -24,15 +24,21 @@
 		<tag>HEAD</tag>
 	</scm>
 
-
+	<developers>
+		<developer>
+			<name>Mosip</name>
+			<email>mosip.emailnotifier@gmail.com</email>
+			<organization>io.mosip</organization>
+			<organizationUrl>https://github.com/mosip/partner-management-services</organizationUrl>
+		</developer>
+	</developers>
+	
 	<dependencies>
-
 		<dependency>
 			<groupId>io.mosip.testrig.apirig.automationtests.commons</groupId>
 			<artifactId>apitest-commons</artifactId>
 			<version>1.2.1-java21-SNAPSHOT</version>
-		</dependency>
-		
+		</dependency>		
 	</dependencies>
 	
 </project>

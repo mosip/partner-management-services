@@ -89,24 +89,10 @@ public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-		if (BaseTestCase.isTargetEnvLTS()) {
-			if (!ConfigManager.isInServiceNotDeployedList(GlobalConstants.RESIDENT)) {
-				if (((BaseTestCase.currentModule.equals("auth") || BaseTestCase.currentModule.equals("esignet"))
-						&& (testCaseName.startsWith("auth_GenerateVID_")
-								|| testCaseName.startsWith("ESignetIdR_Generate")))) {
-					throw new SkipException(GlobalConstants.VID_GENERATED_USING_RESIDENT_API_SO_FEATURE_NOT_SUPPORTED_OR_NEEDED_MESSAGE);
-//					qa115 - f
-//					cam   - t f
-//					dev	  - t 
-				}
-			}
-		}
 
 		testCaseName = isTestCaseValidForExecution(testCaseDTO);
 		String[] templateFields = testCaseDTO.getTemplateFields();
-		String inputJson = "";
-
-		String outputJson = getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate());
+		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
@@ -120,10 +106,6 @@ public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 						response.asString(),
 						getJsonFromTemplate(outputtestcase.get(i).toString(), testCaseDTO.getOutputTemplate()),
 						testCaseDTO, response.getStatusCode());
-				if (testCaseDTO.getTestCaseName().toLowerCase().contains("dynamic")) {
-					JSONObject json = new JSONObject(response.asString());
-					idField = json.getJSONObject("response").get("id").toString();
-				}
 				Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
 				if (!OutputValidationUtil.publishOutputResult(ouputValid))

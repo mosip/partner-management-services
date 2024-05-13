@@ -90,8 +90,8 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 		}
 
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
-		String inputJson = filterInputHbs(testCaseDTO);
-		String outputJson = filterOutputHbs(testCaseDTO);
+		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
+		String outputJson = getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate());
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
@@ -126,30 +126,6 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 
 	
 
-	private String filterOutputHbs(TestCaseDTO testCaseDTO) {
-		String outputJson = getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate());
-
-		if (outputJson.contains(GlobalConstants.$1STLANG$))
-			outputJson = outputJson.replace(GlobalConstants.$1STLANG$, BaseTestCase.languageList.get(0));
-		if (outputJson.contains(GlobalConstants.$2STLANG$))
-			outputJson = outputJson.replace(GlobalConstants.$2STLANG$, BaseTestCase.languageList.get(1));
-		if (outputJson.contains(GlobalConstants.$3STLANG$))
-			outputJson = outputJson.replace(GlobalConstants.$3STLANG$, BaseTestCase.languageList.get(2));
-		return outputJson;
-	}
-
-	private String filterInputHbs(TestCaseDTO testCaseDTO) {
-		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
-
-		if (inputJson.contains(GlobalConstants.$1STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$1STLANG$, BaseTestCase.languageList.get(0));
-		if (inputJson.contains(GlobalConstants.$2STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$2STLANG$, BaseTestCase.languageList.get(1));
-		if (inputJson.contains(GlobalConstants.$3STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$3STLANG$, BaseTestCase.languageList.get(2));
-
-		return inputJson;
-	}
 
 	/**
 	 * The method ser current test name to result

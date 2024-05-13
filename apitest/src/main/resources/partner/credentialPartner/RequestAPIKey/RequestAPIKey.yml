@@ -42,7 +42,7 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
@@ -61,7 +61,7 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
@@ -80,7 +80,7 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
