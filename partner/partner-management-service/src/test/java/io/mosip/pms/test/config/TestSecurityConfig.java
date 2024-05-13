@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 @Configuration
@@ -30,11 +32,16 @@ public class TestSecurityConfig  {
 		return new DefaultHttpFirewall();
 	}
 
+//	@Bean
+//	public WebSecurity configure(WebSecurity webSecurity) throws Exception {
+//		webSecurity.ignoring().requestMatchers(allowedEndPoints());
+//		webSecurity.httpFirewall(defaultHttpFirewall());
+//		return webSecurity;
+//	}
+
 	@Bean
-	public WebSecurity configure(WebSecurity webSecurity) throws Exception {
-		webSecurity.ignoring().requestMatchers(allowedEndPoints());
-		webSecurity.httpFirewall(defaultHttpFirewall());
-		return webSecurity;
+	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
+		return httpSecurity.build();
 	}
 
 	private String[] allowedEndPoints() {
