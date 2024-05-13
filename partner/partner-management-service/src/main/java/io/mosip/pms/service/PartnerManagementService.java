@@ -1,5 +1,6 @@
 package io.mosip.pms.service;
 
+import io.mosip.kernel.auditmanager.dto.AuthorizedRolesDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,7 @@ import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 
-@SpringBootApplication
+@SpringBootApplication(exclude= {AuthorizedRolesDto.class})
 @Import(value = {WebSubPublisher.class,RestUtil.class,FilterColumnValidator.class,FilterHelper.class,SearchHelper.class,PageUtils.class})
 @ComponentScan(basePackages = {"io.mosip.*", "${mosip.auth.adapter.impl.basepackage}"})
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,

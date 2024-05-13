@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
-@Component("authorizedRolesPms")
+@Component("authorizedRoles")
 @ConfigurationProperties(prefix = "mosip.role.pms")
 @Getter
 @Setter
