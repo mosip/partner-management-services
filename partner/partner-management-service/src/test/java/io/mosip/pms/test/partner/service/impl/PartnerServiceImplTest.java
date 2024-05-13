@@ -119,8 +119,6 @@ public class PartnerServiceImplTest {
     @Mock
 	FilterHelper filterHelper;
 	@Mock
-	PartnerHRepository partnerHRepository;
-	@Mock
 	Environment environment;
 	@Mock
 	Authentication authentication;
@@ -1414,7 +1412,6 @@ public class PartnerServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		// Prepare test data
 		Map<String, Object> apiResponse = new HashMap<>();
 		Map<String, Object> response = new HashMap<>();
 		response.put("certificateData", "-----BEGIN CERTIFICATE-----\n" +
@@ -1451,11 +1448,8 @@ public class PartnerServiceImplTest {
 				"-----END CERTIFICATE-----");
 		apiResponse.put("response", response);
 
-		// Mock the behavior of the restUtil.getApi method
 		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("your_uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-
-
 		pserviceImpl.getAllCertificateDetails();
 	}
 
