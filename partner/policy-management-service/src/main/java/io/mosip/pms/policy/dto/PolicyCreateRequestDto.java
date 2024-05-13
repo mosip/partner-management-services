@@ -1,7 +1,7 @@
 package io.mosip.pms.policy.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.json.simple.JSONObject;
 
