@@ -1448,7 +1448,7 @@ public class PartnerServiceImplTest {
 				"-----END CERTIFICATE-----");
 		apiResponse.put("response", response);
 
-		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("your_uri");
+		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		pserviceImpl.getAllCertificateDetails();
 	}
