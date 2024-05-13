@@ -129,7 +129,7 @@ public class PartnerServiceController {
 	 * @param request
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnersbioextractors())")
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
 	@Operation(summary = "Service to add bio extractors", description = "Service to add bio extractors")
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
@@ -148,7 +148,7 @@ public class PartnerServiceController {
 	 * @param policyId
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getGetpartnersbioextractors())")
 	@RequestMapping(value = "{partnerId}/bioextractors/{policyId}", method = RequestMethod.GET)
 	@Operation(summary = "Service to get bio extractors", description = "Service to get bio extractors")
 	public ResponseEntity<ResponseWrapper<ExtractorsDto>> getBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId){
@@ -165,7 +165,7 @@ public class PartnerServiceController {
 	 * @param credentialType
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
 	@Operation(summary = "Service to map partner and policy to a credential type", description = "Service to map partner and policy to a credential type")
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
@@ -176,7 +176,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscredentialtypepolicies())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getGetpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies",method = RequestMethod.GET)
 	@Operation(summary = "Service to get policy for mapped partner and credential type", description = "Service to get policy for mapped partner and credential type")
 	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
@@ -191,7 +191,7 @@ public class PartnerServiceController {
 	 * @param request
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscontactadd())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerscontactadd())")
 	@RequestMapping(value = "{partnerId}/contact/add", method = RequestMethod.POST)
 	@Operation(summary = "Service to add additional contact deatils of partner", description = "Service to add additional contact deatils of partner")
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
@@ -211,7 +211,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return partnerResponse this class contains updated partner details
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartners())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPutpartners())")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
 	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
@@ -227,7 +227,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnersnew())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPutpartnersnew())")
 	@RequestMapping(value = "/v2/{partnerId}", method = RequestMethod.PUT)
 	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerInfo(
@@ -249,7 +249,7 @@ public class PartnerServiceController {
 	 *            this is unique id created after self registered by partner
 	 * @return retrievePartnerDetailsResponse this class contains partner details
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerspartnerid())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getGetpartnerspartnerid())")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
 	@Operation(summary = "Service to get deatils of partner", description = "Service to get deatils of partner")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
@@ -272,7 +272,7 @@ public class PartnerServiceController {
 	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
 	 *         creation of partner API Key
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequest())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getGetpartnersapikeyrequest())")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
 	@Operation(summary = "Service to get api key requests of partner", description = "Service to get api key requests of partner")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
@@ -296,7 +296,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscacertificateupload())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerscacertificateupload())")
 	@RequestMapping(value = "/certificate/ca/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload ca certificate", description = "Service to upload ca certificate")
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
@@ -318,7 +318,7 @@ public class PartnerServiceController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscertificateupload())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerscertificateupload())")
 	@RequestMapping(value = "/certificate/upload", method = RequestMethod.POST)
 	@Operation(summary = "Service to upload partner certificate", description = "Service to upload partner certificate")
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
@@ -339,7 +339,7 @@ public class PartnerServiceController {
      * @throws JsonMappingException 
      * @throws JsonParseException 
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getGetpartnerscertificate())")
 	@RequestMapping(value = "/{partnerId}/certificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner certificate", description = "Service to get partner certificate")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
@@ -353,7 +353,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerssearch())")
 	@Operation(summary = "Service to search partner details", description = "Service to search partner details")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
@@ -365,7 +365,7 @@ public class PartnerServiceController {
 
 	@ResponseFilter
 	@PostMapping("/partnertype/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerspartnertypesearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerspartnertypesearch())")
 	@Operation(summary = "Service to search partner types", description = "Service to search partner types")
 	public ResponseWrapper<PageResponseDto<PartnerType>> searchPartnerType(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -377,7 +377,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersfiltervalues())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnersfiltervalues())")
 	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
@@ -389,7 +389,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/request/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestfiltervalues())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnersapikeyrequestfiltervalues())")
 	@Operation(summary = "Service to filter api key requests", description = "Service to filter api key requests")
 	public ResponseWrapper<FilterResponseCodeDto> apikeyRequetsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
@@ -401,7 +401,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/request/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestsearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnersapikeyrequestsearch())")
 	@Operation(summary = "Service to search api key requests", description = "Service to search api key requests")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -413,7 +413,7 @@ public class PartnerServiceController {
 	
 	@ResponseFilter
 	@PostMapping("/apikey/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeysearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnersapikeysearch())")
 	@Operation(summary = "Service to search api key", description = "Service to search api key")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -423,7 +423,7 @@ public class PartnerServiceController {
 		return responseWrapper;
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnerspolicygroup())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPutpartnerspolicygroup())")
 	@RequestMapping(value = "/{partnerId}/policygroup/{policygroupName}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseWrapper<String>> updatePolicyGroup(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
@@ -444,7 +444,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerspolicymap())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostpartnerspolicymap())")
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
 	@RequestMapping(value = "/{partnerId}/policy/map",method = RequestMethod.POST)
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
@@ -458,7 +458,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersgenerateapikey())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPatchpartnersgenerateapikey())")
 	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(

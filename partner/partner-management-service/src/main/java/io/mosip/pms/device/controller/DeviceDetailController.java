@@ -54,7 +54,7 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetail())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetail())")
 	@ResponseFilter
 	@PostMapping
 	@Operation(summary = "Service to save DeviceDetail", description = "Saves DeviceDetail and return DeviceDetail id")
@@ -88,7 +88,7 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutdevicedetail())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPutdevicedetail())")
 	@ResponseFilter
 	@PutMapping
 	@Operation(summary = "Service to update DeviceDetails", description = "Updates DeviceDetails")
@@ -118,7 +118,7 @@ public class DeviceDetailController {
 	 * @param deviceDetailRequestDto
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdevicedetail())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPatchdevicedetail())")
 	@ResponseFilter
 	@PatchMapping
 	@Operation(summary = "Service to approve/reject DeviceDetail", description = "Approve DeviceDetail and returns success message")
@@ -146,7 +146,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailsearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetailsearch())")
 	@Operation(summary = "Service to search DeviceDetails", description = "ervice to search DeviceDetails")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
@@ -157,7 +157,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/deviceType/search")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypesearch())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetaildevicetypesearch())")
 	@Operation(summary = "Service to search DeviceTypes", description = "service to search DeviceTypes")
 	public ResponseWrapper<PageResponseDto<RegistrationSubTypeDto>> searchDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
@@ -168,7 +168,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailfiltervalues())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetailfiltervalues())")
 	@Operation(summary = "Service to filter DeviceDetails", description = "Service to filter DeviceDetails")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
@@ -180,7 +180,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/deviceType/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypefiltervalues())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetaildevicetypefiltervalues())")
 	@Operation(summary = "Service to filter DeviceTypes", description = "Service to filter DeviceTypes")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
@@ -191,7 +191,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/deviceSubType/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicesubtypefiltervalues())")
+	@PreAuthorize("hasAnyRole(@authorizedRolesPms.getPostdevicedetaildevicesubtypefiltervalues())")
 	@Operation(summary = "Service to filter DeviceSubTypes", description = "Service to filter DeviceSubTypes")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceSubType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
