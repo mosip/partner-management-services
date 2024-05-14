@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -32,29 +31,10 @@ public class TestSecurityConfig {
 		return new DefaultHttpFirewall();
 	}
 
-//	@Bean
-//	public WebSecurity configure(WebSecurity webSecurity) throws Exception {
-//		webSecurity.ignoring().requestMatchers(allowedEndPoints());
-//		webSecurity.httpFirewall(defaultHttpFirewall());
-//		return webSecurity;
-//	}
-
 	@Bean
 	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity.build();
 	}
-
-	private String[] allowedEndPoints() {
-		return new String[] { "/policies/**/**","**","/swagger-ui.html" };
-	}
-
-//	@Bean
-//	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.csrf(httpEntry -> httpEntry.disable();
-//		httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().sessionManagement()
-//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
-//				.authenticationEntryPoint(unauthorizedEntryPoint());
-//	}
 
 	@Bean
 	public AuthenticationEntryPoint unauthorizedEntryPoint() {
