@@ -13,7 +13,7 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 
 @SpringBootApplication
 @Import(value = {WebSubPublisher.class})
-@ComponentScan({ "io.mosip.*", "${mosip.auth.adapter.impl.basepackage}"})
+@ComponentScan({ "io.mosip.pms.policy.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.pms.common.*"})
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class PmpPolicyApplication {
