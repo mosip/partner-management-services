@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -86,6 +87,9 @@ public class PolicyManagementControllerTest {
 	private AuditUtil audit;
 	@InjectMocks
 	PolicyManagementController policyManagementController;
+
+	@Mock
+	AuthPolicyRepository authPolicyRepository;
 	
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
