@@ -29,13 +29,6 @@ public class TestSecurityConfig  {
 		return new DefaultHttpFirewall();
 	}
 
-//	@Override
-//	public void configure(WebSecurity webSecurity) throws Exception {
-//		webSecurity.ignoring().antMatchers(allowedEndPoints());
-//		super.configure(webSecurity);
-//		webSecurity.httpFirewall(defaultHttpFirewall());
-//	}
-
 	@Bean
 	protected SecurityFilterChain configureSecurityFilterChain(final HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf(http -> http.disable());
@@ -45,14 +38,6 @@ public class TestSecurityConfig  {
 	private String[] allowedEndPoints() {
 		return new String[]{"*", "/swagger-ui.html"};
 	}
-
-//	@Override
-//	protected void configure(final HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.csrf().disable();
-//		httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().sessionManagement()
-//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
-//				.authenticationEntryPoint(unauthorizedEntryPoint());
-//	}
 
 	@Bean
 	public AuthenticationEntryPoint unauthorizedEntryPoint() {
