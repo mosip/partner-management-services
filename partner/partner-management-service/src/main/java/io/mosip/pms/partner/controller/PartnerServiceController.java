@@ -6,11 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -470,18 +465,5 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/getAllCertificateDetails")
-	@Operation(summary = "Get partner certificates", description = "fetch partner certificates")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
-		ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(partnerService.getAllCertificateDetails());
-		return responseWrapper;
 	}
 }
