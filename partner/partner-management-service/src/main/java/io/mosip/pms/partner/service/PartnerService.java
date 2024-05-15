@@ -14,7 +14,6 @@ import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
@@ -217,10 +216,5 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
-
-	/**
-	 * @return
-	 */
-	public List<CertificateDto> getAllCertificateDetails();
 
 }
