@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
-		basePackages = "io.mosip.pms.common.repository.*",
+        basePackages = "io.mosip.pms.common.repository.*",
 		repositoryBaseClass = HibernateRepositoryImpl.class)
 @EntityScan(basePackageClasses = { AuthPolicy.class })
 public class PolicyManagerDataSourceConfig extends HibernateDaoConfig {
