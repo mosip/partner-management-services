@@ -129,9 +129,8 @@ public class PartnerServiceImplTest {
 	AuditUtil auditUtil;
     
     @Mock
-	FilterHelper filterHelper;	
+	FilterHelper filterHelper;
 
-	
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
@@ -1394,6 +1393,4 @@ public class PartnerServiceImplTest {
 	 		+ "\"errors\": null\n"
 	 		+ "}"	;
 	}
-	
-
 }
