@@ -6,11 +6,11 @@ CreateMispLicense:
       inputTemplate: partner/MispLicense/CreateMispLicense/createMispLicense
       outputTemplate: partner/MispLicense/CreateMispLicense/createMispLicenseResult
       input: '{
-   "providerId": "MISP",
+   "providerId": "MISP-AUTOMATION",
    "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-   "providerId": "MISP",
+   "providerId": "MISP-AUTOMATION",
    "licenseKeyStatus": "Active"
 }'
    Partner_CreateMispLicense_MispLicense_allValid_smoke_sid:
@@ -20,11 +20,11 @@ CreateMispLicense:
       inputTemplate: partner/MispLicense/CreateMispLicense/createMispLicense
       outputTemplate: partner/MispLicense/CreateMispLicense/createMispLicenseResult
       input: '{
-   "providerId": "MISP2",
+   "providerId": "MISP2-AUTOMATION",
    "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-   "providerId": "MISP2",
+   "providerId": "MISP2-AUTOMATION",
    "licenseKeyStatus": "Active"
 }'
    Partner_CreateMispLicense_InValid_ProviderId:

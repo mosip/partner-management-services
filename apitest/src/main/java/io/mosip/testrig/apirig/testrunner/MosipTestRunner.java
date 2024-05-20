@@ -144,6 +144,10 @@ public class MosipTestRunner {
 
 		if (BaseTestCase.isTargetEnvLTS())
 			HealthChecker.bTerminate = true;
+		if (BaseTestCase.listOfModules.contains("partner")) {
+			DBManager.clearPMSDbData();
+			DBManager.clearKeyManagerDbData();
+		}
 
 		System.exit(0);
 
