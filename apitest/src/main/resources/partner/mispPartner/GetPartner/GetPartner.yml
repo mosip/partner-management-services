@@ -6,10 +6,10 @@ getPartnerCert:
       inputTemplate: partner/mispPartner/GetPartner/getPartner
       outputTemplate: partner/mispPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "MISP"
+	"partnerId": "MISP-AUTOMATION"
 }'
       output: '  {
- 	"partnerID": "MISP"
+ 	"partnerID": "MISP-AUTOMATION"
   }'
   
    Partner_GetPartner_MISP3_Valid_Smoke:

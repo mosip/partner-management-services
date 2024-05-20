@@ -7,7 +7,7 @@ GetPartnerCert:
       inputTemplate: partner/devicePartner/GetCertificate/getCert
       outputTemplate: partner/devicePartner/GetCertificate/getCertResult
       input: '{
-		"partnerId": "DPP"
+		"partnerId": "DPP-AUTOMATION"
 }'
       output: ' {
 }'

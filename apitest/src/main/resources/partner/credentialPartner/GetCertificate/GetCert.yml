@@ -7,7 +7,7 @@ getPartnerCert:
       inputTemplate: partner/credentialPartner/GetCertificate/getCert
       outputTemplate: partner/credentialPartner/GetCertificate/getCertResult
       input: '{
-	"partnerId": "MOVP"
+	"partnerId": "MOVP-AUTOMATION"
 }'
       output: ' {
 }'
