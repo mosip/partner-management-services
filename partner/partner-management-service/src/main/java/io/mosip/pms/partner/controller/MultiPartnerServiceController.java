@@ -2,7 +2,7 @@ package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.service.AllPartnerService;
+import io.mosip.pms.partner.service.MultiPartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,10 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/partners")
 @Api(tags = { "All Partner Service Controller" })
-public class AllPartnerServiceController {
+public class MultiPartnerServiceController {
 
     @Autowired
-    AllPartnerService allPartnerService;
+    MultiPartnerService allPartnerService;
 
     @GetMapping(value = "/getAllCertificateDetails")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")

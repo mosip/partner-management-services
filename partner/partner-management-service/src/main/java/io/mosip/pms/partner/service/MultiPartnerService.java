@@ -4,7 +4,7 @@ import io.mosip.pms.partner.dto.CertificateDto;
 
 import java.util.List;
 
-public interface AllPartnerService {
+public interface MultiPartnerService {
 
     public List<CertificateDto> getAllCertificateDetails();
 }

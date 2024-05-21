@@ -10,7 +10,7 @@ import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.service.AllPartnerService;
+import io.mosip.pms.partner.service.MultiPartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class AllPartnerServiceImpl implements AllPartnerService {
+public class MultiPartnerServiceImpl implements MultiPartnerService {
 
-    private static final Logger LOGGER = PMSLogger.getLogger(AllPartnerServiceImpl.class);
+    private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerServiceImpl.class);
     public static final String BLANK_STRING="";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";

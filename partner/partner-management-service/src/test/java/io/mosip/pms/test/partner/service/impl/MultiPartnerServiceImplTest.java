@@ -5,7 +5,7 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.service.impl.AllPartnerServiceImpl;
+import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AllPartnerServiceImplTest {
+public class MultiPartnerServiceImplTest {
 
     @Autowired
-    AllPartnerServiceImpl allPartnerServiceImpl;
+    MultiPartnerServiceImpl allPartnerServiceImpl;
 
     @MockBean
     RestUtil restUtil;
