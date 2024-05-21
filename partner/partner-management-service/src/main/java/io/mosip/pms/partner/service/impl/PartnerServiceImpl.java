@@ -132,6 +132,7 @@ import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
 @Service
+@Transactional
 public class PartnerServiceImpl implements PartnerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerServiceImpl.class);

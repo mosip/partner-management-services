@@ -14,7 +14,6 @@ import io.mosip.pms.partner.service.AllPartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional
 public class AllPartnerServiceImpl implements AllPartnerService {
 
     private static final Logger LOGGER = PMSLogger.getLogger(AllPartnerServiceImpl.class);
