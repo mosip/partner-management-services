@@ -71,6 +71,7 @@
         <kernel-dataaccess-hibernate.version>1.2.1-java21-SNAPSHOT</kernel-dataaccess-hibernate.version>
         <kernel-websubclient-api.version>1.2.1-java21-SNAPSHOT</kernel-websubclient-api.version>
         <kernel.templatemanager.velocity.version>1.2.1-java21-SNAPSHOT</kernel.templatemanager.velocity.version>
+        <kernel.authadapter.version>1.2.1-java21-SNAPSHOT</kernel.authadapter.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.version>3.13.0</maven.compiler.version>

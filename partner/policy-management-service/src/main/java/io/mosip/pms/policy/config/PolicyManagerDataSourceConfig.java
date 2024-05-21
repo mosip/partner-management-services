@@ -1,9 +1,5 @@
 package io.mosip.pms.policy.config;
 
-/*
- * @author Kamesh Shekhar Prasad
- *
- */
 
 import io.mosip.kernel.dataaccess.hibernate.config.HibernateDaoConfig;
 import io.mosip.kernel.dataaccess.hibernate.repository.impl.HibernateRepositoryImpl;
@@ -13,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Map;
+
+/*
+ * @author Kamesh Shekhar Prasad
+ *
+ */
 
 @Configuration
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
