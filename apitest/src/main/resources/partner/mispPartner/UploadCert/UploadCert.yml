@@ -7,7 +7,7 @@ UploadPartnerCert:
       inputTemplate: partner/mispPartner/UploadCert/uploadCert
       outputTemplate: partner/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "MISP",
+  "partnerId": "MISP-AUTOMATION",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
@@ -20,7 +20,7 @@ UploadPartnerCert:
       inputTemplate: partner/mispPartner/UploadCert/uploadCert2
       outputTemplate: partner/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "MISP2",
+  "partnerId": "MISP2-AUTOMATION",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {

@@ -10,13 +10,13 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "misp@gmail.com",
     "organizationName": "misp",
-    "partnerId": "MISP",
+    "partnerId": "MISP-AUTOMATION",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP",
+        "partnerId": "MISP-AUTOMATION",
         "status": "InProgress"
     }'
    Partner_PartnerSelfRegistration_MispLicense_All_Valid_Smoke:
@@ -30,13 +30,13 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "mis2p@gmail.com",
     "organizationName": "misp2",
-    "partnerId": "MISP2",
+    "partnerId": "MISP2-AUTOMATION",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP2",
+        "partnerId": "MISP2-AUTOMATION",
         "status": "InProgress"
     }'
     

@@ -7,7 +7,7 @@ ActivateDeactivatePartner:
       inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "FTP",
+   "partnerId": "FTP-AUTOMATION",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -67,7 +67,7 @@ ActivateDeactivatePartner:
       inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "MISP",
+   "partnerId": "MISP-AUTOMATION",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
