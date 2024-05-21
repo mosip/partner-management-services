@@ -132,7 +132,6 @@ import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
 @Service
-@Transactional
 public class PartnerServiceImpl implements PartnerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerServiceImpl.class);
@@ -1628,66 +1627,6 @@ public class PartnerServiceImpl implements PartnerService {
 		updateRequest.setAdditionalInfo(null);
 		updateRequest.setLogoUrl(null);	
 		return updatePartnerDetails(updateRequest, partnerId);
-	}
-
-	@Override
-	public List<CertificateDto> getAllCertificateDetails() {
-		List<CertificateDto> certificateDtoList = new ArrayList<>();
-		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
-				for (Partner partner : partnerList) {
-					CertificateDto certificateDto = new CertificateDto();
-					try {
-						if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-							LOGGER.info("Partner Id is null or empty for user id : " + userId);
-							throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-									ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-						}
-						PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
-						requestDto.setPartnerId(partner.getId());
-						PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = getPartnerCertificate(requestDto);
-						String certificateData = partnerCertDownloadResponeDto.getCertificateData();
-						certificateData = certificateData.replaceAll(BEGIN_CERTIFICATE, "")
-								.replaceAll(END_CERTIFICATE, "")
-								.replaceAll("\n", "");
-
-						byte[] decodedCertificate = Base64.getDecoder().decode(certificateData);
-
-						CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-						X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
-
-						certificateDto.setIsCertificateAvailable(true);
-						certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
-						certificateDto.setCertificateUploadDate(cert.getNotBefore());
-						certificateDto.setCertificateExpiryDate(cert.getNotAfter());
-						certificateDto.setPartnerId(partner.getId());
-						certificateDto.setPartnerType(partner.getPartnerTypeCode());
-					} catch (PartnerServiceException ex) {
-						LOGGER.info("Could not fetch partner certificate :" + ex.getMessage());
-						certificateDto.setIsCertificateAvailable(false);
-						certificateDto.setPartnerId(partner.getId());
-						certificateDto.setPartnerType(partner.getPartnerTypeCode());
-					}
-					certificateDtoList.add(certificateDto);
-				}
-			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of PartnerServiceImpl - " + ex.getMessage());
-			throw ex;
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getAllCertificateDetails method of PartnerServiceImpl - " + ex.getMessage());
-			throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
-					ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
-		}
-		return certificateDtoList;
 	}
 
 	private AuthUserDetails authUserDetails() {
