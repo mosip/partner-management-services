@@ -46,7 +46,6 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	String msg = "mosip.partnermanagement";
 	String version = "1.0";
 
-//	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("id", null);

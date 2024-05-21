@@ -47,27 +47,27 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-//	/**
-//	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
-//	 *
-//	 */
-//	@Override
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
-//    		HttpStatus status, WebRequest request) {
-//		ExceptionUtils.logRootCause(ex);
-//        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-//        FieldError fieldError = fieldErrors.get(0);
-//        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
-//        		"Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
-//		ResponseWrapper<ServiceError> errorResponse = null;
-//		try {
-//			errorResponse = setErrors(request);
-//			errorResponse.getErrors().add(serviceError);
-//		} catch (IOException e) {
-//			//
-//		}
-//		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-//    }
+	/**
+	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
+	 *
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+    		HttpStatus status, WebRequest request) {
+		ExceptionUtils.logRootCause(ex);
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        FieldError fieldError = fieldErrors.get(0);
+        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
+        		"Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
+		ResponseWrapper<ServiceError> errorResponse = null;
+		try {
+			errorResponse = setErrors(request);
+			errorResponse.getErrors().add(serviceError);
+		} catch (IOException e) {
+			//
+		}
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+    }
 	
 	/**
 	 * Exception to be thrown when misp application validations failed.
