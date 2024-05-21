@@ -218,9 +218,4 @@ public interface PartnerService {
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
 
-	/**
-	 * @return
-	 */
-	public List<CertificateDto> getAllCertificateDetails();
-
 }
