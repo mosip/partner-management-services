@@ -51,8 +51,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
 	 *
 	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
     		HttpStatus status, WebRequest request) {
 		ExceptionUtils.logRootCause(ex);
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
@@ -150,7 +149,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	 * This method extract the response from HttpServletRequest request.
 	 * 
 	 * @param httpServletRequest
-	 * @param e
 	 * @param httpStatus
 	 * @return
 	 * @throws IOException
