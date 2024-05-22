@@ -76,7 +76,9 @@ public enum ErrorCode {
 	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key"),
 	PARTNER_CERTIFICATES_FETCH_ERROR("PMS_CERTIFICATE_ERROR_001","Error while fetching partner certificates."),
 	USER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_002","User Id does not exists."),
-	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty.");
+	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty."),
+	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group Name is null or empty."),
+	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies.");
 
 	/**
 	 * The error code.

@@ -2,6 +2,7 @@ package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.CertificateDto;
+import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,7 @@ import java.util.List;
 public class MultiPartnerServiceController {
 
     @Autowired
-    MultiPartnerService allPartnerService;
+    MultiPartnerService multiPartnerService;
 
     @GetMapping(value = "/getAllCertificateDetails")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
@@ -33,7 +34,20 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
         ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setResponse(allPartnerService.getAllCertificateDetails());
+        responseWrapper.setResponse(multiPartnerService.getAllCertificateDetails());
+        return responseWrapper;
+    }
+
+    @GetMapping(value = "/getAllPolicies")
+    @Operation(summary = "Get all policies", description = "fetch all policies")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<PolicyDto>> getAllPolicies() {
+        ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.getAllPolicies());
         return responseWrapper;
     }
 }
