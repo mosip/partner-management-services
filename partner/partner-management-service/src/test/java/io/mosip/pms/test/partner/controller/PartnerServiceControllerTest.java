@@ -11,9 +11,11 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -76,10 +78,10 @@ public class PartnerServiceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private PartnerService partnerService;
     
-    @MockBean
+    @Mock
     PartnerManagerService partnerManagerService;
    
     @Autowired
@@ -164,13 +166,14 @@ public class PartnerServiceControllerTest {
     	Mockito.when(partnerService.getBiometricExtractors("123456", "12345")).thenReturn(new ExtractorsDto());
     	mockMvc.perform(MockMvcRequestBuilders.get("/partners/123456/bioextractors/12345")).andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerCertificateTest() throws Exception {
-        Mockito.when(partnerService.getPartnerCertificate(Mockito.any())).thenReturn(Mockito.any());
+        PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = new PartnerCertDownloadResponeDto();
+        Mockito.when(partnerService.getPartnerCertificate(Mockito.any())).thenReturn(partnerCertDownloadResponeDto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/certificate")).andExpect(MockMvcResultMatchers.status().isOk());
-    }    
+    }
     
     
     @Test
