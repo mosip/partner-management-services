@@ -15,7 +15,7 @@ import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

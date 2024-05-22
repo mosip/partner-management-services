@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -49,15 +49,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	/**
 	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
-	 * 
+	 *
 	 */
-	@Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
-    		HttpStatus status, WebRequest request) {		
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+    		HttpStatus status, WebRequest request) {
 		ExceptionUtils.logRootCause(ex);
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        FieldError fieldError = fieldErrors.get(0);		
-        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
+        FieldError fieldError = fieldErrors.get(0);
+        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
         		"Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
@@ -66,7 +65,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		} catch (IOException e) {
 			//
 		}
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);        
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 	
 	/**
@@ -150,7 +149,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	 * This method extract the response from HttpServletRequest request.
 	 * 
 	 * @param httpServletRequest
-	 * @param e
 	 * @param httpStatus
 	 * @return
 	 * @throws IOException

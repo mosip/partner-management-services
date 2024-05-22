@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -31,9 +32,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -59,7 +60,6 @@ import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.test.PolicyServiceTest;
 import io.mosip.pms.policy.util.AuditUtil;
-import org.mockito.Mockito;
 
 /**
  * @author Nagarjuna Kuchi
@@ -70,6 +70,7 @@ import org.mockito.Mockito;
 @SpringBootTest(classes = PolicyServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
+@TestPropertySource("classpath:application.properties")
 public class PolicyManagementControllerTest {
 	
 	@Autowired
@@ -88,6 +89,9 @@ public class PolicyManagementControllerTest {
 	private AuditUtil audit;
 	@InjectMocks
 	PolicyManagementController policyManagementController;
+
+	@Mock
+	AuthPolicyRepository authPolicyRepository;
 	
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
