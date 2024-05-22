@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/partners")
-@Api(tags = { "All Partner Service Controller" })
+@Api(tags = { "Multi Partner Service Controller" })
 public class MultiPartnerServiceController {
 
     @Autowired

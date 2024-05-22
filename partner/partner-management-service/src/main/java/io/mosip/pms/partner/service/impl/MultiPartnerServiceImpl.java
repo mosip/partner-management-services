@@ -95,12 +95,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of AllPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllCertificateDetails method of AllPartnerServiceImpl - " + ex.getMessage());
+                    "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
         }
