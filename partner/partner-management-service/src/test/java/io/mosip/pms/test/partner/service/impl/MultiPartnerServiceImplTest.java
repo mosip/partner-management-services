@@ -1,9 +1,14 @@
 package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
@@ -18,6 +23,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -28,13 +35,19 @@ import static org.mockito.Mockito.when;
 public class MultiPartnerServiceImplTest {
 
     @Autowired
-    MultiPartnerServiceImpl allPartnerServiceImpl;
+    MultiPartnerServiceImpl multiPartnerServiceImpl;
 
     @MockBean
     RestUtil restUtil;
 
     @MockBean
     PartnerServiceRepository partnerRepository;
+
+    @MockBean
+    PolicyGroupRepository policyGroupRepository;
+
+    @MockBean
+    AuthPolicyRepository authPolicyRepository;
 
     @Mock
     Environment environment;
@@ -98,12 +111,50 @@ public class MultiPartnerServiceImplTest {
 
         when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("uri");
         when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-        allPartnerServiceImpl.getAllCertificateDetails();
+        multiPartnerServiceImpl.getAllCertificateDetails();
     }
 
     @Test(expected = PartnerServiceException.class)
     public void getPartnerCertificatesTestException() throws Exception {
-        allPartnerServiceImpl.getAllCertificateDetails();
+        multiPartnerServiceImpl.getAllCertificateDetails();
+    }
+
+    @Test
+    public void getAllPoliciesTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("AUTH");
+        partner.setPolicyGroupId("abc");
+        List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+        PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+        partnerPolicyRequest.setPolicyId("xyz");
+        partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+        partnerPolicyRequest.setStatusCode("approved");
+        partnerPolicyRequestList.add(partnerPolicyRequest);
+        partner.setPartnerPolicyRequests(partnerPolicyRequestList);
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+        String policyGroupName = "test";
+        AuthPolicy authPolicy = new AuthPolicy();
+        authPolicy.setName("policy123");
+        when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
+        when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
+
+        multiPartnerServiceImpl.getAllPolicies();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void getAllPoliciesTestException() throws Exception {
+        multiPartnerServiceImpl.getAllPolicies();
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
