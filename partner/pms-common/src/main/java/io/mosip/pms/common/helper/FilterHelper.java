@@ -21,7 +21,6 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.pms.common.constant.ValidationErrorCode;
 import io.mosip.pms.common.dto.FilterData;
@@ -33,7 +32,6 @@ import io.mosip.pms.common.exception.RequestException;
 
 
 @Repository
-@Transactional(readOnly = true)
 public class FilterHelper  {
 
 	private static List<Class<?>> classes = null;
