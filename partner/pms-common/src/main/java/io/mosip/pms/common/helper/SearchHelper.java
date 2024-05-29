@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
@@ -45,7 +44,6 @@ import io.mosip.pms.common.util.UserDetailUtil;
  * @since 1.0.0
  */
 @Repository
-@Transactional(readOnly = true)
 public class SearchHelper {
 
 	private static final String ENTITY_IS_NULL = "entity is null";
