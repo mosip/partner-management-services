@@ -138,10 +138,12 @@ public class FilterHelper  {
 		List<Predicate> predicates = new ArrayList<>();
 		CriteriaQuery<FilterData> criteriaQueryByType = criteriaBuilder.createQuery(FilterData.class);
 		Root<E> rootType = criteriaQueryByType.from(entity);
-		
-		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-				.like(criteriaBuilder.lower(rootType.get(columnName)), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+
+		if(!filterDto.getText().isEmpty()){
+			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+					.like(criteriaBuilder.lower(rootType.get(columnName)), criteriaBuilder.lower(
+							criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+		}
 
 		if (columnNames.length > 1) {
 			criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnNames[0]),
