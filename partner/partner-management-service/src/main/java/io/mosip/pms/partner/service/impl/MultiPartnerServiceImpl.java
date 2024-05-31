@@ -11,6 +11,7 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.CertificateDto;
+import io.mosip.pms.partner.dto.PartnerTypesDto;
 import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -152,7 +153,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
-        }catch (PartnerServiceException ex) {
+        } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
@@ -163,6 +164,54 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
         }
         return policyDtoList;
+    }
+
+    @Override
+    public List<PartnerTypesDto> getDetailsForAllPartnerTypes() {
+        List<PartnerTypesDto> partnerTypesDtoList = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                for (Partner partner : partnerList) {
+                    PartnerTypesDto partnerTypesDto = new PartnerTypesDto();
+                    try {
+                        if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+                            LOGGER.info("Partner Id is null or empty for user id : " + userId);
+                            throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+                                    ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+                        }
+                        String policyGroupName = policyGroupRepository.findPolicyGroupNameById(partner.getPolicyGroupId());
+                        if (Objects.isNull(policyGroupName) || policyGroupName.equals(BLANK_STRING)) {
+                            LOGGER.info("Policy Group Name is null or empty for partner id : " + partner.getId());
+                            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                    ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                        }
+                        partnerTypesDto.setPartnerId(partner.getId());
+                        partnerTypesDto.setPartnerType(partner.getPartnerTypeCode());
+                        partnerTypesDto.setPolicyGroupId(partner.getPolicyGroupId());
+                        partnerTypesDto.setPolicyGroupName(policyGroupName);
+                    } catch (PartnerServiceException ex) {
+                        LOGGER.info("Could not fetch the details of all partner types :" + ex.getMessage());
+                    }
+                    partnerTypesDtoList.add(partnerTypesDto);
+                }
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getDetailsForAllPartnerTypes method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getDetailsForAllPartnerTypes method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPES_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.PARTNER_TYPES_FETCH_ERROR.getErrorMessage());
+        }
+        return partnerTypesDtoList;
     }
 
     private AuthUserDetails authUserDetails() {

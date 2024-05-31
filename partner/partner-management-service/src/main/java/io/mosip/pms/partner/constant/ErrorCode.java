@@ -78,7 +78,8 @@ public enum ErrorCode {
 	USER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_002","User Id does not exists."),
 	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty."),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group Name is null or empty."),
-	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies.");
+	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
+	PARTNER_TYPES_FETCH_ERROR("PMS_PARTNER_TYPES_ERROR_002", "Error while fetching the details of all partner types.");
 
 	/**
 	 * The error code.
