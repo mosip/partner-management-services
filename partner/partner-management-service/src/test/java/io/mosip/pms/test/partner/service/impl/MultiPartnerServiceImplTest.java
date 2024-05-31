@@ -144,10 +144,10 @@ public class MultiPartnerServiceImplTest {
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 
-        PolicyGroup policyGroup = new PolicyGroup();
+        String policyGroupName = "test";
         AuthPolicy authPolicy = new AuthPolicy();
         authPolicy.setName("policy123");
-        when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+        when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
 
         multiPartnerServiceImpl.getAllPolicies();

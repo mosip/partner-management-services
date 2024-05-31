@@ -35,6 +35,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerServiceImpl.class);
     public static final String BLANK_STRING="";
+    public static  final String DEVICE_PROVIDER = "Device_Provider";
+    public static  final String FTM_PROVIDER = "FTM_Provider";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     @Autowired
@@ -123,7 +125,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
                                     ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
                         }
-                        PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+                        String policyGroupName = policyGroupRepository.findPolicyGroupNameById(partner.getPolicyGroupId());
+                        if (Objects.isNull(policyGroupName) || policyGroupName.equals(BLANK_STRING)) {
+                            LOGGER.info("Policy Group Name is null or empty for partner id : " + partner.getId());
+                            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                    ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                        }
                         List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                         if (!partnerPolicyRequestList.isEmpty()) {
                             for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
@@ -132,7 +139,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     PolicyDto policyDto = new PolicyDto();
                                     policyDto.setPartnerId(partner.getId());
                                     policyDto.setPartnerType(partner.getPartnerTypeCode());
-                                    policyDto.setPolicyGroup(policyGroup.getName());
+                                    policyDto.setPolicyGroup(policyGroupName);
                                     policyDto.setPolicyName(policyDetails.getName());
                                     policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
                                     policyDto.setStatus(partnerPolicyRequest.getStatusCode());
@@ -171,7 +178,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     String partnerType = partner.getPartnerTypeCode();
-                    if (!partnerType.equalsIgnoreCase("Device_Provider") && !partnerType.equalsIgnoreCase("FTM_Provider")
+                    // Ignore, If the partner is a DEVICE or FTM partnertype
+                    if (!partnerType.equalsIgnoreCase(DEVICE_PROVIDER) && !partnerType.equalsIgnoreCase(FTM_PROVIDER)
                         && partner.getApprovalStatus().equalsIgnoreCase(status)) {
                         PartnerTypesDto partnerTypesDto = new PartnerTypesDto();
                         try {
@@ -181,6 +189,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
                             }
                             PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+                            if (Objects.isNull(policyGroup)) {
+                                LOGGER.info("Policy Group is null for partner id : " + partner.getId());
+                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                        ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                            }
                             partnerTypesDto.setPartnerId(partner.getId());
                             partnerTypesDto.setPartnerType(partner.getPartnerTypeCode());
                             partnerTypesDto.setPolicyGroupId(partner.getPolicyGroupId());
