@@ -6,7 +6,7 @@ GetMISPLicenseByMispID:
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
       outputTemplate: partner/error
       input: '{
-    "mispId": "MISP"
+    "mispId": "MISP-AUTOMATION"
 }'
       output: '{
     "errors": [
@@ -22,10 +22,10 @@ GetMISPLicenseByMispID:
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
       outputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispIDResult
       input: '{
-    "mispId": "MISP2"
+    "mispId": "MISP2-AUTOMATION"
 }'
       output: '{
-    "providerId": "MISP2"
+    "providerId": "MISP2-AUTOMATION"
     }'
    Partner_GetMISPLicenseByMispID_inValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey

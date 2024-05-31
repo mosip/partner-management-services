@@ -10,13 +10,13 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
-    "partnerId": "MOVP",
+    "partnerId": "MOVP-AUTOMATION",
     "partnerType": "Online_Verification_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MOVP",
+        "partnerId": "MOVP-AUTOMATION",
         "status": "InProgress"
     }'
     
@@ -55,7 +55,7 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
-    "partnerId": "MOVP",
+    "partnerId": "MOVP-AUTOMATION",
     "partnerType": "Online_Verification_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"

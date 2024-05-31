@@ -20,7 +20,7 @@ UpdatePolicyGroupForPartner:
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: partner/error
       input: '{
-    "partnerId": "MOVP",
+    "partnerId": "MOVP-AUTOMATION",
     "policygroupName": "mosip policy group updated"
 }'
       output: '{

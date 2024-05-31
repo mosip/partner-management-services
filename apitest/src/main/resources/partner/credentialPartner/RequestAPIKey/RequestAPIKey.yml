@@ -1,6 +1,6 @@
 RequestAPIKeyCredentialPartner:
    Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -14,7 +14,7 @@ RequestAPIKeyCredentialPartner:
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -28,7 +28,7 @@ RequestAPIKeyCredentialPartner:
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
-      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -42,12 +42,12 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
-      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -61,12 +61,12 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
-      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -80,7 +80,7 @@ RequestAPIKeyCredentialPartner:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_073"
     }
   ]
 }'
