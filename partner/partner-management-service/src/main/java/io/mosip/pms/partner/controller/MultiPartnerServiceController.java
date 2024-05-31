@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,16 +53,16 @@ public class MultiPartnerServiceController {
         return responseWrapper;
     }
 
-    @GetMapping(value = "/getDetailsForAllPartnerTypes")
+    @GetMapping(value = "/getDetailsForAllPartnerTypes/{status}")
     @Operation(summary = "Get details for all partner types", description = "fetch details for all partner types")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<List<PartnerTypesDto>> getDetailsForAllPartnerTypes() {
+    public ResponseWrapper<List<PartnerTypesDto>> getDetailsForAllPartnerTypes(@PathVariable String status) {
         ResponseWrapper<List<PartnerTypesDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setResponse(multiPartnerService.getDetailsForAllPartnerTypes());
+        responseWrapper.setResponse(multiPartnerService.getDetailsForAllPartnerTypes(status));
         return responseWrapper;
     }
 }

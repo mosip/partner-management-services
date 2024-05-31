@@ -4,6 +4,7 @@ import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
@@ -143,10 +144,10 @@ public class MultiPartnerServiceImplTest {
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 
-        String policyGroupName = "test";
+        PolicyGroup policyGroup = new PolicyGroup();
         AuthPolicy authPolicy = new AuthPolicy();
         authPolicy.setName("policy123");
-        when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
+        when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
 
         multiPartnerServiceImpl.getAllPolicies();

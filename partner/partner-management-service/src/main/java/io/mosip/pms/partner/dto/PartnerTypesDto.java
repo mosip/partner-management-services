@@ -12,4 +12,5 @@ public class PartnerTypesDto {
     private String partnerType;
     private String policyGroupId;
     private String policyGroupName;
+    private String policyGroupDescription;
 }

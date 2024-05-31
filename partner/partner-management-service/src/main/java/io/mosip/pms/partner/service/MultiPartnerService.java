@@ -12,5 +12,5 @@ public interface MultiPartnerService {
 
     public List<PolicyDto> getAllPolicies();
 
-    public List<PartnerTypesDto> getDetailsForAllPartnerTypes();
+    public List<PartnerTypesDto> getDetailsForAllPartnerTypes(String status);
 }
