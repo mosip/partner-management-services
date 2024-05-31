@@ -6,16 +6,14 @@
   <parent>
     <groupId>io.mosip.pms</groupId>
     <artifactId>pms-parent</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1-java21-SNAPSHOT</version>
   </parent>   
   <artifactId>policy-validator</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1-java21-SNAPSHOT</version>
   <name>policy-validator</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
-    <jackson.datatype.version>2.9.8</jackson.datatype.version>
-    <json.version>20180813</json.version>     
   </properties>
   <dependencies>
     <dependency>
@@ -26,7 +24,6 @@
 		<dependency>
            <groupId>org.json</groupId>
            <artifactId>json</artifactId>
-            <version>${json.version}</version>
         </dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -34,4 +31,33 @@
 			<version>${kernel.version}</version>
 		</dependency>	
   </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>git.properties</generateGitPropertiesFilename>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
+                        <includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
+                    </includeOnlyProperties>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <!-- <format>json</format> -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

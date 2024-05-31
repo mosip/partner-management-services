@@ -3,8 +3,8 @@ package io.mosip.pms.partner.controller;
 import java.io.IOException;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.swagger.v3.oas.annotations.media.Content;
