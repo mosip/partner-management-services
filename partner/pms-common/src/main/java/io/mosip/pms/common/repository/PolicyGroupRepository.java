@@ -18,4 +18,7 @@ public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String
 
 	@Query(value = "select pg.name from policy_group pg where pg.id=?", nativeQuery = true )
 	public String findPolicyGroupNameById(String policyGroupId);
+
+	@Query(value = "select * from policy_group pg where pg.id=?", nativeQuery = true )
+	public PolicyGroup findPolicyGroupById(String policyGroupId);
 }

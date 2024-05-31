@@ -2,7 +2,7 @@ package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PartnerTypesDto;
+import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.swagger.annotations.Api;
@@ -52,16 +52,16 @@ public class MultiPartnerServiceController {
         return responseWrapper;
     }
 
-    @GetMapping(value = "/getDetailsForAllPartnerTypes")
-    @Operation(summary = "Get details for all partner types", description = "fetch details for all partner types")
+    @GetMapping(value = "/getAllApprovedPolicyGroups")
+    @Operation(summary = "Get all approved policy groups", description = "fetch all approved policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<List<PartnerTypesDto>> getDetailsForAllPartnerTypes() {
-        ResponseWrapper<List<PartnerTypesDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setResponse(multiPartnerService.getDetailsForAllPartnerTypes());
+    public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPolicyGroups() {
+        ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.getAllApprovedPolicyGroups());
         return responseWrapper;
     }
 }
