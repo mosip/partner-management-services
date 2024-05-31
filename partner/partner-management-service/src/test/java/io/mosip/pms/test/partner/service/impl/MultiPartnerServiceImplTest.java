@@ -4,7 +4,6 @@ import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
