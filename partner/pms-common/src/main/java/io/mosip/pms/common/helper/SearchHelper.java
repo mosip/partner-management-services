@@ -160,6 +160,7 @@ public class SearchHelper {
 			}
 
 			for (SearchFilter filter : filters) {
+				validateFilters(filter);
 				Optional<Field> field = fieldList.stream()
 						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName()))
 						.findFirst();
