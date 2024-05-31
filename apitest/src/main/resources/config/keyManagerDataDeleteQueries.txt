@@ -12,3 +12,4 @@ delete from mosip_keymgr.keymgr.partner_cert_store where cert_subject ='CN=misp,
 delete from mosip_keymgr.keymgr.partner_cert_store where cert_subject ='CN=misp2,OU=misp2,O=misp2,L=BLR,ST=KAR,C=IN'
 delete from mosip_keymgr.keymgr.partner_cert_store where cert_subject ='CN=mosipprint,O=mosipprint,L=Bangalore,ST=Karnataka,C=IN'
 delete from mosip_keymgr.keymgr.ca_cert_store where cert_subject ='CN=mosipprint,O=mosipprint,L=Bangalore,ST=Karnataka,C=IN'
+delete from mosip_keymgr.keymgr.key_alias where ref_id like '%AUTOMATION' or ref_id in ('partner-111997','Tech-123','MISP-AUTOMATION','MISP2-AUTOMATION','FTP-AUTOMATION','DPP-AUTOMATION','MOVP-AUTOMATION')

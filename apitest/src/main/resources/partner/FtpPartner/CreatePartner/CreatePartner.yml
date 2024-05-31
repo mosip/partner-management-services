@@ -10,11 +10,11 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "ftp@gmail.com",
     "organizationName": "ftp",
-    "partnerId": "FTP",
+    "partnerId": "FTP-AUTOMATION",
     "partnerType": "FTM_Provider",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
-     "partnerId": "FTP",
+     "partnerId": "FTP-AUTOMATION",
      "status": "InProgress"
     }'

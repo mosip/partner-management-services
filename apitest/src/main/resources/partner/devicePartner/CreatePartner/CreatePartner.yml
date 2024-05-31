@@ -10,13 +10,13 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "deviceprovider@gmail.com",
     "organizationName": "deviceprovider",
-    "partnerId": "DPP",
+    "partnerId": "DPP-AUTOMATION",
     "partnerType": "Device_Provider",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "DPP",
+        "partnerId": "DPP-AUTOMATION",
         "status": "InProgress"
     }' 
     
