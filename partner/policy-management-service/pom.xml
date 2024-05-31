@@ -83,6 +83,10 @@
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
