@@ -12,7 +12,7 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PartnerTypesDto;
+import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -37,6 +37,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String BLANK_STRING="";
     public static  final String DEVICE_PROVIDER = "Device_Provider";
     public static  final String FTM_PROVIDER = "FTM_Provider";
+    public static  final String APPROVED = "approved";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     @Autowired
@@ -170,8 +171,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PartnerTypesDto> getDetailsForAllPartnerTypes(String status) {
-        List<PartnerTypesDto> partnerTypesDtoList = new ArrayList<>();
+    public List<PolicyGroupDto> getAllApprovedPolicyGroups() {
+        List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -180,8 +181,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     String partnerType = partner.getPartnerTypeCode();
                     // Ignore, If the partner is a DEVICE or FTM partnertype
                     if (!partnerType.equalsIgnoreCase(DEVICE_PROVIDER) && !partnerType.equalsIgnoreCase(FTM_PROVIDER)
-                        && partner.getApprovalStatus().equalsIgnoreCase(status)) {
-                        PartnerTypesDto partnerTypesDto = new PartnerTypesDto();
+                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                        PolicyGroupDto policyGroupDto = new PolicyGroupDto();
                         try {
                             if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
                                 LOGGER.info("Partner Id is null or empty for user id : " + userId);
@@ -194,15 +195,15 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                 throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
                                         ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
                             }
-                            partnerTypesDto.setPartnerId(partner.getId());
-                            partnerTypesDto.setPartnerType(partner.getPartnerTypeCode());
-                            partnerTypesDto.setPolicyGroupId(partner.getPolicyGroupId());
-                            partnerTypesDto.setPolicyGroupName(policyGroup.getName());
-                            partnerTypesDto.setPolicyGroupDescription(policyGroup.getDesc());
+                            policyGroupDto.setPartnerId(partner.getId());
+                            policyGroupDto.setPartnerType(partner.getPartnerTypeCode());
+                            policyGroupDto.setPolicyGroupId(partner.getPolicyGroupId());
+                            policyGroupDto.setPolicyGroupName(policyGroup.getName());
+                            policyGroupDto.setPolicyGroupDescription(policyGroup.getDesc());
                         } catch (PartnerServiceException ex) {
-                            LOGGER.info("Could not fetch the details of all partner types :" + ex.getMessage());
+                            LOGGER.info("Could not fetch all approved policy groups :" + ex.getMessage());
                         }
-                        partnerTypesDtoList.add(partnerTypesDto);
+                        policyGroupDtoList.add(policyGroupDto);
                     }
                 }
             } else {
@@ -211,16 +212,16 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getDetailsForAllPartnerTypes method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getDetailsForAllPartnerTypes method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.PARTNER_TYPES_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.PARTNER_TYPES_FETCH_ERROR.getErrorMessage());
+                    "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorMessage());
         }
-        return partnerTypesDtoList;
+        return policyGroupDtoList;
     }
 
     private AuthUserDetails authUserDetails() {
