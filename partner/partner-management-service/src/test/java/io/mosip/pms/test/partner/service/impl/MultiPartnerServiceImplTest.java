@@ -9,7 +9,6 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
@@ -178,12 +177,12 @@ public class MultiPartnerServiceImplTest {
 
         PolicyGroup policyGroup = new PolicyGroup();
         when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
-        multiPartnerServiceImpl.getAllApprovedPolicyGroups();
+        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
     }
 
     @Test(expected = PartnerServiceException.class)
     public void getAllApprovedPolicyGroupsTestException() throws Exception {
-        multiPartnerServiceImpl.getAllApprovedPolicyGroups();
+        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
