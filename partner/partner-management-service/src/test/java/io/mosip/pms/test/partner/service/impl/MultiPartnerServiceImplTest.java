@@ -4,6 +4,7 @@ import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
@@ -155,6 +156,34 @@ public class MultiPartnerServiceImplTest {
     @Test(expected = PartnerServiceException.class)
     public void getAllPoliciesTestException() throws Exception {
         multiPartnerServiceImpl.getAllPolicies();
+    }
+
+    @Test
+    public void getAllApprovedPolicyGroupsTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Auth_Partner");
+        partner.setPolicyGroupId("abc");
+        partner.setApprovalStatus("approved");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+        PolicyGroup policyGroup = new PolicyGroup();
+        when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+        multiPartnerServiceImpl.getAllApprovedPolicyGroups();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void getAllApprovedPolicyGroupsTestException() throws Exception {
+        multiPartnerServiceImpl.getAllApprovedPolicyGroups();
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

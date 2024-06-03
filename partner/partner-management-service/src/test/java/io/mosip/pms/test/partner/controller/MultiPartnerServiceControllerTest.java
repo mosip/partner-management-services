@@ -4,6 +4,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
+import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,5 +59,20 @@ public class MultiPartnerServiceControllerTest {
         policyDtoList.add(policyDto);
         Mockito.when(multiPartnerService.getAllPolicies()).thenReturn(policyDtoList);
         ResponseWrapper<List<PolicyDto>> response = multiPartnerServiceController.getAllPolicies();
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getAllApprovedPolicyGroupsList() throws Exception {
+        PolicyGroupDto policyGroupDto = new PolicyGroupDto();
+        policyGroupDto.setPartnerId("abc");
+        policyGroupDto.setPartnerType("Auth_Partner");
+        policyGroupDto.setPolicyGroupId("123");
+        policyGroupDto.setPolicyGroupName("testGroup");
+        policyGroupDto.setPolicyGroupDescription("testDesc");
+        List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+        policyGroupDtoList.add(policyGroupDto);
+        Mockito.when(multiPartnerService.getAllApprovedPolicyGroups()).thenReturn(policyGroupDtoList);
+        ResponseWrapper<List<PolicyGroupDto>> responseWrapper = multiPartnerServiceController.getAllApprovedPolicyGroups();
     }
 }
