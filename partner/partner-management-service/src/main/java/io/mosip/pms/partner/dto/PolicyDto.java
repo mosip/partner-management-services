@@ -12,8 +12,14 @@ import java.util.Date;
 public class PolicyDto {
     private String partnerId;
     private String partnerType;
-    private String policyGroup;
     private String policyName;
     private Date createDate;
     private String status;
+    private String policyGroupId;
+    private String policyGroupDescription;
+    private String policyGroupName;
+    private String policyId;
+    private String policyDescription;
+    private String partnerComments;
+    private Date updDtimes;
 }
