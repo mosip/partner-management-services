@@ -53,7 +53,7 @@ public class MultiPartnerServiceControllerTest {
         PolicyDto policyDto = new PolicyDto();
         policyDto.setPartnerId("abc");
         policyDto.setPartnerType("Auth_Partner");
-        policyDto.setPolicyGroup("123");
+        policyDto.setPolicyGroupName("123");
         policyDto.setPolicyName("test");
         List<PolicyDto> policyDtoList = new ArrayList<>();
         policyDtoList.add(policyDto);
