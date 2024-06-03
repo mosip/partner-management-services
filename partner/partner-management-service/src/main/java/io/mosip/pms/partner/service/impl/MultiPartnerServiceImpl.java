@@ -121,30 +121,41 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     try {
-                        if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-                            LOGGER.info("Partner Id is null or empty for user id : " + userId);
-                            throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-                                    ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-                        }
-                        String policyGroupName = policyGroupRepository.findPolicyGroupNameById(partner.getPolicyGroupId());
-                        if (Objects.isNull(policyGroupName) || policyGroupName.equals(BLANK_STRING)) {
-                            LOGGER.info("Policy Group Name is null or empty for partner id : " + partner.getId());
-                            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                    ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                        }
-                        List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
-                        if (!partnerPolicyRequestList.isEmpty()) {
-                            for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-                                AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
-                                if (Objects.nonNull(policyDetails)) {
-                                    PolicyDto policyDto = new PolicyDto();
-                                    policyDto.setPartnerId(partner.getId());
-                                    policyDto.setPartnerType(partner.getPartnerTypeCode());
-                                    policyDto.setPolicyGroup(policyGroupName);
-                                    policyDto.setPolicyName(policyDetails.getName());
-                                    policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
-                                    policyDto.setStatus(partnerPolicyRequest.getStatusCode());
-                                    policyDtoList.add(policyDto);
+                        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER)){
+                            if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+                                LOGGER.info("Partner Id is null or empty for user id : " + userId);
+                                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+                                        ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+                            }
+                            PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+                            if (Objects.isNull(policyGroup) || Objects.isNull(policyGroup.getName()) || policyGroup.getName().equals(BLANK_STRING)) {
+                                LOGGER.info("Policy Group is null or empty for partner id : " + partner.getId());
+                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                        ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                            }
+                            List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
+                            if (!partnerPolicyRequestList.isEmpty()) {
+                                for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
+                                    AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
+                                    if (Objects.nonNull(policyDetails)) {
+                                        PolicyDto policyDto = new PolicyDto();
+                                        policyDto.setPartnerId(partner.getId());
+                                        policyDto.setPartnerType(partner.getPartnerTypeCode());
+
+                                        policyDto.setPolicyGroupId(policyGroup.getId());
+                                        policyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                        policyDto.setPolicyGroupName(policyGroup.getName());
+
+                                        policyDto.setPolicyId(policyDetails.getId());
+                                        policyDto.setPolicyDescription(policyDetails.getDescr());
+                                        policyDto.setPolicyName(policyDetails.getName());
+
+                                        policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
+                                        policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
+                                        policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
+                                        policyDto.setStatus(partnerPolicyRequest.getStatusCode());
+                                        policyDtoList.add(policyDto);
+                                    }
                                 }
                             }
                         }
