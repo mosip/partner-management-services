@@ -162,8 +162,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         policyDtoList.add(policyDto);
                                     } else {
                                         LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
-                                        throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                                ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                                        throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
+                                                ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
                                     }
                                 }
                             }
