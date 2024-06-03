@@ -149,12 +149,12 @@ public class MultiPartnerServiceImplTest {
         when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
 
-        multiPartnerServiceImpl.getAllPolicies();
+        multiPartnerServiceImpl.getAllRequestedPolicies();
     }
 
     @Test(expected = PartnerServiceException.class)
     public void getAllPoliciesTestException() throws Exception {
-        multiPartnerServiceImpl.getAllPolicies();
+        multiPartnerServiceImpl.getAllRequestedPolicies();
     }
 
     @Test
