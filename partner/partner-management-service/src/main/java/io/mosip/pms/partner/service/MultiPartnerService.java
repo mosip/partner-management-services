@@ -12,5 +12,5 @@ public interface MultiPartnerService {
 
     public List<PolicyDto> getAllPolicies();
 
-    public List<PolicyGroupDto> getAllApprovedPolicyGroups();
+    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
 }

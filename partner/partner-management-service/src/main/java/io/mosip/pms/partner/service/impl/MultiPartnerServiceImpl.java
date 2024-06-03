@@ -171,7 +171,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PolicyGroupDto> getAllApprovedPolicyGroups() {
+    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups() {
         List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
