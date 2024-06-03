@@ -127,6 +127,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                 throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
                                         ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
                             }
+                            if (Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().equals(BLANK_STRING)) {
+                                LOGGER.info("Policy group Id is null or empty for user id : " + userId);
+                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+                                        ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());
+                            }
                             PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
                             if (Objects.isNull(policyGroup) || Objects.isNull(policyGroup.getName()) || policyGroup.getName().equals(BLANK_STRING)) {
                                 LOGGER.info("Policy Group is null or empty for partner id : " + partner.getId());
@@ -155,6 +160,10 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
                                         policyDto.setStatus(partnerPolicyRequest.getStatusCode());
                                         policyDtoList.add(policyDto);
+                                    } else {
+                                        LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
+                                        throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                                ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
                                     }
                                 }
                             }
