@@ -57,8 +57,8 @@ public class MultiPartnerServiceControllerTest {
         policyDto.setPolicyName("test");
         List<PolicyDto> policyDtoList = new ArrayList<>();
         policyDtoList.add(policyDto);
-        Mockito.when(multiPartnerService.getAllPolicies()).thenReturn(policyDtoList);
-        ResponseWrapper<List<PolicyDto>> response = multiPartnerServiceController.getAllPolicies();
+        Mockito.when(multiPartnerService.getAllRequestedPolicies()).thenReturn(policyDtoList);
+        ResponseWrapper<List<PolicyDto>> response = multiPartnerServiceController.getAllRequestedPolicies();
     }
 
     @Test
