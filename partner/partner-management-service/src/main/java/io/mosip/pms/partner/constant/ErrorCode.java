@@ -79,7 +79,7 @@ public enum ErrorCode {
 	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty."),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
 	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
-	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner ids with policy groups."),
+	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),
 	MATCHING_POLICY_NOT_FOUND("PMS_POLICY_ERROR_004", "Matching Policy not found."),
 	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty.");
 
