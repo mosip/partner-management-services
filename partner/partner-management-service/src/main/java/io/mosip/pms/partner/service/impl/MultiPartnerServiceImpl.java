@@ -34,10 +34,10 @@ import java.util.Objects;
 public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerServiceImpl.class);
-    public static final String BLANK_STRING="";
-    public static  final String DEVICE_PROVIDER = "Device_Provider";
-    public static  final String FTM_PROVIDER = "FTM_Provider";
-    public static  final String APPROVED = "approved";
+    public static final String BLANK_STRING = "";
+    public static final String DEVICE_PROVIDER = "Device_Provider";
+    public static final String FTM_PROVIDER = "FTM_Provider";
+    public static final String APPROVED = "approved";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     @Autowired
@@ -121,7 +121,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     try {
-                        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER)){
+                        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER)) {
                             if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
                                 LOGGER.info("Partner Id is null or empty for user id : " + userId);
                                 throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
@@ -201,7 +201,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     String partnerType = partner.getPartnerTypeCode();
                     // Ignore, If the partner is a DEVICE or FTM partnertype
                     if (!partnerType.equalsIgnoreCase(DEVICE_PROVIDER) && !partnerType.equalsIgnoreCase(FTM_PROVIDER)
-                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                            && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
                         try {
                             if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
