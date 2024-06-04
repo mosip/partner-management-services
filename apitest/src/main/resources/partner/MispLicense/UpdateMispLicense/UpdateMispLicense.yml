@@ -6,12 +6,12 @@ UpdateMispLicense:
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
       outputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicenseResult
       input: '{
-   "providerId": "MISP",
+   "providerId": "MISP-AUTOMATION",
    "licenseKeyStatus": "De-active",
    "licenseKey": "$ID:CreateMispLicense_allValid_smoke_sid_licenseKey$"
 }'
       output: '{
-   "providerId": "MISP",
+   "providerId": "MISP-AUTOMATION",
     "licenseKeyStatus": "de-active"
 }'
    Partner_UpdateMispLicense_Active_allValid_smoke:
@@ -21,12 +21,12 @@ UpdateMispLicense:
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
       outputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicenseResult
       input: '{
-   "providerId": "MISP2",
+   "providerId": "MISP2-AUTOMATION",
    "licenseKeyStatus": "Active",
    "licenseKey": "$ID:CreateMispLicense_MispLicense_allValid_smoke_sid_licenseKey$"
 }'
       output: '{
-   "providerId": "MISP2",
+   "providerId": "MISP2-AUTOMATION",
     "licenseKeyStatus": "active"
 }'
    Partner_UpdateMispLicense_InValid_licenseKeyStatus:
@@ -36,7 +36,7 @@ UpdateMispLicense:
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
       outputTemplate: partner/error
       input: '{
-   "providerId": "MISP",
+   "providerId": "MISP-AUTOMATION",
     "licenseKeyStatus": "inactive",
     "licenseKey": "adfvad"
 }'

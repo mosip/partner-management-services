@@ -26,7 +26,7 @@ UploadCertificateOfFtpChip:
       inputTemplate: partner/device/ftmChipDetails/uploadcert/uploadcertificate
       outputTemplate: partner/error
       input: '{
-    "ftpProviderId": "FTP",
+    "ftpProviderId": "FTP-AUTOMATION",
     "ftpChipDeatilId": "asdf",
     "isItForRegistrationDevice": true,
     "organizationName": "ftp",
