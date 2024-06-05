@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import io.mosip.pms.common.entity.PolicyGroup;
 
+import java.util.List;
+
 /**
  * @author sanjeev.shrivastava
  *
@@ -21,4 +23,7 @@ public interface PolicyGroupRepository extends JpaRepository<PolicyGroup, String
 
 	@Query(value = "select * from policy_group pg where pg.id=?", nativeQuery = true )
 	public PolicyGroup findPolicyGroupById(String policyGroupId);
+
+	@Query(value = "select * from policy_group pg where pg.is_active=true", nativeQuery = true )
+	public List<PolicyGroup> findAllActivePolicyGroups();
 }
