@@ -1051,12 +1051,19 @@ public class PolicyManagementService {
 	}
 
 	public List<PolicyGroup> getAllPolicyGroups() {
-		List <PolicyGroup> policyGroups = policyGroupRepository.findAllActivePolicyGroups();
-		if (policyGroups.isEmpty()) {
+		List <PolicyGroup> policyGroupsList = new ArrayList<>();
+		List<PolicyGroup> allPolicyGroups = policyGroupRepository.findAllActivePolicyGroups();
+		if (allPolicyGroups.isEmpty()) {
 			logger.error("There are no active policy groups");
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
 					ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
 		}
-		return policyGroups;
+		for (PolicyGroup policyGroup: allPolicyGroups) {
+			List <AuthPolicy> authPolicyList = authPolicyRepository.findActivePoliciesByPolicyGroupId(policyGroup.getId());
+			if (!authPolicyList.isEmpty()) {
+				policyGroupsList.add(policyGroup);
+			}
+		}
+		return policyGroupsList;
 	}
 }
