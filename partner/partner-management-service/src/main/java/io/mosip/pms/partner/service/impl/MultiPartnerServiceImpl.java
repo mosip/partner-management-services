@@ -113,7 +113,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PolicyDto> getAllRequestedPolicies() {
+    public List<PolicyDto> getAllRequestedPolicies(Boolean filterByOnlyApprovedPolicies) {
         List<PolicyDto> policyDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -141,29 +141,31 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                             if (!partnerPolicyRequestList.isEmpty()) {
                                 for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-                                    AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
-                                    if (Objects.nonNull(policyDetails)) {
-                                        PolicyDto policyDto = new PolicyDto();
-                                        policyDto.setPartnerId(partner.getId());
-                                        policyDto.setPartnerType(partner.getPartnerTypeCode());
+                                    if (!filterByOnlyApprovedPolicies || partnerPolicyRequest.getStatusCode().equals("approved")){
+                                        AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
+                                        if (Objects.nonNull(policyDetails)) {
+                                            PolicyDto policyDto = new PolicyDto();
+                                            policyDto.setPartnerId(partner.getId());
+                                            policyDto.setPartnerType(partner.getPartnerTypeCode());
 
-                                        policyDto.setPolicyGroupId(policyGroup.getId());
-                                        policyDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                        policyDto.setPolicyGroupName(policyGroup.getName());
+                                            policyDto.setPolicyGroupId(policyGroup.getId());
+                                            policyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                            policyDto.setPolicyGroupName(policyGroup.getName());
 
-                                        policyDto.setPolicyId(policyDetails.getId());
-                                        policyDto.setPolicyDescription(policyDetails.getDescr());
-                                        policyDto.setPolicyName(policyDetails.getName());
+                                            policyDto.setPolicyId(policyDetails.getId());
+                                            policyDto.setPolicyDescription(policyDetails.getDescr());
+                                            policyDto.setPolicyName(policyDetails.getName());
 
-                                        policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
-                                        policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
-                                        policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
-                                        policyDto.setStatus(partnerPolicyRequest.getStatusCode());
-                                        policyDtoList.add(policyDto);
-                                    } else {
-                                        LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
-                                        throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
-                                                ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
+                                            policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
+                                            policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
+                                            policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
+                                            policyDto.setStatus(partnerPolicyRequest.getStatusCode());
+                                            policyDtoList.add(policyDto);
+                                        } else {
+                                            LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
+                                            throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
+                                                    ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
+                                        }
                                     }
                                 }
                             }

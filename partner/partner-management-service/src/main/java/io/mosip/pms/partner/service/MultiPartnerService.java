@@ -10,7 +10,7 @@ public interface MultiPartnerService {
 
     public List<CertificateDto> getAllCertificateDetails();
 
-    public List<PolicyDto> getAllRequestedPolicies();
+    public List<PolicyDto> getAllRequestedPolicies(Boolean filterByOnlyApprovedPolicies);
 
     public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
 }
