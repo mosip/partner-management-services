@@ -141,7 +141,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                             if (!partnerPolicyRequestList.isEmpty()) {
                                 for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-                                    if (!filterByOnlyApprovedPolicies || partnerPolicyRequest.getStatusCode().equals("approved")){
+                                    if (!filterByOnlyApprovedPolicies || partnerPolicyRequest.getStatusCode().equals(APPROVED)){
                                         AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
                                         if (Objects.nonNull(policyDetails)) {
                                             PolicyDto policyDto = new PolicyDto();
