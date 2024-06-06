@@ -3,8 +3,8 @@ package io.mosip.pms.policy.dto;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

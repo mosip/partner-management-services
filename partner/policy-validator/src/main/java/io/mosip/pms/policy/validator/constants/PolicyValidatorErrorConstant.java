@@ -1,5 +1,8 @@
 package io.mosip.pms.policy.validator.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum PolicyValidatorErrorConstant {
 	SCHEMA_IO_EXCEPTION("PMS_PV_001", "Failed to read schema"),
 
@@ -13,9 +16,21 @@ public enum PolicyValidatorErrorConstant {
 
 	MISSING_INPUT_PARAMETER("PMS_PV_006", "Missing input parameter - %s in policy data");
 
-	private final String errorCode;
+    /**
+     * -- GETTER --
+     *  Gets the error code.
+     *
+     * @return the error code
+     */
+    private final String errorCode;
 
-	private final String message;
+    /**
+     * -- GETTER --
+     *  Gets the message.
+     *
+     * @return the message
+     */
+    private final String message;
 
 	/**
 	 * Instantiates a new json validator error constant.
@@ -26,24 +41,6 @@ public enum PolicyValidatorErrorConstant {
 	PolicyValidatorErrorConstant(final String errorCode, final String message) {
 		this.errorCode = errorCode;
 		this.message = message;
-	}
-
-	/**
-	 * Gets the error code.
-	 *
-	 * @return the error code
-	 */
-	public String getErrorCode() {
-		return errorCode;
-	}
-
-	/**
-	 * Gets the message.
-	 *
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
 	}
 
 }
