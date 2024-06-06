@@ -1,0 +1,12 @@
+{
+	"response": {
+		"partners":[ 
+	      {{#each policies}}
+	        {
+		        "partnerType": "{{partnerType}}"
+		      }
+	      {{#unless @last}},{{/unless}}
+	      	{{/each}}
+	    ]
+	}
+}

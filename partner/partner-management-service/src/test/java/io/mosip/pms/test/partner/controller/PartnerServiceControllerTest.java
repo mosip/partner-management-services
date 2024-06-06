@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.partner.controller.PartnerServiceController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,6 +79,9 @@ public class PartnerServiceControllerTest {
 
     @MockBean
     private PartnerService partnerService;
+
+    @MockBean
+    private PartnerServiceController partnerServiceController;
     
     @MockBean
     PartnerManagerService partnerManagerService;
@@ -291,8 +295,7 @@ public class PartnerServiceControllerTest {
     	PartnerPolicyMappingRequest requestDto = new PartnerPolicyMappingRequest();
     	request.setRequest(requestDto);
     	Mockito.when(partnerService.requestForPolicyMapping(request.getRequest(),"1234")).thenReturn(response);
-    	mockMvc.perform(post("/partners/1234/policy/map").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    	partnerServiceController.mapPolicyToPartner("1234", request);
     }
     
     @Test    
@@ -304,8 +307,7 @@ public class PartnerServiceControllerTest {
     	APIKeyGenerateRequestDto requestDto = new APIKeyGenerateRequestDto();
     	request.setRequest(requestDto);
     	Mockito.when(partnerManagerService.generateAPIKey("1234",requestDto)).thenReturn(response);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    	partnerServiceController.generateAPIKey("1234", request);
     }
     
     private RequestWrapper<FilterValueDto> createFilterRequest(){

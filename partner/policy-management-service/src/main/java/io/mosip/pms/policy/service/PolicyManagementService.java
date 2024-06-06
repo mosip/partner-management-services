@@ -725,12 +725,16 @@ public class PolicyManagementService {
 	 */
 	public List<PolicyWithAuthPolicyDto> getPolicyGroup() throws JsonParseException, JsonMappingException, IOException {
 		List<PolicyGroup> policyGroups = policyGroupRepository.findAll();
+		logger.debug("policyGroups having size- "+ policyGroups.size());
+		logger.debug(String.valueOf(policyGroups));
 		List<PolicyWithAuthPolicyDto> response = new ArrayList<PolicyWithAuthPolicyDto>();
 		for (PolicyGroup policyGroup : policyGroups) {
 			PolicyWithAuthPolicyDto policyGroupWthPolicy = new PolicyWithAuthPolicyDto();
 			List<AuthPolicy> policies = authPolicyRepository.findByPolicyGroupId(policyGroup.getId());
+			logger.debug("Polices from authpolicyRepo"+ policies);
 			List<PolicyDto> policyGroupPolicies = new ArrayList<PolicyDto>();
 			for (AuthPolicy authPolicy : policies) {
+				logger.debug("authPolicy"+authPolicy);
 				policyGroupPolicies.add(mapPolicyToPolicyDto(authPolicy));
 			}
 			policyGroupWthPolicy.setPolicyGroup(policyGroup);
@@ -764,6 +768,8 @@ public class PolicyManagementService {
 		policyDto.setUpd_dtimes(authPolicy.getUpdDtimes());
 		policyDto.setValidTill(authPolicy.getValidToDate());
 		policyDto.setVersion(authPolicy.getVersion());
+		logger.debug("authPolicy file id"+authPolicy.getPolicyFileId());
+		logger.debug("policydto"+ policyDto);
 		policyDto.setPolicies(getPolicyObject(authPolicy.getPolicyFileId()));
 		return policyDto;
 	}
@@ -771,6 +777,7 @@ public class PolicyManagementService {
 	private JSONObject getPolicyObject(String policy) {
 		JSONParser parser = new JSONParser();
 		String error = null;
+		logger.debug("policy in getpolicy object"+policy);
 		try {
 			return ((JSONObject) parser.parse(policy));
 		} catch (ParseException e) {

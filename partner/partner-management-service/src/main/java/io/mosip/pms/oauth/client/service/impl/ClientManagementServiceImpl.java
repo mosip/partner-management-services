@@ -74,7 +74,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Service
 public class ClientManagementServiceImpl implements ClientManagementService {
@@ -299,7 +299,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		try {
 			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			LOGGER.error("Error processing public key JSON: {}", e.getMessage());
 		}
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));

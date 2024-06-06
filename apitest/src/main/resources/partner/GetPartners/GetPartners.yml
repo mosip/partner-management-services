@@ -1,0 +1,51 @@
+GetPartners:
+   Partner_GetPartners_allValid_smoke:
+      endPoint: /v1/partnermanager/partners
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetPartners/getPartners
+      outputTemplate: partner/GetPartners/getPartnersResult
+      input: '{
+}'
+      output: '{
+}'
+   Partner_GetPartners_ByPartnerType_allValid_smoke:
+      endPoint: /v1/partnermanager/partners?partnerType=Device_Provider
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetPartners/getPartners
+      outputTemplate: partner/GetPartners/getPartnersResult
+      input: '{
+}'
+      output: '{
+}'
+   Partner_GetPartners_invalid_partnerType:
+      endPoint: /v1/partnermanager/partners?partnerType=zsfvgefb
+      role: partner
+      restMethod: get
+      inputTemplate: partner/GetPartners/getPartners
+      outputTemplate: partner/error
+      input: '{
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_013"
+    }
+  ]
+}'
+
+   Partner_PrintPartener_ByPartnerType_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/v2?partnerType=Print_Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetPartners/getPartners
+      outputTemplate: partner/GetPartners/getPartnersResult
+      input: '{
+}'
+      output: '{
+    "partnerType": "Print_Partner"
+}'

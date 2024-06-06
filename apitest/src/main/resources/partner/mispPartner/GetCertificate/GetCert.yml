@@ -1,0 +1,13 @@
+getPartnerCert:
+   Partner_GetPartnerCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/mispPartner/GetCertificate/getCert
+      outputTemplate: partner/mispPartner/GetCertificate/getCertResult
+      input: '{
+  "partnerId": "MISP"
+}'
+      output: ' {
+}'

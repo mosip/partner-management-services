@@ -8,14 +8,15 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.http.ssl.TrustStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 
 @Configuration
 public class TestConfig {
@@ -25,15 +26,20 @@ public class TestConfig {
 
 		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
+		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(acceptingTrustStrategy)
 				.build();
 
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
 
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		var connnectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
+		connnectionManagerBuilder.setSSLSocketFactory(csf);
+		var connectionManager = connnectionManagerBuilder.build();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom()
+				.setConnectionManager(connectionManager);
 
-		requestFactory.setHttpClient(httpClient);
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+		requestFactory.setHttpClient(httpClientBuilder.build());
 		return new RestTemplate(requestFactory);
 
 	}

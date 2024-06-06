@@ -1,0 +1,101 @@
+UpdatePolicyAgainstApiKey:
+   Partner_UpdatePolicyAgainstApiKey_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKeyResult
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "message": "Given apikey updated with policy successfully. "
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "asgfdg",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50",
+      "message": "Given apikey,partner and policy mapping not exists."
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_apiKey:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "asvbgn",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50",
+      "message": "Given apikey,partner and policy mapping not exists."
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_OldPolicyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "asfbgt",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50",
+      "message": "Given apikey,partner and policy mapping not exists."
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_newPolicyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "INVALID",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_014",
+      "message": "Policy does not existINVALID"
+    }
+  ]
+}'

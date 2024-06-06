@@ -1,0 +1,26 @@
+getPartnerCert:
+   Partner_GetPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      role: partner
+      restMethod: get
+      inputTemplate: partner/mispPartner/GetPartner/getPartner
+      outputTemplate: partner/mispPartner/GetPartner/getPartnerResult
+      input: '{
+	"partnerId": "MISP"
+}'
+      output: '  {
+ 	"partnerID": "MISP"
+  }'
+  
+   Partner_GetPartner_MISP3_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      role: partner
+      restMethod: get
+      inputTemplate: partner/mispPartner/GetPartner/getPartner
+      outputTemplate: partner/mispPartner/GetPartner/getPartnerResult
+      input: '{
+	"partnerId": "MISP3"
+}'
+      output: '  {
+ 	"partnerID": "MISP3"
+  }'
