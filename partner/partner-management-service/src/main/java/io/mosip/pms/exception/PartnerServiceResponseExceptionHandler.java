@@ -8,17 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -49,25 +51,47 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	String version = "1.0";
 
 	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
+	protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("id", null);
 		body.put("version", null);
 		body.put("metadata", null);
 		body.put("response", null);
 		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        FieldError fieldError = fieldErrors.get(0);
-        
+
+		List<FieldError> fieldErrors = (List<FieldError>) ex.getAllErrors();
+		FieldError fieldError = fieldErrors.get(0);
+
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
 		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		List<ErrorResponse> errors = new ArrayList<>();
 		errors.add(errorResponse);
 		body.put("errors", errors);
-		return new ResponseEntity<>(body, headers, HttpStatus.OK);
+		return ResponseEntity.badRequest().body(body);
 	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("id", null);
+		body.put("version", null);
+		body.put("metadata", null);
+		body.put("response", null);
+		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
+
+		List<FieldError> fieldErrors = ex.getFieldErrors();
+		FieldError fieldError = fieldErrors.get(0);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
+		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
+		List<ErrorResponse> errors = new ArrayList<>();
+		errors.add(errorResponse);
+		body.put("errors", errors);
+		return ResponseEntity.badRequest().body(body);
+	}
+
 	
 	@ExceptionHandler(MISPServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(

@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.CommonConstant;
@@ -47,9 +46,9 @@ import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.RegistrationSubTypeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.device.util.DeviceUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class DeviceDetailServiceImpl implements DeviceDetailService {
 	
 	@Autowired
@@ -78,6 +77,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	private PageUtils pageUtils;
 
 	@Override
+	@Transactional
 	public IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
 		DeviceDetail entity = new DeviceDetail();
 		DeviceDetail deviceDetail = null;
@@ -151,6 +151,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	}
 
 	@Override
+	@Transactional
 	public IdDto updateDeviceDetails(DeviceDetailUpdateDto deviceDetailDto) {
 		DeviceDetail entity = new DeviceDetail();
 		DeviceDetail deviceDetail = null;
@@ -205,6 +206,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	}
 
 	@Override
+	@Transactional
 	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails) {
 		DeviceDetail entity = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
 		if (entity == null) {
