@@ -1050,7 +1050,7 @@ public class PolicyManagementService {
 
 	}
 
-	public List<PolicyGroup> getAllActivePolicyGroups() {
+	public List<PolicyGroup> getAllPolicyGroups() {
 		List <PolicyGroup> policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
 		if (policyGroupsList.isEmpty()) {
 			logger.error("There are no active policy groups");
