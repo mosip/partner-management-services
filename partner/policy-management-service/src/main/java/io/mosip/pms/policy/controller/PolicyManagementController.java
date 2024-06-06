@@ -289,7 +289,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
 	@GetMapping(value = "/getAllPolicyGroups")
-	@Operation(summary = "Service to get all active policy groups", description = "Service to get all active policy groups")
+	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
 	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
