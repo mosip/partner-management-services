@@ -287,13 +287,13 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
-	@GetMapping(value = "/getAllPolicyGroups")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallactivepolicygroups())")
+	@GetMapping(value = "/getAllActivePolicyGroups")
 	@Operation(summary = "Service to get all active policy groups", description = "Service to get all active policy groups")
-	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
+	public ResponseWrapper<List<PolicyGroup>> getAllActivePolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		response.setResponse(policyManagementService.getAllPolicyGroups());
+		response.setResponse(policyManagementService.getAllActivePolicyGroups());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}

@@ -1050,7 +1050,7 @@ public class PolicyManagementService {
 
 	}
 
-	public List<PolicyGroup> getAllPolicyGroups() {
+	public List<PolicyGroup> getAllActivePolicyGroups() {
 		List <PolicyGroup> policyGroupsList = new ArrayList<>();
 		List<PolicyGroup> allPolicyGroups = policyGroupRepository.findAllActivePolicyGroups();
 		if (allPolicyGroups.isEmpty()) {
