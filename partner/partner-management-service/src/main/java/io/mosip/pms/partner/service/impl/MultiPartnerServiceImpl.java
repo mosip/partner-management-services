@@ -121,23 +121,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     try {
-                        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER)) {
-                            if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-                                LOGGER.info("Partner Id is null or empty for user id : " + userId);
-                                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-                            }
-                            if (Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().equals(BLANK_STRING)) {
-                                LOGGER.info("Policy group Id is null or empty for user id : " + userId);
-                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());
-                            }
-                            PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
-                            if (Objects.isNull(policyGroup) || Objects.isNull(policyGroup.getName()) || policyGroup.getName().equals(BLANK_STRING)) {
-                                LOGGER.info("Policy Group is null or empty for partner id : " + partner.getId());
-                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                            }
+                        if (checkPartnerType(partner)) {
+                            checkPartnerAndPolicyGroupIds(partner, userId);
+                            PolicyGroup policyGroup = validatePolicyGroup(partner);
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                             if (!partnerPolicyRequestList.isEmpty()) {
                                 for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
@@ -200,7 +186,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 for (Partner partner : partnerList) {
                     String partnerType = partner.getPartnerTypeCode();
                     // Ignore, If the partner is a DEVICE or FTM partnertype
-                    if (!partnerType.equalsIgnoreCase(DEVICE_PROVIDER) && !partnerType.equalsIgnoreCase(FTM_PROVIDER)
+                    if (checkPartnerType(partner)
                             && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
                         try {
@@ -244,6 +230,97 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return policyGroupDtoList;
     }
 
+    @Override
+    public List<PolicyDto> getAllApprovedPolicies() {
+        List<PolicyDto> policyDtoList = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                for (Partner partner : partnerList) {
+                    try {
+                        if (checkPartnerType(partner)) {
+                            checkPartnerAndPolicyGroupIds(partner, userId);
+                            PolicyGroup policyGroup = validatePolicyGroup(partner);
+                            List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
+                            if (!partnerPolicyRequestList.isEmpty()) {
+                                for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
+                                    if (partnerPolicyRequest.getStatusCode().equals(APPROVED)) {
+                                        AuthPolicy policyDetails = authPolicyRepository.findApprovedPolicyByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
+                                        if (Objects.nonNull(policyDetails)) {
+                                            PolicyDto policyDto = new PolicyDto();
+                                            policyDto.setPartnerId(partner.getId());
+                                            policyDto.setPartnerType(partner.getPartnerTypeCode());
+
+                                            policyDto.setPolicyGroupId(policyGroup.getId());
+                                            policyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                            policyDto.setPolicyGroupName(policyGroup.getName());
+
+                                            policyDto.setPolicyId(policyDetails.getId());
+                                            policyDto.setPolicyDescription(policyDetails.getDescr());
+                                            policyDto.setPolicyName(policyDetails.getName());
+
+                                            policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
+                                            policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
+                                            policyDto.setStatus(partnerPolicyRequest.getStatusCode());
+                                            policyDtoList.add(policyDto);
+                                        } else {
+                                            LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
+                                            throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
+                                                    ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (PartnerServiceException ex) {
+                        LOGGER.info("Could not fetch policies :" + ex.getMessage());
+                    }
+                }
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
+        }
+        return policyDtoList;
+    }
+
+    public static void checkPartnerAndPolicyGroupIds(Partner partner, String userId) {
+        if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+            LOGGER.info("Partner Id is null or empty for user id : " + userId);
+            throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+        }
+        if (Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().equals(BLANK_STRING)) {
+            LOGGER.info("Policy group Id is null or empty for user id : " + userId);
+            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage());
+        }
+    }
+
+    public static boolean checkPartnerType(Partner partner) {
+        return !partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER);
+    }
+
+    private PolicyGroup validatePolicyGroup(Partner partner) throws PartnerServiceException {
+        PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+        if (Objects.isNull(policyGroup) || Objects.isNull(policyGroup.getName()) || policyGroup.getName().isEmpty()) {
+            LOGGER.info("Policy Group is null or empty for partner id : {}", partner.getId());
+            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(), ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+        }
+        return policyGroup;
+    }
+    
     private AuthUserDetails authUserDetails() {
         return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }

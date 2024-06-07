@@ -52,6 +52,19 @@ public class MultiPartnerServiceController {
         return responseWrapper;
     }
 
+    @GetMapping(value = "/getAllApprovedPolicies")
+    @Operation(summary = "Get all approved policies", description = "fetch all approved policies")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<PolicyDto>> getAllApprovedPolicies() {
+        ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.getAllApprovedPolicies());
+        return responseWrapper;
+    }
+
     @GetMapping(value = "/getAllApprovedPartnerIdsWithPolicyGroups")
     @Operation(summary = "Get all approved partner id's with policy groups", description = "fetch all approved partner id's with policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

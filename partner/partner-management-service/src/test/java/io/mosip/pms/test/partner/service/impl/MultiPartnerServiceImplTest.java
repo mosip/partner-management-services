@@ -152,6 +152,39 @@ public class MultiPartnerServiceImplTest {
         multiPartnerServiceImpl.getAllRequestedPolicies();
     }
 
+    @Test
+    public void getAllApprovedPolicies() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("AUTH");
+        partner.setPolicyGroupId("abc");
+        List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+        PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+        partnerPolicyRequest.setPolicyId("xyz");
+        partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+        partnerPolicyRequest.setStatusCode("approved");
+        partnerPolicyRequestList.add(partnerPolicyRequest);
+        partner.setPartnerPolicyRequests(partnerPolicyRequestList);
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+        String policyGroupName = "test";
+        AuthPolicy authPolicy = new AuthPolicy();
+        authPolicy.setName("policy123");
+        when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
+        when(authPolicyRepository.findApprovedPolicyByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
+
+        multiPartnerServiceImpl.getAllApprovedPolicies();
+    }
+
     @Test(expected = PartnerServiceException.class)
     public void getAllPoliciesTestException() throws Exception {
         multiPartnerServiceImpl.getAllRequestedPolicies();
