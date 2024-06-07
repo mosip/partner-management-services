@@ -63,6 +63,20 @@ public class MultiPartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
+    public void getAllApprovedPoliciesTest() throws Exception {
+        PolicyDto policyDto = new PolicyDto();
+        policyDto.setPartnerId("abc");
+        policyDto.setPartnerType("Auth_Partner");
+        policyDto.setPolicyGroupName("123");
+        policyDto.setPolicyName("test");
+        List<PolicyDto> policyDtoList = new ArrayList<>();
+        policyDtoList.add(policyDto);
+        Mockito.when(multiPartnerService.getAllApprovedPolicies()).thenReturn(policyDtoList);
+        ResponseWrapper<List<PolicyDto>> response = multiPartnerServiceController.getAllApprovedPolicies();
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void getAllApprovedPolicyGroupsList() throws Exception {
         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
         policyGroupDto.setPartnerId("abc");
