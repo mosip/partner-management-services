@@ -180,7 +180,7 @@ public class MultiPartnerServiceImplTest {
         AuthPolicy authPolicy = new AuthPolicy();
         authPolicy.setName("policy123");
         when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
-        when(authPolicyRepository.findApprovedPolicyByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
+        when(authPolicyRepository.findActivePoliciesByPolicyGroupId(anyString(), anyString())).thenReturn(authPolicy);
 
         multiPartnerServiceImpl.getAllApprovedPolicies();
     }
