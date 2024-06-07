@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
