@@ -2,7 +2,7 @@ package io.mosip.pms.common.dto;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

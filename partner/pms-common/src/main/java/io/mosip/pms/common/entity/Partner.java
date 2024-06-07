@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The persistent class for the partner database table.

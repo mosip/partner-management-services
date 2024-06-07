@@ -1,26 +1,27 @@
-package io.mosip.pms.test.config;
+package io.mosip.pms.policy.test.config;
 
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.http.ssl.TrustStrategy;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.SSLContext;
-
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.http.ssl.TrustStrategy;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-
 @Configuration
 public class TestConfig {
+
 	@Bean
+	@Primary
 	public RestTemplate restTemplateConfig()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
@@ -34,17 +35,15 @@ public class TestConfig {
 		var connnectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
 		connnectionManagerBuilder.setSSLSocketFactory(csf);
 		var connectionManager = connnectionManagerBuilder.build();
+
 		HttpClientBuilder httpClientBuilder = HttpClients.custom()
 				.setConnectionManager(connectionManager);
-
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+				
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		return new RestTemplate(requestFactory);
 
 	}
-	
-	@Bean
-	public RestTemplate selfTokenRestTemplate() { return new RestTemplate(); }
 
 }
