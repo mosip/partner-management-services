@@ -49,12 +49,12 @@
 		<maven.source.plugin.version>2.2.1</maven.source.plugin.version>
 
 		<git.commit.id.plugin.version>3.0.1</git.commit.id.plugin.version>
-		<fileName>apitest-partner-1.2.1-java21-SNAPSHOT-jar-with-dependencies</fileName>
+		<fileName>apitest-pms-1.2.1-java21-SNAPSHOT-jar-with-dependencies</fileName>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>io.mosip.testrig.apirig.automationtests.commons</groupId>
+			<groupId>io.mosip.testrig.apirig.apitest.commons</groupId>
 			<artifactId>apitest-commons</artifactId>
 			<version>1.2.1-java21-SNAPSHOT</version>
 		</dependency>
