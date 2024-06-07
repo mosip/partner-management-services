@@ -11,9 +11,7 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyGroupDto;
-import io.mosip.pms.partner.dto.PolicyDto;
+import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
@@ -231,8 +229,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PolicyDto> getAllApprovedPolicies() {
-        List<PolicyDto> policyDtoList = new ArrayList<>();
+    public List<ApprovedPolicyDto> getAllApprovedPolicies() {
+        List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -243,27 +241,27 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             checkPartnerAndPolicyGroupIds(partner, userId);
                             PolicyGroup policyGroup = validatePolicyGroup(partner);
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
+                            List<ActivePolicyDto> activePolicyDtoList = new ArrayList<>();
                             if (!partnerPolicyRequestList.isEmpty()) {
                                 for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
                                     if (partnerPolicyRequest.getStatusCode().equals(APPROVED)) {
                                         AuthPolicy policyDetails = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
                                         if (Objects.nonNull(policyDetails)) {
-                                            PolicyDto policyDto = new PolicyDto();
-                                            policyDto.setPartnerId(partner.getId());
-                                            policyDto.setPartnerType(partner.getPartnerTypeCode());
+                                            ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
+                                            ActivePolicyDto activePolicyDto = new ActivePolicyDto();
+                                            approvedPolicyDto.setPartnerId(partner.getId());
+                                            approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
+                                            approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
+                                            approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                            approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
 
-                                            policyDto.setPolicyGroupId(policyGroup.getId());
-                                            policyDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                            policyDto.setPolicyGroupName(policyGroup.getName());
+                                            activePolicyDto.setPolicyId(policyDetails.getId());
+                                            activePolicyDto.setPolicyDescription(policyDetails.getDescr());
+                                            activePolicyDto.setPolicyName(policyDetails.getName());
+                                            activePolicyDto.setStatus(partnerPolicyRequest.getStatusCode());
 
-                                            policyDto.setPolicyId(policyDetails.getId());
-                                            policyDto.setPolicyDescription(policyDetails.getDescr());
-                                            policyDto.setPolicyName(policyDetails.getName());
-
-                                            policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
-                                            policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
-                                            policyDto.setStatus(partnerPolicyRequest.getStatusCode());
-                                            policyDtoList.add(policyDto);
+                                            approvedPolicyList.add(approvedPolicyDto);
+                                            activePolicyDtoList.add(activePolicyDto);
                                         } else {
                                             LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
                                             throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
@@ -271,6 +269,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         }
                                     }
                                 }
+                                addActivePolices(approvedPolicyList, activePolicyDtoList);
                             }
                         }
                     } catch (PartnerServiceException ex) {
@@ -292,7 +291,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
         }
-        return policyDtoList;
+        return approvedPolicyList;
+    }
+
+    private void addActivePolices(List<ApprovedPolicyDto> approvedPolicyList, List<ActivePolicyDto> activePolicyDtoList) {
+        for (ApprovedPolicyDto approvedPolicyDto : approvedPolicyList) {
+            approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+        }
     }
 
     public static void checkPartnerAndPolicyGroupIds(Partner partner, String userId) {
@@ -320,7 +325,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         return policyGroup;
     }
-    
+
     private AuthUserDetails authUserDetails() {
         return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
