@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.partner.dto.ApprovedPolicyDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.dto.PolicyDto;
@@ -59,8 +60,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<List<PolicyDto>> getAllApprovedPolicies() {
-        ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedPolicies() {
+        ResponseWrapper<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setResponse(multiPartnerService.getAllApprovedPolicies());
         return responseWrapper;
     }
