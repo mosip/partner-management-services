@@ -154,7 +154,9 @@ public class FilterHelper  {
 
 		columnTypeValidator(rootType, columnName);
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
-			predicates.add(caseSensitivePredicate);
+			if(caseSensitivePredicate!=null){
+				predicates.add(caseSensitivePredicate);
+			}
 		}
 		buildOptionalFilter(criteriaBuilder, rootType, filterValueDto.getOptionalFilters(), predicates);
 		Predicate filterPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
