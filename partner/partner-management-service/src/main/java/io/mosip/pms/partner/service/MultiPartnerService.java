@@ -13,7 +13,7 @@ public interface MultiPartnerService {
 
     public List<PolicyDto> getAllRequestedPolicies();
 
-    public List<ApprovedPolicyDto> getAllApprovedPolicies();
+    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies();
 
     public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
 }

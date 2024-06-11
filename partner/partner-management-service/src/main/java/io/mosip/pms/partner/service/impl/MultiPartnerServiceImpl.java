@@ -35,6 +35,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String BLANK_STRING = "";
     public static final String DEVICE_PROVIDER = "Device_Provider";
     public static final String FTM_PROVIDER = "FTM_Provider";
+    public static final String AUTH_PARTNER = "Auth_Partner";
     public static final String APPROVED = "approved";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
@@ -119,8 +120,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     try {
-                        if (checkPartnerType(partner)) {
-                            checkPartnerAndPolicyGroupIds(partner, userId);
+                        if (!skipDeviceOrFtmPartner(partner)) {
+                            validatePartnerId(partner, userId);
+                            validatePolicyGroupId(partner, userId);
                             PolicyGroup policyGroup = validatePolicyGroup(partner);
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                             if (!partnerPolicyRequestList.isEmpty()) {
@@ -184,21 +186,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 for (Partner partner : partnerList) {
                     String partnerType = partner.getPartnerTypeCode();
                     // Ignore, If the partner is a DEVICE or FTM partnertype
-                    if (checkPartnerType(partner)
+                    if (!skipDeviceOrFtmPartner(partner)
                             && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
                         try {
-                            if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-                                LOGGER.info("Partner Id is null or empty for user id : " + userId);
-                                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-                            }
-                            PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
-                            if (Objects.isNull(policyGroup)) {
-                                LOGGER.info("Policy Group is null for partner id : " + partner.getId());
-                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                            }
+                            validatePartnerId(partner, userId);
+                            validatePolicyGroupId(partner, userId);
+                            PolicyGroup policyGroup = validatePolicyGroup(partner);
                             policyGroupDto.setPartnerId(partner.getId());
                             policyGroupDto.setPartnerType(partner.getPartnerTypeCode());
                             policyGroupDto.setPolicyGroupId(partner.getPolicyGroupId());
@@ -229,7 +223,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<ApprovedPolicyDto> getAllApprovedPolicies() {
+    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies() {
         List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -237,9 +231,16 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
                     try {
-                        if (checkPartnerType(partner)) {
-                            checkPartnerAndPolicyGroupIds(partner, userId);
+                        if (checkIfPartnerIsApprovedAuthPartner(partner)) {
+                            validatePartnerId(partner, userId);
+                            validatePolicyGroupId(partner, userId);
                             PolicyGroup policyGroup = validatePolicyGroup(partner);
+                            ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
+                            approvedPolicyDto.setPartnerId(partner.getId());
+                            approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
+                            approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
+                            approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                            approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
                             List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
                             List<ActivePolicyDto> activePolicyDtoList = new ArrayList<>();
                             if (!partnerPolicyRequestList.isEmpty()) {
@@ -247,20 +248,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     if (partnerPolicyRequest.getStatusCode().equals(APPROVED)) {
                                         AuthPolicy policyDetails = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
                                         if (Objects.nonNull(policyDetails)) {
-                                            ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
                                             ActivePolicyDto activePolicyDto = new ActivePolicyDto();
-                                            approvedPolicyDto.setPartnerId(partner.getId());
-                                            approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
-                                            approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
-                                            approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                            approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
-
                                             activePolicyDto.setPolicyId(policyDetails.getId());
                                             activePolicyDto.setPolicyDescription(policyDetails.getDescr());
                                             activePolicyDto.setPolicyName(policyDetails.getName());
                                             activePolicyDto.setStatus(partnerPolicyRequest.getStatusCode());
-
-                                            approvedPolicyList.add(approvedPolicyDto);
                                             activePolicyDtoList.add(activePolicyDto);
                                         } else {
                                             LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
@@ -269,7 +261,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         }
                                     }
                                 }
-                                addActivePolices(approvedPolicyList, activePolicyDtoList);
+                                approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+                                approvedPolicyList.add(approvedPolicyDto);
+                            } else {
+                                approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+                                approvedPolicyList.add(approvedPolicyDto);
                             }
                         }
                     } catch (PartnerServiceException ex) {
@@ -294,18 +290,31 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return approvedPolicyList;
     }
 
-    private void addActivePolices(List<ApprovedPolicyDto> approvedPolicyList, List<ActivePolicyDto> activePolicyDtoList) {
-        for (ApprovedPolicyDto approvedPolicyDto : approvedPolicyList) {
-            approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+    public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        String approvalStatus = partner.getApprovalStatus();
+        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
+            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
         }
+        if ((Objects.isNull(approvalStatus) || approvalStatus.equals(BLANK_STRING))) {
+            LOGGER.info("Approval status is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
+        }
+        return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
     }
 
-    public static void checkPartnerAndPolicyGroupIds(Partner partner, String userId) {
+    public static void validatePartnerId(Partner partner, String userId) {
         if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
             LOGGER.info("Partner Id is null or empty for user id : " + userId);
             throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
                     ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
         }
+    }
+
+    public static void validatePolicyGroupId(Partner partner, String userId) {
         if (Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().equals(BLANK_STRING)) {
             LOGGER.info("Policy group Id is null or empty for user id : " + userId);
             throw new PartnerServiceException(ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
@@ -313,8 +322,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
     }
 
-    public static boolean checkPartnerType(Partner partner) {
-        return !partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) && !partner.getPartnerTypeCode().equals(FTM_PROVIDER);
+    public static boolean skipDeviceOrFtmPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
+            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
+        }
+        return partnerType.equals(DEVICE_PROVIDER) || partnerType.equals(FTM_PROVIDER);
     }
 
     private PolicyGroup validatePolicyGroup(Partner partner) throws PartnerServiceException {

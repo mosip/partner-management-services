@@ -182,7 +182,7 @@ public class MultiPartnerServiceImplTest {
         when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
         when(authPolicyRepository.findActivePoliciesByPolicyGroupId(anyString(), anyString())).thenReturn(authPolicy);
 
-        multiPartnerServiceImpl.getAllApprovedPolicies();
+        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
     }
 
     @Test(expected = PartnerServiceException.class)
