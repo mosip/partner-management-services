@@ -10,6 +10,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -20,9 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -149,6 +148,17 @@ public class ClientManagementControllerTest {
 
         verify(serviceImpl).getClientDetails("123");
         assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void getAllOidcClients() throws Exception {
+        List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+        OidcClientDto oidcClientDto = new OidcClientDto();
+        oidcClientDto.setOidcClientId("123");
+        oidcClientDto.setName("abc");
+        oidcClientDtoList.add(oidcClientDto);
+        Mockito.when(serviceImpl.getAllOidcClients()).thenReturn(oidcClientDtoList);
+        ResponseWrapper<List<OidcClientDto>> responseWrapper = clientManagementController.getAllOidcClients();
     }
 
 }

@@ -1,6 +1,12 @@
 package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
@@ -8,18 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.oauth.client.dto.ClientDetail;
-import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
-import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
-import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ClientManagementController {
@@ -86,6 +88,19 @@ public class ClientManagementController {
 		var response = new ResponseWrapper<ClientDetail>();
 		response.setResponse(clientManagementService.getClientDetails(clientId));
 		return response;
+	}
+
+	@GetMapping(value = "/getAllOidcClients")
+	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
+		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(clientManagementService.getAllOidcClients());
+		return responseWrapper;
 	}
 	
 }
