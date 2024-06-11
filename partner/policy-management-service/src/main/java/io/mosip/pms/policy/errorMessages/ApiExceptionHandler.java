@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import io.mosip.pms.common.request.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,15 +53,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	/**
 	 * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
-	 * 
+	 *
 	 */
-	@Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
-    		HttpStatus status, WebRequest request) {		
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+    		HttpStatus status, WebRequest request) {
 		ExceptionUtils.logRootCause(ex);
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        FieldError fieldError = fieldErrors.get(0);		
-        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(), 
+        FieldError fieldError = fieldErrors.get(0);
+        ServiceError serviceError = new ServiceError(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode(),
         		"Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		ResponseWrapper<ServiceError> errorResponse = null;
 		try {
@@ -66,8 +69,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		} catch (IOException e) {
 			//
 		}
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);        
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("id", null);
+		body.put("version", null);
+		body.put("metadata", null);
+		body.put("response", null);
+		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
+
+		List<FieldError> fieldErrors = ex.getFieldErrors();
+		FieldError fieldError = fieldErrors.get(0);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(ErrorMessages.MISSING_INPUT_PARAMETER.getErrorCode());
+		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
+		List<ErrorResponse> errors = new ArrayList<>();
+		errors.add(errorResponse);
+		body.put("errors", errors);
+		return ResponseEntity.badRequest().body(body);
+	}
 	
 	/**
 	 * Exception to be thrown when misp application validations failed.
@@ -150,7 +174,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	 * This method extract the response from HttpServletRequest request.
 	 * 
 	 * @param httpServletRequest
-	 * @param e
 	 * @param httpStatus
 	 * @return
 	 * @throws IOException
