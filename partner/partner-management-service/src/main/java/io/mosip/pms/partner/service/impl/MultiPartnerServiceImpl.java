@@ -261,8 +261,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         }
                                     }
                                 }
+                                approvedPolicyDto.setActivePolicies(activePolicyDtoList);
                                 approvedPolicyList.add(approvedPolicyDto);
-                                addActivePolices(approvedPolicyList, activePolicyDtoList);
                             } else {
                                 approvedPolicyDto.setActivePolicies(activePolicyDtoList);
                                 approvedPolicyList.add(approvedPolicyDto);
@@ -288,12 +288,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
         }
         return approvedPolicyList;
-    }
-
-    private void addActivePolices(List<ApprovedPolicyDto> approvedPolicyList, List<ActivePolicyDto> activePolicyDtoList) {
-        for (ApprovedPolicyDto approvedPolicyDto : approvedPolicyList) {
-            approvedPolicyDto.setActivePolicies(activePolicyDtoList);
-        }
     }
 
     public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
