@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.controller;
 
+import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.ApprovedPolicyDto;
 import io.mosip.pms.partner.dto.CertificateDto;
@@ -76,6 +77,19 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
         ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setResponse(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups());
+        return responseWrapper;
+    }
+
+    @GetMapping(value = "/getAllOidcClients")
+    @Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<ClientDetail>> getAllOidcClients() {
+        ResponseWrapper<List<ClientDetail>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.getAllOidcClients());
         return responseWrapper;
     }
 }

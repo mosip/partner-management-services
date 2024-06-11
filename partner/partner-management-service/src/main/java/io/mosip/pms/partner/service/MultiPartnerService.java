@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.service;
 
+import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.partner.dto.ApprovedPolicyDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyGroupDto;
@@ -16,4 +17,6 @@ public interface MultiPartnerService {
     public List<ApprovedPolicyDto> getAllApprovedPolicies();
 
     public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
+
+    public List<ClientDetail> getAllOidcClients();
 }

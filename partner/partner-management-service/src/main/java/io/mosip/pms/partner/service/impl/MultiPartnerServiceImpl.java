@@ -2,11 +2,9 @@ package io.mosip.pms.partner.service.impl;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -49,6 +47,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     PartnerServiceImpl partnerServiceImpl;
+
+    @Autowired
+    ClientDetailRepository clientDetailRepository;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -325,6 +326,22 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         return policyGroup;
     }
+
+    @Override
+    public List<ClientDetail> getAllOidcClients() {
+        List<ClientDetail> clientDetailList = new ArrayList<>();
+        try {
+            clientDetailList = clientDetailRepository.findAll();
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getAllOidcClients method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
+        }
+        return clientDetailList;
+    }
+
 
     private AuthUserDetails authUserDetails() {
         return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

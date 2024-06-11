@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import io.mosip.pms.common.entity.ClientDetail;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientDetailRepository extends CrudRepository<ClientDetail, String> {
@@ -27,4 +28,7 @@ public interface ClientDetailRepository extends CrudRepository<ClientDetail, Str
      * @return
      */
     Optional<ClientDetail> findByName(String clientName);
+
+    List<ClientDetail> findAll();
+
 }

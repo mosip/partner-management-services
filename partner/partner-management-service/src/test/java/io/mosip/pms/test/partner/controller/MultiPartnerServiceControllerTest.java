@@ -1,5 +1,7 @@
 package io.mosip.pms.test.partner.controller;
 
+import ch.qos.logback.core.net.server.Client;
+import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.ApprovedPolicyDto;
@@ -88,5 +90,16 @@ public class MultiPartnerServiceControllerTest {
         policyGroupDtoList.add(policyGroupDto);
         Mockito.when(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups()).thenReturn(policyGroupDtoList);
         ResponseWrapper<List<PolicyGroupDto>> responseWrapper = multiPartnerServiceController.getAllApprovedPartnerIdsWithPolicyGroups();
+    }
+
+    @Test
+    public void getAllOidcClients() throws Exception {
+        List<ClientDetail> clientDetailList = new ArrayList<>();
+        ClientDetail clientDetail = new ClientDetail();
+        clientDetail.setId("123");
+        clientDetail.setName("abc");
+        clientDetailList.add(clientDetail);
+        Mockito.when(multiPartnerService.getAllOidcClients()).thenReturn(clientDetailList);
+        ResponseWrapper<List<ClientDetail>> responseWrapper = multiPartnerServiceController.getAllOidcClients();
     }
 }

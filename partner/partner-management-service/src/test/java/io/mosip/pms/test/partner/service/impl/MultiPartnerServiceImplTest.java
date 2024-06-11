@@ -1,11 +1,9 @@
 package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.RestUtil;
@@ -23,6 +21,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -48,6 +47,9 @@ public class MultiPartnerServiceImplTest {
 
     @MockBean
     AuthPolicyRepository authPolicyRepository;
+
+    @Mock
+    ClientDetailRepository clientDetailRepository;
 
     @Mock
     Environment environment;
@@ -223,5 +225,29 @@ public class MultiPartnerServiceImplTest {
         mosipUserDto.setUserId("123");
         mosipUserDto.setMail("abc@gmail.com");
         return mosipUserDto;
+    }
+
+    @Test
+    public void getAllOidcClients() throws Exception {
+        List<ClientDetail> clientDetailList = new ArrayList<>();
+        ClientDetail clientDetail = new ClientDetail();
+        clientDetail.setId("123");
+        clientDetail.setName("abc");
+        clientDetailList.add(clientDetail);
+
+        when(clientDetailRepository.findAll()).thenReturn(clientDetailList);
+        multiPartnerServiceImpl.getAllOidcClients();
+    }
+
+    @Test
+    public void getAllOidcClientsException() throws Exception {
+        List<ClientDetail> clientDetailList = new ArrayList<>();
+        ClientDetail clientDetail = new ClientDetail();
+        clientDetail.setId("123");
+        clientDetail.setName("abc");
+        clientDetailList.add(clientDetail);
+
+        when(clientDetailRepository.findAll()).thenThrow(SQLException.class);
+        multiPartnerServiceImpl.getAllOidcClients();
     }
 }
