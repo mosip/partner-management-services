@@ -190,17 +190,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
                         try {
-                            if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-                                LOGGER.info("Partner Id is null or empty for user id : " + userId);
-                                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-                            }
-                            PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
-                            if (Objects.isNull(policyGroup)) {
-                                LOGGER.info("Policy Group is null for partner id : " + partner.getId());
-                                throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                        ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                            }
+                            validatePartnerId(partner, userId);
+                            validatePolicyGroupId(partner, userId);
+                            PolicyGroup policyGroup = validatePolicyGroup(partner);
                             policyGroupDto.setPartnerId(partner.getId());
                             policyGroupDto.setPartnerType(partner.getPartnerTypeCode());
                             policyGroupDto.setPolicyGroupId(partner.getPolicyGroupId());
@@ -305,6 +297,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
+        if (Objects.isNull(partner)) {
+            return false;
+        }
         return partner.getPartnerTypeCode().equals(AUTH_PARTNER) && partner.getApprovalStatus().equals(APPROVED);
     }
 
@@ -325,6 +320,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     public static boolean skipDeviceOrFtmPartner(Partner partner) {
+        if (Objects.isNull(partner)) {
+            return false;
+        }
         return partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) || partner.getPartnerTypeCode().equals(FTM_PROVIDER);
     }
 
