@@ -297,10 +297,19 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
-        if (Objects.isNull(partner)) {
-            return false;
+        String partnerType = partner.getPartnerTypeCode();
+        String approvalStatus = partner.getApprovalStatus();
+        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
+            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
         }
-        return partner.getPartnerTypeCode().equals(AUTH_PARTNER) && partner.getApprovalStatus().equals(APPROVED);
+        if ((Objects.isNull(approvalStatus) || approvalStatus.equals(BLANK_STRING))) {
+            LOGGER.info("Approval status is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
+        }
+        return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
     }
 
     public static void validatePartnerId(Partner partner, String userId) {
@@ -320,10 +329,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     public static boolean skipDeviceOrFtmPartner(Partner partner) {
-        if (Objects.isNull(partner)) {
-            return false;
+        String partnerType = partner.getPartnerTypeCode();
+        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
+            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
         }
-        return partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) || partner.getPartnerTypeCode().equals(FTM_PROVIDER);
+        return partnerType.equals(DEVICE_PROVIDER) || partnerType.equals(FTM_PROVIDER);
     }
 
     private PolicyGroup validatePolicyGroup(Partner partner) throws PartnerServiceException {
