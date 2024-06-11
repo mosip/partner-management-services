@@ -1,7 +1,7 @@
 package io.mosip.pms.device.request.dto;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;

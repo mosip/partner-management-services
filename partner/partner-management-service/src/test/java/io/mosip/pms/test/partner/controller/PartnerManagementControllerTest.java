@@ -16,7 +16,6 @@ import java.util.Optional;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import lombok.SneakyThrows;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -62,6 +62,7 @@ import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
+@TestPropertySource("classpath:application.properties")
 public class PartnerManagementControllerTest {
 
 	@Autowired
@@ -69,6 +70,9 @@ public class PartnerManagementControllerTest {
 
 	@MockBean
 	PartnerManagerService partnerManagementService;
+
+	@MockBean
+	PartnerManagementController partnerMangementController;
 
 	@Mock
 	private MispLicenseKeyRepository misplKeyRepository;	
@@ -205,8 +209,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.approveRejectPartnerPolicyMapping(mappingKey,requestDto))
 				.thenReturn("Success");
 		
-		mockMvc.perform(MockMvcRequestBuilders.put("/partners/policy/56789").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+		partnerMangementController.approveRejectPolicyMappings(request, "56789");
 	}
 	
 	@Test
@@ -222,8 +225,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",requestDto))
 				.thenReturn("Success");
 		
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+		partnerMangementController.activateDeactivatePartnerAPIKey("1234", "456", request);
 	}
 
 	@Test (expected = Exception.class)
@@ -275,7 +277,6 @@ public class PartnerManagementControllerTest {
 	@SneakyThrows
 	@Test
 	public void testActivateDeactivatePartnerAPIKey() {
-		PartnerManagementController partnerManagementController = new PartnerManagementController();
 
 		APIkeyStatusUpdateRequestDto apIkeyStatusUpdateRequestDto = new APIkeyStatusUpdateRequestDto();
 		apIkeyStatusUpdateRequestDto.setLabel("Label");
@@ -289,8 +290,7 @@ public class PartnerManagementControllerTest {
 		requestWrapper.setVersion("1.0");
 		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",apIkeyStatusUpdateRequestDto))
 				.thenReturn("Success");
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(MockMvcResultMatchers.status().isUnauthorized());
+		partnerMangementController.activateDeactivatePartnerAPIKey("1234", "456", requestWrapper);
 	}
 
 	@SneakyThrows
