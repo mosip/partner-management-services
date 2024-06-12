@@ -1,20 +1,20 @@
 package io.mosip.pms.oauth.client.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,26 +37,11 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.ClientDetailRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
-import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
-import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
-import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
-import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
-import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
-import io.mosip.pms.oauth.client.dto.CreateClientRequestDto;
-import io.mosip.pms.oauth.client.dto.CreateClientRequestDtoV2;
-import io.mosip.pms.oauth.client.dto.ProcessedClientDetail;
-import io.mosip.pms.oauth.client.dto.RequestWrapper;
-import io.mosip.pms.oauth.client.dto.UpdateClientRequestDto;
-import io.mosip.pms.oauth.client.dto.UpdateClientRequestDtoV2;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
@@ -90,6 +75,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
+	public static final String BLANK_STRING = "";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -102,6 +88,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	@Autowired
 	PartnerRepository partnerRepository;
+
+	@Autowired
+	PartnerServiceRepository partnerServiceRepository;
 
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
@@ -596,7 +585,60 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setClientAuthMethods(convertStringToList(result.get().getClientAuthMethods()));
 		return dto;
 	}
-	
+
+	@Override
+	public List<OidcClientDto> getAllOidcClients() {
+		List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			for (Partner partner : partnerList) {
+				String partnerId = partner.getId();
+				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
+					LOGGER.info("Partner Id is null or empty for user id : " + userId);
+					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				List<ClientDetail> clientDetailList = new ArrayList<>();
+				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
+				for (ClientDetail clientDetail : clientDetailList){
+					OidcClientDto oidcClientDto = new OidcClientDto();
+					oidcClientDto.setPartnerId(partnerId);
+					oidcClientDto.setUserId(userId);
+					oidcClientDto.setOidcClientId(clientDetail.getId());
+					oidcClientDto.setName(clientDetail.getName());
+					oidcClientDto.setPolicyId(clientDetail.getPolicyId());
+					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
+					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
+					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
+					oidcClientDto.setClaims(convertStringToList(clientDetail.getClaims()));
+					oidcClientDto.setAcrValues(convertStringToList(clientDetail.getAcrValues()));
+					oidcClientDto.setStatus(clientDetail.getStatus());
+					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
+
+					oidcClientDtoList.add(oidcClientDto);
+				}
+			}
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
+					ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
+		}
+		return oidcClientDtoList;
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 	/**
 	 * 
 	 * @param commaSeparatedString
