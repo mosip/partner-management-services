@@ -616,7 +616,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDto.setPartnerId(partnerId);
 					oidcClientDto.setUserId(userId);
 					oidcClientDto.setOidcClientId(clientDetail.getId());
-					oidcClientDto.setName(clientDetail.getName());
+					oidcClientDto.setOidcClientName(clientDetail.getName());
 					oidcClientDto.setPolicyGroupName(policyGroup.getName());
 					oidcClientDto.setPolicyName(authPolicy.get().getName());
 					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
@@ -625,6 +625,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
 					oidcClientDto.setStatus(clientDetail.getStatus());
 					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+					oidcClientDto.setCrDtimes(clientDetail.getCreatedDateTime());
+					oidcClientDto.setUpdDtimes(clientDetail.getUpdatedDateTime());
 
 					oidcClientDtoList.add(oidcClientDto);
 				}
