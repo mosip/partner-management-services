@@ -6,6 +6,8 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
@@ -31,10 +33,6 @@ import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.ClientDetail;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
@@ -602,21 +600,31 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				List<ClientDetail> clientDetailList = new ArrayList<>();
 				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
 				for (ClientDetail clientDetail : clientDetailList){
+					Optional <AuthPolicy> authPolicy = authPolicyRepository.findById(clientDetail.getPolicyId());
+					if (!authPolicy.isPresent()) {
+						LOGGER.info("Policy does not exists.");
+						throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+								ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
+					}
+					PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
+					if (Objects.isNull(policyGroup)) {
+						LOGGER.info("Policy Group is null or empty");
+						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+					}
 					OidcClientDto oidcClientDto = new OidcClientDto();
 					oidcClientDto.setPartnerId(partnerId);
 					oidcClientDto.setUserId(userId);
 					oidcClientDto.setOidcClientId(clientDetail.getId());
 					oidcClientDto.setName(clientDetail.getName());
-					oidcClientDto.setPolicyId(clientDetail.getPolicyId());
+					oidcClientDto.setPolicyGroupName(policyGroup.getName());
+					oidcClientDto.setPolicyName(authPolicy.get().getName());
 					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
 					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
 					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
 					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
-					oidcClientDto.setClaims(convertStringToList(clientDetail.getClaims()));
-					oidcClientDto.setAcrValues(convertStringToList(clientDetail.getAcrValues()));
 					oidcClientDto.setStatus(clientDetail.getStatus());
 					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
 
 					oidcClientDtoList.add(oidcClientDto);
 				}
