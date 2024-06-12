@@ -623,11 +623,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
 					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
 					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
-					oidcClientDto.setClaims(convertStringToList(clientDetail.getClaims()));
-					oidcClientDto.setAcrValues(convertStringToList(clientDetail.getAcrValues()));
 					oidcClientDto.setStatus(clientDetail.getStatus());
 					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
 
 					oidcClientDtoList.add(oidcClientDto);
 				}
