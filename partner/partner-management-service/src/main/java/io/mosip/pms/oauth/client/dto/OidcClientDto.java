@@ -12,7 +12,9 @@ public class OidcClientDto {
     private String oidcClientId;
     private String oidcClientName;
     private String policyGroupName;
+    private String policyGroupDescription;
     private String policyName;
+    private String policyNameDescription;
     private String relyingPartyId;
     private String logoUri;
     private List<String> redirectUris;
