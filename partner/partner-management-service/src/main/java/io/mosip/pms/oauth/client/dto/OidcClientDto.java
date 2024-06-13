@@ -11,8 +11,10 @@ public class OidcClientDto {
     private String partnerId;
     private String oidcClientId;
     private String oidcClientName;
+    private String policyGroupId;
     private String policyGroupName;
     private String policyGroupDescription;
+    private String policyId;
     private String policyName;
     private String policyNameDescription;
     private String relyingPartyId;
