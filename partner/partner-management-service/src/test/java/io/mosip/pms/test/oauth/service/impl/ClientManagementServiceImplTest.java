@@ -10,8 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,7 +23,6 @@ import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
@@ -40,6 +41,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -50,9 +54,6 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.ClientDetailRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
@@ -92,6 +93,15 @@ public class ClientManagementServiceImplTest {
 
 	@Mock
 	private WebSubPublisher webSubPublisher;
+
+	@Mock
+	Authentication authentication;
+
+	@Mock
+	SecurityContext securityContext;
+
+	@Mock
+	PartnerServiceRepository partnerServiceRepository;
 
 	Map<String, Object> public_key;
 	
@@ -1159,6 +1169,60 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(result.getClientDetail());
 		assertNotNull(result.getPartner());
 		assertNotNull(result.getPolicy());
+	}
+	@Test
+	public void getAllOidcClients() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		List<ClientDetail> clientDetailList = new ArrayList<>();
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("id123");
+		clientDetail.setName("Sample Client");
+		clientDetail.setRpId("rp123");
+		clientDetail.setPolicyId("policy123");
+		clientDetail.setLogoUri("https://example.com/logo.png");
+		clientDetail.setRedirectUris("https://example.com/callback");
+		clientDetail.setPublicKey("public-key-string");
+		clientDetail.setClaims("claims-string");
+		clientDetail.setAcrValues("acr-values-string");
+		clientDetail.setStatus("active");
+		clientDetail.setGrantTypes("grant-type-string");
+		clientDetail.setClientAuthMethods("auth-methods-string");
+		clientDetail.setCreatedBy("creator-user");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		clientDetail.setUpdatedBy("updater-user");
+		clientDetail.setUpdatedDateTime(LocalDateTime.now());
+		clientDetail.setIsDeleted(false);
+		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("abc");
+		authPolicy.setPolicyGroup(policyGroup);
+		authPolicy.setName("abc");
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+
+		serviceImpl.getAllOidcClients();
+	}
+
+	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
 	}
 
 }
