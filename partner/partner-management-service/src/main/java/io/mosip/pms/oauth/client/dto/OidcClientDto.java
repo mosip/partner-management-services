@@ -25,4 +25,5 @@ public class OidcClientDto {
     private List<String> grantTypes;
     private LocalDateTime crDtimes;
     private LocalDateTime updDtimes;
+    private List<String> clientAuthMethods;
 }

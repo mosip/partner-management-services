@@ -631,7 +631,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
 					oidcClientDto.setCrDtimes(clientDetail.getCreatedDateTime());
 					oidcClientDto.setUpdDtimes(clientDetail.getUpdatedDateTime());
-
+					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
 					oidcClientDtoList.add(oidcClientDto);
 				}
 			}
