@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Service
 public class ClientManagementServiceImpl implements ClientManagementService {
@@ -138,6 +139,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
+		String clientNameLang=objectMapper.writeValueAsString(createRequest.getClientNameLangMap());
+		clientDetail.setClientNameLang(clientNameLang);
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
@@ -461,6 +464,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
+		clientDetail.setClientNameLang(objectMapper.writeValueAsString(updateRequest.getClientNameLangMap()));
 		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -594,6 +598,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setRedirectUris(convertStringToList(result.get().getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(result.get().getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(result.get().getClientAuthMethods()));
+		try {
+			if(result.get().getClientNameLang()!=null){
+				Map<String,String> clientNameLangMap = objectMapper.readValue(result.get().getClientNameLang(),Map.class);
+				dto.setClientNameLangMap(clientNameLangMap);
+			}
+		} catch(Exception e) {
+			LOGGER.error("getClientDetails::Error while parsing clientNameLangMap {}", e.getMessage());
+		}
 		return dto;
 	}
 	

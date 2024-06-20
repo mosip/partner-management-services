@@ -8,20 +8,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.pms.common.constant.ValidationErrorCode;
 import io.mosip.pms.common.dto.FilterData;
@@ -33,7 +32,6 @@ import io.mosip.pms.common.exception.RequestException;
 
 
 @Repository
-@Transactional(readOnly = true)
 public class FilterHelper  {
 
 	private static List<Class<?>> classes = null;
@@ -140,10 +138,12 @@ public class FilterHelper  {
 		List<Predicate> predicates = new ArrayList<>();
 		CriteriaQuery<FilterData> criteriaQueryByType = criteriaBuilder.createQuery(FilterData.class);
 		Root<E> rootType = criteriaQueryByType.from(entity);
-		
-		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-				.like(criteriaBuilder.lower(rootType.get(columnName)), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+
+		if(!filterDto.getText().isEmpty()){
+			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+					.like(criteriaBuilder.lower(rootType.get(columnName)), criteriaBuilder.lower(
+							criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+		}
 
 		if (columnNames.length > 1) {
 			criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnNames[0]),
@@ -154,7 +154,9 @@ public class FilterHelper  {
 
 		columnTypeValidator(rootType, columnName);
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
-			predicates.add(caseSensitivePredicate);
+			if(caseSensitivePredicate!=null){
+				predicates.add(caseSensitivePredicate);
+			}
 		}
 		buildOptionalFilter(criteriaBuilder, rootType, filterValueDto.getOptionalFilters(), predicates);
 		Predicate filterPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

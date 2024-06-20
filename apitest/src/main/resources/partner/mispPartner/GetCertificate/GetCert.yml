@@ -7,7 +7,7 @@ getPartnerCert:
       inputTemplate: partner/mispPartner/GetCertificate/getCert
       outputTemplate: partner/mispPartner/GetCertificate/getCertResult
       input: '{
-  "partnerId": "MISP"
+  "partnerId": "MISP-AUTOMATION"
 }'
       output: ' {
 }'

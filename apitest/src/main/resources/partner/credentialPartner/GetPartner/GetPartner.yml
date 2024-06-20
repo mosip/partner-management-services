@@ -6,10 +6,10 @@ getPartnerCert:
       inputTemplate: partner/credentialPartner/GetPartner/getPartner
       outputTemplate: partner/credentialPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "MOVP"
+	"partnerId": "MOVP-AUTOMATION"
 }'
       output: '  {
-    "partnerID": "MOVP",
+    "partnerID": "MOVP-AUTOMATION",
     "errors": "[]"
   }'
   

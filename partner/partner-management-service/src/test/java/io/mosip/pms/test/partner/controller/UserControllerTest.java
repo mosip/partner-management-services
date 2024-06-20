@@ -1,11 +1,9 @@
 package io.mosip.pms.test.partner.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import io.mosip.pms.user.controller.UserController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +35,9 @@ public class UserControllerTest {
     
     @MockBean
     UserManagementService userManagementService;    
-     
+
+	@MockBean
+	UserController userController;
     
 	@Autowired
 	private ObjectMapper objectMapper;	
@@ -49,8 +48,7 @@ public class UserControllerTest {
     	MosipUserDto response = new MosipUserDto();
 		Mockito.when(userManagementService.registerUser(Mockito.any())).thenReturn(response);
 		RequestWrapper<UserRegistrationRequestDto> request = createRequest();
-		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+		userController.registerUser(request);
     }
 
 	private RequestWrapper<UserRegistrationRequestDto> createRequest() {

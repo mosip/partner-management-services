@@ -1,7 +1,7 @@
 package io.mosip.pms.common.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The primary key class for the partner_h database table.
