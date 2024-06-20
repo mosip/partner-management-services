@@ -27,10 +27,10 @@ import java.util.Map;
 @Api(tags = { "Multi Partner Service Controller" })
 public class MultiPartnerServiceController {
 
-    @Value("${mosip.pms.oidc.clients.grantTypes}")
+    @Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
     private String grantTypes;
 
-    @Value("${mosip.pms.oidc.clients.clientAuthMethods}")
+    @Value("${mosip.pms.oidc.clients.clientAuthMethods:private_key_jwt}")
     private String clientAuthMethods;
 
     @Autowired
@@ -101,6 +101,7 @@ public class MultiPartnerServiceController {
         configMap.put("grantTypes", grantTypes);
         configMap.put("clientAuthMethods", clientAuthMethods);
         responseWrapper.setResponse(configMap);
+        System.out.println(responseWrapper);
         return responseWrapper;
     }
 }
