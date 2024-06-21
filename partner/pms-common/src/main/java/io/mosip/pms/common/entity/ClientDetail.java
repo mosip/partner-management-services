@@ -74,7 +74,4 @@ public class ClientDetail {
 
 	@Column(name = "is_deleted")
 	public Boolean isDeleted;
-
-	@Column(name="client_name")
-	private String clientNameLang;
 }
