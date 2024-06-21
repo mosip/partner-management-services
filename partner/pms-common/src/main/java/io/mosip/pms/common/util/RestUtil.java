@@ -12,16 +12,16 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.TrustStrategy;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.ssl.TrustStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -35,9 +35,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.google.gson.Gson;
-
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.StringUtils;
@@ -47,6 +45,7 @@ import io.mosip.pms.common.dto.Metadata;
 import io.mosip.pms.common.dto.SecretKeyRequest;
 import io.mosip.pms.common.dto.TokenRequestDTO;
 import io.mosip.pms.common.exception.ApiAccessibleException;
+import org.apache.hc.core5.ssl.SSLContexts;
 
 @Component
 public class RestUtil {
@@ -248,12 +247,17 @@ public class RestUtil {
 	 */
 	public RestTemplate getRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
+		SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
 				.build();
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+		var connnectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
+		connnectionManagerBuilder.setSSLSocketFactory(csf);
+		var connectionManager = connnectionManagerBuilder.build();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom()
+				.setConnectionManager(connectionManager);
+		requestFactory.setHttpClient(httpClientBuilder.build());
 		return new RestTemplate(requestFactory);
 	}
 
@@ -265,7 +269,7 @@ public class RestUtil {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException {
+	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException, NoSuchAlgorithmException, KeyStoreException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		final String token = getToken();
 		headers.add("Cookie",token);
@@ -300,7 +304,7 @@ public class RestUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	private String getToken() throws IOException {
+	private String getToken() throws IOException, NoSuchAlgorithmException, KeyStoreException {
 		String token = System.getProperty("token");
 		boolean isValid = false;
 
@@ -317,13 +321,13 @@ public class RestUtil {
 			tokenRequestDTO.setRequest(setSecretKeyRequestDTO());
 
 			Gson gson = new Gson();
-			HttpClient httpClient = HttpClientBuilder.create().build();
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(environment.getProperty("pms.cert.service.token.request.issuerUrl"));
 			try {
 				StringEntity postingString = new StringEntity(gson.toJson(tokenRequestDTO));
 				post.setEntity(postingString);
 				post.setHeader("Content-type", "application/json");
-				HttpResponse response = httpClient.execute(post);
+				CloseableHttpResponse response = httpClient.execute(post);
 				Header[] cookie = response.getHeaders("Set-Cookie");
 				if (cookie.length == 0)
 					throw new IOException("cookie is empty. Could not generate new token.");

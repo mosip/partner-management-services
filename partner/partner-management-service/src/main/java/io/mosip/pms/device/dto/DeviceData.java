@@ -1,7 +1,7 @@
 package io.mosip.pms.device.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import io.mosip.pms.device.validator.ValidFoundational;
 import io.mosip.pms.device.validator.ValidPurpose;

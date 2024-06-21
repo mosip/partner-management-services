@@ -3,8 +3,8 @@ package io.mosip.pms.common.dto;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 
 import lombok.Data;
 
