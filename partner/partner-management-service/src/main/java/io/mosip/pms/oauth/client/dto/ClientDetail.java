@@ -26,5 +26,4 @@ public class ClientDetail {
     private String status;
     private List<String> grantTypes;
     private List<String> clientAuthMethods;
-    private Map<String, String> clientNameLangMap;
 }

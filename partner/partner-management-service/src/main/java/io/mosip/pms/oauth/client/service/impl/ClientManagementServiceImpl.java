@@ -91,6 +91,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
+    public static final String NONE_LANG_KEY = "@none";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -139,9 +140,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
-		String clientNameLang=objectMapper.writeValueAsString(createRequest.getClientNameLangMap());
-		clientDetail.setClientNameLang(clientNameLang);
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				createRequest.getClientNameLangMap(),
+				createRequest.getName()
+        );
+		clientDetail.setName(clientName);
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
@@ -464,8 +468,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throws Exception {
 		
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
-		clientDetail.setClientNameLang(objectMapper.writeValueAsString(updateRequest.getClientNameLangMap()));
 		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				updateRequest.getClientNameLangMap(),
+				updateRequest.getClientName()
+        );
+		clientDetail.setName(clientName);
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
@@ -598,16 +606,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		dto.setRedirectUris(convertStringToList(result.get().getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(result.get().getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(result.get().getClientAuthMethods()));
-		try {
-			if(result.get().getClientNameLang()!=null){
-				Map<String,String> clientNameLangMap = objectMapper.readValue(result.get().getClientNameLang(),Map.class);
-				dto.setClientNameLangMap(clientNameLangMap);
-			}
-		} catch(Exception e) {
-			LOGGER.error("getClientDetails::Error while parsing clientNameLangMap {}", e.getMessage());
-		}
 		return dto;
 	}
+	
+    private String getClientNameLanguageMapAsJsonString(Map<String, String> clientNameMap, String clientName) {
+        clientNameMap.put(NONE_LANG_KEY, clientName);
+        JSONObject clientNameObject = new JSONObject(clientNameMap);
+        return clientNameObject.toString();
+    }
 	
 	/**
 	 * 
