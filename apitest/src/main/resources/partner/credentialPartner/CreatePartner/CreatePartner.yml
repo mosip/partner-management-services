@@ -11,7 +11,7 @@ createPartnerSelfRegistration:
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
     "partnerId": "MOVP-AUTOMATION",
-    "partnerType": "Online_Verification_Partner",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
@@ -32,7 +32,7 @@ createPartnerSelfRegistration:
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
     "partnerId": "$REMOVE$",
-    "partnerType": "Online_Verification_Partner",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
@@ -56,7 +56,7 @@ createPartnerSelfRegistration:
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
     "partnerId": "MOVP-AUTOMATION",
-    "partnerType": "Online_Verification_Partner",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
