@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
@@ -90,6 +91,7 @@ public class ClientManagementController {
 		return response;
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalloidcclients())")
 	@GetMapping(value = "/getAllOidcClients")
 	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

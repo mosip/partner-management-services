@@ -2,11 +2,9 @@ package io.mosip.pms.partner.service.impl;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -23,10 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class MultiPartnerServiceImpl implements MultiPartnerService {
@@ -47,6 +42,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     AuthPolicyRepository authPolicyRepository;
+
+    @Autowired
+    PartnerPolicyRepository partnerPolicyRepository;
 
     @Autowired
     PartnerServiceImpl partnerServiceImpl;
@@ -339,6 +337,71 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(), ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
         }
         return policyGroup;
+    }
+
+    @Override
+    public List<ApiKeyRequestDto> getAllApiKeysForAuthPartners() {
+        List<ApiKeyRequestDto> apiKeyRequestDtoList = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                for (Partner partner : partnerList) {
+                    try {
+                        if (checkIfPartnerIsApprovedAuthPartner(partner)) {
+                            validatePartnerId(partner, userId);
+                            List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
+                            if (!apiKeyRequestsList.isEmpty()) {
+                                for (PartnerPolicy partnerPolicy: apiKeyRequestsList) {
+                                    Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
+                                    if (!authPolicy.isPresent()) {
+                                        LOGGER.info("Policy does not exists.");
+                                        throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+                                                ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
+                                    }
+                                    PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
+                                    if (Objects.isNull(policyGroup)) {
+                                        LOGGER.info("Policy Group is null or empty");
+                                        throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                                ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                                    }
+                                    ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
+                                    apiKeyRequestDto.setApiKeyReqID(partnerPolicy.getPolicyApiKey());
+                                    apiKeyRequestDto.setApiKeyLabel(partnerPolicy.getLabel());
+                                    apiKeyRequestDto.setApiKeyStatus(partnerPolicy.getIsActive());
+                                    apiKeyRequestDto.setPartnerId(partner.getId());
+                                    apiKeyRequestDto.setPolicyGroupId(policyGroup.getId());
+                                    apiKeyRequestDto.setPolicyGroupName(policyGroup.getName());
+                                    apiKeyRequestDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                    apiKeyRequestDto.setPolicyId(authPolicy.get().getId());
+                                    apiKeyRequestDto.setPolicyName(authPolicy.get().getName());
+                                    apiKeyRequestDto.setPolicyNameDescription(authPolicy.get().getDescr());
+                                    apiKeyRequestDto.setCrDtimes(partnerPolicy.getCrDtimes());
+                                    apiKeyRequestDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
+                                    apiKeyRequestDtoList.add(apiKeyRequestDto);
+                                }
+                            }
+                        }
+                    } catch (PartnerServiceException ex) {
+                        LOGGER.info("Could not fetch api requests :" + ex.getMessage());
+                    }
+                }
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
+        }
+        return apiKeyRequestDtoList;
     }
 
     private AuthUserDetails authUserDetails() {
