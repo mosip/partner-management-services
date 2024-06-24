@@ -2,10 +2,7 @@ package io.mosip.pms.test.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
-import io.mosip.pms.partner.dto.ApprovedPolicyDto;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
-import io.mosip.pms.partner.dto.PolicyGroupDto;
+import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,5 +85,24 @@ public class MultiPartnerServiceControllerTest {
         policyGroupDtoList.add(policyGroupDto);
         Mockito.when(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups()).thenReturn(policyGroupDtoList);
         ResponseWrapper<List<PolicyGroupDto>> responseWrapper = multiPartnerServiceController.getAllApprovedPartnerIdsWithPolicyGroups();
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getAllApiKeysForAuthPartners() throws Exception {
+        ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
+        apiKeyRequestDto.setApiKeyReqID("abx");
+        apiKeyRequestDto.setApiKeyStatus(true);
+        apiKeyRequestDto.setApiKeyLabel("test");
+        apiKeyRequestDto.setPolicyId("policy123");
+        apiKeyRequestDto.setPolicyName("policy123name");
+        apiKeyRequestDto.setPolicyNameDescription("policy123desc");
+        apiKeyRequestDto.setPolicyGroupId("policygroup000");
+        apiKeyRequestDto.setPolicyGroupName("policygroup000name");
+        apiKeyRequestDto.setPolicyGroupDescription("policygroup000desc");
+        List<ApiKeyRequestDto> apiKeyRequestDtoList = new ArrayList<>();
+        apiKeyRequestDtoList.add(apiKeyRequestDto);
+        Mockito.when(multiPartnerService.getAllApiKeysForAuthPartners()).thenReturn(apiKeyRequestDtoList);
+        ResponseWrapper<List<ApiKeyRequestDto>> response = multiPartnerServiceController.getAllApiKeysForAuthPartners();
     }
 }
