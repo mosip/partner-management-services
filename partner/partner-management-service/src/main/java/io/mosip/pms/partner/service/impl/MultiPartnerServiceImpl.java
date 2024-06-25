@@ -32,6 +32,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String FTM_PROVIDER = "FTM_Provider";
     public static final String AUTH_PARTNER = "Auth_Partner";
     public static final String APPROVED = "approved";
+    public static final String ACTIVE = "ACTIVE";
+    public static final String INACTIVE = "INACTIVE";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     @Autowired
@@ -350,6 +352,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     try {
                         if (checkIfPartnerIsApprovedAuthPartner(partner)) {
                             validatePartnerId(partner, userId);
+                            validatePolicyGroupId(partner, userId);
                             List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
                             if (!apiKeyRequestsList.isEmpty()) {
                                 for (PartnerPolicy partnerPolicy: apiKeyRequestsList) {
@@ -368,7 +371,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
                                     apiKeyRequestDto.setApiKeyReqID(partnerPolicy.getPolicyApiKey());
                                     apiKeyRequestDto.setApiKeyLabel(partnerPolicy.getLabel());
-                                    apiKeyRequestDto.setApiKeyStatus(partnerPolicy.getIsActive());
+                                    if (partnerPolicy.getIsActive()) {
+                                        apiKeyRequestDto.setStatus(ACTIVE);
+                                    } else {
+                                        apiKeyRequestDto.setStatus(INACTIVE);
+                                    }
                                     apiKeyRequestDto.setPartnerId(partner.getId());
                                     apiKeyRequestDto.setPolicyGroupId(policyGroup.getId());
                                     apiKeyRequestDto.setPolicyGroupName(policyGroup.getName());

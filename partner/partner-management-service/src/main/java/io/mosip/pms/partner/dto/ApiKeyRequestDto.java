@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 public class ApiKeyRequestDto {
     private String apiKeyReqID;
-    private boolean apiKeyStatus;
+    private String status;
     private String apiKeyLabel;
     private String partnerId;
     private String policyGroupId;

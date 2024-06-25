@@ -92,7 +92,7 @@ public class MultiPartnerServiceControllerTest {
     public void getAllApiKeysForAuthPartners() throws Exception {
         ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
         apiKeyRequestDto.setApiKeyReqID("abx");
-        apiKeyRequestDto.setApiKeyStatus(true);
+        apiKeyRequestDto.setStatus("ACTIVE");
         apiKeyRequestDto.setApiKeyLabel("test");
         apiKeyRequestDto.setPolicyId("policy123");
         apiKeyRequestDto.setPolicyName("policy123name");
