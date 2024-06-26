@@ -31,6 +31,12 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.oidc.clients.clientAuthMethods:private_key_jwt}")
     private String clientAuthMethods;
 
+    @Value("${mosip.pms.session.inactivity.timer}")
+    private String inActivityTimer;
+
+    @Value("${mosip.pms.session.inactivity.prompt.timer}")
+    private String inActivityPromptTimer;
+
     @Autowired
     MultiPartnerService multiPartnerService;
 
@@ -102,6 +108,8 @@ public class MultiPartnerServiceController {
         Map<String, String> configMap = new HashMap<String, String>();
         configMap.put("grantTypes", grantTypes);
         configMap.put("clientAuthMethods", clientAuthMethods);
+        configMap.put("inActivityTimer", inActivityTimer);
+        configMap.put("inActivityPromptTimer", inActivityPromptTimer);
         responseWrapper.setResponse(configMap);
         System.out.println(responseWrapper);
         return responseWrapper;
