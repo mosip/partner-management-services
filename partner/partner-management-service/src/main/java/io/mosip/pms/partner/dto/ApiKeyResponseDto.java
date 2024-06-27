@@ -9,8 +9,7 @@ import java.util.Date;
 @Data
 @Getter
 @Setter
-public class ApiKeyRequestDto {
-    private String apiKeyReqID;
+public class ApiKeyResponseDto {
     private String status;
     private String apiKeyLabel;
     private String partnerId;

@@ -90,19 +90,18 @@ public class MultiPartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getAllApiKeysForAuthPartners() throws Exception {
-        ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
-        apiKeyRequestDto.setApiKeyReqID("abx");
-        apiKeyRequestDto.setStatus("ACTIVE");
-        apiKeyRequestDto.setApiKeyLabel("test");
-        apiKeyRequestDto.setPolicyId("policy123");
-        apiKeyRequestDto.setPolicyName("policy123name");
-        apiKeyRequestDto.setPolicyNameDescription("policy123desc");
-        apiKeyRequestDto.setPolicyGroupId("policygroup000");
-        apiKeyRequestDto.setPolicyGroupName("policygroup000name");
-        apiKeyRequestDto.setPolicyGroupDescription("policygroup000desc");
-        List<ApiKeyRequestDto> apiKeyRequestDtoList = new ArrayList<>();
-        apiKeyRequestDtoList.add(apiKeyRequestDto);
-        Mockito.when(multiPartnerService.getAllApiKeysForAuthPartners()).thenReturn(apiKeyRequestDtoList);
-        ResponseWrapper<List<ApiKeyRequestDto>> response = multiPartnerServiceController.getAllApiKeysForAuthPartners();
+        ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
+        apiKeyResponseDto.setStatus("ACTIVE");
+        apiKeyResponseDto.setApiKeyLabel("test");
+        apiKeyResponseDto.setPolicyId("policy123");
+        apiKeyResponseDto.setPolicyName("policy123name");
+        apiKeyResponseDto.setPolicyNameDescription("policy123desc");
+        apiKeyResponseDto.setPolicyGroupId("policygroup000");
+        apiKeyResponseDto.setPolicyGroupName("policygroup000name");
+        apiKeyResponseDto.setPolicyGroupDescription("policygroup000desc");
+        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
+        apiKeyResponseDtoList.add(apiKeyResponseDto);
+        Mockito.when(multiPartnerService.getAllApiKeysForAuthPartners()).thenReturn(apiKeyResponseDtoList);
+        ResponseWrapper<List<ApiKeyResponseDto>> response = multiPartnerServiceController.getAllApiKeysForAuthPartners();
     }
 }

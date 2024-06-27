@@ -14,5 +14,5 @@ public interface MultiPartnerService {
 
     public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
 
-    public List<ApiKeyRequestDto> getAllApiKeysForAuthPartners();
+    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners();
 }

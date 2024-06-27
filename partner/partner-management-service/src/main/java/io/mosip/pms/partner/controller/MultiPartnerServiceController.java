@@ -123,8 +123,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<List<ApiKeyRequestDto>> getAllApiKeysForAuthPartners() {
-        ResponseWrapper<List<ApiKeyRequestDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
+        ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
         return responseWrapper;
     }

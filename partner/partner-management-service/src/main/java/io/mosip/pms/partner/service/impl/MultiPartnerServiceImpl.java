@@ -342,8 +342,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<ApiKeyRequestDto> getAllApiKeysForAuthPartners() {
-        List<ApiKeyRequestDto> apiKeyRequestDtoList = new ArrayList<>();
+    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners() {
+        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -368,24 +368,23 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
                                                 ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
                                     }
-                                    ApiKeyRequestDto apiKeyRequestDto = new ApiKeyRequestDto();
-                                    apiKeyRequestDto.setApiKeyReqID(partnerPolicy.getPolicyApiKey());
-                                    apiKeyRequestDto.setApiKeyLabel(partnerPolicy.getLabel());
+                                    ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
+                                    apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
                                     if (partnerPolicy.getIsActive()) {
-                                        apiKeyRequestDto.setStatus(ACTIVE);
+                                        apiKeyResponseDto.setStatus(ACTIVE);
                                     } else {
-                                        apiKeyRequestDto.setStatus(INACTIVE);
+                                        apiKeyResponseDto.setStatus(INACTIVE);
                                     }
-                                    apiKeyRequestDto.setPartnerId(partner.getId());
-                                    apiKeyRequestDto.setPolicyGroupId(policyGroup.getId());
-                                    apiKeyRequestDto.setPolicyGroupName(policyGroup.getName());
-                                    apiKeyRequestDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                    apiKeyRequestDto.setPolicyId(authPolicy.get().getId());
-                                    apiKeyRequestDto.setPolicyName(authPolicy.get().getName());
-                                    apiKeyRequestDto.setPolicyNameDescription(authPolicy.get().getDescr());
-                                    apiKeyRequestDto.setCrDtimes(partnerPolicy.getCrDtimes());
-                                    apiKeyRequestDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
-                                    apiKeyRequestDtoList.add(apiKeyRequestDto);
+                                    apiKeyResponseDto.setPartnerId(partner.getId());
+                                    apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
+                                    apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
+                                    apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                    apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
+                                    apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
+                                    apiKeyResponseDto.setPolicyNameDescription(authPolicy.get().getDescr());
+                                    apiKeyResponseDto.setCrDtimes(partnerPolicy.getCrDtimes());
+                                    apiKeyResponseDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
+                                    apiKeyResponseDtoList.add(apiKeyResponseDto);
                                 }
                             }
                         }
@@ -408,7 +407,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode(),
                     ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
         }
-        return apiKeyRequestDtoList;
+        return apiKeyResponseDtoList;
     }
 
     private AuthUserDetails authUserDetails() {
