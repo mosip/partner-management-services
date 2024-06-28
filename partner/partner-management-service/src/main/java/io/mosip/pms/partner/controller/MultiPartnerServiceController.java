@@ -37,6 +37,9 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.session.inactivity.prompt.timer}")
     private String inActivityPromptTimer;
 
+    @Value("${mosip.pms.axios.timeout}")
+    private String axiosTimeout;
+
     @Autowired
     MultiPartnerService multiPartnerService;
 
@@ -110,6 +113,7 @@ public class MultiPartnerServiceController {
         configMap.put("clientAuthMethods", clientAuthMethods);
         configMap.put("inActivityTimer", inActivityTimer);
         configMap.put("inActivityPromptTimer", inActivityPromptTimer);
+        configMap.put("axiosTimeout", axiosTimeout);
         responseWrapper.setResponse(configMap);
         System.out.println(responseWrapper);
         return responseWrapper;
