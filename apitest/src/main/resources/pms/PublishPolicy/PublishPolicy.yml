@@ -1,0 +1,27 @@
+createPublishPolicy:
+   Partner_PublishPolicy_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group 1923",
+        "policyGroupDesc": "desc mosip policy group1923",
+        "policyGroupStatus": true,
+        "policyName": "mosip policy",
+        "policyDesc": "desc mosip policy updated",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "bio",
+        "authSubType": "FINGER",
+		"mandatory": true,
+        "attributeName": "string",
+        "authTokenType": "partner"
+    }'

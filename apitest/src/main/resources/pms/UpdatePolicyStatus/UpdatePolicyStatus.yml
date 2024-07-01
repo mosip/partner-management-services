@@ -1,0 +1,16 @@
+UpdatePolicyStatus:
+   Partner_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+       "message": "status updated successfully"
+    }'

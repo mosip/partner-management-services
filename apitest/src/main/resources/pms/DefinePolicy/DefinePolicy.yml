@@ -1,0 +1,26 @@
+definePolicy:
+   Partner_DefinePolicy_All_Valid_Smoke_pms_sid:
+      endPoint: /v1/policymanager/policies
+      role: partner
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc mosip policy 1923",
+	"name": "mosip policy 1923",
+	"authSubType": "FINGER",
+	"authType": "bio",
+	"mandatory": true,
+	"attributeName": "string",
+	"authTokenType": "partner",
+	"policyGroupName": "mosip policy group 1923",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group 1923",
+    "name": "mosip policy 1923",
+    "desc": "desc mosip policy 1923",
+    "is_Active": false
+}'

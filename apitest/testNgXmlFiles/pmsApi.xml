@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+
+<suite name="Partner Management Service API Suite">
+
+	<!-- Passing Group as parmeter unsing "testType" Possible Groups are: smoke 
+		regression smokeAndRegression -->
+	<listeners>
+		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport"/>
+	</listeners>
+	
+	 <test name="CreatePolicyGroup">
+		<parameter name="ymlFile"
+			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	
+	
+	<test name="DefinePolicy">
+		<parameter name="ymlFile"
+			value="pms/DefinePolicy/DefinePolicy.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	
+	<test name="UpdatePolicyStatus">
+		<parameter name="ymlFile"
+			value="pms/UpdatePolicyStatus/UpdatePolicyStatus.yml" />
+		<parameter name="pathParams" value="policygroupId,policyId"/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="PublishPolicy">
+		<parameter name="ymlFile"
+			value="pms/PublishPolicy/PublishPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
+	
+	
+
+      <test name="CreatePartner">
+		<parameter name="ymlFile"
+			value="pms/CreatePartner/CreatePartner.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	
+</suite>

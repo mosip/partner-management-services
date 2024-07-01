@@ -1,0 +1,5 @@
+#####  DB queries to be executed to tear down the data used and generated during the test rig run for partnerRevamp APIs
+
+delete from partner_policy where cr_by='partner-111997'
+delete from partner_policy_request where cr_by='partner-111997'
+delete from partner_policy_bioextract where cr_by='partner-111997'
