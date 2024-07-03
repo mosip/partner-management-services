@@ -27,15 +27,7 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.response.dto.APIkeyRequests;
-import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
-import io.mosip.pms.partner.response.dto.PartnerResponse;
-import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
-import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.*;
 
 public interface PartnerService {
 	
@@ -111,7 +103,19 @@ public interface PartnerService {
      * @throws JsonParseException 
     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
-    
+
+	/**
+	 * Function to Download Original Partner certificates
+	 *
+	 * @param PartnerCertDownloadRequestDto certDownloadRequestDto
+	 * @return {@link PartnerCertDownloadResponeDto} instance
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+
     /**
      * Function to add biometric extractors 
      * @param partnerId

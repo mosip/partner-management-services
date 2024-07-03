@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.partner.dto.CertificateDto;
+import io.mosip.pms.partner.response.dto.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,16 +50,6 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
-import io.mosip.pms.partner.response.dto.APIkeyRequests;
-import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
-import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
-import io.mosip.pms.partner.response.dto.PartnerResponse;
-import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
-import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -349,7 +340,19 @@ public class PartnerServiceController {
 		requestDto.setPartnerId(partnerId);
 		response.setResponse(partnerService.getPartnerCertificate(requestDto));
 		return response;
-    }	
+    }
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
+	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
+	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
+	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
+			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId(partnerId);
+		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
+		return response;
+	}
 	
 	@ResponseFilter
 	@PostMapping("/search")

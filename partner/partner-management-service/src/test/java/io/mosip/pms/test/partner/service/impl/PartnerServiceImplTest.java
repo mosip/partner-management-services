@@ -219,6 +219,27 @@ public class PartnerServiceImplTest {
 		assertEquals(partnerCertDownloadResponeDto.getCertificateData(), "12345");
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getOriginalPartnerCertificate_Test() throws Exception{
+		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
+		partnerCertDownloadRequestDto.setPartnerId("id");
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+		try {
+			pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
+		}catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+		}
+		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
+		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
+
+		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
+		assertNotNull(originalCertDownloadResponseDto);
+		assertEquals(originalCertDownloadResponseDto.getCaSignedCertificateData(), "12345");
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
+	}
 	
 	@Test
 	public void addContact_test() throws Exception{
