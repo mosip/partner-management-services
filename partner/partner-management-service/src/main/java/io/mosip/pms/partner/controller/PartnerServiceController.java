@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -356,7 +357,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
 	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
-			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
