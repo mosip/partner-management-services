@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.service;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -123,7 +124,7 @@ public interface PartnerService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
+	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
 
     /**
      * Function to add biometric extractors 

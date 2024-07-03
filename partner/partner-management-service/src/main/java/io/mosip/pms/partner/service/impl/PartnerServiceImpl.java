@@ -7,6 +7,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.CertificateDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -806,7 +808,25 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		return getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+		OriginalCertDownloadResponseDto responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+		responseDto.setIsMosipSignedCertificateExpired(false);
+		responseDto.setIsCaSignedCertificateExpired(false);
+		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+		// Check mosip signed certificate expiry date
+		X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
+		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+			responseDto.setMosipSignedCertificateData("");
+			responseDto.setIsMosipSignedCertificateExpired(true);
+		}
+		// Check ca signed partner certificate expiry date
+		X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
+		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+			responseDto.setCaSignedCertificateData("");
+			responseDto.setIsCaSignedCertificateExpired(true);
+		}
+		return responseDto;
 	}
 
 	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,
