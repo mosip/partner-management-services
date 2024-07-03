@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.service;
 
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.partner.dto.*;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface MultiPartnerService {
     public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
 
     public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners();
+
+    public UserDetailsDto saveUserConsentGiven();
+
+    public Boolean isUserConsentGiven();
 }

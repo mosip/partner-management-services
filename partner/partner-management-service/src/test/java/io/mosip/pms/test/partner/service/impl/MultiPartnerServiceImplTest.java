@@ -1,12 +1,12 @@
 package io.mosip.pms.test.partner.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -56,6 +57,10 @@ public class MultiPartnerServiceImplTest {
     Authentication authentication;
     @Mock
     SecurityContext securityContext;
+    @Mock
+    UserDetailsRepository userDetailsRepository;
+    @Mock
+    ObjectMapper objectMapper;
 
     @Test
     public void getPartnerCertificatesTest() throws Exception {
@@ -246,6 +251,16 @@ public class MultiPartnerServiceImplTest {
         List<PartnerPolicy> partnerPolicies = new ArrayList<>();
         when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
         multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void isUserConsentGivenException(){
+        multiPartnerServiceImpl.isUserConsentGiven();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void saveUserConsentGivenException(){
+        multiPartnerServiceImpl.saveUserConsentGiven();
     }
 
     @Test(expected = PartnerServiceException.class)

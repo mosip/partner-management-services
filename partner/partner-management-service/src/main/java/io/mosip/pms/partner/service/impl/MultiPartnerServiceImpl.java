@@ -1,12 +1,12 @@
 package io.mosip.pms.partner.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Service
@@ -36,6 +38,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String INACTIVE = "INACTIVE";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
+    public static final String YES = "YES";
+
     @Autowired
     PartnerServiceRepository partnerRepository;
 
@@ -50,6 +54,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     PartnerServiceImpl partnerServiceImpl;
+
+    @Autowired
+    UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -408,6 +418,82 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
         }
         return apiKeyResponseDtoList;
+    }
+
+    private String getUserBy() {
+        String crBy = authUserDetails().getMail();
+        return crBy;
+    }
+
+    public synchronized static String generateUUID(String prefix, String replaceHypen, int length)
+    {
+        String uniqueId = prefix + UUID.randomUUID().toString().replace("-", replaceHypen);
+        if (uniqueId.length() <= length)
+            return uniqueId;
+        return uniqueId.substring(0, length);
+    }
+
+    @Override
+    public UserDetailsDto saveUserConsentGiven() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        try {
+            UserDetails userDetails = new UserDetails();
+
+            String userId = getUserId();
+            LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
+            userDetails.setConsentGiven(YES);
+            userDetails.setConsentGivenDtimes(nowDate);
+
+            Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+            if (optionalEntity.isPresent()) {
+                UserDetails entity = optionalEntity.get();
+                userDetails.setId(entity.getId());
+                userDetails.setUpdBy(this.getUserBy());
+                userDetails.setUpdDtimes(nowDate);
+                userDetails.setCrBy(entity.getCrBy());
+                userDetails.setCrDtimes(entity.getCrDtimes());
+                userDetails.setUserId(entity.getUserId());
+            } else {
+                userDetails.setId(generateUUID("id", "", 36));
+                userDetails.setCrBy(this.getUserBy());
+                userDetails.setCrDtimes(nowDate);
+                userDetails.setUserId(userId);
+            }
+            UserDetails respEntity = userDetailsRepository.save(userDetails);
+            LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
+
+            userDetailsDto = (UserDetailsDto) objectMapper
+                    .convertValue(respEntity, new TypeReference<UserDetailsDto>() {
+                    });
+        } catch (Exception e) {
+            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
+            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
+                    ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
+        }
+        return  userDetailsDto;
+    }
+
+    @Override
+    public Boolean isUserConsentGiven() {
+        boolean isConsentGiven = false;
+        try {
+            String userId = getUserId();
+            LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
+            Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+            if (optionalEntity.isPresent()) {
+                UserDetails entity = optionalEntity.get();
+                if (entity.getConsentGiven().equals(YES)) {
+                    isConsentGiven = true;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
+            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
+                    ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
+        }
+        return isConsentGiven;
     }
 
     private AuthUserDetails authUserDetails() {

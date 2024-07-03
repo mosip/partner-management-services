@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.controller;
 
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.service.MultiPartnerService;
@@ -130,6 +131,32 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
         ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
+        return responseWrapper;
+    }
+
+    @GetMapping(value = "/saveUserConsentGiven")
+    @Operation(summary = "save user consent", description = "Store the user consent in the database.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
+        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.saveUserConsentGiven());
+        return responseWrapper;
+    }
+
+    @GetMapping(value = "/isUserConsentGiven")
+    @Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<Boolean> isUserConsentGiven() {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
         return responseWrapper;
     }
 }
