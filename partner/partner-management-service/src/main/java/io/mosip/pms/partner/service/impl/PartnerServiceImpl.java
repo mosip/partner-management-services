@@ -811,17 +811,17 @@ public class PartnerServiceImpl implements PartnerService {
 		OriginalCertDownloadResponseDto responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
 		responseDto.setIsMosipSignedCertificateExpired(false);
 		responseDto.setIsCaSignedCertificateExpired(false);
-		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.systemDefault());
+		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 		// Check mosip signed certificate expiry date
 		X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
-		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
 			responseDto.setMosipSignedCertificateData("");
 			responseDto.setIsMosipSignedCertificateExpired(true);
 		}
 		// Check ca signed partner certificate expiry date
 		X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
-		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
 			responseDto.setCaSignedCertificateData("");
 			responseDto.setIsCaSignedCertificateExpired(true);
