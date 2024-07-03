@@ -1,0 +1,16 @@
+GenerateApiKey:
+   Partner_GenerateApiKey_AllValid_smoke_sid:
+      endPoint: /v1/partnermanager/partners/Tech-1245/generate/apikey
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/GenerateApiKey/generateApiKeyResult
+      input: '{
+    "policyName": "mosip policy 19234",
+    "label": "string",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "partnerId": "pms-111999",
+    "label": "string"    
+}'

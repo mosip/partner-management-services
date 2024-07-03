@@ -1,21 +1,21 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-      role: partner
+      role: partnerrevamp
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip9876@gmail.com",
+    "emailId": "mosip98763@gmail.com",
     "organizationName": "Tech124",
-    "partnerId": "Tech-124",
+    "partnerId": "Tech-1245",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group for pms",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "Tech124",
+        "partnerId": "Tech-1245",
         "status": "InProgress"
     }'

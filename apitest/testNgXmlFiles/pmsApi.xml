@@ -58,5 +58,66 @@
 		</classes>
 	</test>
 	
+	<test name ="GetPartnerCertificate">
+		<parameter name ="ymlFile"
+			value= "pms/GetCertificate/GetCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
+	
+	
+	<test name="partnerPolicyMapping">
+		<parameter name="ymlFile"
+			value="pms/partnerPolicyMapping/partnerPolicyMapping.yml" />
+		<parameter name="idKeyName" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="GenerateApiKey">
+		<parameter name="ymlFile"
+			value="pms/GenerateApiKey/GenerateApiKey.yml" />
+		<parameter name="idKeyName"	value="apiKey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePatchForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="VerifyPartnersEmail">
+		<parameter name="ymlFile"
+			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name ="UploadPartnerCertificate">
+		<parameter name ="ymlFile"
+			value= "pms/UploadPartnerCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="ActivateDeactivatePartnerApiKey">
+		<parameter name="ymlFile"
+			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
+			<parameter name="pathParams"	value="partnerId,policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name ="GetAllApiKeyForAuthPartner">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartner.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	
 </suite>

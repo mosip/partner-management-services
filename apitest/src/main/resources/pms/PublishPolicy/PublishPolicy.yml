@@ -1,10 +1,10 @@
 createPublishPolicy:
    Partner_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      role: partner
+      role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/PublishPolicy/publishPolicy
-      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
 		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
 		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",

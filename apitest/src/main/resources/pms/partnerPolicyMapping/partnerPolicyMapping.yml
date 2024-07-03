@@ -1,0 +1,15 @@
+RequestAPIKeyForAuthPartner:
+   Partner_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/Tech-1245/policy/map
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/RequestAPIKey/requestApiKey
+      outputTemplate: pms/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'

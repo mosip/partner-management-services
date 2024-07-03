@@ -1,17 +1,17 @@
 definePolicyGroup:
    Partner_DefinePolicyGroup_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
-      role: partner
+      role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group1923",
-    "name": "mosip policy group 1923",
+    "desc": "desc mosip policy group19234",
+    "name": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "mosip policy group 1923",
-        "desc": "desc mosip policy group1923",
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
         "is_Active": true
     }'
