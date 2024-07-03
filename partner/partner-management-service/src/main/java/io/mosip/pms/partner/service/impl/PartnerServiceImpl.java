@@ -128,6 +128,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -796,10 +797,20 @@ public class PartnerServiceImpl implements PartnerService {
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 	}
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		return getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+	}
+
+	@Override
+	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		return getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+	}
+
+	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,
+										  String uriProperty, Class<T> responseType)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
 		if (partnerFromDb.isEmpty()) {
@@ -808,22 +819,22 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
-			LOGGER.error("Cert is not uploaded for given partner {} ", certDownloadRequestDto.getPartnerId());
+			LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());
 			throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
 					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
 		}
-		PartnerCertDownloadResponeDto responseObject = null;
+
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
 		Map<String, Object> getApiResponse = restUtil
-				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
-		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
-				PartnerCertDownloadResponeDto.class);
+				.getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
+		T responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
+
 		if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
-				LOGGER.error("Error occured while getting the cert from keymanager ");
+				LOGGER.error("Error occurred while getting the cert from keymanager");
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
@@ -832,14 +843,14 @@ public class PartnerServiceImpl implements PartnerService {
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
+
 		if (responseObject == null) {
-			LOGGER.error("Got null respone from {} ",
-					environment.getProperty("pmp.partner.certificaticate.get.rest.uri"));
+			LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
-		return responseObject;
 
+		return responseObject;
 	}
 
 	@Override

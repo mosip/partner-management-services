@@ -310,6 +310,28 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getPartnerCertificateTest() throws Exception{
+        PartnerCertDownloadResponeDto certDownloadResponeDto = new PartnerCertDownloadResponeDto();
+        RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
+        PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+        requestWrapper.setRequest(requestDto);
+        Mockito.when(partnerService.getPartnerCertificate(requestDto)).thenReturn(certDownloadResponeDto);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/certificate")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getOriginalPartnerCertificateTest() throws Exception{
+        OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
+        RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
+        PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+        requestWrapper.setRequest(requestDto);
+        Mockito.when(partnerService.getOriginalPartnerCertificate(requestDto)).thenReturn(originalCertDownloadResponseDto);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/originalPartnerCertificate")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
     
     private RequestWrapper<FilterValueDto> createFilterRequest(){
     	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
