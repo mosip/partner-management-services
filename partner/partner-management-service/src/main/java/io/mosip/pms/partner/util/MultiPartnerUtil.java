@@ -24,7 +24,7 @@ public class MultiPartnerUtil {
         try {
             byte[] decodedCertificate = Base64.getDecoder().decode(certificateData);
 
-            CertificateFactory certificateFactory = CertificateFactory.getInstance("xyz123");
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
         } catch (Exception ex) {
             LOGGER.error("Could not decode the certificate data :" + ex.getMessage());
