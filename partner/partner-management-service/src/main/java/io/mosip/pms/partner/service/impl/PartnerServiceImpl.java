@@ -807,7 +807,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
-			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		OriginalCertDownloadResponseDto responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
 		responseDto.setIsMosipSignedCertificateExpired(false);
 		responseDto.setIsCaSignedCertificateExpired(false);
