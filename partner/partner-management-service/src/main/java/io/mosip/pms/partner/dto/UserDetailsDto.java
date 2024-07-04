@@ -13,16 +13,8 @@ public class UserDetailsDto {
 
     private String userId;
 
-    private String consentGiven;
+    private boolean consentGiven;
 
     private LocalDateTime consentGivenDtimes;
-
-    private String crBy;
-
-    private LocalDateTime crDtimes;
-
-    private String updBy;
-
-    private LocalDateTime updDtimes;
 
 }

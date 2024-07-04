@@ -19,5 +19,5 @@ public interface MultiPartnerService {
 
     public UserDetailsDto saveUserConsentGiven();
 
-    public Boolean isUserConsentGiven();
+    public UserDetailsDto isUserConsentGiven();
 }

@@ -115,7 +115,7 @@ public class MultiPartnerServiceControllerTest {
     @Test
     public void isUserConsentGiven() throws Exception {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
-        Mockito.when(multiPartnerService.isUserConsentGiven()).thenReturn(false);
-        ResponseWrapper<Boolean> response = multiPartnerServiceController.isUserConsentGiven();
+        Mockito.when(multiPartnerService.isUserConsentGiven()).thenReturn(userDetailsDto);
+        ResponseWrapper<UserDetailsDto> response = multiPartnerServiceController.isUserConsentGiven();
     }
 }

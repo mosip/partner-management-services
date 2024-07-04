@@ -1,12 +1,14 @@
 package io.mosip.pms.partner.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.UserDetailsRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
@@ -14,6 +16,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 @Service
@@ -57,9 +59,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     UserDetailsRepository userDetailsRepository;
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -425,14 +424,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return crBy;
     }
 
-    public synchronized static String generateUUID(String prefix, String replaceHypen, int length)
-    {
-        String uniqueId = prefix + UUID.randomUUID().toString().replace("-", replaceHypen);
-        if (uniqueId.length() <= length)
-            return uniqueId;
-        return uniqueId.substring(0, length);
-    }
-
     @Override
     public UserDetailsDto saveUserConsentGiven() {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
@@ -440,7 +431,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             UserDetails userDetails = new UserDetails();
 
             String userId = getUserId();
-            LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
+            LocalDateTime nowDate = LocalDateTime.now();
             userDetails.setConsentGiven(YES);
             userDetails.setConsentGivenDtimes(nowDate);
 
@@ -454,7 +445,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 userDetails.setCrDtimes(entity.getCrDtimes());
                 userDetails.setUserId(entity.getUserId());
             } else {
-                userDetails.setId(generateUUID("id", "", 36));
+                userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
                 userDetails.setCrBy(this.getUserBy());
                 userDetails.setCrDtimes(nowDate);
                 userDetails.setUserId(userId);
@@ -462,9 +453,10 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             UserDetails respEntity = userDetailsRepository.save(userDetails);
             LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
 
-            userDetailsDto = (UserDetailsDto) objectMapper
-                    .convertValue(respEntity, new TypeReference<UserDetailsDto>() {
-                    });
+            userDetailsDto.setConsentGiven(true);
+            userDetailsDto.setUserId(respEntity.getUserId());
+            userDetailsDto.setConsentGivenDtimes(respEntity.getConsentGivenDtimes());
+
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
@@ -475,16 +467,18 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public Boolean isUserConsentGiven() {
-        boolean isConsentGiven = false;
+    public UserDetailsDto isUserConsentGiven() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
         try {
             String userId = getUserId();
+            userDetailsDto.setUserId(userId);
             LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
             Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
             if (optionalEntity.isPresent()) {
                 UserDetails entity = optionalEntity.get();
                 if (entity.getConsentGiven().equals(YES)) {
-                    isConsentGiven = true;
+                    userDetailsDto.setConsentGiven(true);
+                    userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
                 }
             }
         } catch (Exception e) {
@@ -493,7 +487,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
                     ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
         }
-        return isConsentGiven;
+        return userDetailsDto;
     }
 
     private AuthUserDetails authUserDetails() {
