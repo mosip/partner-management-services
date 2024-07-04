@@ -2,11 +2,13 @@ package io.mosip.pms.test.partner.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
-import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
@@ -23,7 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
