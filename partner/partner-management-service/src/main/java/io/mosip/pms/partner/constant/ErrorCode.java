@@ -86,7 +86,9 @@ public enum ErrorCode {
 	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty."),
 	OIDC_CLIENTS_FETCH_ERROR("PMS_POLICY_ERROR_006","Error while fetching OIDC clients list."),
 	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
-	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data");
+	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
+	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
+	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent.");
 	/**
 	 * The error code.
 	 */

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -130,6 +131,34 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
         ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
+    @PostMapping(value = "/saveUserConsentGiven")
+    @Operation(summary = "save user consent", description = "Store the user consent in the database.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
+        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.saveUserConsentGiven());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
+    @GetMapping(value = "/isUserConsentGiven")
+    @Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
+        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
         return responseWrapper;
     }
 }

@@ -158,5 +158,9 @@ public class AuthorizedRolesDto {
 	private List<String> getallapikeysforauthpartners;
 
 	private List<String> getalloidcclients;
+
+	//user consent
+
+	private List<String> userconsent;
 		
 }

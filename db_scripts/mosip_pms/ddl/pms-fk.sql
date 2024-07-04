@@ -46,3 +46,6 @@ ALTER TABLE pms.reg_device_sub_type ADD CONSTRAINT fk_rdstyp_dtype_code FOREIGN 
 REFERENCES pms.reg_device_type (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE pms.user_details ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id)
+REFERENCES pms.partner (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
