@@ -1,5 +1,5 @@
 GetAllApiKeyForAuthPartner:
-   Partner_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
+   Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

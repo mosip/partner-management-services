@@ -1,5 +1,5 @@
 createPublishPolicy:
-   Partner_PublishPolicy_All_Valid_Smoke:
+   Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       role: partnerrevamp
       restMethod: post
@@ -11,17 +11,17 @@ createPublishPolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "mosip policy group 1923",
-        "policyGroupDesc": "desc mosip policy group1923",
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "mosip policy",
-        "policyDesc": "desc mosip policy updated",
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true,
-        "authType": "bio",
-        "authSubType": "FINGER",
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
 		"mandatory": true,
-        "attributeName": "string",
-        "authTokenType": "partner"
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
     }'

@@ -1,5 +1,5 @@
 UpdatePolicyStatus:
-   Partner_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
+   Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partnerrevamp
       restMethod: patch

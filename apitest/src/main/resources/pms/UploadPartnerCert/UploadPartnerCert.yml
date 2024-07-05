@@ -1,5 +1,5 @@
 uploadPartnerCert:
-   Partner_UploadPartnerCert_All_Valid_Smoke:
+   Pms_UploadPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -10,4 +10,4 @@ uploadPartnerCert:
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-}' 
+}'          

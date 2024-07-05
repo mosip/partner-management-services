@@ -1,10 +1,10 @@
 VerifyPartnersEmail:
-   Partner_VerifyPartnersEmail_AllValid_smoke:
+   Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       role: partnerrevamp
       restMethod: put
-      inputTemplate: pms/verifyPartnersEmail
-      outputTemplate: pms/verifyPartnersEmailResult
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
       input: '{
     "emailId": "mosip98763@gmail.com",
     "requesttime": "$TIMESTAMP$"

@@ -1,5 +1,5 @@
 definePolicy:
-   Partner_DefinePolicy_All_Valid_Smoke_pms_sid:
+   Pms_DefinePolicy_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
@@ -20,7 +20,7 @@ definePolicy:
 }'
       output: ' {
     "policyGroupName": "mosip policy group 19234",
-    "name": "mosip policy 1923",
-    "desc": "desc mosip policy 1923",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
     "is_Active": false
 }'

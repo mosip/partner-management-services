@@ -30,6 +30,13 @@
 		</classes>
 	</test>
 	
+	<test name="PublishPolicy">
+		<parameter name="ymlFile"
+			value="pms/PublishPolicy/PublishPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
 	
 	<test name="UpdatePolicyStatus">
 		<parameter name="ymlFile"
@@ -39,13 +46,15 @@
 			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
-	<test name="PublishPolicy">
-		<parameter name="ymlFile"
-			value="pms/PublishPolicy/PublishPolicy.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PostWithOnlyPathParam" />
+	
+	<test name ="GetAllActivePolicyGroups">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllActivePolicyGroups/GetAllActivePolicyGroups.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	
 	
 	
 
@@ -58,6 +67,30 @@
 		</classes>
 	</test>
 	
+	<test name="VerifyPartnersEmail">
+		<parameter name="ymlFile"
+			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name ="UploadCACertificate">
+		<parameter name ="ymlFile"
+			value= "pms/UploadCACertificate/UploadCACertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	
+	<test name ="UploadPartnerCertificate">
+		<parameter name ="ymlFile"
+			value= "pms/UploadPartnerCert/UploadPartnerCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
 	<test name ="GetPartnerCertificate">
 		<parameter name ="ymlFile"
 			value= "pms/GetCertificate/GetCert.yml" />
@@ -66,8 +99,21 @@
 		</classes>
 	</test>
 	
+	<test name ="GetAllCertificate">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllCertificate/GetAllCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	
-	
+	<test name ="GetAllApprovedPartnerId">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	
 	<test name="partnerPolicyMapping">
 		<parameter name="ymlFile"
@@ -78,6 +124,17 @@
 		</classes>
 	</test>
 	
+	<test name ="GetAllRequestedPolicy">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
+	
+	
 	<test name="GenerateApiKey">
 		<parameter name="ymlFile"
 			value="pms/GenerateApiKey/GenerateApiKey.yml" />
@@ -87,21 +144,8 @@
 		</classes>
 	</test>
 	
-	<test name="VerifyPartnersEmail">
-		<parameter name="ymlFile"
-			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
-		</classes>
-	</test>
 	
-	<test name ="UploadPartnerCertificate">
-		<parameter name ="ymlFile"
-			value= "pms/UploadPartnerCert/UploadCert.yml" />
-	<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
-		</classes>
-	</test>
+	
 	
 	<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"

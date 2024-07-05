@@ -1,5 +1,5 @@
 GetPartnerCert:
-   Partner_GetPartnerCert_All_Valid_Smoke:
+   Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

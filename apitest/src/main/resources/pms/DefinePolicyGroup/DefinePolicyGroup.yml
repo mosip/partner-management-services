@@ -1,5 +1,5 @@
 definePolicyGroup:
-   Partner_DefinePolicyGroup_All_Valid_Smoke_pms_sid:
+   Pms_DefinePolicyGroup_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       role: partnerrevamp
       restMethod: post
