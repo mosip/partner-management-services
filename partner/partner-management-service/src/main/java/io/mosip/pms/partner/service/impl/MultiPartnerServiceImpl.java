@@ -2,11 +2,13 @@ package io.mosip.pms.partner.service.impl;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
@@ -15,13 +17,13 @@ import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -37,6 +39,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String INACTIVE = "INACTIVE";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
+    public static final String YES = "YES";
+
     @Autowired
     PartnerServiceRepository partnerRepository;
 
@@ -51,6 +55,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     PartnerServiceImpl partnerServiceImpl;
+
+    @Autowired
+    UserDetailsRepository userDetailsRepository;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -401,6 +408,97 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
         }
         return apiKeyResponseDtoList;
+    }
+
+    private String getUserBy() {
+        String crBy = authUserDetails().getMail();
+        return crBy;
+    }
+
+    @Override
+    public UserDetailsDto saveUserConsentGiven() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                UserDetails userDetails = new UserDetails();
+
+                LocalDateTime nowDate = LocalDateTime.now();
+                userDetails.setConsentGiven(YES);
+                userDetails.setConsentGivenDtimes(nowDate);
+
+                Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+                if (optionalEntity.isPresent()) {
+                    UserDetails entity = optionalEntity.get();
+                    userDetails.setId(entity.getId());
+                    userDetails.setUpdBy(this.getUserBy());
+                    userDetails.setUpdDtimes(nowDate);
+                    userDetails.setCrBy(entity.getCrBy());
+                    userDetails.setCrDtimes(entity.getCrDtimes());
+                    userDetails.setUserId(entity.getUserId());
+                } else {
+                    userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
+                    userDetails.setCrBy(this.getUserBy());
+                    userDetails.setCrDtimes(nowDate);
+                    userDetails.setUserId(userId);
+                }
+                UserDetails respEntity = userDetailsRepository.save(userDetails);
+                LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
+
+                userDetailsDto.setConsentGiven(true);
+                userDetailsDto.setUserId(respEntity.getUserId());
+                userDetailsDto.setConsentGivenDtimes(respEntity.getConsentGivenDtimes());
+
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception e) {
+            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
+            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
+                    ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
+        }
+        return userDetailsDto;
+    }
+
+    @Override
+    public UserDetailsDto isUserConsentGiven() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                userDetailsDto.setUserId(userId);
+                LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
+                Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+                if (optionalEntity.isPresent()) {
+                    UserDetails entity = optionalEntity.get();
+                    if (entity.getConsentGiven().equals(YES)) {
+                        userDetailsDto.setConsentGiven(true);
+                        userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
+                    }
+                }
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception e) {
+            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
+            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
+                    ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
+        }
+        return userDetailsDto;
     }
 
     private AuthUserDetails authUserDetails() {

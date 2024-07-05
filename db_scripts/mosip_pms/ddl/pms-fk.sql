@@ -45,4 +45,3 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE pms.reg_device_sub_type ADD CONSTRAINT fk_rdstyp_dtype_code FOREIGN KEY (dtyp_code)
 REFERENCES pms.reg_device_type (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
-
