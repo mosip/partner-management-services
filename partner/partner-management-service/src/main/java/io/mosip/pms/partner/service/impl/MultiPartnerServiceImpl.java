@@ -455,13 +455,16 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
             throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
                     ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
         }
-        return  userDetailsDto;
+        return userDetailsDto;
     }
 
     @Override
@@ -469,16 +472,26 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         try {
             String userId = getUserId();
-            userDetailsDto.setUserId(userId);
-            LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
-            Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
-            if (optionalEntity.isPresent()) {
-                UserDetails entity = optionalEntity.get();
-                if (entity.getConsentGiven().equals(YES)) {
-                    userDetailsDto.setConsentGiven(true);
-                    userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (!partnerList.isEmpty()) {
+                userDetailsDto.setUserId(userId);
+                LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
+                Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+                if (optionalEntity.isPresent()) {
+                    UserDetails entity = optionalEntity.get();
+                    if (entity.getConsentGiven().equals(YES)) {
+                        userDetailsDto.setConsentGiven(true);
+                        userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
+                    }
                 }
+            } else {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
