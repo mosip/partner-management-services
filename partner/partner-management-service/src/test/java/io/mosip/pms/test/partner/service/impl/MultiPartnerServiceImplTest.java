@@ -1,11 +1,9 @@
 package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
@@ -49,6 +47,9 @@ public class MultiPartnerServiceImplTest {
 
     @MockBean
     PartnerPolicyRepository partnerPolicyRepository;
+
+    @MockBean
+    UserDetailsRepository userDetailsRepository;
 
     @Mock
     Environment environment;
@@ -246,6 +247,72 @@ public class MultiPartnerServiceImplTest {
         List<PartnerPolicy> partnerPolicies = new ArrayList<>();
         when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
         multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+    }
+
+    @Test
+    public void saveUserConsentGivenTest() throws Exception{
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Auth_Partner");
+        partner.setPolicyGroupId("abc");
+        partner.setApprovalStatus("approved");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        UserDetails userDetails = new UserDetails();
+        userDetails.setId("123");
+        userDetails.setUpdDtimes(LocalDateTime.now());
+        userDetails.setUpdBy("abc");
+        userDetails.setCrBy("abc");
+        userDetails.setCrDtimes(LocalDateTime.now());
+        when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+        when(userDetailsRepository.save(any())).thenReturn(userDetails);
+        multiPartnerServiceImpl.saveUserConsentGiven();
+    }
+
+    @Test
+    public void isUserConsentGiven() throws Exception{
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Auth_Partner");
+        partner.setPolicyGroupId("abc");
+        partner.setApprovalStatus("approved");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        UserDetails userDetails = new UserDetails();
+        userDetails.setId("123");
+        userDetails.setUpdDtimes(LocalDateTime.now());
+        userDetails.setUpdBy("abc");
+        userDetails.setCrBy("abc");
+        userDetails.setConsentGiven("YES");
+        userDetails.setCrDtimes(LocalDateTime.now());
+        when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+        multiPartnerServiceImpl.isUserConsentGiven();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void isUserConsentGivenTestException() throws Exception {
+        multiPartnerServiceImpl.isUserConsentGiven();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void saveUserConsentGivenTestException() throws Exception {
+        multiPartnerServiceImpl.saveUserConsentGiven();
     }
 
     @Test(expected = PartnerServiceException.class)
