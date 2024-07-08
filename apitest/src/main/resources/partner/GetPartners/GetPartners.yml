@@ -1,7 +1,6 @@
 GetPartners:
    Partner_GetPartners_allValid_smoke:
       endPoint: /v1/partnermanager/partners
-	  description: Retrieve all the Partner details.
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -13,7 +12,6 @@ GetPartners:
 }'
    Partner_GetPartners_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners?partnerType=Device_Provider
-	  description: Retrieve all the Partner details by setting the Valid Partner Type.
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -25,7 +23,6 @@ GetPartners:
 }'
    Partner_GetPartners_invalid_partnerType:
       endPoint: /v1/partnermanager/partners?partnerType=zsfvgefb
-	  description: Retrieve all the Partner details by setting the InValid Partner Type.
       role: partner
       restMethod: get
       inputTemplate: partner/GetPartners/getPartners
@@ -42,7 +39,6 @@ GetPartners:
 
    Partner_PrintPartener_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v2?partnerType=Print_Partner
-	  description: Retrieve all the Print Partner details by setting the Valid Partner Type.
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

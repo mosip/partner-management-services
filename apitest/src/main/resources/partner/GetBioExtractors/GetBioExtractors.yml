@@ -1,9 +1,8 @@
 GetBioExtractors:
    Partner_GetBioExtractors_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: Retrieve Partner biometric data providing Valid input.
       role: partner
-      checkErrorsOnlyInResponse: true 
+      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: partner/GetBioExtractors/getBioExtractors
       outputTemplate: partner/GetBioExtractors/getBioExtractorsResult
@@ -15,7 +14,6 @@ GetBioExtractors:
 }'
    Partner_GetBioExtractors_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: Retrieve Partner biometric data providing InValid PartnerID.
       role: partner
       restMethod: get
       inputTemplate: partner/GetBioExtractors/getBioExtractors

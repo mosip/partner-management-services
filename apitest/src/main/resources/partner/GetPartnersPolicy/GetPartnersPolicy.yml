@@ -1,7 +1,6 @@
 GetPartnersPolicy:
    partner_GetPartnersPolicy_allValid_smoke:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
-	  description: Retrieve all the Policies mapped to the Partner.
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -22,7 +21,6 @@ GetPartnersPolicy:
 
    partner_GetPartnersPolicy_invalid_partnerId:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
-	  description: Retrieve all the Partner Policy by setting the InValid PartnerID.
       role: partner
       restMethod: get
       inputTemplate: partner/GetPartnersPolicy/getPartnersPolicy
