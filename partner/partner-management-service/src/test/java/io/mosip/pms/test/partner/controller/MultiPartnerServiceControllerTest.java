@@ -118,4 +118,9 @@ public class MultiPartnerServiceControllerTest {
         Mockito.when(multiPartnerService.isUserConsentGiven()).thenReturn(userDetailsDto);
         ResponseWrapper<UserDetailsDto> response = multiPartnerServiceController.isUserConsentGiven();
     }
+
+    @Test
+    public void getConfigValuesTest() throws Exception {
+        multiPartnerServiceController.getConfigValues();
+    }
 }
