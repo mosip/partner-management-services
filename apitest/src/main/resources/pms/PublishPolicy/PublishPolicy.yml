@@ -2,6 +2,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       role: partnerrevamp
+      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -21,7 +22,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": true,
+		"mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'

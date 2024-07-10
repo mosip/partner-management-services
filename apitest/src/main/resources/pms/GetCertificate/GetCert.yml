@@ -7,7 +7,7 @@ GetPartnerCert:
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "Tech-1245"
+	"partnerId": "111999"
 }'
       output: ' {
 }'

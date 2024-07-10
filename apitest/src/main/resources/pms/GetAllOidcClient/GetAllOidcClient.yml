@@ -1,0 +1,12 @@
+GetAllOidcClient:
+   Pms_GetAllOidcClient_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/getAllOidcClients
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+}'
+      output: ' {
+}'

@@ -1,6 +1,6 @@
 GenerateApiKey:
-   Partner_GenerateApiKey_AllValid_smoke_sid:
-      endPoint: /v1/partnermanager/partners/Tech-1245/generate/apikey
+   Pms_GenerateApiKey_AllValid_smoke_sid:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
@@ -11,6 +11,6 @@ GenerateApiKey:
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-   "partnerId": "pms-111999",
+   "partnerId": "111999",
     "label": "string"    
 }'

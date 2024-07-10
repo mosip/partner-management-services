@@ -1,5 +1,5 @@
 ActivateDeactivatePartnerApiKey:
-   Partner_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
+   Pms_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

@@ -124,6 +124,15 @@
 		</classes>
 	</test>
 	
+	<test name="ApproveMappingKey">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingKey/ApproveMappingKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
 	<test name ="GetAllRequestedPolicy">
 		<parameter name ="ymlFile"
 			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml" />
@@ -132,6 +141,13 @@
 		</classes>
 	</test>
 	
+	<test name ="GetAllApprovedAuthPartnerPolicy">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApprovedAuthPartnerPolicy/GetAllApprovedAuthPartnerPolicy.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	
 	
 	
@@ -163,5 +179,32 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	
+	
+	<test name="OAuthClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClient/OIDCClient.yml" />
+		<parameter name="idKeyName"	value="clientId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UpdateOAuthClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClient/UpdateOIDCClient.yml" />
+			<parameter name="pathParams" value="client_id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name ="GetAllOidcClient">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllOidcClient/GetAllOidcClient.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
 	
 </suite>

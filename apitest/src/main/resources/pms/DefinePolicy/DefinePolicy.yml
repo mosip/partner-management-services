@@ -8,10 +8,7 @@ definePolicy:
       input: '{
 	"desc": "desc mosip policy 19234",
 	"name": "mosip policy 19234",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
+	"attributeName": "fullName",
 	"authTokenType": "partner",
 	"policyGroupName": "mosip policy group 19234",
 	"policyType": "Auth",

@@ -1,5 +1,5 @@
 GetAllRequestedPolicies:
-   Pms_GetAllActivePolicyGroups_All_Valid_Smoke:
+   Pms_GetAllRequestedPolicies_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/getAllRequestedPolicies
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
