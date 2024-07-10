@@ -1,0 +1,23 @@
+definePolicy:
+   Pms_DefinePolicy_All_Valid_Smoke_pms_sid:
+      endPoint: /v1/policymanager/policies
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc mosip policy 19234",
+	"name": "mosip policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "partner",
+	"policyGroupName": "mosip policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
+    "is_Active": false
+}'

@@ -1,0 +1,12 @@
+GetAllApprovedAuthPartnerPolicy:
+   Pms_GetAllApprovedAuthPartnerPolicy_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/getAllApprovedAuthPartnerPolicies
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicyResult
+      input: '{
+}'
+      output: ' {
+}'

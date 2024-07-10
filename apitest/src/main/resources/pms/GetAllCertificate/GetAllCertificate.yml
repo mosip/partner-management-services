@@ -1,0 +1,11 @@
+GetAllCertificate:
+   Pms_GetAllCertificate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      role: partnerrevamp
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
+      input: '{
+}'
+      output: '{
+}'
