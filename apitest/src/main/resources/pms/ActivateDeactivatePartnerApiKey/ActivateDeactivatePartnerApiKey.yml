@@ -1,0 +1,18 @@
+ActivateDeactivatePartnerApiKey:
+   Pms_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
+      input: '{
+   "partnerId": "partner-111999",
+   "policyId": "MDSP",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "Active"
+}'
+      output: '{
+    "response": "Partner apikey activated successfully."
+}'

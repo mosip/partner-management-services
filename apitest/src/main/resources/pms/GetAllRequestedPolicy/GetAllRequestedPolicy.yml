@@ -1,0 +1,12 @@
+GetAllRequestedPolicies:
+   Pms_GetAllRequestedPolicies_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/getAllRequestedPolicies
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
+      outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
+      input: '{
+}'
+      output: ' {
+}'
