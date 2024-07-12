@@ -89,7 +89,8 @@ public enum ErrorCode {
 	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
 	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
-	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent.");
+	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
+	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated.");
 	/**
 	 * The error code.
 	 */
