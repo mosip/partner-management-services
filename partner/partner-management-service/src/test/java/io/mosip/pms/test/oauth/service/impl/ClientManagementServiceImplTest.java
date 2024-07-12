@@ -880,6 +880,7 @@ public class ClientManagementServiceImplTest {
 		when(clientDetail.getRedirectUris()).thenReturn("Redirect Uris");
 		when(clientDetail.getGrantTypes()).thenReturn("Grant Types");
 		when(clientDetail.getName()).thenReturn("Name");
+		when(clientDetail.getRelyingPartyId()).thenReturn("123");
 		when(clientDetail.getClientAuthMethods()).thenReturn("Client Auth Methods");
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(clientDetail));
 		when(environment.getProperty(anyString())).thenReturn("Property");
