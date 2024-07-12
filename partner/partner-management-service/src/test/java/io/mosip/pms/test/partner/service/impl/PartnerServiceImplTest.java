@@ -904,7 +904,7 @@ public class PartnerServiceImplTest {
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorCode()));
 		}
 		partner.get().setPolicyGroupId("12345");
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
@@ -912,7 +912,7 @@ public class PartnerServiceImplTest {
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode()));
 		}
 		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(Optional.empty());		

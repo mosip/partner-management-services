@@ -1566,13 +1566,13 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.IN_PROGRESS))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
 		}
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.APPROVED));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorMessage(), PartnerConstants.APPROVED));
 		}
 		PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
