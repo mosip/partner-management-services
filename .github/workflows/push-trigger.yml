@@ -18,8 +18,7 @@ on:
       - release*
       - master
       - 1.*
-      - develop
-      - develop-pmp-revamp 
+      - develop*
       - MOSIP*
 
 jobs:
