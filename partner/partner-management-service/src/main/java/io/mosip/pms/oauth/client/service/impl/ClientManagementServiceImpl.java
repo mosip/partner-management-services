@@ -43,6 +43,7 @@ import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
@@ -160,6 +161,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					clientId);
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
+		}
+		//check if Partner is Active or not
+		if (!partner.get().getIsActive()) {
+			LOGGER.error("createOIDCClient::Partner is not Active with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					clientId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
 		if (!policyFromDb.isPresent()) {
@@ -466,6 +475,29 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
+		}
+		//Check if OIDC client is already deactivated
+		if (result.get().getStatus().equalsIgnoreCase("inactive")) {
+			LOGGER.error("updateOIDCClient::Client already deactivated with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE, clientId,
+					result.get().getStatus());
+			throw new PartnerServiceException(ErrorCode.CLIENT_ALREADY_DEACTIVATED.getErrorCode(),
+					ErrorCode.CLIENT_ALREADY_DEACTIVATED.getErrorMessage());
+		}
+		Optional<Partner> partner = partnerRepository.findById(result.get().getRpId());
+		String partnerId = result.get().getRpId();
+		if (partner.isEmpty() || partnerId == null) {
+			LOGGER.error("updateOIDCClient::Partner not exists with id {}", partnerId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
+					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
+		}
+		//check if Partner is Active or not
+		if (!partner.get().getIsActive()) {
+			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 		ClientDetail clientDetail = result.get();
 		clientDetail.setName(updateRequest.getClientName());
