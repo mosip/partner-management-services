@@ -686,7 +686,12 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), false);
+		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
