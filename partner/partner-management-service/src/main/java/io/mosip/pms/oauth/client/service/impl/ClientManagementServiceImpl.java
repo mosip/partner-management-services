@@ -187,7 +187,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					.format(ErrorCode.PARTNER_POLICY_TYPE_MISMATCH.getErrorMessage()));
 		}
 		List<PartnerPolicyRequest> policyMappingReqFromDb = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.get().getId());
+				.findLatestPolicyRequestByPartnerIdAndPolicyId(createRequest.getAuthPartnerId(), policyFromDb.get().getId());
 		if (policyMappingReqFromDb.isEmpty()) {
 			LOGGER.error("createOIDCClient::Policy and partner mapping not exists for policy {} and partner {}",
 					createRequest.getPolicyId(), createRequest.getAuthPartnerId());

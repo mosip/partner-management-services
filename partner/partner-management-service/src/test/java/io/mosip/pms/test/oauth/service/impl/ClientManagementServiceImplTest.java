@@ -1159,7 +1159,7 @@ public class ClientManagementServiceImplTest {
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
-		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(List.of(partnerPolicyRequest));
+		when(partnerPolicyRequestRepository.findLatestPolicyRequestByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(List.of(partnerPolicyRequest));
 
 		serviceImpl.processCreateOIDCClient(createRequest);
 
