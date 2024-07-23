@@ -196,16 +196,13 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-
-		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
-			LOGGER.error(
-					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
-					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					clientId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
+		List<PartnerPolicyRequest> approvedMappedPolicy = partnerPolicyRequestRepository
+				.findByPartnerIdAndPolicyIdAndStatusCode(partner.get().getUserId(), policy.getId(), PartnerConstants.APPROVED);
+		if (approvedMappedPolicy.isEmpty()) {
+			LOGGER.error("createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}"
+					, createRequest.getPolicyId(), createRequest.getAuthPartnerId());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(), clientId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(), ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
