@@ -38,14 +38,7 @@
 		</classes>
 	</test>
 	
-<!--	<test name="UpdatePolicyStatus">
-		<parameter name="ymlFile"
-			value="pms/UpdatePolicyStatus/UpdatePolicyStatus.yml" />
-		<parameter name="pathParams" value="policygroupId,policyId"/>
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>-->
+
 	
 	<test name ="GetAllActivePolicyGroups">
 		<parameter name ="ymlFile"

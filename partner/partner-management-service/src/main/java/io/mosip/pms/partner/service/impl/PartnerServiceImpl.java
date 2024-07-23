@@ -687,6 +687,11 @@ public class PartnerServiceImpl implements PartnerService {
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
@@ -1566,13 +1571,13 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.IN_PROGRESS))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
 		}
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.APPROVED));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorMessage(), PartnerConstants.APPROVED));
 		}
 		PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
