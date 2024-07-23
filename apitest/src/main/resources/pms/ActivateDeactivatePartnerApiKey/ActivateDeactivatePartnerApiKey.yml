@@ -7,8 +7,8 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "partner-111999",
-   "policyId": "MDSP",
+   "partnerId": "111999",
+   "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
