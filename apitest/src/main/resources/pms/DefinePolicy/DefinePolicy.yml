@@ -1,6 +1,7 @@
 definePolicy:
    Pms_DefinePolicy_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies
+      description: Creating a Policy using PolicyGroup
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy

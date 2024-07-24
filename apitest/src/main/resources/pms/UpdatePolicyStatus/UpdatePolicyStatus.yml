@@ -1,6 +1,7 @@
 UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
