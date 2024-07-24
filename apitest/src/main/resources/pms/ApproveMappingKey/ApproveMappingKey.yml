@@ -1,7 +1,8 @@
 ApproveMappingKey:
    Pms_ApproveMappingKey_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-      role: partner
+      description: Approve the Mapping Key
+      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey

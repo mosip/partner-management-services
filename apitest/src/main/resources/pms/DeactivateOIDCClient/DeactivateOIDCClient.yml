@@ -1,6 +1,7 @@
 DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post

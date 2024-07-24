@@ -1,6 +1,7 @@
 VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail

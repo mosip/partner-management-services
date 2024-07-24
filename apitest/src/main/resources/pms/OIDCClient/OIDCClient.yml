@@ -1,6 +1,7 @@
 CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
