@@ -2,11 +2,13 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -361,7 +363,10 @@ public class PartnerServiceController {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
+		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");
+		response.setVersion("1.0");
 		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
+		response.setResponsetime(LocalDateTime.now());
 		return response;
 	}
 	
