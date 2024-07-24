@@ -41,6 +41,32 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.axios.timeout}")
     private String axiosTimeout;
 
+    @Value("${mosip.pms.api.id.all.certificates.details.get}")
+    private String getAllCertificatesDetailsId;
+
+    @Value("${mosip.pms.api.id.all.requested.policies.get}")
+    private String getAllRequestedPoliciesId;
+
+    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
+    private String getAllApprovedAuthPartnersPoliciesId;
+
+    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
+    private String getAllApprovedPartnerIdsWithPolicyGroupsId;
+
+    @Value("${mosip.pms.api.id.configs.get}")
+    private String getConfigsId;
+
+    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
+    private String getAllApiKeysForAuthPartners;
+
+    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
+    private String postSaveUserConsentGivenId;
+
+    @Value("${mosip.pms.api.id.user.consent.given.get}")
+    private String getUserConsentGivenId;
+
+    public static final String VERSION = "1.0";
+
     @Autowired
     MultiPartnerService multiPartnerService;
 
@@ -54,6 +80,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
         ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllCertificatesDetailsId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllCertificateDetails());
         return responseWrapper;
     }
@@ -68,6 +96,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies() {
         ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllRequestedPoliciesId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllRequestedPolicies());
         return responseWrapper;
     }
@@ -82,6 +112,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
         ResponseWrapper<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedAuthPartnerPolicies());
         return responseWrapper;
     }
@@ -96,6 +128,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
         ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups());
         return responseWrapper;
     }
@@ -109,6 +143,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<Map<String, String>> getConfigValues() {
         ResponseWrapper<Map<String, String>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getConfigsId);
+        responseWrapper.setVersion(VERSION);
         Map<String, String> configMap = new HashMap<String, String>();
         configMap.put("grantTypes", grantTypes);
         configMap.put("clientAuthMethods", clientAuthMethods);
@@ -130,6 +166,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
         ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllApiKeysForAuthPartners);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
         return responseWrapper;
     }
@@ -144,6 +182,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
         ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(postSaveUserConsentGivenId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.saveUserConsentGiven());
         return responseWrapper;
     }
@@ -158,6 +198,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
         ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getUserConsentGivenId);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
         return responseWrapper;
     }
