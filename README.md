@@ -33,6 +33,13 @@ mosip.datasource.regdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQLDia
 hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 
+## Add below config
+# For Spring-boot 3.x we need to specify the ANT Path Matcher for using the existing ANT path patterns.
+spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
+
+# Spring boot 3.x onwards we need to specify the below property to unmask values in actuator env url
+management.endpoint.env.show-values=ALWAYS
+
 1. Build Docker for a service:
     ```
     $ cd <service folder>
