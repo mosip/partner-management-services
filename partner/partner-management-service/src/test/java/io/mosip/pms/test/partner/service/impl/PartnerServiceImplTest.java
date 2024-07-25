@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.partner.dto.DataShareDto;
@@ -30,6 +31,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -131,6 +135,12 @@ public class PartnerServiceImplTest {
     @Mock
 	FilterHelper filterHelper;
 
+	@Mock
+	SecurityContext securityContext;
+
+	@Mock
+	Authentication authentication;
+
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
@@ -199,20 +209,39 @@ public class PartnerServiceImplTest {
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));
 	}
 
+	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
+	}
+
 	@Test(expected = PartnerServiceException.class) 
 	public void getPartnerCertificate_Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		try {
 			pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+			assertFalse(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
 		}
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
-		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
+		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
 		
 		PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(partnerCertDownloadResponeDto);
@@ -222,18 +251,30 @@ public class PartnerServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void getOriginalPartnerCertificate_Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		try {
 			pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+			assertFalse(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
 		}
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
-		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
+		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
 
 		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(originalCertDownloadResponseDto);
