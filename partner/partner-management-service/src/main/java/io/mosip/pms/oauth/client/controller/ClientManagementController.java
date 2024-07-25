@@ -7,8 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,11 @@ public class ClientManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	
+	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
+	private String getAllOidcClientsId;
+
+	public static final String VERSION = "1.0";
+
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
@@ -101,6 +104,8 @@ public class ClientManagementController {
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
 		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setId(getAllOidcClientsId);
+		responseWrapper.setVersion(VERSION);
 		responseWrapper.setResponse(clientManagementService.getAllOidcClients());
 		return responseWrapper;
 	}
