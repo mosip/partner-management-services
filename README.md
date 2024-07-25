@@ -19,11 +19,28 @@ The project requires JDK 1.21.
     $ cd kernel
     $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
     ```
+## Update below config
+```
+mosip.datasource.authdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+mosip.datasource.regdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+```
+
+## Remove 95 from PostgreSQL95Dialect like below
+```
+mosip.datasource.authdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+mosip.datasource.regdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+```
+
 1. Build Docker for a service:
     ```
     $ cd <service folder>
     $ docker build -f Dockerfile
     ```
+
+## Configuration
+[Configuration](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) defined here.
 
 ## Deploy
 To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
