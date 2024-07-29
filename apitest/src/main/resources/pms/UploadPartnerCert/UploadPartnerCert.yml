@@ -10,4 +10,66 @@ uploadPartnerCert:
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-}'          
+}'
+   Pms_UploadPartnerCert_missing_PartnerDomain:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert2
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_invalid_certificate:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert3
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "KER-KMS-013"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_invalid_Domain:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert4
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "KER-PCM-011"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_UploadAgain_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+
+          
