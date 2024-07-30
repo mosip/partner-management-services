@@ -561,6 +561,41 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return sbiDetailsDtoList;
     }
 
+    @Override
+    public List<PartnerDto> getAllApprovedDeviceProviderIds() {
+        List<PartnerDto> approvedDeviceProviderIds = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            for (Partner partner : partnerList) {
+                validatePartnerId(partner, userId);
+                if (checkIfPartnerIsDevicePartner(partner)
+                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                    PartnerDto partnerDto = new PartnerDto();
+                    partnerDto.setPartnerId(partner.getId());
+                    partnerDto.setPartnerType(partner.getPartnerTypeCode());
+
+                    approvedDeviceProviderIds.add(partnerDto);
+                }
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getAllApprovedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage());
+        }
+        return approvedDeviceProviderIds;
+    }
+
     private AuthUserDetails authUserDetails() {
         return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }

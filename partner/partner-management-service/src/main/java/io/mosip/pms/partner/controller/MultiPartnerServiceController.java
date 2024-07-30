@@ -68,6 +68,9 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.api.id.all.sbi.details.get}")
     private String getAllSbiDetailsId;
 
+    @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
+    private String getAllApprovedDeviceProviderId;
+
     public static final String VERSION = "1.0";
 
     @Autowired
@@ -220,6 +223,22 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(getAllSbiDetailsId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllSBIDetails());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @GetMapping(value = "/getAllApprovedDeviceProviderIds")
+    @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<PartnerDto>> getAllApprovedDeviceProviderIds() {
+        ResponseWrapper<List<PartnerDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllApprovedDeviceProviderId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.getAllApprovedDeviceProviderIds());
         return responseWrapper;
     }
 }
