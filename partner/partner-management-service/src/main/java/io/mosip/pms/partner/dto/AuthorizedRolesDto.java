@@ -161,6 +161,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> userconsent;
 
-	private List<String> sbidetailslist;
+	private List<String> getallsbidetails;
 		
 }

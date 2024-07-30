@@ -207,7 +207,7 @@ public class MultiPartnerServiceController {
         return responseWrapper;
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getSbidetailslist())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
     @GetMapping(value = "/getAllSBIDetails")
     @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
