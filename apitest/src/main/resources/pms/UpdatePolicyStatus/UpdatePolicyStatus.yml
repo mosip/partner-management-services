@@ -1,5 +1,5 @@
 UpdatePolicyStatus:
-   Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
+   Pms_UpdatePolicyStatus_Active_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partnerrevamp
       restMethod: patch
@@ -123,7 +123,7 @@ UpdatePolicyStatus:
       outputTemplate: pms/error
       input: '{		
 		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"policygroupId":"asfbvef",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
 		"status":"$REMOVE$",
 		"requesttime": "$TIMESTAMP$"
 }'
@@ -134,4 +134,4 @@ UpdatePolicyStatus:
           "message": "Could not process the request"         
         }
        ]
-    }'                        
+    }'                            

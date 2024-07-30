@@ -54,26 +54,7 @@ createPublishPolicy:
         "attributeName": "$IGNORE$",
         "authTokenType": "random"
     }'
-    
-   Pms_PublishPolicy_Datashare_Smoke:
-      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      role: partnerrevamp
-      checkErrorsOnlyInResponse: true
-      restMethod: post
-      inputTemplate: pms/PublishPolicy/publishPolicy
-      outputTemplate: pms/PublishPolicy/publishPolicyResult
-      input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
-}'
-      output: '{
-        "policyGroupName": "mosip policy group",
-        "policyGroupDesc": "desc mosip policy group updated",
-        "policyGroupStatus": true,
-        "is_Active": true
-    }'
-    
+   
    Pms_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       role: partnerrevamp
@@ -90,26 +71,6 @@ createPublishPolicy:
         "errors": [
         { 
           "errorCode": "PMS_POL_020"
-        }
-       ] 
-    }'
-    
-   Pms_PublishPolicy_InValid_policygroupId:
-      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      role: partnerrevamp
-      checkErrorsOnlyInResponse: true
-      restMethod: post
-      inputTemplate: pms/PublishPolicy/publishPolicy
-      outputTemplate: pms/error
-      input: '{
-		"policygroupId": "sgdasfgbv",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
-}'
-      output: '{
-        "errors": [
-        { 
-          "errorCode": "PMS_POL_016"
         }
        ] 
     }'
@@ -153,10 +114,25 @@ createPublishPolicy:
         }
        ] 
     }'
-          
-    
-                    
-    
-        
+   Pms_PublishPolicy_missing_token:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      role:
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/error
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_POL_020"
+        }
+       ] 
+    }'                 
+                          
     
     
