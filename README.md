@@ -49,6 +49,10 @@ management.endpoint.env.show-values=ALWAYS
 ## Configuration
 [Configuration](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) defined here.
 
+## Below Jar should be there in class path to run service
+https://oss.sonatype.org/content/repositories/snapshots/io/mosip/kernel/kernel-auth-adapter/1.2.1-SNAPSHOT/kernel-auth-adapter-1.2.1-20240718.062459-116.jar
+
+
 ## Deploy
 To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
 
