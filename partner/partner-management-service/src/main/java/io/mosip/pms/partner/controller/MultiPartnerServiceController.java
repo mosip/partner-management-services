@@ -65,6 +65,9 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.api.id.user.consent.given.get}")
     private String getUserConsentGivenId;
 
+    @Value("${mosip.pms.api.id.all.sbi.details.get}")
+    private String getAllSbiDetailsId;
+
     public static final String VERSION = "1.0";
 
     @Autowired
@@ -201,6 +204,22 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(getUserConsentGivenId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getSbidetailslist())")
+    @GetMapping(value = "/getAllSBIDetails")
+    @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails() {
+        ResponseWrapper<List<SbiDetailsDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllSbiDetailsId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.getAllSBIDetails());
         return responseWrapper;
     }
 }

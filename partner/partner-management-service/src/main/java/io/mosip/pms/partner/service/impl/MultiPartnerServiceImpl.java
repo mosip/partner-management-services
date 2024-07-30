@@ -9,7 +9,10 @@ import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
+import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -58,6 +61,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
+
+    @Autowired
+    DeviceDetailSbiRepository deviceDetailSbiRepository;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -306,6 +315,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
     }
 
+    public static boolean checkIfPartnerIsDevicePartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        return partnerType.equals(DEVICE_PROVIDER);
+    }
+
     public static void validatePartnerId(Partner partner, String userId) {
         if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
             LOGGER.info("Partner Id is null or empty for user id : " + userId);
@@ -499,6 +513,53 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
         }
         return userDetailsDto;
+    }
+
+    @Override
+    public List<SbiDetailsDto> getAllSBIDetails() {
+        List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            for (Partner partner : partnerList) {
+                validatePartnerId(partner, userId);
+                if (checkIfPartnerIsDevicePartner(partner)) {
+                    List<SecureBiometricInterface> secureBiometricInterfaceList = secureBiometricInterfaceRepository.findByProviderId(partner.getId());
+                    if (secureBiometricInterfaceList.isEmpty()) {
+                        return Collections.emptyList();
+                    }
+                    for (SecureBiometricInterface secureBiometricInterface : secureBiometricInterfaceList) {
+                        SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
+                        List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
+                        sbiDetailsDto.setPartnerId(partner.getId());
+                        sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
+                        sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
+                        sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
+                        sbiDetailsDto.setCountOfDevices(String.valueOf(deviceDetailSBIList.size()));
+                        sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
+                        sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
+                        sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
+
+                        sbiDetailsDtoList.add(sbiDetailsDto);
+                    }
+                }
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage());
+        }
+        return sbiDetailsDtoList;
     }
 
     private AuthUserDetails authUserDetails() {

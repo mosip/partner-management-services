@@ -159,8 +159,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getalloidcclients;
 
-	//user consent
-
 	private List<String> userconsent;
+
+	private List<String> sbidetailslist;
 		
 }
