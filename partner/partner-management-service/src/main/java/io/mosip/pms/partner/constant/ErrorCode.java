@@ -91,7 +91,8 @@ public enum ErrorCode {
 	PARTNER_DOES_NOT_BELONG_TO_THE_USER("PMS_CERTIFICATE_ERROR_007", "The given partner ID does not belong to the user.So unable to get the original partner certificates"),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
-	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated.");
+	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
+	SBI_DETAILS_LIST_FETCH_ERROR("PMS_SBI_ERROR_001", "Unable to fetch SBI details.");
 	/**
 	 * The error code.
 	 */
