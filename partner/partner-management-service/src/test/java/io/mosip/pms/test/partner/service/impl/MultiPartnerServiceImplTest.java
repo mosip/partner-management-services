@@ -5,6 +5,8 @@ import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
@@ -50,6 +52,12 @@ public class MultiPartnerServiceImplTest {
 
     @MockBean
     UserDetailsRepository userDetailsRepository;
+
+    @MockBean
+    SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
+
+    @MockBean
+    DeviceDetailSbiRepository deviceDetailSbiRepository;
 
     @Mock
     Environment environment;
@@ -727,6 +735,51 @@ public class MultiPartnerServiceImplTest {
         Optional<UserDetails> optionalEntity = Optional.of(userDetails);
         when(userDetailsRepository.findByUserId(anyString())).thenReturn(optionalEntity);
         multiPartnerServiceImpl.isUserConsentGiven();
+    }
+
+    @Test
+    public void getAllSBIDetailsTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        List<SecureBiometricInterface> secureBiometricInterfaceList = new ArrayList<>();
+        SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
+        secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
+        secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+        secureBiometricInterface.setApprovalStatus("approved");
+        secureBiometricInterface.setCrDtimes(LocalDateTime.now());
+        secureBiometricInterfaceList.add(secureBiometricInterface);
+        secureBiometricInterface.setSwVersion("1.0");
+        when(secureBiometricInterfaceRepository.findByProviderId(anyString())).thenReturn(secureBiometricInterfaceList);
+        List<DeviceDetailSBI> deviceDetailSBIList = new ArrayList<>();
+        DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+        deviceDetailSBIList.add(deviceDetailSBI);
+        when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(anyString(), anyString())).thenReturn(deviceDetailSBIList);
+
+        multiPartnerServiceImpl.getAllSBIDetails();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void getAllSBIDetailsExceptionTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        
+        multiPartnerServiceImpl.getAllSBIDetails();
     }
 
     @Test(expected = PartnerServiceException.class)
