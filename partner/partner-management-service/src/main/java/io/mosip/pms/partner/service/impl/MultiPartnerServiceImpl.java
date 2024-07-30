@@ -530,22 +530,21 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 validatePartnerId(partner, userId);
                 if (checkIfPartnerIsDevicePartner(partner)) {
                     List<SecureBiometricInterface> secureBiometricInterfaceList = secureBiometricInterfaceRepository.findByProviderId(partner.getId());
-                    if (secureBiometricInterfaceList.isEmpty()) {
-                        return Collections.emptyList();
-                    }
-                    for (SecureBiometricInterface secureBiometricInterface : secureBiometricInterfaceList) {
-                        SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
-                        List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
-                        sbiDetailsDto.setPartnerId(partner.getId());
-                        sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
-                        sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
-                        sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
-                        sbiDetailsDto.setCountOfDevices(String.valueOf(deviceDetailSBIList.size()));
-                        sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
-                        sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
-                        sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
+                    if (!secureBiometricInterfaceList.isEmpty()) {
+                        for (SecureBiometricInterface secureBiometricInterface : secureBiometricInterfaceList) {
+                            SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
+                            List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
+                            sbiDetailsDto.setPartnerId(partner.getId());
+                            sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
+                            sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
+                            sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
+                            sbiDetailsDto.setCountOfDevices(String.valueOf(deviceDetailSBIList.size()));
+                            sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
+                            sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
+                            sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
 
-                        sbiDetailsDtoList.add(sbiDetailsDto);
+                            sbiDetailsDtoList.add(sbiDetailsDto);
+                        }
                     }
                 }
             }
