@@ -830,8 +830,6 @@ public class MultiPartnerServiceImplTest {
         multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
     }
 
-    ;
-
     @Test(expected = Exception.class)
     public void getAllApprovedDeviceProviderIdsExceptionTest1() throws Exception {
         multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
