@@ -797,6 +797,44 @@ public class MultiPartnerServiceImplTest {
         multiPartnerServiceImpl.isUserConsentGiven();
     }
 
+    @Test
+    public void getAllApprovedDeviceProviderIdsTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partner.setApprovalStatus("approved");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void getAllApprovedDeviceProviderIdsExceptionTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+    }
+
+    @Test(expected = Exception.class)
+    public void getAllApprovedDeviceProviderIdsExceptionTest1() throws Exception {
+        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+    }
+
     @Test(expected = PartnerServiceException.class)
     public void isUserConsentGivenExceptionTest1() throws Exception {
         multiPartnerServiceImpl.isUserConsentGiven();
