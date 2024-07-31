@@ -19,25 +19,18 @@ The project requires JDK 1.21.
     $ cd kernel
     $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
     ```
-## Update below config
-```
-mosip.datasource.authdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-mosip.datasource.regdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-```
-
-## Remove 95 from PostgreSQL95Dialect like below
+   
+### Remove the version-specific suffix (PostgreSQL95Dialect) from the Hibernate dialect configuration
 ```
 mosip.datasource.authdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 mosip.datasource.regdevice.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 
-## Add below config
-# For Spring-boot 3.x we need to specify the ANT Path Matcher for using the existing ANT path patterns.
+### For Spring-boot 3.x we need to specify the ANT Path Matcher for using the existing ANT path patterns.
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
 
-# Spring boot 3.x onwards we need to specify the below property to unmask values in actuator env url
+### Spring boot 3.x onwards we need to specify the below property to unmask values in actuator env url
 management.endpoint.env.show-values=ALWAYS
 
 1. Build Docker for a service:
@@ -46,12 +39,17 @@ management.endpoint.env.show-values=ALWAYS
     $ docker build -f Dockerfile
     ```
 
-## Configuration
+### Configuration
 [Configuration](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) defined here.
 
-## Below Jar should be there in class path to run service
-https://oss.sonatype.org/content/repositories/snapshots/io/mosip/kernel/kernel-auth-adapter/1.2.1-SNAPSHOT/kernel-auth-adapter-1.2.1-20240718.062459-116.jar
-
+### Add auth-adapter in a class-path to run a services
+   ```
+   <dependency>
+       <groupId>io.mosip.kernel</groupId>
+       <artifactId>kernel-auth-adapter</artifactId>
+       <version>${kernel.auth.adaptor.version}</version>
+   </dependency>
+   ```
 
 ## Deploy
 To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
