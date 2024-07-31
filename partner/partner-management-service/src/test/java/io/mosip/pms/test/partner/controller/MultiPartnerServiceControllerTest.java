@@ -116,6 +116,16 @@ public class MultiPartnerServiceControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void getAllApprovedDeviceProviderIdsTest() throws Exception {
+        List<PartnerDto> partnerDtos = new ArrayList<>();
+        PartnerDto partnerDto = new PartnerDto();
+        partnerDtos.add(partnerDto);
+        Mockito.when(multiPartnerService.getAllApprovedDeviceProviderIds()).thenReturn(partnerDtos);
+        ResponseWrapper<List<PartnerDto>> response = multiPartnerServiceController.getAllApprovedDeviceProviderIds();
+    }
+
+    @Test
     public void saveUserConsentGiven() throws Exception {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         Mockito.when(multiPartnerService.saveUserConsentGiven()).thenReturn(userDetailsDto);
