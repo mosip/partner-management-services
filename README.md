@@ -40,7 +40,11 @@ management.endpoint.env.show-values=ALWAYS
     ```
 
 ### Configuration
-[Configuration](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) defined here.
+[partner-management-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) 
+
+[application-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/application-default.properties) 
+
+defined here.
 
 ### Add auth-adapter in a class-path to run a services
    ```
