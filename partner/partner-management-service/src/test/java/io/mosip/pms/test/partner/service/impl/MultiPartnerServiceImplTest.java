@@ -835,8 +835,6 @@ public class MultiPartnerServiceImplTest {
         multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
     }
 
-    ;
-
     @Test(expected = PartnerServiceException.class)
     public void isUserConsentGivenExceptionTest1() throws Exception {
         multiPartnerServiceImpl.isUserConsentGiven();
