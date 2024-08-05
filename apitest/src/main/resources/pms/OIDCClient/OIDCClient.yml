@@ -40,7 +40,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_PRT_073"
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_073"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_invalid_logoUri:
       endPoint: /v1/partnermanager/oauth/client
@@ -61,7 +65,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_COR_001"
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_invalid_RedirectUri:
       endPoint: /v1/partnermanager/oauth/client
@@ -82,7 +90,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "invalid_redirect_uri"
+      "errors": [
+      {
+       "errorCode": "invalid_redirect_uri"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_without_token:
       endPoint: /v1/partnermanager/oauth/client
@@ -103,7 +115,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "KER-ATH-401"
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_without_publickey:
       endPoint: /v1/partnermanager/oauth/client
@@ -124,7 +140,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_COR_00"
+      "errors": [
+      {
+       "errorCode": "PMS_COR_00"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_invalid_granttypes:
       endPoint: /v1/partnermanager/oauth/client
@@ -145,7 +165,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "invalid_grant_type"
+      "errors": [
+      {
+       "errorCode": "invalid_grant_type"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_without_granttypes:
       endPoint: /v1/partnermanager/oauth/client
@@ -166,7 +190,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_COR_001"
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_without_name:
       endPoint: /v1/partnermanager/oauth/client
@@ -187,7 +215,11 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_COR_001"
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
 }'
    Pms_CreateOIDCClient_invalid_publickey:
       endPoint: /v1/partnermanager/oauth/client
@@ -208,5 +240,9 @@ CreateOIDCClient:
       	"clientAuthMethods": "private_key_jwt"
 }'
       output: '{
-        "errorCode": "PMS_COR_001"
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
 }'

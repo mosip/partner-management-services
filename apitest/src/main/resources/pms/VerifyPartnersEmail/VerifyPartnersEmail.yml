@@ -14,7 +14,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_token:
       endPoint: /v1/partnermanager/partners/email/verify
-      role:
+      role: partner
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error

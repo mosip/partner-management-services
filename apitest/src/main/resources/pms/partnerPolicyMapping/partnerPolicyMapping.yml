@@ -27,7 +27,11 @@ partnerPolicyMapping:
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
-      "errorCode": "PMS_PRT_073"
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_073"
+        }
+       ]
     }'
    Pms_partnerPolicyMapping_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
@@ -42,7 +46,11 @@ partnerPolicyMapping:
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
-      "errorCode": "PMS_PRT_005"
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_005"
+        }
+       ]
     }'
    Pms_partnerPolicyMapping_missing_policyName:
       endPoint: /v1/partnermanager/partners/111999/policy/map
@@ -57,7 +65,11 @@ partnerPolicyMapping:
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
-      "errorCode": "PMS_COR_001"
+        "errors": [
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
     }'
    Pms_partnerPolicyMapping_missing_useCaseDescription:
       endPoint: /v1/partnermanager/partners/111999/policy/map
