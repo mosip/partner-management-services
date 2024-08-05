@@ -1,6 +1,7 @@
 GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      description: Fetching all the API certificates of the Loggedin Partner
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate

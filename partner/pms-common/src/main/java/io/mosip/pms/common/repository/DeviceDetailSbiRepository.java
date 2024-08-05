@@ -6,9 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 
+import java.util.List;
+
 @Repository
 public interface DeviceDetailSbiRepository extends JpaRepository<DeviceDetailSBI, String>{
 
 	@Query(value = "select * from device_detail_sbi dds where dds.device_detail_id=?1 and dds.sbi_id = ?2",nativeQuery = true)
 	DeviceDetailSBI findByDeviceDetailAndSbi(String deviceDetailId, String sbiId);
+
+	@Query(value = "select * from device_detail_sbi dds where dds.dprovider_id=?1 and dds.sbi_id = ?2",nativeQuery = true)
+	List<DeviceDetailSBI> findByDeviceProviderIdAndSbiId(String dproviderId, String sbiId);
 }

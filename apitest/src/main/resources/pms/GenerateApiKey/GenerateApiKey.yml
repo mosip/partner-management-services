@@ -1,6 +1,7 @@
 GenerateApiKey:
    Pms_GenerateApiKey_AllValid_smoke_sid:
       endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey

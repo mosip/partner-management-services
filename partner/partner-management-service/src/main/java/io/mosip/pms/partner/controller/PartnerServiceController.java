@@ -2,17 +2,20 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,6 +85,11 @@ public class PartnerServiceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
+	private String getOriginalPartnerCertificateId;
+
+	public static final String VERSION = "1.0";
 	
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
@@ -359,9 +367,14 @@ public class PartnerServiceController {
 	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
+		response.setId(getOriginalPartnerCertificateId);
+		response.setVersion(VERSION);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
+		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");
+		response.setVersion("1.0");
 		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
+		response.setResponsetime(LocalDateTime.now());
 		return response;
 	}
 	

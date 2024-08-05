@@ -1,6 +1,7 @@
 partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/111999/policy/map
+      description: Mapping Partner & Policy
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post 
