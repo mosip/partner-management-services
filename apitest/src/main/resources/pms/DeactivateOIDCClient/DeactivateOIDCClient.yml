@@ -1,16 +1,17 @@
-UpdateOIDCClient:
-   Pms_UpdateOIDCClient_all_Valid_Smoke_sid:
+DeactivateOIDCClient:
+   Pms_DeactivateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/OIDCClient/oIDCClientUpdate
-      outputTemplate: pms/OIDCClient/oIDCClientResult
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClientResult
       input: '{
       	"requesttime": "$TIMESTAMP$",
       	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
       	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "ACTIVE",
+      	"status": "INACTIVE",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -19,5 +20,5 @@ UpdateOIDCClient:
 }'
       output: '{
         "clientId": "$IGNORE$",
-    	"status": "ACTIVE"
+    	"status": "INACTIVE"
 }'

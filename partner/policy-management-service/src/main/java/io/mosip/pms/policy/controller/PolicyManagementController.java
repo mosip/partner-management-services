@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -65,6 +66,11 @@ public class PolicyManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Value("${mosip.pms.api.id.all.policy.groups.get}")
+	private String getAllPolicyGroupsId;
+
+	public static final String VERSION = "1.0";
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -292,6 +298,8 @@ public class PolicyManagementController {
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
 	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
+		response.setId(getAllPolicyGroupsId);
+		response.setVersion(VERSION);
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		response.setResponse(policyManagementService.getAllPolicyGroups());
 		logger.info("Returning response from PolicyManagementController.");

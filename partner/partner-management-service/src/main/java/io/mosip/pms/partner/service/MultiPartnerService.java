@@ -6,6 +6,8 @@ import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.UserDetailsDto;
+import io.mosip.pms.partner.dto.SbiDetailsDto;
+import io.mosip.pms.partner.dto.PartnerDto;
 
 import java.util.List;
 
@@ -24,4 +26,9 @@ public interface MultiPartnerService {
     public UserDetailsDto saveUserConsentGiven();
 
     public UserDetailsDto isUserConsentGiven();
+
+    public List<SbiDetailsDto> getAllSBIDetails();
+
+    public List<PartnerDto> getAllApprovedDeviceProviderIds();
+
 }

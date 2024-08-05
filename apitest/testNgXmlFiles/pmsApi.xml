@@ -38,14 +38,7 @@
 		</classes>
 	</test>
 	
-	<test name="UpdatePolicyStatus">
-		<parameter name="ymlFile"
-			value="pms/UpdatePolicyStatus/UpdatePolicyStatus.yml" />
-		<parameter name="pathParams" value="policygroupId,policyId"/>
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
+
 	
 	<test name ="GetAllActivePolicyGroups">
 		<parameter name ="ymlFile"
@@ -202,6 +195,14 @@
 			value= "pms/GetAllOidcClient/GetAllOidcClient.yml" />
 	<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="DeactivateOIDCClient">
+		<parameter name="ymlFile"
+			value="pms/DeactivateOIDCClient/DeactivateOIDCClient.yml" />
+			<parameter name="pathParams" value="client_id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
 		</classes>
 	</test>
 	

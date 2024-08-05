@@ -837,42 +837,62 @@ public class PartnerServiceImpl implements PartnerService {
 	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,
 										  String uriProperty, Class<T> responseType)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-		if (partnerFromDb.isEmpty()) {
-			LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		String userId = getUserId();
+		List<Partner> partnerList = partnerRepository.findByUserId(userId);
+		if (partnerList.isEmpty()) {
+			LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
+			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 		}
-		if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
-			LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());
-			throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
-					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
-		}
-
-		Map<String, String> pathsegments = new HashMap<>();
-		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
-		Map<String, Object> getApiResponse = restUtil
-				.getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
-		T responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
-
-		if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
-					.get(PartnerConstants.ERRORS);
-			if (!certServiceErrorList.isEmpty()) {
-				LOGGER.error("Error occurred while getting the cert from keymanager");
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
-			} else {
-				LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+		boolean isPartnerBelongsToTheUser = false;
+		for (Partner partner: partnerList) {
+			if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
+				isPartnerBelongsToTheUser = true;
 			}
 		}
+		T responseObject = null;
+		if (isPartnerBelongsToTheUser) {
+			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+			if (partnerFromDb.isEmpty()) {
+				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
+				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
+				LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());
+				throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+			}
 
-		if (responseObject == null) {
-			LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
-			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			Map<String, String> pathsegments = new HashMap<>();
+			pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+			Map<String, Object> getApiResponse = restUtil
+					.getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
+			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
+
+			if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while getting the cert from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+
+			if (responseObject == null) {
+				LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+		} else {
+			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorMessage());
 		}
 
 		return responseObject;
