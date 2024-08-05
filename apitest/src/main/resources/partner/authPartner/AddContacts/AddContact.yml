@@ -1,6 +1,7 @@
 addContact:
    Partner_AddContact_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      description: Create Contact details for Partner with Valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -17,6 +18,7 @@ addContact:
     }'
    Partner_AddContact_Missing_InputParameter_address:
       endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      description: Create contact details for the Partner while keeping the address parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/AddContacts/addContact
@@ -39,6 +41,7 @@ addContact:
    
    Partner_AddContact_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      description: Create contact details for the Partner while keeping the contactNumber parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/AddContacts/addContact
@@ -59,6 +62,7 @@ addContact:
 }'
    Partner_AddContact_Missing_InputParameter_emailId:
       endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      description: Create contact details for the Partner while keeping the emailID parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/AddContacts/addContact

@@ -1,6 +1,7 @@
 createServiceToUpdateDeviceDetail:
    Partner_ServiceToUpdateDeviceDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -23,6 +24,7 @@ createServiceToUpdateDeviceDetail:
 
    Partner_ServiceToUpdateDeviceDetail_afterReject_InValid:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail afterReject
       role: partner
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
@@ -49,6 +51,7 @@ createServiceToUpdateDeviceDetail:
 
    Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_DeviceId:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail while keeping DeviceId as empty
       role: partner
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
@@ -77,6 +80,7 @@ createServiceToUpdateDeviceDetail:
 
    Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceProviderId:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail while keeping DeviceProvideId as empty
       role: partner
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
@@ -104,6 +108,7 @@ createServiceToUpdateDeviceDetail:
 
    Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceSubTypeCode:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail while keeping DeviceSubTypeCode as empty
       role: partner
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
@@ -130,6 +135,7 @@ createServiceToUpdateDeviceDetail:
 
    Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceTypeCode:
       endPoint: /v1/partnermanager/devicedetail
+      description: Create Service To Update DeviceDetail while keeping DeviceTypeCode as empty
       role: partner
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail

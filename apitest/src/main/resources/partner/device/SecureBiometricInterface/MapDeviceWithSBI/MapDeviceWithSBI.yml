@@ -1,6 +1,7 @@
 MapDeviceWithSBI:
    Partner_MapDeviceWithSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      description: MapDeviceWithSBI with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -14,6 +15,7 @@ MapDeviceWithSBI:
     }'
    Partner_MapDeviceWithSBI_Multiple_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      description: MapDevice Partner With Multiple SBI valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -28,6 +30,7 @@ MapDeviceWithSBI:
     
    Partner_MapDeviceWithSBI_Multiple_map:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      description: MapDevice Partner With Multiple SBI
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -47,6 +50,7 @@ MapDeviceWithSBI:
     
    Partner_MapDeviceWithSBI_Multiple_MapDeviceWith_Diff_Provider:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      description: MapDevice Partner With Multiple SBI with different Provider
       role: partner
       restMethod: put
       inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI

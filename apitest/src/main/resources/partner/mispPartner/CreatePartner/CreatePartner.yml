@@ -1,6 +1,7 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
+      description: Create MISP Partner Self Registration
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner
@@ -21,6 +22,7 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_MispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
+      description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner
@@ -42,6 +44,7 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_MispLicense_Msip:
       endPoint: /v1/partnermanager/partners
+      description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner

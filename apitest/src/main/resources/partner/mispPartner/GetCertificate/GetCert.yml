@@ -1,6 +1,7 @@
 getPartnerCert:
    Partner_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Retrieve Misp Partner Certificate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

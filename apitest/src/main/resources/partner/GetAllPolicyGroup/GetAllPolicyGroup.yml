@@ -1,6 +1,7 @@
 GetAllPolicyGroup:
    partner_GetAllPolicyGroup_allValid_smoke:
       endPoint: /v1/policymanager/policies/group/all
+      description: Retrieve All Partner Policy Group
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

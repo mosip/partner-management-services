@@ -1,6 +1,7 @@
 DeviceDetailsFilter:
    partner_DeviceDetailsFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -20,6 +21,7 @@ DeviceDetailsFilter:
 
    partner_DeviceDetailsFilter_To_MapSBI:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter to MapSBI
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -38,6 +40,7 @@ DeviceDetailsFilter:
 }'
    partner_DeviceDetailsFilter_all_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -58,6 +61,7 @@ DeviceDetailsFilter:
 }'
    partner_DeviceDetailsFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -80,6 +84,7 @@ DeviceDetailsFilter:
 }'
    partner_DeviceDetailsFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -102,6 +107,7 @@ DeviceDetailsFilter:
 }'
    partner_DeviceDetailsFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter while keeping invalid values in Column parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -124,6 +130,7 @@ DeviceDetailsFilter:
 }'
    partner_DeviceDetailsFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
+      description: Create Device Details Filter while keeping invalid values in Type parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter

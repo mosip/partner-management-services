@@ -1,6 +1,7 @@
 CreateFTPChipDetail:
    Partner_CreateFTPChipDetail_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/ftpchipdetail
+      description: Create FTP Chip Deatils for Partner with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -18,6 +19,7 @@ CreateFTPChipDetail:
 
    Partner_CreateFTPChipDetail_Missing_InputParameter_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail
+      description: Create FTP Chip Deatils for Partner while keeping ftpProviderId parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
@@ -38,6 +40,7 @@ CreateFTPChipDetail:
 
    Partner_CreateFTPChipDetail_Missing_InputParameter_ftpId:
       endPoint: /v1/partnermanager/ftpchipdetail
+      description: Create FTP Chip Deatils for Partner while keeping ftpId parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail

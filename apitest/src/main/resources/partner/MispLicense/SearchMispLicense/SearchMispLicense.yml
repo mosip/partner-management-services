@@ -1,6 +1,7 @@
 SearchMispLicense:
    Partner_SearchMispLicense_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -21,6 +22,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Valid_Filter_Name:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with valid Filter Name
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -44,6 +46,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_NegPageFetch:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with invalid Page fetch
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/SearchMispLicense/searchMispLicense
@@ -71,6 +74,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_NegPageStart:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with invalid Page Start
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/SearchMispLicense/searchMispLicense
@@ -98,6 +102,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_SortType_neg:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with invalid SortType
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/SearchMispLicense/searchMispLicense
@@ -125,6 +130,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_SortField_neg:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with invalid SortField
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/SearchMispLicense/searchMispLicense
@@ -153,6 +159,7 @@ SearchMispLicense:
    
    Partner_SearchMispLicense_Blank_SortField:
       endPoint: /v1/partnermanager/misps/search
+      description: Create Search Misp License with Empty Sort Field
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/SearchMispLicense/searchMispLicense

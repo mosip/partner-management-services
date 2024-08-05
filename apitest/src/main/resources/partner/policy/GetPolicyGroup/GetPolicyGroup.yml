@@ -1,12 +1,13 @@
 getPolicyGroup:
    Partner_GetPolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      description: Retrieve Parter Policy Group
       role: partner
       restMethod: get
       inputTemplate: partner/policy/GetPolicyGroup/getPolicyGroup
       outputTemplate: partner/policy/GetPolicyGroup/getPolicyGroupResult
       input: '{
-	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$"
+"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$"
 }'
       output: '{
    "desc": "desc mosip policy group",
@@ -15,12 +16,13 @@ getPolicyGroup:
 }'
    Partner_GetPolicyGroup_By_Invalid_policyGroupId:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      description: Retrieve Parter Policy Group with invalid PolicyGroupId
       role: partner
       restMethod: get
       inputTemplate: partner/policy/GetPolicyGroup/getPolicyGroup
       outputTemplate: partner/error
       input: '{
-	"policyGroupId": "policygroup-id-00001"
+"policyGroupId": "policygroup-id-00001"
 }'
       output: '{
    "errors": [

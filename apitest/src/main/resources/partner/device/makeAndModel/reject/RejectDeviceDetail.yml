@@ -1,6 +1,7 @@
 rejectDeviceDetail:
    Partner_rejectDeviceDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
+      description: Reject Device Details with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -16,6 +17,7 @@ rejectDeviceDetail:
     }'
    Partner_rejectDeviceDetail_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
+      description: Reject Device Details with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -31,6 +33,7 @@ rejectDeviceDetail:
     }'
    Partner_rejectDeviceDetail_Missing_InputParameter_approvalStatus:
       endPoint: /v1/partnermanager/devicedetail
+      description: Reject Device Details while keeping approvalStatus as empty
       role: partner
       restMethod: patch
       inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
@@ -52,6 +55,7 @@ rejectDeviceDetail:
 
    Partner_rejectDeviceDetail_Missing_InputParameter_deviceId:
       endPoint: /v1/partnermanager/devicedetail
+      description: Reject Device Details while keeping deviceId as empty
       role: partner
       restMethod: patch
       inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail

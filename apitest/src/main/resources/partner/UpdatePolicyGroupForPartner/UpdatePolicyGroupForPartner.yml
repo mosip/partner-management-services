@@ -1,6 +1,7 @@
 UpdatePolicyGroupForPartner:
    Partner_UpdatePolicyGroupForPartner_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      description: Update Policy Group For Partner with valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -15,6 +16,7 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_ApprovedPartner:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      description: Update Policy Group For Partner with invalid Approved Partner
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
@@ -32,6 +34,7 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      description: Update Policy Group For Partner with invalid PartnerId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
@@ -49,6 +52,7 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_PolicyGroup:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      description: Update Policy Group For Partner with invalid Policy GroupId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner

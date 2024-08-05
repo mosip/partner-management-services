@@ -1,6 +1,7 @@
 CreateMispLicense:
    Partner_CreateMispLicense_allValid_smoke_sid:
       endPoint: /v1/partnermanager/misps
+      description: Create MISP License Partner
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/CreateMispLicense/createMispLicense
@@ -15,6 +16,7 @@ CreateMispLicense:
 }'
    Partner_CreateMispLicense_MispLicense_allValid_smoke_sid:
       endPoint: /v1/partnermanager/misps
+      description: Create MISP License Partner with all valid details
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/CreateMispLicense/createMispLicense
@@ -29,6 +31,7 @@ CreateMispLicense:
 }'
    Partner_CreateMispLicense_InValid_ProviderId:
       endPoint: /v1/partnermanager/misps
+      description: Create MISP License Partner while keeping invalid ProviderID
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/CreateMispLicense/createMispLicense

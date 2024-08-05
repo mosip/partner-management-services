@@ -1,6 +1,7 @@
 GetPartnerDetails:
    Partner_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      description: Retrieve Device Partner Deatils
       role: partner
       restMethod: get
       inputTemplate: partner/devicePartner/GetPartner/getPartner
@@ -13,6 +14,7 @@ GetPartnerDetails:
   }'
    Partner_GetPartner_invalid_partner:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      description: Retrieve Device Partner Deatils by providing invalid partner 
       role: partner
       restMethod: get
       inputTemplate: partner/devicePartner/GetPartner/getPartner

@@ -1,6 +1,7 @@
 RejectSecureBiometricInterface:
    Partner_RejectSecureBiometricInterface_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Reject SecureBiometricInterface with valid detais
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -16,6 +17,7 @@ RejectSecureBiometricInterface:
     }'
    Partner_RejectSecureBiometricInterface_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Reject SecureBiometricInterface with valid detais
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -32,6 +34,7 @@ RejectSecureBiometricInterface:
     
    Partner_RejectSecureBiometricInterface_SpaVal_neg:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Reject SecureBiometricInterface with SpaVal invalid
       role: partner
       restMethod: patch
       inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
@@ -52,6 +55,7 @@ RejectSecureBiometricInterface:
     
    Partner_RejectSecureBiometricInterface_Missing_InputParameter_approvalStatus:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Reject SecureBiometricInterface while keeping parameter approvalStatus as Empty
       role: partner
       restMethod: patch
       inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface

@@ -1,6 +1,7 @@
 GetRoles:
    Partner_GetRoles_allValid_smoke:
       endPoint: /v1/partnermanager/roles
+      description: Retrieve all Partner Roles
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
