@@ -21,4 +21,7 @@ public interface SecureBiometricInterfaceRepository extends JpaRepository<Secure
 
 	@Query(value = "select * from  secure_biometric_interface d where d.provider_id = ?1 AND (d.is_deleted is null or d.is_deleted = false)", nativeQuery = true)
 	List<SecureBiometricInterface> findByProviderId(String providerId);
+
+	@Query(value = "select * from  secure_biometric_interface d where d.id = ?1 AND d.provider_id = ?2 AND (d.is_deleted is null or d.is_deleted = false)", nativeQuery = true)
+	SecureBiometricInterface findBySbiIdAndProviderId(String sbiId, String providerId);
 }

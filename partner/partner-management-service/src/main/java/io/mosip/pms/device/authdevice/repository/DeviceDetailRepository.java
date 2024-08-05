@@ -1,6 +1,7 @@
 package io.mosip.pms.device.authdevice.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,6 @@ public interface DeviceDetailRepository extends JpaRepository<DeviceDetail, Stri
 	@Query(value= "select * from device_detail d where d.id IN :ids AND (d.is_deleted is null or d.is_deleted = false) AND d.is_active=true",nativeQuery = true)
 	List<DeviceDetail> findByIds(@Param("ids") List<String> ids);
 
+	@Query("FROM DeviceDetail d where d.id=?1 AND d.deviceProviderId=?2 AND (d.isDeleted is null or d.isDeleted = false)")
+	Optional<DeviceDetail> findByIdAndDeviceProviderId(String id, String deviceProviderId);
 }

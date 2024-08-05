@@ -11,7 +11,9 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
@@ -67,6 +69,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+    @Autowired
+    DeviceDetailRepository deviceDetailRepository;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -594,6 +599,90 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage());
         }
         return approvedDeviceProviderIds;
+    }
+
+    @Override
+    public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId, String partnerId) {
+        List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+
+            // check if partnerId is associated with user
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            } else {
+                boolean partnerIdExists = false;
+                for (Partner partner : partnerList) {
+                    if (partner.getId().equals(partnerId)) {
+                        validatePartnerId(partner, userId);
+                        validateDevicePartnerType(partner, userId);
+                        partnerIdExists = true;
+                        break;
+                    }
+                }
+                if (!partnerIdExists) {
+                    LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+                    throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+                            ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+                }
+            }
+            // check if Sbi is mapped with partnerId
+            SecureBiometricInterface secureBiometricInterface = secureBiometricInterfaceRepository.findBySbiIdAndProviderId(sbiId, partnerId);
+            if (Objects.isNull(secureBiometricInterface)) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
+                throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
+                        ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
+            }
+            // fetch devices list
+            List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partnerId, sbiId);
+            if (!deviceDetailSBIList.isEmpty()) {
+                for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
+                    Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
+                            findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
+                    if (deviceDetail.isPresent()){
+                        DeviceDetailDto deviceDetailDto = getDeviceDetailDto(deviceDetail.get());
+                        deviceDetailDtoList.add(deviceDetailDto);
+                    }
+                }
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage());
+        }
+        return deviceDetailDtoList;
+    }
+
+    private void validateDevicePartnerType(Partner partner, String userId) {
+        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER)) {
+            LOGGER.info("Invalid Partner type for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorCode(),
+                    ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorMessage());
+        }
+    }
+
+    private static DeviceDetailDto getDeviceDetailDto(DeviceDetail deviceDetail) {
+        DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
+        deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
+        deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
+        deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
+        deviceDetailDto.setMake(deviceDetail.getMake());
+        deviceDetailDto.setModel(deviceDetail.getModel());
+        deviceDetailDto.setApprovalStatus(deviceDetail.getApprovalStatus());
+        deviceDetailDto.setActive(deviceDetail.getIsActive());
+        deviceDetailDto.setCrDtimes(deviceDetail.getCrDtimes());
+        deviceDetailDto.setCrBy(deviceDetail.getCrBy());
+        deviceDetailDto.setUpdBy(deviceDetail.getUpdBy());
+        deviceDetailDto.setUpdDtimes(deviceDetail.getUpdDtimes());
+        return deviceDetailDto;
     }
 
     private AuthUserDetails authUserDetails() {
