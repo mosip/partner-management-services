@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SbiDetailsDto {
+    private String sbiId;
     private String sbiVersion;
     private String partnerId;
     private String partnerType;
