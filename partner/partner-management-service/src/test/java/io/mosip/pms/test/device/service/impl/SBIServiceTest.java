@@ -121,7 +121,7 @@ public class SBIServiceTest {
 		secureBiometricInterfaceHistory.setSwBinaryHAsh("swb".getBytes());
 		secureBiometricInterfaceHistory.setEffectDateTime(LocalDateTime.now());
 		secureBiometricInterfaceHistory.setSwCreateDateTime(LocalDateTime.now());
-		secureBiometricInterfaceHistory.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterfaceHistory.setSwExpiryDateTime(LocalDateTime.now().plusYears(1));
 		secureBiometricInterfaceHistory.setActive(true);
 		secureBiometricInterfaceHistory.setCrBy("110005");
 		secureBiometricInterfaceHistory.setCrDtimes(LocalDateTime.now());
@@ -132,7 +132,7 @@ public class SBIServiceTest {
 		secureBiometricInterface.setApprovalStatus("pending");
 		secureBiometricInterface.setSwBinaryHash("swb".getBytes());
 		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
-		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now().plusYears(1));
 		secureBiometricInterface.setActive(true);
 		secureBiometricInterface.setCrBy("110005");
 		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
@@ -143,7 +143,7 @@ public class SBIServiceTest {
 
 		sbidto.setSwBinaryHash("swb");
 		sbidto.setSwCreateDateTime(LocalDateTime.now());
-		sbidto.setSwExpiryDateTime(LocalDateTime.now());
+		sbidto.setSwExpiryDateTime(LocalDateTime.now().plusYears(1));
 		sbidto.setIsActive(true);
 		sbidto.setSwVersion("v1");
 		sbidto.setId("1234");
@@ -185,7 +185,7 @@ public class SBIServiceTest {
 				
 		sbicreatedto.setSwBinaryHash("swb");
 		sbicreatedto.setSwCreateDateTime(LocalDateTime.now());
-		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now());
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().plusYears(1));
 		sbicreatedto.setProviderId("1234");
 		sbicreatedto.setSwVersion("v1");
     	deviceDetail.setApprovalStatus("pending");
@@ -278,7 +278,7 @@ public class SBIServiceTest {
     public void updateDeviceDetailTest() throws Exception {
 		assertTrue(secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto).getId().equals("1234"));
 		SecureBiometricInterface sbiFromDb = secureBiometricInterface;
-		sbiFromDb.setId("789");
+		sbiFromDb.setId("7189");
 		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(sbiFromDb));
 		try {
 			secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
