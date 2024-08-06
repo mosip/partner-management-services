@@ -15,3 +15,101 @@ GenerateApiKey:
    "partnerId": "111999",
     "label": "string"    
 }'
+
+   Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "policyName": "mosip policy 19234",
+    "label": "string",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_110"
+    }
+  ]
+}'
+
+   Pms_GenerateApiKey_Missing_Request_time_Neg:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "policyName": "mosip policy 192341",
+    "label": "string"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_GenerateApiKey_Invalid_Request_time_Neg:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "policyName": "mosip policy 192341",
+    "label": "string",
+    "requesttime": "123123123"
+    
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_GenerateApiKey_Missing_label_Neg:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "policyName": "mosip policy 192341",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_GenerateApiKey_Missing_policyName_Neg:
+      endPoint: /v1/partnermanager/partners/111999/generate/apikey
+      description: Generating an API Key
+      role: partnerrevamp
+      restMethod: patch
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "label": "string",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
