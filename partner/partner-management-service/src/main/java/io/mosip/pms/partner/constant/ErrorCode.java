@@ -93,7 +93,11 @@ public enum ErrorCode {
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
 	SBI_DETAILS_LIST_FETCH_ERROR("PMS_SBI_ERROR_001", "Unable to fetch SBI details."),
-	APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR("PMS_DP_FETCH_001", "Unable to fetch approved device provider Ids.");
+	APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR("PMS_DP_FETCH_001", "Unable to fetch approved device provider Ids."),
+	PARTNER_ID_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_001", "Partner id is not associated with user."),
+	SBI_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_002", "SBI is not associated with partner Id."),
+	INVALID_DEVICE_PARTNER_TYPE("PMS_DEVICE_ERROR_003", "Invalid partner type."),
+	DEVICES_LIST_FOR_SBI_FETCH_ERROR("PMS_SF_ERROR_001", "Error while fetching devices list for SBI.");
 	/**
 	 * The error code.
 	 */
