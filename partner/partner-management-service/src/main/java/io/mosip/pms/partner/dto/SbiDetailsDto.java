@@ -15,7 +15,9 @@ public class SbiDetailsDto {
     private String partnerId;
     private String partnerType;
     private String status;
-    private String countOfDevices;
+    private boolean isExpired;
+    private String countOfApprovedDevices;
+    private String countOfPendingDevices;
     private LocalDateTime sbiSoftwareCreatedDtimes;
     private LocalDateTime sbiSoftwareExpiryDtimes;
     private LocalDateTime crDtimes;

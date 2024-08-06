@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -47,6 +48,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     public static final String YES = "YES";
+    public static final String PENDING_APPROVAL = "pending_approval";
 
     @Autowired
     PartnerServiceRepository partnerRepository;
@@ -549,7 +551,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
-                            sbiDetailsDto.setCountOfDevices(String.valueOf(deviceDetailSBIList.size()));
+                            sbiDetailsDto.setExpired(checkIfSbiExpired(secureBiometricInterface));
+                            sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
+                            sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
                             sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
                             sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
                             sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
@@ -570,6 +574,25 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage());
         }
         return sbiDetailsDtoList;
+    }
+
+    private String countDevices(List<DeviceDetailSBI> deviceDetailSBIList, String status) {
+        int count = 0;
+        if (deviceDetailSBIList.isEmpty()) {
+            return String.valueOf(count);
+        }
+        for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
+            Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
+                    findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
+            if (deviceDetail.isPresent() && deviceDetail.get().getApprovalStatus().equals(status)) {
+                count++;
+            }
+        }
+        return String.valueOf(count);
+    }
+
+    private boolean checkIfSbiExpired(SecureBiometricInterface secureBiometricInterface) {
+        return !secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isAfter(LocalDate.now());
     }
 
     @Override
