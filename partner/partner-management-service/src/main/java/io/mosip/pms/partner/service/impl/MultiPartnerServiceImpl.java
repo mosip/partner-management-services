@@ -592,7 +592,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     private boolean checkIfSbiExpired(SecureBiometricInterface secureBiometricInterface) {
-        return secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now());
+        return !secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isAfter(LocalDate.now());
     }
 
     @Override
