@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -591,7 +592,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     private boolean checkIfSbiExpired(SecureBiometricInterface secureBiometricInterface) {
-        return secureBiometricInterface.getSwExpiryDateTime().isBefore(LocalDateTime.now());
+        return secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now());
     }
 
     @Override
