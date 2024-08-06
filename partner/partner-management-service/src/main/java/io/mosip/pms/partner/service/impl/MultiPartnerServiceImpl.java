@@ -140,43 +140,39 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
-                    try {
-                        if (!skipDeviceOrFtmPartner(partner)) {
-                            validatePartnerId(partner, userId);
-                            validatePolicyGroupId(partner, userId);
-                            PolicyGroup policyGroup = validatePolicyGroup(partner);
-                            List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
-                            if (!partnerPolicyRequestList.isEmpty()) {
-                                for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-                                    AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
-                                    if (Objects.nonNull(policyDetails)) {
-                                        PolicyDto policyDto = new PolicyDto();
-                                        policyDto.setPartnerId(partner.getId());
-                                        policyDto.setPartnerType(partner.getPartnerTypeCode());
+                    if (!skipDeviceOrFtmPartner(partner)) {
+                        validatePartnerId(partner, userId);
+                        validatePolicyGroupId(partner, userId);
+                        PolicyGroup policyGroup = validatePolicyGroup(partner);
+                        List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
+                        if (!partnerPolicyRequestList.isEmpty()) {
+                            for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
+                                AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
+                                if (Objects.nonNull(policyDetails)) {
+                                    PolicyDto policyDto = new PolicyDto();
+                                    policyDto.setPartnerId(partner.getId());
+                                    policyDto.setPartnerType(partner.getPartnerTypeCode());
 
-                                        policyDto.setPolicyGroupId(policyGroup.getId());
-                                        policyDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                        policyDto.setPolicyGroupName(policyGroup.getName());
+                                    policyDto.setPolicyGroupId(policyGroup.getId());
+                                    policyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                    policyDto.setPolicyGroupName(policyGroup.getName());
 
-                                        policyDto.setPolicyId(policyDetails.getId());
-                                        policyDto.setPolicyDescription(policyDetails.getDescr());
-                                        policyDto.setPolicyName(policyDetails.getName());
+                                    policyDto.setPolicyId(policyDetails.getId());
+                                    policyDto.setPolicyDescription(policyDetails.getDescr());
+                                    policyDto.setPolicyName(policyDetails.getName());
 
-                                        policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
-                                        policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
-                                        policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
-                                        policyDto.setStatus(partnerPolicyRequest.getStatusCode());
-                                        policyDtoList.add(policyDto);
-                                    } else {
-                                        LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
-                                        throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
-                                                ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
-                                    }
+                                    policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
+                                    policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
+                                    policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
+                                    policyDto.setStatus(partnerPolicyRequest.getStatusCode());
+                                    policyDtoList.add(policyDto);
+                                } else {
+                                    LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
+                                    throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
+                                            ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
                                 }
                             }
                         }
-                    } catch (PartnerServiceException ex) {
-                        LOGGER.info("Could not fetch policies :" + ex.getMessage());
                     }
                 }
             } else {
@@ -210,18 +206,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     if (!skipDeviceOrFtmPartner(partner)
                             && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
-                        try {
-                            validatePartnerId(partner, userId);
-                            validatePolicyGroupId(partner, userId);
-                            PolicyGroup policyGroup = validatePolicyGroup(partner);
-                            policyGroupDto.setPartnerId(partner.getId());
-                            policyGroupDto.setPartnerType(partner.getPartnerTypeCode());
-                            policyGroupDto.setPolicyGroupId(partner.getPolicyGroupId());
-                            policyGroupDto.setPolicyGroupName(policyGroup.getName());
-                            policyGroupDto.setPolicyGroupDescription(policyGroup.getDesc());
-                        } catch (PartnerServiceException ex) {
-                            LOGGER.info("Could not fetch all approved policy groups :" + ex.getMessage());
-                        }
+                        validatePartnerId(partner, userId);
+                        validatePolicyGroupId(partner, userId);
+                        PolicyGroup policyGroup = validatePolicyGroup(partner);
+                        policyGroupDto.setPartnerId(partner.getId());
+                        policyGroupDto.setPartnerType(partner.getPartnerTypeCode());
+                        policyGroupDto.setPolicyGroupId(partner.getPolicyGroupId());
+                        policyGroupDto.setPolicyGroupName(policyGroup.getName());
+                        policyGroupDto.setPolicyGroupDescription(policyGroup.getDesc());
                         policyGroupDtoList.add(policyGroupDto);
                     }
                 }
@@ -251,46 +243,42 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
-                    try {
-                        if (checkIfPartnerIsApprovedAuthPartner(partner)) {
-                            validatePartnerId(partner, userId);
-                            validatePolicyGroupId(partner, userId);
-                            PolicyGroup policyGroup = validatePolicyGroup(partner);
-                            ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
-                            approvedPolicyDto.setPartnerId(partner.getId());
-                            approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
-                            approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
-                            approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
-                            approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
-                            List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
-                            List<ActivePolicyDto> activePolicyDtoList = new ArrayList<>();
-                            if (!partnerPolicyRequestList.isEmpty()) {
-                                for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-                                    if (partnerPolicyRequest.getStatusCode().equals(APPROVED)) {
-                                        AuthPolicy policyDetails = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
-                                        if (Objects.nonNull(policyDetails)) {
-                                            ActivePolicyDto activePolicyDto = new ActivePolicyDto();
-                                            activePolicyDto.setPolicyId(policyDetails.getId());
-                                            activePolicyDto.setPolicyDescription(policyDetails.getDescr());
-                                            activePolicyDto.setPolicyName(policyDetails.getName());
-                                            activePolicyDto.setStatus(partnerPolicyRequest.getStatusCode());
-                                            activePolicyDtoList.add(activePolicyDto);
-                                        } else {
-                                            LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
-                                            throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
-                                                    ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
-                                        }
+                    if (checkIfPartnerIsApprovedAuthPartner(partner)) {
+                        validatePartnerId(partner, userId);
+                        validatePolicyGroupId(partner, userId);
+                        PolicyGroup policyGroup = validatePolicyGroup(partner);
+                        ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
+                        approvedPolicyDto.setPartnerId(partner.getId());
+                        approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
+                        approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
+                        approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
+                        approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
+                        List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
+                        List<ActivePolicyDto> activePolicyDtoList = new ArrayList<>();
+                        if (!partnerPolicyRequestList.isEmpty()) {
+                            for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
+                                if (partnerPolicyRequest.getStatusCode().equals(APPROVED)) {
+                                    AuthPolicy policyDetails = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
+                                    if (Objects.nonNull(policyDetails)) {
+                                        ActivePolicyDto activePolicyDto = new ActivePolicyDto();
+                                        activePolicyDto.setPolicyId(policyDetails.getId());
+                                        activePolicyDto.setPolicyDescription(policyDetails.getDescr());
+                                        activePolicyDto.setPolicyName(policyDetails.getName());
+                                        activePolicyDto.setStatus(partnerPolicyRequest.getStatusCode());
+                                        activePolicyDtoList.add(activePolicyDto);
+                                    } else {
+                                        LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
+                                        throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
+                                                ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
                                     }
                                 }
-                                approvedPolicyDto.setActivePolicies(activePolicyDtoList);
-                                approvedPolicyList.add(approvedPolicyDto);
-                            } else {
-                                approvedPolicyDto.setActivePolicies(activePolicyDtoList);
-                                approvedPolicyList.add(approvedPolicyDto);
                             }
+                            approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+                            approvedPolicyList.add(approvedPolicyDto);
+                        } else {
+                            approvedPolicyDto.setActivePolicies(activePolicyDtoList);
+                            approvedPolicyList.add(approvedPolicyDto);
                         }
-                    } catch (PartnerServiceException ex) {
-                        LOGGER.info("Could not fetch policies :" + ex.getMessage());
                     }
                 }
             } else {
@@ -375,48 +363,45 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 for (Partner partner : partnerList) {
-                    try {
-                        if (checkIfPartnerIsApprovedAuthPartner(partner)) {
-                            validatePartnerId(partner, userId);
-                            validatePolicyGroupId(partner, userId);
-                            List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
-                            if (!apiKeyRequestsList.isEmpty()) {
-                                for (PartnerPolicy partnerPolicy: apiKeyRequestsList) {
-                                    Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
-                                    if (!authPolicy.isPresent()) {
-                                        LOGGER.info("Policy does not exists.");
-                                        throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-                                                ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-                                    }
-                                    PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-                                    if (Objects.isNull(policyGroup)) {
-                                        LOGGER.info("Policy Group is null or empty");
-                                        throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                                ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                                    }
-                                    ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-                                    apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
-                                    if (partnerPolicy.getIsActive()) {
-                                        apiKeyResponseDto.setStatus(ACTIVE);
-                                    } else {
-                                        apiKeyResponseDto.setStatus(INACTIVE);
-                                    }
-                                    apiKeyResponseDto.setPartnerId(partner.getId());
-                                    apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
-                                    apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
-                                    apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                    apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
-                                    apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
-                                    apiKeyResponseDto.setPolicyNameDescription(authPolicy.get().getDescr());
-                                    apiKeyResponseDto.setCrDtimes(partnerPolicy.getCrDtimes());
-                                    apiKeyResponseDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
-                                    apiKeyResponseDtoList.add(apiKeyResponseDto);
+                    if (checkIfPartnerIsApprovedAuthPartner(partner)) {
+                        validatePartnerId(partner, userId);
+                        validatePolicyGroupId(partner, userId);
+                        List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
+                        if (!apiKeyRequestsList.isEmpty()) {
+                            for (PartnerPolicy partnerPolicy : apiKeyRequestsList) {
+                                Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
+                                if (!authPolicy.isPresent()) {
+                                    LOGGER.info("Policy does not exists.");
+                                    throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+                                            ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
                                 }
+                                PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
+                                if (Objects.isNull(policyGroup)) {
+                                    LOGGER.info("Policy Group is null or empty");
+                                    throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+                                            ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+                                }
+                                ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
+                                apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
+                                if (partnerPolicy.getIsActive()) {
+                                    apiKeyResponseDto.setStatus(ACTIVE);
+                                } else {
+                                    apiKeyResponseDto.setStatus(INACTIVE);
+                                }
+                                apiKeyResponseDto.setPartnerId(partner.getId());
+                                apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
+                                apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
+                                apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
+                                apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
+                                apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
+                                apiKeyResponseDto.setPolicyNameDescription(authPolicy.get().getDescr());
+                                apiKeyResponseDto.setCrDtimes(partnerPolicy.getCrDtimes());
+                                apiKeyResponseDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
+                                apiKeyResponseDtoList.add(apiKeyResponseDto);
                             }
                         }
-                    } catch (PartnerServiceException ex) {
-                        LOGGER.info("Could not fetch api requests :" + ex.getMessage());
                     }
+
                 }
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
