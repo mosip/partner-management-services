@@ -1,6 +1,6 @@
 package io.mosip.pms.partner.dto;
 
-import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +24,7 @@ public class DeviceDetailDto {
 
     private String approvalStatus;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 
     private String crBy;
