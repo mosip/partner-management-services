@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,9 @@ public class MultiPartnerServiceController {
 
     @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
     private String getAllApprovedDeviceProviderId;
+
+    @Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
+    private String getAllDevicesForSBIId;
 
     public static final String VERSION = "1.0";
 
@@ -239,6 +243,24 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(getAllApprovedDeviceProviderId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedDeviceProviderIds());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @GetMapping(value = "/getAllDevicesForSBI/{sbiId}")
+    @Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(@PathVariable String sbiId) {
+        ResponseWrapper<List<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllDevicesForSBIId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.getAllDevicesForSBI(sbiId));
         return responseWrapper;
     }
 }

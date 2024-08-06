@@ -8,6 +8,7 @@ import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.dto.SbiDetailsDto;
 import io.mosip.pms.partner.dto.PartnerDto;
+import io.mosip.pms.partner.dto.DeviceDetailDto;
 
 import java.util.List;
 
@@ -30,5 +31,7 @@ public interface MultiPartnerService {
     public List<SbiDetailsDto> getAllSBIDetails();
 
     public List<PartnerDto> getAllApprovedDeviceProviderIds();
+
+    public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId);
 
 }
