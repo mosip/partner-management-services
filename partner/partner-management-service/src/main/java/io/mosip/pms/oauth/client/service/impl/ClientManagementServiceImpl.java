@@ -664,6 +664,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDtoList.add(oidcClientDto);
 				}
 			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			throw ex;
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
