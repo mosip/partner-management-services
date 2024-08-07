@@ -97,7 +97,12 @@ public enum ErrorCode {
 	PARTNER_ID_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_001", "Partner id is not associated with user."),
 	SBI_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_002", "SBI is not associated with partner Id."),
 	INVALID_DEVICE_PARTNER_TYPE("PMS_DEVICE_ERROR_003", "Invalid partner type."),
-	DEVICES_LIST_FOR_SBI_FETCH_ERROR("PMS_SF_ERROR_001", "Error while fetching devices list for SBI.");
+	DEVICES_LIST_FOR_SBI_FETCH_ERROR("PMS_SF_ERROR_001", "Error while fetching devices list for SBI."),
+	INVALID_REQUEST_PARAM("PMS_REQUEST_ERROR_001", "Invalid request."),
+	SBI_DEVICE_MAPPING_ALREADY_EXIST("PMS_DEVICE_ERROR_004", "SBI and Device mapping already exists."),
+	SBI_NOT_EXISTS("PMS_DEVICE_ERROR_005", "SBI do not exists."),
+	DEVICE_NOT_EXISTS("PMS_DEVICE_ERROR_006", "Device do not exists."),
+	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id.");
 	/**
 	 * The error code.
 	 */
