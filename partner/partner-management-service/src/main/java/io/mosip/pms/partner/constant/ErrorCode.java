@@ -102,7 +102,8 @@ public enum ErrorCode {
 	SBI_DEVICE_MAPPING_ALREADY_EXIST("PMS_DEVICE_ERROR_004", "SBI and Device mapping already exists."),
 	SBI_NOT_EXISTS("PMS_DEVICE_ERROR_005", "SBI do not exists."),
 	DEVICE_NOT_EXISTS("PMS_DEVICE_ERROR_006", "Device do not exists."),
-	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id.");
+	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id."),
+	INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR("PMS_DEVICE_ERROR_008", "Error while adding inactive device mapping for sbi.");
 	/**
 	 * The error code.
 	 */

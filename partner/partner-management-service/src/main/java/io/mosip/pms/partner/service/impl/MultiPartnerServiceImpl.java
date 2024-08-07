@@ -750,8 +750,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage());
+            throw new PartnerServiceException(ErrorCode.INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode(),
+                    ErrorCode.INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
         }
         return response;
     }
