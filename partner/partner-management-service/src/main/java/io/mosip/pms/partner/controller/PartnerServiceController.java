@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -85,11 +87,15 @@ public class PartnerServiceController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
-	private String getOriginalPartnerCertificateId;
+	private final String getOriginalPartnerCertificateId;
 
-	@Value("${pmp.api.version}")
-	private String version;
+	@Autowired
+	public PartnerServiceController(Config config) {
+		Map<String, String> ids = config.getId();
+		this.getOriginalPartnerCertificateId = ids.get("original.partner.certificate.get");
+	}
+
+	public static final String VERSION = "1.0";
 	
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
@@ -268,7 +274,7 @@ public class PartnerServiceController {
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
-		response.setVersion(version);
+		response.setVersion(VERSION);
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}			
@@ -291,7 +297,7 @@ public class PartnerServiceController {
 		List<APIkeyRequests> apikeyRequestsList = null;		
 		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 		response.setId(msg);
-		response.setVersion(version);
+		response.setVersion(VERSION);
 		response.setResponse(apikeyRequestsList);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -367,12 +373,10 @@ public class PartnerServiceController {
 	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
-		response.setId(getOriginalPartnerCertificateId);
-		response.setVersion(version);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");
-		response.setVersion("1.0");
+		response.setId(getOriginalPartnerCertificateId);
+		response.setVersion(VERSION);
 		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
 		response.setResponsetime(LocalDateTime.now());
 		return response;

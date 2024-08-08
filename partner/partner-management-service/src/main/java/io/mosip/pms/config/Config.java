@@ -22,6 +22,10 @@ public class Config {
         this.id = id;
     }
 
+    public Map<String, String> getId() {
+        return id;
+    }
+
     /**
      * Id.
      *

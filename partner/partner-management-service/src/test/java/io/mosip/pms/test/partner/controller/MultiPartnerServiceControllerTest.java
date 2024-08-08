@@ -7,6 +7,7 @@ import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,11 +40,11 @@ public class MultiPartnerServiceControllerTest {
     private MultiPartnerService multiPartnerService;
 
     @Mock
-    MultiPartnerUtil multiPartnerUtil;
+    RequestValidator requestValidator;
 
     private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
 
-    public static final String VERSION = "v1";
+    public static final String VERSION = "1.0";
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
@@ -169,8 +170,8 @@ public class MultiPartnerServiceControllerTest {
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
         Mockito.when(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest())).thenReturn(true);
-        doNothing().when(multiPartnerUtil).validateId(anyString(), anyString());
-        doNothing().when(multiPartnerUtil).validate(any());
+        doNothing().when(requestValidator).validateId(anyString(), anyString());
+        doNothing().when(requestValidator).validate(any());
         ResponseWrapper<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
     }
 }

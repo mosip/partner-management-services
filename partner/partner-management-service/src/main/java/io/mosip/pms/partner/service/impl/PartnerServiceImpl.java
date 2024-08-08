@@ -240,9 +240,6 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Autowired
-	MultiPartnerUtil multiPartnerUtil;
-
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
@@ -823,14 +820,14 @@ public class PartnerServiceImpl implements PartnerService {
 			responseDto.setIsCaSignedCertificateExpired(false);
 			LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 			// Check mosip signed certificate expiry date
-			X509Certificate decodedMosipSignedCert = multiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
+			X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
 			LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 			if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
 				responseDto.setMosipSignedCertificateData("");
 				responseDto.setIsMosipSignedCertificateExpired(true);
 			}
 			// Check ca signed partner certificate expiry date
-			X509Certificate decodedCaSignedCert = multiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
+			X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
 			LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 			if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
 				responseDto.setCaSignedCertificateData("");

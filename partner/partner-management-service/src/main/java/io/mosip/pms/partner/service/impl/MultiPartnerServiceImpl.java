@@ -81,9 +81,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired
-    MultiPartnerUtil multiPartnerUtil;
-
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
         List<CertificateDto> certificateDtoList = new ArrayList<>();
@@ -102,7 +99,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
                         requestDto.setPartnerId(partner.getId());
                         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerServiceImpl.getPartnerCertificate(requestDto);
-                        X509Certificate cert = multiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+                        X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 
                         certificateDto.setIsCertificateAvailable(true);
                         certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));

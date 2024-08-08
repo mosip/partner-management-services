@@ -2,10 +2,11 @@ package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
-import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -45,44 +47,20 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.axios.timeout}")
     private String axiosTimeout;
 
-    @Value("${mosip.pms.api.id.all.certificates.details.get}")
-    private String getAllCertificatesDetailsId;
+    private final String getAllCertificatesDetailsId;
+    private final String getAllRequestedPoliciesId;
+    private final String getAllApprovedAuthPartnersPoliciesId;
+    private final String getAllApprovedPartnerIdsWithPolicyGroupsId;
+    private final String getConfigsId;
+    private final String getAllApiKeysForAuthPartners;
+    private final String postSaveUserConsentGivenId;
+    private final String getUserConsentGivenId;
+    private final String getAllSbiDetailsId;
+    private final String getAllApprovedDeviceProviderId;
+    private final String getAllDevicesForSBIId;
+    private final String postAddInactiveDeviceMappingToSbiId;
 
-    @Value("${mosip.pms.api.id.all.requested.policies.get}")
-    private String getAllRequestedPoliciesId;
-
-    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
-    private String getAllApprovedAuthPartnersPoliciesId;
-
-    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
-    private String getAllApprovedPartnerIdsWithPolicyGroupsId;
-
-    @Value("${mosip.pms.api.id.configs.get}")
-    private String getConfigsId;
-
-    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
-    private String getAllApiKeysForAuthPartners;
-
-    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
-    private String postSaveUserConsentGivenId;
-
-    @Value("${mosip.pms.api.id.user.consent.given.get}")
-    private String getUserConsentGivenId;
-
-    @Value("${mosip.pms.api.id.all.sbi.details.get}")
-    private String getAllSbiDetailsId;
-
-    @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
-    private String getAllApprovedDeviceProviderId;
-
-    @Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
-    private String getAllDevicesForSBIId;
-
-    @Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
-    private String postAddInactiveDeviceMappingToSbiId;
-
-    @Value("${pmp.api.version}")
-    private String version;
+    public static final String VERSION = "1.0";
 
     private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
 
@@ -90,7 +68,24 @@ public class MultiPartnerServiceController {
     MultiPartnerService multiPartnerService;
 
     @Autowired
-    MultiPartnerUtil multiPartnerUtil;
+    RequestValidator requestValidator;
+
+    @Autowired
+    public MultiPartnerServiceController(Config config) {
+        Map<String, String> ids = config.getId();
+        this.getAllCertificatesDetailsId = ids.get("all.certificates.details.get");
+        this.getAllRequestedPoliciesId = ids.get("all.requested.policies.get");
+        this.getAllApprovedAuthPartnersPoliciesId = ids.get("all.approved.auth.partners.policies.get");
+        this.getAllApprovedPartnerIdsWithPolicyGroupsId = ids.get("all.approved.partner.ids.with.policy.groups.get");
+        this.getConfigsId = ids.get("configs.get");
+        this.getAllApiKeysForAuthPartners = ids.get("all.api.keys.for.auth.partners.get");
+        this.postSaveUserConsentGivenId = ids.get("save.user.consent.given.post");
+        this.getUserConsentGivenId = ids.get("user.consent.given.get");
+        this.getAllSbiDetailsId = ids.get("all.sbi.details.get");
+        this.getAllApprovedDeviceProviderId = ids.get("all.approved.device.provider.ids.get");
+        this.getAllDevicesForSBIId = ids.get("all.devices.for.sbi.get");
+        this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
+    }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
     @GetMapping(value = "/getAllCertificateDetails")
@@ -103,7 +98,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
         ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllCertificatesDetailsId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllCertificateDetails());
         return responseWrapper;
     }
@@ -119,7 +114,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies() {
         ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllRequestedPoliciesId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllRequestedPolicies());
         return responseWrapper;
     }
@@ -135,7 +130,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
         ResponseWrapper<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedAuthPartnerPolicies());
         return responseWrapper;
     }
@@ -151,7 +146,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
         ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups());
         return responseWrapper;
     }
@@ -166,7 +161,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<Map<String, String>> getConfigValues() {
         ResponseWrapper<Map<String, String>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getConfigsId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         Map<String, String> configMap = new HashMap<String, String>();
         configMap.put("grantTypes", grantTypes);
         configMap.put("clientAuthMethods", clientAuthMethods);
@@ -189,7 +184,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
         ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllApiKeysForAuthPartners);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
         return responseWrapper;
     }
@@ -205,7 +200,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
         ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(postSaveUserConsentGivenId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.saveUserConsentGiven());
         return responseWrapper;
     }
@@ -221,7 +216,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
         ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getUserConsentGivenId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
         return responseWrapper;
     }
@@ -237,7 +232,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails() {
         ResponseWrapper<List<SbiDetailsDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllSbiDetailsId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllSBIDetails());
         return responseWrapper;
     }
@@ -253,7 +248,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<PartnerDto>> getAllApprovedDeviceProviderIds() {
         ResponseWrapper<List<PartnerDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllApprovedDeviceProviderId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedDeviceProviderIds());
         return responseWrapper;
     }
@@ -271,7 +266,7 @@ public class MultiPartnerServiceController {
     public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(@PathVariable String sbiId) {
         ResponseWrapper<List<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllDevicesForSBIId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllDevicesForSBI(sbiId));
         return responseWrapper;
     }
@@ -288,12 +283,11 @@ public class MultiPartnerServiceController {
     })
     public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        multiPartnerUtil.validateId(MULTI_PARTNER_SERVICE_POST, requestWrapper.getId());
-        multiPartnerUtil.validate(requestWrapper);
+        requestValidator.validateId(MULTI_PARTNER_SERVICE_POST, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
         responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
-        responseWrapper.setVersion(version);
+        responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest()));
         return responseWrapper;
     }
-
 }
