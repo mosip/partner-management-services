@@ -8,7 +8,7 @@
 	<name>apitest-pms</name>
 	<description>Parent project of apitest-pms</description>
 	<url>https://github.com/mosip/partner-management-services</url>
-	<version>1.2.0.1-SNAPSHOT</version>
+	<version>1.3.0-dp.1-SNAPSHOT</version>
 
 	<licenses>
 		<license>
@@ -176,7 +176,7 @@
 		<rest.assured.version>3.0.7</rest.assured.version>
 		<testng.version>6.11</testng.version>
 		<zt.zip.version>1.13</zt.zip.version>
-		<fileName>apitest-pms-1.2.0.1-SNAPSHOT-jar-with-dependencies</fileName>
+		<fileName>apitest-pms-1.3.0-dp.1-SNAPSHOT-jar-with-dependencies</fileName>
 		
 		</properties>
 	<build>
