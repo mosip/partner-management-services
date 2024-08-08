@@ -2,18 +2,18 @@ package io.mosip.pms.test.partner.controller;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
-import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
@@ -30,17 +30,20 @@ import static org.mockito.Mockito.doNothing;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@SpringBootTest(classes = {MultiPartnerServiceController.class})
 public class MultiPartnerServiceControllerTest {
 
-    @InjectMocks
+    @Autowired
     private MultiPartnerServiceController multiPartnerServiceController;
 
-    @Mock
+    @MockBean
     private MultiPartnerService multiPartnerService;
 
-    @Mock
+    @MockBean
     RequestValidator requestValidator;
+
+    @MockBean
+    Config config;
 
     private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
 
