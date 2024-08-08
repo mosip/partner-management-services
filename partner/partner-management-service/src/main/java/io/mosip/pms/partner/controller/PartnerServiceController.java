@@ -81,7 +81,6 @@ public class PartnerServiceController {
 	PartnerManagerService partnerManagerService;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
-	String version = "1.0";
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -89,7 +88,8 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
 	private String getOriginalPartnerCertificateId;
 
-	public static final String VERSION = "1.0";
+	@Value("${pmp.api.version}")
+	private String version;
 	
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
@@ -368,7 +368,7 @@ public class PartnerServiceController {
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
 		response.setId(getOriginalPartnerCertificateId);
-		response.setVersion(VERSION);
+		response.setVersion(version);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
 		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");

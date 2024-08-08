@@ -35,7 +35,8 @@ public class ClientManagementController {
 	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
 	private String getAllOidcClientsId;
 
-	public static final String VERSION = "1.0";
+	@Value("${pmp.api.version}")
+	private String version;
 
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
@@ -105,7 +106,7 @@ public class ClientManagementController {
 	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
 		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setId(getAllOidcClientsId);
-		responseWrapper.setVersion(VERSION);
+		responseWrapper.setVersion(version);
 		responseWrapper.setResponse(clientManagementService.getAllOidcClients());
 		return responseWrapper;
 	}

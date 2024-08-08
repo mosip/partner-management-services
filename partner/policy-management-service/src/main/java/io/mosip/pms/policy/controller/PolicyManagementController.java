@@ -70,7 +70,8 @@ public class PolicyManagementController {
 	@Value("${mosip.pms.api.id.all.policy.groups.get}")
 	private String getAllPolicyGroupsId;
 
-	public static final String VERSION = "1.0";
+	@Value("${pmp.api.version}")
+	private String version;
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -299,7 +300,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
 		response.setId(getAllPolicyGroupsId);
-		response.setVersion(VERSION);
+		response.setVersion(version);
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		response.setResponse(policyManagementService.getAllPolicyGroups());
 		logger.info("Returning response from PolicyManagementController.");
