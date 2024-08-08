@@ -1,9 +1,12 @@
 package io.mosip.pms.test.partner.controller;
 
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,8 +19,13 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -29,6 +37,13 @@ public class MultiPartnerServiceControllerTest {
 
     @Mock
     private MultiPartnerService multiPartnerService;
+
+    @Mock
+    MultiPartnerUtil multiPartnerUtil;
+
+    private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
+
+    public static final String VERSION = "v1";
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
@@ -142,5 +157,20 @@ public class MultiPartnerServiceControllerTest {
     @Test
     public void getConfigValuesTest() throws Exception {
         multiPartnerServiceController.getConfigValues();
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void addInactiveDeviceMappingToSbi() throws Exception {
+        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setId(MULTI_PARTNER_SERVICE_POST);
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequesttime(LocalDateTime.now());
+        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
+        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
+        Mockito.when(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest())).thenReturn(true);
+        doNothing().when(multiPartnerUtil).validateId(anyString(), anyString());
+        doNothing().when(multiPartnerUtil).validate(any());
+        ResponseWrapper<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
     }
 }

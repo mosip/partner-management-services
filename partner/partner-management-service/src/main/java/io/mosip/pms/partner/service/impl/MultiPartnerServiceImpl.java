@@ -1,6 +1,5 @@
 package io.mosip.pms.partner.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -23,7 +22,6 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.SbiAndDeviceMappingResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -83,6 +81,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    MultiPartnerUtil multiPartnerUtil;
+
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
         List<CertificateDto> certificateDtoList = new ArrayList<>();
@@ -101,7 +102,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
                         requestDto.setPartnerId(partner.getId());
                         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerServiceImpl.getPartnerCertificate(requestDto);
-                        X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+                        X509Certificate cert = multiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 
                         certificateDto.setIsCertificateAvailable(true);
                         certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
@@ -682,8 +683,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public SbiAndDeviceMappingResponseDto addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
-        SbiAndDeviceMappingResponseDto response = new SbiAndDeviceMappingResponseDto();
+    public Boolean addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
+        Boolean inactiveDeviceMappingToSbiFlag = false;
         try {
             String partnerId = requestDto.getPartnerId();
             String sbiId = requestDto.getSbiId();
@@ -738,11 +739,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
             DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
             LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
-
-            response.setSbiId(savedEntity.getId().getSbiId());
-            response.setProviderId(savedEntity.getProviderId());
-            response.setDeviceDetailId(deviceDetailId);
-            response.setIsActive(savedEntity.getIsActive());
+            inactiveDeviceMappingToSbiFlag = true;
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
@@ -753,7 +750,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode(),
                     ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
         }
-        return response;
+        return inactiveDeviceMappingToSbiFlag;
     }
 
     private void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
