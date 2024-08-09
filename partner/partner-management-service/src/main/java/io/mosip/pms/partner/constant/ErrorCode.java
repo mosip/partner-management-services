@@ -80,6 +80,9 @@ public enum ErrorCode {
 	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty."),
 	PARTNER_TYPE_NOT_EXISTS("PMS_CERTIFICATE_ERROR_004","Partner Type is null or empty"),
 	APPROVAL_STATUS_NOT_EXISTS("PMS_CERTIFICATE_ERROR_005","Approval Status is null or empty"),
+	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
+	PARTNER_DOES_NOT_BELONG_TO_THE_USER("PMS_CERTIFICATE_ERROR_007", "The given partner ID does not belong to the user.So unable to get the original partner certificates"),
+	CERTIFICATE_FETCH_ERROR("PMS_CERTIFICATE_ERROR_008","Error while fetching certificate."),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
 	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
 	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),
@@ -87,8 +90,6 @@ public enum ErrorCode {
 	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty."),
 	OIDC_CLIENTS_FETCH_ERROR("PMS_POLICY_ERROR_006","Error while fetching OIDC clients list."),
 	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
-	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
-	PARTNER_DOES_NOT_BELONG_TO_THE_USER("PMS_CERTIFICATE_ERROR_007", "The given partner ID does not belong to the user.So unable to get the original partner certificates"),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
@@ -97,7 +98,18 @@ public enum ErrorCode {
 	PARTNER_ID_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_001", "Partner id is not associated with user."),
 	SBI_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_002", "SBI is not associated with partner Id."),
 	INVALID_DEVICE_PARTNER_TYPE("PMS_DEVICE_ERROR_003", "Invalid partner type."),
-	DEVICES_LIST_FOR_SBI_FETCH_ERROR("PMS_SF_ERROR_001", "Error while fetching devices list for SBI.");
+	DEVICES_LIST_FOR_SBI_FETCH_ERROR("PMS_SF_ERROR_001", "Error while fetching devices list for SBI."),
+	INVALID_REQUEST_PARAM("PMS_REQUEST_ERROR_001", "Invalid request."),
+	INVALID_REQUEST_ID("PMS_REQUEST_ERROR_002", "Invalid Request Id"),
+	INVALID_REQUEST_VERSION("PMS_REQUEST_ERROR_003", "Request version is invalid"),
+	INVALID_REQUEST_DATETIME("PMS_REQUEST_ERROR_004", "Invalid request time"),
+	INVALID_REQUEST_BODY("PMS_REQUEST_ERROR_005", "Request body is invalid"),
+	INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE("PMS_REQUEST_ERROR_006", "Request date should be current date"),
+	SBI_DEVICE_MAPPING_ALREADY_EXIST("PMS_DEVICE_ERROR_004", "SBI and Device mapping already exists."),
+	SBI_NOT_EXISTS("PMS_DEVICE_ERROR_005", "SBI do not exists."),
+	DEVICE_NOT_EXISTS("PMS_DEVICE_ERROR_006", "Device do not exists."),
+	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id."),
+	ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR("PMS_DEVICE_ERROR_008", "Error while adding inactive device mapping for sbi.");
 	/**
 	 * The error code.
 	 */
