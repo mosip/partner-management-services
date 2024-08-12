@@ -871,6 +871,7 @@ public class MultiPartnerServiceImplTest {
         when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
         DeviceDetail deviceDetail = new DeviceDetail();
         deviceDetail.setDeviceProviderId("123");
+        deviceDetail.setApprovalStatus("pending_approval");
         when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
         DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
         deviceDetailSBI.setProviderId("123");
