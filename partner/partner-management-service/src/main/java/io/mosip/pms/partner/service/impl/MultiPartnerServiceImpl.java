@@ -753,7 +753,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
         Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
         if (secureBiometricInterface.isEmpty()) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not exists.");
+            LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
                     ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
         } else if (!secureBiometricInterface.get().getProviderId().equals(partnerId)) {
@@ -768,7 +768,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
         Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
         if (deviceDetail.isEmpty()) {
-            LOGGER.info("sessionId", "idType", "id", "Device not exists.");
+            LOGGER.info("sessionId", "idType", "id", "Device does not exists.");
             throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
                     ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
         } else if (!deviceDetail.get().getDeviceProviderId().equals(partnerId)) {
