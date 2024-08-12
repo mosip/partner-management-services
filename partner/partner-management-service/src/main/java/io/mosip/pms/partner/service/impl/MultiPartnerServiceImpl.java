@@ -772,7 +772,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
                     ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
         } else if (!deviceDetail.get().getDeviceProviderId().equals(partnerId)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
+            LOGGER.info("sessionId", "idType", "id", "Device is not associated with partner Id.");
             throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
                     ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
         } else if (!deviceDetail.get().getApprovalStatus().equals(PENDING_APPROVAL)) {

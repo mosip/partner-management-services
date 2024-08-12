@@ -180,6 +180,7 @@ public class DeviceDetailController {
 	
 	@ResponseFilter
 	@PostMapping("/deviceType/filtervalues")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetaildevicetypefiltervalues())")
 	@Operation(summary = "Service to filter DeviceTypes", description = "Service to filter DeviceTypes")
 	public ResponseWrapper<FilterResponseCodeDto> filterDeviceType(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
