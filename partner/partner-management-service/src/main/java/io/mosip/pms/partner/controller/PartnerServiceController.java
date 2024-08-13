@@ -86,7 +86,7 @@ public class PartnerServiceController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
+	@Value("${mosip.pms.api.id.original.partner.certificate.get:mosip.pms.original.partner.certificate.get}")
 	private String getOriginalPartnerCertificateId;
 
 	public static final String VERSION = "1.0";
