@@ -67,7 +67,7 @@ public class PolicyManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
+	@Value("${mosip.pms.api.id.all.policy.groups.get:mosip.pms.all.policy.groups.get}")
 	private String getAllPolicyGroupsId;
 
 	public static final String VERSION = "1.0";

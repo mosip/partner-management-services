@@ -32,37 +32,37 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.oidc.clients.clientAuthMethods:private_key_jwt}")
     private String clientAuthMethods;
 
-    @Value("${mosip.pms.session.inactivity.timer}")
+    @Value("${mosip.pms.session.inactivity.timer:25}")
     private String inActivityTimer;
 
-    @Value("${mosip.pms.session.inactivity.prompt.timer}")
+    @Value("${mosip.pms.session.inactivity.prompt.timer:5}")
     private String inActivityPromptTimer;
 
-    @Value("${mosip.pms.axios.timeout}")
+    @Value("${mosip.pms.axios.timeout:3}")
     private String axiosTimeout;
 
-    @Value("${mosip.pms.api.id.all.certificates.details.get}")
+    @Value("${mosip.pms.api.id.all.certificates.details.get:mosip.pms.all.certificates.details.get}")
     private String getAllCertificatesDetailsId;
 
-    @Value("${mosip.pms.api.id.all.requested.policies.get}")
+    @Value("${mosip.pms.api.id.all.requested.policies.get:mosip.pms.all.requested.policies.get}")
     private String getAllRequestedPoliciesId;
 
-    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
+    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get:mosip.pms.all.approved.auth.partners.policies.get}")
     private String getAllApprovedAuthPartnersPoliciesId;
 
-    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
+    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get:mosip.pms.all.approved.partner.ids.with.policy.groups.get}")
     private String getAllApprovedPartnerIdsWithPolicyGroupsId;
 
-    @Value("${mosip.pms.api.id.configs.get}")
+    @Value("${mosip.pms.api.id.configs.get:mosip.pms.configs.get}")
     private String getConfigsId;
 
-    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
+    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get:mosip.pms.all.api.keys.for.auth.partners.get}")
     private String getAllApiKeysForAuthPartners;
 
-    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
+    @Value("${mosip.pms.api.id.save.user.consent.given.post:mosip.pms.save.user.consent.given.post}")
     private String postSaveUserConsentGivenId;
 
-    @Value("${mosip.pms.api.id.user.consent.given.get}")
+    @Value("${mosip.pms.api.id.user.consent.given.get:mosip.pms.user.consent.given.get}")
     private String getUserConsentGivenId;
 
     public static final String VERSION = "1.0";

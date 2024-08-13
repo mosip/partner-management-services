@@ -32,7 +32,7 @@ public class ClientManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
+	@Value("${mosip.pms.api.id.all.oidc.clients.get:mosip.pms.all.oidc.clients.get}")
 	private String getAllOidcClientsId;
 
 	public static final String VERSION = "1.0";
