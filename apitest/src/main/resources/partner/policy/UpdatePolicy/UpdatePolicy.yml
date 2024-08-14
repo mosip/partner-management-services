@@ -1,24 +1,24 @@
 createUpdatePolicy:
    Partner_UpdatePolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy with valid values
+      description: Update Policy with valid values
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/policy/UpdatePolicy/updatePolicyResult
       input: '{
-"desc": "desc mosip policy updated",
-"name": "mosip policy",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy updated",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
         "policyGroupName": "mosip policy group",
@@ -28,24 +28,24 @@ createUpdatePolicy:
     }'
    Partner_UpdatePolicy_Invalid_PolicyID:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy with invalid PolicyID
+      description: Update Policy with invalid PolicyID
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "mosip policy",
-"policyId": "asfgref",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "asfgref",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -57,24 +57,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Invalid_PolicygroupName:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy with invalid PolicyGroupName
+      description: Update Policy with invalid PolicyGroupName
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "mosip policy",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "asfgrrw",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "asfgrrw",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -86,24 +86,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy with invalid PolicyParameterName
+      description: Update Policy with invalid PolicyParameterName
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "$REMOVE$",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "$REMOVE$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -115,24 +115,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy while keeping InputParameter as empty  
+      description: Update Policy while keeping InputParameter as empty
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "$REMOVE$",
-"name": "mosip policy",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "$REMOVE$",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -144,24 +144,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Invalid_InputParameter_policyID:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy while keeping InputParameter as invalid for PolicyID
+      desciption: Update Policy while keeping InputParameter as invalid for PolicyID
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "mosip policy",
-"policyId": "1234abcxz",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "1234abcxz",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -173,24 +173,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_authTokenType:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy while keeping authTokeType Parameter as Empty
+      description: Update Policy while keeping authTokeType Parameter as Empty
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "mosip policy",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "$REMOVE$",
-"policyGroupName": "mosip policy group",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "$REMOVE$",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -202,24 +202,24 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_policyGroupName:
       endPoint: /v1/policymanager/policies/{policyId}
-      description: Upldate Policy while keeping PolicyGroupName Parameter as Empty
+      description: Update Policy while keeping PolicyGroupName Parameter as Empty
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "desc mosip policy",
-"name": "mosip policy",
-"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-"authSubType": "FINGER",
-"authType": "bio",
-"mandatory": true,
-"attributeName": "string",
-"authTokenType": "partner",
-"policyGroupName": "$REMOVE$",
-"policyType": "Auth",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "$REMOVE$",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

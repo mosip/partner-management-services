@@ -7,21 +7,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policy",
-"policyId": "MDSP",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy",
+		"policyId": "MDSP",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -38,21 +38,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy ApiKey",
-"name": "mosip data share policy ApiKey",
-"policyId": "MDSPFA",
-"policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-"policyType": "DataShare",
-"format":"extraction",
-"attributeName":"biometrics",
-"version": "1.0",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy ApiKey",
+		"name": "mosip data share policy ApiKey",
+		"policyId": "MDSPFA",
+		"policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
@@ -63,27 +63,27 @@ defineDataSharePolicy:
     
    Partner_DefineDataSharePolicy_All_for_Update_sid:
       endPoint: /v1/policymanager/policies
-      description: Create Data Share Policy for update partner
+      description: Create Data Share Policy for update partner	  
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "desc mosip policy group for req key For Update",
-"name": "mosip policy group for req key For Update",
-"policyId": "MDSPFU",
-"policyGroupName": "mosip policy group for req key For Update",
-"policyType": "DataShare",
-"format":"extraction",
-"attributeName":"biometrics",
-"version": "1.0",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy group for req key For Update",
+		"name": "mosip policy group for req key For Update",
+		"policyId": "MDSPFU",
+		"policyGroupName": "mosip policy group for req key For Update",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group for req key For Update",
@@ -100,21 +100,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy check status",
-"name": "mosip data share policy to check status22",
-"policyId": "MDSP8",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"attributeName":"biometrics",
-"version": "1.0",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy check status",
+		"name": "mosip data share policy to check status22",
+		"policyId": "MDSP8",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -130,21 +130,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy2",
-"name": "mosip data share policy2",
-"policyId": "MDSP2",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"$REMOVE$",
-"attributeName":"biometrics",
-"version": "1.0",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy2",
+		"name": "mosip data share policy2",
+		"policyId": "MDSP2",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"$REMOVE$",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -170,11 +170,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -201,11 +201,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -232,11 +232,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -263,11 +263,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -294,11 +294,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -325,11 +325,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -356,11 +356,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -387,11 +387,11 @@ defineDataSharePolicy:
     "attributeName":"biometrics",
     "version": "1.0",
     "typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -410,21 +410,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "mosip data share policy7",
-"name": "mosip data share policy7",
-"policyId": "MDSP",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"attributeName":"$REMOVE$",
-"version": "1.0",
+		"desc": "mosip data share policy7",
+		"name": "mosip data share policy7",
+		"policyId": "MDSP",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"$REMOVE$",
+		"version": "1.0",
         "typeOfShare": "Data Share",
-    "validForInMinutes": "30",
-    "transactionsAllowed": "2",
-    "encryptionType": "Partner Based",
-    "shareDomain": "datashare-service",
-    "source": "Packet Manager",
-"requesttime": "$TIMESTAMP$"
+	    "validForInMinutes": "30",
+	    "transactionsAllowed": "2",
+	    "encryptionType": "Partner Based",
+	    "shareDomain": "datashare-service",
+	    "source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
@@ -443,21 +443,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policya",
-"policyId": "MDSPA",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":" ",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policya",
+		"policyId": "MDSPA",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":" ",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -474,21 +474,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyb",
-"policyId": "MDSPB",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"individualBiometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyb",
+		"policyId": "MDSPB",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"individualBiometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -505,21 +505,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyd",
-"policyId": "MDSPC",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"Zipcode",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyd",
+		"policyId": "MDSPC",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"Zipcode",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -536,21 +536,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policye",
-"policyId": "MDSPDD",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": " ",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policye",
+		"policyId": "MDSPDD",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": " ",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
             "errors": [
@@ -568,21 +568,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyf",
-"policyId": "MDSPEE",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Direct",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyf",
+		"policyId": "MDSPEE",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Direct",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -600,21 +600,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyi",
-"policyId": "MDSPEE",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "$REMOVE$",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyi",
+		"policyId": "MDSPEE",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "$REMOVE$",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -632,21 +632,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyg",
-"policyId": "MDSPGG",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "https",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyg",
+		"policyId": "MDSPGG",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "https",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -663,21 +663,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyh",
-"policyId": "MDSPHH",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "none",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyh",
+		"policyId": "MDSPHH",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "none",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -694,21 +694,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policyk",
-"policyId": "MDSPm",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"custom name",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyk",
+		"policyId": "MDSPm",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"custom name",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -724,21 +724,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policy name",
-"policyId": "MDSP239fhfdndn",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy name",
+		"policyId": "MDSP239fhfdndn",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -755,21 +755,21 @@ defineDataSharePolicy:
       inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-"desc": "mosip data share policy",
-"name": "mosip data share policy without policy id",
-"policyId": "$REMOVE$",
-"policyGroupName": "mosip policy group",
-"policyType": "DataShare",
-"format":"extraction",
-"typeOfShare": "Data Share",
-"validForInMinutes": "30",
-"transactionsAllowed": "2",
-"encryptionType": "Partner Based",
-"shareDomain": "datashare-service",
-"source": "Packet Manager",
-"attributeName":"biometrics",
-"version": "1.0",
-"requesttime": "$TIMESTAMP$"
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy without policy id",
+		"policyId": "$REMOVE$",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [

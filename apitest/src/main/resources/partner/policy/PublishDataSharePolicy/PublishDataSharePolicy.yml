@@ -7,9 +7,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
       outputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicyResult
       input: '{
-"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-"policyId": "MDSP",
-"requesttime": "$TIMESTAMP$"
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "mosip policy group",
@@ -20,8 +20,8 @@ createPublishPolicy:
         "policyType": "DataShare",
         "status": "PUBLISHED",
         "is_Active": true,
-"format":"extraction",
-"attributeName":"biometrics"
+		"format":"extraction",
+		"attributeName":"biometrics"
     }'
    Partner_PublishDataSharePolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
@@ -31,9 +31,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-"policyId": "MDSP",
-"requesttime": "$TIMESTAMP$"
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
     "errors": [
@@ -50,9 +50,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"policygroupId": "sgdasfgbv",
-"policyId": "MDSP",
-"requesttime": "$TIMESTAMP$"
+		"policygroupId": "sgdasfgbv",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
     "errors": [
@@ -69,9 +69,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
       outputTemplate: partner/error
       input: '{
-"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-"policyId": "afgrwfg",
-"requesttime": "$TIMESTAMP$"
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "afgrwfg",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
   "errors": [
