@@ -144,7 +144,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Invalid_InputParameter_policyID:
       endPoint: /v1/policymanager/policies/{policyId}
-      desciption: Update Policy while keeping InputParameter as invalid for PolicyID
+      description: Update Policy while keeping InputParameter as invalid for PolicyID
       role: partner
       restMethod: put
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
