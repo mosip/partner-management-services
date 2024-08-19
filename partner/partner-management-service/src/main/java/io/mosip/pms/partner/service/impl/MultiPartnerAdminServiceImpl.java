@@ -68,7 +68,7 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             deviceDetailService.updateDeviceDetailStatus(deviceDetails);
 
             deviceDetailSBI.setIsActive(true);
-            DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(deviceDetailSBI);
+            deviceDetailSbiRepository.save(deviceDetailSBI);
             LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
             approveDeviceWithSbiMappingFlag = true;
         } catch (PartnerServiceException ex) {
