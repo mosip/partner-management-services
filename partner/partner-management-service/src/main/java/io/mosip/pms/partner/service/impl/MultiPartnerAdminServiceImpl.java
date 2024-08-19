@@ -6,6 +6,7 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
+import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -22,8 +23,6 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
 
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerAdminServiceImpl.class);
     public static final String APPROVED = "approved";
-    public static final String ACTIVATE = "Activate";
-    public static final String DEACTIVATE = "De-activate";
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -59,22 +58,17 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
                         ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
             }
 
+            UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
+            deviceDetails.setId(deviceDetailId);
             if (rejectFlag) {
-                UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
-                deviceDetails.setId(deviceDetailId);
-                deviceDetails.setApprovalStatus(DEACTIVATE);
-                deviceDetailService.updateDeviceDetailStatus(deviceDetails);
+                deviceDetails.setApprovalStatus(DeviceConstant.REJECT);
             } else {
-                UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
-                deviceDetails.setId(deviceDetailId);
-                deviceDetails.setApprovalStatus(ACTIVATE);
-                deviceDetailService.updateDeviceDetailStatus(deviceDetails);
+                deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
             }
+            deviceDetailService.updateDeviceDetailStatus(deviceDetails);
 
-            DeviceDetailSBI entity = deviceDetailSBI;
-            entity.setIsActive(true);
-
-            DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
+            deviceDetailSBI.setIsActive(true);
+            DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(deviceDetailSBI);
             LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
             approveDeviceWithSbiMappingFlag = true;
         } catch (PartnerServiceException ex) {
