@@ -112,7 +112,7 @@ public enum ErrorCode {
 	ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR("PMS_DEVICE_ERROR_008", "Error while adding inactive device mapping for sbi."),
 	SBI_NOT_APPROVED("PMS_DEVICE_ERROR_009","Given sbi details are not approved"),
 	DEVICE_NOT_PENDING_FOR_APPROVAL("PMS_DEVICE_ERROR_010","Given device details are not in pending for approval status."),
-	APPROVE_DEVICE_WITH_SBI__MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving device for Sbi Mapping."),
+	APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),
 	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists.");
 	/**
 	 * The error code.

@@ -28,10 +28,11 @@ public class MultiPartnerAdminServiceController {
 
     public static final String VERSION = "1.0";
 
-    private static final String MULTI_PARTNER_ADMIN_SERVICE_POST = "multi.partner.admin.service.post";
+    @Value("${mosip.pms.api.id.approve.device.with.sbi.mapping.post:mosip.approve.device.with.sbi.mapping.post}")
+    private String postApproveDeviceWithSbiMappingId;
 
-    @Value("${mosip.pms.api.id.approve.device.with.sbi.mapping.get:mosip.approve.device.with.sbi.mapping.get}")
-    private String getApproveDeviceWithSbiMappingId;
+    @Value("${mosip.pms.api.id.reject.device.with.sbi.mapping.post:mosip.reject.device.with.sbi.mapping.post}")
+    private String postRejectDeviceWithSbiMappingId;
 
     @Autowired
     MultiPartnerAdminService multiPartnerAdminService;
@@ -39,9 +40,12 @@ public class MultiPartnerAdminServiceController {
     @Autowired
     RequestValidator requestValidator;
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdevicedetail())")
+    public static final String APPROVE_DEVICE_WITH_SBI_MAPPING_POST = "approve.device.with.sbi.mapping.post";
+    public static final String REJECT_DEVICE_WITH_SBI_MAPPING_POST = "reject.device.with.sbi.mapping.post";
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
     @PostMapping(value = "/approveDeviceWithSbiMapping")
-    @Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
+    @Operation(summary = "Approve device and activate device mapping to sbi.", description = "Approve device and activate device mapping to sbi.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
@@ -51,11 +55,31 @@ public class MultiPartnerAdminServiceController {
     })
     public ResponseWrapper<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(MULTI_PARTNER_ADMIN_SERVICE_POST, requestWrapper.getId());
+        requestValidator.validateId(APPROVE_DEVICE_WITH_SBI_MAPPING_POST, requestWrapper.getId());
         requestValidator.validate(requestWrapper);
-        responseWrapper.setId(getApproveDeviceWithSbiMappingId);
+        responseWrapper.setId(postApproveDeviceWithSbiMappingId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerAdminService.approveDeviceWithSbiMapping(requestWrapper.getRequest()));
+        responseWrapper.setResponse(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), false));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
+    @PostMapping(value = "/rejectDeviceWithSbiMapping")
+    @Operation(summary = "Reject device and activate device mapping to sbi.", description = "Reject device and activate device mapping to sbi.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        requestValidator.validateId(REJECT_DEVICE_WITH_SBI_MAPPING_POST, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
+        responseWrapper.setId(postRejectDeviceWithSbiMappingId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), true));
         return responseWrapper;
     }
 }

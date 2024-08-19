@@ -23,7 +23,7 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerAdminServiceImpl.class);
     public static final String APPROVED = "approved";
     public static final String ACTIVATE = "Activate";
-    public static final String PENDING_APPROVAL = "pending_approval";
+    public static final String DEACTIVATE = "De-activate";
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -38,13 +38,13 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     MultiPartnerHelper multiPartnerHelper;
 
     @Override
-    public Boolean approveDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto) {
+    public Boolean approveOrRejectDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
         Boolean approveDeviceWithSbiMappingFlag = false;
         try {
             String partnerId = requestDto.getPartnerId();
             String sbiId = requestDto.getSbiId();
             String deviceDetailId = requestDto.getDeviceDetailId();
-            if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)  ){
+            if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)) {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
                 throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
@@ -53,16 +53,23 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             multiPartnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
 
             DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
-            if (Objects.isNull(deviceDetailSBI)){
+            if (Objects.isNull(deviceDetailSBI)) {
                 LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
                 throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
                         ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
             }
 
-            UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
-            deviceDetails.setId(deviceDetailId);
-            deviceDetails.setApprovalStatus(ACTIVATE);
-            deviceDetailService.updateDeviceDetailStatus(deviceDetails);
+            if (rejectFlag) {
+                UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
+                deviceDetails.setId(deviceDetailId);
+                deviceDetails.setApprovalStatus(DEACTIVATE);
+                deviceDetailService.updateDeviceDetailStatus(deviceDetails);
+            } else {
+                UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
+                deviceDetails.setId(deviceDetailId);
+                deviceDetails.setApprovalStatus(ACTIVATE);
+                deviceDetailService.updateDeviceDetailStatus(deviceDetails);
+            }
 
             DeviceDetailSBI entity = deviceDetailSBI;
             entity.setIsActive(true);
@@ -71,14 +78,14 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
             approveDeviceWithSbiMappingFlag = true;
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In approveDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In approveDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.APPROVE_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorCode(),
-                    ErrorCode.APPROVE_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorMessage());
+                    "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorCode(),
+                    ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorMessage());
         }
         return approveDeviceWithSbiMappingFlag;
     }

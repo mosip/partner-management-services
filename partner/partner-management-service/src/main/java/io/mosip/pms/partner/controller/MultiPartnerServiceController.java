@@ -60,8 +60,7 @@ public class MultiPartnerServiceController {
     private final String postAddInactiveDeviceMappingToSbiId;
 
     public static final String VERSION = "1.0";
-
-    private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
+    public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
 
     @Autowired
     MultiPartnerService multiPartnerService;
@@ -282,7 +281,7 @@ public class MultiPartnerServiceController {
     })
     public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(MULTI_PARTNER_SERVICE_POST, requestWrapper.getId());
+        requestValidator.validateId(ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST, requestWrapper.getId());
         requestValidator.validate(requestWrapper);
         responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
         responseWrapper.setVersion(VERSION);
