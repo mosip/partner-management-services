@@ -23,6 +23,7 @@ import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
+import io.mosip.pms.partner.util.MultiPartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    MultiPartnerHelper multiPartnerHelper;
 
     @Override
     public List<CertificateDto> getAllCertificateDetails() {
@@ -718,7 +722,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
 
             // validate sbi and device mapping
-            validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
+            multiPartnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
+
+            DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
+            if (Objects.nonNull(deviceDetailSBI)){
+                LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+                throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
+                        ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
+            }
 
             DeviceDetailSBI entity = new DeviceDetailSBI();
 
@@ -748,45 +759,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
         }
         return inactiveDeviceMappingToSbiFlag;
-    }
-
-    private void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
-        Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
-        if (secureBiometricInterface.isEmpty()) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
-        } else if (!secureBiometricInterface.get().getProviderId().equals(partnerId)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
-                    ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
-        } else if (!secureBiometricInterface.get().getApprovalStatus().equals(APPROVED)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
-                    ErrorCode.SBI_NOT_APPROVED.getErrorMessage());
-        }
-
-        Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-        if (deviceDetail.isEmpty()) {
-            LOGGER.info("sessionId", "idType", "id", "Device does not exists.");
-            throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
-        } else if (!deviceDetail.get().getDeviceProviderId().equals(partnerId)) {
-            LOGGER.info("sessionId", "idType", "id", "Device is not associated with partner Id.");
-            throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
-                    ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
-        } else if (!deviceDetail.get().getApprovalStatus().equals(PENDING_APPROVAL)) {
-            LOGGER.info("sessionId", "idType", "id", "Device is not in pending for approval state.");
-            throw new PartnerServiceException(ErrorCode.DEVICE_NOT_PENDING_FOR_APPROVAL.getErrorCode(),
-                    ErrorCode.DEVICE_NOT_PENDING_FOR_APPROVAL.getErrorMessage());
-        }
-
-        DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
-        if (Objects.nonNull(deviceDetailSBI)){
-            LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
-            throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
-                    ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
-        }
     }
 
     private void validateDevicePartnerType(Partner partner, String userId) {
