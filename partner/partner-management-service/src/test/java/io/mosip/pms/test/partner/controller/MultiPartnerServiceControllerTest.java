@@ -45,8 +45,6 @@ public class MultiPartnerServiceControllerTest {
     @MockBean
     Config config;
 
-    private static final String MULTI_PARTNER_SERVICE_POST = "multi.partner.service.post";
-
     public static final String VERSION = "1.0";
 
     @Test
@@ -167,7 +165,6 @@ public class MultiPartnerServiceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void addInactiveDeviceMappingToSbi() throws Exception {
         RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
-        requestWrapper.setId(MULTI_PARTNER_SERVICE_POST);
         requestWrapper.setVersion(VERSION);
         requestWrapper.setRequesttime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();

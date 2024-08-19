@@ -162,5 +162,7 @@ public class AuthorizedRolesDto {
 	private List<String> userconsent;
 
 	private List<String> getallsbidetails;
+
+	private List<String> postdevicewithsbimapping;
 		
 }
