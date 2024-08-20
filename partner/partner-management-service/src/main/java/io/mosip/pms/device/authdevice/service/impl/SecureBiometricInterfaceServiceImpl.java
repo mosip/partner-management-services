@@ -354,7 +354,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	 * @param toDate
 	 */
 	private void validateDates(LocalDateTime fromDate, LocalDateTime toDate) {
-		if (toDate.isBefore(fromDate)) {
+		if (toDate.isBefore(fromDate) || toDate.isEqual(fromDate)) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
@@ -367,7 +367,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode(),
 					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorMessage());
 		}
-		if (toDate.toLocalDate().isBefore(LocalDate.now())) {
+		if (toDate.toLocalDate().isBefore(LocalDate.now()) || toDate.toLocalDate().isEqual(LocalDate.now())) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,

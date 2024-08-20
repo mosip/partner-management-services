@@ -1,34 +1,51 @@
 package io.mosip.pms.test.partner.controller;
 
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
+import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@SpringBootTest(classes = {MultiPartnerServiceController.class})
 public class MultiPartnerServiceControllerTest {
 
-    @InjectMocks
+    @Autowired
     private MultiPartnerServiceController multiPartnerServiceController;
 
-    @Mock
+    @MockBean
     private MultiPartnerService multiPartnerService;
+
+    @MockBean
+    RequestValidator requestValidator;
+
+    @MockBean
+    Config config;
+
+    public static final String VERSION = "1.0";
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
@@ -142,5 +159,19 @@ public class MultiPartnerServiceControllerTest {
     @Test
     public void getConfigValuesTest() throws Exception {
         multiPartnerServiceController.getConfigValues();
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void addInactiveDeviceMappingToSbi() throws Exception {
+        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequesttime(LocalDateTime.now());
+        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
+        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
+        Mockito.when(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest())).thenReturn(true);
+        doNothing().when(requestValidator).validateId(anyString(), anyString());
+        doNothing().when(requestValidator).validate(any());
+        ResponseWrapper<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
     }
 }

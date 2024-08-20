@@ -1,8 +1,12 @@
 package io.mosip.pms.partner.controller;
 
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
+import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,10 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/partners")
@@ -42,43 +46,44 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.axios.timeout}")
     private String axiosTimeout;
 
-    @Value("${mosip.pms.api.id.all.certificates.details.get}")
-    private String getAllCertificatesDetailsId;
-
-    @Value("${mosip.pms.api.id.all.requested.policies.get}")
-    private String getAllRequestedPoliciesId;
-
-    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
-    private String getAllApprovedAuthPartnersPoliciesId;
-
-    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
-    private String getAllApprovedPartnerIdsWithPolicyGroupsId;
-
-    @Value("${mosip.pms.api.id.configs.get}")
-    private String getConfigsId;
-
-    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
-    private String getAllApiKeysForAuthPartners;
-
-    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
-    private String postSaveUserConsentGivenId;
-
-    @Value("${mosip.pms.api.id.user.consent.given.get}")
-    private String getUserConsentGivenId;
-
-    @Value("${mosip.pms.api.id.all.sbi.details.get}")
-    private String getAllSbiDetailsId;
-
-    @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
-    private String getAllApprovedDeviceProviderId;
-
-    @Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
-    private String getAllDevicesForSBIId;
+    private final String getAllCertificatesDetailsId;
+    private final String getAllRequestedPoliciesId;
+    private final String getAllApprovedAuthPartnersPoliciesId;
+    private final String getAllApprovedPartnerIdsWithPolicyGroupsId;
+    private final String getConfigsId;
+    private final String getAllApiKeysForAuthPartners;
+    private final String postSaveUserConsentGivenId;
+    private final String getUserConsentGivenId;
+    private final String getAllSbiDetailsId;
+    private final String getAllApprovedDeviceProviderId;
+    private final String getAllDevicesForSBIId;
+    private final String postAddInactiveDeviceMappingToSbiId;
 
     public static final String VERSION = "1.0";
+    public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
 
     @Autowired
     MultiPartnerService multiPartnerService;
+
+    @Autowired
+    RequestValidator requestValidator;
+
+    @Autowired
+    public MultiPartnerServiceController(Config config) {
+        Map<String, String> ids = config.getId();
+        this.getAllCertificatesDetailsId = ids.get("all.certificates.details.get");
+        this.getAllRequestedPoliciesId = ids.get("all.requested.policies.get");
+        this.getAllApprovedAuthPartnersPoliciesId = ids.get("all.approved.auth.partners.policies.get");
+        this.getAllApprovedPartnerIdsWithPolicyGroupsId = ids.get("all.approved.partner.ids.with.policy.groups.get");
+        this.getConfigsId = ids.get("configs.get");
+        this.getAllApiKeysForAuthPartners = ids.get("all.api.keys.for.auth.partners.get");
+        this.postSaveUserConsentGivenId = ids.get("save.user.consent.given.post");
+        this.getUserConsentGivenId = ids.get("user.consent.given.get");
+        this.getAllSbiDetailsId = ids.get("all.sbi.details.get");
+        this.getAllApprovedDeviceProviderId = ids.get("all.approved.device.provider.ids.get");
+        this.getAllDevicesForSBIId = ids.get("all.devices.for.sbi.get");
+        this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
+    }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
     @GetMapping(value = "/getAllCertificateDetails")
@@ -261,6 +266,26 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(getAllDevicesForSBIId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllDevicesForSBI(sbiId));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @PostMapping(value = "/addInactiveDeviceMappingToSbi")
+    @Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        requestValidator.validateId(ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
+        responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest()));
         return responseWrapper;
     }
 }
