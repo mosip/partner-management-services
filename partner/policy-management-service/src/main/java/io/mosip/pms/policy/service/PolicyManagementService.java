@@ -1051,11 +1051,23 @@ public class PolicyManagementService {
 	}
 
 	public List<PolicyGroup> getAllPolicyGroups() {
-		List<PolicyGroup> policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
-		if (policyGroupsList.isEmpty()) {
-			logger.error("There are no active policy groups");
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
-					ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
+		List<PolicyGroup> policyGroupsList;
+		try {
+			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
+			if (policyGroupsList.isEmpty()) {
+				logger.error("There are no active policy groups");
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
+						ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
+			}
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In getAllPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode(),
+					ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage());
 		}
 		return policyGroupsList;
 	}

@@ -813,23 +813,35 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		OriginalCertDownloadResponseDto responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-		responseDto.setIsMosipSignedCertificateExpired(false);
-		responseDto.setIsCaSignedCertificateExpired(false);
-		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
-		// Check mosip signed certificate expiry date
-		X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
-		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
-			responseDto.setMosipSignedCertificateData("");
-			responseDto.setIsMosipSignedCertificateExpired(true);
-		}
-		// Check ca signed partner certificate expiry date
-		X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
-		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
-			responseDto.setCaSignedCertificateData("");
-			responseDto.setIsCaSignedCertificateExpired(true);
+		OriginalCertDownloadResponseDto responseDto = null;
+		try {
+			responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+			responseDto.setIsMosipSignedCertificateExpired(false);
+			responseDto.setIsCaSignedCertificateExpired(false);
+			LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+			// Check mosip signed certificate expiry date
+			X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
+			LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+			if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+				responseDto.setMosipSignedCertificateData("");
+				responseDto.setIsMosipSignedCertificateExpired(true);
+			}
+			// Check ca signed partner certificate expiry date
+			X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
+			LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+			if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+				responseDto.setCaSignedCertificateData("");
+				responseDto.setIsCaSignedCertificateExpired(true);
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			throw new PartnerServiceException(ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorCode(),
+					ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorMessage());
 		}
 		return responseDto;
 	}

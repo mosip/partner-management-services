@@ -1,4 +1,5 @@
 package io.mosip.pms.oauth.client.controller;
+import io.mosip.pms.config.Config;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ClientManagementController {
@@ -32,8 +34,13 @@ public class ClientManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
-	private String getAllOidcClientsId;
+	private final String getAllOidcClientsId;
+
+	@Autowired
+	public ClientManagementController(Config config) {
+		Map<String, String> ids = config.getId();
+		this.getAllOidcClientsId = ids.get("all.oidc.clients.get");
+	}
 
 	public static final String VERSION = "1.0";
 
