@@ -24,6 +24,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_policyID:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client with invalid policyid      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -49,6 +50,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_logoUri:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client with invalid logoUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -74,6 +76,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_RedirectUri:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client with invalid redirectUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -99,6 +102,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_token:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client without token      
       role:
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -124,6 +128,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_publickey:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client without publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -149,6 +154,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_granttypes:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client with invalid granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -174,6 +180,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_granttypes:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client without granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -199,6 +206,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_name:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client without name field      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -224,6 +232,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_publickey:
       endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client with invalid publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post

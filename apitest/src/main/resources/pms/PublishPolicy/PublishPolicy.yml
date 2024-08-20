@@ -30,6 +30,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_WIthRandomToken_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -58,6 +59,7 @@ createPublishPolicy:
    
    Pms_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy which is already published      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -78,6 +80,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policygroupId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy with invalid policygroupid      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -98,6 +101,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policyId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy with invalid policyid      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -117,6 +121,7 @@ createPublishPolicy:
     }'
    Pms_PublishPolicy_missing_token:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy without access token      
       role:
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -14,6 +14,7 @@ uploadPartnerCert:
 }'
    Pms_UploadPartnerCert_missing_PartnerDomain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload Partner Cert without partnerdomain      
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert2
@@ -30,6 +31,7 @@ uploadPartnerCert:
 }'
    Pms_UploadPartnerCert_invalid_certificate:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload Partner Cert by giving invalid cert data      
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert3
@@ -46,6 +48,7 @@ uploadPartnerCert:
 }'
    Pms_UploadPartnerCert_invalid_Domain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload Partner Cert by giving invalid domain      
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert4
