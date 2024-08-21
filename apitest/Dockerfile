@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2
+FROM openjdk:11
 
 ARG SOURCE
 ARG COMMIT_HASH
