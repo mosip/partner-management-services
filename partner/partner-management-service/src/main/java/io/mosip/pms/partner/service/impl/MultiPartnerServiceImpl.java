@@ -541,6 +541,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
+                            sbiDetailsDto.setActive(secureBiometricInterface.isActive());
                             sbiDetailsDto.setExpired(checkIfSbiExpired(secureBiometricInterface));
                             sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
                             sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
