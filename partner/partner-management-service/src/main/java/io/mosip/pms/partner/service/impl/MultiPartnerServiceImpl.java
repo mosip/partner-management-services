@@ -575,8 +575,17 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
             Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
                     findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
-            if (deviceDetail.isPresent() && deviceDetail.get().getApprovalStatus().equals(status)) {
-                count++;
+            if (deviceDetail.isPresent()) {
+                if (status.equals(APPROVED)) {
+                    if (deviceDetail.get().getApprovalStatus().equals(status) && deviceDetail.get().getIsActive()) {
+                        count++;
+                    }
+                }
+                if (status.equals(PENDING_APPROVAL)) {
+                    if (deviceDetail.get().getApprovalStatus().equals(status)) {
+                        count++;
+                    }
+                }
             }
         }
         return String.valueOf(count);
