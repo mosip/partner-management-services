@@ -164,5 +164,7 @@ public class AuthorizedRolesDto {
 	private List<String> getallsbidetails;
 
 	private List<String> postdevicewithsbimapping;
+
+	private List<String> putdeactivatedevice;
 		
 }
