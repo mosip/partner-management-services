@@ -771,34 +771,49 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         return inactiveDeviceMappingToSbiFlag;
     }
-
     @Override
     public DeviceDetailResponseDto deactivateDevice(String deviceDetailId) {
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         try {
             String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
             if (Objects.isNull(deviceDetailId)) {
                 LOGGER.info("sessionId", "idType", "id", "Device id is null.");
                 throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_ID.getErrorCode(),
                         ErrorCode.INVALID_DEVICE_ID.getErrorMessage());
             }
-            Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findByIdAndDeviceProviderId(deviceDetailId, userId);
+            Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
             if (!deviceDetail.isPresent()) {
                 LOGGER.error("Device not exists with id {}", deviceDetailId);
                 throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
                         ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
             }
             DeviceDetail device = deviceDetail.get();
-            Optional<Partner> partner = partnerRepository.findById(device.getDeviceProviderId());
-            String partnerId = device.getDeviceProviderId();
-            if (partner.isEmpty() || partnerId == null) {
-                LOGGER.error("Partner not exists with id {}", partnerId);
-                throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
-                        String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
+            // check if the device is associated with user.
+            String deviceProviderId = device.getDeviceProviderId();
+            boolean deviceProviderExist = false;
+            Partner partnerDetails = new Partner();
+            for (Partner partner : partnerList) {
+                if (partner.getId().equals(deviceProviderId)) {
+                    validatePartnerId(partner, userId);
+                    deviceProviderExist = true;
+                    partnerDetails = partner;
+                    break;
+                }
+            }
+            if (!deviceProviderExist) {
+                LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+                throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+                        ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
             }
             //check if Partner is Active or not
-            if (!partner.get().getIsActive()) {
-                LOGGER.error("Partner is not Active with id {}", partnerId);
+            if (!partnerDetails.getIsActive()) {
+                LOGGER.error("Partner is not Active with id {}", deviceProviderId);
                 throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
                         ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
             }

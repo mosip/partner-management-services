@@ -116,7 +116,8 @@ public enum ErrorCode {
 	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists."),
 	INVALID_DEVICE_ID("PMS_DEVICE_ERROR_013", "Device Id is invalid"),
 	UNABLE_TO_DEACTIVATE_DEVICE("PMS_DEVICE_ERROR_014", "Unable to deactivate device"),
-	DEACTIVATE_DEVICE_ERROR("PMS_DEVICE_ERROR_015", "Error while deactivating the device");
+	DEACTIVATE_DEVICE_ERROR("PMS_DEVICE_ERROR_015", "Error while deactivating the device"),
+	DEVICE_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_016", "Device is not associated with user.");
 	/**
 	 * The error code.
 	 */
