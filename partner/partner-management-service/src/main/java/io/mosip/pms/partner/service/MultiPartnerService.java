@@ -11,6 +11,7 @@ import io.mosip.pms.partner.dto.PartnerDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 
 import java.util.List;
 
@@ -39,4 +40,6 @@ public interface MultiPartnerService {
     public Boolean addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto);
 
     public DeviceDetailResponseDto deactivateDevice(String deviceDetailId);
+
+    public SbiDetailsResponseDto deactivateSbi(String id);
 }
