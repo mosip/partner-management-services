@@ -6,6 +6,7 @@ import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -173,5 +175,24 @@ public class MultiPartnerServiceControllerTest {
         doNothing().when(requestValidator).validateId(anyString(), anyString());
         doNothing().when(requestValidator).validate(any());
         ResponseWrapper<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void getAllDevicesForSBITest() throws Exception {
+        ResponseWrapper<List<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
+        List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+        DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
+        deviceDetailDtoList.add(deviceDetailDto);
+        Mockito.when(multiPartnerService.getAllDevicesForSBI(Mockito.any())).thenReturn(deviceDetailDtoList);
+        ResponseWrapper<List<DeviceDetailDto>> response = multiPartnerServiceController.getAllDevicesForSBI("abc");
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void deactivateDeviceTest() throws Exception {
+        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+        Mockito.when(multiPartnerService.deactivateDevice(Mockito.any())).thenReturn(deviceDetailResponseDto);
+        ResponseWrapper<DeviceDetailResponseDto> response = multiPartnerServiceController.deactivateDevice("abc");
     }
 }
