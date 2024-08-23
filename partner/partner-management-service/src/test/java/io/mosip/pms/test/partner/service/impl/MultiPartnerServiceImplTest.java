@@ -11,6 +11,7 @@ import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.service.impl.MultiPartnerServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -930,6 +931,88 @@ public class MultiPartnerServiceImplTest {
     @Test(expected = PartnerServiceException.class)
     public void isUserConsentGivenExceptionTest1() throws Exception {
         multiPartnerServiceImpl.isUserConsentGiven();
+    }
+
+    @Test
+    public void deactivateDeviceTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partner.setName("abc");
+        partner.setIsActive(true);
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        DeviceDetail deviceDetail = new DeviceDetail();
+        deviceDetail.setId("23456");
+        deviceDetail.setDeviceProviderId("123");
+        deviceDetail.setApprovalStatus("approved");
+        deviceDetail.setIsActive(true);
+        when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+        when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
+        multiPartnerServiceImpl.deactivateDevice("23456");
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void deactivateDeviceTestException() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partner.setName("abc");
+        partner.setIsActive(true);
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        multiPartnerServiceImpl.deactivateDevice(null);
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void deactivateDeviceTestException1() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        multiPartnerServiceImpl.deactivateDevice("23456");
+    }
+
+    @Test(expected = PartnerServiceException.class)
+    public void deactivateDeviceTestException2() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partner.setName("abc");
+        partner.setIsActive(true);
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+
+        DeviceDetail deviceDetail = new DeviceDetail();
+        when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+        multiPartnerServiceImpl.deactivateDevice("23456");
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
