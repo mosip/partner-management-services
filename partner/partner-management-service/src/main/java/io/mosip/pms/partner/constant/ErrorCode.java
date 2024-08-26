@@ -113,7 +113,15 @@ public enum ErrorCode {
 	SBI_NOT_APPROVED("PMS_DEVICE_ERROR_009","Given sbi details are not approved"),
 	DEVICE_NOT_PENDING_FOR_APPROVAL("PMS_DEVICE_ERROR_010","Given device details are not in pending for approval status."),
 	APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),
-	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists.");
+	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists."),
+	INVALID_DEVICE_ID("PMS_DEVICE_ERROR_013", "Device Id is invalid"),
+	UNABLE_TO_DEACTIVATE_DEVICE("PMS_DEVICE_ERROR_014", "Device should be in approved status"),
+	DEACTIVATE_DEVICE_ERROR("PMS_DEVICE_ERROR_015", "Error while deactivating the device"),
+	DEVICE_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_016", "Device is not associated with user."),
+	INVALID_SBI_ID("PMS_DEVICE_ERROR_017", "SBI Id is invalid"),
+	DEACTIVATE_SBI_ERROR("PMS_DEVICE_ERROR_018", "Error while deactivating the SBI"),
+	SBI_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_019", "SBI is not associated with user."),
+	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "SBI should be in approved status");
 	/**
 	 * The error code.
 	 */

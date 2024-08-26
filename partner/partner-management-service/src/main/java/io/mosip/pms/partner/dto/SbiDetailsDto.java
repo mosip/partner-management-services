@@ -26,6 +26,9 @@ public class SbiDetailsDto {
     @Schema(description = "Current status of the SBI", example = "approved")
     private String status;
 
+    @Schema(description = "Indicates whether the SBI is active (true if active, false otherwise)", example = "false")
+    private boolean isActive;
+
     @Schema(description = "Indicates whether the SBI is expired (true if expired, false otherwise)", example = "false")
     private boolean isExpired;
 

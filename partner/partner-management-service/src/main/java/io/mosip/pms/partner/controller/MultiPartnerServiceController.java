@@ -5,6 +5,8 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.annotations.Api;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -58,6 +61,8 @@ public class MultiPartnerServiceController {
     private final String getAllApprovedDeviceProviderId;
     private final String getAllDevicesForSBIId;
     private final String postAddInactiveDeviceMappingToSbiId;
+    private final String putDeactivateDevice;
+    private final String putDeactivateSbi;
 
     public static final String VERSION = "1.0";
     public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
@@ -83,6 +88,8 @@ public class MultiPartnerServiceController {
         this.getAllApprovedDeviceProviderId = ids.get("all.approved.device.provider.ids.get");
         this.getAllDevicesForSBIId = ids.get("all.devices.for.sbi.get");
         this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
+        this.putDeactivateDevice = ids.get("deactivate.device.put");
+        this.putDeactivateSbi = ids.get("deactivate.sbi.put");
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
@@ -286,6 +293,42 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest()));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatedevice())")
+    @PutMapping(value = "/deactivateDevice/{id}")
+    @Operation(summary = "Deactivate device details", description = "Deactivate device details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(@PathVariable String id) {
+        ResponseWrapper<DeviceDetailResponseDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(putDeactivateDevice);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.deactivateDevice(id));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatesbi())")
+    @PutMapping(value = "/deactivateSbi/{id}")
+    @Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(@PathVariable String id) {
+        ResponseWrapper<SbiDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(putDeactivateSbi);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.deactivateSbi(id));
         return responseWrapper;
     }
 }

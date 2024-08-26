@@ -21,7 +21,9 @@ import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.MultiPartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
@@ -541,6 +543,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
+                            sbiDetailsDto.setActive(secureBiometricInterface.isActive());
                             sbiDetailsDto.setExpired(checkIfSbiExpired(secureBiometricInterface));
                             sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
                             sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
@@ -574,8 +577,17 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
             Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
                     findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
-            if (deviceDetail.isPresent() && deviceDetail.get().getApprovalStatus().equals(status)) {
-                count++;
+            if (deviceDetail.isPresent()) {
+                if (status.equals(APPROVED)) {
+                    if (deviceDetail.get().getApprovalStatus().equals(status) && deviceDetail.get().getIsActive()) {
+                        count++;
+                    }
+                }
+                if (status.equals(PENDING_APPROVAL)) {
+                    if (deviceDetail.get().getApprovalStatus().equals(status)) {
+                        count++;
+                    }
+                }
             }
         }
         return String.valueOf(count);
@@ -759,6 +771,156 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
         }
         return inactiveDeviceMappingToSbiFlag;
+    }
+    @Override
+    public DeviceDetailResponseDto deactivateDevice(String deviceDetailId) {
+        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            if (Objects.isNull(deviceDetailId)) {
+                LOGGER.info("sessionId", "idType", "id", "Device id is null.");
+                throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_ID.getErrorCode(),
+                        ErrorCode.INVALID_DEVICE_ID.getErrorMessage());
+            }
+            Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+            if (!deviceDetail.isPresent()) {
+                LOGGER.error("Device not exists with id {}", deviceDetailId);
+                throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
+            }
+            DeviceDetail device = deviceDetail.get();
+            // check if the device is associated with user.
+            String deviceProviderId = device.getDeviceProviderId();
+            boolean deviceProviderExist = false;
+            Partner partnerDetails = new Partner();
+            for (Partner partner : partnerList) {
+                if (partner.getId().equals(deviceProviderId)) {
+                    validatePartnerId(partner, userId);
+                    deviceProviderExist = true;
+                    partnerDetails = partner;
+                    break;
+                }
+            }
+            if (!deviceProviderExist) {
+                LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+                throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+                        ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+            }
+            //check if Partner is Active or not
+            if (!partnerDetails.getIsActive()) {
+                LOGGER.error("Partner is not Active with id {}", deviceProviderId);
+                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+            }
+            // Deactivate only if the device is approved status and is_active true.
+            if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {
+                device.setIsActive(false);
+                DeviceDetail updatedDetail = deviceDetailRepository.save(device);
+                deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
+                deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+                deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
+            } else {
+                LOGGER.error("Unable to deactivate device with id {}", device.getId());
+                throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorCode(),
+                        ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorCode(),
+                    ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage());
+        }
+        return deviceDetailResponseDto;
+    }
+
+    @Override
+    public SbiDetailsResponseDto deactivateSbi(String sbiId) {
+        SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+
+            if (Objects.isNull(sbiId)) {
+                LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
+                throw new PartnerServiceException(ErrorCode.INVALID_SBI_ID.getErrorCode(),
+                        ErrorCode.INVALID_SBI_ID.getErrorMessage());
+            }
+            Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
+            if (!secureBiometricInterface.isPresent()) {
+                LOGGER.error("SBI not exists with id {}", sbiId);
+                throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
+            }
+            SecureBiometricInterface sbi = secureBiometricInterface.get();
+            // check if the SBI is associated with user.
+            String sbiProviderId = sbi.getProviderId();
+            boolean sbiProviderExist = false;
+            Partner partnerDetails = new Partner();
+            for (Partner partner : partnerList) {
+                if (partner.getId().equals(sbiProviderId)) {
+                    validatePartnerId(partner, userId);
+                    sbiProviderExist = true;
+                    partnerDetails = partner;
+                    break;
+                }
+            }
+            if (!sbiProviderExist) {
+                LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
+                throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+                        ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+            }
+            //check if Partner is Active or not
+            if (!partnerDetails.getIsActive()) {
+                LOGGER.error("Partner is not Active with id {}", sbiProviderId);
+                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+            }
+            // Deactivate only if the SBI is approved and is_active true.
+            if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
+                List <DeviceDetail> deviceDetailList = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
+                if (!deviceDetailList.isEmpty()) {
+                    for (DeviceDetail deviceDetail: deviceDetailList) {
+                        deviceDetail.setIsActive(false);
+                        deviceDetailRepository.save(deviceDetail);
+                    }
+                }
+                sbi.setActive(false);
+                SecureBiometricInterface updatedSbi = secureBiometricInterfaceRepository.save(sbi);
+                sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
+                sbiDetailsResponseDto.setSbiVersion(updatedSbi.getSwVersion());
+                sbiDetailsResponseDto.setStatus(updatedSbi.getApprovalStatus());
+                sbiDetailsResponseDto.setActive(updatedSbi.isActive());
+            } else {
+                LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
+                throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorCode(),
+                        ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorMessage());
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode(),
+                    ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage());
+        }
+        return sbiDetailsResponseDto;
     }
 
     private void validateDevicePartnerType(Partner partner, String userId) {
