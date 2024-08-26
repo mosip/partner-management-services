@@ -7,6 +7,7 @@ import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
@@ -194,5 +195,13 @@ public class MultiPartnerServiceControllerTest {
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         Mockito.when(multiPartnerService.deactivateDevice(Mockito.any())).thenReturn(deviceDetailResponseDto);
         ResponseWrapper<DeviceDetailResponseDto> response = multiPartnerServiceController.deactivateDevice("abc");
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void deactivateSbiTest() throws Exception {
+        SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
+        Mockito.when(multiPartnerService.deactivateSbi(Mockito.any())).thenReturn(sbiDetailsResponseDto);
+        ResponseWrapper<SbiDetailsResponseDto> response = multiPartnerServiceController.deactivateSbi("abc");
     }
 }
