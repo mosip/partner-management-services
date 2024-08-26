@@ -5,6 +5,8 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.request.dto.DeactivateDeviceRequestDto;
+import io.mosip.pms.partner.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
@@ -192,16 +194,30 @@ public class MultiPartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void deactivateDeviceTest() throws Exception {
+        RequestWrapper<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequesttime(LocalDateTime.now());
+        DeactivateDeviceRequestDto deactivateDeviceRequestDto = new DeactivateDeviceRequestDto();
+        deactivateDeviceRequestDto.setDeviceId("abc");
+        requestWrapper.setRequest(deactivateDeviceRequestDto);
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         Mockito.when(multiPartnerService.deactivateDevice(Mockito.any())).thenReturn(deviceDetailResponseDto);
-        ResponseWrapper<DeviceDetailResponseDto> response = multiPartnerServiceController.deactivateDevice("abc");
+        doNothing().when(requestValidator).validateId(anyString(), anyString());
+        doNothing().when(requestValidator).validate(any());
+        ResponseWrapper<DeviceDetailResponseDto> response = multiPartnerServiceController.deactivateDevice(requestWrapper);
     }
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void deactivateSbiTest() throws Exception {
+        RequestWrapper<DeactivateSbiRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequesttime(LocalDateTime.now());
+        DeactivateSbiRequestDto deactivateSbiRequestDto = new DeactivateSbiRequestDto();
+        deactivateSbiRequestDto.setSbiId("abc");
+        requestWrapper.setRequest(deactivateSbiRequestDto);
         SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
         Mockito.when(multiPartnerService.deactivateSbi(Mockito.any())).thenReturn(sbiDetailsResponseDto);
-        ResponseWrapper<SbiDetailsResponseDto> response = multiPartnerServiceController.deactivateSbi("abc");
+        ResponseWrapper<SbiDetailsResponseDto> response = multiPartnerServiceController.deactivateSbi(requestWrapper);
     }
 }
