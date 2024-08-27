@@ -1,6 +1,7 @@
 UpdateMispLicense:
    Partner_UpdateMispLicense_Deactive_allValid_smoke:
       endPoint: /v1/partnermanager/misps
+      description: Update MispLicense Partner as Deactive
       role: partner
       restMethod: put
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
@@ -16,6 +17,7 @@ UpdateMispLicense:
 }'
    Partner_UpdateMispLicense_Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps
+      description: Update MispLicense Partner as active
       role: partner
       restMethod: put
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
@@ -31,6 +33,7 @@ UpdateMispLicense:
 }'
    Partner_UpdateMispLicense_InValid_licenseKeyStatus:
       endPoint: /v1/partnermanager/misps
+      description: Update MispLicense for Partner with InValid_licenseKeyStatus
       role: partner
       restMethod: put
       inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense

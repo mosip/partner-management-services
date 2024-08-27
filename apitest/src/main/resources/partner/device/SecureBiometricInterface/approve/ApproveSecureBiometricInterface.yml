@@ -1,6 +1,7 @@
 ApproveSecureBiometricInterface:
    Partner_ApproveSecureBiometricInterface_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Approvr Secure Biometric Interface with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -18,6 +19,7 @@ ApproveSecureBiometricInterface:
 
    Partner_ApproveSecureBiometricInterface_Missing_InputParameter_approvalStatus:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Approvr Secure Biometric Interface while keeping parameter approval status as empty
       role: partner
       restMethod: patch
       inputTemplate: partner/device/SecureBiometricInterface/approve/approveSecureBiometricInterface

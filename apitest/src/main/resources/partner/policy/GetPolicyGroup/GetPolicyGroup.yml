@@ -1,6 +1,7 @@
 getPolicyGroup:
    Partner_GetPolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      description: Retrieve Parter Policy Group
       role: partner
       restMethod: get
       inputTemplate: partner/policy/GetPolicyGroup/getPolicyGroup
@@ -15,6 +16,7 @@ getPolicyGroup:
 }'
    Partner_GetPolicyGroup_By_Invalid_policyGroupId:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      description: Retrieve Parter Policy Group with invalid PolicyGroupId
       role: partner
       restMethod: get
       inputTemplate: partner/policy/GetPolicyGroup/getPolicyGroup

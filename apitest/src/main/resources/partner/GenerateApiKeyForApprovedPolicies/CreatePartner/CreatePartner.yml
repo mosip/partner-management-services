@@ -1,6 +1,7 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
+      description: Create Partner Self Registration with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/GenerateApiKeyForApprovedPolicies/CreatePartner/createPartner

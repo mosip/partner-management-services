@@ -1,6 +1,7 @@
 RemoveMapDeviceWithSBI:
    Partner_RemoveMapDeviceWithSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map/remove
+      description: Remove Partner Mapped Device with SBI
       role: partner
       restMethod: put
       inputTemplate: partner/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBI

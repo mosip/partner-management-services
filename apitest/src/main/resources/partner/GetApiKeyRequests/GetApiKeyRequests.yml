@@ -1,6 +1,7 @@
 GetApiKeyRequests:
    Partner_GetApiKeyRequests_allValid_smoke:
       endPoint: /v1/partnermanager/partners/apikey
+      description: Retrieve ApiKeyRequests for Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

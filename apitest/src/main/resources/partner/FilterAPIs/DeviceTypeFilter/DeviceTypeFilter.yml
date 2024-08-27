@@ -1,6 +1,7 @@
 DeviceTypeFilter:
    partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
@@ -25,6 +26,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
@@ -49,6 +51,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
@@ -71,6 +74,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
@@ -93,6 +97,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner while keeping invalid values in Column parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
@@ -115,6 +120,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Create Device Type Filter for Partner while keeping invalid values in Type parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter

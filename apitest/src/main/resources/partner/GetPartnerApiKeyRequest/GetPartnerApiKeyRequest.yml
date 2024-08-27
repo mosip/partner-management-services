@@ -1,6 +1,7 @@
 GetPartnerApiKeyRequest:
    Partner_GetPartnerApiKeyRequest_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/request
+      description: Retrieve ApiKeyRequests for Partner while keeping invalid PartnerId
       role: partner
       restMethod: get
       inputTemplate: partner/GetPartnerApiKeyRequest/getPartnerApiKeyRequest

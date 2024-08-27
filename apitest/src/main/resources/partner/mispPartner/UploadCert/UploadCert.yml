@@ -1,6 +1,7 @@
 UploadPartnerCert:
    Partner_UploadCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload valid certificate for Misp Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -14,6 +15,7 @@ UploadPartnerCert:
 }'  
    Partner_UploadCert_MispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload valid certificate for Misp License
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -28,6 +30,7 @@ UploadPartnerCert:
 
    Partner_UploadCert_MispLicense_MISP3_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload valid certificate for Misp License with valid PartnerID
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put

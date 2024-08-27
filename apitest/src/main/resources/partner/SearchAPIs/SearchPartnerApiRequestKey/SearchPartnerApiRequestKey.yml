@@ -1,6 +1,7 @@
 SearchPartnerApiRequestKey:
    Partner_SearchPartnerApiRequestKey_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key with valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -16,6 +17,7 @@ SearchPartnerApiRequestKey:
 }'
    Partner_SearchPartnerApiRequestKey_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key with Only FilterCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -38,6 +40,7 @@ SearchPartnerApiRequestKey:
 }'
    Partner_SearchPartnerApiRequestKey_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key with Only SortCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -59,6 +62,7 @@ SearchPartnerApiRequestKey:
 }'
    Partner_SearchPartnerApiRequestKey_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key with Only PaginationCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -74,6 +78,7 @@ SearchPartnerApiRequestKey:
 }'
    Partner_SearchPartnerApiRequestKey_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key while keeping Type parameter as contains and filter data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -98,6 +103,7 @@ SearchPartnerApiRequestKey:
 
    Partner_SearchPartnerApiRequestKey_type_contains_invalid_pagination:
       endPoint: /v1/partnermanager/partners/apikey/request/search
+      description: Create Search Partner API Request Key while keeping Type parameter as contains and invalid pagination
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey

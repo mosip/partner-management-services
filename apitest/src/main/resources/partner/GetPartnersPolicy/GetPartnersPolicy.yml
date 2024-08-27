@@ -1,6 +1,7 @@
 GetPartnersPolicy:
    partner_GetPartnersPolicy_allValid_smoke:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
+      description: Retrieve Partner Policy details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -21,6 +22,7 @@ GetPartnersPolicy:
 
    partner_GetPartnersPolicy_invalid_partnerId:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
+      description: Retrieve Partners Policy details while keeping invalid PartnerId
       role: partner
       restMethod: get
       inputTemplate: partner/GetPartnersPolicy/getPartnersPolicy

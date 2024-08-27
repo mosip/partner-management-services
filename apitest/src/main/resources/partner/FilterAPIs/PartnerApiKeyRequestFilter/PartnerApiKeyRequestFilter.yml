@@ -1,6 +1,7 @@
 PartnerApiKeyRequestFilter:
    partner_PartnerApiKeyRequestFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -24,6 +25,7 @@ PartnerApiKeyRequestFilter:
 }'
    partner_PartnerApiKeyRequestFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -47,6 +49,7 @@ PartnerApiKeyRequestFilter:
 }'
    partner_PartnerApiKeyRequestFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -68,6 +71,7 @@ PartnerApiKeyRequestFilter:
 }'
    partner_PartnerApiKeyRequestFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -89,6 +93,7 @@ PartnerApiKeyRequestFilter:
 }'
    partner_PartnerApiKeyRequestFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Column parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -110,6 +115,7 @@ PartnerApiKeyRequestFilter:
 }'
    partner_PartnerApiKeyRequestFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Type parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter

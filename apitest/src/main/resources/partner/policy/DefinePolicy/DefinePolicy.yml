@@ -1,6 +1,7 @@
 definePolicy:
    Partner_DefinePolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy with valid details
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -27,6 +28,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy with valid details for Get ApiKey with deactivated Policy
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -53,6 +55,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Null_Neg:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as null value
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -80,6 +83,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Policy:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as Policy value
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -107,6 +111,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Invalid_Neg:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -134,6 +139,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Blank:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as Blank value
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -160,6 +166,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_without_AuthTypeToken:
       endPoint: /v1/policymanager/policies
+      description: Create Policy whithout AuthTokenType parameter
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -187,6 +194,7 @@ definePolicy:
 
    Partner_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Space:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter with spaces
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -214,6 +222,7 @@ definePolicy:
 
    Partner_DefinePolicy_RandomTokenType_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as random
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -240,6 +249,7 @@ definePolicy:
 
    Partner_DefinePolicy_DEMOAUTH_with_SAME_POLICYNAME_NEG:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthType parameter with same PolicyName
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -268,6 +278,7 @@ definePolicy:
 
    Partner_DefinePolicy_REMOVE_demo_Neg:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -294,6 +305,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_AlreadyExists_InValid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy with already exists Policy group
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -320,6 +332,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_PolicyGrpNotExists_InValid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy with Policy Group Not Existing
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -346,6 +359,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_PolicyGrpInActive_InValid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy for Policy Group is InActive
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -372,6 +386,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping name parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -398,6 +413,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping desc parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -424,6 +440,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_mandatory:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping mandatory parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -450,6 +467,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_authType:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping authtype parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -476,6 +494,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_authTokenType:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping authTokenType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -502,6 +521,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_attributeName:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping attributeName parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -528,6 +548,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_policyGroupName:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping Policy Group Name parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -554,6 +575,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_Missing_InputParameter_policyType:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping PolicyType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -580,6 +602,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_when_authTokenType_null:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as null
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -606,6 +629,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_when_authTokenType_invalid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -632,6 +656,7 @@ definePolicy:
 }'
    Partner_DefinePolicy_when_authTokenType_missing:
       endPoint: /v1/policymanager/policies
+      description: Create Policy while keeping AuthTokenType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy
@@ -659,6 +684,7 @@ definePolicy:
 
    Partner_DefinePolicy_demo_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
+      description: Create Policy with valid values
       role: partner
       restMethod: post
       inputTemplate: partner/policy/DefinePolicy/definePolicy

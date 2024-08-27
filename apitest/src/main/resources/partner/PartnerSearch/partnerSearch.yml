@@ -1,6 +1,7 @@
 createSearchPartner:
    Partner_SearchPartner_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -30,6 +31,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type__Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -59,6 +61,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_contains_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -88,6 +91,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_equals_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Equals and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -121,6 +125,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_equals_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Equals and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -154,6 +159,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_startswith_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Starts with and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -187,6 +193,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_startswith_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Starts with and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -220,6 +227,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_id_desc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -255,6 +263,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_id_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -289,6 +298,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_address_asc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -324,6 +334,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_address_desc_sid:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -359,6 +370,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_containts:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter contains invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -392,6 +404,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_equals:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as invalid value equals
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -425,6 +438,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_startswith:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as invalid value Starts with
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -458,6 +472,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_columnName:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -491,6 +506,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_columnName:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping ColumnName parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -524,6 +540,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_type:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping Type parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -557,6 +574,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_sort_type:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping SortType parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -590,6 +608,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_sort_type:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping SortType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -623,6 +642,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_sort_field:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping SortField parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -656,6 +676,7 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_sort_field:
       endPoint: /v1/partnermanager/partners/search
+      description: Create Partner search while keeping SortField parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner

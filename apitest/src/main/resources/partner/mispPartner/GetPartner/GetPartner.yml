@@ -1,6 +1,7 @@
 getPartnerCert:
    Partner_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      description: Retrieve Misp Partner details
       role: partner
       restMethod: get
       inputTemplate: partner/mispPartner/GetPartner/getPartner
@@ -14,6 +15,7 @@ getPartnerCert:
   
    Partner_GetPartner_MISP3_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      description: Retrieve Misp Partner details with valid PartnerId
       role: partner
       restMethod: get
       inputTemplate: partner/mispPartner/GetPartner/getPartner

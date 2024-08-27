@@ -1,6 +1,7 @@
 createSearchDeviceDetails:
    Partner_SearchDeviceDetails_sort_type_desc_equals_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while Type parameter as Equals and filter data in descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -30,6 +31,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_AllValid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details with all valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -46,6 +48,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details with Only FilterCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -69,6 +72,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details with Only SortCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -91,6 +95,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details with Only PaginationCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -107,6 +112,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_invalid_columnName:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details with invalid columnName
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -141,6 +147,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_missing_type:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while keeping Type parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -175,6 +182,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_invalid_sort_type:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while keeping sortType parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -209,6 +217,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_missing_sort_type:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while keeping sortType parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -243,6 +252,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_invalid_sort_field:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while keeping sortField parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -277,6 +287,7 @@ createSearchDeviceDetails:
 }'
    Partner_SearchDeviceDetails_with_missing_sort_field:
       endPoint: /v1/partnermanager/devicedetail/search
+      description: Create Search Device Details while keeping sortField parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails

@@ -1,6 +1,7 @@
 uploadCACert:
    Partner_UploadCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload valid CA Certificate for Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -13,6 +14,7 @@ uploadCACert:
 }' 
    Partner_UploadCACertificate__with_FTM_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload valid CA Certificate for FTM Partner	  
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -25,6 +27,7 @@ uploadCACert:
 }' 
    Partner_UploadCACertificate_UploadAgain_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload CA certificate again for Partner for whos certificate is already uploaded
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate
@@ -41,6 +44,7 @@ uploadCACert:
 }'
    Partner_UploadCACertificate_with_invalid_data:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload invalid CA Certificate for Partner
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate3
@@ -57,6 +61,7 @@ uploadCACert:
 }'
    Partner_UploadCACertificate_with_blank_data:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload CA Certificate for Partner with blank data
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate4

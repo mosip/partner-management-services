@@ -1,6 +1,7 @@
 VerifyPartnersEmail:
    Partner_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      description: Update Parter email with valid data
       role: partner
       restMethod: put
       inputTemplate: partner/VerifyPartnersEmail/verifyPartnersEmail

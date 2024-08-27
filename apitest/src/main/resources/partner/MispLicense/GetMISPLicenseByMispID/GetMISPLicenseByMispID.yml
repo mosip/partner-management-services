@@ -1,6 +1,7 @@
 GetMISPLicenseByMispID:
    Partner_GetMISPLicenseByMispID__Deactive_allValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      description: Retreive MISPLicense for Deactivate MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
@@ -17,6 +18,7 @@ GetMISPLicenseByMispID:
     }'
    Partner_GetMISPLicenseByMispID__Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      description: Retreive MISPLicense for Activate MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
@@ -29,6 +31,7 @@ GetMISPLicenseByMispID:
     }'
    Partner_GetMISPLicenseByMispID_inValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
+      description: Retreive MISPLicense for invalid MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID

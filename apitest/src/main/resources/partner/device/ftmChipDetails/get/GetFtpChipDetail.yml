@@ -1,6 +1,7 @@
 GetFTPChipDetail:
    Partner_GetFtpChipDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/getPartnerCertificate/{ftpChipDetailId}
+      description: Retreive FTP ChipDetails Partner with valid detail
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

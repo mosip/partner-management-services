@@ -1,6 +1,7 @@
 PartnerFilter:
    partner_PartnerFilter_unique_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping Type parameter as Unique
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
@@ -24,6 +25,7 @@ PartnerFilter:
 }'
    partner_PartnerFilter_all_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping Type parameter as All
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
@@ -47,6 +49,7 @@ PartnerFilter:
 }'
    partner_PartnerFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
@@ -68,6 +71,7 @@ PartnerFilter:
 }'
    partner_PartnerFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping invalid values in Column parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
@@ -89,6 +93,7 @@ PartnerFilter:
 }'
    partner_PartnerFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping invalid values in Type parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
@@ -110,6 +115,7 @@ PartnerFilter:
 }'
    partner_PartnerFilter_Invalid_Empty_column:
       endPoint: /v1/partnermanager/partners/filtervalues
+      description: Create Partner Filter while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter

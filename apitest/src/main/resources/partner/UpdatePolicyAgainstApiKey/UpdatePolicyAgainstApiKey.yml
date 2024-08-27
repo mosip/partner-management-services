@@ -1,6 +1,7 @@
 UpdatePolicyAgainstApiKey:
    Partner_UpdatePolicyAgainstApiKey_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      description: Update Policy Against ApiKey with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -17,6 +18,7 @@ UpdatePolicyAgainstApiKey:
 }'
    Partner_UpdatePolicyAgainstApiKey_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      description: Update Policy Against ApiKey with invalid PartnerId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -37,6 +39,7 @@ UpdatePolicyAgainstApiKey:
 }'
    Partner_UpdatePolicyAgainstApiKey_invalid_apiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      description: Update Policy Against ApiKey with invalid ApiKey
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -57,6 +60,7 @@ UpdatePolicyAgainstApiKey:
 }'
    Partner_UpdatePolicyAgainstApiKey_invalid_OldPolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      description: Update Policy Against ApiKey with invalid OldPolicyId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -77,6 +81,7 @@ UpdatePolicyAgainstApiKey:
 }'
    Partner_UpdatePolicyAgainstApiKey_invalid_newPolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      description: Update Policy Against ApiKey with invalid NewPolicyId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey

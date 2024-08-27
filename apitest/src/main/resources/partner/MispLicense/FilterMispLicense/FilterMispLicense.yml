@@ -1,6 +1,7 @@
 FilterMispLicense:
    Partner_FilterMispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping Type All
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
@@ -28,6 +29,7 @@ FilterMispLicense:
 }'
    Partner_FilterMispLicense_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping Type Unique
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
@@ -55,6 +57,7 @@ FilterMispLicense:
 }'
    Partner_FilterMispLicense_InValid_FilterType:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping Text parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
@@ -76,6 +79,7 @@ FilterMispLicense:
 }'
    Partner_FilterMispLicense_Blank_FilterType:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping Type parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
@@ -97,6 +101,7 @@ FilterMispLicense:
 }'
    Partner_FilterMispLicense_InValid_columnName:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Invalid
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
@@ -118,6 +123,7 @@ FilterMispLicense:
 }'
    Partner_FilterMispLicense_InValid_Empty_columnName:
       endPoint: /v1/partnermanager/misps/filtervalues
+      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
