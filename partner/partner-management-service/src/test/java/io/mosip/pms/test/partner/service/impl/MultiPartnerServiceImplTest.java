@@ -867,6 +867,7 @@ public class MultiPartnerServiceImplTest {
         secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
         secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
         secureBiometricInterface.setApprovalStatus("approved");
+        secureBiometricInterface.setActive(true);
         secureBiometricInterface.setCrDtimes(LocalDateTime.now());
         secureBiometricInterface.setSwVersion("1.0");
         secureBiometricInterface.setProviderId("123");
@@ -909,6 +910,7 @@ public class MultiPartnerServiceImplTest {
         secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
         secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
         secureBiometricInterface.setApprovalStatus("approved");
+        secureBiometricInterface.setActive(true);
         secureBiometricInterface.setCrDtimes(LocalDateTime.now());
         secureBiometricInterface.setSwVersion("1.0");
         secureBiometricInterface.setProviderId("123");
