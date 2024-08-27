@@ -4,6 +4,8 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.request.dto.DeactivateDeviceRequestDto;
+import io.mosip.pms.partner.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
@@ -66,6 +68,8 @@ public class MultiPartnerServiceController {
 
     public static final String VERSION = "1.0";
     public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
+    public static final String DEACTIVATE_DEVICE_PUT = "deactivate.device.put";
+    public static final String DEACTIVATE_SBI_PUT = "deactivate.sbi.put";
 
     @Autowired
     MultiPartnerService multiPartnerService;
@@ -297,7 +301,7 @@ public class MultiPartnerServiceController {
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatedevice())")
-    @PutMapping(value = "/deactivateDevice/{id}")
+    @PutMapping(value = "/deactivateDevice")
     @Operation(summary = "Deactivate device details", description = "Deactivate device details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -306,16 +310,18 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(@PathVariable String id) {
+    public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(@RequestBody @Valid RequestWrapper<DeactivateDeviceRequestDto> requestWrapper) {
         ResponseWrapper<DeviceDetailResponseDto> responseWrapper = new ResponseWrapper<>();
+        requestValidator.validateId(DEACTIVATE_DEVICE_PUT, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
         responseWrapper.setId(putDeactivateDevice);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.deactivateDevice(id));
+        responseWrapper.setResponse(multiPartnerService.deactivateDevice(requestWrapper.getRequest().getDeviceId()));
         return responseWrapper;
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatesbi())")
-    @PutMapping(value = "/deactivateSbi/{id}")
+    @PutMapping(value = "/deactivateSbi")
     @Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -324,11 +330,13 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(@PathVariable String id) {
+    public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(@RequestBody @Valid RequestWrapper<DeactivateSbiRequestDto> requestWrapper) {
         ResponseWrapper<SbiDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
+        requestValidator.validateId(DEACTIVATE_SBI_PUT, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
         responseWrapper.setId(putDeactivateSbi);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.deactivateSbi(id));
+        responseWrapper.setResponse(multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId()));
         return responseWrapper;
     }
 }
