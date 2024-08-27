@@ -1,9 +1,9 @@
 # Partner Management Services (PMS)
-[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_partner-management-services)
+[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.3.x)](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.3.x&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.3.x&id=mosip_partner-management-services)
 
 ## Overview
-This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to [Partner-management UI github repo](https://github.com/mosip/partner-management-portal/)
+This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to PMS Revamp UI [Partner-management UI github repo](https://github.com/mosip/partner-management-portal/tree/release-1.3.x/pmp-reactjs-ui)
 
 Partnermanagement module contains following services:
 1. Partner management service
@@ -27,6 +27,13 @@ The project requires JDK 1.11.
 
 ## Deploy
 To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
+
+## Config
+Add below property to ```partner-management-default.properties``` file in mosip-config repository to Deploy PMS Revamp 1.3.0-DP.1 release in your env.
+```
+## This property is used by kernel-authcodeflowproxy-api to check request is coming from allowed urls not.
+auth.allowed.urls=https://${mosip.pmp.host}/,https://${mosip.pmp.reactjs.ui.host}/
+```
 
 ## Test
 Automated functional tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests).
