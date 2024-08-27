@@ -100,10 +100,10 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_without_token:
+   Pms_CreateOIDCClient_invalid_role:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
-      role:
+      role: regproc
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -122,7 +122,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-401"
+       "errorCode": "KER-ATH-403"
        }
        ]
 }'

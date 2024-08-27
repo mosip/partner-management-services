@@ -85,9 +85,12 @@ partnerPolicyMapping:
       outputTemplate: pms/error
       input: '{
         "policyName": "mosip policy 19234",
-        "useCaseDescription": "$REMOVE$",
+        "useCaseDescription":"$REMOVE$",
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
+        "errors": [
+    {
       "errorCode": "PMS_COR_001"
+  ]
     }'                

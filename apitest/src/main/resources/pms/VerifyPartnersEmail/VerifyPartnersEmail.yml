@@ -13,9 +13,9 @@ VerifyPartnersEmail:
       output: '{
    "emailExists": true
 }'
-   Pms_VerifyPartnersEmail_without_token:
+   Pms_VerifyPartnersEmail_invalid_role:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: partner
+      role: regproc
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -26,7 +26,7 @@ VerifyPartnersEmail:
       output: '{
         "errors": [
         { 
-          "errorCode": "KER-ATH-401"
+          "errorCode": "KER-ATH-403"
         }
        ]
 }'
@@ -64,4 +64,3 @@ VerifyPartnersEmail:
         }
        ]
 }'
-

@@ -28,7 +28,7 @@ createPublishPolicy:
         "authTokenType": "$IGNORE$"
     }'
     
-   Pms_PublishPolicy_WIthRandomToken_Smoke:
+   Pms_PublishPolicy_WIthRandomToken_Neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy      
       role: partnerrevamp
@@ -42,18 +42,18 @@ createPublishPolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "	mosip policy2",
+        "policyDesc": "desc mosip policy2",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
+        "authType": "bio",
+        "authSubType": "FINGER",
+		"mandatory": false,
+        "attributeName": "string",
         "authTokenType": "random"
     }'
    
@@ -73,7 +73,7 @@ createPublishPolicy:
       output: '{
         "errors": [
         { 
-          "errorCode": "PMS_POL_020"
+         "errorCode": "PMS_POL_020"
         }
        ] 
     }'
@@ -108,7 +108,7 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
 		"policyId": "afgrwfg",
 		"requesttime": "$TIMESTAMP$"
 }'
@@ -119,10 +119,11 @@ createPublishPolicy:
         }
        ] 
     }'
-   Pms_PublishPolicy_missing_token:
+    
+   Pms_PublishPolicy_invalid_role:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy without access token      
-      role:
+      role: regproc
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -135,7 +136,7 @@ createPublishPolicy:
       output: '{
         "errors": [
         { 
-          "errorCode": "PMS_POL_020"
+          "errorCode": "KER-ATH-403"
         }
        ] 
     }'                 
