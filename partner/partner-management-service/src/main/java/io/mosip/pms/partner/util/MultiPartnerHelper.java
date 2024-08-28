@@ -12,6 +12,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
@@ -44,6 +45,10 @@ public class MultiPartnerHelper {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
                     ErrorCode.SBI_NOT_APPROVED.getErrorMessage());
+        } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
+            LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
+            throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
+                    ErrorCode.SBI_EXPIRED.getErrorMessage());
         }
 
         Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);

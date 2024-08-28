@@ -445,6 +445,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorMessage(), input.getSbiId()));
 		}
+		if (validSbi.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorCode(), String.format(
+									SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(), input.getSbiId())),
+					"AUT-016", input.getSbiId(), "sbiId");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_EXPIRED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_EXPIRED.getErrorMessage(), input.getSbiId()));
+		}
 		if(!validDeviceDetail.getDeviceProviderId().equals(validSbi.getProviderId())) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
