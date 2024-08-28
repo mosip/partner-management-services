@@ -40,7 +40,7 @@ public class MultiPartnerHelper {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
                     ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
-        } else if (!secureBiometricInterface.get().getApprovalStatus().equals(APPROVED)) {
+        } else if (!(secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && secureBiometricInterface.get().isActive())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
                     ErrorCode.SBI_NOT_APPROVED.getErrorMessage());

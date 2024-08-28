@@ -17,3 +17,4 @@ ActivateDeactivatePartnerApiKey:
       output: '{
     "response": "Partner apikey activated successfully."
 }'
+
