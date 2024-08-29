@@ -2,7 +2,7 @@ apiVersion: v2
 name: pms-policy
 description: A Helm chart for MOSIP Packetmanager module
 type: application
-version: 13.0-dp.1-develop
+version: 13.0-dp.1
 appVersion: ""
 dependencies:
   - name: common

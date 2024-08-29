@@ -1,6 +1,6 @@
 # Partner Management Services (PMS)
-[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.2.0.1)](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.2.0.1&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.2.0.1&id=mosip_partner-management-services)
+[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.3.x)](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.3.x&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.3.x&id=mosip_partner-management-services)
 
 ## Overview
 This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to PMS Revamp UI [Partner-management UI github repo](https://github.com/mosip/partner-management-portal/tree/release-1.3.x/pmp-reactjs-ui)
@@ -25,8 +25,27 @@ The project requires JDK 1.11.
     $ docker build -f Dockerfile
     ```
 
-## Deploy
-To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
+## Deployment in K8 cluster with other MOSIP services:
+### Pre-requisites
+* Set KUBECONFIG variable to point to existing K8 cluster kubeconfig file:
+  * ```
+    export KUBECONFIG=~/.kube/<my-cluster.config>
+    ```
+### Install
+  ```
+    $ cd deploy
+    $ ./install.sh
+   ```
+### Delete
+  ```
+    $ cd deploy
+    $ ./delete.sh
+   ```
+### Restart
+  ```
+    $ cd deploy
+    $ ./restart.sh
+   ```
 
 ## Config
 Add below property to ```partner-management-default.properties``` file in mosip-config repository to Deploy PMS Revamp 1.3.0-DP.1 release in your env.
