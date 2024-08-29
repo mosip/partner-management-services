@@ -30,7 +30,7 @@
 		</classes>
 	</test>
 	
-	<!--<test name="PublishPolicy">
+	<test name="PublishPolicy">
 		<parameter name="ymlFile"
 			value="pms/PublishPolicy/PublishPolicy.yml" />
 		<classes>
@@ -281,6 +281,6 @@
 	<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>-->
+	</test>
 	
 </suite>
