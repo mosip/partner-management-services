@@ -128,7 +128,15 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-		
+
+	<test name ="GetAllRequestedPolicyBeforeMapping">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicyNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+			
 	<test name="partnerPolicyMapping">
 		<parameter name="ymlFile"
 			value="pms/partnerPolicyMapping/partnerPolicyMapping.yml" />
