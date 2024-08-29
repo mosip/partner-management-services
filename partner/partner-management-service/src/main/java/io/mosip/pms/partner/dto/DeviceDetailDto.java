@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class DeviceDetailDto {
 
-    @Schema(description = "Code representing the id of device. Also, this can be null.", example = "12345")
+    @Schema(description = "Code representing the id of the device. The id can be a unique ID given by the user, or if it's null, the service will generate one automatically.", example = "12345")
     private String id;
 
     @Schema(description = "Code representing the type of device", example = "DT001")
