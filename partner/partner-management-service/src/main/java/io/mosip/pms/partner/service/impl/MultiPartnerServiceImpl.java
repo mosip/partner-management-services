@@ -53,6 +53,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     public static final String YES = "YES";
     public static final String PENDING_APPROVAL = "pending_approval";
+    public static final String REJECTED = "rejected";
 
     @Autowired
     PartnerServiceRepository partnerRepository;
@@ -762,16 +763,28 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             inactiveDeviceMappingToSbiFlag = true;
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            deleteDeviceDetail(requestDto.getDeviceDetailId());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            deleteDeviceDetail(requestDto.getDeviceDetailId());
             throw new PartnerServiceException(ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode(),
                     ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
         }
         return inactiveDeviceMappingToSbiFlag;
     }
+
+    private void deleteDeviceDetail(String deviceDetailId) {
+        try {
+            deviceDetailRepository.deleteById(deviceDetailId);
+            LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+        } catch (Exception e) {
+            LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
+        }
+    }
+    
     @Override
     public DeviceDetailResponseDto deactivateDevice(String deviceDetailId) {
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
@@ -892,10 +905,19 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
             // Deactivate only if the SBI is approved and is_active true.
             if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
-                List <DeviceDetail> deviceDetailList = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
-                if (!deviceDetailList.isEmpty()) {
-                    for (DeviceDetail deviceDetail: deviceDetailList) {
+                // Deactivate approved devices
+                List <DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
+                if (!approvedDevices.isEmpty()) {
+                    for (DeviceDetail deviceDetail: approvedDevices) {
                         deviceDetail.setIsActive(false);
+                        deviceDetailRepository.save(deviceDetail);
+                    }
+                }
+                // Reject pending_approval devices
+                List <DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
+                if (!pendingApprovalDevices.isEmpty()) {
+                    for (DeviceDetail deviceDetail: pendingApprovalDevices) {
+                        deviceDetail.setApprovalStatus(REJECTED);
                         deviceDetailRepository.save(deviceDetail);
                     }
                 }

@@ -22,3 +22,264 @@ DeactivateOIDCClient:
         "clientId": "$IGNORE$",
     	"status": "INACTIVE"
 }'
+
+   Pms_DeactivateOIDCClient_Retry_with_same_policy_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_POL_014"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_Requesttime_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_client_id_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_clientName_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_status_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_logoUri_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_redirectUris_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_grantTypes_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_clientNameLangMap_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'
+
+   Pms_DeactivateOIDCClient_Missing_clientAuthMethods_Neg:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Deactivating The Oidc Client
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "INACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}]
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_COR_001"
+        }
+  ]
+}'

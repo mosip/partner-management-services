@@ -20,3 +20,101 @@ createPartnerSelfRegistration:
         "partnerId": "111999",
         "status": "InProgress"
     }'
+
+   Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip98763@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111999",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group 19234",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_011"
+    }
+  ]
+}'
+
+   Pms_PartnerSelfRegistration_Missing_Email_Neg:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111999",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group 19234",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip987631@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111999",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group 19234"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip987631@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111999",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group 19234",
+    "requesttime": "1111-07-22T08:21:17.665Z"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
