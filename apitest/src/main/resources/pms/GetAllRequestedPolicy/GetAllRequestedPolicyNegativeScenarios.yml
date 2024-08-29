@@ -1,0 +1,13 @@
+GetAllRequestedPolicies:
+   Pms_GetAllRequestedPolicies:
+      endPoint: /v1/partnermanager/partners/getAllRequestedPolicies
+      description: Fetching all the Requested Policies
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
+      outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
+      input: '{
+}'
+      output: ' {
+}'
