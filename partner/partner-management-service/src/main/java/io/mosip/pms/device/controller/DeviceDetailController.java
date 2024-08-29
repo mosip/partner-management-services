@@ -88,10 +88,11 @@ public class DeviceDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutdevicedetail())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update DeviceDetails", description = "Updates DeviceDetails")
+	@Operation(summary = "Service to update DeviceDetails", description = "This API has been deprecated because it shouldn't be allowed for the user to update the device details.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating DeviceDetail any error occured") })
