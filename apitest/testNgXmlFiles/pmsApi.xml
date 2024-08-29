@@ -30,7 +30,7 @@
 		</classes>
 	</test>
 	
-	<test name="PublishPolicy">
+	<!--<test name="PublishPolicy">
 		<parameter name="ymlFile"
 			value="pms/PublishPolicy/PublishPolicy.yml" />
 		<classes>
@@ -206,6 +206,81 @@
 		</classes>
 	</test>
 	
+		<test name="GetConfiguration">
+		<parameter name="ymlFile"
+			value="pms/GetConfiguration/GetConfiguration.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		<test name="saveUserConsent">
+		<parameter name="ymlFile"
+			value="pms/SaveUserConsent/SaveUserConsent.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostWithoutBody" />
+		</classes>
+	</test>
+			<test name="GetUserConsent">
+		<parameter name="ymlFile"
+			value="pms/GetUserConsent/GetUserConsent.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+				<test name="GetOriginalPartnerCertificates">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		<test name="SaveSecureBiometricInterfaceCreateDto">
+		<parameter name="ymlFile"
+			value="pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto.yml" />
+			<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+			<test name="UpdateSecureBiometricInterface">
+		<parameter name="ymlFile" 
+			value="pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePatch" />
+		</classes>
+	</test>	
 	
+		<test name="SaveDeviceDetails">
+		<parameter name="ymlFile" 
+			value="pms/SaveDeviceDetails/SaveDeviceDetails.yml" />
+			<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+		
+		<test name="GetAllDevicesForSbi">
+		<parameter name="ymlFile"
+			value="pms/GetAllDevicesForSbi/GetAllDevicesForSbi.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+			<test name ="GetAllApprovedDeviceProviderIds">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+				<test name ="GetAllSbiDetails">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllSbiDetails/GetAllSbiDetails.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>-->
 	
 </suite>

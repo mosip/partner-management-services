@@ -1,0 +1,15 @@
+GetOriginalPartnerCertificates:
+   Pms_GetOriginalPartnerCertificates_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/originalPartnerCertificate
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      
+      "partnerId": "111999"
+}'
+      output: '{
+     
+}'

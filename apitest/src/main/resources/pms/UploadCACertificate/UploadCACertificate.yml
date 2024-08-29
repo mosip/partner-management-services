@@ -25,3 +25,17 @@ UploadCACertificate:
   }'
       output: ' {
 }'
+
+   Pms_UploadSubCACertificate_For_uploadCertificateDeviceProvider_with_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload Sub-CA Cert
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceProvider
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}'
