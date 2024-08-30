@@ -78,7 +78,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterface())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update SecureBiometricInterface", description = "This API has been deprecated since 1.3.x release. Update SBI details will not be required in the current UI.")
+	@Operation(summary = "Service to update SecureBiometricInterface", description = "This API has been deprecated since 1.3.x release.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterface successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating SecureBiometricInterface any error occured") })
@@ -154,7 +154,7 @@ public class SecureBiometricInterfaceController {
 	@ResponseFilter
 	@PutMapping("/devicedetails/map/remove")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmapremove())")
-	@Operation(summary = "Service to remove mapped device details with sbi", description = "This API has been deprecated since 1.3.x release. Also in the current UI, removing mapped device details is not required.")
+	@Operation(summary = "Service to remove mapped device details with sbi", description = "This API has been deprecated since 1.3.x release.")
 	public ResponseWrapper<String> removeMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
