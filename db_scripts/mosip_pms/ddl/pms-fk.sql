@@ -45,3 +45,11 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE pms.reg_device_sub_type ADD CONSTRAINT fk_rdstyp_dtype_code FOREIGN KEY (dtyp_code)
 REFERENCES pms.reg_device_type (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.device_detail_sbi ADD CONSTRAINT fk_mapping_device_detail_id FOREIGN KEY (device_detail_id)
+REFERENCES pms.device_detail(id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.device_detail_sbi ADD CONSTRAINT fk_mapping_sbi_id FOREIGN KEY (sbi_id)
+REFERENCES pms.secure_biometric_interface(id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
