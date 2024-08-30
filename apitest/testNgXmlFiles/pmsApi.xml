@@ -53,9 +53,23 @@
 	<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
+	</test>
+	
+	<test name ="GetAllCertificateBeforePartnerCreate">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name ="GetAllApprovedPartnerIdBeforePartnerCreate">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
 	</test>	
-	
-	
 
       <test name="CreatePartner">
 		<parameter name="ymlFile"
@@ -72,7 +86,8 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>	
-	
+
+		
 	<test name="VerifyPartnersEmail">
 		<parameter name="ymlFile"
 			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
@@ -81,13 +96,29 @@
 		</classes>
 	</test>
 	
+	<test name ="GetAllCertificateBeforeCACertificateUpload">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		
 	<test name ="UploadCACertificate">
 		<parameter name ="ymlFile"
 			value= "pms/UploadCACertificate/UploadCACertificate.yml" />
 	<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
-	</test> 
+	</test>
+	
+	<test name ="GetAllCertificateBeforePartnerCertificateUpload">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	 
 	
 	<test name ="UploadPartnerCertificate">
 		<parameter name ="ymlFile"
@@ -121,6 +152,14 @@
 		</classes>
 	</test>
 
+	<test name ="GetAllApprovedPartnerIdWithoutAuthentication">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllApprovedPartnerId/GetAllApprovedPartnerIdNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 	<test name ="GetAllApiKeyForAuthPartnerbeforepolicyMapping">
 		<parameter name ="ymlFile"
 			value= "pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
@@ -131,7 +170,7 @@
 
 	<test name ="GetAllRequestedPolicyBeforeMapping">
 		<parameter name ="ymlFile"
-			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicyNegativeScenarios.yml" />
+			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml" />
 	<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -162,6 +201,14 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	
+	<test name ="GetAllRequestedPolicyAuthvalidations">
+		<parameter name ="ymlFile"
+			value= "pms/GetAllRequestedPolicy/GetAllRequestedPolicyNegativeScenarios.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	
 	<test name ="GetAllApprovedAuthPartnerPolicy">
 		<parameter name ="ymlFile"

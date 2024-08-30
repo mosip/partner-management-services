@@ -1,13 +1,35 @@
 GetAllRequestedPolicies:
-   Pms_GetAllRequestedPolicies:
+   Pms_GetAllRequestedPolicies_without_auth:
       endPoint: /v1/partnermanager/partners/getAllRequestedPolicies
-      description: Fetching all the Requested Policies
-      role: partnerrevamp
+      description: Fetching all the Requested Policies without login token
+      role: invalidbatch
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
       outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
       input: '{
 }'
-      output: ' {
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllRequestedPolicies_invalid_auth:
+      endPoint: /v1/partnermanager/partners/getAllRequestedPolicies
+      description: Fetching all the Requested Policies with invalid role
+      role: regproc
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
+      outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
 }'

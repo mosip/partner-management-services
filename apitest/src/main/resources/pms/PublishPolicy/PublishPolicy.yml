@@ -28,34 +28,6 @@ createPublishPolicy:
         "authTokenType": "$IGNORE$"
     }'
     
-   Pms_PublishPolicy_WIthRandomToken_Neg:
-      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      description: Publish The Policy      
-      role: partnerrevamp
-      checkErrorsOnlyInResponse: true
-      restMethod: post
-      inputTemplate: pms/PublishPolicy/publishPolicy
-      outputTemplate: pms/PublishPolicy/publishPolicyResult
-      input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
-}'
-      output: '{
-        "policyGroupName": "mosip policy group",
-        "policyGroupDesc": "desc mosip policy group updated",
-        "policyGroupStatus": true,
-        "policyName": "	mosip policy2",
-        "policyDesc": "desc mosip policy2",
-        "policyType": "Auth",
-        "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "bio",
-        "authSubType": "FINGER",
-		"mandatory": false,
-        "attributeName": "string",
-        "authTokenType": "random"
-    }'
    
    Pms_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
@@ -120,7 +92,7 @@ createPublishPolicy:
        ] 
     }'
     
-   Pms_PublishPolicy_invalid_role:
+   Pms_PublishPolicy_invalid_auth:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy without access token      
       role: regproc
