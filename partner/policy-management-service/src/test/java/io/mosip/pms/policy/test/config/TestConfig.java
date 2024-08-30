@@ -32,9 +32,9 @@ public class TestConfig {
 
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
 
-		var connnectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
-		connnectionManagerBuilder.setSSLSocketFactory(csf);
-		var connectionManager = connnectionManagerBuilder.build();
+		var connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
+		connectionManagerBuilder.setSSLSocketFactory(csf);
+		var connectionManager = connectionManagerBuilder.build();
 
 		HttpClientBuilder httpClientBuilder = HttpClients.custom()
 				.setConnectionManager(connectionManager);

@@ -307,7 +307,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		certRequest.setPartnerType(partnerFromDb.getPartnerTypeCode());
 		RequestWrapper<FtpCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(certRequest);
-		Map<String, Object> uploadApiResponse = restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Map<String, Object> uploadApiResponse = restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class);		
 		FtpCertificateResponseDto responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), FtpCertificateResponseDto.class);
 		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
@@ -376,7 +376,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", chipDetail.get().getCertificateAlias());
-		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
+		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificate.get.rest.uri"), pathsegments, Map.class);
 		FtpCertDownloadResponeDto responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), FtpCertDownloadResponeDto.class);
 		if(responseObject == null && getApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(ERRORS);

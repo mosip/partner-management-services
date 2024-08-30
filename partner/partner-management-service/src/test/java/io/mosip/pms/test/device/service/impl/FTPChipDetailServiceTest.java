@@ -278,7 +278,7 @@ public class FTPChipDetailServiceTest {
 		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
-		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(null);
@@ -297,7 +297,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpProviderId("12345");		
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
-		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
@@ -317,7 +317,7 @@ public class FTPChipDetailServiceTest {
 		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
-		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
@@ -338,7 +338,7 @@ public class FTPChipDetailServiceTest {
 		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
-		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
@@ -359,7 +359,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpProviderId("122345");
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
-		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
+		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificate.upload.rest.uri"), null, "", "",
 				MediaType.APPLICATION_JSON, request, Map.class)).thenReturn(uploadApiResponse);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);

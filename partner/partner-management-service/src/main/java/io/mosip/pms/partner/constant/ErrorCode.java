@@ -62,6 +62,8 @@ public enum ErrorCode {
 	POLICY_GROUP_NOT_MAPPED_PARTNER("PMS_PRT_054","Policy group not mapped for given partner"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
 	PARTNER_POLICY_MAPPING_EXISTS("PMS_PRT_053","Mapping exists for given policy and partner, and is in %s state."),
+	PARTNER_POLICY_MAPPING_INPROGRESS("PMS_PRT_053","This policy is already pending for approval against your partner ID."),
+	PARTNER_POLICY_MAPPING_APPROVED("PMS_PRT_060","This policy has already been approved against your partner ID."),
 	PARTNER_LANG_CODE_NOT_SUPPORTED("PMS_PRT_056","Given langCode is not supported"),
 	PARTNER_ID_CONTAINS_SPACES("PMS_PRT_066","PartnerId should not have any spaces"),
 	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
@@ -73,8 +75,24 @@ public enum ErrorCode {
 	CLIENT_NOT_EXISTS("PMS_ESI_004","Client not exists with given id."),
 	PARTNER_HAVING_NO_CLAIMS("PMS_ESI_005","Partner has no user claims"),
 	PARTNER_HAVING_NO_ACRVALUES("PMS_ESI_006","Partner has no Authentication Context Refrences"),
-	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key");
-
+	FAILED_TO_PROCESS_JWK("PMS_ESI_007","Failed to process the Public Key"),
+	PARTNER_CERTIFICATES_FETCH_ERROR("PMS_CERTIFICATE_ERROR_001","Error while fetching partner certificates."),
+	USER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_002","User Id does not exists."),
+	PARTNER_ID_NOT_EXISTS("PMS_CERTIFICATE_ERROR_003","Partner Id is null or empty."),
+	PARTNER_TYPE_NOT_EXISTS("PMS_CERTIFICATE_ERROR_004","Partner Type is null or empty"),
+	APPROVAL_STATUS_NOT_EXISTS("PMS_CERTIFICATE_ERROR_005","Approval Status is null or empty"),
+	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
+	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
+	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),
+	MATCHING_POLICY_NOT_FOUND("PMS_POLICY_ERROR_004", "Matching Policy not found."),
+	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty."),
+	OIDC_CLIENTS_FETCH_ERROR("PMS_POLICY_ERROR_006","Error while fetching OIDC clients list."),
+	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
+	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
+	PARTNER_DOES_NOT_BELONG_TO_THE_USER("PMS_CERTIFICATE_ERROR_007", "The given partner ID does not belong to the user.So unable to get the original partner certificates"),
+	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
+	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
+	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated.");
 	/**
 	 * The error code.
 	 */

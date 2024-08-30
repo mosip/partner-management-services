@@ -144,5 +144,23 @@ public class AuthorizedRolesDto {
 	private List<String> postmispfiltervalues;
 	
 	private List<String> postmispsearch;
+
+	//Multi Partner Service Controller
+
+	private List<String> getallcertificatedetails;
+
+	private List<String> getallrequestedpolicies;
+
+	private List<String> getallapprovedauthpartnerpolicies;
+
+	private List<String> getallapprovedpartneridswithpolicygroups;
+
+	private List<String> getallapikeysforauthpartners;
+
+	private List<String> getalloidcclients;
+
+	//user consent
+
+	private List<String> userconsent;
 		
 }
