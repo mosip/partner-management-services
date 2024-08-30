@@ -24,7 +24,7 @@ CREATE TABLE pms.device_detail_sbi(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp
-	
+
 );
 -- ddl-end --
 
