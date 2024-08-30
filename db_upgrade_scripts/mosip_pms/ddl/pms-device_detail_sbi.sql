@@ -23,13 +23,7 @@ CREATE TABLE pms.device_detail_sbi(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp,
-	CONSTRAINT fk_mapping_device_detail_id FOREIGN KEY (device_detail_id)
-		REFERENCES pms.device_detail(id) MATCH SIMPLE
-		ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT fk_mapping_sbi_id FOREIGN KEY (sbi_id)
-		REFERENCES pms.secure_biometric_interface(id) MATCH SIMPLE
-		ON DELETE NO ACTION ON UPDATE NO ACTION
+	del_dtimes timestamp
 );
 -- ddl-end --
 
