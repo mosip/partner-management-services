@@ -140,11 +140,11 @@ public class MultiPartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void getAllApprovedDeviceProviderIdsTest() throws Exception {
-        List<PartnerDto> partnerDtos = new ArrayList<>();
-        PartnerDto partnerDto = new PartnerDto();
-        partnerDtos.add(partnerDto);
-        Mockito.when(multiPartnerService.getAllApprovedDeviceProviderIds()).thenReturn(partnerDtos);
-        ResponseWrapper<List<PartnerDto>> response = multiPartnerServiceController.getAllApprovedDeviceProviderIds();
+        List<DeviceProviderDto> deviceProviderDtos = new ArrayList<>();
+        DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
+        deviceProviderDtos.add(deviceProviderDto);
+        Mockito.when(multiPartnerService.getAllApprovedDeviceProviderIds()).thenReturn(deviceProviderDtos);
+        ResponseWrapper<List<DeviceProviderDto>> response = multiPartnerServiceController.getAllApprovedDeviceProviderIds();
     }
 
     @Test

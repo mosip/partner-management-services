@@ -50,7 +50,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterface())")
 	@ResponseFilter
 	@PostMapping
-	@Operation(summary = "Service to save SecureBiometricInterfaceCreateDto", description = "Saves SecureBiometricInterfaceCreateDto and return DeviceDetail id")
+	@Operation(summary = "Service to save SecureBiometricInterface details", description = "Saves SecureBiometricInterface details and return SBI id")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterfaceCreateDto successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating SecureBiometricInterfaceCreateDto any error occured") })
@@ -74,10 +74,11 @@ public class SecureBiometricInterfaceController {
 
 	}
 
+	@Deprecated
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterface())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update SecureBiometricInterface", description = "Updates SecureBiometricInterface and returns success message")
+	@Operation(summary = "Service to update SecureBiometricInterface", description = "This API has been deprecated since 1.3.x release.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterface successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating SecureBiometricInterface any error occured") })
@@ -149,10 +150,11 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 
+	@Deprecated
 	@ResponseFilter
 	@PutMapping("/devicedetails/map/remove")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmapremove())")
-	@Operation(summary = "Service to remove mapped device details with sbi", description = "Service to remove mapped device details with sbi")
+	@Operation(summary = "Service to remove mapped device details with sbi", description = "This API has been deprecated since 1.3.x release.")
 	public ResponseWrapper<String> removeMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
