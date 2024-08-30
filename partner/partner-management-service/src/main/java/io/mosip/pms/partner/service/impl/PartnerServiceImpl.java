@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -19,6 +21,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,6 +32,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -120,6 +125,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -676,6 +682,11 @@ public class PartnerServiceImpl implements PartnerService {
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
@@ -793,45 +804,95 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-		if (partnerFromDb.isEmpty()) {
-			LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		return getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+	}
+
+	@Override
+	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		OriginalCertDownloadResponseDto responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+		responseDto.setIsMosipSignedCertificateExpired(false);
+		responseDto.setIsCaSignedCertificateExpired(false);
+		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+		// Check mosip signed certificate expiry date
+		X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
+		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+			responseDto.setMosipSignedCertificateData("");
+			responseDto.setIsMosipSignedCertificateExpired(true);
 		}
-		if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
-			LOGGER.error("Cert is not uploaded for given partner {} ", certDownloadRequestDto.getPartnerId());
-			throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
-					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+		// Check ca signed partner certificate expiry date
+		X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
+		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+			responseDto.setCaSignedCertificateData("");
+			responseDto.setIsCaSignedCertificateExpired(true);
 		}
-		PartnerCertDownloadResponeDto responseObject = null;
-		Map<String, String> pathsegments = new HashMap<>();
-		pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
-		Map<String, Object> getApiResponse = restUtil
-				.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
-		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")),
-				PartnerCertDownloadResponeDto.class);
-		if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
-					.get(PartnerConstants.ERRORS);
-			if (!certServiceErrorList.isEmpty()) {
-				LOGGER.error("Error occured while getting the cert from keymanager ");
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
-			} else {
-				LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+		return responseDto;
+	}
+
+	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,
+										  String uriProperty, Class<T> responseType)
+			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+		String userId = getUserId();
+		List<Partner> partnerList = partnerRepository.findByUserId(userId);
+		if (partnerList.isEmpty()) {
+			LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
+			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+		}
+		boolean isPartnerBelongsToTheUser = false;
+		for (Partner partner: partnerList) {
+			if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
+				isPartnerBelongsToTheUser = true;
 			}
 		}
-		if (responseObject == null) {
-			LOGGER.error("Got null respone from {} ",
-					environment.getProperty("pmp.partner.certificaticate.get.rest.uri"));
-			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
-		}
-		return responseObject;
+		T responseObject = null;
+		if (isPartnerBelongsToTheUser) {
+			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+			if (partnerFromDb.isEmpty()) {
+				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
+				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
+				LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());
+				throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+			}
 
+			Map<String, String> pathsegments = new HashMap<>();
+			pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
+			Map<String, Object> getApiResponse = restUtil
+					.getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
+			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
+
+			if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while getting the cert from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+
+			if (responseObject == null) {
+				LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+		} else {
+			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorMessage());
+		}
+
+		return responseObject;
 	}
 
 	@Override
@@ -1527,13 +1588,13 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.IN_PROGRESS))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorMessage(), PartnerConstants.IN_PROGRESS));
 		}
 		if(mappingRequests.stream().anyMatch(r->r.getStatusCode().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode(), String
-					.format(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorMessage(), PartnerConstants.APPROVED));
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorCode(), String
+					.format(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorMessage(), PartnerConstants.APPROVED));
 		}
 		PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
@@ -1620,5 +1681,24 @@ public class PartnerServiceImpl implements PartnerService {
 		updateRequest.setAdditionalInfo(null);
 		updateRequest.setLogoUrl(null);	
 		return updatePartnerDetails(updateRequest, partnerId);
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
+
+	public static String getCertificateName(String subjectDN) {
+		String[] parts = subjectDN.split(",");
+		for (String part : parts) {
+			if (part.trim().startsWith("CN=")) {
+				return part.trim().substring(3);
+			}
+		}
+		return BLANK_STRING;
 	}
 }

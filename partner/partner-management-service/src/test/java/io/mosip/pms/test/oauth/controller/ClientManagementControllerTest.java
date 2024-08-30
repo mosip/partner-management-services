@@ -5,14 +5,19 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
+import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
+import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -20,9 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -37,6 +40,12 @@ public class ClientManagementControllerTest {
 
     @Autowired
     private ClientManagementServiceImpl serviceImpl;
+
+    @Mock
+    ClientManagementService clientManagementService;
+
+    @Mock
+    ClientManagementController clientController;
 
     Map<String, Object> public_key;
 
@@ -149,6 +158,13 @@ public class ClientManagementControllerTest {
 
         verify(serviceImpl).getClientDetails("123");
         assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void getAllOidcClients() throws Exception {
+        List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+        when(clientManagementService.getAllOidcClients()).thenReturn(oidcClientDtoList);
+        ResponseWrapper<List<OidcClientDto>> actualResponse = clientController.getAllOidcClients();
     }
 
 }
