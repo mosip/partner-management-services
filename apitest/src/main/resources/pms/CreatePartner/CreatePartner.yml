@@ -14,7 +14,7 @@ createPartnerSelfRegistration:
     "partnerId": "111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "111999",
@@ -36,7 +36,7 @@ createPartnerSelfRegistration:
     "partnerId": "111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -60,7 +60,7 @@ createPartnerSelfRegistration:
     "partnerId": "111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -134,7 +134,7 @@ createPartnerSelfRegistration:
     "partnerId": "111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "111998",

@@ -27,8 +27,9 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
-      outputTemplate: partner/policy/DefinePolicy/definePolicyResult
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/policy/DefinePolicy/definePolicyResult
       input: '{
 	"desc": "desc mosip policy",
 	"name": "mosip policy",
@@ -53,11 +54,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -80,11 +81,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -107,11 +108,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -134,11 +135,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -160,11 +161,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -187,11 +188,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
+	"name": "mosip policy AuthTypeToken Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -214,11 +215,12 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
-      outputTemplate: partner/policy/DefinePolicy/definePolicyResult
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/policy/DefinePolicy/definePolicyResult
       input: '{
 	"desc": "desc mosip policy2",
-	"name": "mosip policy2",
+	"name": "mosip policy2 Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": false,
@@ -240,11 +242,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy",
-	"name": "mosip policy",
+	"name": "mosip policy Neg",
 	"authSubType": "FINGER",
 	"authType": "demo",
 	"mandatory": true,
@@ -268,11 +270,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy5",
-	"name": "mosip policy5",
+	"name": "mosip policy5 Neg",
 	"authSubType": "FINGER",
 	"authType": "$REMOVE$",
 	"mandatory": true,
@@ -294,11 +296,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy",
-	"name": "mosip policy",
+	"name": "mosip policy Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -320,11 +322,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy",
-	"name": "mosip policy",
+	"name": "mosip policy Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -342,15 +344,15 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_PolicyGrpInActive_InValid:
+   Pms_DefinePolicy_PolicyGrpInActive_InValid_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy",
-	"name": "mosip policy",
+	"name": "mosip policy 19234",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -368,11 +370,11 @@ definePolicy:
         }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_name:
+   Pms_DefinePolicy_Missing_InputParameter_name_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
@@ -394,15 +396,15 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_desc:
+   Pms_DefinePolicy_Missing_InputParameter_descNeg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "$REMOVE$",
-		"name": "mosip policy",
+		"name": "mosip policy Neg",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
@@ -420,15 +422,15 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_mandatory:
+   Pms_DefinePolicy_Missing_InputParameter_mandatory_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy test",
+		"name": "mosip policy group Neg 1",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": $REMOVE$,
@@ -446,15 +448,15 @@ definePolicy:
         }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_authType:
+   Pms_DefinePolicy_Missing_InputParameter_authType_neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy test",
+		"name": "mosip policy group Neg",
 		"authSubType": "FINGER",
 		"authType": "$REMOVE$",
 		"mandatory": true,
@@ -472,15 +474,15 @@ definePolicy:
         }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_authTokenType:
+   Pms_DefinePolicy_Missing_InputParameter_authTokenType_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy test",
+		"name": "mosip policy group Neg",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
@@ -502,12 +504,12 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
         "attributeName": "$REMOVE$",
 		"desc": "desc mosip policy",
-		"name": "mosip policy test",
+		"name": "mosip policy test Neg",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
@@ -528,11 +530,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy",
+		"name": "mosip policy Neg",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
@@ -554,11 +556,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy",
+		"name": "mosip policy Neg",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
@@ -580,11 +582,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
+	"name": "mosip policy9 Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -606,11 +608,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
+	"name": "mosip policy9 Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -632,11 +634,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
+	"name": "mosip policy9 Neg",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
@@ -659,11 +661,11 @@ definePolicy:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
-      inputTemplate: partner/policy/DefinePolicy/definePolicy
-      outputTemplate: partner/policy/DefinePolicy/definePolicyResult
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
 	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
+	"name": "mosip policy9 Neg",
 	"authSubType": "FINGER",
 	"authType": "demo",
 	"mandatory": true,
@@ -676,7 +678,7 @@ definePolicy:
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
-    "name": "mosip policy9",
+    "name": "mosip policy9 Neg",
     "desc": "desc mosip policy9",
     "is_Active": false
 }'

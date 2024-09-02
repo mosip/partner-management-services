@@ -32,8 +32,7 @@ definePolicyGroup:
       output: ' {
       "errors": [
        {
-            "errorCode": "PMS_POL_014",
-            "message": "Policy group exists with name : mosip policy group"
+            "errorCode": "PMS_POL_014"
         }
   ]
     }'
@@ -106,8 +105,8 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
       input: '{
-    "desc": "desc mosip policy group",
-    "name": "mosip policy group",
+    "desc": "desc mosip policy group 1233",
+    "name": "mosip policy group 1233",
     "requesttime": "$REMOVE$"
   }'
       output: '{
