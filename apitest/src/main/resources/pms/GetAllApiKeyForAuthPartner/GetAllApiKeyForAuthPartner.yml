@@ -14,7 +14,7 @@ GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_without_auth:
       endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
       description: Fetching all the API Key available for Auth Partner without token
-      role: invalidBatch
+      role: batch
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner

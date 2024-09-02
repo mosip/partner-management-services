@@ -2,7 +2,7 @@ GetAllOidcClient:
    Pms_GetAllOidcClient_without_Auth:
       endPoint: /v1/partnermanager/getAllOidcClients
       description: Fetching all OIDC Clients of the loggedin Partner
-      role: invalidBatch
+      role: batch
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient

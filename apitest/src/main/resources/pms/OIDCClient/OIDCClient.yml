@@ -100,7 +100,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_role:
+   Pms_CreateOIDCClient_invalid_auth:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
       role: regproc

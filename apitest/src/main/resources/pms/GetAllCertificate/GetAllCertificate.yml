@@ -13,7 +13,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_without_auth:
       endPoint: /v1/partnermanager/partners/getAllCertificateDetails
       description: Fetching all the API certificates of the partner without login
-      role: invalidBatch
+      role: batch
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error

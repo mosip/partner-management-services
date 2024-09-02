@@ -2,7 +2,7 @@ GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_without_auth:
       endPoint: /v1/partnermanager/partners/getAllApprovedAuthPartnerPolicies
       description: Fetching all Approved Auth Partner Policies without token
-      role: invalidBatch
+      role: batch
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy

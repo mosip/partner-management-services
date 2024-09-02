@@ -14,7 +14,7 @@ GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_without_auth:
       endPoint: /v1/policymanager/policies/getAllPolicyGroups
       description: Fetching all the active PolicyGroups without token
-      role: invalidBatch
+      role: batch
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups

@@ -2,7 +2,7 @@ GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_without_auth:
       endPoint: /v1/partnermanager/partners/getAllApprovedPartnerIdsWithPolicyGroups
       description: Fetching all approved Partner Id without token
-      role: invalidBatch
+      role: batch
       restMethod: get
       inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
       outputTemplate: pms/error
