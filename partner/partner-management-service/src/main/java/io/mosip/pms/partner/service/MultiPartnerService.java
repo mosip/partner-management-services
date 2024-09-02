@@ -7,7 +7,7 @@ import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.dto.SbiDetailsDto;
-import io.mosip.pms.partner.dto.PartnerDto;
+import io.mosip.pms.partner.dto.DeviceProviderDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
@@ -33,7 +33,7 @@ public interface MultiPartnerService {
 
     public List<SbiDetailsDto> getAllSBIDetails();
 
-    public List<PartnerDto> getAllApprovedDeviceProviderIds();
+    public List<DeviceProviderDto> getAllApprovedDeviceProviderIds();
 
     public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId);
 

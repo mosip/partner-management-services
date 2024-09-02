@@ -599,8 +599,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PartnerDto> getAllApprovedDeviceProviderIds() {
-        List<PartnerDto> approvedDeviceProviderIds = new ArrayList<>();
+    public List<DeviceProviderDto> getAllApprovedDeviceProviderIds() {
+        List<DeviceProviderDto> approvedDeviceProviderIds = new ArrayList<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -613,11 +613,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 validatePartnerId(partner, userId);
                 if (checkIfPartnerIsDevicePartner(partner)
                         && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
-                    PartnerDto partnerDto = new PartnerDto();
-                    partnerDto.setPartnerId(partner.getId());
-                    partnerDto.setPartnerType(partner.getPartnerTypeCode());
+                    DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
+                    deviceProviderDto.setPartnerId(partner.getId());
+                    deviceProviderDto.setPartnerType(partner.getPartnerTypeCode());
 
-                    approvedDeviceProviderIds.add(partnerDto);
+                    approvedDeviceProviderIds.add(deviceProviderDto);
                 }
             }
         } catch (PartnerServiceException ex) {

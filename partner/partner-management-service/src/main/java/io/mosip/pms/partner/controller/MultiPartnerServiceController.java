@@ -254,8 +254,8 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<List<PartnerDto>> getAllApprovedDeviceProviderIds() {
-        ResponseWrapper<List<PartnerDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapper<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
+        ResponseWrapper<List<DeviceProviderDto>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getAllApprovedDeviceProviderId);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getAllApprovedDeviceProviderIds());
