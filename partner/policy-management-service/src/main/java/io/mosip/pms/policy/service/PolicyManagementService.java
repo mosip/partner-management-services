@@ -1056,4 +1056,14 @@ public class PolicyManagementService {
 		return policiesByGroupName;
 
 	}
+
+	public List<PolicyGroup> getAllPolicyGroups() {
+		List<PolicyGroup> policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
+		if (policyGroupsList.isEmpty()) {
+			logger.error("There are no active policy groups");
+			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
+					ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
+		}
+		return policyGroupsList;
+	}
 }

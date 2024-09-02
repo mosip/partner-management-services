@@ -1,0 +1,225 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0",
+    "title": "Policy Manager Services API documentation",
+    "description": "Policy Manager Services API documentation",
+    "license": {
+      "url": "https://docs.mosip.io/platform/license",
+      "name": "Mosip"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+      "description": "Policy Manager Service"
+    }
+  ],
+  "paths": {
+    "/policies/getAllPolicyGroups": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "NEW: Service to get all active policy groups",
+        "description": "Service to get all policy groups",
+        "operationId": "getAllPolicyGroups",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListPolicyGroup"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/active/group/{groupName}": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Service to get active policy details for policy group name",
+        "description": "Service to get active policy details for policy group name",
+        "operationId": "getPoliciesByGroupName",
+        "parameters": [
+          {
+            "name": "groupName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListPolicyDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResponseWrapperListPolicyGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyGroup"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "crBy": {
+            "type": "string"
+          },
+          "crDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "desc": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "updBy": {
+            "type": "string"
+          },
+          "updDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "ServiceError": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseWrapperListPolicyDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyDetailsDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyDetailsDto": {
+        "type": "object",
+        "properties": {
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "descr": {
+            "type": "string"
+          },
+          "policyType": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
