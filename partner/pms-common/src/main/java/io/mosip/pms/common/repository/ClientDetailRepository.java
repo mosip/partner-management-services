@@ -5,10 +5,13 @@
  */
 package io.mosip.pms.common.repository;
 
+import io.mosip.pms.common.entity.PartnerContact;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import io.mosip.pms.common.entity.ClientDetail;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientDetailRepository extends CrudRepository<ClientDetail, String> {
@@ -27,4 +30,8 @@ public interface ClientDetailRepository extends CrudRepository<ClientDetail, Str
      * @return
      */
     Optional<ClientDetail> findByName(String clientName);
+
+    @Query(value = "SELECT * FROM oidc_client oc WHERE oc.rp_id = ?1", nativeQuery = true)
+    List<ClientDetail> findAllByPartnerId(String partnerId);
+
 }

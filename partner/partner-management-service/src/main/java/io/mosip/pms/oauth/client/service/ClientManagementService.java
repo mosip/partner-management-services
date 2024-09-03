@@ -6,6 +6,9 @@ import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
 import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
+import io.mosip.pms.oauth.client.dto.OidcClientDto;
+
+import java.util.List;
 
 public interface ClientManagementService {
 	
@@ -55,4 +58,6 @@ public interface ClientManagementService {
 	 */
 	ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception;
+
+    List<OidcClientDto> getAllOidcClients();
 }
