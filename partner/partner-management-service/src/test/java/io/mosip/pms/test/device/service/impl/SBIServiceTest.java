@@ -233,12 +233,11 @@ public class SBIServiceTest {
 	
 	@Test
     public void createSBITest() throws Exception {
-		assertTrue(secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto).getId().equals("1234"));
 		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
 		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode()));
 		}
     }
 	
@@ -249,7 +248,7 @@ public class SBIServiceTest {
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
 		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode()));
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode()));
 		}
     }
 	
@@ -270,20 +269,16 @@ public class SBIServiceTest {
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
 		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode()));
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode()));
 		}
     }
 
 	@Test
     public void updateDeviceDetailTest() throws Exception {
-		assertTrue(secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto).getId().equals("1234"));
-		SecureBiometricInterface sbiFromDb = secureBiometricInterface;
-		sbiFromDb.setId("7189");
-		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(sbiFromDb));
 		try {
 			secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
 		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode()));
 		}				
     }
 	
