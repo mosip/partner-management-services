@@ -20,12 +20,12 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 
 @SpringBootApplication
 @Import(value = {WebSubPublisher.class,RestUtil.class,FilterColumnValidator.class,FilterHelper.class,SearchHelper.class,PageUtils.class})
-@ComponentScan(basePackages = {"io.mosip.pms.*","io.mosip.kernel.websub.api.config",
+@ComponentScan(basePackages = {"io.mosip.pms.*","io.mosip.kernel.websub.api.config", "io.mosip.pms.common.repository",
 		"io.mosip.kernel.templatemanager.velocity.builder", "${mosip.auth.adapter.impl.basepackage}", "io.mosip.kernel.authcodeflowproxy.*"},excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = AuthorizedRolesDto.class) })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-public class PartnerManagementService {
+public class  PartnerManagementService {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PartnerManagementService.class, args);

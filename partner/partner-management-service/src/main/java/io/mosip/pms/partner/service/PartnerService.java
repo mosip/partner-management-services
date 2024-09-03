@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.service;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -35,6 +36,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 
 public interface PartnerService {
 	
@@ -110,7 +112,19 @@ public interface PartnerService {
      * @throws JsonParseException 
     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
-    
+
+	/**
+	 * Function to Download Original Partner certificates
+	 *
+	 * @param PartnerCertDownloadRequestDto certDownloadRequestDto
+	 * @return {@link PartnerCertDownloadResponeDto} instance
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
+
     /**
      * Function to add biometric extractors 
      * @param partnerId
