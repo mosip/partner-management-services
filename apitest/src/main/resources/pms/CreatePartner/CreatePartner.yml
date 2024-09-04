@@ -57,7 +57,7 @@ createPartnerSelfRegistration:
     "address": "Bangalore",
     "contactNumber": "8553967572",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "1119911",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
@@ -80,9 +80,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip987631@gmail.com",
+    "emailId": "mosip98763125@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "1119910",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234"
   }'
@@ -104,9 +104,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip987631@gmail.com",
+    "emailId": "mosip98763123@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "11199911",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "1111-07-22T08:21:17.665Z"

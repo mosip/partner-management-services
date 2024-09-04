@@ -352,13 +352,13 @@ definePolicy:
       outputTemplate: pms/error
       input: '{
 	"desc": "desc mosip policy",
-	"name": "mosip policy 19234",
+	"name": "mosip policy 192345",
 	"authSubType": "FINGER",
 	"authType": "bio",
 	"mandatory": true,
 	"attributeName": "string",
 	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group2",
+	"policyGroupName": "mosip policy group 19234",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
@@ -482,13 +482,13 @@ definePolicy:
       outputTemplate: pms/error
       input: '{
 		"desc": "desc mosip policy",
-		"name": "mosip policy group Neg",
+		"name": "mosip policy group Neg2",
 		"authSubType": "FINGER",
 		"authType": "bio",
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "$REMOVE$",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "mosip policy group 19234",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"
@@ -682,3 +682,4 @@ definePolicy:
     "desc": "desc mosip policy9",
     "is_Active": false
 }'
+
