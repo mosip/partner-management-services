@@ -431,58 +431,58 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerDetails(par.getName());
 	}
 
-//	@Test
-//	@WithUserDetails("partner")
-//	public void savePartnerTest() {
-//		MosipUserDto userDto = new MosipUserDto();
-//		userDto.setName("PARTNER");
-//		userDto.setMobile("partner@gmail.com");
-//		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
-//		PartnerRequest partnerRequest = createPartnerRequest();
-//		Partner partner = new Partner();
-//		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
-//		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
-//		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
-//		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
-//		assertNotNull(savePartner);
-//
-//		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
-//		try {
-//			pserviceImpl.savePartner(partnerRequest);
-//		}catch(PartnerServiceException e) {
-//			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode()));
-//		}
-//		policyGroup.setIsActive(false);
-//		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
-//		try {
-//			pserviceImpl.savePartner(partnerRequest);
-//		}catch(PartnerServiceException e) {
-//			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode()));
-//		}
-//
-//		partnerRequest.setContactNumber("09876543212345889989");
-//		try {
-//			pserviceImpl.savePartner(partnerRequest);
-//		}catch(PartnerServiceException e) {
-//			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode()));
-//		}
-//		partnerRequest.setContactNumber("0987654321234588");
-//		partnerRequest.setLangCode("iuy");
-//		try {
-//			pserviceImpl.savePartner(partnerRequest);
-//		}catch(PartnerServiceException e) {
-//			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode()));
-//		}
-//		partnerRequest.setContactNumber("0987654321234588");
-//		partnerRequest.setLangCode("iuy");
-//		partnerRequest.setPartnerId("auth partner");
-//		try {
-//			pserviceImpl.savePartner(partnerRequest);
-//		}catch(PartnerServiceException e) {
-//			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode()));
-//		}
-//
-//	}
+	@Test
+	@WithUserDetails("partner")
+	public void savePartnerTest() {
+		MosipUserDto userDto = new MosipUserDto();
+		userDto.setName("PARTNER");
+		userDto.setMobile("partner@gmail.com");
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
+		PartnerRequest partnerRequest = createPartnerRequest();
+		Partner partner = new Partner();
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
+		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+		PartnerResponse savePartner = pserviceImpl.savePartner(partnerRequest);
+		assertNotNull(savePartner);
+
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(null);
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode()));
+		}
+		policyGroup.setIsActive(false);
+		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode()));
+		}
+
+		partnerRequest.setContactNumber("09876543212345889989");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode()));
+		}
+		partnerRequest.setContactNumber("0987654321234588");
+		partnerRequest.setLangCode("iuy");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode()));
+		}
+		partnerRequest.setContactNumber("0987654321234588");
+		partnerRequest.setLangCode("iuy");
+		partnerRequest.setPartnerId("auth partner");
+		try {
+			pserviceImpl.savePartner(partnerRequest);
+		}catch(PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode()));
+		}
+
+	}
 
 	@Test(expected = PartnerServiceException.class)
 	public void savePartnerTest01() {
