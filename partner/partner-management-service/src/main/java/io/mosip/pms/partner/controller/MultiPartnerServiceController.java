@@ -5,9 +5,11 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.DeactivateDeviceRequestDto;
+import io.mosip.pms.partner.request.dto.DeactivateFtmRequestDto;
 import io.mosip.pms.partner.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.FtmDetailsResponseDto;
 import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
@@ -68,11 +70,15 @@ public class MultiPartnerServiceController {
     private final String postAddInactiveDeviceMappingToSbiId;
     private final String putDeactivateDevice;
     private final String putDeactivateSbi;
+    private final String getAllApprovedFtmProviderId;
+    private final String getAllFtmProviderDetails;
+    private final String putDeactivateFtm;
 
     public static final String VERSION = "1.0";
     public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
     public static final String DEACTIVATE_DEVICE_PUT = "deactivate.device.put";
     public static final String DEACTIVATE_SBI_PUT = "deactivate.sbi.put";
+    public static final String DEACTIVATE_FTM_PUT = "deactivate.ftm.put";
 
     @Autowired
     MultiPartnerService multiPartnerService;
@@ -97,6 +103,9 @@ public class MultiPartnerServiceController {
         this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
         this.putDeactivateDevice = ids.get("deactivate.device.put");
         this.putDeactivateSbi = ids.get("deactivate.sbi.put");
+        this.getAllApprovedFtmProviderId= ids.get("all.approved.ftm.provider.ids.get");
+        this.getAllFtmProviderDetails=ids.get("all.ftm.provider.details.get");
+        this.putDeactivateFtm=ids.get("deactivate.ftm.put");
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
@@ -341,6 +350,58 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(putDeactivateSbi);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId()));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedftmproviderids())")
+    @GetMapping(value = "/getAllApprovedFTMProviderIds")
+    @Operation(summary = "Get all approved FTM providers id.", description = "Get all approved FTM providers id.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmProviderDto>> getAllApprovedFTMProviderIds() {
+        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllApprovedFtmProviderId);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.getAllApprovedFtmProviderIds());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallftmproviderdetails())")
+    @GetMapping(value = "/getAllFTMProviderDetails")
+    @Operation(summary = "Get all FTM Provider details list.", description = "Get all FTM provider details list associated with partner.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmProviderDetailsDto>> getAllFTMProviderDetails() {
+        ResponseWrapper<List<FtmProviderDetailsDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getAllFtmProviderDetails);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.getAllFtmProviderDetails());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivateftm())")
+    @PutMapping(value = "/deactivateFtm")
+    @Operation(summary = "Deactivate FTM details", description = "Deactivate FTM details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapper<FtmDetailsResponseDto> deactivateFtm(@RequestBody @Valid RequestWrapper<DeactivateFtmRequestDto> requestWrapper) {
+        ResponseWrapper<FtmDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
+        requestValidator.validateId(DEACTIVATE_FTM_PUT, requestWrapper.getId());
+        requestValidator.validate(requestWrapper);
+        responseWrapper.setId(putDeactivateFtm);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.deactivateFtm(requestWrapper.getRequest().getFtmId()));
         return responseWrapper;
     }
 }

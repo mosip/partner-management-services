@@ -9,8 +9,11 @@ import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.dto.SbiDetailsDto;
 import io.mosip.pms.partner.dto.DeviceProviderDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.dto.FtmProviderDto;
+import io.mosip.pms.partner.dto.FtmProviderDetailsDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.FtmDetailsResponseDto;
 import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 
 import java.util.List;
@@ -42,4 +45,10 @@ public interface MultiPartnerService {
     public DeviceDetailResponseDto deactivateDevice(String deviceDetailId);
 
     public SbiDetailsResponseDto deactivateSbi(String id);
+
+    public List<FtmProviderDto> getAllApprovedFtmProviderIds();
+
+    public List<FtmProviderDetailsDto> getAllFtmProviderDetails();
+
+    public FtmDetailsResponseDto deactivateFtm(String id);
 }

@@ -22,6 +22,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.response.dto.FtmDetailsResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
@@ -326,6 +327,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static boolean checkIfPartnerIsDevicePartner(Partner partner) {
         String partnerType = partner.getPartnerTypeCode();
         return partnerType.equals(DEVICE_PROVIDER);
+    }
+
+    public static boolean checkIfPartnerIsFtmPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        return partnerType.equals(FTM_PROVIDER);
     }
 
     public static void validatePartnerId(Partner partner, String userId) {
@@ -943,6 +949,24 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage());
         }
         return sbiDetailsResponseDto;
+    }
+
+    @Override
+    public List<FtmProviderDto> getAllApprovedFtmProviderIds() {
+        List<FtmProviderDto> approvedFtmProviderIds = new ArrayList<>();
+        return approvedFtmProviderIds;
+    }
+
+    @Override
+    public List<FtmProviderDetailsDto> getAllFtmProviderDetails() {
+        List<FtmProviderDetailsDto> ftmProviderDetailsList = new ArrayList<>();
+        return ftmProviderDetailsList;
+    }
+
+    @Override
+    public FtmDetailsResponseDto deactivateFtm(String ftmId) {
+       FtmDetailsResponseDto ftmDetailsResponseDto = new FtmDetailsResponseDto();
+       return  ftmDetailsResponseDto;
     }
 
     private void validateDevicePartnerType(Partner partner, String userId) {
