@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,6 +90,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	@Autowired
 	FilterHelper filterHelper;
+
+	@Value("${mosip.pms.expiry.date.max.year}")
+	private int maxAllowedYear;
 
 	
 	@Override
@@ -354,19 +358,21 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	 * @param toDate
 	 */
 	private void validateDates(LocalDateTime fromDate, LocalDateTime toDate) {
-		if (toDate.toLocalDate().isBefore(fromDate.toLocalDate()) || toDate.toLocalDate().isEqual(fromDate.toLocalDate())) {
+		// Check if fromDate is in the future
+		if (fromDate.toLocalDate().isAfter(LocalDate.now())) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC,
-							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode(),
-							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE
+							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY.getErrorCode(),
+							SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY
 									.getErrorMessage()),
 					"AUT-015");
 			throw new RequestException(
-					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorCode(),
-					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_LESSTHAN_EXPIRYDATE.getErrorMessage());
+					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY.getErrorCode(),
+					SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY.getErrorMessage());
 		}
+		// Check if toDate is before or on today's date
 		if (toDate.toLocalDate().isBefore(LocalDate.now()) || toDate.toLocalDate().isEqual(LocalDate.now())) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
@@ -379,6 +385,20 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode(),
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorMessage());
+		}
+		// Check if toDate is more than 10 years from today
+		LocalDate maxYear = LocalDate.now().plusYears(maxAllowedYear);
+		if (toDate.toLocalDate().isAfter(maxYear)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode(),
+							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedYear),
+					"AUT-015");
+			throw new RequestException(
+					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedYear));
 		}
 	}
 
