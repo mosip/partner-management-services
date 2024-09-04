@@ -25,6 +25,6 @@ public class RoleServiceImplTest {
 		RoleExtnDto dto = new RoleExtnDto();
 		dto = roleServiceImpl.getUIRequiredRoles();
 		List<String> roles = dto.getRoles();
-		assertTrue(roles.contains("MISP_PARTNER"));
+		assertTrue(roles.contains("MISP_Partner"));
 	}
 }
