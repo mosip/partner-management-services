@@ -329,11 +329,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return partnerType.equals(DEVICE_PROVIDER);
     }
 
-    public static boolean checkIfPartnerIsFtmPartner(Partner partner) {
-        String partnerType = partner.getPartnerTypeCode();
-        return partnerType.equals(FTM_PROVIDER);
-    }
-
     public static void validatePartnerId(Partner partner, String userId) {
         if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
             LOGGER.info("Partner Id is null or empty for user id : " + userId);
