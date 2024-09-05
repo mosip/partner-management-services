@@ -51,6 +51,9 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.axios.timeout}")
     private String axiosTimeout;
 
+    @Value("${mosip.pms.expiry.date.max.year}")
+    private String maxAllowedYear;
+
     private final String getAllCertificatesDetailsId;
     private final String getAllRequestedPoliciesId;
     private final String getAllApprovedAuthPartnersPoliciesId;
@@ -177,6 +180,7 @@ public class MultiPartnerServiceController {
         configMap.put("inActivityTimer", inActivityTimer);
         configMap.put("inActivityPromptTimer", inActivityPromptTimer);
         configMap.put("axiosTimeout", axiosTimeout);
+        configMap.put("maxAllowedyear", maxAllowedYear);
         responseWrapper.setResponse(configMap);
         System.out.println(responseWrapper);
         return responseWrapper;

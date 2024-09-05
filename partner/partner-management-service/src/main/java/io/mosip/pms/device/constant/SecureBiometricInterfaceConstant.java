@@ -12,7 +12,9 @@ public enum SecureBiometricInterfaceConstant {
 	DD_SBI_MAPPING_NOT_EXISTS("PMS_AUT_510","Mapping not exists for given data."),
 	SBI_NOT_APPROVED("PMS_AUT_511","SBI for which device is being mapped is not approved"),
 	SBI_RECORDS_EXISTS("PMS_AUT_512","SBI details exists for given SBI Version. Multiple SBI with same SBI Version cannot be added."),
-	SBI_EXPIRED("PMS_AUT_513", "SBI for which device is being mapped is expired");
+	SBI_EXPIRED("PMS_AUT_513", "SBI for which device is being mapped is expired"),
+	SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY("PMS_AUT_514","The created date should be less than or equal to the current date."),
+	EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS("PMS_AUT_515", "Expiry date should not be greater than %s years from today");
 	
 	/**
 	 * The error code.
