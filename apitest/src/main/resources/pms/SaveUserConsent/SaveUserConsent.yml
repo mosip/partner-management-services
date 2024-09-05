@@ -7,7 +7,6 @@ saveUserConsent:
       inputTemplate: pms/saveUserConsent/SaveUserConsent
       outputTemplate: pms/saveUserConsent/SaveUserConsentResult
       input: '{
-
 }'
       output: '{
            "userId": "111999"

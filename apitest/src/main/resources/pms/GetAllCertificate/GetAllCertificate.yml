@@ -10,7 +10,7 @@ GetAllCertificate:
 }'
       output: '{
       "partnerID": "111999",
-  	  "partnerType": "Auth_Partner",
+      "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
 
@@ -25,6 +25,6 @@ GetAllCertificate:
 }'
       output: '{
       "partnerID": "111996",
-  	  "partnerType": "Auth_Partner",
+      "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'

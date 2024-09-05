@@ -9,7 +9,6 @@ GetConfiguration:
       input: '{
 }'
       output: '{
-      
     "grantTypes": "authorization_code",
     "axiosTimeout": "3",
     "inActivityTimer": "25",

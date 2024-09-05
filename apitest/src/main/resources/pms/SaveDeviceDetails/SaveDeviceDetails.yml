@@ -16,7 +16,6 @@ SaveDeviceDetails:
     "crBy": "user456",
     "crDtimes": "$TIMESTAMPL$",
     "isActive": true
-
 }'
       output: '{
           

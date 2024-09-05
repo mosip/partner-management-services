@@ -32,7 +32,8 @@ definePolicyGroup:
       output: ' {
       "errors": [
        {
-            "errorCode": "PMS_POL_014"
+            "errorCode": "PMS_POL_014",
+            "message": "Policy group exists with name : mosip policy group"
         }
   ]
     }'
