@@ -17,7 +17,6 @@ import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.MultiPartnerHelper;
-import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,7 +78,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
                         requestDto.setPartnerId(partner.getId());
                         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = multiPartnerHelper.getCertificateFromKeyMgr(requestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
-                        X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+                        X509Certificate cert = PartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 
                         certificateDto.setIsCertificateAvailable(true);
                         certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
