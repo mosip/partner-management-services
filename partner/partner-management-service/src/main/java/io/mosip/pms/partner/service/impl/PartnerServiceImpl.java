@@ -22,8 +22,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.mosip.pms.partner.util.MultiPartnerHelper;
-import io.mosip.pms.partner.util.MultiPartnerUtil;
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,7 +31,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -819,14 +816,14 @@ public class PartnerServiceImpl implements PartnerService {
 		responseDto.setIsCaSignedCertificateExpired(false);
 		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 		// Check mosip signed certificate expiry date
-		X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
+		X509Certificate decodedMosipSignedCert = PartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
 		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
 			responseDto.setMosipSignedCertificateData("");
 			responseDto.setIsMosipSignedCertificateExpired(true);
 		}
 		// Check ca signed partner certificate expiry date
-		X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
+		X509Certificate decodedCaSignedCert = PartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
 		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
 		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
 			responseDto.setCaSignedCertificateData("");
