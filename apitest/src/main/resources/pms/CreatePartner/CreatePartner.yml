@@ -134,7 +134,7 @@ createPartnerSelfRegistration:
     "partnerId": "111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "111998",
