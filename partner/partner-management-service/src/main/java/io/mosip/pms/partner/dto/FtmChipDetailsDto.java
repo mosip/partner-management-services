@@ -36,15 +36,15 @@ public class FtmChipDetailsDto {
     @Schema(description = "Name of the FTM Chip certificate uploaded by the partner", example = "cert-001")
     private String certificateName;
 
-    @Schema(description = "Date when the FTM Chip certificate was uploaded", example = "2024-07-15T10:00:00Z")
+    @Schema(description = "Date and time in ISO format indicating when the FTM Chip certificate was uploaded", example = "2024-07-15T10:00:00Z")
     private Date certificateUploadDateTime;
 
-    @Schema(description = "Date when the FTM Chip certificate expires", example = "2025-07-15T10:00:00Z")
+    @Schema(description = "Date and time in ISO format indicating when the FTM Chip certificate will expire", example = "2025-07-15T10:00:00Z")
     private Date certificateExpiryDateTime;
 
     @Schema(description = "Indicates whether the FTM certificate is expired (true if expired, false otherwise)", example = "false")
     private Boolean isCertificateExpired;
 
-    @Schema(description = "Date and time when the FTM Chip details were added by the partner", example = "2024-08-01T14:30:00Z")
+    @Schema(description = "Date and time in ISO format indicating when the FTM Chip details were added by the partner", example = "2024-08-01T14:30:00Z")
     private LocalDateTime createdDateTime;
 }
