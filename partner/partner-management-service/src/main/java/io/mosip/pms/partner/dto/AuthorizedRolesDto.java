@@ -170,5 +170,7 @@ public class AuthorizedRolesDto {
 	private List<String> putdeactivatesbi;
 
 	private List<String> getftmchipdetails;
+
+	private List<String> getapprovedftmproviderids;
 		
 }

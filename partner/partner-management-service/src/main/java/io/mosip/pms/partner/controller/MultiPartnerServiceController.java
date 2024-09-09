@@ -69,6 +69,7 @@ public class MultiPartnerServiceController {
     private final String putDeactivateDevice;
     private final String putDeactivateSbi;
     private final String getFtmChipDetails;
+    private final String getApprovedFtmProviderIds;
 
     public static final String VERSION = "1.0";
     public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
@@ -99,6 +100,7 @@ public class MultiPartnerServiceController {
         this.putDeactivateDevice = ids.get("deactivate.device.put");
         this.putDeactivateSbi = ids.get("deactivate.sbi.put");
         this.getFtmChipDetails=ids.get("ftm.chip.details.get");
+        this.getApprovedFtmProviderIds=ids.get("approved.ftm.provider.ids.get");
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
@@ -359,6 +361,22 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(getFtmChipDetails);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.ftmChipDetails());
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedftmproviderids())")
+    @GetMapping(value = "/approved-ftm-provider-ids")
+    @Operation(summary = "Get all approved FTM providers ids.", description = "This endpoint will fetch list of all the approved FTM provider ID's mapped to the logged in user.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmProviderDto>> approvedFTMProviderIds() {
+        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getApprovedFtmProviderIds);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.approvedFTMProviderIds());
         return responseWrapper;
     }
 }

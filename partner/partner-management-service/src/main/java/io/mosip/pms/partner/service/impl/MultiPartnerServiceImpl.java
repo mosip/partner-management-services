@@ -1024,6 +1024,41 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return ftmChipDetailsDtoList;
     }
 
+    @Override
+    public List<FtmProviderDto> approvedFTMProviderIds() {
+        List <FtmProviderDto> approvedFtmProviderIds = new ArrayList<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            for (Partner partner : partnerList) {
+                validatePartnerId(partner, userId);
+                if (checkIfPartnerIsFtmPartner(partner)
+                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                    FtmProviderDto ftmProviderDto = new FtmProviderDto();
+                    ftmProviderDto.setPartnerId(partner.getId());
+                    ftmProviderDto.setPartnerType(partner.getPartnerTypeCode());
+
+                    approvedFtmProviderIds.add(ftmProviderDto);
+                }
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            throw new PartnerServiceException(ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorCode(),
+                    ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorMessage());
+        }
+        return approvedFtmProviderIds;
+    }
+
     private void validateDevicePartnerType(Partner partner, String userId) {
         if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER)) {
             LOGGER.info("Invalid Partner type for partner id : " + partner.getId());

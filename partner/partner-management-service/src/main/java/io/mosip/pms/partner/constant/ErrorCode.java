@@ -123,7 +123,8 @@ public enum ErrorCode {
 	SBI_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_019", "SBI is not associated with user."),
 	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "SBI should be in approved status"),
 	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired"),
-	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details");
+	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
+	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids.");
 	/**
 	 * The error code.
 	 */
