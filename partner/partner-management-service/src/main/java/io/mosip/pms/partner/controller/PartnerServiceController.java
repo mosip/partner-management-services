@@ -9,15 +9,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import io.mosip.pms.config.Config;
-import io.mosip.pms.partner.constant.PartnerConstants;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -87,16 +79,8 @@ public class PartnerServiceController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	private final String getOriginalPartnerCertificateId;
-
-	@Autowired
-	public PartnerServiceController(Config config) {
-		Map<String, String> ids = config.getId();
-		this.getOriginalPartnerCertificateId = ids.get("original.partner.certificate.get");
-	}
-
 	public static final String VERSION = "1.0";
-	
+
 	/**
 	 * This API would be used for self registration by partner to create Auth/E-KYC
 	 * Partners. Partner Management module would be integrating with Kernel IAM
@@ -372,14 +356,9 @@ public class PartnerServiceController {
 	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
 	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
-		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		response.setId(getOriginalPartnerCertificateId);
-		response.setVersion(VERSION);
-		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
-		response.setResponsetime(LocalDateTime.now());
-		return response;
+		return partnerService.getOriginalPartnerCertificate(requestDto);
 	}
 	
 	@ResponseFilter

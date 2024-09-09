@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/admin")
@@ -40,9 +42,6 @@ public class MultiPartnerAdminServiceController {
     @Autowired
     RequestValidator requestValidator;
 
-    public static final String APPROVE_DEVICE_WITH_SBI_MAPPING_POST = "approve.device.with.sbi.mapping.post";
-    public static final String REJECT_DEVICE_WITH_SBI_MAPPING_POST = "reject.device.with.sbi.mapping.post";
-
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
     @PostMapping(value = "/approveDeviceWithSbiMapping")
     @Operation(summary = "Approve device and activate device mapping to sbi.", description = "Approve device and activate device mapping to sbi.")
@@ -54,13 +53,11 @@ public class MultiPartnerAdminServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(APPROVE_DEVICE_WITH_SBI_MAPPING_POST, requestWrapper.getId());
-        requestValidator.validate(requestWrapper);
-        responseWrapper.setId(postApproveDeviceWithSbiMappingId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), false));
-        return responseWrapper;
+        Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postApproveDeviceWithSbiMappingId, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+        return multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), false);
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
@@ -74,12 +71,10 @@ public class MultiPartnerAdminServiceController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(REJECT_DEVICE_WITH_SBI_MAPPING_POST, requestWrapper.getId());
-        requestValidator.validate(requestWrapper);
-        responseWrapper.setId(postRejectDeviceWithSbiMappingId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), true));
-        return responseWrapper;
+        Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postRejectDeviceWithSbiMappingId, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+        return multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), true);
     }
 }

@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.request.dto.ErrorResponse;
+import io.mosip.pms.policy.errorMessages.ServiceError;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -134,6 +136,9 @@ public class PolicyManagementService {
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
 
+	@Value("${mosip.pms.api.id.all.policy.groups.get}")
+	private String getAllPolicyGroupsId;
+
 	@Autowired
 	SearchHelper searchHelper;
 
@@ -151,7 +156,8 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
-	public static final String ALL = "all";	
+	public static final String ALL = "all";
+	public static final String VERSION = "1.0";
 
 	/** The mapper. */
 	@Autowired
@@ -1050,25 +1056,37 @@ public class PolicyManagementService {
 
 	}
 
-	public List<PolicyGroup> getAllPolicyGroups() {
-		List<PolicyGroup> policyGroupsList;
+	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() {
+		ResponseWrapper<List<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
 		try {
+			List<PolicyGroup> policyGroupsList;
 			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
 			if (policyGroupsList.isEmpty()) {
 				logger.error("There are no active policy groups");
 				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
 						ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
 			}
+			responseWrapper.setResponse(policyGroupsList);
 		} catch (PolicyManagementServiceException ex) {
 			logger.info("sessionId", "idType", "id", "In getAllPolicyGroups method of PolicyManagementService - " + ex.getMessage());
-			throw ex;
+			responseWrapper.setErrors(setErrorResponse(ex));
 		} catch (Exception ex) {
 			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
 			logger.error("sessionId", "idType", "id",
 					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode(),
-					ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage());
+			String errorCode = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.getServiceErr(errorCode, errorMessage));
 		}
-		return policyGroupsList;
+		responseWrapper.setId(getAllPolicyGroupsId);
+		responseWrapper.setVersion(VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public List<ServiceError> setErrorResponse(PolicyManagementServiceException ex) {
+		String errorCode = ex.getErrorCode();
+		String errorMessage = ex.getErrorText();
+		return PolicyUtil.getServiceErr(errorCode, errorMessage);
 	}
 }

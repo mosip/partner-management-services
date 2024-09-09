@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.service;
 
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.partner.dto.ApprovedPolicyDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
@@ -17,29 +18,29 @@ import java.util.List;
 
 public interface MultiPartnerService {
 
-    public List<CertificateDto> getAllCertificateDetails();
+    public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails();
 
-    public List<PolicyDto> getAllRequestedPolicies();
+    public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies();
 
-    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies();
+    public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies();
 
-    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
+    public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups();
 
-    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners();
+    public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners();
 
-    public UserDetailsDto saveUserConsentGiven();
+    public ResponseWrapper<UserDetailsDto> saveUserConsentGiven();
 
-    public UserDetailsDto isUserConsentGiven();
+    public ResponseWrapper<UserDetailsDto> isUserConsentGiven();
 
-    public List<SbiDetailsDto> getAllSBIDetails();
+    public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails();
 
-    public List<DeviceProviderDto> getAllApprovedDeviceProviderIds();
+    public ResponseWrapper<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds();
 
-    public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId);
+    public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(String sbiId);
 
-    public Boolean addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto);
+    public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto);
 
-    public DeviceDetailResponseDto deactivateDevice(String deviceDetailId);
+    public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId);
 
-    public SbiDetailsResponseDto deactivateSbi(String id);
+    public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(String id);
 }

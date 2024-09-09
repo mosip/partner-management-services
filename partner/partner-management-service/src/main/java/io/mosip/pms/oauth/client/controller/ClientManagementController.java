@@ -1,5 +1,4 @@
 package io.mosip.pms.oauth.client.controller;
-import io.mosip.pms.config.Config;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -8,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Value;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ClientManagementController {
@@ -33,16 +30,6 @@ public class ClientManagementController {
 
 	@Autowired
 	AuditUtil auditUtil;
-
-	private final String getAllOidcClientsId;
-
-	@Autowired
-	public ClientManagementController(Config config) {
-		Map<String, String> ids = config.getId();
-		this.getAllOidcClientsId = ids.get("all.oidc.clients.get");
-	}
-
-	public static final String VERSION = "1.0";
 
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
@@ -110,11 +97,7 @@ public class ClientManagementController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
-		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setId(getAllOidcClientsId);
-		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(clientManagementService.getAllOidcClients());
-		return responseWrapper;
+		return clientManagementService.getAllOidcClients();
 	}
 	
 }
