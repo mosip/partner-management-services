@@ -68,6 +68,7 @@ public class MultiPartnerServiceController {
     private final String postAddInactiveDeviceMappingToSbiId;
     private final String putDeactivateDevice;
     private final String putDeactivateSbi;
+    private final String getFtmChipDetails;
 
     public static final String VERSION = "1.0";
     public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
@@ -97,6 +98,7 @@ public class MultiPartnerServiceController {
         this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
         this.putDeactivateDevice = ids.get("deactivate.device.put");
         this.putDeactivateSbi = ids.get("deactivate.sbi.put");
+        this.getFtmChipDetails=ids.get("ftm.chip.details.get");
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
@@ -341,6 +343,22 @@ public class MultiPartnerServiceController {
         responseWrapper.setId(putDeactivateSbi);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId()));
+        return responseWrapper;
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
+    @GetMapping(value = "/ftm-chip-details")
+    @Operation(summary = "Get list of all the FTM Chip details", description = "This endpoint will fetch the list of all the FTM Chip details created by all the partner Id's associated with the logged in user")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmChipDetailsDto>> ftmChipDetails() {
+        ResponseWrapper<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setId(getFtmChipDetails);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponse(multiPartnerService.ftmChipDetails());
         return responseWrapper;
     }
 }

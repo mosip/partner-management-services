@@ -168,5 +168,7 @@ public class AuthorizedRolesDto {
 	private List<String> putdeactivatedevice;
 
 	private List<String> putdeactivatesbi;
+
+	private List<String> getftmchipdetails;
 		
 }
