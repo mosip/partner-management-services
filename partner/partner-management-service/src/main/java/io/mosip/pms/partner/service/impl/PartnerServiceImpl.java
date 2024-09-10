@@ -7,10 +7,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -24,9 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -842,25 +838,19 @@ public class PartnerServiceImpl implements PartnerService {
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(setErrorResponse(ex));
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getOriginalPartnerCertificateId);
 		responseWrapper.setVersion(VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public List<ErrorResponse> setErrorResponse(PartnerServiceException ex) {
-		String errorCode = ex.getErrorCode();
-		String errorMessage = ex.getErrorText();
-		return MultiPartnerUtil.getServiceErr(errorCode, errorMessage);
 	}
 
 	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,

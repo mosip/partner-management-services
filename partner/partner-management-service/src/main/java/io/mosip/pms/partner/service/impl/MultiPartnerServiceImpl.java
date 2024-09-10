@@ -11,7 +11,6 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
-import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
@@ -172,14 +171,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllCertificatesDetailsId);
         responseWrapper.setVersion(VERSION);
@@ -239,14 +238,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllRequestedPoliciesId);
         responseWrapper.setVersion(VERSION);
@@ -287,14 +286,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
         responseWrapper.setVersion(VERSION);
@@ -357,14 +356,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
         responseWrapper.setVersion(VERSION);
@@ -484,14 +483,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllApiKeysForAuthPartnersId);
         responseWrapper.setVersion(VERSION);
@@ -548,13 +547,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
             String errorCode = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode();
             String errorMessage = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(postSaveUserConsentGivenId);
         responseWrapper.setVersion(VERSION);
@@ -588,13 +587,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
             String errorCode = ErrorCode.PMS_CONSENT_ERR.getErrorCode();
             String errorMessage = ErrorCode.PMS_CONSENT_ERR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getUserConsentGivenId);
         responseWrapper.setVersion(VERSION);
@@ -643,14 +642,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             responseWrapper.setResponse(sbiDetailsDtoList);
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllSbiDetailsId);
         responseWrapper.setVersion(VERSION);
@@ -712,14 +711,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             responseWrapper.setResponse(approvedDeviceProviderIds);
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllApprovedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllApprovedDeviceProviderId);
         responseWrapper.setVersion(VERSION);
@@ -781,14 +780,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAllDevicesForSBIId);
         responseWrapper.setVersion(VERSION);
@@ -864,7 +863,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             deleteDeviceDetail(requestDto.getDeviceDetailId());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
@@ -872,7 +871,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             deleteDeviceDetail(requestDto.getDeviceDetailId());
             String errorCode = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode();
             String errorMessage = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
         responseWrapper.setVersion(VERSION);
@@ -953,14 +952,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorCode();
             String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(putDeactivateDevice);
         responseWrapper.setVersion(VERSION);
@@ -1050,14 +1049,14 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode();
             String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(putDeactivateSbi);
         responseWrapper.setVersion(VERSION);
@@ -1090,11 +1089,5 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         }
         return BLANK_STRING;
-    }
-
-    public List<ErrorResponse> setErrorResponse(PartnerServiceException ex) {
-        String errorCode = ex.getErrorCode();
-        String errorMessage = ex.getErrorText();
-        return MultiPartnerUtil.getServiceErr(errorCode, errorMessage);
     }
 }

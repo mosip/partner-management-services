@@ -3,7 +3,6 @@ package io.mosip.pms.partner.service.impl;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.repository.*;
-import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -86,14 +84,14 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             responseWrapper.setResponse(true);
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(setErrorResponse(ex));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorCode();
             String errorMessage = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         if (rejectFlag){
             responseWrapper.setId(postRejectDeviceWithSbiMappingId);
@@ -105,9 +103,4 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
         return responseWrapper;
     }
 
-    public List<ErrorResponse> setErrorResponse(PartnerServiceException ex) {
-        String errorCode = ex.getErrorCode();
-        String errorMessage = ex.getErrorText();
-        return MultiPartnerUtil.getServiceErr(errorCode, errorMessage);
-    }
 }

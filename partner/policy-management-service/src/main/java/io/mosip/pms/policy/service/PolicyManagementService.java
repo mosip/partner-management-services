@@ -16,8 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.mosip.pms.common.request.dto.ErrorResponse;
-import io.mosip.pms.policy.errorMessages.ServiceError;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1069,24 +1067,18 @@ public class PolicyManagementService {
 			responseWrapper.setResponse(policyGroupsList);
 		} catch (PolicyManagementServiceException ex) {
 			logger.info("sessionId", "idType", "id", "In getAllPolicyGroups method of PolicyManagementService - " + ex.getMessage());
-			responseWrapper.setErrors(setErrorResponse(ex));
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
 			logger.error("sessionId", "idType", "id",
 					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
 			String errorCode = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(PolicyUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAllPolicyGroupsId);
 		responseWrapper.setVersion(VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public List<ServiceError> setErrorResponse(PolicyManagementServiceException ex) {
-		String errorCode = ex.getErrorCode();
-		String errorMessage = ex.getErrorText();
-		return PolicyUtil.getServiceErr(errorCode, errorMessage);
 	}
 }

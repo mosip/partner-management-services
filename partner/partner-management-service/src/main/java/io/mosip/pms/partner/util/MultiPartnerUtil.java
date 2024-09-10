@@ -37,7 +37,7 @@ public class MultiPartnerUtil {
         return cert;
     }
 
-    public static List<ErrorResponse> getServiceErr(String errorCode, String errorMessage) {
+    public static List<ErrorResponse> setErrorResponse(String errorCode, String errorMessage) {
         List<ErrorResponse> errorResponseList = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode(errorCode);

@@ -48,7 +48,7 @@ public class RequestValidator {
             responseWrapper.setId(operation);
             responseWrapper.setVersion(VERSION);
             responseWrapper.setResponsetime(LocalDateTime.now());
-            responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(ex.getErrorCode(), ex.getErrorText()));
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
             return Optional.of(responseWrapper);
         }
         return Optional.empty();

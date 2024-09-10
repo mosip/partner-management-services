@@ -19,7 +19,7 @@ public class PolicyUtil {
 		return random.nextInt(100000) + "";
 	}
 
-	public static List<ServiceError> getServiceErr(String errorCode, String errorMessage) {
+	public static List<ServiceError> setErrorResponse(String errorCode, String errorMessage) {
 		List<ServiceError> serviceErrorList = new ArrayList<>();
 		ServiceError serviceError = new ServiceError();
 		serviceError.setErrorCode(errorCode);

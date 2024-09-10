@@ -678,25 +678,19 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(setErrorResponse(ex));
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAllOidcClientsId);
 		responseWrapper.setVersion(VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public List<ErrorResponse> setErrorResponse(PartnerServiceException ex) {
-		String errorCode = ex.getErrorCode();
-		String errorMessage = ex.getErrorText();
-		return MultiPartnerUtil.getServiceErr(errorCode, errorMessage);
 	}
 
 	private String getUserId() {
