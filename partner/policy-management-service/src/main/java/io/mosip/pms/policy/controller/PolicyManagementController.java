@@ -6,6 +6,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -296,6 +300,9 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
 	@GetMapping(value = "/getAllPolicyGroups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
 		response.setId(getAllPolicyGroupsId);

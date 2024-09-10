@@ -370,6 +370,9 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
 	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();

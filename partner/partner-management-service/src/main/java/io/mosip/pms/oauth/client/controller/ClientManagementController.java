@@ -105,10 +105,8 @@ public class ClientManagementController {
 	@GetMapping(value = "/getAllOidcClients")
 	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
 		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setId(getAllOidcClientsId);
