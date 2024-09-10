@@ -984,7 +984,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     FtpCertDownloadResponeDto ftpCertDownloadResponeDto = ftpChipDetailServiceImpl.getCertificate(requestDto);
                                     X509Certificate cert = MultiPartnerUtil.decodeCertificateData(ftpCertDownloadResponeDto.getCertificateData());
 
-                                    ftmChipDetailsDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
                                     ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore());
                                     ftmChipDetailsDto.setCertificateExpiryDateTime(cert.getNotAfter());
 

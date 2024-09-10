@@ -33,9 +33,6 @@ public class FtmChipDetailsDto {
     @Schema(description = "Indicates whether the FTM Chip certificate is available (true if available, false otherwise)", example = "true")
     private Boolean isCertificateAvailable;
 
-    @Schema(description = "Name of the FTM Chip certificate uploaded by the partner", example = "cert-001")
-    private String certificateName;
-
     @Schema(description = "Date and time in ISO format indicating when the FTM Chip certificate was uploaded", example = "2024-07-15T10:00:00Z")
     private Date certificateUploadDateTime;
 
