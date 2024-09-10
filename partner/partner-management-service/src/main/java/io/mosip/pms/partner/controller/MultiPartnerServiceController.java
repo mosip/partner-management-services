@@ -32,7 +32,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/partners")
-@Api(tags = { "Multi Partner Service Controller" })
+@Api(tags = {"Multi Partner Service Controller"})
 public class MultiPartnerServiceController {
 
     @Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
@@ -77,10 +77,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllCertificateDetails")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
         ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
         return  multiPartnerService.getAllCertificateDetails();
@@ -90,10 +88,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllRequestedPolicies")
     @Operation(summary = "Get all policies", description = "fetch all policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies() {
         return multiPartnerService.getAllRequestedPolicies();
     }
@@ -102,10 +98,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllApprovedAuthPartnerPolicies")
     @Operation(summary = "Get all approved auth partner policies", description = "fetch all approved auth partner policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
         return multiPartnerService.getAllApprovedAuthPartnerPolicies();
     }
@@ -114,21 +108,17 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllApprovedPartnerIdsWithPolicyGroups")
     @Operation(summary = "Get all approved partner id's with policy groups", description = "fetch all approved partner id's with policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
         return multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups();
     }
 
     @GetMapping(value = "/configs")
     @Operation(summary = "Get config", description = "Get configuration values")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<Map<String, String>> getConfigValues() {
         ResponseWrapper<Map<String, String>> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setId(getConfigsId);
@@ -149,10 +139,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllApiKeysForAuthPartners")
     @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
         return multiPartnerService.getAllApiKeysForAuthPartners();
     }
@@ -161,10 +149,8 @@ public class MultiPartnerServiceController {
     @PostMapping(value = "/saveUserConsentGiven")
     @Operation(summary = "save user consent", description = "Store the user consent in the database.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
         return multiPartnerService.saveUserConsentGiven();
     }
@@ -173,10 +159,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/isUserConsentGiven")
     @Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
         return multiPartnerService.isUserConsentGiven();
     }
@@ -185,10 +169,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllSBIDetails")
     @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails() {
         return multiPartnerService.getAllSBIDetails();
     }
@@ -197,10 +179,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/getAllApprovedDeviceProviderIds")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
         return multiPartnerService.getAllApprovedDeviceProviderIds();
     }
@@ -210,10 +190,8 @@ public class MultiPartnerServiceController {
     @Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(@PathVariable String sbiId) {
         return multiPartnerService.getAllDevicesForSBI(sbiId);
@@ -224,10 +202,8 @@ public class MultiPartnerServiceController {
     @Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postAddInactiveDeviceMappingToSbiId, requestWrapper);
@@ -242,10 +218,8 @@ public class MultiPartnerServiceController {
     @Operation(summary = "Deactivate device details", description = "Deactivate device details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(@RequestBody @Valid RequestWrapper<DeactivateDeviceRequestDto> requestWrapper) {
         Optional<ResponseWrapper<DeviceDetailResponseDto>> validationResponse = requestValidator.validate(putDeactivateDevice, requestWrapper);
@@ -260,10 +234,8 @@ public class MultiPartnerServiceController {
     @Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(@RequestBody @Valid RequestWrapper<DeactivateSbiRequestDto> requestWrapper) {
         Optional<ResponseWrapper<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(putDeactivateSbi, requestWrapper);
@@ -271,5 +243,25 @@ public class MultiPartnerServiceController {
             return validationResponse.get();
         }
         return multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId());
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
+    @GetMapping(value = "/ftm-chip-details")
+    @Operation(summary = "Get list of all the FTM Chip details", description = "This endpoint will fetch the list of all the FTM Chip details created by all the partner Id's associated with the logged in user")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmChipDetailsDto>> ftmChipDetails() {
+        return multiPartnerService.ftmChipDetails();
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedftmproviderids())")
+    @GetMapping(value = "/approved-ftm-provider-ids")
+    @Operation(summary = "Get all approved FTM providers ids.", description = "This endpoint will fetch list of all the approved FTM provider ID's mapped to the logged in user.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+    public ResponseWrapper<List<FtmProviderDto>> approvedFTMProviderIds() {
+        return multiPartnerService.approvedFTMProviderIds();
     }
 }

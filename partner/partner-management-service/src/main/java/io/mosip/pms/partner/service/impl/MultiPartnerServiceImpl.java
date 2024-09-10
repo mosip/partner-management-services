@@ -14,9 +14,14 @@ import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
+import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
+import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
+import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -38,6 +43,7 @@ import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -95,6 +101,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     @Value("${mosip.pms.api.id.deactivate.sbi.put}")
     private  String putDeactivateSbi;
 
+    @Value("${mosip.pms.api.id.ftm.chip.details.get}")
+    private String getFtmChipDetails;
+
+    @Value("${mosip.pms.api.id.approved.ftm.provider.ids.get}")
+    private String getApprovedFtmProviderIds;
+
     @Autowired
     PartnerServiceRepository partnerRepository;
 
@@ -111,6 +123,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     PartnerServiceImpl partnerServiceImpl;
 
     @Autowired
+    FTPChipDetailServiceImpl ftpChipDetailServiceImpl;
+
+    @Autowired
     UserDetailsRepository userDetailsRepository;
 
     @Autowired
@@ -121,6 +136,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     DeviceDetailRepository deviceDetailRepository;
+
+    @Autowired
+    FTPChipDetailRepository ftpChipDetailRepository;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -390,6 +408,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static boolean checkIfPartnerIsDevicePartner(Partner partner) {
         String partnerType = partner.getPartnerTypeCode();
         return partnerType.equals(DEVICE_PROVIDER);
+    }
+
+    public static boolean checkIfPartnerIsFtmPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        return partnerType.equals(FTM_PROVIDER);
     }
 
     public static void validatePartnerId(Partner partner, String userId) {
@@ -1059,6 +1082,113 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(putDeactivateSbi);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
+    }
+
+    @Override
+    public ResponseWrapper<List<FtmChipDetailsDto>> ftmChipDetails() {
+        ResponseWrapper<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapper<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
+            if (!partnerList.isEmpty()) {
+                for (Partner partner : partnerList) {
+                    if (checkIfPartnerIsFtmPartner(partner)) {
+                        validatePartnerId(partner, userId);
+                        List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository.findByProviderId(partner.getId());
+                        if(!ftpChipDetailList.isEmpty()) {
+                            for(FTPChipDetail ftpChipDetail: ftpChipDetailList) {
+                                FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
+                                // Get certificate data if available
+                                if (ftpChipDetail.getCertificateAlias() != null) {
+                                    ftmChipDetailsDto.setIsCertificateAvailable(true);
+                                    FtpChipCertDownloadRequestDto requestDto = new FtpChipCertDownloadRequestDto();
+                                    requestDto.setFtpChipDetailId(ftpChipDetail.getFtpChipDetailId());
+                                    FtpCertDownloadResponeDto ftpCertDownloadResponeDto = ftpChipDetailServiceImpl.getCertificate(requestDto);
+                                    X509Certificate cert = MultiPartnerUtil.decodeCertificateData(ftpCertDownloadResponeDto.getCertificateData());
+
+                                    ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore());
+                                    ftmChipDetailsDto.setCertificateExpiryDateTime(cert.getNotAfter());
+
+                                    // Check the certificate expiration status
+                                    LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+                                    LocalDateTime certExpiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+                                    ftmChipDetailsDto.setIsCertificateExpired(certExpiryDate.isBefore(currentDateTime));
+                                } else {
+                                    ftmChipDetailsDto.setIsCertificateAvailable(false);
+                                    ftmChipDetailsDto.setIsCertificateExpired(false);
+                                }
+                                ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
+                                ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
+                                ftmChipDetailsDto.setPartnerType(FTM_PROVIDER);
+                                ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
+                                ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
+                                ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
+                                ftmChipDetailsDto.setIsActive(ftpChipDetail.isActive());
+                                ftmChipDetailsDto.setCreatedDateTime(ftpChipDetail.getCrDtimes());
+                                ftmChipDetailsDtoList.add(ftmChipDetailsDto);
+                            }
+                        }
+                    }
+                }
+            }
+            responseWrapper.setResponse(ftmChipDetailsDtoList);
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+        }
+        responseWrapper.setId(getFtmChipDetails);
+        responseWrapper.setVersion(VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
+    }
+
+    @Override
+    public ResponseWrapper<List<FtmProviderDto>> approvedFTMProviderIds() {
+        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
+        try {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            List <FtmProviderDto> approvedFtmProviderIds = new ArrayList<>();
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            for (Partner partner : partnerList) {
+                validatePartnerId(partner, userId);
+                if (checkIfPartnerIsFtmPartner(partner)
+                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                    FtmProviderDto ftmProviderDto = new FtmProviderDto();
+                    ftmProviderDto.setPartnerId(partner.getId());
+                    ftmProviderDto.setPartnerType(partner.getPartnerTypeCode());
+
+                    approvedFtmProviderIds.add(ftmProviderDto);
+                }
+            }
+            responseWrapper.setResponse(approvedFtmProviderIds);
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+        }
+        responseWrapper.setId(getApprovedFtmProviderIds);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;

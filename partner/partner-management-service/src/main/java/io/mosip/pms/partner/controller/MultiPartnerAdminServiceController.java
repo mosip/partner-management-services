@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/admin")
-@Api(tags = { "Multi Partner Admin Service Controller" })
+@Api(tags = {"Multi Partner Admin Service Controller"})
 public class MultiPartnerAdminServiceController {
 
     public static final String VERSION = "1.0";
@@ -47,10 +47,8 @@ public class MultiPartnerAdminServiceController {
     @Operation(summary = "Approve device and activate device mapping to sbi.", description = "Approve device and activate device mapping to sbi.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postApproveDeviceWithSbiMappingId, requestWrapper);
@@ -65,10 +63,8 @@ public class MultiPartnerAdminServiceController {
     @Operation(summary = "Reject device and activate device mapping to sbi.", description = "Reject device and activate device mapping to sbi.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
         Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postRejectDeviceWithSbiMappingId, requestWrapper);
