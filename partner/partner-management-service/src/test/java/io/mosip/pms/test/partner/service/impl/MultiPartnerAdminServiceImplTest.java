@@ -122,7 +122,7 @@ public class MultiPartnerAdminServiceImplTest {
         multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, true);
     }
 
-    @Test(expected = PartnerServiceException.class)
+    @Test
     public void approveDeviceWithSbiMappingException() {
 
         SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();

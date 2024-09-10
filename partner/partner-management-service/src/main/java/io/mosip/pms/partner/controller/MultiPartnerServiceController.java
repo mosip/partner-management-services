@@ -2,7 +2,6 @@ package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.config.Config;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.partner.request.dto.DeactivateSbiRequestDto;
@@ -54,54 +53,25 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.expiry.date.max.year}")
     private String maxAllowedYear;
 
-    private final String getAllCertificatesDetailsId;
-    private final String getAllRequestedPoliciesId;
-    private final String getAllApprovedAuthPartnersPoliciesId;
-    private final String getAllApprovedPartnerIdsWithPolicyGroupsId;
-    private final String getConfigsId;
-    private final String getAllApiKeysForAuthPartners;
-    private final String postSaveUserConsentGivenId;
-    private final String getUserConsentGivenId;
-    private final String getAllSbiDetailsId;
-    private final String getAllApprovedDeviceProviderId;
-    private final String getAllDevicesForSBIId;
-    private final String postAddInactiveDeviceMappingToSbiId;
-    private final String putDeactivateDevice;
-    private final String putDeactivateSbi;
-    private final String getFtmChipDetails;
-    private final String getApprovedFtmProviderIds;
+    @Value("${mosip.pms.api.id.configs.get}")
+    private String getConfigsId;
+
+    @Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
+    private  String postAddInactiveDeviceMappingToSbiId;
+
+    @Value("${mosip.pms.api.id.deactivate.device.put}")
+    private  String putDeactivateDevice;
+
+    @Value("${mosip.pms.api.id.deactivate.sbi.put}")
+    private  String putDeactivateSbi;
 
     public static final String VERSION = "1.0";
-    public static final String ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST = "add.inactive.device.mapping.to.sbi.id.post";
-    public static final String DEACTIVATE_DEVICE_PUT = "deactivate.device.put";
-    public static final String DEACTIVATE_SBI_PUT = "deactivate.sbi.put";
 
     @Autowired
     MultiPartnerService multiPartnerService;
 
     @Autowired
     RequestValidator requestValidator;
-
-    @Autowired
-    public MultiPartnerServiceController(Config config) {
-        Map<String, String> ids = config.getId();
-        this.getAllCertificatesDetailsId = ids.get("all.certificates.details.get");
-        this.getAllRequestedPoliciesId = ids.get("all.requested.policies.get");
-        this.getAllApprovedAuthPartnersPoliciesId = ids.get("all.approved.auth.partners.policies.get");
-        this.getAllApprovedPartnerIdsWithPolicyGroupsId = ids.get("all.approved.partner.ids.with.policy.groups.get");
-        this.getConfigsId = ids.get("configs.get");
-        this.getAllApiKeysForAuthPartners = ids.get("all.api.keys.for.auth.partners.get");
-        this.postSaveUserConsentGivenId = ids.get("save.user.consent.given.post");
-        this.getUserConsentGivenId = ids.get("user.consent.given.get");
-        this.getAllSbiDetailsId = ids.get("all.sbi.details.get");
-        this.getAllApprovedDeviceProviderId = ids.get("all.approved.device.provider.ids.get");
-        this.getAllDevicesForSBIId = ids.get("all.devices.for.sbi.get");
-        this.postAddInactiveDeviceMappingToSbiId = ids.get("add.inactive.device.mapping.to.sbi.id.post");
-        this.putDeactivateDevice = ids.get("deactivate.device.put");
-        this.putDeactivateSbi = ids.get("deactivate.sbi.put");
-        this.getFtmChipDetails = ids.get("ftm.chip.details.get");
-        this.getApprovedFtmProviderIds = ids.get("approved.ftm.provider.ids.get");
-    }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
     @GetMapping(value = "/getAllCertificateDetails")
@@ -111,10 +81,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
         ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllCertificatesDetailsId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllCertificateDetails());
-        return responseWrapper;
+        return  multiPartnerService.getAllCertificateDetails();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallrequestedpolicies())")
@@ -124,11 +91,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies() {
-        ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllRequestedPoliciesId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllRequestedPolicies());
-        return responseWrapper;
+        return multiPartnerService.getAllRequestedPolicies();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedauthpartnerpolicies())")
@@ -138,11 +101,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
-        ResponseWrapper<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllApprovedAuthPartnerPolicies());
-        return responseWrapper;
+        return multiPartnerService.getAllApprovedAuthPartnerPolicies();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedpartneridswithpolicygroups())")
@@ -152,11 +111,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
-        ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups());
-        return responseWrapper;
+        return multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups();
     }
 
     @GetMapping(value = "/configs")
@@ -187,11 +142,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
-        ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllApiKeysForAuthPartners);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllApiKeysForAuthPartners());
-        return responseWrapper;
+        return multiPartnerService.getAllApiKeysForAuthPartners();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
@@ -201,11 +152,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
-        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(postSaveUserConsentGivenId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.saveUserConsentGiven());
-        return responseWrapper;
+        return multiPartnerService.saveUserConsentGiven();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
@@ -215,11 +162,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
-        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getUserConsentGivenId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
-        return responseWrapper;
+        return multiPartnerService.isUserConsentGiven();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
@@ -229,11 +172,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails() {
-        ResponseWrapper<List<SbiDetailsDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllSbiDetailsId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllSBIDetails());
-        return responseWrapper;
+        return multiPartnerService.getAllSBIDetails();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
@@ -243,11 +182,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
-        ResponseWrapper<List<DeviceProviderDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllApprovedDeviceProviderId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllApprovedDeviceProviderIds());
-        return responseWrapper;
+        return multiPartnerService.getAllApprovedDeviceProviderIds();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
@@ -259,11 +194,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(@PathVariable String sbiId) {
-        ResponseWrapper<List<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getAllDevicesForSBIId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.getAllDevicesForSBI(sbiId));
-        return responseWrapper;
+        return multiPartnerService.getAllDevicesForSBI(sbiId);
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
@@ -275,13 +206,11 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(ADD_INACTIVE_DEVICE_MAPPING_TO_SBI_POST, requestWrapper.getId());
-        requestValidator.validate(requestWrapper);
-        responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest()));
-        return responseWrapper;
+        Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postAddInactiveDeviceMappingToSbiId, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+        return multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest());
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatedevice())")
@@ -293,13 +222,11 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(@RequestBody @Valid RequestWrapper<DeactivateDeviceRequestDto> requestWrapper) {
-        ResponseWrapper<DeviceDetailResponseDto> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(DEACTIVATE_DEVICE_PUT, requestWrapper.getId());
-        requestValidator.validate(requestWrapper);
-        responseWrapper.setId(putDeactivateDevice);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.deactivateDevice(requestWrapper.getRequest().getDeviceId()));
-        return responseWrapper;
+        Optional<ResponseWrapper<DeviceDetailResponseDto>> validationResponse = requestValidator.validate(putDeactivateDevice, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+        return multiPartnerService.deactivateDevice(requestWrapper.getRequest().getDeviceId());
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatesbi())")
@@ -311,13 +238,11 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(@RequestBody @Valid RequestWrapper<DeactivateSbiRequestDto> requestWrapper) {
-        ResponseWrapper<SbiDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
-        requestValidator.validateId(DEACTIVATE_SBI_PUT, requestWrapper.getId());
-        requestValidator.validate(requestWrapper);
-        responseWrapper.setId(putDeactivateSbi);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId()));
-        return responseWrapper;
+        Optional<ResponseWrapper<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(putDeactivateSbi, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+        return multiPartnerService.deactivateSbi(requestWrapper.getRequest().getSbiId());
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
@@ -327,11 +252,7 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<FtmChipDetailsDto>> ftmChipDetails() {
-        ResponseWrapper<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getFtmChipDetails);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.ftmChipDetails());
-        return responseWrapper;
+        return multiPartnerService.ftmChipDetails();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedftmproviderids())")
@@ -341,10 +262,6 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<List<FtmProviderDto>> approvedFTMProviderIds() {
-        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getApprovedFtmProviderIds);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.approvedFTMProviderIds());
-        return responseWrapper;
+        return multiPartnerService.approvedFTMProviderIds();
     }
 }

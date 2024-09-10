@@ -71,11 +71,6 @@ public class PolicyManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getAllPolicyGroupsId;
-
-	public static final String VERSION = "1.0";
-
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
 	@Operation(summary = "Service to create a new policy group", description = "Service to craete a new policy group")
@@ -304,12 +299,6 @@ public class PolicyManagementController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
-		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
-		response.setId(getAllPolicyGroupsId);
-		response.setVersion(VERSION);
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		response.setResponse(policyManagementService.getAllPolicyGroups());
-		logger.info("Returning response from PolicyManagementController.");
-		return response;
+		return policyManagementService.getAllPolicyGroups();
 	}
 }

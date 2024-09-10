@@ -3,31 +3,29 @@ package io.mosip.pms.partner.util;
 import io.micrometer.core.lang.NonNull;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class RequestValidator {
 
-    @Resource
-    protected Map<String, String> id;
     public static final String VERSION = "1.0";
 
     private static final Logger LOGGER = PMSLogger.getLogger(RequestValidator.class);
 
     public void validateId(String operation, String requestId) {
         if (Objects.nonNull(requestId)) {
-            if (!requestId.equals(id.get(operation))) {
+            if (!requestId.equals(operation)) {
                 LOGGER.error("", "", "validateId", "\n" + "Id is not correct");
                 throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_ID.getErrorCode(),
                         ErrorCode.INVALID_REQUEST_ID.getErrorMessage());
@@ -39,11 +37,21 @@ public class RequestValidator {
         }
     }
 
-    public void validate(@NonNull Object target) {
-        RequestWrapper<Object> request = (RequestWrapper<Object>) target;
-        validateReqTime(request.getRequesttime());
-        validateVersion(request.getVersion());
-        validateRequest(request.getRequest());
+    public <T> Optional<ResponseWrapper<T>> validate(@NonNull String operation, RequestWrapper<?> requestWrapper) {
+        try {
+            validateId(operation, requestWrapper.getId());
+            validateReqTime(requestWrapper.getRequesttime());
+            validateVersion(requestWrapper.getVersion());
+            validateRequest(requestWrapper.getRequest());
+        } catch (PartnerServiceException ex) {
+            ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
+            responseWrapper.setId(operation);
+            responseWrapper.setVersion(VERSION);
+            responseWrapper.setResponsetime(LocalDateTime.now());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+            return Optional.of(responseWrapper);
+        }
+        return Optional.empty();
     }
 
     protected void validateReqTime(LocalDateTime reqTime) {
