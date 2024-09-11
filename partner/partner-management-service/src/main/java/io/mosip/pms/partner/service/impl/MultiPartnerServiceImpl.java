@@ -1123,7 +1123,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                 }
                                 ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
                                 ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
-                                ftmChipDetailsDto.setPartnerType(FTM_PROVIDER);
                                 ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
                                 ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
                                 ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
@@ -1171,7 +1170,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                     FtmProviderDto ftmProviderDto = new FtmProviderDto();
                     ftmProviderDto.setPartnerId(partner.getId());
-                    ftmProviderDto.setPartnerType(partner.getPartnerTypeCode());
 
                     approvedFtmProviderIds.add(ftmProviderDto);
                 }
