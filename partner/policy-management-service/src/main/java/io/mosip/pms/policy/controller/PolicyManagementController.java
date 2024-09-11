@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -298,7 +299,7 @@ public class PolicyManagementController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
+	public ResponseWrapperV2<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		return policyManagementService.getAllPolicyGroups();
 	}
 }

@@ -11,7 +11,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -326,9 +328,9 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getOriginalPartnerCertificateTest() throws Exception{
-        ResponseWrapper<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapper<>();
+        ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
         OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
-        RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
+        RequestWrapperV2<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapperV2<>();
         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
         requestWrapper.setRequest(requestDto);
         responseWrapper.setResponse(originalCertDownloadResponseDto);

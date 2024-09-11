@@ -13,6 +13,7 @@ import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
@@ -275,7 +276,7 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
 		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
 
-		ResponseWrapper<OriginalCertDownloadResponseDto> originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(originalCertDownloadResponseDto);
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}

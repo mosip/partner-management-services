@@ -3,7 +3,7 @@ package io.mosip.pms.partner.service.impl;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.repository.*;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
@@ -48,8 +48,8 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     MultiPartnerHelper multiPartnerHelper;
 
     @Override
-    public ResponseWrapper<Boolean> approveOrRejectDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<Boolean> approveOrRejectDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         try {
             String partnerId = requestDto.getPartnerId();
             String sbiId = requestDto.getSbiId();
@@ -99,7 +99,6 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             responseWrapper.setId(postApproveDeviceWithSbiMappingId);
         }
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 

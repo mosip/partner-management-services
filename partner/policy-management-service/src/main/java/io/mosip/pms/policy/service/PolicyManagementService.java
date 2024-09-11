@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1054,8 +1055,8 @@ public class PolicyManagementService {
 
 	}
 
-	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() {
-		ResponseWrapper<List<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
+	public ResponseWrapperV2<List<PolicyGroup>> getAllPolicyGroups() {
+		ResponseWrapperV2<List<PolicyGroup>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			List<PolicyGroup> policyGroupsList;
 			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
@@ -1078,7 +1079,6 @@ public class PolicyManagementService {
 		}
 		responseWrapper.setId(getAllPolicyGroupsId);
 		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
 }

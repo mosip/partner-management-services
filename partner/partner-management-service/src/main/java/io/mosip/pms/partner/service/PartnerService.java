@@ -15,6 +15,7 @@ import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
@@ -125,7 +126,7 @@ public interface PartnerService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
 
     /**
      * Function to add biometric extractors 
