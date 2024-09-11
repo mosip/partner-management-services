@@ -8,7 +8,4 @@ public class FtmProviderDto {
 
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
-
-    @Schema(description = "Type of partner", example = "FTM_PROVIDER")
-    private String partnerType;
 }
