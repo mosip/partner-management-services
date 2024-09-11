@@ -6,8 +6,10 @@ import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
+import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
@@ -65,6 +67,9 @@ public class MultiPartnerServiceImplTest {
 
     @MockBean
     DeviceDetailRepository deviceDetailRepository;
+
+    @MockBean
+    FTPChipDetailRepository ftpChipDetailRepository;
 
     @Mock
     Environment environment;
@@ -1106,6 +1111,69 @@ public class MultiPartnerServiceImplTest {
         SecureBiometricInterface sbi = new SecureBiometricInterface();
         when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(sbi));
         multiPartnerServiceImpl.deactivateDevice("23456");
+    }
+
+    @Test
+    public void ftmChipDetailsTest() throws Exception {
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("FTM_Provider");
+        partner.setApprovalStatus("approved");
+        partner.setCertificateAlias("abs");
+        partnerList.add(partner);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<FTPChipDetail> ftpChipDetailList = new ArrayList<>();
+        FTPChipDetail ftpChipDetail = new FTPChipDetail();
+        ftpChipDetail.setFtpChipDetailId("xxx");
+        ftpChipDetail.setFtpProviderId("123");
+        ftpChipDetail.setMake("make");
+        ftpChipDetail.setModel("model");
+        ftpChipDetail.setApprovalStatus("approved");
+        ftpChipDetail.setActive(true);
+        ftpChipDetail.setCrDtimes(LocalDateTime.now());
+        ftpChipDetail.setCertificateAlias("");
+        ftpChipDetailList.add(ftpChipDetail);
+        when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
+        multiPartnerServiceImpl.ftmChipDetails();
+    }
+
+    @Test
+    public void ftmChipDetailsExceptionTest() throws Exception {
+        multiPartnerServiceImpl.ftmChipDetails();
+    }
+
+    @Test
+    public void approvedFTMProviderIdsTest() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("FTM_Provider");
+        partner.setApprovalStatus("approved");
+        partner.setIsActive(true);
+        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        multiPartnerServiceImpl.approvedFTMProviderIds();
+    }
+
+    @Test
+    public void approvedFTMProviderIdsExceptionTest() throws Exception {
+        multiPartnerServiceImpl.approvedFTMProviderIds();
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
