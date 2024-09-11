@@ -232,4 +232,28 @@ public class MultiPartnerServiceControllerTest {
         Mockito.when(multiPartnerService.deactivateSbi(Mockito.any())).thenReturn(responseWrapper);
         ResponseWrapper<SbiDetailsResponseDto> response = multiPartnerServiceController.deactivateSbi(requestWrapper);
     }
+
+    @Test
+    @WithMockUser(roles = {"FTM_PROVIDER"})
+    public void ftmChipDetailsTest() throws Exception {
+        ResponseWrapper<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapper<>();
+        List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
+        FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
+        ftmChipDetailsDtoList.add(ftmChipDetailsDto);
+        responseWrapper.setResponse(ftmChipDetailsDtoList);
+        Mockito.when(multiPartnerService.ftmChipDetails()).thenReturn(responseWrapper);
+        ResponseWrapper<List<FtmChipDetailsDto>> response = multiPartnerServiceController.ftmChipDetails();
+    }
+
+    @Test
+    @WithMockUser(roles = {"FTM_PROVIDER"})
+    public void approvedFTMProviderIdsTest() throws Exception {
+        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
+        List<FtmProviderDto> ftmProviderDtoList = new ArrayList<>();
+        FtmProviderDto ftmProviderDto = new FtmProviderDto();
+        ftmProviderDtoList.add(ftmProviderDto);
+        responseWrapper.setResponse(ftmProviderDtoList);
+        Mockito.when(multiPartnerService.approvedFTMProviderIds()).thenReturn(responseWrapper);
+        ResponseWrapper<List<FtmProviderDto>> response = multiPartnerServiceController.approvedFTMProviderIds();
+    }
 }
