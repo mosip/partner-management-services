@@ -43,8 +43,8 @@ public class MultiPartnerHelper {
                     ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
         } else if (!(secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && secureBiometricInterface.get().isActive())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
-                    ErrorCode.SBI_NOT_APPROVED.getErrorMessage());
+            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorCode(),
+                    ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorMessage());
         } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
             throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
