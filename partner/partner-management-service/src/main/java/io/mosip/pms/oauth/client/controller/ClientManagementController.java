@@ -1,4 +1,5 @@
 package io.mosip.pms.oauth.client.controller;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -94,7 +95,7 @@ public class ClientManagementController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
+	public ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients() {
 		return clientManagementService.getAllOidcClients();
 	}
 	

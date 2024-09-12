@@ -19,12 +19,12 @@ public class PolicyUtil {
 		return random.nextInt(100000) + "";
 	}
 
-	public static List<ServiceError> setErrorResponse(String errorCode, String errorMessage) {
-		List<ServiceError> serviceErrorList = new ArrayList<>();
-		ServiceError serviceError = new ServiceError();
-		serviceError.setErrorCode(errorCode);
-		serviceError.setMessage(errorMessage);
-		serviceErrorList.add(serviceError);
-		return serviceErrorList;
+	public static List<ErrorResponse> setErrorResponse(String errorCode, String errorMessage) {
+		List<ErrorResponse> errorResponseList = new ArrayList<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(errorCode);
+		errorResponse.setMessage(errorMessage);
+		errorResponseList.add(errorResponse);
+		return errorResponseList;
 	}
 }

@@ -11,6 +11,7 @@ import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -622,8 +623,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
-		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
+	public ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients() {
+		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
@@ -689,7 +690,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		responseWrapper.setId(getAllOidcClientsId);
 		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
 

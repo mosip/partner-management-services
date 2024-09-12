@@ -3,7 +3,7 @@ package io.mosip.pms.partner.util;
 import io.micrometer.core.lang.NonNull;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -37,17 +37,16 @@ public class RequestValidator {
         }
     }
 
-    public <T> Optional<ResponseWrapper<T>> validate(@NonNull String operation, RequestWrapper<?> requestWrapper) {
+    public <T> Optional<ResponseWrapperV2<T>> validate(@NonNull String operation, RequestWrapper<?> requestWrapper) {
         try {
             validateId(operation, requestWrapper.getId());
             validateReqTime(requestWrapper.getRequesttime());
             validateVersion(requestWrapper.getVersion());
             validateRequest(requestWrapper.getRequest());
         } catch (PartnerServiceException ex) {
-            ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
+            ResponseWrapperV2<T> responseWrapper = new ResponseWrapperV2<>();
             responseWrapper.setId(operation);
             responseWrapper.setVersion(VERSION);
-            responseWrapper.setResponsetime(LocalDateTime.now());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
             return Optional.of(responseWrapper);
         }
