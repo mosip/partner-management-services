@@ -657,12 +657,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
             responseWrapper.setResponse(sbiDetailsDtoList);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
@@ -803,12 +803,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 responseWrapper.setResponse(deviceDetailDtoList);
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In sbiDevices method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In sbiDevices method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
@@ -884,13 +884,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
             responseWrapper.setResponse(true);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In inactiveMappingDeviceToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             deleteDeviceDetail(requestDto.getDeviceDetailId());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In inactiveMappingDeviceToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             deleteDeviceDetail(requestDto.getDeviceDetailId());
             String errorCode = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode();
             String errorMessage = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage();
