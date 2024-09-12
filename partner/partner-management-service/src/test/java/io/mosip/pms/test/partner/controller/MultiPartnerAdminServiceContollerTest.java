@@ -1,6 +1,6 @@
 package io.mosip.pms.test.partner.controller;
 
-import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.MultiPartnerAdminServiceController;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
@@ -39,9 +39,9 @@ public class MultiPartnerAdminServiceContollerTest {
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveDeviceWithSbiMapping() throws Exception {
-        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequesttime(LocalDateTime.now());
+        requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
@@ -53,9 +53,9 @@ public class MultiPartnerAdminServiceContollerTest {
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void rejectDeviceWithSbiMapping() throws Exception {
-        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequesttime(LocalDateTime.now());
+        requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
