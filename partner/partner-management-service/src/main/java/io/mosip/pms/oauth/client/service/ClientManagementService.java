@@ -1,6 +1,7 @@
 package io.mosip.pms.oauth.client.service;
 
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.oauth.client.dto.*;
 
 import java.util.List;
@@ -54,5 +55,5 @@ public interface ClientManagementService {
 	ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception;
 
-    ResponseWrapper<List<OidcClientDto>> getAllOidcClients();
+    ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients();
 }

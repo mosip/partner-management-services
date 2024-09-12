@@ -11,7 +11,7 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
@@ -147,8 +147,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     MultiPartnerHelper multiPartnerHelper;
 
     @Override
-    public ResponseWrapper<List<CertificateDto>> getAllCertificateDetails() {
-        ResponseWrapper<List<CertificateDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<CertificateDto>> getAllCertificateDetails() {
+        ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -200,13 +200,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllCertificatesDetailsId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<PolicyDto>> getAllRequestedPolicies() {
-        ResponseWrapper<List<PolicyDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<PolicyDto>> getAllRequestedPolicies() {
+        ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -267,13 +266,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllRequestedPoliciesId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
-        ResponseWrapper<List<PolicyGroupDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
+        ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -315,13 +313,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
-        ResponseWrapper<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
+        ResponseWrapperV2<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -385,7 +382,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
@@ -451,8 +447,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public ResponseWrapper<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
-        ResponseWrapper<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
+        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -517,7 +513,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllApiKeysForAuthPartnersId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
@@ -527,8 +522,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public ResponseWrapper<UserDetailsDto> saveUserConsentGiven() {
-        ResponseWrapper<UserDetailsDto> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<UserDetailsDto> saveUserConsentGiven() {
+        ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -580,13 +575,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(postSaveUserConsentGivenId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<UserDetailsDto> isUserConsentGiven() {
-        ResponseWrapper<UserDetailsDto> responseWrapper =  new ResponseWrapper<>();
+    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
+        ResponseWrapperV2<UserDetailsDto> responseWrapper =  new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -620,13 +614,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getUserConsentGivenId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<SbiDetailsDto>> getAllSBIDetails() {
-        ResponseWrapper<List<SbiDetailsDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<SbiDetailsDto>> getAllSBIDetails() {
+        ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -676,7 +669,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllSbiDetailsId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
@@ -709,8 +701,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public ResponseWrapper<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
-        ResponseWrapper<List<DeviceProviderDto>> responseWrapper =  new ResponseWrapper<>();
+    public ResponseWrapperV2<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
+        ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper =  new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -745,13 +737,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllApprovedDeviceProviderId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<DeviceDetailDto>> getAllDevicesForSBI(String sbiId) {
-        ResponseWrapper<List<DeviceDetailDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSBI(String sbiId) {
+        ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -814,13 +805,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getAllDevicesForSBIId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<Boolean> addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<Boolean> addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         try {
             String partnerId = requestDto.getPartnerId();
             String sbiId = requestDto.getSbiId();
@@ -898,7 +888,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
@@ -912,8 +901,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
     
     @Override
-    public ResponseWrapper<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId) {
-        ResponseWrapper<DeviceDetailResponseDto> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId) {
+        ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -986,13 +975,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(putDeactivateDevice);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
-        ResponseWrapper<SbiDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
+        ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -1083,13 +1071,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(putDeactivateSbi);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<FtmChipDetailsDto>> ftmChipDetails() {
-        ResponseWrapper<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails() {
+        ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -1148,13 +1135,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getFtmChipDetails);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapper<List<FtmProviderDto>> approvedFTMProviderIds() {
-        ResponseWrapper<List<FtmProviderDto>> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapperV2<List<FtmProviderDto>> approvedFTMProviderIds() {
+        ResponseWrapperV2<List<FtmProviderDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -1188,7 +1174,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         }
         responseWrapper.setId(getApprovedFtmProviderIds);
         responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
 

@@ -1,7 +1,7 @@
 package io.mosip.pms.partner.controller;
 
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerAdminService;
 import io.mosip.pms.partner.util.RequestValidator;
@@ -50,8 +50,8 @@ public class MultiPartnerAdminServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapper<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postApproveDeviceWithSbiMappingId, requestWrapper);
+    public ResponseWrapperV2<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postApproveDeviceWithSbiMappingId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
@@ -66,8 +66,8 @@ public class MultiPartnerAdminServiceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapper<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        Optional<ResponseWrapper<Boolean>> validationResponse = requestValidator.validate(postRejectDeviceWithSbiMappingId, requestWrapper);
+    public ResponseWrapperV2<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postRejectDeviceWithSbiMappingId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
