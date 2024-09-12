@@ -30,11 +30,11 @@ public class MultiPartnerAdminServiceController {
 
     public static final String VERSION = "1.0";
 
-    @Value("${mosip.pms.api.id.approve.device.with.sbi.mapping.post:mosip.approve.device.with.sbi.mapping.post}")
-    private String postApproveDeviceWithSbiMappingId;
+    @Value("${mosip.pms.api.id.approve.mapping.device.to.sbi.post:mosip.approve.mapping.device.to.sbi.post}")
+    private String postApproveMappingDeviceToSbiId;
 
-    @Value("${mosip.pms.api.id.reject.device.with.sbi.mapping.post:mosip.reject.device.with.sbi.mapping.post}")
-    private String postRejectDeviceWithSbiMappingId;
+    @Value("${mosip.pms.api.id.reject.mapping.device.to.sbi.post:mosip.reject.mapping.device.to.sbi.post}")
+    private String postRejectMappingDeviceToSbiId;
 
     @Autowired
     MultiPartnerAdminService multiPartnerAdminService;
@@ -43,34 +43,34 @@ public class MultiPartnerAdminServiceController {
     RequestValidator requestValidator;
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
-    @PostMapping(value = "/approveDeviceWithSbiMapping")
+    @PostMapping(value = "/approve-mapping-device-to-sbi")
     @Operation(summary = "Approve device and activate device mapping to sbi.", description = "Approve device and activate device mapping to sbi.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapperV2<Boolean> approveDeviceWithSbiMapping(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postApproveDeviceWithSbiMappingId, requestWrapper);
+    public ResponseWrapperV2<Boolean> approveMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postApproveMappingDeviceToSbiId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
-        return multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), false);
+        return multiPartnerAdminService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest(), false);
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
-    @PostMapping(value = "/rejectDeviceWithSbiMapping")
+    @PostMapping(value = "/reject-mapping-device-to-sbi")
     @Operation(summary = "Reject device and activate device mapping to sbi.", description = "Reject device and activate device mapping to sbi.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseWrapperV2<Boolean> rejectDeviceWithSbiMapping(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
-        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postRejectDeviceWithSbiMappingId, requestWrapper);
+    public ResponseWrapperV2<Boolean> rejectMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+        Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postRejectMappingDeviceToSbiId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
-        return multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), true);
+        return multiPartnerAdminService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest(), true);
     }
 }

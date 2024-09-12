@@ -29,11 +29,11 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     public static final String APPROVED = "approved";
     public static final String VERSION = "1.0";
 
-    @Value("${mosip.pms.api.id.approve.device.with.sbi.mapping.post:mosip.approve.device.with.sbi.mapping.post}")
-    private String postApproveDeviceWithSbiMappingId;
+    @Value("${mosip.pms.api.id.approve.mapping.device.to.sbi.post}")
+    private String postApproveMappingDeviceToSbiId;
 
-    @Value("${mosip.pms.api.id.reject.device.with.sbi.mapping.post:mosip.reject.device.with.sbi.mapping.post}")
-    private String postRejectDeviceWithSbiMappingId;
+    @Value("${mosip.pms.api.id.reject.mapping.device.to.sbi.post}")
+    private String postRejectMappingDeviceToSbiId;
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -48,7 +48,7 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     MultiPartnerHelper multiPartnerHelper;
 
     @Override
-    public ResponseWrapperV2<Boolean> approveOrRejectDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
+    public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         try {
             String partnerId = requestDto.getPartnerId();
@@ -94,9 +94,9 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         if (rejectFlag){
-            responseWrapper.setId(postRejectDeviceWithSbiMappingId);
+            responseWrapper.setId(postRejectMappingDeviceToSbiId);
         } else {
-            responseWrapper.setId(postApproveDeviceWithSbiMappingId);
+            responseWrapper.setId(postApproveMappingDeviceToSbiId);
         }
         responseWrapper.setVersion(VERSION);
         return responseWrapper;

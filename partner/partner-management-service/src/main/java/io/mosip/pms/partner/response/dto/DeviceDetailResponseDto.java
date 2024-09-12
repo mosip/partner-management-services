@@ -6,5 +6,5 @@ import lombok.Data;
 public class DeviceDetailResponseDto {
     private String deviceId;
     private String status;
-    private boolean active;
+    private boolean isActive;
 }
