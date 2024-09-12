@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -812,9 +813,9 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		ResponseWrapper<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapper<>();
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			OriginalCertDownloadResponseDto responseDto = null;
 			responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
@@ -849,7 +850,6 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		responseWrapper.setId(getOriginalPartnerCertificateId);
 		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
 
