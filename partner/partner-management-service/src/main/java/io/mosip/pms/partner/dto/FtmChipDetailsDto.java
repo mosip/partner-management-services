@@ -15,9 +15,6 @@ public class FtmChipDetailsDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
-    @Schema(description = "Type of partner - FTM_PROVIDER", example = "FTM_PROVIDER")
-    private String partnerType;
-
     @Schema(description = "Make of the FTM chip", example = "make-123")
     private String make;
 
