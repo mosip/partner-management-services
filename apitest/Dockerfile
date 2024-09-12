@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM mosipdev/openjdk-21-jre:latest
 
 ARG SOURCE
 ARG COMMIT_HASH
@@ -28,22 +28,21 @@ WORKDIR /home/${container_user}
 
 ENV work_dir=/home/${container_user}
 
-ADD ./apitest/target/ $work_dir
-
-ADD entrypoint.sh $work_dir/entrypoint.sh
+# Combine all necessary files into a single COPY command
+COPY ./apitest/target $work_dir/
+COPY entrypoint.sh $work_dir
 
 # install packages and create user
 RUN apt-get -y update \
-&& apt-get install -y unzip jq \
+&& apt-get install -y unzip jq curl \
 && groupadd -g ${container_user_gid} ${container_user_group} \
-&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/bash -m ${container_user} \
 && curl -LO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+&& mkdir -p /home/${container_user} \
 && chmod +x kubectl $work_dir/entrypoint.sh \
-&& chown -R ${container_user}:${container_user} /home/${container_user} /usr/local/openjdk-11/lib/security/cacerts \
-&& chmod 644 /usr/local/openjdk-11/lib/security/cacerts \
-&& mv kubectl /usr/local/bin/
-
-#ADD ./testNgXmlFiles/ $work_dir/testNgXmlFiles/
+&& mv kubectl /usr/local/bin/ \
+&& chown -R ${container_user}:${container_user} /home/${container_user} /etc/ssl/certs/java/cacerts \
+&& chmod 644 /etc/ssl/certs/java/cacerts
 
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
