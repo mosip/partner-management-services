@@ -132,26 +132,26 @@ public class MultiPartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllSBIDetailsTest() throws Exception {
+    public void sbiDetailsTest() throws Exception {
         ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
         SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
         sbiDetailsDtoList.add(sbiDetailsDto);
         responseWrapper.setResponse(sbiDetailsDtoList);
-        Mockito.when(multiPartnerService.getAllSBIDetails()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<SbiDetailsDto>> response = multiPartnerServiceController.getAllSBIDetails();
+        Mockito.when(multiPartnerService.sbiDetails()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<SbiDetailsDto>> response = multiPartnerServiceController.sbiDetails();
     }
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllApprovedDeviceProviderIdsTest() throws Exception {
+    public void approvedDeviceProviderIdsTest() throws Exception {
         ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper = new ResponseWrapperV2<>();
         List<DeviceProviderDto> deviceProviderDtos = new ArrayList<>();
         DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
         deviceProviderDtos.add(deviceProviderDto);
         responseWrapper.setResponse(deviceProviderDtos);
-        Mockito.when(multiPartnerService.getAllApprovedDeviceProviderIds()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<DeviceProviderDto>> response = multiPartnerServiceController.getAllApprovedDeviceProviderIds();
+        Mockito.when(multiPartnerService.approvedDeviceProviderIds()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<DeviceProviderDto>> response = multiPartnerServiceController.approvedDeviceProviderIds();
     }
 
     @Test
@@ -179,27 +179,27 @@ public class MultiPartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void addInactiveDeviceMappingToSbi() throws Exception {
+    public void inactiveMappingDeviceToSbi() throws Exception {
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setVersion(VERSION);
         requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        Mockito.when(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
-        ResponseWrapperV2<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
+        Mockito.when(multiPartnerService.inactiveMappingDeviceToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
+        ResponseWrapperV2<Boolean> response = multiPartnerServiceController.inactiveMappingDeviceToSbi(requestWrapper);
     }
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllDevicesForSBITest() throws Exception {
+    public void sbiDevicesTest() throws Exception {
         ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
         List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
         DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
         deviceDetailDtoList.add(deviceDetailDto);
         responseWrapper.setResponse(deviceDetailDtoList);
-        Mockito.when(multiPartnerService.getAllDevicesForSBI(Mockito.any())).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<DeviceDetailDto>> response = multiPartnerServiceController.getAllDevicesForSBI("abc");
+        Mockito.when(multiPartnerService.sbiDevices(Mockito.any())).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<DeviceDetailDto>> response = multiPartnerServiceController.sbiDevices("abc");
     }
 
     @Test
