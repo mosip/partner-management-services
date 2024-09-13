@@ -83,12 +83,12 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
             responseWrapper.setResponse(true);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In approveOrRejectMappingDeviceToSbi method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In approveOrRejectDeviceWithSbiMapping method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
+                    "In approveOrRejectMappingDeviceToSbi method of MultiPartnerAdminServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorCode();
             String errorMessage = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
