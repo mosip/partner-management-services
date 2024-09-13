@@ -8,8 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -59,8 +69,21 @@ import io.mosip.pms.device.util.AuditUtil;
 
 @Component
 @Transactional
-public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {	
-	
+public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
+
+	private static final Logger LOGGER = PMSLogger.getLogger(SecureBiometricInterfaceServiceImpl.class);
+	public static final String BLANK_STRING = "";
+	public static final String VERSION = "1.0";
+	public static final String DEVICE_PROVIDER = "Device_Provider";
+	public static final String APPROVED = "approved";
+	public static final String REJECTED = "rejected";
+
+	@Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
+	private  String getSbiDevicesId;
+
+	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
+	private  String postDeactivateSbi;
+
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
 
@@ -592,5 +615,204 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			filterResponseDto.setFilters(columnValueList);
 		}
 		return filterResponseDto;
+	}
+
+	@Override
+	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId) {
+		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
+			Optional<SecureBiometricInterface> secureBiometricInterface = sbiRepository.findById(sbiId);
+
+			if (secureBiometricInterface.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
+						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
+			}
+
+			SecureBiometricInterface sbi = secureBiometricInterface.get();
+			// check if partnerId is associated with user
+			boolean partnerIdExists = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(sbi.getProviderId())) {
+					validatePartnerId(partner, userId);
+					validateDevicePartnerType(partner, userId);
+					partnerIdExists = true;
+					break;
+				}
+			}
+			if (!partnerIdExists) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			// fetch devices list
+			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
+			if (!deviceDetailSBIList.isEmpty()) {
+				List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+				for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
+					Optional<DeviceDetail> optionalDeviceDetail = deviceDetailRepository.
+							findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
+					if (optionalDeviceDetail.isPresent()) {
+						DeviceDetail deviceDetail = optionalDeviceDetail.get();
+						DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
+						deviceDetailDto.setId(deviceDetail.getId());
+						deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
+						deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
+						deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
+						deviceDetailDto.setMake(deviceDetail.getMake());
+						deviceDetailDto.setModel(deviceDetail.getModel());
+						deviceDetailDto.setStatus(deviceDetail.getApprovalStatus());
+						deviceDetailDto.setActive(deviceDetail.getIsActive());
+						deviceDetailDto.setCreatedDateTime(deviceDetail.getCrDtimes());
+
+						deviceDetailDtoList.add(deviceDetailDto);
+					}
+				}
+				responseWrapper.setResponse(deviceDetailDtoList);
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getSbiDevicesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public static void validatePartnerId(Partner partner, String userId) {
+		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+			LOGGER.info("Partner Id is null or empty for user id : " + userId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+		}
+	}
+
+	private void validateDevicePartnerType(Partner partner, String userId) {
+		if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER)) {
+			LOGGER.info("Invalid Partner type for partner id : " + partner.getId());
+			throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorCode(),
+					ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorMessage());
+		}
+	}
+
+	@Override
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
+		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
+			if (Objects.isNull(sbiId)) {
+				LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
+				throw new PartnerServiceException(ErrorCode.INVALID_SBI_ID.getErrorCode(),
+						ErrorCode.INVALID_SBI_ID.getErrorMessage());
+			}
+			Optional<SecureBiometricInterface> secureBiometricInterface = sbiRepository.findById(sbiId);
+			if (!secureBiometricInterface.isPresent()) {
+				LOGGER.error("SBI not exists with id {}", sbiId);
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
+						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
+			}
+			SecureBiometricInterface sbi = secureBiometricInterface.get();
+			// check if the SBI is associated with user.
+			String sbiProviderId = sbi.getProviderId();
+			boolean sbiProviderExist = false;
+			Partner partnerDetails = new Partner();
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(sbiProviderId)) {
+					validatePartnerId(partner, userId);
+					sbiProviderExist = true;
+					partnerDetails = partner;
+					break;
+				}
+			}
+			if (!sbiProviderExist) {
+				LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			//check if Partner is Active or not
+			if (!partnerDetails.getIsActive()) {
+				LOGGER.error("Partner is not Active with id {}", sbiProviderId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+			// Deactivate only if the SBI is approved and is_active true.
+			if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
+				// Deactivate approved devices
+				List <DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
+				if (!approvedDevices.isEmpty()) {
+					for (DeviceDetail deviceDetail: approvedDevices) {
+						deviceDetail.setIsActive(false);
+						deviceDetailRepository.save(deviceDetail);
+					}
+				}
+				// Reject pending_approval devices
+				List <DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
+				if (!pendingApprovalDevices.isEmpty()) {
+					for (DeviceDetail deviceDetail: pendingApprovalDevices) {
+						deviceDetail.setApprovalStatus(REJECTED);
+						deviceDetailRepository.save(deviceDetail);
+					}
+				}
+				sbi.setActive(false);
+				SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
+				SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
+
+				sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
+				sbiDetailsResponseDto.setSbiVersion(updatedSbi.getSwVersion());
+				sbiDetailsResponseDto.setStatus(updatedSbi.getApprovalStatus());
+				sbiDetailsResponseDto.setActive(updatedSbi.isActive());
+
+				responseWrapper.setResponse(sbiDetailsResponseDto);
+			} else {
+				LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
+				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorCode(),
+						ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorMessage());
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postDeactivateSbi);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
 	}
 }

@@ -1,15 +1,8 @@
 package io.mosip.pms.test.partner.controller;
 
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
-import io.mosip.pms.partner.request.dto.DeactivateDeviceRequestDto;
-import io.mosip.pms.partner.request.dto.DeactivateSbiRequestDto;
-import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
-import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
 import org.junit.Test;
@@ -24,7 +17,6 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,26 +124,26 @@ public class MultiPartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllSBIDetailsTest() throws Exception {
+    public void sbiDetailsTest() throws Exception {
         ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
         SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
         sbiDetailsDtoList.add(sbiDetailsDto);
         responseWrapper.setResponse(sbiDetailsDtoList);
-        Mockito.when(multiPartnerService.getAllSBIDetails()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<SbiDetailsDto>> response = multiPartnerServiceController.getAllSBIDetails();
+        Mockito.when(multiPartnerService.sbiDetails()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<SbiDetailsDto>> response = multiPartnerServiceController.sbiDetails();
     }
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllApprovedDeviceProviderIdsTest() throws Exception {
+    public void approvedDeviceProviderIdsTest() throws Exception {
         ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper = new ResponseWrapperV2<>();
         List<DeviceProviderDto> deviceProviderDtos = new ArrayList<>();
         DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
         deviceProviderDtos.add(deviceProviderDto);
         responseWrapper.setResponse(deviceProviderDtos);
-        Mockito.when(multiPartnerService.getAllApprovedDeviceProviderIds()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<DeviceProviderDto>> response = multiPartnerServiceController.getAllApprovedDeviceProviderIds();
+        Mockito.when(multiPartnerService.approvedDeviceProviderIds()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<DeviceProviderDto>> response = multiPartnerServiceController.approvedDeviceProviderIds();
     }
 
     @Test
@@ -175,63 +167,6 @@ public class MultiPartnerServiceControllerTest {
     @Test
     public void getConfigValuesTest() throws Exception {
         multiPartnerServiceController.getConfigValues();
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void addInactiveDeviceMappingToSbi() throws Exception {
-        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
-        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
-        requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequestTime(LocalDateTime.now());
-        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
-        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        Mockito.when(multiPartnerService.addInactiveDeviceMappingToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
-        ResponseWrapperV2<Boolean> response = multiPartnerServiceController.addInactiveDeviceMappingToSbi(requestWrapper);
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getAllDevicesForSBITest() throws Exception {
-        ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
-        List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
-        DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
-        deviceDetailDtoList.add(deviceDetailDto);
-        responseWrapper.setResponse(deviceDetailDtoList);
-        Mockito.when(multiPartnerService.getAllDevicesForSBI(Mockito.any())).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<DeviceDetailDto>> response = multiPartnerServiceController.getAllDevicesForSBI("abc");
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void deactivateDeviceTest() throws Exception {
-        ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapperV2<>();
-        requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequestTime(LocalDateTime.now());
-        DeactivateDeviceRequestDto deactivateDeviceRequestDto = new DeactivateDeviceRequestDto();
-        deactivateDeviceRequestDto.setDeviceId("abc");
-        requestWrapper.setRequest(deactivateDeviceRequestDto);
-        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
-        responseWrapper.setResponse(deviceDetailResponseDto);
-        Mockito.when(multiPartnerService.deactivateDevice(Mockito.any())).thenReturn(responseWrapper);
-        ResponseWrapperV2<DeviceDetailResponseDto> response = multiPartnerServiceController.deactivateDevice(requestWrapper);
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void deactivateSbiTest() throws Exception {
-        ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        RequestWrapperV2<DeactivateSbiRequestDto> requestWrapper = new RequestWrapperV2<>();
-        requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequestTime(LocalDateTime.now());
-        DeactivateSbiRequestDto deactivateSbiRequestDto = new DeactivateSbiRequestDto();
-        deactivateSbiRequestDto.setSbiId("abc");
-        requestWrapper.setRequest(deactivateSbiRequestDto);
-        SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
-        responseWrapper.setResponse(sbiDetailsResponseDto);
-        Mockito.when(multiPartnerService.deactivateSbi(Mockito.any())).thenReturn(responseWrapper);
-        ResponseWrapperV2<SbiDetailsResponseDto> response = multiPartnerServiceController.deactivateSbi(requestWrapper);
     }
 
     @Test

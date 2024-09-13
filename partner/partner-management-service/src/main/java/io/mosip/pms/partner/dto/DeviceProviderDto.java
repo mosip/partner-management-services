@@ -11,7 +11,4 @@ import lombok.Setter;
 public class DeviceProviderDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
-
-    @Schema(description = "Type of partner", example = "DEVICE_PROVIDER")
-    private String partnerType;
 }

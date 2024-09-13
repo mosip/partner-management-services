@@ -1,12 +1,28 @@
 package io.mosip.pms.device.authdevice.service.impl;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.entity.DeviceDetailSBI;
+import io.mosip.pms.common.entity.DeviceDetailSBIPK;
+import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,10 +67,26 @@ import io.mosip.pms.device.util.DeviceUtil;
 @Service
 @Transactional
 public class DeviceDetailServiceImpl implements DeviceDetailService {
+
+	private static final Logger LOGGER = PMSLogger.getLogger(DeviceDetailServiceImpl.class);
+	public static final String BLANK_STRING = "";
+	public static final String VERSION = "1.0";
+	public static final String APPROVED = "approved";
+
+	@Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
+	private  String postInactiveMappingDeviceToSbiId;
+
+	@Value("${mosip.pms.api.id.deactivate.device.post}")
+	private  String postDeactivateDevice;
+
+	@Autowired
+	DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 	
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
-
 
 	@Autowired
 	FilterHelper filterHelper;
@@ -364,5 +396,202 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			filterResponseDto.setFilters(columnValueList);
 		}
 		return filterResponseDto;
+	}
+
+	@Override
+	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto) {
+		ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String partnerId = requestDto.getPartnerId();
+			String sbiId = requestDto.getSbiId();
+			String deviceDetailId = requestDto.getDeviceDetailId();
+			if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)  ){
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
+			// check if partnerId is associated with user
+			boolean partnerIdExists = false;
+			String partnerOrgname = BLANK_STRING;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					validatePartnerId(partner, userId);
+					partnerIdExists = true;
+					partnerOrgname = partner.getName();
+					break;
+				}
+			}
+			if (!partnerIdExists) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+
+			// validate sbi and device mapping
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
+
+			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
+			if (Objects.nonNull(deviceDetailSBI)){
+				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
+						ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
+			}
+
+			DeviceDetailSBI entity = new DeviceDetailSBI();
+
+			DeviceDetailSBIPK pk = new DeviceDetailSBIPK();
+			pk.setSbiId(sbiId);
+			pk.setDeviceDetailId(deviceDetailId);
+
+			entity.setId(pk);
+			entity.setProviderId(partnerId);
+			entity.setPartnerName(partnerOrgname);
+			entity.setIsActive(false);
+			entity.setIsDeleted(false);
+			entity.setCrBy(userId);
+			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+
+			DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
+			LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
+			responseWrapper.setResponse(true);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In inactiveMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
+			deleteDeviceDetail(requestDto.getDeviceDetailId());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In inactiveMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
+			deleteDeviceDetail(requestDto.getDeviceDetailId());
+			String errorCode = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postInactiveMappingDeviceToSbiId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public static void validatePartnerId(Partner partner, String userId) {
+		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+			LOGGER.info("Partner Id is null or empty for user id : " + userId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+		}
+	}
+
+	private void deleteDeviceDetail(String deviceDetailId) {
+		try {
+			deviceDetailRepository.deleteById(deviceDetailId);
+			LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+		} catch (Exception e) {
+			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId) {
+		ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (Objects.isNull(deviceDetailId)) {
+				LOGGER.info("sessionId", "idType", "id", "Device id is null.");
+				throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_ID.getErrorCode(),
+						ErrorCode.INVALID_DEVICE_ID.getErrorMessage());
+			}
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+			if (!deviceDetail.isPresent()) {
+				LOGGER.error("Device not exists with id {}", deviceDetailId);
+				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
+						ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
+			}
+			DeviceDetail device = deviceDetail.get();
+			// check if the device is associated with user.
+			String deviceProviderId = device.getDeviceProviderId();
+			boolean deviceProviderExist = false;
+			Partner partnerDetails = new Partner();
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(deviceProviderId)) {
+					validatePartnerId(partner, userId);
+					deviceProviderExist = true;
+					partnerDetails = partner;
+					break;
+				}
+			}
+			if (!deviceProviderExist) {
+				LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			//check if Partner is Active or not
+			if (!partnerDetails.getIsActive()) {
+				LOGGER.error("Partner is not Active with id {}", deviceProviderId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+			// Deactivate only if the device is approved status and is_active true.
+			if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {
+				DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+
+				device.setIsActive(false);
+				DeviceDetail updatedDetail = deviceDetailRepository.save(device);
+				deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
+				deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+				deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
+
+				responseWrapper.setResponse(deviceDetailResponseDto);
+			} else {
+				LOGGER.error("Unable to deactivate device with id {}", device.getId());
+				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorCode(),
+						ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorMessage());
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postDeactivateDevice);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
+
+	public static String getCertificateName(String subjectDN) {
+		String[] parts = subjectDN.split(",");
+		for (String part : parts) {
+			if (part.trim().startsWith("CN=")) {
+				return part.trim().substring(3);
+			}
+		}
+		return BLANK_STRING;
 	}
 }

@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.response.dto;
+package io.mosip.pms.device.response.dto;
 
 import lombok.Data;
 
@@ -6,5 +6,5 @@ import lombok.Data;
 public class DeviceDetailResponseDto {
     private String deviceId;
     private String status;
-    private boolean active;
+    private boolean isActive;
 }

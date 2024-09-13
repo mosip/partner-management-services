@@ -1,11 +1,17 @@
 package io.mosip.pms.test.device.service.impl;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
@@ -100,6 +109,12 @@ public class SBIServiceTest {
 	
 	@Mock
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+	@Mock
+	Authentication authentication;
+
+	@Mock
+	SecurityContext securityContext;
 	
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	DeviceDetail deviceDetail=new DeviceDetail();
@@ -524,5 +539,80 @@ public class SBIServiceTest {
 		filterValueDto.setFilters(filterDtos);
 		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		secureBiometricInterfaceService.filterValues(filterValueDto);
+	}
+
+	@Test
+	public void deactivateSbiTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setId("12345");
+		sbi.setActive(true);
+		sbi.setApprovalStatus("approved");
+		sbi.setSwVersion("1.0.0");
+		sbi.setProviderId("123");
+		when(sbiRepository.findById(anyString())).thenReturn(Optional.of(sbi));
+		List<DeviceDetail> deviceDetailList = new ArrayList<>();
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setId("23456");
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setApprovalStatus("approved");
+		deviceDetail.setIsActive(true);
+		deviceDetailList.add(deviceDetail);
+		when(deviceDetailRepository.findApprovedDevicesBySbiId(anyString())).thenReturn(deviceDetailList);
+		when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
+		when(sbiRepository.save(any())).thenReturn(sbi);
+		secureBiometricInterfaceService.deactivateSbi("12345");
+	}
+
+	@Test
+	public void deactivateSbiTestException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		secureBiometricInterfaceService.deactivateSbi(null);
+	}
+
+	@Test
+	public void deactivateSbiTestException1() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		secureBiometricInterfaceService.deactivateSbi("23456");
+	}
+
+	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
 	}
 }
