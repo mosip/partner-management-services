@@ -1,0 +1,7 @@
+modules:
+  pms:
+    enabled: true
+    image:
+      repository: mosipdev/apitest-pms
+      tag: develop
+      pullPolicy: Always
