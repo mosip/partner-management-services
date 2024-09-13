@@ -4,7 +4,11 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -614,7 +618,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<List<DeviceDetailDto>> sbiDevices(String sbiId) {
+	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId) {
 		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
@@ -676,12 +680,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				responseWrapper.setResponse(deviceDetailDtoList);
 			}
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In sbiDevices method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In sbiDevices method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+					"In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));

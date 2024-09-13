@@ -355,13 +355,13 @@ public class SecureBiometricInterfaceControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"DEVICE_PROVIDER"})
-	public void sbiDevicesTest() throws Exception {
+	public void getAllDevicesForSbiTest() throws Exception {
 		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
 		DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
 		deviceDetailDtoList.add(deviceDetailDto);
 		responseWrapper.setResponse(deviceDetailDtoList);
-		Mockito.when(secureBiometricInterfaceService.sbiDevices(Mockito.any())).thenReturn(responseWrapper);
+		Mockito.when(secureBiometricInterfaceService.getAllDevicesForSbi(Mockito.any())).thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/sbi-devices/123").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
 	}
