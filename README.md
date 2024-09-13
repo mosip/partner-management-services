@@ -85,7 +85,7 @@ defined here.
    ```
 ### Delete
   ```
-    $ cd ./apitest/deploy/pms-apitetsrig
+    $ cd ./apitest/deploy/pms-apitestrig
     $ ./delete.sh
    ```
 
