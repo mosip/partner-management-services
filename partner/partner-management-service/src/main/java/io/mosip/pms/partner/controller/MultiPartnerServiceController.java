@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -212,7 +211,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.inactiveMappingDeviceToSbi(requestWrapper.getRequest());
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatedevice())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivatedevice())")
     @PostMapping(value = "/deactivate-device")
     @Operation(summary = "Deactivate device details", description = "Deactivate device details")
     @ApiResponses(value = {
@@ -228,7 +227,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.deactivateDevice(requestWrapper.getRequest().getDeviceId());
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getPutdeactivatesbi())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivatesbi())")
     @PostMapping(value = "/deactivate-sbi")
     @Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
     @ApiResponses(value = {

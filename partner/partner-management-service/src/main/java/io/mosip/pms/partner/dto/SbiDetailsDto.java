@@ -20,9 +20,6 @@ public class SbiDetailsDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
-    @Schema(description = "Type of partner", example = "DEVICE_PROVIDER")
-    private String partnerType;
-
     @Schema(description = "Current status of the SBI", example = "approved")
     private String status;
 

@@ -96,10 +96,10 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private  String postInactiveMappingDeviceToSbiId;
 
     @Value("${mosip.pms.api.id.deactivate.device.post}")
-    private  String putDeactivateDevice;
+    private  String postDeactivateDevice;
 
     @Value("${mosip.pms.api.id.deactivate.sbi.post}")
-    private  String putDeactivateSbi;
+    private  String postDeactivateSbi;
 
     @Value("${mosip.pms.api.id.ftm.chip.details.get}")
     private String getFtmChipDetails;
@@ -639,7 +639,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
                             sbiDetailsDto.setSbiId(secureBiometricInterface.getId());
                             sbiDetailsDto.setPartnerId(partner.getId());
-                            sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
                             sbiDetailsDto.setSbiActive(secureBiometricInterface.isActive());
@@ -718,7 +717,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                     DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
                     deviceProviderDto.setPartnerId(partner.getId());
-                    deviceProviderDto.setPartnerType(partner.getPartnerTypeCode());
 
                     approvedDeviceProviderIds.add(deviceProviderDto);
                 }
@@ -983,7 +981,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(putDeactivateDevice);
+        responseWrapper.setId(postDeactivateDevice);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -1079,7 +1077,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(putDeactivateSbi);
+        responseWrapper.setId(postDeactivateSbi);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
