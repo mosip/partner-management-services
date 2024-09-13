@@ -10,7 +10,7 @@ definePolicy:
 	"desc": "desc mosip policy 19234",
 	"name": "mosip policy 19234",
 	"attributeName": "fullName",
-	"authTokenType": "partner",
+	"authTokenType": "policy",
 	"policyGroupName": "mosip policy group 19234",
 	"policyType": "Auth",
 	"version": "1.0",
