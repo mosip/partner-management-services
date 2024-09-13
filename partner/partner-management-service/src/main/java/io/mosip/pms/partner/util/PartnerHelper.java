@@ -16,9 +16,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
-public class MultiPartnerHelper {
+public class PartnerHelper {
 
-    private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerHelper.class);
+    private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
 

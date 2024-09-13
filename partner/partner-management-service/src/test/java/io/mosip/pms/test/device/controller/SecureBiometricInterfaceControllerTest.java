@@ -11,6 +11,11 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
+import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -347,6 +352,36 @@ public class SecureBiometricInterfaceControllerTest {
     	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/devicedetails/map/search").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
+
+	@Test
+	@WithMockUser(roles = {"DEVICE_PROVIDER"})
+	public void sbiDevicesTest() throws Exception {
+		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+		DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
+		deviceDetailDtoList.add(deviceDetailDto);
+		responseWrapper.setResponse(deviceDetailDtoList);
+		Mockito.when(secureBiometricInterfaceService.sbiDevices(Mockito.any())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/sbi-devices/123").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"DEVICE_PROVIDER"})
+	public void deactivateSbiTest() throws Exception {
+		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		RequestWrapperV2<DeactivateSbiRequestDto> requestWrapper = new RequestWrapperV2<>();
+		requestWrapper.setVersion("1.0");
+		requestWrapper.setRequestTime(LocalDateTime.now());
+		DeactivateSbiRequestDto deactivateSbiRequestDto = new DeactivateSbiRequestDto();
+		deactivateSbiRequestDto.setSbiId("abc");
+		requestWrapper.setRequest(deactivateSbiRequestDto);
+		SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
+		responseWrapper.setResponse(sbiDetailsResponseDto);
+		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.any())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/deactivate-sbi").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
+	}
 
 	private RequestWrapper<DeviceDetailSBIMappingDto> createMappingRequest() {
 		RequestWrapper<DeviceDetailSBIMappingDto> request = new RequestWrapper<DeviceDetailSBIMappingDto>();
