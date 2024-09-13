@@ -24,13 +24,13 @@ public interface MultiPartnerService {
 
     public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven();
 
-    public ResponseWrapperV2<List<SbiDetailsDto>> getAllSBIDetails();
+    public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails();
 
-    public ResponseWrapperV2<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds();
+    public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds();
 
-    public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSBI(String sbiId);
+    public ResponseWrapperV2<List<DeviceDetailDto>> sbiDevices(String sbiId);
 
-    public ResponseWrapperV2<Boolean> addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto);
+    public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto);
 
     public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId);
 

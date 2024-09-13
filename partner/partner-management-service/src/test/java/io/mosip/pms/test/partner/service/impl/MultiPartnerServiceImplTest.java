@@ -751,7 +751,7 @@ public class MultiPartnerServiceImplTest {
     }
 
     @Test
-    public void getAllSBIDetailsTest() throws Exception {
+    public void sbiDetailsTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -779,11 +779,11 @@ public class MultiPartnerServiceImplTest {
         deviceDetailSBIList.add(deviceDetailSBI);
         when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(anyString(), anyString())).thenReturn(deviceDetailSBIList);
 
-        multiPartnerServiceImpl.getAllSBIDetails();
+        multiPartnerServiceImpl.sbiDetails();
     }
 
     @Test
-    public void getAllSBIDetailsExceptionTest() throws Exception {
+    public void sbiDetailsExceptionTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -793,7 +793,7 @@ public class MultiPartnerServiceImplTest {
         List<Partner> partnerList = new ArrayList<>();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         
-        multiPartnerServiceImpl.getAllSBIDetails();
+        multiPartnerServiceImpl.sbiDetails();
     }
 
     @Test
@@ -812,7 +812,7 @@ public class MultiPartnerServiceImplTest {
     }
 
     @Test
-    public void getAllApprovedDeviceProviderIdsTest() throws Exception {
+    public void approvedDeviceProviderIdsTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -827,11 +827,11 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
-        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+        multiPartnerServiceImpl.approvedDeviceProviderIds();
     }
 
     @Test
-    public void getAllApprovedDeviceProviderIdsExceptionTest() throws Exception {
+    public void approvedDeviceProviderIdsExceptionTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -841,16 +841,16 @@ public class MultiPartnerServiceImplTest {
         List<Partner> partnerList = new ArrayList<>();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
-        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+        multiPartnerServiceImpl.approvedDeviceProviderIds();
     }
 
     @Test
-    public void getAllApprovedDeviceProviderIdsExceptionTest1() throws Exception {
-        multiPartnerServiceImpl.getAllApprovedDeviceProviderIds();
+    public void approvedDeviceProviderIdsExceptionTest1() throws Exception {
+        multiPartnerServiceImpl.approvedDeviceProviderIds();
     }
 
     @Test
-    public void addInactiveDeviceMappingToSbi() throws Exception {
+    public void inactiveMappingDeviceToSbi() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -885,11 +885,11 @@ public class MultiPartnerServiceImplTest {
         deviceDetailSBI.setProviderId("123");
         when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
 
-        multiPartnerServiceImpl.addInactiveDeviceMappingToSbi(requestDto);
+        multiPartnerServiceImpl.inactiveMappingDeviceToSbi(requestDto);
     }
 
     @Test
-    public void addInactiveDeviceMappingToSbiException() throws Exception {
+    public void inactiveMappingDeviceToSbiException() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -901,7 +901,7 @@ public class MultiPartnerServiceImplTest {
         requestDto.setPartnerId("123");
         requestDto.setSbiId("112");
         requestDto.setDeviceDetailId("dgdg");
-        multiPartnerServiceImpl.addInactiveDeviceMappingToSbi(requestDto);
+        multiPartnerServiceImpl.inactiveMappingDeviceToSbi(requestDto);
 
         List<Partner> partnerList = new ArrayList<>();
         Partner partner = new Partner();
@@ -920,19 +920,19 @@ public class MultiPartnerServiceImplTest {
         secureBiometricInterface.setSwVersion("1.0");
         secureBiometricInterface.setProviderId("123");
 
-        multiPartnerServiceImpl.addInactiveDeviceMappingToSbi(requestDto);
+        multiPartnerServiceImpl.inactiveMappingDeviceToSbi(requestDto);
         when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
         DeviceDetail deviceDetail = new DeviceDetail();
         deviceDetail.setDeviceProviderId("123");
 
-        multiPartnerServiceImpl.addInactiveDeviceMappingToSbi(requestDto);
+        multiPartnerServiceImpl.inactiveMappingDeviceToSbi(requestDto);
         when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
         DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
         deviceDetailSBI.setProviderId("123");
         when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
         when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
 
-        multiPartnerServiceImpl.addInactiveDeviceMappingToSbi(requestDto);
+        multiPartnerServiceImpl.inactiveMappingDeviceToSbi(requestDto);
     }
 
     @Test

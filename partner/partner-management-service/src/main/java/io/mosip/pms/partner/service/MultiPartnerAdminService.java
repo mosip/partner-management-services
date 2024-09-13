@@ -5,5 +5,5 @@ import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 
 public interface MultiPartnerAdminService {
 
-    public ResponseWrapperV2<Boolean> approveOrRejectDeviceWithSbiMapping(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag);
+    public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag);
 }

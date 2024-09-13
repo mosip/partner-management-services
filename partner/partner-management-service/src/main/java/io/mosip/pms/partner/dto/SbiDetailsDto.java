@@ -27,10 +27,10 @@ public class SbiDetailsDto {
     private String status;
 
     @Schema(description = "Indicates whether the SBI is active (true if active, false otherwise)", example = "false")
-    private boolean isActive;
+    private boolean isSbiActive;
 
     @Schema(description = "Indicates whether the SBI is expired (true if expired, false otherwise)", example = "false")
-    private boolean isExpired;
+    private boolean isSbiExpired;
 
     @Schema(description = "Number of approved devices associated with the SBI", example = "29")
     private String countOfApprovedDevices;
@@ -39,12 +39,12 @@ public class SbiDetailsDto {
     private String countOfPendingDevices;
 
     @Schema(description = "Date and time when the SBI was created", example = "2024-07-15T10:00:00Z")
-    private LocalDateTime sbiSoftwareCreatedDtimes;
+    private LocalDateTime sbiCreatedDateTime;
 
     @Schema(description = "Date and time when the SBI expires", example = "2025-07-15T10:00:00Z")
-    private LocalDateTime sbiSoftwareExpiryDtimes;
+    private LocalDateTime sbiExpiryDateTime;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
-    private LocalDateTime crDtimes;
+    private LocalDateTime createdDateTime;
 
 }
