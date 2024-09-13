@@ -84,22 +84,22 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private String getUserConsentGivenId;
 
     @Value("${mosip.pms.api.id.all.sbi.details.get}")
-    private  String getAllSbiDetailsId;
+    private  String getSbiDetailsId;
 
     @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
-    private  String getAllApprovedDeviceProviderId;
+    private  String getApprovedDeviceProviderIds;
 
     @Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
-    private  String getAllDevicesForSBIId;
+    private  String getSbiDevicesId;
 
     @Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
-    private  String postAddInactiveDeviceMappingToSbiId;
+    private  String postInactiveMappingDeviceToSbiId;
 
-    @Value("${mosip.pms.api.id.deactivate.device.put}")
-    private  String putDeactivateDevice;
+    @Value("${mosip.pms.api.id.deactivate.device.post}")
+    private  String postDeactivateDevice;
 
-    @Value("${mosip.pms.api.id.deactivate.sbi.put}")
-    private  String putDeactivateSbi;
+    @Value("${mosip.pms.api.id.deactivate.sbi.post}")
+    private  String postDeactivateSbi;
 
     @Value("${mosip.pms.api.id.ftm.chip.details.get}")
     private String getFtmChipDetails;
@@ -618,7 +618,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public ResponseWrapperV2<List<SbiDetailsDto>> getAllSBIDetails() {
+    public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails() {
         ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
@@ -639,16 +639,15 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
                             sbiDetailsDto.setSbiId(secureBiometricInterface.getId());
                             sbiDetailsDto.setPartnerId(partner.getId());
-                            sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
-                            sbiDetailsDto.setActive(secureBiometricInterface.isActive());
-                            sbiDetailsDto.setExpired(checkIfSbiExpired(secureBiometricInterface));
+                            sbiDetailsDto.setSbiActive(secureBiometricInterface.isActive());
+                            sbiDetailsDto.setSbiExpired(checkIfSbiExpired(secureBiometricInterface));
                             sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
                             sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
-                            sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
-                            sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
-                            sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
+                            sbiDetailsDto.setSbiCreatedDateTime(secureBiometricInterface.getSwCreateDateTime());
+                            sbiDetailsDto.setSbiExpiryDateTime(secureBiometricInterface.getSwExpiryDateTime());
+                            sbiDetailsDto.setCreatedDateTime(secureBiometricInterface.getCrDtimes());
 
                             sbiDetailsDtoList.add(sbiDetailsDto);
                         }
@@ -657,17 +656,17 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
             responseWrapper.setResponse(sbiDetailsDtoList);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllSbiDetailsId);
+        responseWrapper.setId(getSbiDetailsId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -701,7 +700,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public ResponseWrapperV2<List<DeviceProviderDto>> getAllApprovedDeviceProviderIds() {
+    public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds() {
         ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper =  new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
@@ -718,30 +717,29 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                     DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
                     deviceProviderDto.setPartnerId(partner.getId());
-                    deviceProviderDto.setPartnerType(partner.getPartnerTypeCode());
 
                     approvedDeviceProviderIds.add(deviceProviderDto);
                 }
             }
             responseWrapper.setResponse(approvedDeviceProviderIds);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In approvedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllApprovedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In approvedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllApprovedDeviceProviderId);
+        responseWrapper.setId(getApprovedDeviceProviderIds);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSBI(String sbiId) {
+    public ResponseWrapperV2<List<DeviceDetailDto>> sbiDevices(String sbiId) {
         ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
@@ -782,34 +780,44 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!deviceDetailSBIList.isEmpty()) {
                 List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
                 for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
-                    Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
+                    Optional<DeviceDetail> optionalDeviceDetail = deviceDetailRepository.
                             findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
-                    if (deviceDetail.isPresent()) {
-                        DeviceDetailDto deviceDetailDto = objectMapper
-                                .convertValue(deviceDetail, DeviceDetailDto.class);
+                    if (optionalDeviceDetail.isPresent()) {
+                        DeviceDetail deviceDetail = optionalDeviceDetail.get();
+                        DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
+                        deviceDetailDto.setId(deviceDetail.getId());
+                        deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
+                        deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
+                        deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
+                        deviceDetailDto.setMake(deviceDetail.getMake());
+                        deviceDetailDto.setModel(deviceDetail.getModel());
+                        deviceDetailDto.setStatus(deviceDetail.getApprovalStatus());
+                        deviceDetailDto.setActive(deviceDetail.getIsActive());
+                        deviceDetailDto.setCreatedDateTime(deviceDetail.getCrDtimes());
+                        
                         deviceDetailDtoList.add(deviceDetailDto);
                     }
                 }
                 responseWrapper.setResponse(deviceDetailDtoList);
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In sbiDevices method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In sbiDevices method of MultiPartnerServiceImpl - " + ex.getMessage());
             String errorCode = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode();
             String errorMessage = ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllDevicesForSBIId);
+        responseWrapper.setId(getSbiDevicesId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
 
     @Override
-    public ResponseWrapperV2<Boolean> addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
+    public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto) {
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         try {
             String partnerId = requestDto.getPartnerId();
@@ -874,19 +882,19 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
             responseWrapper.setResponse(true);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In inactiveMappingDeviceToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             deleteDeviceDetail(requestDto.getDeviceDetailId());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In inactiveMappingDeviceToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
             deleteDeviceDetail(requestDto.getDeviceDetailId());
             String errorCode = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode();
             String errorMessage = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(postAddInactiveDeviceMappingToSbiId);
+        responseWrapper.setId(postInactiveMappingDeviceToSbiId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -973,7 +981,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(putDeactivateDevice);
+        responseWrapper.setId(postDeactivateDevice);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -1069,7 +1077,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(putDeactivateSbi);
+        responseWrapper.setId(postDeactivateSbi);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }

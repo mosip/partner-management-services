@@ -7,5 +7,5 @@ public class SbiDetailsResponseDto {
     private String sbiId;
     private String sbiVersion;
     private String status;
-    private boolean active;
+    private boolean isActive;
 }
