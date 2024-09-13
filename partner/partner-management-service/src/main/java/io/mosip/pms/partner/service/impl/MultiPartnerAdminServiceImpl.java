@@ -13,13 +13,12 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerAdminService;
-import io.mosip.pms.partner.util.MultiPartnerHelper;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -45,7 +44,7 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     DeviceDetailServiceImpl deviceDetailService;
 
     @Autowired
-    MultiPartnerHelper multiPartnerHelper;
+    PartnerHelper partnerHelper;
 
     @Override
     public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto, boolean rejectFlag) {
@@ -60,7 +59,7 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
             // validate sbi and device mapping
-            multiPartnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
+            partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
 
             DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
             if (Objects.isNull(deviceDetailSBI)) {

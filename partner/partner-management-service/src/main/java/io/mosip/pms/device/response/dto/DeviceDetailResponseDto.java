@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.response.dto;
+package io.mosip.pms.device.response.dto;
 
 import lombok.Data;
 

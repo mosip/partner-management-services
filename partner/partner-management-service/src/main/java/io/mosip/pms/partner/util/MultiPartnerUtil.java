@@ -1,6 +1,5 @@
 package io.mosip.pms.partner.util;
 
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.util.PMSLogger;

@@ -2,9 +2,6 @@ package io.mosip.pms.partner.service;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
-import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
-import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 
 import java.util.List;
 
@@ -27,14 +24,6 @@ public interface MultiPartnerService {
     public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails();
 
     public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds();
-
-    public ResponseWrapperV2<List<DeviceDetailDto>> sbiDevices(String sbiId);
-
-    public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto);
-
-    public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId);
-
-    public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id);
 
     public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails();
 

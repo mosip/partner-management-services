@@ -5,11 +5,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -438,6 +444,37 @@ public class DeviceDetailControllerTest {
     	RequestWrapper<DeviceFilterValueDto> request = filterRequest();
     	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void inactiveMappingDeviceToSbi() throws Exception {
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setVersion("1.0");
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
+        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
+        Mockito.when(deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/inactive-mapping-device-to-sbi").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void deactivateDeviceTest() throws Exception {
+        ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+        RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setVersion("1.0");
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        DeactivateDeviceRequestDto deactivateDeviceRequestDto = new DeactivateDeviceRequestDto();
+        deactivateDeviceRequestDto.setDeviceId("abc");
+        requestWrapper.setRequest(deactivateDeviceRequestDto);
+        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+        responseWrapper.setResponse(deviceDetailResponseDto);
+        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.any())).thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deactivate-device").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
     
 }
