@@ -3,6 +3,8 @@ package io.mosip.pms.test.partner.controller;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.user.controller.UserController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,5 +63,24 @@ public class UserControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setVersion("1.0");
 		return request;
+	}
+
+	@Test
+	public void saveUserConsent() throws Exception {
+		UserDetailsDto userDetailsDto = new UserDetailsDto();
+		Mockito.when(userManagementService.saveUserConsent()).thenReturn(userDetailsDto);
+		ResponseWrapperV2<UserDetailsDto> response = userController.saveUserConsent();
+	}
+
+	@Test
+	public void isUserConsentGiven() throws Exception {
+		UserDetailsDto userDetailsDto = new UserDetailsDto();
+		Mockito.when(userManagementService.isUserConsentGiven()).thenReturn(userDetailsDto);
+		ResponseWrapperV2<UserDetailsDto> response = userController.isUserConsentGiven();
+	}
+
+	@Test
+	public void getConfigValuesTest() throws Exception {
+		userController.getConfigValues();
 	}
 }

@@ -58,12 +58,11 @@ public class MultiPartnerServiceImplTest {
     PartnerPolicyRepository partnerPolicyRepository;
 
     @Mock
-    UserDetailsRepository userDetailsRepository;
+    Environment environment;
 
     @Mock
-    Environment environment;
-    @Mock
     Authentication authentication;
+
     @Mock
     SecurityContext securityContext;
 
@@ -638,124 +637,6 @@ public class MultiPartnerServiceImplTest {
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
         multiPartnerServiceImpl.getApiKeysForAuthPartners();
-    }
-
-    @Test
-    public void saveUserConsentTest() throws Exception {
-        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        List<Partner> partnerList = new ArrayList<>();
-        Partner partner = new Partner();
-        partner.setId("123");
-        partner.setPartnerTypeCode("Auth_Partner");
-        partnerList.add(partner);
-        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-
-        UserDetails userDetails = new UserDetails();
-        userDetails.setUserId("123");
-        userDetails.setId("abc");
-        userDetails.setCrDtimes(LocalDateTime.now());
-        userDetails.setCrBy("abc");
-        Optional<UserDetails> optionalEntity = Optional.of(new UserDetails());
-        when(userDetailsRepository.findByUserId(anyString())).thenReturn(optionalEntity);
-        when(userDetailsRepository.save(any())).thenReturn(userDetails);
-        multiPartnerServiceImpl.saveUserConsent();
-    }
-
-    @Test
-    public void saveUserConsentTest1() throws Exception {
-        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        List<Partner> partnerList = new ArrayList<>();
-        Partner partner = new Partner();
-        partner.setId("123");
-        partner.setPartnerTypeCode("Auth_Partner");
-        partnerList.add(partner);
-        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-
-        UserDetails userDetails = new UserDetails();
-        userDetails.setUserId("123");
-        userDetails.setId("abc");
-        userDetails.setCrDtimes(LocalDateTime.now());
-        userDetails.setCrBy("abc");
-        when(userDetailsRepository.save(any())).thenReturn(userDetails);
-        multiPartnerServiceImpl.saveUserConsent();
-    }
-
-    @Test(expected = PartnerServiceException.class)
-    public void saveUserConsentExceptionTest() throws Exception {
-        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        List<Partner> partnerList = new ArrayList<>();
-        Partner partner = new Partner();
-        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.saveUserConsent();
-    }
-    @Test(expected = PartnerServiceException.class)
-    public void saveUserConsentExceptionTest1() throws Exception {
-        multiPartnerServiceImpl.saveUserConsent();
-    }
-
-    @Test
-    public void isUserConsentGivenTest() throws Exception {
-        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        List<Partner> partnerList = new ArrayList<>();
-        Partner partner = new Partner();
-        partner.setId("123");
-        partner.setPartnerTypeCode("Auth_Partner");
-        partnerList.add(partner);
-        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        UserDetails userDetails = new UserDetails();
-        userDetails.setUserId("123");
-        userDetails.setId("abc");
-        userDetails.setCrDtimes(LocalDateTime.now());
-        userDetails.setCrBy("abc");
-        userDetails.setConsentGiven("YES");
-        userDetails.setConsentGivenDtimes(LocalDateTime.now());
-        Optional<UserDetails> optionalEntity = Optional.of(userDetails);
-        when(userDetailsRepository.findByUserId(anyString())).thenReturn(optionalEntity);
-        multiPartnerServiceImpl.isUserConsentGiven();
-    }
-
-    @Test(expected = PartnerServiceException.class)
-    public void isUserConsentGivenExceptionTest() throws Exception {
-        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        List<Partner> partnerList = new ArrayList<>();
-        Partner partner = new Partner();
-        when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-        when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.isUserConsentGiven();
-    }
-
-    @Test(expected = PartnerServiceException.class)
-    public void isUserConsentGivenExceptionTest1() throws Exception {
-        multiPartnerServiceImpl.isUserConsentGiven();
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
