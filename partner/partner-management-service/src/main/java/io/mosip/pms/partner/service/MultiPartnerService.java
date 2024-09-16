@@ -11,17 +11,17 @@ import java.util.List;
 
 public interface MultiPartnerService {
 
-    public List<CertificateDto> getAllCertificateDetails();
+    public List<CertificateDto> getPartnerCertificates();
 
-    public List<PolicyDto> getAllRequestedPolicies();
+    public List<PolicyDto> getPolicyRequests();
 
-    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies();
+    public List<ApprovedPolicyDto> getAuthPartnerPolicies();
 
-    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
+    public List<PolicyGroupDto> getApprovedPartnerIdsWithPolicyGroups();
 
-    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners();
+    public List<ApiKeyResponseDto> getApiKeysForAuthPartners();
 
-    public UserDetailsDto saveUserConsentGiven();
+    public UserDetailsDto saveUserConsent();
 
     public UserDetailsDto isUserConsentGiven();
 }

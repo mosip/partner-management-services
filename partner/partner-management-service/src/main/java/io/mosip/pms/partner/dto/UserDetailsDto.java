@@ -15,6 +15,6 @@ public class UserDetailsDto {
 
     private boolean consentGiven;
 
-    private LocalDateTime consentGivenDtimes;
+    private LocalDateTime consentGivenDateTime;
 
 }

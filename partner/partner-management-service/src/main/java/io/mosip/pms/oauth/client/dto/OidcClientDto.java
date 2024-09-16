@@ -16,14 +16,14 @@ public class OidcClientDto {
     private String policyGroupDescription;
     private String policyId;
     private String policyName;
-    private String policyNameDescription;
+    private String policyDescription;
     private String relyingPartyId;
     private String logoUri;
     private List<String> redirectUris;
     private String publicKey;
     private String status;
     private List<String> grantTypes;
-    private LocalDateTime crDtimes;
-    private LocalDateTime updDtimes;
+    private LocalDateTime createdDateTime;
+    private LocalDateTime updatedDateTime;
     private List<String> clientAuthMethods;
 }

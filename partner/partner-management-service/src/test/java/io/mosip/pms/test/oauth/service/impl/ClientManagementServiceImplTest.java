@@ -1173,7 +1173,7 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(result.getPolicy());
 	}
 	@Test
-	public void getAllOidcClients() throws Exception {
+	public void getOidcClients() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1217,7 +1217,7 @@ public class ClientManagementServiceImplTest {
 		authPolicy.setName("abc");
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
 
-		serviceImpl.getAllOidcClients();
+		serviceImpl.getOidcClients();
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

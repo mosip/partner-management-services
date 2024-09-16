@@ -1,4 +1,5 @@
 package io.mosip.pms.oauth.client.controller;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class ClientManagementController {
 	AuditUtil auditUtil;
 
 	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
-	private String getAllOidcClientsId;
+	private String getOidcClientsId;
 
 	public static final String VERSION = "1.0";
 
@@ -103,18 +104,18 @@ public class ClientManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalloidcclients())")
-	@GetMapping(value = "/getAllOidcClients")
+	@GetMapping(value = "/oidc-clients")
 	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<List<OidcClientDto>> getAllOidcClients() {
-		ResponseWrapper<List<OidcClientDto>> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setId(getAllOidcClientsId);
+	public ResponseWrapperV2<List<OidcClientDto>> getOidcClients() {
+		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
+		responseWrapper.setId(getOidcClientsId);
 		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(clientManagementService.getAllOidcClients());
+		responseWrapper.setResponse(clientManagementService.getOidcClients());
 		return responseWrapper;
 	}
 	

@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -357,19 +358,16 @@ public class PartnerServiceController {
     }
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
-	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/original-partner-certificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
-	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
-		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> response = new ResponseWrapperV2<>();
 		response.setId(getOriginalPartnerCertificateId);
 		response.setVersion(VERSION);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");
-		response.setVersion("1.0");
 		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
-		response.setResponsetime(LocalDateTime.now());
 		return response;
 	}
 	

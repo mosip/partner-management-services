@@ -61,7 +61,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     UserDetailsRepository userDetailsRepository;
 
     @Override
-    public List<CertificateDto> getAllCertificateDetails() {
+    public List<CertificateDto> getPartnerCertificates() {
         List<CertificateDto> certificateDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -81,9 +81,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         X509Certificate cert = PartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 
                         certificateDto.setIsCertificateAvailable(true);
-                        certificateDto.setCertificateName(getCertificateName(cert.getSubjectDN().getName()));
-                        certificateDto.setCertificateUploadDate(cert.getNotBefore());
-                        certificateDto.setCertificateExpiryDate(cert.getNotAfter());
+                        certificateDto.setCertificateIssuedTo(getCertificateName(cert.getSubjectDN().getName()));
+                        certificateDto.setCertificateUploadDateTime(cert.getNotBefore());
+                        certificateDto.setCertificateExpiryDateTime(cert.getNotAfter());
                         certificateDto.setPartnerId(partner.getId());
                         certificateDto.setPartnerType(partner.getPartnerTypeCode());
                     } catch (PartnerServiceException ex) {
@@ -100,12 +100,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificates method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In getPartnerCertificates method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
         }
@@ -114,7 +114,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Override
     @Transactional
-    public List<PolicyDto> getAllRequestedPolicies() {
+    public List<PolicyDto> getPolicyRequests() {
         List<PolicyDto> policyDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -144,8 +144,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                         policyDto.setPolicyName(policyDetails.getName());
 
                                         policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
-                                        policyDto.setUpdDtimes(partnerPolicyRequest.getUpdDtimes());
-                                        policyDto.setCreateDate(partnerPolicyRequest.getCrDtimes());
+                                        policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes());
+                                        policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes());
                                         policyDto.setStatus(partnerPolicyRequest.getStatusCode());
                                         policyDtoList.add(policyDto);
                                     } else {
@@ -166,12 +166,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getPolicyRequests method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In getPolicyRequests method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
         }
@@ -179,7 +179,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups() {
+    public List<PolicyGroupDto> getApprovedPartnerIdsWithPolicyGroups() {
         List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -212,12 +212,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getApprovedPartnerIdsWithPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In getApprovedPartnerIdsWithPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorCode(),
                     ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorMessage());
         }
@@ -226,7 +226,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Override
     @Transactional
-    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies() {
+    public List<ApprovedPolicyDto> getAuthPartnerPolicies() {
         List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -240,7 +240,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             PolicyGroup policyGroup = validatePolicyGroup(partner);
                             ApprovedPolicyDto approvedPolicyDto = new ApprovedPolicyDto();
                             approvedPolicyDto.setPartnerId(partner.getId());
-                            approvedPolicyDto.setPartnerType(partner.getPartnerTypeCode());
                             approvedPolicyDto.setPolicyGroupId(policyGroup.getId());
                             approvedPolicyDto.setPolicyGroupDescription(policyGroup.getDesc());
                             approvedPolicyDto.setPolicyGroupName(policyGroup.getName());
@@ -255,7 +254,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                             activePolicyDto.setPolicyId(policyDetails.getId());
                                             activePolicyDto.setPolicyDescription(policyDetails.getDescr());
                                             activePolicyDto.setPolicyName(policyDetails.getName());
-                                            activePolicyDto.setStatus(partnerPolicyRequest.getStatusCode());
                                             activePolicyDtoList.add(activePolicyDto);
                                         } else {
                                             LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
@@ -281,12 +279,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getAuthPartnerPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In getAuthPartnerPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
         }
@@ -345,7 +343,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners() {
+    public List<ApiKeyResponseDto> getApiKeysForAuthPartners() {
         List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
         try {
             String userId = getUserId();
@@ -384,9 +382,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
                                     apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
                                     apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
-                                    apiKeyResponseDto.setPolicyNameDescription(authPolicy.get().getDescr());
-                                    apiKeyResponseDto.setCrDtimes(partnerPolicy.getCrDtimes());
-                                    apiKeyResponseDto.setUpdDtimes(partnerPolicy.getUpdDtimes());
+                                    apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
+                                    apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes());
                                     apiKeyResponseDtoList.add(apiKeyResponseDto);
                                 }
                             }
@@ -401,12 +398,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In getApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+                    "In getApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw new PartnerServiceException(ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode(),
                     ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
         }
@@ -419,7 +416,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public UserDetailsDto saveUserConsentGiven() {
+    public UserDetailsDto saveUserConsent() {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         try {
             String userId = getUserId();
@@ -451,7 +448,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
                 userDetailsDto.setConsentGiven(true);
                 userDetailsDto.setUserId(respEntity.getUserId());
-                userDetailsDto.setConsentGivenDtimes(respEntity.getConsentGivenDtimes());
+                userDetailsDto.setConsentGivenDateTime(respEntity.getConsentGivenDtimes());
 
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -459,11 +456,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id", "In saveUserConsent method of MultiPartnerServiceImpl - " + ex.getMessage());
             throw ex;
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
+            LOGGER.error("sessionId", "idType", "id", "In saveUserConsent method of MultiPartnerServiceImpl - " + e.getMessage());
             throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
                     ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
         }
@@ -484,7 +481,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     UserDetails entity = optionalEntity.get();
                     if (entity.getConsentGiven().equals(YES)) {
                         userDetailsDto.setConsentGiven(true);
-                        userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
+                        userDetailsDto.setConsentGivenDateTime(entity.getConsentGivenDtimes());
                     }
                 }
             } else {

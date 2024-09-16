@@ -80,6 +80,7 @@ import io.mosip.pms.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.ResponseWrapper;
+import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -1057,13 +1058,26 @@ public class PolicyManagementService {
 
 	}
 
-	public List<PolicyGroup> getAllPolicyGroups() {
+	public List<PolicyGroupDto> getPolicyGroups() {
 		List<PolicyGroup> policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
 		if (policyGroupsList.isEmpty()) {
 			logger.error("There are no active policy groups");
 			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
 					ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
 		}
-		return policyGroupsList;
+		List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+		for (PolicyGroup policyGroup : policyGroupsList) {
+			PolicyGroupDto policyGroupDto = new PolicyGroupDto();
+			policyGroupDto.setId(policyGroup.getId());
+			policyGroupDto.setDescription(policyGroup.getDesc());
+			policyGroupDto.setName(policyGroup.getName());
+			policyGroupDto.setIsActive(policyGroup.getIsActive());
+			policyGroupDto.setUpdBy(policyGroup.getUpdBy());
+			policyGroupDto.setUpdDtimes(policyGroup.getUpdDtimes());
+
+			policyGroupDtoList.add(policyGroupDto);
+		}
+
+		return policyGroupDtoList;
 	}
 }

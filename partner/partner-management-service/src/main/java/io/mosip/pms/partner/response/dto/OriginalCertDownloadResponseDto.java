@@ -16,8 +16,4 @@ public class OriginalCertDownloadResponseDto {
      */
     private String mosipSignedCertificateData;
     private Boolean isMosipSignedCertificateExpired;
-    /**
-     * Response timestamp.
-     */
-    private LocalDateTime timestamp;
 }

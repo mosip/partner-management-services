@@ -13,7 +13,7 @@ public class PolicyDto {
     private String partnerId;
     private String partnerType;
     private String policyName;
-    private Date createDate;
+    private Date createdDateTime;
     private String status;
     private String policyGroupId;
     private String policyGroupDescription;
@@ -21,5 +21,5 @@ public class PolicyDto {
     private String policyId;
     private String policyDescription;
     private String partnerComments;
-    private Date updDtimes;
+    private Date updatedDateTime;
 }
