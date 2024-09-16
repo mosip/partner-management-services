@@ -11,5 +11,4 @@ public class ActivePolicyDto {
     private String policyName;
     private String policyId;
     private String policyDescription;
-    private String status;
 }

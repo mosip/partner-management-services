@@ -122,12 +122,12 @@ public class MultiPartnerServiceImplTest {
 //
 //        when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("uri");
 //        when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-//        multiPartnerServiceImpl.getAllCertificateDetails();
+//        multiPartnerServiceImpl.getPartnerCertificates();
 //    }
 
     @Test(expected = PartnerServiceException.class)
     public void getPartnerCertificatesTestException() throws Exception {
-        multiPartnerServiceImpl.getAllCertificateDetails();
+        multiPartnerServiceImpl.getPartnerCertificates();
     }
 
     @Test
@@ -145,7 +145,7 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllCertificateDetails();
+        multiPartnerServiceImpl.getPartnerCertificates();
     }
 
     @Test(expected = PartnerServiceException.class)
@@ -160,11 +160,11 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllCertificateDetails();
+        multiPartnerServiceImpl.getPartnerCertificates();
     }
 
     @Test
-    public void getAllPoliciesTest() throws Exception {
+    public void getPolicyRequestsTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -197,14 +197,14 @@ public class MultiPartnerServiceImplTest {
         authPolicy.setName("policy123");
         when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
 
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(null);
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test
-    public void getAllPoliciesTest1() throws Exception {
+    public void getPolicyRequestsTest1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -231,11 +231,11 @@ public class MultiPartnerServiceImplTest {
         authPolicy.setName("policy123");
         when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
 
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test
-    public void getAllPoliciesTest2() throws Exception {
+    public void getPolicyRequestsTest2() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -257,11 +257,11 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test
-    public void getAllPoliciesTest3() throws Exception {
+    public void getPolicyRequestsTest3() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -276,11 +276,11 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test
-    public void getAllPoliciesTest4() throws Exception {
+    public void getPolicyRequestsTest4() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -295,16 +295,16 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllPoliciesTestException() throws Exception {
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+    public void getPolicyRequestsTestException() throws Exception {
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllPoliciesTestException1() throws Exception {
+    public void getPolicyRequestsTestException1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -315,12 +315,12 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllRequestedPolicies();
+        multiPartnerServiceImpl.getPolicyRequests();
     }
 
 
     @Test
-    public void getAllApprovedAuthPartnerPolicies() throws Exception {
+    public void getAuthPartnerPolicies() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -352,14 +352,14 @@ public class MultiPartnerServiceImplTest {
         AuthPolicy authPolicy = new AuthPolicy();
         authPolicy.setName("policy123");
         when(authPolicyRepository.findActivePoliciesByPolicyGroupId(anyString(), anyString())).thenReturn(authPolicy);
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
 
         when(authPolicyRepository.findActivePoliciesByPolicyGroupId(anyString(), anyString())).thenReturn(null);
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
 
     @Test
-    public void getAllApprovedAuthPartnerPoliciesTest1() throws Exception {
+    public void getAuthPartnerPoliciesTest1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -386,11 +386,11 @@ public class MultiPartnerServiceImplTest {
         AuthPolicy authPolicy = new AuthPolicy();
         authPolicy.setName("policy123");
         when(authPolicyRepository.findActivePoliciesByPolicyGroupId(anyString(), anyString())).thenReturn(authPolicy);
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
 
     @Test
-    public void getAllApprovedAuthPartnerPoliciesTest2() throws Exception {
+    public void getAuthPartnerPoliciesTest2() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -408,11 +408,11 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
 
     @Test
-    public void getAllApprovedAuthPartnerPoliciesTest3() throws Exception {
+    public void getAuthPartnerPoliciesTest3() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -430,16 +430,16 @@ public class MultiPartnerServiceImplTest {
         partnerList.add(partner);
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApprovedAuthPartnerPoliciesException() throws Exception {
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+    public void getAuthPartnerPoliciesException() throws Exception {
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApprovedAuthPartnerPoliciesException1() throws Exception {
+    public void getAuthPartnerPoliciesException1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -450,10 +450,10 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllApprovedAuthPartnerPolicies();
+        multiPartnerServiceImpl.getAuthPartnerPolicies();
     }
     @Test
-    public void getAllApprovedPolicyGroupsTest() throws Exception {
+    public void getApprovedPartnerIdsWithPolicyGroupsTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -474,20 +474,20 @@ public class MultiPartnerServiceImplTest {
         policyGroup.setName("group1");
         policyGroup.setDesc("dgvhsd");
         when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
-        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
+        multiPartnerServiceImpl.getApprovedPartnerIdsWithPolicyGroups();
 
         PolicyGroup policyGroup1 = new PolicyGroup();
         when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup1);
-        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
+        multiPartnerServiceImpl.getApprovedPartnerIdsWithPolicyGroups();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApprovedPolicyGroupsTestException() throws Exception {
-        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
+    public void getApprovedPartnerIdsWithPolicyGroupsException() throws Exception {
+        multiPartnerServiceImpl.getApprovedPartnerIdsWithPolicyGroups();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApprovedPolicyGroupsTestException1() throws Exception {
+    public void getApprovedPartnerIdsWithPolicyGroups1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -498,11 +498,11 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllApprovedPartnerIdsWithPolicyGroups();
+        multiPartnerServiceImpl.getApprovedPartnerIdsWithPolicyGroups();
     }
 
     @Test
-    public void getAllApiKeysForAuthPartnersTest() throws Exception{
+    public void getApiKeysForAuthPartnersTest() throws Exception{
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -540,11 +540,11 @@ public class MultiPartnerServiceImplTest {
         authPolicy.setPolicyGroup(policyGroup);
         Optional<AuthPolicy> authPolicyDetails = Optional.of(authPolicy);
         when(authPolicyRepository.findById(anyString())).thenReturn(authPolicyDetails);
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
     }
 
     @Test
-    public void getAllApiKeysForAuthPartnersTest1() throws Exception {
+    public void getApiKeysForAuthPartnersTest1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -582,11 +582,11 @@ public class MultiPartnerServiceImplTest {
         authPolicy.setPolicyGroup(policyGroup);
         Optional<AuthPolicy> authPolicyDetails = Optional.of(authPolicy);
         when(authPolicyRepository.findById(anyString())).thenReturn(authPolicyDetails);
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
     }
 
     @Test
-    public void getAllApiKeysForAuthPartnersTest2() throws Exception{
+    public void getApiKeysForAuthPartnersTest2() throws Exception{
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -612,21 +612,21 @@ public class MultiPartnerServiceImplTest {
         List<PartnerPolicy> partnerPolicies = new ArrayList<>();
         partnerPolicies.add(partnerPolicy);
         when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
 
         AuthPolicy authPolicy = new AuthPolicy();
         Optional<AuthPolicy> authPolicyDetails = Optional.of(authPolicy);
         when(authPolicyRepository.findById(anyString())).thenReturn(authPolicyDetails);
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApiKeysForAuthPartnersTestException() throws Exception {
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+    public void getApiKeysForAuthPartnersTestException() throws Exception {
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void getAllApiKeysForAuthPartnersTestException1() throws Exception {
+    public void getApiKeysForAuthPartnersTestException1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -637,11 +637,11 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.getAllApiKeysForAuthPartners();
+        multiPartnerServiceImpl.getApiKeysForAuthPartners();
     }
 
     @Test
-    public void saveUserConsentGivenTest() throws Exception {
+    public void saveUserConsentTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -664,11 +664,11 @@ public class MultiPartnerServiceImplTest {
         Optional<UserDetails> optionalEntity = Optional.of(new UserDetails());
         when(userDetailsRepository.findByUserId(anyString())).thenReturn(optionalEntity);
         when(userDetailsRepository.save(any())).thenReturn(userDetails);
-        multiPartnerServiceImpl.saveUserConsentGiven();
+        multiPartnerServiceImpl.saveUserConsent();
     }
 
     @Test
-    public void saveUserConsentGivenTest1() throws Exception {
+    public void saveUserConsentTest1() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -689,11 +689,11 @@ public class MultiPartnerServiceImplTest {
         userDetails.setCrDtimes(LocalDateTime.now());
         userDetails.setCrBy("abc");
         when(userDetailsRepository.save(any())).thenReturn(userDetails);
-        multiPartnerServiceImpl.saveUserConsentGiven();
+        multiPartnerServiceImpl.saveUserConsent();
     }
 
     @Test(expected = PartnerServiceException.class)
-    public void saveUserConsentGivenExceptionTest() throws Exception {
+    public void saveUserConsentExceptionTest() throws Exception {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         SecurityContextHolder.setContext(securityContext);
@@ -704,11 +704,11 @@ public class MultiPartnerServiceImplTest {
         Partner partner = new Partner();
         when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
         when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-        multiPartnerServiceImpl.saveUserConsentGiven();
+        multiPartnerServiceImpl.saveUserConsent();
     }
     @Test(expected = PartnerServiceException.class)
-    public void saveUserConsentGivenExceptionTest1() throws Exception {
-        multiPartnerServiceImpl.saveUserConsentGiven();
+    public void saveUserConsentExceptionTest1() throws Exception {
+        multiPartnerServiceImpl.saveUserConsent();
     }
 
     @Test

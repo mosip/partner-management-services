@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+
 import jakarta.validation.Valid;
 
 import org.json.simple.parser.ParseException;
@@ -48,6 +50,7 @@ import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.policy.dto.ResponseWrapper;
+import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -68,7 +71,7 @@ public class PolicyManagementController {
 	AuditUtil auditUtil;
 
 	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getAllPolicyGroupsId;
+	private String getPolicyGroupsId;
 
 	public static final String VERSION = "1.0";
 
@@ -294,14 +297,14 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
-	@GetMapping(value = "/getAllPolicyGroups")
+	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
-	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
-		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
-		response.setId(getAllPolicyGroupsId);
+	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
+		ResponseWrapperV2<List<PolicyGroupDto>> response = new ResponseWrapperV2<>();
+		response.setId(getPolicyGroupsId);
 		response.setVersion(VERSION);
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		response.setResponse(policyManagementService.getAllPolicyGroups());
+		response.setResponse(policyManagementService.getPolicyGroups());
 		logger.info("Returning response from PolicyManagementController.");
 		return response;
 	}

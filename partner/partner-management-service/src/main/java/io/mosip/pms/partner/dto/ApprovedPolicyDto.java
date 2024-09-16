@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 public class ApprovedPolicyDto {
     private String partnerId;
-    private String partnerType;
     private String policyGroupId;
     private String policyGroupDescription;
     private String policyGroupName;

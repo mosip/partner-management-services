@@ -18,7 +18,6 @@ public class ApiKeyResponseDto {
     private String policyGroupDescription;
     private String policyId;
     private String policyName;
-    private String policyNameDescription;
-    private Date crDtimes;
-    private Date updDtimes;
+    private String policyDescription;
+    private Date createdDateTime;
 }

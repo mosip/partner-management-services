@@ -10,9 +10,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class CertificateDto {
-    private String certificateName;
-    private Date certificateUploadDate;
-    private Date certificateExpiryDate;
+    private String certificateIssuedTo;
+    private Date certificateUploadDateTime;
+    private Date certificateExpiryDateTime;
     private String partnerType;
     private String partnerId;
     private Boolean isCertificateAvailable;
