@@ -20,8 +20,4 @@ public interface MultiPartnerService {
     public List<PolicyGroupDto> getApprovedPartnerIdsWithPolicyGroups();
 
     public List<ApiKeyResponseDto> getApiKeysForAuthPartners();
-
-    public UserDetailsDto saveUserConsent();
-
-    public UserDetailsDto isUserConsentGiven();
 }

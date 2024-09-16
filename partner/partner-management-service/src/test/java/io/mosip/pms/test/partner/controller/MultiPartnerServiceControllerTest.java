@@ -105,22 +105,4 @@ public class MultiPartnerServiceControllerTest {
         ResponseWrapperV2<List<ApiKeyResponseDto>> response = multiPartnerServiceController.getApiKeysForAuthPartners();
     }
 
-    @Test
-    public void saveUserConsent() throws Exception {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
-        Mockito.when(multiPartnerService.saveUserConsent()).thenReturn(userDetailsDto);
-        ResponseWrapperV2<UserDetailsDto> response = multiPartnerServiceController.saveUserConsent();
-    }
-
-    @Test
-    public void isUserConsentGiven() throws Exception {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
-        Mockito.when(multiPartnerService.isUserConsentGiven()).thenReturn(userDetailsDto);
-        ResponseWrapperV2<UserDetailsDto> response = multiPartnerServiceController.isUserConsentGiven();
-    }
-
-    @Test
-    public void getConfigValuesTest() throws Exception {
-        multiPartnerServiceController.getConfigValues();
-    }
 }

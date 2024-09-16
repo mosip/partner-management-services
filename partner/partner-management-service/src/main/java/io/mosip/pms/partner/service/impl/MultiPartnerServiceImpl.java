@@ -40,7 +40,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String INACTIVE = "INACTIVE";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
-    public static final String YES = "YES";
 
     @Autowired
     PartnerServiceRepository partnerRepository;
@@ -56,9 +55,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
 
     @Autowired
     MultiPartnerHelper multiPartnerHelper;
-
-    @Autowired
-    UserDetailsRepository userDetailsRepository;
 
     @Override
     public List<CertificateDto> getPartnerCertificates() {
@@ -408,97 +404,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
         }
         return apiKeyResponseDtoList;
-    }
-
-    private String getUserBy() {
-        String crBy = authUserDetails().getMail();
-        return crBy;
-    }
-
-    @Override
-    public UserDetailsDto saveUserConsent() {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
-        try {
-            String userId = getUserId();
-            List<Partner> partnerList = partnerRepository.findByUserId(userId);
-            if (!partnerList.isEmpty()) {
-                UserDetails userDetails = new UserDetails();
-
-                LocalDateTime nowDate = LocalDateTime.now();
-                userDetails.setConsentGiven(YES);
-                userDetails.setConsentGivenDtimes(nowDate);
-
-                Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
-                if (optionalEntity.isPresent()) {
-                    UserDetails entity = optionalEntity.get();
-                    userDetails.setId(entity.getId());
-                    userDetails.setUpdBy(this.getUserBy());
-                    userDetails.setUpdDtimes(nowDate);
-                    userDetails.setCrBy(entity.getCrBy());
-                    userDetails.setCrDtimes(entity.getCrDtimes());
-                    userDetails.setUserId(entity.getUserId());
-                } else {
-                    userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
-                    userDetails.setCrBy(this.getUserBy());
-                    userDetails.setCrDtimes(nowDate);
-                    userDetails.setUserId(userId);
-                }
-                UserDetails respEntity = userDetailsRepository.save(userDetails);
-                LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
-
-                userDetailsDto.setConsentGiven(true);
-                userDetailsDto.setUserId(respEntity.getUserId());
-                userDetailsDto.setConsentGivenDateTime(respEntity.getConsentGivenDtimes());
-
-            } else {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In saveUserConsent method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
-        } catch (Exception e) {
-            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id", "In saveUserConsent method of MultiPartnerServiceImpl - " + e.getMessage());
-            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
-                    ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
-        }
-        return userDetailsDto;
-    }
-
-    @Override
-    public UserDetailsDto isUserConsentGiven() {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
-        try {
-            String userId = getUserId();
-            List<Partner> partnerList = partnerRepository.findByUserId(userId);
-            if (!partnerList.isEmpty()) {
-                userDetailsDto.setUserId(userId);
-                LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
-                Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
-                if (optionalEntity.isPresent()) {
-                    UserDetails entity = optionalEntity.get();
-                    if (entity.getConsentGiven().equals(YES)) {
-                        userDetailsDto.setConsentGiven(true);
-                        userDetailsDto.setConsentGivenDateTime(entity.getConsentGivenDtimes());
-                    }
-                }
-            } else {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
-        } catch (Exception e) {
-            LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
-            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
-                    ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
-        }
-        return userDetailsDto;
     }
 
     private AuthUserDetails authUserDetails() {

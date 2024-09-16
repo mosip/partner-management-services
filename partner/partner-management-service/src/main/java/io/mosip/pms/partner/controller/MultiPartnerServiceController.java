@@ -1,6 +1,5 @@
 package io.mosip.pms.partner.controller;
 
-import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.service.MultiPartnerService;
@@ -27,21 +26,6 @@ import java.util.Map;
 @Api(tags = { "Multi Partner Service Controller" })
 public class MultiPartnerServiceController {
 
-    @Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
-    private String grantTypes;
-
-    @Value("${mosip.pms.oidc.clients.clientAuthMethods:private_key_jwt}")
-    private String clientAuthMethods;
-
-    @Value("${mosip.pms.session.inactivity.timer}")
-    private String inActivityTimer;
-
-    @Value("${mosip.pms.session.inactivity.prompt.timer}")
-    private String inActivityPromptTimer;
-
-    @Value("${mosip.pms.axios.timeout}")
-    private String axiosTimeout;
-
     @Value("${mosip.pms.api.id.all.certificates.details.get}")
     private String getPartnerCertificatesId;
 
@@ -54,17 +38,8 @@ public class MultiPartnerServiceController {
     @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
     private String getApprovedPartnerIdsWithPolicyGroupsId;
 
-    @Value("${mosip.pms.api.id.configs.get}")
-    private String getConfigsId;
-
     @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
     private String getApiKeysForAuthPartners;
-
-    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
-    private String postSaveUserConsentId;
-
-    @Value("${mosip.pms.api.id.user.consent.given.get}")
-    private String getUserConsentGivenId;
 
     public static final String VERSION = "1.0";
 
@@ -75,10 +50,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/partner-certificates")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificates() {
         ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setId(getPartnerCertificatesId);
@@ -91,10 +64,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/policy-requests")
     @Operation(summary = "Get all policies", description = "fetch all policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
         ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setId(getAllRequestedPoliciesId);
@@ -107,10 +78,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/auth-partners-policies")
     @Operation(summary = "Get all approved auth partner policies", description = "fetch all approved auth partner policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<ApprovedPolicyDto>> getAuthPartnerPolicies() {
         ResponseWrapperV2<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setId(getAuthPartnersPoliciesId);
@@ -123,10 +92,8 @@ public class MultiPartnerServiceController {
     @GetMapping(value = "/approved-partner-ids-with-policy-groups")
     @Operation(summary = "Get all approved partner id's with policy groups", description = "fetch all approved partner id's with policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<PolicyGroupDto>> getApprovedPartnerIdsWithPolicyGroups() {
         ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setId(getApprovedPartnerIdsWithPolicyGroupsId);
@@ -135,73 +102,17 @@ public class MultiPartnerServiceController {
         return responseWrapper;
     }
 
-    @GetMapping(value = "/configs")
-    @Operation(summary = "Get config", description = "Get configuration values")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<Map<String, String>> getConfigValues() {
-        ResponseWrapper<Map<String, String>> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setId(getConfigsId);
-        responseWrapper.setVersion(VERSION);
-        Map<String, String> configMap = new HashMap<String, String>();
-        configMap.put("grantTypes", grantTypes);
-        configMap.put("clientAuthMethods", clientAuthMethods);
-        configMap.put("inActivityTimer", inActivityTimer);
-        configMap.put("inActivityPromptTimer", inActivityPromptTimer);
-        configMap.put("axiosTimeout", axiosTimeout);
-        responseWrapper.setResponse(configMap);
-        System.out.println(responseWrapper);
-        return responseWrapper;
-    }
-
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapikeysforauthpartners())")
     @GetMapping(value = "/api-keys-for-auth-partners")
     @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<ApiKeyResponseDto>> getApiKeysForAuthPartners() {
         ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setId(getApiKeysForAuthPartners);
         responseWrapper.setVersion(VERSION);
         responseWrapper.setResponse(multiPartnerService.getApiKeysForAuthPartners());
-        return responseWrapper;
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-    @PostMapping(value = "/user-consent")
-    @Operation(summary = "save user consent", description = "Store the user consent in the database.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<UserDetailsDto> saveUserConsent() {
-        ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setId(postSaveUserConsentId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.saveUserConsent());
-        return responseWrapper;
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-    @GetMapping(value = "/user-consent")
-    @Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
-        ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setId(getUserConsentGivenId);
-        responseWrapper.setVersion(VERSION);
-        responseWrapper.setResponse(multiPartnerService.isUserConsentGiven());
         return responseWrapper;
     }
 }
