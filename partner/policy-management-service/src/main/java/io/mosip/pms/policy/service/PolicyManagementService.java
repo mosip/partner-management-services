@@ -1072,8 +1072,6 @@ public class PolicyManagementService {
 			policyGroupDto.setDescription(policyGroup.getDesc());
 			policyGroupDto.setName(policyGroup.getName());
 			policyGroupDto.setIsActive(policyGroup.getIsActive());
-			policyGroupDto.setUpdBy(policyGroup.getUpdBy());
-			policyGroupDto.setUpdDtimes(policyGroup.getUpdDtimes());
 
 			policyGroupDtoList.add(policyGroupDto);
 		}

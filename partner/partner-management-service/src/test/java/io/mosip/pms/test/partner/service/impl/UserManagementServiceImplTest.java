@@ -9,6 +9,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -38,10 +39,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class UserManagementServiceImplTest {
 	
-	@Autowired
+	@InjectMocks
 	UserManagementServiceImpl userManagementServiceImpl;
 	
-	@MockBean
+	@Mock
 	private KeycloakImpl keycloakImpl;
 
 	@Mock
