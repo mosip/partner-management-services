@@ -357,7 +357,7 @@ public class PartnerServiceController {
     }
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
-	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/original-partner-certificate", method = RequestMethod.GET)
 	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

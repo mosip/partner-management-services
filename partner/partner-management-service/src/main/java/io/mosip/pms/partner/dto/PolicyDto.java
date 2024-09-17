@@ -21,7 +21,7 @@ public class PolicyDto {
     private String policyName;
 
     @Schema(description = "Date when the policy was created", example = "2024-07-15T10:00:00Z")
-    private Date createDate;
+    private Date createdDateTime;
 
     @Schema(description = "Current status of the policy", example = "approved")
     private String status;
@@ -45,5 +45,5 @@ public class PolicyDto {
     private String partnerComments;
 
     @Schema(description = "Date and time when the policy was last updated", example = "2024-08-01T14:30:00Z")
-    private Date updDtimes;
+    private Date updatedDateTime;
 }

@@ -335,7 +335,7 @@ public class PartnerServiceControllerTest {
         requestWrapper.setRequest(requestDto);
         responseWrapper.setResponse(originalCertDownloadResponseDto);
         Mockito.when(partnerService.getOriginalPartnerCertificate(requestDto)).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/originalPartnerCertificate")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/original-partner-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     private RequestWrapper<FilterValueDto> createFilterRequest(){

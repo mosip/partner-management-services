@@ -28,7 +28,5 @@ public class OriginalCertDownloadResponseDto {
     /**
      * Response timestamp.
      */
-    @Schema(description = "Timestamp of the response", example = "2024-08-08T10:00:00Z")
-    private LocalDateTime timestamp;
 
 }

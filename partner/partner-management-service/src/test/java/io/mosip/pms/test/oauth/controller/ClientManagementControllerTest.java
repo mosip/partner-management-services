@@ -162,12 +162,12 @@ public class ClientManagementControllerTest {
     }
 
     @Test
-    public void getAllOidcClients() throws Exception {
+    public void getClients() throws Exception {
         ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
         List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
         responseWrapper.setResponse(oidcClientDtoList);
-        when(clientManagementService.getAllOidcClients()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<OidcClientDto>> actualResponse = clientController.getAllOidcClients();
+        when(clientManagementService.getClients()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<OidcClientDto>> actualResponse = clientController.getClients();
     }
 
 }
