@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -53,6 +52,7 @@ import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.policy.dto.ResponseWrapper;
+import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -294,12 +294,12 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
-	@GetMapping(value = "/getAllPolicyGroups")
+	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
-		return policyManagementService.getAllPolicyGroups();
+	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
+		return policyManagementService.getPolicyGroups();
 	}
 }

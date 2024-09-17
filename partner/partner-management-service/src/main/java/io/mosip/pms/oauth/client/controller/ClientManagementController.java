@@ -90,13 +90,13 @@ public class ClientManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalloidcclients())")
-	@GetMapping(value = "/getAllOidcClients")
-	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
+	@GetMapping(value = "/oauth/clients")
+	@Operation(summary = "Get all clients", description = "fetch all clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients() {
-		return clientManagementService.getAllOidcClients();
+	public ResponseWrapperV2<List<OidcClientDto>> getClients() {
+		return clientManagementService.getClients();
 	}
 	
 }

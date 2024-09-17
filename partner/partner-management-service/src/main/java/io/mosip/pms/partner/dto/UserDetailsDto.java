@@ -19,6 +19,6 @@ public class UserDetailsDto {
     private boolean consentGiven;
 
     @Schema(description = "Date and time when consent was given", example = "2024-08-08T10:00:00Z")
-    private LocalDateTime consentGivenDtimes;
+    private LocalDateTime consentGivenDateTime;
 
 }

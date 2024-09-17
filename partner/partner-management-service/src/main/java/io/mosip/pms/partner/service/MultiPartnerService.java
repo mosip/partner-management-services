@@ -7,19 +7,15 @@ import java.util.List;
 
 public interface MultiPartnerService {
 
-    public ResponseWrapperV2<List<CertificateDto>> getAllCertificateDetails();
+    public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificates();
 
-    public ResponseWrapperV2<List<PolicyDto>> getAllRequestedPolicies();
+    public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests();
 
-    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies();
+    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAuthPartnersPolicies();
 
-    public ResponseWrapperV2<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups();
+    public ResponseWrapperV2<List<PolicyGroupDto>> getApprovedPartnerIdsWithPolicyGroups();
 
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners();
-
-    public ResponseWrapperV2<UserDetailsDto> saveUserConsentGiven();
-
-    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven();
+    public ResponseWrapperV2<List<ApiKeyResponseDto>> getApiKeysForAuthPartners();
 
     public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails();
 

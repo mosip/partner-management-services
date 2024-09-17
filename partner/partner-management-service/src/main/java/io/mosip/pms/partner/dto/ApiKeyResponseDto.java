@@ -36,11 +36,8 @@ public class ApiKeyResponseDto {
     private String policyName;
 
     @Schema(description = "Description of the policy name", example = "Policy that outlines data protection measures")
-    private String policyNameDescription;
+    private String policyDescription;
 
     @Schema(description = "Date and time when the record was created", example = "2024-07-15T10:00:00Z")
-    private Date crDtimes;
-
-    @Schema(description = "Date and time when the record was last updated", example = "2024-08-01T14:30:00Z")
-    private Date updDtimes;
+    private Date createdDateTime;
 }

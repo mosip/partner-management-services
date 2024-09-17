@@ -83,7 +83,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String VERSION = "1.0";
 
 	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
-	private String getAllOidcClientsId;
+	private String getClientsId;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -623,7 +623,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients() {
+	public ResponseWrapperV2<List<OidcClientDto>> getClients() {
 		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
@@ -661,15 +661,15 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDto.setPolicyGroupDescription(policyGroup.getDesc());
 					oidcClientDto.setPolicyId(authPolicy.get().getId());
 					oidcClientDto.setPolicyName(authPolicy.get().getName());
-					oidcClientDto.setPolicyNameDescription(authPolicy.get().getDescr());
+					oidcClientDto.setPolicyDescription(authPolicy.get().getDescr());
 					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
 					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
 					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
 					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
 					oidcClientDto.setStatus(clientDetail.getStatus());
 					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oidcClientDto.setCrDtimes(clientDetail.getCreatedDateTime());
-					oidcClientDto.setUpdDtimes(clientDetail.getUpdatedDateTime());
+					oidcClientDto.setCreatedDateTime(clientDetail.getCreatedDateTime());
+					oidcClientDto.setUpdatedDateTime(clientDetail.getUpdatedDateTime());
 					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
 					oidcClientDtoList.add(oidcClientDto);
 				}
@@ -678,17 +678,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		} catch (PartnerServiceException ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAllOidcClientsId);
+		responseWrapper.setId(getClientsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
