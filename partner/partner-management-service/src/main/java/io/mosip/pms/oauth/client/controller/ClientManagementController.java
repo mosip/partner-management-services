@@ -42,7 +42,7 @@ public class ClientManagementController {
 	AuditUtil auditUtil;
 
 	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
-	private String getOidcClientsId;
+	private String getClientsId;
 
 	public static final String VERSION = "1.0";
 
@@ -104,16 +104,16 @@ public class ClientManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalloidcclients())")
-	@GetMapping(value = "/oidc-clients")
+	@GetMapping(value = "/oauth/clients")
 	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<OidcClientDto>> getOidcClients() {
+	public ResponseWrapperV2<List<OidcClientDto>> getClients() {
 		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId(getOidcClientsId);
+		responseWrapper.setId(getClientsId);
 		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(clientManagementService.getOidcClients());
+		responseWrapper.setResponse(clientManagementService.getClients());
 		return responseWrapper;
 	}
 	

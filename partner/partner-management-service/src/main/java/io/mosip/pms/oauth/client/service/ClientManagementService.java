@@ -59,5 +59,5 @@ public interface ClientManagementService {
 	ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception;
 
-    List<OidcClientDto> getOidcClients();
+    List<OidcClientDto> getClients();
 }

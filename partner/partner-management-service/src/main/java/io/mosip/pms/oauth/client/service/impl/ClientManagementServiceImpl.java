@@ -656,7 +656,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
     }
 
 	@Override
-	public List<OidcClientDto> getOidcClients() {
+	public List<OidcClientDto> getClients() {
 		List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
 		try {
 			String userId = getUserId();
@@ -709,7 +709,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
 					ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
 		}
