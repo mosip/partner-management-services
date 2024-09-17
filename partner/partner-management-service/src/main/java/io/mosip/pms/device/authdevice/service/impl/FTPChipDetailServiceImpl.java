@@ -563,7 +563,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 				responseWrapper.setResponse(ftmDetailResponseDto);
 			} else {
-				LOGGER.error("Unable to deactivate device with id {}", ftm.getFtpChipDetailId());
+				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
 				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorCode(),
 						ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorMessage());
 			}
