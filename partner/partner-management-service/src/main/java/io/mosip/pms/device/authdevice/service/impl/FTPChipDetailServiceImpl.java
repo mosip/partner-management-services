@@ -6,14 +6,12 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -62,16 +60,11 @@ import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailUpdateDto;
-import io.mosip.pms.device.response.dto.FTPSearchResponseDto;
-import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
-import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
-import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-
 
 @Component
 @Transactional
@@ -102,6 +95,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	
 	@Autowired
 	PartnerServiceRepository partnerServiceRepository;
+
+	@Autowired
+	PartnerServiceRepository partnerRepository;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -111,12 +107,20 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	private static final String ERRORCODE = "errorCode";
 
 	private static final String ERRORMESSAGE = "message";
-	
+
+	public static final String VERSION = "1.0";
+
+	public static final String APPROVED = "approved";
+
+	public static final String BLANK_STRING = "";
 	@Value("${pms.certs.datashare.subscriberId}")
 	private String subscriberId;
 	
 	@Value("${pms.certs.datashare.policyId}")
 	private String policyId;
+
+	@Value("${mosip.pms.api.id.deactivate.ftm.post}")
+	private  String postDeactivateFtm;
 	
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -499,5 +503,100 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		data.put("certChainDatashareUrl", certData);
 		data.put("partnerDomain", partnerDomain);
 		webSubPublisher.notify(EventType.CA_CERTIFICATE_UPLOADED, data, type);
+	}
+
+	@Override
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId) {
+		ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (Objects.isNull(ftmId)) {
+				LOGGER.info("sessionId", "idType", "id", "FTM id is null.");
+				throw new PartnerServiceException(ErrorCode.INVALID_FTM_ID.getErrorCode(),
+						ErrorCode.INVALID_FTM_ID.getErrorMessage());
+			}
+			Optional<FTPChipDetail> ftmChipDetail = ftpChipDetailRepository.findById(ftmId);
+			if (!ftmChipDetail.isPresent()) {
+				LOGGER.error("FTM Details not exists with id {}", ftmId);
+				throw new PartnerServiceException(ErrorCode.FTM_NOT_EXISTS.getErrorCode(),
+						ErrorCode.FTM_NOT_EXISTS.getErrorMessage());
+			}
+			FTPChipDetail ftm = ftmChipDetail.get();
+			// check if the FTM is associated with user.
+			String ftmProviderId = ftm.getFtpProviderId();
+			boolean ftmProviderExist = false;
+			Partner partnerDetails = new Partner();
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(ftmProviderId)) {
+					validatePartnerId(partner, userId);
+					ftmProviderExist = true;
+					partnerDetails = partner;
+					break;
+				}
+			}
+			if (!ftmProviderExist) {
+				LOGGER.info("sessionId", "idType", "id", "FTM is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			//check if Partner is Active or not
+			if (!partnerDetails.getIsActive()) {
+				LOGGER.error("Partner is not Active with id {}", ftmProviderId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+			// Deactivate only if the FTM is approved status and is_active true.
+			if (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive()) {
+				FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
+
+				ftm.setActive(false);
+				FTPChipDetail updatedDetail = ftpChipDetailRepository.save(ftm);
+				ftmDetailResponseDto.setFtmId(updatedDetail.getFtpChipDetailId());
+				ftmDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+				ftmDetailResponseDto.setActive(updatedDetail.isActive());
+
+				responseWrapper.setResponse(ftmDetailResponseDto);
+			} else {
+				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
+				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorCode(),
+						ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorMessage());
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In deactivateFtm method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In deactivateFtm method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DEACTIVATE_FTM_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DEACTIVATE_FTM_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postDeactivateFtm);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public static void validatePartnerId(Partner partner, String userId) {
+		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+			LOGGER.info("Partner Id is null or empty for user id : " + userId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+		}
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
 	}
 }
