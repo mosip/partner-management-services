@@ -124,7 +124,12 @@ public enum ErrorCode {
 	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "The selected SBI must be active and approved"),
 	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired"),
 	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
-	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids.");
+	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids."),
+	DEACTIVATE_FTM_ERROR("PMS_FTM_ERROR_003", "Error while deactivating the FTM"),
+	INVALID_FTM_ID("PMS_FTM_ERROR_004", "FTM Id is invalid"),
+	FTM_NOT_EXISTS("PMS_FTM_ERROR_005", "FTM Details do not exists."),
+	FTM_NOT_ASSOCIATED_WITH_USER("PMS_FTM_ERROR_006", "FTM is not associated with user."),
+	UNABLE_TO_DEACTIVATE_FTM("PMS_FTM_ERROR_007", "The selected FTM must be active and approved");
 	/**
 	 * The error code.
 	 */

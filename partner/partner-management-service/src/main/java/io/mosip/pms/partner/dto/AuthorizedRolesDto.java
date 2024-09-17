@@ -172,5 +172,7 @@ public class AuthorizedRolesDto {
 	private List<String> getftmchipdetails;
 
 	private List<String> getapprovedftmproviderids;
+
+	private List<String> postdeactivateftm;
 		
 }
