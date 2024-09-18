@@ -136,8 +136,8 @@ public class PolicyManagementService {
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
 
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getAllPolicyGroupsId;
+	@Value("${mosip.pms.api.id.policy.groups.get}")
+	private String getPolicyGroupsId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -1088,7 +1088,7 @@ public class PolicyManagementService {
 			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAllPolicyGroupsId);
+		responseWrapper.setId(getPolicyGroupsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

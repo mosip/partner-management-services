@@ -29,7 +29,7 @@ public class MultiPartnerServiceController {
     @Autowired
     RequestValidator requestValidator;
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPartnercertificates())")
     @GetMapping(value = "/partner-certificates")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -39,7 +39,7 @@ public class MultiPartnerServiceController {
         return  multiPartnerService.getPartnerCertificates();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallrequestedpolicies())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPolicyrequests())")
     @GetMapping(value = "/policy-requests")
     @Operation(summary = "Get all policies", description = "fetch all policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -49,7 +49,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getPolicyRequests();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedauthpartnerpolicies())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getAuthpartnerspolicies())")
     @GetMapping(value = "/auth-partners-policies")
     @Operation(summary = "Get all approved auth partner policies", description = "fetch all approved auth partner policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -59,7 +59,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getAuthPartnersPolicies();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedpartneridswithpolicygroups())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getApprovedpartneridswithpolicygroups())")
     @GetMapping(value = "/approved-partner-ids-with-policy-groups")
     @Operation(summary = "Get all approved partner id's with policy groups", description = "fetch all approved partner id's with policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -69,7 +69,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getApprovedPartnerIdsWithPolicyGroups();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapikeysforauthpartners())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getApikeysforauthpartners())")
     @GetMapping(value = "/api-keys-for-auth-partners")
     @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -79,7 +79,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getApiKeysForAuthPartners();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
     @GetMapping(value = "/sbi-details")
     @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -89,7 +89,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.sbiDetails();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
     @GetMapping(value = "/approved-device-provider-ids")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -99,7 +99,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.approvedDeviceProviderIds();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getFtmchipservice())")
     @GetMapping(value = "/ftm-chip-details")
     @Operation(summary = "Get list of all the FTM Chip details", description = "This endpoint will fetch the list of all the FTM Chip details created by all the partner Id's associated with the logged in user")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -109,7 +109,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.ftmChipDetails();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedftmproviderids())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getFtmchipservice())")
     @GetMapping(value = "/approved-ftm-provider-ids")
     @Operation(summary = "Get all approved FTM providers ids.", description = "This endpoint will fetch list of all the approved FTM provider ID's mapped to the logged in user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

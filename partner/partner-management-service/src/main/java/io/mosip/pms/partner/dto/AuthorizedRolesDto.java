@@ -147,32 +147,24 @@ public class AuthorizedRolesDto {
 
 	//Multi Partner Service Controller
 
-	private List<String> getallcertificatedetails;
+	private List<String> partnercertificates;
 
-	private List<String> getallrequestedpolicies;
+	private List<String> policyrequests;
 
-	private List<String> getallapprovedauthpartnerpolicies;
+	private List<String> authpartnerspolicies;
 
-	private List<String> getallapprovedpartneridswithpolicygroups;
+	private List<String> approvedpartneridswithpolicygroups;
 
-	private List<String> getallapikeysforauthpartners;
+	private List<String> apikeysforauthpartners;
 
-	private List<String> getalloidcclients;
+	private List<String> oauthclients;
 
 	private List<String> userconsent;
 
-	private List<String> getallsbidetails;
+	private List<String> deviceproviderservice;
 
-	private List<String> postdevicewithsbimapping;
+	private List<String> deviceprovideradminservice;
 
-	private List<String> postdeactivatedevice;
-
-	private List<String> postdeactivatesbi;
-
-	private List<String> getftmchipdetails;
-
-	private List<String> getapprovedftmproviderids;
-
-	private List<String> postdeactivateftm;
+	private List<String> ftmchipservice;
 		
 }

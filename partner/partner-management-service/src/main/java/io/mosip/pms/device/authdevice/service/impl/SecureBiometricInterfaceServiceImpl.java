@@ -78,7 +78,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public static final String APPROVED = "approved";
 	public static final String REJECTED = "rejected";
 
-	@Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
+	@Value("${mosip.pms.api.id.sbi.devices.get}")
 	private  String getSbiDevicesId;
 
 	@Value("${mosip.pms.api.id.deactivate.sbi.post}")

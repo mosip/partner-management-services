@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class OidcClientDto {
+public class OauthClientDto {
     @Schema(description = "Unique identifier for the user", example = "user789")
     private String userId;
 
@@ -15,10 +15,10 @@ public class OidcClientDto {
     private String partnerId;
 
     @Schema(description = "Unique identifier for the OIDC (OpenID Connect) client", example = "oidcClient456")
-    private String oidcClientId;
+    private String clientId;
 
     @Schema(description = "Name of the OIDC client", example = "MyOIDCClient")
-    private String oidcClientName;
+    private String clientName;
 
     @Schema(description = "Unique identifier for the policy group", example = "policyGroup789")
     private String policyGroupId;

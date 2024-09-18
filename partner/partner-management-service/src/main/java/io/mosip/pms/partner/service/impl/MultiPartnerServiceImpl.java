@@ -3,13 +3,11 @@ package io.mosip.pms.partner.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
@@ -30,7 +28,6 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
-import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,29 +54,29 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String PENDING_APPROVAL = "pending_approval";
     public static final String VERSION = "1.0";
 
-    @Value("${mosip.pms.api.id.all.certificates.details.get}")
-    private String getAllCertificatesDetailsId;
+    @Value("${mosip.pms.api.id.partner.certificates.get}")
+    private String getPartnerCertificatesId;
 
-    @Value("${mosip.pms.api.id.all.requested.policies.get}")
-    private String getAllRequestedPoliciesId;
+    @Value("${mosip.pms.api.id.policy.requests.get}")
+    private String getPolicyRequestsId;
 
-    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
+    @Value("${mosip.pms.api.id.approved.partner.ids.with.policy.groups.get}")
     private String getApprovedPartnerIdsWithPolicyGroupsId;
 
-    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
-    private String getAllApprovedAuthPartnersPoliciesId;
+    @Value("${mosip.pms.api.id.auth.partners.policies.get}")
+    private String getAuthPartnersPoliciesId;
 
-    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
+    @Value("${mosip.pms.api.id.api.keys.for.auth.partners.get}")
     private String getApiKeysForAuthPartnersId;
 
-    @Value("${mosip.pms.api.id.all.sbi.details.get}")
+    @Value("${mosip.pms.api.id.sbi.details.get}")
     private  String getSbiDetailsId;
 
-    @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
+    @Value("${mosip.pms.api.id.approved.device.provider.ids.get}")
     private  String getApprovedDeviceProviderIds;
 
     @Value("${mosip.pms.api.id.ftm.chip.details.get}")
-    private String getFtmChipDetails;
+    private String getFtmChipDetailsId;
 
     @Value("${mosip.pms.api.id.approved.ftm.provider.ids.get}")
     private String getApprovedFtmProviderIds;
@@ -172,7 +169,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllCertificatesDetailsId);
+        responseWrapper.setId(getPartnerCertificatesId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -238,7 +235,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllRequestedPoliciesId);
+        responseWrapper.setId(getPolicyRequestsId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -352,7 +349,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
+        responseWrapper.setId(getAuthPartnersPoliciesId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }
@@ -667,7 +664,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             String errorMessage = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        responseWrapper.setId(getFtmChipDetails);
+        responseWrapper.setId(getFtmChipDetailsId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }

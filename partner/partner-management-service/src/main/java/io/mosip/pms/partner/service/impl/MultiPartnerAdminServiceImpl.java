@@ -28,10 +28,10 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
     public static final String APPROVED = "approved";
     public static final String VERSION = "1.0";
 
-    @Value("${mosip.pms.api.id.approve.device.with.sbi.mapping.post:mosip.approve.device.with.sbi.mapping.post}")
+    @Value("${mosip.pms.api.id.approve.mapping.device.to.sbi.post:mosip.pms.approve.mapping.device.to.sbi.post}")
     private String postApproveMappingDeviceToSbiId;
 
-    @Value("${mosip.pms.api.id.reject.device.with.sbi.mapping.post:mosip.reject.device.with.sbi.mapping.post}")
+    @Value("${mosip.pms.api.id.reject.mapping.device.to.sbi.post:mosip.pms.reject.mapping.device.to.sbi.post}")
     private String postRejectMappingDeviceToSbiId;
 
     @Autowired
