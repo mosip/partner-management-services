@@ -13,10 +13,13 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.request.dto.ErrorResponse;
+import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
@@ -35,6 +38,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
@@ -83,6 +89,10 @@ public class FTPChipDetailServiceTest {
 	
 	@Mock
 	FTPChipDetailRepository ftpChipDetailRepository;
+
+	@Mock
+	PartnerServiceRepository partnerRepository;
+
 	@Mock
 	private Environment environment;
 	
@@ -104,6 +114,12 @@ public class FTPChipDetailServiceTest {
 	
 	@Mock
 	private AuditUtil audit;
+
+	@Mock
+	Authentication authentication;
+
+	@Mock
+	SecurityContext securityContext;
 	
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	Partner partner=new Partner();
@@ -993,5 +1009,94 @@ public class FTPChipDetailServiceTest {
 				.notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
 		ReflectionTestUtils.invokeMethod(fTPChipDetailServiceImpl,"notify","Cert Data", "Partner Domain");
 		verify(webSubPublisher).notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
+	}
+
+	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
+	}
+
+	@Test
+	public void deactivateFtmTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("23456");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setActive(true);
+		when(ftpChipDetailRepository.findById(anyString())).thenReturn(Optional.of(ftpChipDetail));
+		when(ftpChipDetailRepository.save(any())).thenReturn(ftpChipDetail);
+		ftpChipDetailService.deactivateFtm("23456");
+	}
+
+	@Test
+	public void deactivateFtmTestException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		ftpChipDetailService.deactivateFtm(null);
+	}
+
+	@Test
+	public void deactivateFtmTestException1() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		ftpChipDetailService.deactivateFtm("23456");
+	}
+
+	@Test
+	public void deactivateFtmTestException2() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		when(ftpChipDetailRepository.findById(anyString())).thenReturn(Optional.of(ftpChipDetail));
+		ftpChipDetailService.deactivateFtm("23456");
 	}
 }
