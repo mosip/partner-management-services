@@ -35,10 +35,10 @@ public class UserManagementServiceImpl implements UserManagementService{
 	public static final String YES = "YES";
 	public static final String VERSION = "1.0";
 
-	@Value("${mosip.pms.api.id.save.user.consent.given.post}")
+	@Value("${mosip.pms.api.id.user.consent.post}")
 	private String postSaveUserConsentGivenId;
 
-	@Value("${mosip.pms.api.id.user.consent.given.get}")
+	@Value("${mosip.pms.api.id.user.consent.get}")
 	private String getUserConsentGivenId;
 
 	@Autowired

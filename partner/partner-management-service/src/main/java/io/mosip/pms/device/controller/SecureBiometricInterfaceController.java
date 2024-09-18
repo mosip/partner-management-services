@@ -205,7 +205,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
 	@GetMapping(value = "/sbi-devices/{sbiId}")
 	@Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {

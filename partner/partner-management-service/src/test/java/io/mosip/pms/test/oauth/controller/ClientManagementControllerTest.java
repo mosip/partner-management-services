@@ -8,17 +8,14 @@ import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
-import io.mosip.pms.partner.dto.PolicyGroupDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -163,11 +160,11 @@ public class ClientManagementControllerTest {
 
     @Test
     public void getClients() throws Exception {
-        ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
-        List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
-        responseWrapper.setResponse(oidcClientDtoList);
+        ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
+        List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
+        responseWrapper.setResponse(oauthClientDtoList);
         when(clientManagementService.getClients()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<OidcClientDto>> actualResponse = clientController.getClients();
+        ResponseWrapperV2<List<OauthClientDto>> actualResponse = clientController.getClients();
     }
 
 }

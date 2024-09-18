@@ -1,21 +1,15 @@
 package io.mosip.pms.oauth.client.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
-import io.mosip.pms.common.request.dto.ErrorResponse;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
-import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +42,6 @@ import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
-import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
@@ -82,7 +75,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String BLANK_STRING = "";
 	public static final String VERSION = "1.0";
 
-	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
+	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
 
 	@Autowired
@@ -623,12 +616,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<OidcClientDto>> getClients() {
-		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
+		ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+			List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
 			for (Partner partner : partnerList) {
 				String partnerId = partner.getId();
 				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
@@ -651,39 +644,39 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
 								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
 					}
-					OidcClientDto oidcClientDto = new OidcClientDto();
-					oidcClientDto.setPartnerId(partnerId);
-					oidcClientDto.setUserId(userId);
-					oidcClientDto.setOidcClientId(clientDetail.getId());
-					oidcClientDto.setOidcClientName(clientDetail.getName());
-					oidcClientDto.setPolicyGroupId(policyGroup.getId());
-					oidcClientDto.setPolicyGroupName(policyGroup.getName());
-					oidcClientDto.setPolicyGroupDescription(policyGroup.getDesc());
-					oidcClientDto.setPolicyId(authPolicy.get().getId());
-					oidcClientDto.setPolicyName(authPolicy.get().getName());
-					oidcClientDto.setPolicyDescription(authPolicy.get().getDescr());
-					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
-					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
-					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
-					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
-					oidcClientDto.setStatus(clientDetail.getStatus());
-					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oidcClientDto.setCreatedDateTime(clientDetail.getCreatedDateTime());
-					oidcClientDto.setUpdatedDateTime(clientDetail.getUpdatedDateTime());
-					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
-					oidcClientDtoList.add(oidcClientDto);
+					OauthClientDto oauthClientDto = new OauthClientDto();
+					oauthClientDto.setPartnerId(partnerId);
+					oauthClientDto.setUserId(userId);
+					oauthClientDto.setClientId(clientDetail.getId());
+					oauthClientDto.setClientName(clientDetail.getName());
+					oauthClientDto.setPolicyGroupId(policyGroup.getId());
+					oauthClientDto.setPolicyGroupName(policyGroup.getName());
+					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
+					oauthClientDto.setPolicyId(authPolicy.get().getId());
+					oauthClientDto.setPolicyName(authPolicy.get().getName());
+					oauthClientDto.setPolicyDescription(authPolicy.get().getDescr());
+					oauthClientDto.setRelyingPartyId(clientDetail.getRpId());
+					oauthClientDto.setLogoUri(clientDetail.getLogoUri());
+					oauthClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+					oauthClientDto.setPublicKey(clientDetail.getPublicKey());
+					oauthClientDto.setStatus(clientDetail.getStatus());
+					oauthClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+					oauthClientDto.setCreatedDateTime(clientDetail.getCreatedDateTime());
+					oauthClientDto.setUpdatedDateTime(clientDetail.getUpdatedDateTime());
+					oauthClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
+					oauthClientDtoList.add(oauthClientDto);
 				}
 			}
-			responseWrapper.setResponse(oidcClientDtoList);
+			responseWrapper.setResponse(oauthClientDtoList);
 		} catch (PartnerServiceException ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));

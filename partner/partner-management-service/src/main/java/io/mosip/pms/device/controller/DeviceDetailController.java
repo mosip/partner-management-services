@@ -51,7 +51,7 @@ import java.util.Optional;
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
 
-	@Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
+	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
 	private  String postInactiveMappingDeviceToSbiId;
 
 	@Value("${mosip.pms.api.id.deactivate.device.post}")
@@ -221,7 +221,7 @@ public class DeviceDetailController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostinactivemappingdevicetosbi())")
 	@PostMapping(value = "/inactive-mapping-device-to-sbi")
 	@Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
