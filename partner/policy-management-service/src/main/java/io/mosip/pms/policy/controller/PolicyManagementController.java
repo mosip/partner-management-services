@@ -293,7 +293,7 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPolicygroups())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetPolicygroups())")
 	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
