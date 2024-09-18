@@ -79,7 +79,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getApiKeysForAuthPartners();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getSbiservice())")
     @GetMapping(value = "/sbi-details")
     @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -89,7 +89,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.sbiDetails();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getSbiservice())")
     @GetMapping(value = "/approved-device-provider-ids")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -99,7 +99,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.approvedDeviceProviderIds();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getFtmchipservice())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getFtmchipdetails())")
     @GetMapping(value = "/ftm-chip-details")
     @Operation(summary = "Get list of all the FTM Chip details", description = "This endpoint will fetch the list of all the FTM Chip details created by all the partner Id's associated with the logged in user")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -109,7 +109,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.ftmChipDetails();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getFtmchipservice())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getApprovedftmproviderids())")
     @GetMapping(value = "/approved-ftm-provider-ids")
     @Operation(summary = "Get all approved FTM providers ids.", description = "This endpoint will fetch list of all the approved FTM provider ID's mapped to the logged in user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

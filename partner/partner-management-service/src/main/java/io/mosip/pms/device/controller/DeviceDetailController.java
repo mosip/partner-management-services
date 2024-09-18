@@ -221,7 +221,7 @@ public class DeviceDetailController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getSbiservice())")
 	@PostMapping(value = "/inactive-mapping-device-to-sbi")
 	@Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
@@ -237,7 +237,7 @@ public class DeviceDetailController {
 		return deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest());
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getDeviceproviderservice())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getDeactivatedevice())")
 	@PostMapping(value = "/deactivate-device")
 	@Operation(summary = "Deactivate device details", description = "Deactivate device details")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {

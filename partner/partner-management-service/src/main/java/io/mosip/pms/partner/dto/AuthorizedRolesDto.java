@@ -161,10 +161,18 @@ public class AuthorizedRolesDto {
 
 	private List<String> userconsent;
 
-	private List<String> deviceproviderservice;
+	private List<String> sbiservice;
 
-	private List<String> deviceprovideradminservice;
+	private List<String> devicewithsbimapping;
 
-	private List<String> ftmchipservice;
+	private List<String> deactivatedevice;
+
+	private List<String> deactivatesbi;
+
+	private List<String> ftmchipdetails;
+
+	private List<String> approvedftmproviderids;
+
+	private List<String> deactivateftm;
 		
 }
