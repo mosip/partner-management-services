@@ -557,7 +557,7 @@ public class DeviceDetailServiceTest {
 	}
 
 	@Test
-	public void deactivateSbiTestException2() throws Exception {
+	public void deactivateDeviceTestException3() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
