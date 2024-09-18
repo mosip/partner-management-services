@@ -42,7 +42,7 @@ public class MultiPartnerAdminServiceController {
     @Autowired
     RequestValidator requestValidator;
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getDevicewithsbimapping())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostapproveorrejectdevicewithsbimapping())")
     @PostMapping(value = "/approve-mapping-device-to-sbi")
     @Operation(summary = "Approve device and activate device mapping to sbi.", description = "Approve device and activate device mapping to sbi.")
     @ApiResponses(value = {
@@ -58,7 +58,7 @@ public class MultiPartnerAdminServiceController {
         return multiPartnerAdminService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest(), false);
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getDevicewithsbimapping())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostapproveorrejectdevicewithsbimapping())")
     @PostMapping(value = "/reject-mapping-device-to-sbi")
     @Operation(summary = "Reject device and activate device mapping to sbi.", description = "Reject device and activate device mapping to sbi.")
     @ApiResponses(value = {

@@ -89,7 +89,7 @@ public class ClientManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getOauthclients())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthclients())")
 	@GetMapping(value = "/oauth/clients")
 	@Operation(summary = "Get all clients", description = "fetch all clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

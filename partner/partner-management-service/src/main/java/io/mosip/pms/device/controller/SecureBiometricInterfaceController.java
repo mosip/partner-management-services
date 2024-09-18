@@ -205,7 +205,7 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getSbiservice())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbiservice())")
 	@GetMapping(value = "/sbi-devices/{sbiId}")
 	@Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
@@ -217,7 +217,7 @@ public class SecureBiometricInterfaceController {
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getDeactivatesbi())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivatesbi())")
 	@PostMapping(value = "/deactivate-sbi")
 	@Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {

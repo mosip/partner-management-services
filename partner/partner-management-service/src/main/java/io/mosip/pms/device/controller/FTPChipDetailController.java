@@ -235,7 +235,7 @@ public class FTPChipDetailController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getDeactivateftm())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivateftm())")
 	@PostMapping(value = "/deactivate-ftm")
 	@Operation(summary = "Deactivate FTM details", description = "This endpoint will deactivate FTM Chip details based on the FTM Id sent in the Request Body.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
