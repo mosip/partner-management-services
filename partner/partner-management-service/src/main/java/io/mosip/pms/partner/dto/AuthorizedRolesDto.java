@@ -161,7 +161,7 @@ public class AuthorizedRolesDto {
 
 	private List<String> userconsent;
 
-	private List<String> getsbiservice;
+	private List<String> getsbidetails;
 
 	private List<String> getapproveddeviceproviderids;
 
