@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -22,9 +20,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -205,6 +203,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	private NotificatonService notificationService;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
@@ -819,23 +820,7 @@ public class PartnerServiceImpl implements PartnerService {
 		try {
 			OriginalCertDownloadResponseDto responseDto = null;
 			responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-			responseDto.setIsMosipSignedCertificateExpired(false);
-			responseDto.setIsCaSignedCertificateExpired(false);
-			LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
-			// Check mosip signed certificate expiry date
-			X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
-			LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-			if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
-				responseDto.setMosipSignedCertificateData("");
-				responseDto.setIsMosipSignedCertificateExpired(true);
-			}
-			// Check ca signed partner certificate expiry date
-			X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
-			LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-			if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
-				responseDto.setCaSignedCertificateData("");
-				responseDto.setIsCaSignedCertificateExpired(true);
-			}
+			partnerHelper.populateCertificateExpiryState(responseDto);
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
@@ -882,32 +867,7 @@ public class PartnerServiceImpl implements PartnerService {
 				throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
 						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
 			}
-
-			Map<String, String> pathsegments = new HashMap<>();
-			pathsegments.put("partnerCertId", partnerFromDb.get().getCertificateAlias());
-			Map<String, Object> getApiResponse = restUtil
-					.getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
-			responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
-
-			if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
-				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
-						.get(PartnerConstants.ERRORS);
-				if (!certServiceErrorList.isEmpty()) {
-					LOGGER.error("Error occurred while getting the cert from keymanager");
-					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
-				} else {
-					LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
-					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
-				}
-			}
-
-			if (responseObject == null) {
-				LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
-			}
+			responseObject = partnerHelper.getCertificate(partnerFromDb.get().getCertificateAlias(), uriProperty, responseType);
 		} else {
 			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
 			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorCode(),

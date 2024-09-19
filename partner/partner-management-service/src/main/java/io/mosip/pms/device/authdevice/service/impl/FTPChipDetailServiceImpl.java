@@ -11,7 +11,9 @@ import java.util.*;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -102,6 +104,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	PartnerHelper partnerHelper;
+
 	private static final String ERRORS = "errors";
 
 	private static final String ERRORCODE = "errorCode";
@@ -112,6 +117,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	public static final String APPROVED = "approved";
 
+	public static final String PENDING_APPROVAL = "pending_approval";
+
 	public static final String BLANK_STRING = "";
 	@Value("${pms.certs.datashare.subscriberId}")
 	private String subscriberId;
@@ -121,6 +128,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.post}")
 	private  String postDeactivateFtm;
+
+	@Value("${mosip.pms.api.id.original.ftm.certificate.get}")
+	private  String getOriginalFtmCertificateId;
 	
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -516,41 +526,13 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
-			if (Objects.isNull(ftmId)) {
-				LOGGER.info("sessionId", "idType", "id", "FTM id is null.");
-				throw new PartnerServiceException(ErrorCode.INVALID_FTM_ID.getErrorCode(),
-						ErrorCode.INVALID_FTM_ID.getErrorMessage());
-			}
+			validateFtmId(ftmId);
 			Optional<FTPChipDetail> ftmChipDetail = ftpChipDetailRepository.findById(ftmId);
-			if (!ftmChipDetail.isPresent()) {
-				LOGGER.error("FTM Details not exists with id {}", ftmId);
-				throw new PartnerServiceException(ErrorCode.FTM_NOT_EXISTS.getErrorCode(),
-						ErrorCode.FTM_NOT_EXISTS.getErrorMessage());
-			}
+			validateFtmChipDetail(ftmChipDetail);
+
 			FTPChipDetail ftm = ftmChipDetail.get();
-			// check if the FTM is associated with user.
-			String ftmProviderId = ftm.getFtpProviderId();
-			boolean ftmProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(ftmProviderId)) {
-					validatePartnerId(partner, userId);
-					ftmProviderExist = true;
-					partnerDetails = partner;
-					break;
-				}
-			}
-			if (!ftmProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "FTM is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", ftmProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
+			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+			checkIfPartnerIsNotActive(partnerDetails);
 			// Deactivate only if the FTM is approved status and is_active true.
 			if (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive()) {
 				FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
@@ -581,6 +563,99 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		responseWrapper.setId(postDeactivateFtm);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalFtmCertificate(String ftmId) {
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			validateFtmId(ftmId);
+			Optional<FTPChipDetail> ftmChipDetail = ftpChipDetailRepository.findById(ftmId);
+			validateFtmChipDetail(ftmChipDetail);
+
+			FTPChipDetail ftm = ftmChipDetail.get();
+			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+			checkIfPartnerIsNotActive(partnerDetails);
+
+			// Download only if the FTM is approved and pending_approval true.
+			if (ftm.getApprovalStatus().equals(PENDING_APPROVAL) || (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive())) {
+				OriginalCertDownloadResponseDto responseObject = null;
+				responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+				partnerHelper.populateCertificateExpiryState(responseObject);
+				responseWrapper.setResponse(responseObject);
+			} else {
+				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
+				throw new PartnerServiceException(ErrorCode.DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR.getErrorCode(),
+						ErrorCode.DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR.getErrorMessage());
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE.getErrorCode();
+			String errorMessage = ErrorCode.UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getOriginalFtmCertificateId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public static void validateFtmId(String ftmId) {
+		if (Objects.isNull(ftmId) || ftmId.equals(BLANK_STRING)) {
+			LOGGER.info("sessionId", "idType", "id", "FTM id is null or empty.");
+			throw new PartnerServiceException(ErrorCode.INVALID_FTM_ID.getErrorCode(),
+					ErrorCode.INVALID_FTM_ID.getErrorMessage());
+		}
+	}
+
+	public static void validateFtmChipDetail(Optional<FTPChipDetail> ftmChipDetail) {
+		if (!ftmChipDetail.isPresent()) {
+			LOGGER.error("FTM Details not exists");
+			throw new PartnerServiceException(ErrorCode.FTM_NOT_EXISTS.getErrorCode(),
+					ErrorCode.FTM_NOT_EXISTS.getErrorMessage());
+		}
+	}
+
+	public static void checkIfPartnerIsNotActive(Partner partner) {
+		if (!partner.getIsActive()) {
+			LOGGER.error("Partner is not Active with id {}", partner.getId());
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
+	}
+
+	public Partner getAssociatedPartner(List<Partner> partnerList, FTPChipDetail ftm, String userId) {
+		String ftmProviderId = ftm.getFtpProviderId();
+		boolean ftmProviderExist = false;
+		Partner partnerDetails = null;
+
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(ftmProviderId)) {
+				validatePartnerId(partner, userId);
+				ftmProviderExist = true;
+				partnerDetails = partner;
+				break;
+			}
+		}
+
+		if (!ftmProviderExist) {
+			LOGGER.info("sessionId", "idType", "id", "FTM is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+
+		return partnerDetails;
 	}
 
 	public static void validatePartnerId(Partner partner, String userId) {
