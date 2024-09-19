@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -84,5 +85,7 @@ public interface FtpChipDetailService {
     public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto);
 
 	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId);
+
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalFtmCertificate(String ftmId);
 
 }

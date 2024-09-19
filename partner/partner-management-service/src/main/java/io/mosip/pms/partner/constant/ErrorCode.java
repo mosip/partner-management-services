@@ -129,7 +129,9 @@ public enum ErrorCode {
 	INVALID_FTM_ID("PMS_FTM_ERROR_004", "FTM Id is invalid"),
 	FTM_NOT_EXISTS("PMS_FTM_ERROR_005", "FTM Details do not exists."),
 	FTM_NOT_ASSOCIATED_WITH_USER("PMS_FTM_ERROR_006", "FTM is not associated with user."),
-	UNABLE_TO_DEACTIVATE_FTM("PMS_FTM_ERROR_007", "The selected FTM must be active and approved");
+	UNABLE_TO_DEACTIVATE_FTM("PMS_FTM_ERROR_007", "The selected FTM must be active and approved"),
+	DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR("PMS_FTM_ERROR_008", "The selected FTM must be pending_approval or approved"),
+	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate");
 	/**
 	 * The error code.
 	 */
