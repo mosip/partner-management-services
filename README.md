@@ -77,19 +77,6 @@ defined here.
     $ ./restart.sh
    ```
 
-## To deploy Pms apitestrig within k8s cluster:
-### Install
-  ```
-    $ cd ./apitest/deploy/pms-apitestrig
-    $ ./install.sh
-   ```
-### Delete
-  ```
-    $ cd ./apitest/deploy/pms-apitetsrig
-    $ ./delete.sh
-   ```
-
-
 ## Test
 Automated functional tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests).
 
