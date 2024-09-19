@@ -584,7 +584,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
 			checkIfPartnerIsNotActive(partnerDetails);
 
-			// Download only if the FTM is approved and pending_approval true.
+			// Download only if the FTM is approved or pending_approval status.
 			if (ftm.getApprovalStatus().equals(PENDING_APPROVAL) || (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive())) {
 				OriginalCertDownloadResponseDto responseObject = null;
 				responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
