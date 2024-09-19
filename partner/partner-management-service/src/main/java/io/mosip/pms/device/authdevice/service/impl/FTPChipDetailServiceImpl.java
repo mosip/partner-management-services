@@ -14,6 +14,7 @@ import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -152,7 +153,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 		}
 		FTPChipDetail uniqueChipDetail = ftpChipDetailRepository.findByUniqueKey(chipDetails.getFtpProviderId(),
-				chipDetails.getMake(), chipDetails.getModel());
+				PartnerUtil.trimAndReplace(chipDetails.getMake()), PartnerUtil.trimAndReplace(chipDetails.getModel()));
 		if(uniqueChipDetail != null){
 			auditUtil.auditRequest(
 					String.format(

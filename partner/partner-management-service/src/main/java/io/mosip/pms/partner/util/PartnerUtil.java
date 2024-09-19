@@ -69,4 +69,11 @@ public class PartnerUtil {
 			return uniqueId;
 		return uniqueId.substring(0, length);
 	}
+
+	public static String trimAndReplace(String str) {
+		if (str == null) {
+			return null;
+		}
+		return str.trim().replaceAll("\\s+", " ");
+	}
 }
