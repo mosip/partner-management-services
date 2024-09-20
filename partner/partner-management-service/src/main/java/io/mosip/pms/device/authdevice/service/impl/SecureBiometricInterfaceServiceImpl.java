@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -489,7 +490,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorMessage(), input.getSbiId()));
 		}
-		if (validSbi.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
+		LocalDate currentUTCDate = LocalDate.now(ZoneOffset.UTC);
+		if (validSbi.getSwExpiryDateTime().toLocalDate().isBefore(currentUTCDate)) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
