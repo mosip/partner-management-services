@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -135,6 +136,9 @@ public class PolicyManagementService {
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
 
+	@Value("${mosip.pms.api.id.policy.groups.get}")
+	private String getPolicyGroupsId;
+
 	@Autowired
 	SearchHelper searchHelper;
 
@@ -152,7 +156,8 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
-	public static final String ALL = "all";	
+	public static final String ALL = "all";
+	public static final String VERSION = "1.0";
 
 	/** The mapper. */
 	@Autowired
@@ -1058,24 +1063,40 @@ public class PolicyManagementService {
 
 	}
 
-	public List<PolicyGroupDto> getPolicyGroups() {
-		List<PolicyGroup> policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
-		if (policyGroupsList.isEmpty()) {
-			logger.error("There are no active policy groups");
-			throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
-					ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
-		}
-		List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
-		for (PolicyGroup policyGroup : policyGroupsList) {
-			PolicyGroupDto policyGroupDto = new PolicyGroupDto();
-			policyGroupDto.setId(policyGroup.getId());
-			policyGroupDto.setDescription(policyGroup.getDesc());
-			policyGroupDto.setName(policyGroup.getName());
-			policyGroupDto.setIsActive(policyGroup.getIsActive());
+	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() {
+		ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			List<PolicyGroup> policyGroupsList;
+			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
+			if (policyGroupsList.isEmpty()) {
+				logger.error("There are no active policy groups");
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
+						ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
+			}
+			List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+			for (PolicyGroup policyGroup : policyGroupsList) {
+				PolicyGroupDto policyGroupDto = new PolicyGroupDto();
+				policyGroupDto.setId(policyGroup.getId());
+				policyGroupDto.setDescription(policyGroup.getDesc());
+				policyGroupDto.setName(policyGroup.getName());
+				policyGroupDto.setIsActive(policyGroup.getIsActive());
 
-			policyGroupDtoList.add(policyGroupDto);
+				policyGroupDtoList.add(policyGroupDto);
+			}
+			responseWrapper.setResponse(policyGroupDtoList);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
-
-		return policyGroupDtoList;
+		responseWrapper.setId(getPolicyGroupsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 }

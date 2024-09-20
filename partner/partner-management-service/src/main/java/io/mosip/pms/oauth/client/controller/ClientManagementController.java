@@ -2,14 +2,11 @@ package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
-import org.springframework.http.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +19,7 @@ import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequestV2;
 import io.mosip.pms.oauth.client.dto.ClientDetailResponse;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequest;
 import io.mosip.pms.oauth.client.dto.ClientDetailUpdateRequestV2;
-import io.mosip.pms.oauth.client.dto.OidcClientDto;
+import io.mosip.pms.oauth.client.dto.OauthClientDto;
 
 import jakarta.validation.Valid;
 
@@ -40,11 +37,6 @@ public class ClientManagementController {
 
 	@Autowired
 	AuditUtil auditUtil;
-
-	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
-	private String getClientsId;
-
-	public static final String VERSION = "1.0";
 
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
@@ -103,18 +95,14 @@ public class ClientManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalloidcclients())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthclients())")
 	@GetMapping(value = "/oauth/clients")
-	@Operation(summary = "Get all Oidc clients", description = "fetch all oidc clients")
+	@Operation(summary = "Get all clients", description = "fetch all clients")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<OidcClientDto>> getClients() {
-		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId(getClientsId);
-		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(clientManagementService.getClients());
-		return responseWrapper;
+	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
+		return clientManagementService.getClients();
 	}
 	
 }

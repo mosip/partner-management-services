@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +26,10 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.user.service.UserManagementService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,21 +71,31 @@ public class UserControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void saveUserConsent() throws Exception {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
-		Mockito.when(userManagementService.saveUserConsent()).thenReturn(userDetailsDto);
-		ResponseWrapperV2<UserDetailsDto> response = userController.saveUserConsent();
+		responseWrapper.setResponse(userDetailsDto);
+		Mockito.when(userManagementService.saveUserConsent()).thenReturn(responseWrapper);
+		mockMvc.perform(post("/users/user-consent").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void isUserConsentGiven() throws Exception {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
-		Mockito.when(userManagementService.isUserConsentGiven()).thenReturn(userDetailsDto);
-		ResponseWrapperV2<UserDetailsDto> response = userController.isUserConsentGiven();
+		responseWrapper.setResponse(userDetailsDto);
+		Mockito.when(userManagementService.isUserConsentGiven()).thenReturn(responseWrapper);
+		mockMvc.perform(get("/users/user-consent").contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
 	public void getConfigValuesTest() throws Exception {
-		userController.getConfigValues();
+		mockMvc.perform(get("/users/configs").contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
 	}
 }

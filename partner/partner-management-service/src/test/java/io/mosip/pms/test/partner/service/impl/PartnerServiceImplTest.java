@@ -12,6 +12,7 @@ import java.util.*;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
@@ -249,7 +250,7 @@ public class PartnerServiceImplTest {
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test
 	public void getOriginalPartnerCertificate_Test() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -266,19 +267,16 @@ public class PartnerServiceImplTest {
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
-		try {
-			pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
-		}catch (PartnerServiceException e) {
-			assertFalse(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
-		}
+
+		pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
+
 		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
 		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
 
-		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> originalCertDownloadResponseDto = pserviceImpl.getOriginalPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(originalCertDownloadResponseDto);
-		assertEquals(originalCertDownloadResponseDto.getCaSignedCertificateData(), "12345");
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
 

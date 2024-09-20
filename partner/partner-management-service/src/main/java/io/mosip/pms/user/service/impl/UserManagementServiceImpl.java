@@ -6,12 +6,14 @@ import io.mosip.pms.common.dto.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,13 @@ public class UserManagementServiceImpl implements UserManagementService{
 
 	private static final Logger LOGGER = PMSLogger.getLogger(UserManagementServiceImpl.class);
 	public static final String YES = "YES";
+	public static final String VERSION = "1.0";
+
+	@Value("${mosip.pms.api.id.user.consent.post}")
+	private String postSaveUserConsentGivenId;
+
+	@Value("${mosip.pms.api.id.user.consent.get}")
+	private String getUserConsentGivenId;
 
 	@Autowired
 	KeycloakImpl keycloakService;
@@ -59,8 +68,8 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	@Override
-	public UserDetailsDto saveUserConsent() {
-		UserDetailsDto userDetailsDto = new UserDetailsDto();
+	public ResponseWrapperV2<UserDetailsDto> saveUserConsent() {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -89,10 +98,12 @@ public class UserManagementServiceImpl implements UserManagementService{
 				UserDetails respEntity = userDetailsRepository.save(userDetails);
 				LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
 
+				UserDetailsDto userDetailsDto = new UserDetailsDto();
 				userDetailsDto.setConsentGiven(true);
 				userDetailsDto.setUserId(respEntity.getUserId());
 				userDetailsDto.setConsentGivenDateTime(respEntity.getConsentGivenDtimes());
 
+				responseWrapper.setResponse(userDetailsDto);
 			} else {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -100,23 +111,27 @@ public class UserManagementServiceImpl implements UserManagementService{
 			}
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In saveUserConsent method of UserManagementServiceImpl - " + ex.getMessage());
-			throw ex;
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception e) {
 			LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id", "In saveUserConsent method of UserManagementServiceImpl - " + e.getMessage());
-			throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
-					ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
+			String errorCode = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage();
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		return userDetailsDto;
+		responseWrapper.setId(postSaveUserConsentGivenId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	@Override
-	public UserDetailsDto isUserConsentGiven() {
-		UserDetailsDto userDetailsDto = new UserDetailsDto();
+	public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper =  new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (!partnerList.isEmpty()) {
+				UserDetailsDto userDetailsDto = new UserDetailsDto();
 				userDetailsDto.setUserId(userId);
 				LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
 				Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
@@ -127,6 +142,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 						userDetailsDto.setConsentGivenDateTime(entity.getConsentGivenDtimes());
 					}
 				}
+				responseWrapper.setResponse(userDetailsDto);
 			} else {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -134,14 +150,16 @@ public class UserManagementServiceImpl implements UserManagementService{
 			}
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of UserManagementServiceImpl - " + ex.getMessage());
-			throw ex;
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception e) {
 			LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of UserManagementServiceImpl - " + e.getMessage());
-			throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
-					ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
+			String errorCode = ErrorCode.PMS_CONSENT_ERR.getErrorCode();
+			String errorMessage = ErrorCode.PMS_CONSENT_ERR.getErrorMessage();
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		return userDetailsDto;
+		responseWrapper.setId(getUserConsentGivenId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
-
 }

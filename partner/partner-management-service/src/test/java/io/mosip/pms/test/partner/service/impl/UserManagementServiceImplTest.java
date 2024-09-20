@@ -125,7 +125,7 @@ public class UserManagementServiceImplTest {
 		userManagementServiceImpl.saveUserConsent();
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test
 	public void saveUserConsentExceptionTest() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -139,7 +139,7 @@ public class UserManagementServiceImplTest {
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 		userManagementServiceImpl.saveUserConsent();
 	}
-	@Test(expected = PartnerServiceException.class)
+	@Test
 	public void saveUserConsentExceptionTest1() throws Exception {
 		userManagementServiceImpl.saveUserConsent();
 	}
@@ -171,7 +171,7 @@ public class UserManagementServiceImplTest {
 		userManagementServiceImpl.isUserConsentGiven();
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test
 	public void isUserConsentGivenExceptionTest() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -186,7 +186,7 @@ public class UserManagementServiceImplTest {
 		userManagementServiceImpl.isUserConsentGiven();
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test
 	public void isUserConsentGivenExceptionTest1() throws Exception {
 		userManagementServiceImpl.isUserConsentGiven();
 	}

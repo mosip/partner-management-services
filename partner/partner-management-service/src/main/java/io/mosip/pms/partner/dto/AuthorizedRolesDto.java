@@ -145,21 +145,19 @@ public class AuthorizedRolesDto {
 	
 	private List<String> postmispsearch;
 
-	//Multi Partner Service Controller
+//Multi Partner Service Controller
 
-	private List<String> getallcertificatedetails;
+	private List<String> getpartnercertificates;
 
-	private List<String> getallrequestedpolicies;
+	private List<String> getpolicyrequests;
 
-	private List<String> getallapprovedauthpartnerpolicies;
+	private List<String> getauthpartnerspolicies;
 
-	private List<String> getallapprovedpartneridswithpolicygroups;
+	private List<String> getapprovedpartneridswithpolicygroups;
 
-	private List<String> getallapikeysforauthpartners;
+	private List<String> getapikeysforauthpartners;
 
-	private List<String> getalloidcclients;
-
-	//user consent
+	private List<String> getoauthclients;
 
 	private List<String> userconsent;
 		

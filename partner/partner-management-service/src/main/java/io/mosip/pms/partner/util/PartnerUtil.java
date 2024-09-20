@@ -4,9 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.security.SecureRandom;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -98,5 +101,14 @@ public class PartnerUtil {
 					ErrorCode.UNABLE_TO_DECODE_CERTIFICATE.getErrorMessage());
 		}
 		return cert;
+	}
+
+	public static List<ErrorResponse> setErrorResponse(String errorCode, String errorMessage) {
+		List<ErrorResponse> errorResponseList = new ArrayList<>();
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(errorCode);
+		errorResponse.setMessage(errorMessage);
+		errorResponseList.add(errorResponse);
+		return errorResponseList;
 	}
 }

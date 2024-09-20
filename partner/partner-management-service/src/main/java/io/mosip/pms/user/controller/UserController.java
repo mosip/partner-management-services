@@ -31,12 +31,6 @@ public class UserController {
 	@Autowired
 	UserManagementService userManagementService;
 
-	@Value("${mosip.pms.api.id.save.user.consent.given.post}")
-	private String postSaveUserConsentId;
-
-	@Value("${mosip.pms.api.id.user.consent.given.get}")
-	private String getUserConsentGivenId;
-
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
 
@@ -72,11 +66,7 @@ public class UserController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<UserDetailsDto> saveUserConsent() {
-		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId(postSaveUserConsentId);
-		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(userManagementService.saveUserConsent());
-		return responseWrapper;
+		return userManagementService.saveUserConsent();
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
@@ -86,18 +76,14 @@ public class UserController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
-		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId(getUserConsentGivenId);
-		responseWrapper.setVersion(VERSION);
-		responseWrapper.setResponse(userManagementService.isUserConsentGiven());
-		return responseWrapper;
+		return userManagementService.isUserConsentGiven();
 	}
 
 	@GetMapping(value = "/configs")
 	@Operation(summary = "Get config", description = "Get configuration values")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true)))})
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<Map<String, String>> getConfigValues() {
 		ResponseWrapperV2<Map<String, String>> responseWrapper = new ResponseWrapperV2<>();
 		responseWrapper.setId(getConfigsId);

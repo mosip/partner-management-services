@@ -6,6 +6,10 @@ import java.util.List;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 import org.json.simple.parser.ParseException;
@@ -69,11 +73,6 @@ public class PolicyManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getPolicyGroupsId;
-
-	public static final String VERSION = "1.0";
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -296,16 +295,13 @@ public class PolicyManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicygroups())")
 	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
-		ResponseWrapperV2<List<PolicyGroupDto>> response = new ResponseWrapperV2<>();
-		response.setId(getPolicyGroupsId);
-		response.setVersion(VERSION);
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		response.setResponse(policyManagementService.getPolicyGroups());
-		logger.info("Returning response from PolicyManagementController.");
-		return response;
+		return policyManagementService.getPolicyGroups();
 	}
 }

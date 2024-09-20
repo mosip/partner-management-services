@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -21,7 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.mosip.pms.partner.util.MultiPartnerHelper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -233,8 +232,13 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	AuditUtil auditUtil;
 
+	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
+	private String getOriginalPartnerCertificateId;
+
+	public static final String VERSION = "1.0";
+
 	@Autowired
-	MultiPartnerHelper multiPartnerHelper;
+	PartnerHelper partnerHelper;
 
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
@@ -805,31 +809,31 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		return multiPartnerHelper.getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+		return partnerHelper.getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
 	}
 
 	@Override
-	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		OriginalCertDownloadResponseDto responseDto = multiPartnerHelper.getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-		responseDto.setIsMosipSignedCertificateExpired(false);
-		responseDto.setIsCaSignedCertificateExpired(false);
-		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
-		// Check mosip signed certificate expiry date
-		X509Certificate decodedMosipSignedCert = PartnerUtil.decodeCertificateData(responseDto.getMosipSignedCertificateData());
-		LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-		if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
-			responseDto.setMosipSignedCertificateData("");
-			responseDto.setIsMosipSignedCertificateExpired(true);
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			OriginalCertDownloadResponseDto responseDto = partnerHelper.getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+			partnerHelper.populateCertificateExpiryState(responseDto);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		// Check ca signed partner certificate expiry date
-		X509Certificate decodedCaSignedCert = PartnerUtil.decodeCertificateData(responseDto.getCaSignedCertificateData());
-		LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-		if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
-			responseDto.setCaSignedCertificateData("");
-			responseDto.setIsCaSignedCertificateExpired(true);
-		}
-		return responseDto;
+		responseWrapper.setId(getOriginalPartnerCertificateId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	@Override

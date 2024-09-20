@@ -11,6 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import org.junit.Before;
@@ -327,11 +329,13 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getOriginalPartnerCertificateTest() throws Exception{
+        ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
         OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
-        RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
+        RequestWrapperV2<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapperV2<>();
         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
         requestWrapper.setRequest(requestDto);
-        Mockito.when(partnerService.getOriginalPartnerCertificate(requestDto)).thenReturn(originalCertDownloadResponseDto);
+        responseWrapper.setResponse(originalCertDownloadResponseDto);
+        Mockito.when(partnerService.getOriginalPartnerCertificate(requestDto)).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/original-partner-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     

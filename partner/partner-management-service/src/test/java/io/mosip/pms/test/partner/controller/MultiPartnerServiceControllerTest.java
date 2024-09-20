@@ -34,6 +34,8 @@ public class MultiPartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getPartnerCertificates() throws Exception {
+        ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
+
         CertificateDto certificateDto = new CertificateDto();
         certificateDto.setPartnerId("abc");
         certificateDto.setPartnerType("Auth_Partner");
@@ -42,13 +44,15 @@ public class MultiPartnerServiceControllerTest {
         List<CertificateDto> certificateDtoList = new ArrayList<>();
         certificateDtoList.add(certificateDto);
 
-        Mockito.when(multiPartnerService.getPartnerCertificates()).thenReturn(certificateDtoList);
+        responseWrapper.setResponse(certificateDtoList);
+        Mockito.when(multiPartnerService.getPartnerCertificates()).thenReturn(responseWrapper);
         ResponseWrapperV2<List<CertificateDto>> response = multiPartnerServiceController.getPartnerCertificates();
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getPolicyRequestsTest() throws Exception {
+        ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         PolicyDto policyDto = new PolicyDto();
         policyDto.setPartnerId("abc");
         policyDto.setPartnerType("Auth_Partner");
@@ -56,25 +60,29 @@ public class MultiPartnerServiceControllerTest {
         policyDto.setPolicyName("test");
         List<PolicyDto> policyDtoList = new ArrayList<>();
         policyDtoList.add(policyDto);
-        Mockito.when(multiPartnerService.getPolicyRequests()).thenReturn(policyDtoList);
+        responseWrapper.setResponse(policyDtoList);
+        Mockito.when(multiPartnerService.getPolicyRequests()).thenReturn(responseWrapper);
         ResponseWrapperV2<List<PolicyDto>> response = multiPartnerServiceController.getPolicyRequests();
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getAuthPartnerPoliciesTest() throws Exception {
+    public void getAuthPartnersPoliciesTest() throws Exception {
+        ResponseWrapperV2<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         ApprovedPolicyDto policyDto = new ApprovedPolicyDto();
         policyDto.setPartnerId("abc");
         policyDto.setPolicyGroupName("123");
         List<ApprovedPolicyDto> policyDtoList = new ArrayList<>();
         policyDtoList.add(policyDto);
-        Mockito.when(multiPartnerService.getAuthPartnerPolicies()).thenReturn(policyDtoList);
-        ResponseWrapperV2<List<ApprovedPolicyDto>> response = multiPartnerServiceController.getAuthPartnerPolicies();
+        responseWrapper.setResponse(policyDtoList);
+        Mockito.when(multiPartnerService.getAuthPartnersPolicies()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<ApprovedPolicyDto>> response = multiPartnerServiceController.getAuthPartnersPolicies();
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getApprovedPartnerIdsWithPolicyGroupsTest() throws Exception {
+        ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
         PolicyGroupDto policyGroupDto = new PolicyGroupDto();
         policyGroupDto.setPartnerId("abc");
         policyGroupDto.setPartnerType("Auth_Partner");
@@ -83,13 +91,15 @@ public class MultiPartnerServiceControllerTest {
         policyGroupDto.setPolicyGroupDescription("testDesc");
         List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
         policyGroupDtoList.add(policyGroupDto);
-        Mockito.when(multiPartnerService.getApprovedPartnerIdsWithPolicyGroups()).thenReturn(policyGroupDtoList);
-        ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = multiPartnerServiceController.getApprovedPartnerIdsWithPolicyGroups();
+        responseWrapper.setResponse(policyGroupDtoList);
+        Mockito.when(multiPartnerService.getApprovedPartnerIdsWithPolicyGroups()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<PolicyGroupDto>> response = multiPartnerServiceController.getApprovedPartnerIdsWithPolicyGroups();
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getApiKeysForAuthPartners() throws Exception {
+        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper =  new ResponseWrapperV2<>();
         ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
         apiKeyResponseDto.setStatus("ACTIVE");
         apiKeyResponseDto.setApiKeyLabel("test");
@@ -101,7 +111,8 @@ public class MultiPartnerServiceControllerTest {
         apiKeyResponseDto.setPolicyGroupDescription("policygroup000desc");
         List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
         apiKeyResponseDtoList.add(apiKeyResponseDto);
-        Mockito.when(multiPartnerService.getApiKeysForAuthPartners()).thenReturn(apiKeyResponseDtoList);
+        responseWrapper.setResponse(apiKeyResponseDtoList);
+        Mockito.when(multiPartnerService.getApiKeysForAuthPartners()).thenReturn(responseWrapper);
         ResponseWrapperV2<List<ApiKeyResponseDto>> response = multiPartnerServiceController.getApiKeysForAuthPartners();
     }
 

@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class OidcClientDto {
+public class OauthClientDto {
     private String UserId;
     private String partnerId;
-    private String oidcClientId;
-    private String oidcClientName;
+    private String clientId;
+    private String clientName;
     private String policyGroupId;
     private String policyGroupName;
     private String policyGroupDescription;
