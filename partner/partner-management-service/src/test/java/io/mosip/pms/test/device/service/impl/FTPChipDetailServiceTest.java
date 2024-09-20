@@ -18,12 +18,15 @@ import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.request.dto.ErrorResponse;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -80,6 +83,9 @@ public class FTPChipDetailServiceTest {
 
 	@Mock
 	SearchHelper searchHelper;
+
+	@Mock
+	PartnerHelper partnerHelper;
 	
 	@Mock
 	PartnerServiceRepository partnerServiceRepository;
@@ -1098,5 +1104,92 @@ public class FTPChipDetailServiceTest {
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		when(ftpChipDetailRepository.findById(anyString())).thenReturn(Optional.of(ftpChipDetail));
 		ftpChipDetailService.deactivateFtm("23456");
+	}
+
+	@Test
+	public void getOriginalFtmCertificate_Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("23456");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setActive(true);
+		ftpChipDetail.setCertificateAlias("xxxyyxxx");
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
+		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
+		originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
+		originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
+		originalCertDownloadResponseDto.setCaSignedCertificateData("-----BEGIN CERTIFICATE-----\\n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\\nd+oxv9Lwk4FT0+WtHZAjMtnDf0l19aNdtImywaI=\\n-----END CERTIFICATE-----\\n");
+		originalCertDownloadResponseDto.setMosipSignedCertificateData("-----BEGIN CERTIFICATE-----\\nMIIEizCCA3OgAwIBAgIIBkWQXN5LYV0wDQYJKoZIhvcNAQELBQAwdjELMAkGA1UE\\nBhMCSU4xCzAJBgNVBAgMAktBMRIwEAYDVQQHDAlCQU5HQUxPUkUxDTALBgNVBAoM\\nBElJVEIxGjAYBgNVBAsMEU1PU0lQLVRFQ0gtQ0VOVEVSMRswGQYDVQQDDBJ3d3cu\\nbW9zaXAuaW8gKFBNUykwHhcNMjQwOTE4MDgwNjU3WhcNMjUwOTE4MDgwNjU3WjBR\\nMQswCQYDVQQGEwJJTjELMAkGA1UECAwCTUgxCzAJBgNVBAcMAlBOMQwwCgYDVQQK\\nDANBQkMxDDAKBgNVBAsMA0FCQzEMMAoGA1UEAwwDQUJDMIICIjANBgkqhkiG9w0B\\nAQEFAAOCAg8AMIICCgKCAgEA1EGQeI5OMJlEThlZOWRPqTv2EHD/yAFvJaulKXMI\\nKKa3CWESBfl7wBh8odUBahaTdhJelpI5xLSLCVmHYDNGJUK/pT2An/QRUrsG5T3t\\nt4jI3ryCzwTnG6zkaYyrlWCaYXd4DrQ1d24Jh7bEoGhGY1WlatyqURKLI9z51Yn2\\n/6ebyxIvhTgsAwniEE9w4uWUWrcgQQI+uLFkfj3jrvbC9Ek0f9lmm6hQo4fI3trP\\nG2f4YbPuXabGQ+zwYwZE3szCMn7fPgZ+3sz7fnKXmrmlSme94pu8kSbdOQ1jxHuU\\n/W202/VACyFzmWTX6HUcBD0CcUxnyjU8QULEsBh177xdGNCJTRUmxyXn1yeO6L6D\\n1ojjoTwGt+ySogK8em5bCp2HRuCWMiJ0P3KsOBukzA87iZHBdm2wnJi1HON59vi3\\nPoQw04vd1BQmEUSkNmiuKAbeHr9LpHuSRiyaQ+SnUrouZ08L98A4ks7Y06oQSsXa\\n7OcL3U+lTCw+IlWb0ba9K5zDs1uDRP0az0rKnqAONVkXdU8tUXji583NTLfK0nBH\\nbeZ8oB2QWuQmccYZQqnGIKiQQHV9NXPwlPOO4HfdgLxXytOoByFawcFraPo0CbFf\\nWDkSoxco5zee7/12Tar0ecNcnnu0DTFghGcdGe4YBURxmhc7ajlnHM6nvrJMlDKR\\nfo0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUxAYPEcGciAk/\\n5FBXGmZ+z0u9uGIwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQAG\\n4TWJEafFhuAnXQXQQcF3bb3KvabpzDXCyaad7qNnojf2/e48SdLnURcHeiYFDr9a\\nrUdrrU6nBLE6NpTYD8WI+GHZ43SPeim0ACwz08+ZIXyvZt95DV1MCMKehd7YQKEQ\\n/AuvgRP/Z9FP2miZx+TH9GEU0KSAYLX8cMDNZhq3pzBihgHlzNeELDZnJ01kBWWJ\\nxVm1u9jwFDwOa11DGZ3zgEmNbh+3HhKf4zFurTFa88NaHsbvHXSadJMDBpuB42xR\\nAG6a2oUb0nNBg0QmxwAbo85JScNdWg6ncykQnROzGqpSICmIlL/E1Gl/Ti1hwrpP\\nu9J0ndrvDLo566k8h0Xr\\n-----END CERTIFICATE-----\\n");
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		responseWrapper.setResponse(originalCertDownloadResponseDto);
+		ftpChipDetailService.getOriginalFtmCertificate("23456");
+	}
+
+	@Test
+	public void getOriginalFtmCertificate_Test1() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("23456");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setApprovalStatus("rejected");
+		ftpChipDetail.setActive(false);
+		ftpChipDetail.setCertificateAlias("xxxyyxxx");
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
+
+		ftpChipDetailService.getOriginalFtmCertificate("23456");
+	}
+
+	@Test
+	public void getOriginalFtmCertificate_Test2() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(false);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("23456");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setActive(true);
+		ftpChipDetail.setCertificateAlias("xxxyyxxx");
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
+
+		ftpChipDetailService.getOriginalFtmCertificate("23456");
 	}
 }

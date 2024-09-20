@@ -16,6 +16,7 @@ import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -393,4 +395,14 @@ public class FTPChipDetailControllerTest {
 			mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/deactivate-ftm").contentType(MediaType.APPLICATION_JSON_VALUE)
 					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 		}
+
+	@Test
+	@WithMockUser(roles = {"FTM_PROVIDER"})
+	public void getOriginalFtmCertificateTest() throws Exception {
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
+		responseWrapper.setResponse(originalCertDownloadResponseDto);
+		Mockito.when(ftpChipDetaillService.getOriginalFtmCertificate(Mockito.any())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/original-ftm-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }
