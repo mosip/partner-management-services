@@ -564,8 +564,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     private boolean checkIfSbiExpired(SecureBiometricInterface secureBiometricInterface) {
-        LocalDate currentUTCDate = LocalDate.now(ZoneOffset.UTC);
-        return secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isBefore(currentUTCDate);
+        return secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now());
     }
 
     @Override

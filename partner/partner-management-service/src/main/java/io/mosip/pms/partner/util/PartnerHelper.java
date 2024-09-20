@@ -57,7 +57,6 @@ public class PartnerHelper {
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
         Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
-        LocalDate currentUTCDate = LocalDate.now(ZoneOffset.UTC);
         if (secureBiometricInterface.isEmpty()) {
             LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
@@ -70,7 +69,7 @@ public class PartnerHelper {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorCode(),
                     ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorMessage());
-        } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(currentUTCDate)) {
+        } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
             throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
                     ErrorCode.SBI_EXPIRED.getErrorMessage());
