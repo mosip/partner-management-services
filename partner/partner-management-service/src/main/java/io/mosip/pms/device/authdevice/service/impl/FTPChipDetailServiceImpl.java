@@ -6,6 +6,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -174,7 +175,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}		
 		chipDetail.setActive(false);
 		chipDetail.setDeleted(false);
-		chipDetail.setCrDtimes(LocalDateTime.now());
+		chipDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
 		chipDetail.setFtpChipDetailId(DeviceUtil.generateId());
 		chipDetail.setMake(chipDetails.getMake());

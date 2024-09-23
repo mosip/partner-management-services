@@ -3,6 +3,7 @@ package io.mosip.pms.partner.manager.service.impl;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -626,7 +627,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(getUser());
-		partnerPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		partnerPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
 		partnerPolicyRepository.save(partnerPolicy);		
 		notify(MapperUtils.mapDataToPublishDto(approvedMappedPolicy.get(0).getPartner(),
 				getPartnerCertificate(approvedMappedPolicy.get(0).getPartner().getCertificateAlias())),
@@ -646,7 +647,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		validatePolicy(updateObject.getPolicyId());		
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(updateObject);			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
@@ -654,7 +655,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
 			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
 			updateObject.setStatusCode(PartnerConstants.REJECTED);
 			partnerPolicyRequestRepository.save(updateObject);			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
