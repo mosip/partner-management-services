@@ -21,6 +21,7 @@ import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -73,7 +74,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public static final String VERSION = "1.0";
 	public static final String APPROVED = "approved";
 
-	@Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
+	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
 	private  String postInactiveMappingDeviceToSbiId;
 
 	@Value("${mosip.pms.api.id.deactivate.device.post}")
@@ -146,7 +147,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}
 		entity.setPartnerOrganizationName(partner.getName());
-		if (deviceDetailRepository.findUniqueDeviceDetail(deviceDetailDto.getMake(), deviceDetailDto.getModel(),
+		if (deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
 				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
 				deviceDetailDto.getDeviceTypeCode()) != null) {
 			auditUtil.auditRequest(

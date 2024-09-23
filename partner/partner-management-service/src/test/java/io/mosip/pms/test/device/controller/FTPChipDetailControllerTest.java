@@ -6,11 +6,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.request.dto.*;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -44,16 +51,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
-import io.mosip.pms.device.request.dto.DeviceSearchDto;
-import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
-import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailUpdateDto;
-import io.mosip.pms.device.response.dto.FTPSearchResponseDto;
-import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
-import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
-import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.util.AuditUtil;
 
 @RunWith(SpringRunner.class)
@@ -381,6 +378,31 @@ public class FTPChipDetailControllerTest {
 	    	mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/getPartnerCertificate/1234").contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
-	    
 
+		@Test
+		@WithMockUser(roles = {"FTM_PROVIDER"})
+		public void deactivateFtmTest() throws Exception {
+			ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			RequestWrapperV2<DeactivateFtmRequestDto> requestWrapper = new RequestWrapperV2<>();
+			requestWrapper.setVersion("1.0");
+			requestWrapper.setRequestTime(LocalDateTime.now());
+			DeactivateFtmRequestDto deactivateFtmRequestDto = new DeactivateFtmRequestDto();
+			deactivateFtmRequestDto.setFtmId("abc");
+			requestWrapper.setRequest(deactivateFtmRequestDto);
+			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
+			responseWrapper.setResponse(ftmDetailResponseDto);
+			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any())).thenReturn(responseWrapper);
+			mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/deactivate-ftm").contentType(MediaType.APPLICATION_JSON_VALUE)
+					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+		}
+
+	@Test
+	@WithMockUser(roles = {"FTM_PROVIDER"})
+	public void getOriginalFtmCertificateTest() throws Exception {
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
+		responseWrapper.setResponse(originalCertDownloadResponseDto);
+		Mockito.when(ftpChipDetaillService.getOriginalFtmCertificate(Mockito.any())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/original-ftm-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }

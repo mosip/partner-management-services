@@ -15,13 +15,13 @@ public class CertificateDto {
     private String partnerId;
 
     @Schema(description = "Name of the certificate issued to the partner", example = "cert-001")
-    private String certificateName;
+    private String certificateIssuedTo;
 
     @Schema(description = "Date when the certificate was uploaded", example = "2024-07-15T10:00:00Z")
-    private Date certificateUploadDate;
+    private Date certificateUploadDateTime;
 
     @Schema(description = "Date when the certificate expires", example = "2025-07-15T10:00:00Z")
-    private Date certificateExpiryDate;
+    private Date certificateExpiryDateTime;
 
     @Schema(description = "Type of partner (e.g., distributor, supplier, etc.)", example = "distributor")
     private String partnerType;

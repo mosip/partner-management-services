@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -78,7 +80,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public static final String APPROVED = "approved";
 	public static final String REJECTED = "rejected";
 
-	@Value("${mosip.pms.api.id.all.devices.for.sbi.get}")
+	@Value("${mosip.pms.api.id.sbi.devices.get}")
 	private  String getSbiDevicesId;
 
 	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
@@ -137,7 +139,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 		}		
-		List<SecureBiometricInterface> existsRecordsFromDb = sbiRepository.findByProviderIdAndSwVersion(sbiDto.getProviderId(), sbiDto.getSwVersion());
+		List<SecureBiometricInterface> existsRecordsFromDb = sbiRepository.findByProviderIdAndSwVersion(sbiDto.getProviderId(), PartnerUtil.trimAndReplace(sbiDto.getSwVersion()));
 		if(existsRecordsFromDb.size() > 0) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),

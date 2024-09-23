@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class OidcClientDto {
+public class OauthClientDto {
     @Schema(description = "Unique identifier for the user", example = "user789")
     private String userId;
 
@@ -15,10 +15,10 @@ public class OidcClientDto {
     private String partnerId;
 
     @Schema(description = "Unique identifier for the OIDC (OpenID Connect) client", example = "oidcClient456")
-    private String oidcClientId;
+    private String clientId;
 
     @Schema(description = "Name of the OIDC client", example = "MyOIDCClient")
-    private String oidcClientName;
+    private String clientName;
 
     @Schema(description = "Unique identifier for the policy group", example = "policyGroup789")
     private String policyGroupId;
@@ -36,7 +36,7 @@ public class OidcClientDto {
     private String policyName;
 
     @Schema(description = "Description of the policy name", example = "Policy outlining data protection measures and requirements")
-    private String policyNameDescription;
+    private String policyDescription;
 
     @Schema(description = "Unique identifier for the relying party", example = "relyingParty001")
     private String relyingPartyId;
@@ -57,10 +57,10 @@ public class OidcClientDto {
     private List<String> grantTypes;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-08T10:00:00Z")
-    private LocalDateTime crDtimes;
+    private LocalDateTime createdDateTime;
 
     @Schema(description = "Date and time when the record was last updated", example = "2024-08-08T12:00:00Z")
-    private LocalDateTime updDtimes;
+    private LocalDateTime updatedDateTime;
 
     @Schema(description = "List of client authentication methods supported by the OIDC client", example = "[\"client_secret_basic\", \"client_secret_post\"]")
     private List<String> clientAuthMethods;

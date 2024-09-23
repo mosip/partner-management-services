@@ -1,18 +1,33 @@
 package io.mosip.pms.partner.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.security.cert.X509Certificate;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -30,6 +45,15 @@ public class PartnerHelper {
 
     @Autowired
     DeviceDetailRepository deviceDetailRepository;
+
+    @Autowired
+    RestUtil restUtil;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Autowired
+    private Environment environment;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
         Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
@@ -64,6 +88,58 @@ public class PartnerHelper {
             LOGGER.info("sessionId", "idType", "id", "Device is not in pending for approval state.");
             throw new PartnerServiceException(ErrorCode.DEVICE_NOT_PENDING_FOR_APPROVAL.getErrorCode(),
                     ErrorCode.DEVICE_NOT_PENDING_FOR_APPROVAL.getErrorMessage());
+        }
+    }
+
+    public <T> T getCertificate(String certificateAlias, String uriProperty, Class<T> responseType ) throws JsonProcessingException {
+        T responseObject = null;
+        Map<String, String> pathsegments = new HashMap<>();
+        pathsegments.put("partnerCertId", certificateAlias);
+        Map<String, Object> getApiResponse = restUtil
+                .getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
+        responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
+
+        if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+            List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
+                    .get(PartnerConstants.ERRORS);
+            if (!certServiceErrorList.isEmpty()) {
+                LOGGER.error("Error occurred while getting the cert from keymanager");
+                throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+                        certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+            } else {
+                LOGGER.error("Error occurred while getting the cert {}", getApiResponse);
+                throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+                        ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+            }
+        }
+
+        if (responseObject == null) {
+            LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
+            throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+                    ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+        }
+        return responseObject;
+    }
+
+    public void populateCertificateExpiryState(OriginalCertDownloadResponseDto originalCertDownloadResponseDto) {
+        originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
+        originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+
+        // Check mosip signed certificate expiry date
+        X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
+        LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+            originalCertDownloadResponseDto.setMosipSignedCertificateData("");
+            originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
+        }
+
+        // Check ca signed partner certificate expiry date
+        X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
+        LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+            originalCertDownloadResponseDto.setCaSignedCertificateData("");
+            originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
     }
 }

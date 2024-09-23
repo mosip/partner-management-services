@@ -14,9 +14,6 @@ public class ApprovedPolicyDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
-    @Schema(description = "Type of partner", example = "DEVICE_PROVIDER")
-    private String partnerType;
-
     @Schema(description = "Unique identifier for the policy group", example = "policyGroup456")
     private String policyGroupId;
 

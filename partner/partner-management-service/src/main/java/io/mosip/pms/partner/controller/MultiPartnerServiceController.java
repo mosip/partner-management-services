@@ -11,10 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,133 +23,63 @@ import java.util.*;
 @Api(tags = {"Multi Partner Service Controller"})
 public class MultiPartnerServiceController {
 
-    @Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
-    private String grantTypes;
-
-    @Value("${mosip.pms.oidc.clients.clientAuthMethods:private_key_jwt}")
-    private String clientAuthMethods;
-
-    @Value("${mosip.pms.session.inactivity.timer}")
-    private String inActivityTimer;
-
-    @Value("${mosip.pms.session.inactivity.prompt.timer}")
-    private String inActivityPromptTimer;
-
-    @Value("${mosip.pms.axios.timeout}")
-    private String axiosTimeout;
-
-    @Value("${mosip.pms.expiry.date.max.year}")
-    private String maxAllowedYear;
-
-    @Value("${mosip.pms.api.id.configs.get}")
-    private String getConfigsId;
-
-    @Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
-    private  String postInactiveMappingDeviceToSbiId;
-
-    @Value("${mosip.pms.api.id.deactivate.device.post}")
-    private  String postDeactivateDeviceId;
-
-    public static final String VERSION = "1.0";
-
     @Autowired
     MultiPartnerService multiPartnerService;
 
     @Autowired
     RequestValidator requestValidator;
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcertificatedetails())")
-    @GetMapping(value = "/getAllCertificateDetails")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
+    @GetMapping(value = "/partner-certificates")
     @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<CertificateDto>> getAllCertificateDetails() {
-        return  multiPartnerService.getAllCertificateDetails();
+    public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificates() {
+        return  multiPartnerService.getPartnerCertificates();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallrequestedpolicies())")
-    @GetMapping(value = "/getAllRequestedPolicies")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicyrequests())")
+    @GetMapping(value = "/policy-requests")
     @Operation(summary = "Get all policies", description = "fetch all policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<PolicyDto>> getAllRequestedPolicies() {
-        return multiPartnerService.getAllRequestedPolicies();
+    public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
+        return multiPartnerService.getPolicyRequests();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedauthpartnerpolicies())")
-    @GetMapping(value = "/getAllApprovedAuthPartnerPolicies")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetauthpartnerspolicies())")
+    @GetMapping(value = "/auth-partners-policies")
     @Operation(summary = "Get all approved auth partner policies", description = "fetch all approved auth partner policies")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
-        return multiPartnerService.getAllApprovedAuthPartnerPolicies();
+    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAuthPartnersPolicies() {
+        return multiPartnerService.getAuthPartnersPolicies();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapprovedpartneridswithpolicygroups())")
-    @GetMapping(value = "/getAllApprovedPartnerIdsWithPolicyGroups")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedpartneridswithpolicygroups())")
+    @GetMapping(value = "/approved-partner-ids-with-policy-groups")
     @Operation(summary = "Get all approved partner id's with policy groups", description = "fetch all approved partner id's with policy groups")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
-        return multiPartnerService.getAllApprovedPartnerIdsWithPolicyGroups();
+    public ResponseWrapperV2<List<PolicyGroupDto>> getApprovedPartnerIdsWithPolicyGroups() {
+        return multiPartnerService.getApprovedPartnerIdsWithPolicyGroups();
     }
 
-    @GetMapping(value = "/configs")
-    @Operation(summary = "Get config", description = "Get configuration values")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<Map<String, String>> getConfigValues() {
-        ResponseWrapperV2<Map<String, String>> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setId(getConfigsId);
-        responseWrapper.setVersion(VERSION);
-        Map<String, String> configMap = new HashMap<String, String>();
-        configMap.put("grantTypes", grantTypes);
-        configMap.put("clientAuthMethods", clientAuthMethods);
-        configMap.put("inActivityTimer", inActivityTimer);
-        configMap.put("inActivityPromptTimer", inActivityPromptTimer);
-        configMap.put("axiosTimeout", axiosTimeout);
-        configMap.put("maxAllowedyear", maxAllowedYear);
-        responseWrapper.setResponse(configMap);
-        System.out.println(responseWrapper);
-        return responseWrapper;
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallapikeysforauthpartners())")
-    @GetMapping(value = "/getAllApiKeysForAuthPartners")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
+    @GetMapping(value = "/api-keys-for-auth-partners")
     @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
-        return multiPartnerService.getAllApiKeysForAuthPartners();
+    public ResponseWrapperV2<List<ApiKeyResponseDto>> getApiKeysForAuthPartners() {
+        return multiPartnerService.getApiKeysForAuthPartners();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-    @PostMapping(value = "/saveUserConsentGiven")
-    @Operation(summary = "save user consent", description = "Store the user consent in the database.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<UserDetailsDto> saveUserConsentGiven() {
-        return multiPartnerService.saveUserConsentGiven();
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-    @GetMapping(value = "/isUserConsentGiven")
-    @Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
-        return multiPartnerService.isUserConsentGiven();
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
     @GetMapping(value = "/sbi-details")
     @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -161,7 +89,7 @@ public class MultiPartnerServiceController {
         return multiPartnerService.sbiDetails();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapproveddeviceproviderids())")
     @GetMapping(value = "/approved-device-provider-ids")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),

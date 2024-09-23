@@ -609,7 +609,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}		
 		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-				partnerFromDb.get().getId(), validPolicy.getId(), requestDto.getLabel());
+				partnerFromDb.get().getId(), validPolicy.getId(), PartnerUtil.trimAndReplace(requestDto.getLabel()));
 		if(policyByLabel != null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),

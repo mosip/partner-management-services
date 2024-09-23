@@ -81,6 +81,7 @@ import io.mosip.pms.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.ResponseWrapper;
+import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -135,8 +136,8 @@ public class PolicyManagementService {
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
 
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getAllPolicyGroupsId;
+	@Value("${mosip.pms.api.id.policy.groups.get}")
+	private String getPolicyGroupsId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -1055,8 +1056,8 @@ public class PolicyManagementService {
 
 	}
 
-	public ResponseWrapperV2<List<PolicyGroup>> getAllPolicyGroups() {
-		ResponseWrapperV2<List<PolicyGroup>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() {
+		ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			List<PolicyGroup> policyGroupsList;
 			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
@@ -1065,19 +1066,29 @@ public class PolicyManagementService {
 				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
 						ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
 			}
-			responseWrapper.setResponse(policyGroupsList);
+			List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+			for (PolicyGroup policyGroup : policyGroupsList) {
+				PolicyGroupDto policyGroupDto = new PolicyGroupDto();
+				policyGroupDto.setId(policyGroup.getId());
+				policyGroupDto.setDescription(policyGroup.getDesc());
+				policyGroupDto.setName(policyGroup.getName());
+				policyGroupDto.setIsActive(policyGroup.getIsActive());
+
+				policyGroupDtoList.add(policyGroupDto);
+			}
+			responseWrapper.setResponse(policyGroupDtoList);
 		} catch (PolicyManagementServiceException ex) {
-			logger.info("sessionId", "idType", "id", "In getAllPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			logger.info("sessionId", "idType", "id", "In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
 			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
 			logger.error("sessionId", "idType", "id",
-					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+					"In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
 			String errorCode = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAllPolicyGroupsId);
+		responseWrapper.setId(getPolicyGroupsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
