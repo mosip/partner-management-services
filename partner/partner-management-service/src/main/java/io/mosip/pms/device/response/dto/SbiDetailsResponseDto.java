@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.response.dto;
+package io.mosip.pms.device.response.dto;
 
 import lombok.Data;
 
@@ -7,5 +7,5 @@ public class SbiDetailsResponseDto {
     private String sbiId;
     private String sbiVersion;
     private String status;
-    private boolean active;
+    private boolean isActive;
 }

@@ -8,19 +8,19 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClientResult
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
         "clientId": "$IGNORE$",
-    	"status": "INACTIVE"
+        "status": "INACTIVE"
 }'
 
    Pms_DeactivateOIDCClient_Retry_with_same_policy_Neg:
@@ -32,15 +32,15 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -59,14 +59,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -85,14 +85,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -111,14 +111,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -137,14 +137,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -163,14 +163,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -189,14 +189,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -215,14 +215,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -241,14 +241,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-      	"clientAuthMethods": "private_key_jwt"
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
     "errors": [
@@ -267,14 +267,14 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      	"requesttime": "$TIMESTAMP$",
-      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
-      	"clientName": "OIDC TEST CLIENT 8976678",
-      	"status": "INACTIVE",
-      	"logoUri": "https://health-services.com/logo.png",
-      	"redirectUris": "$IDPREDIRECTURI$",
-      	"grantTypes": "authorization_code",
-		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}]
+      "requesttime": "$TIMESTAMP$",
+      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "clientName": "OIDC TEST CLIENT 8976678",
+      "status": "INACTIVE",
+      "logoUri": "https://health-services.com/logo.png",
+      "redirectUris": "$IDPREDIRECTURI$",
+      "grantTypes": "authorization_code",
+      "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}]
 }'
       output: '{
     "errors": [

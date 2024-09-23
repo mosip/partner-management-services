@@ -7,10 +7,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.partner.dto.CertificateDto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -106,7 +104,6 @@ import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -149,6 +146,8 @@ public class PartnerServiceImpl implements PartnerService {
 	private final static String LINE_SEPARATOR = "\n";
 
 	public static final String BLANK_STRING="";
+
+	public static final String VERSION = "1.0";
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
@@ -236,6 +235,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${mosip.optional-languages}")
 	private String optionalLanguges;
+
+	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
+	private String getOriginalPartnerCertificateId;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -811,10 +813,11 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		OriginalCertDownloadResponseDto responseDto = null;
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			OriginalCertDownloadResponseDto responseDto = null;
 			responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
 			responseDto.setIsMosipSignedCertificateExpired(false);
 			responseDto.setIsCaSignedCertificateExpired(false);
@@ -833,17 +836,21 @@ public class PartnerServiceImpl implements PartnerService {
 				responseDto.setCaSignedCertificateData("");
 				responseDto.setIsCaSignedCertificateExpired(true);
 			}
+			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
-			throw ex;
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
-			throw new PartnerServiceException(ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorCode(),
-					ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorMessage());
+			String errorCode = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		return responseDto;
+		responseWrapper.setId(getOriginalPartnerCertificateId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,

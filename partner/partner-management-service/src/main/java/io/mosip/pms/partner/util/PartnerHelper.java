@@ -16,9 +16,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
-public class MultiPartnerHelper {
+public class PartnerHelper {
 
-    private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerHelper.class);
+    private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
 
@@ -43,8 +43,8 @@ public class MultiPartnerHelper {
                     ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
         } else if (!(secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && secureBiometricInterface.get().isActive())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
-                    ErrorCode.SBI_NOT_APPROVED.getErrorMessage());
+            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorCode(),
+                    ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorMessage());
         } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
             throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),

@@ -59,7 +59,7 @@ public class MultiPartnerAdminServiceImplTest {
     }
 
     @Test
-    public void approveOrRejectDeviceWithSbiMappingTest() throws Exception {
+    public void approveOrRejectMappingDeviceToSbiTest() throws Exception {
         SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
         requestDto.setPartnerId("123");
         requestDto.setSbiId("112");
@@ -87,11 +87,11 @@ public class MultiPartnerAdminServiceImplTest {
         deviceDetailSBI.setProviderId("123");
         when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
     }
 
     @Test
-    public void approveOrRejectDeviceWithSbiMappingTest2() throws Exception {
+    public void approveOrRejectMappingDeviceToSbiTest2() throws Exception {
         SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
         requestDto.setPartnerId("123");
         requestDto.setSbiId("112");
@@ -119,17 +119,17 @@ public class MultiPartnerAdminServiceImplTest {
         deviceDetailSBI.setProviderId("123");
         when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, true);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, true);
     }
 
-    @Test(expected = PartnerServiceException.class)
+    @Test
     public void approveDeviceWithSbiMappingException() {
 
         SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
         requestDto.setPartnerId("123");
         requestDto.setSbiId("112");
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
 
         requestDto.setDeviceDetailId("dgdg");
 
@@ -142,21 +142,21 @@ public class MultiPartnerAdminServiceImplTest {
         secureBiometricInterface.setSwVersion("1.0");
         secureBiometricInterface.setProviderId("123");
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
         when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
         DeviceDetail deviceDetail = new DeviceDetail();
         deviceDetail.setDeviceProviderId("123");
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
         when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
 
         when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(null);
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
 
         DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
         deviceDetailSBI.setProviderId("123");
         when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
 
-        multiPartnerAdminServiceImpl.approveOrRejectDeviceWithSbiMapping(requestDto, false);
+        multiPartnerAdminServiceImpl.approveOrRejectMappingDeviceToSbi(requestDto, false);
     }
 }

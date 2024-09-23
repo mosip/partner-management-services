@@ -165,8 +165,12 @@ public class AuthorizedRolesDto {
 
 	private List<String> postdevicewithsbimapping;
 
-	private List<String> putdeactivatedevice;
+	private List<String> postdeactivatedevice;
 
-	private List<String> putdeactivatesbi;
+	private List<String> postdeactivatesbi;
+
+	private List<String> getftmchipdetails;
+
+	private List<String> getapprovedftmproviderids;
 		
 }

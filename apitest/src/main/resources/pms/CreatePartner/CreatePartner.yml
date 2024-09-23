@@ -14,7 +14,7 @@ createPartnerSelfRegistration:
     "partnerId": "111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "111999",
@@ -36,7 +36,7 @@ createPartnerSelfRegistration:
     "partnerId": "111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -57,10 +57,10 @@ createPartnerSelfRegistration:
     "address": "Bangalore",
     "contactNumber": "8553967572",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "1119911",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -80,9 +80,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip987631@gmail.com",
+    "emailId": "mosip98763125@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "1119910",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234"
   }'
@@ -104,9 +104,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip987631@gmail.com",
+    "emailId": "mosip98763123@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "11199911",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "1111-07-22T08:21:17.665Z"
@@ -118,3 +118,25 @@ createPartnerSelfRegistration:
     }
   ]
 }'
+
+   Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip98768@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111998",
+    "partnerType": "Device_Provider",
+    "policyGroup": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "111998",
+        "status": "InProgress"
+    }'

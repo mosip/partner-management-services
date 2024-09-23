@@ -1,7 +1,7 @@
 package io.mosip.pms.test.partner.controller;
 
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.MultiPartnerAdminServiceController;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.service.MultiPartnerAdminService;
@@ -19,10 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -42,29 +38,29 @@ public class MultiPartnerAdminServiceContollerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
-    public void approveDeviceWithSbiMapping() throws Exception {
-        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+    public void approveMappingDeviceToSbi() throws Exception {
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequesttime(LocalDateTime.now());
+        requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        Mockito.when(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), false)).thenReturn(true);
-        doNothing().when(requestValidator).validateId(anyString(), anyString());
-        doNothing().when(requestValidator).validate(any());
-        multiPartnerAdminServiceController.approveDeviceWithSbiMapping(requestWrapper);
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(true);
+        Mockito.when(multiPartnerAdminService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest(), false)).thenReturn(responseWrapper);
+        multiPartnerAdminServiceController.approveMappingDeviceToSbi(requestWrapper);
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
-    public void rejectDeviceWithSbiMapping() throws Exception {
-        RequestWrapper<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapper<>();
+    public void rejectMappingDeviceToSbi() throws Exception {
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setVersion(VERSION);
-        requestWrapper.setRequesttime(LocalDateTime.now());
+        requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        Mockito.when(multiPartnerAdminService.approveOrRejectDeviceWithSbiMapping(requestWrapper.getRequest(), true)).thenReturn(true);
-        doNothing().when(requestValidator).validateId(anyString(), anyString());
-        doNothing().when(requestValidator).validate(any());
-        multiPartnerAdminServiceController.rejectDeviceWithSbiMapping(requestWrapper);
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(true);
+        Mockito.when(multiPartnerAdminService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest(), true)).thenReturn(responseWrapper);
+        multiPartnerAdminServiceController.rejectMappingDeviceToSbi(requestWrapper);
     }
 }

@@ -68,11 +68,44 @@
 			"authSubType": "",
 			"authType": "wla",
 			"mandatory": false
+		},
+		{
+			"authSubType": "",
+			"authType": "vciexchange",
+			"mandatory": false
+		},
+		{
+			"authSubType": "",
+			"authType": "pwd",
+			"mandatory": false
 		}
 	],
-			"allowedKycAttributes": [{
-				"attributeName": "{{attributeName}}"
-			}],
+			"allowedKycAttributes": [
+		{
+			"attributeName": "fullName"
+		},
+		{
+			"attributeName": "gender"
+		},
+		{
+			"attributeName": "phone"
+		},
+		{
+			"attributeName": "email"
+		},
+		{
+			"attributeName": "dateOfBirth"
+		},
+		{
+			"attributeName": "city"
+		},
+		{
+			"attributeName": "face"
+		},
+		{
+			"attributeName": "addressLine1"
+		}
+	],
 			"authTokenType": "{{authTokenType}}"
 		}
   },

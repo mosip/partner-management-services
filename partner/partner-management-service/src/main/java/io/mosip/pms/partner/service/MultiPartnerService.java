@@ -1,45 +1,31 @@
 package io.mosip.pms.partner.service;
 
-import io.mosip.pms.partner.dto.ApprovedPolicyDto;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
-import io.mosip.pms.partner.dto.PolicyGroupDto;
-import io.mosip.pms.partner.dto.ApiKeyResponseDto;
-import io.mosip.pms.partner.dto.UserDetailsDto;
-import io.mosip.pms.partner.dto.SbiDetailsDto;
-import io.mosip.pms.partner.dto.DeviceProviderDto;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
-import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
-import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.*;
 
 import java.util.List;
 
 public interface MultiPartnerService {
 
-    public List<CertificateDto> getAllCertificateDetails();
+    public ResponseWrapperV2<List<CertificateDto>> getAllCertificateDetails();
 
-    public List<PolicyDto> getAllRequestedPolicies();
+    public ResponseWrapperV2<List<PolicyDto>> getAllRequestedPolicies();
 
-    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies();
+    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies();
 
-    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups();
+    public ResponseWrapperV2<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups();
 
-    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners();
+    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners();
 
-    public UserDetailsDto saveUserConsentGiven();
+    public ResponseWrapperV2<UserDetailsDto> saveUserConsentGiven();
 
-    public UserDetailsDto isUserConsentGiven();
+    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven();
 
-    public List<SbiDetailsDto> getAllSBIDetails();
+    public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails();
 
-    public List<DeviceProviderDto> getAllApprovedDeviceProviderIds();
+    public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds();
 
-    public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId);
+    public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails();
 
-    public Boolean addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto);
-
-    public DeviceDetailResponseDto deactivateDevice(String deviceDetailId);
-
-    public SbiDetailsResponseDto deactivateSbi(String id);
+    public ResponseWrapperV2<List<FtmProviderDto>> approvedFTMProviderIds();
 }

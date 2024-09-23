@@ -5,7 +5,7 @@ UploadCACertificate:
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificate
+      inputTemplate: pms/UploadCACertificate/uploadCertificateAuthCa
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
     "requesttime": "$TIMESTAMP$"
@@ -18,7 +18,35 @@ UploadCACertificate:
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificate2
+      inputTemplate: pms/UploadCACertificate/uploadCertificateAuthSubCa
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}'
+
+   Pms_UploadCertificateDeviceProvider_with_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload CA Cert
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceCa
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}'
+
+   Pms_UploadSubCACertificate_DeviceProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload Sub-CA Cert
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceSubCa
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
     "requesttime": "$TIMESTAMP$"
@@ -78,4 +106,4 @@ UploadCACertificate:
        "errorCode": "PMS_COR_001"
        }
        ]
-}'
+}' 

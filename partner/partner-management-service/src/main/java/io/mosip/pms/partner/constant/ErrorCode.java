@@ -110,19 +110,21 @@ public enum ErrorCode {
 	DEVICE_NOT_EXISTS("PMS_DEVICE_ERROR_006", "Device do not exists."),
 	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id."),
 	ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR("PMS_DEVICE_ERROR_008", "Error while adding inactive device mapping for sbi."),
-	SBI_NOT_APPROVED("PMS_DEVICE_ERROR_009","SBI for which device is being added is not approved"),
+	SBI_NOT_APPROVED_OR_INACTIVE("PMS_DEVICE_ERROR_009","SBI for which device is being added is either not approved or deactivated."),
 	DEVICE_NOT_PENDING_FOR_APPROVAL("PMS_DEVICE_ERROR_010","Given device details are not in pending for approval status."),
-	APPROVE_OR_REJECT_DEVICE_WITH_SBI__MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),
+	APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),
 	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists."),
 	INVALID_DEVICE_ID("PMS_DEVICE_ERROR_013", "Device Id is invalid"),
-	UNABLE_TO_DEACTIVATE_DEVICE("PMS_DEVICE_ERROR_014", "Device should be in approved status"),
+	UNABLE_TO_DEACTIVATE_DEVICE("PMS_DEVICE_ERROR_014", "The selected device must be active and approved"),
 	DEACTIVATE_DEVICE_ERROR("PMS_DEVICE_ERROR_015", "Error while deactivating the device"),
 	DEVICE_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_016", "Device is not associated with user."),
 	INVALID_SBI_ID("PMS_DEVICE_ERROR_017", "SBI Id is invalid"),
 	DEACTIVATE_SBI_ERROR("PMS_DEVICE_ERROR_018", "Error while deactivating the SBI"),
 	SBI_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_019", "SBI is not associated with user."),
-	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "SBI should be in approved status"),
-	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired");
+	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "The selected SBI must be active and approved"),
+	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired"),
+	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
+	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids.");
 	/**
 	 * The error code.
 	 */

@@ -5,7 +5,7 @@ GetAllCertificate:
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
-      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{

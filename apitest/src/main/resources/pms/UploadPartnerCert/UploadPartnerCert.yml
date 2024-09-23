@@ -11,7 +11,22 @@ uploadPartnerCert:
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
+}'          
+
+   Pms_UploadPartnerCert_uploadCertificateDeviceProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      description: Upload Partner Cert
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCertDeviceProvider
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
 }'
+      output: ' {
+}'
+
    Pms_UploadPartnerCert_missing_PartnerDomain:
       endPoint: /v1/partnermanager/partners/certificate/upload
       description: Upload Partner Cert without partnerdomain      
@@ -74,6 +89,4 @@ uploadPartnerCert:
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-}'
-
-          
+}' 

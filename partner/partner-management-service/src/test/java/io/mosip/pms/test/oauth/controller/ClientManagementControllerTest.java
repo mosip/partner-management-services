@@ -3,6 +3,7 @@ package io.mosip.pms.test.oauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
@@ -162,9 +163,11 @@ public class ClientManagementControllerTest {
 
     @Test
     public void getAllOidcClients() throws Exception {
+        ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
         List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
-        when(clientManagementService.getAllOidcClients()).thenReturn(oidcClientDtoList);
-        ResponseWrapper<List<OidcClientDto>> actualResponse = clientController.getAllOidcClients();
+        responseWrapper.setResponse(oidcClientDtoList);
+        when(clientManagementService.getAllOidcClients()).thenReturn(responseWrapper);
+        ResponseWrapperV2<List<OidcClientDto>> actualResponse = clientController.getAllOidcClients();
     }
 
 }

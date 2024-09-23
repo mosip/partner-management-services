@@ -2,7 +2,16 @@ package io.mosip.pms.device.controller;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,16 +44,27 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
+
+	@Value("${mosip.pms.api.id.add.inactive.device.mapping.to.sbi.id.post}")
+	private  String postInactiveMappingDeviceToSbiId;
+
+	@Value("${mosip.pms.api.id.deactivate.device.post}")
+	private  String postDeactivateDeviceId;
 	
 	@Autowired
 	AuditUtil auditUtil;
 	
 	@Autowired	
 	DeviceDetailService deviceDetaillService;
+
+	@Autowired
+	RequestValidator requestValidator;
 	
 	/**
 	 * Post API to insert a new row of DeviceDetail data
@@ -200,4 +220,37 @@ public class DeviceDetailController {
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
 	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+	@PostMapping(value = "/inactive-mapping-device-to-sbi")
+	@Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postInactiveMappingDeviceToSbiId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivatedevice())")
+	@PostMapping(value = "/deactivate-device")
+	@Operation(summary = "Deactivate device details", description = "Deactivate device details")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(@RequestBody @Valid RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<DeviceDetailResponseDto>> validationResponse = requestValidator.validate(postDeactivateDeviceId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return deviceDetaillService.deactivateDevice(requestWrapper.getRequest().getDeviceId());
+	}
+
 }

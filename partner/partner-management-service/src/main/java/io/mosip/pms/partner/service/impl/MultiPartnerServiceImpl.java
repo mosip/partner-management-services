@@ -11,31 +11,35 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
+import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
+import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
+import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.partner.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
-import io.mosip.pms.partner.util.MultiPartnerHelper;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -49,11 +53,42 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static final String APPROVED = "approved";
     public static final String ACTIVE = "ACTIVE";
     public static final String INACTIVE = "INACTIVE";
-    private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
-    private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
     public static final String YES = "YES";
     public static final String PENDING_APPROVAL = "pending_approval";
-    public static final String REJECTED = "rejected";
+    public static final String VERSION = "1.0";
+
+    @Value("${mosip.pms.api.id.all.certificates.details.get}")
+    private String getAllCertificatesDetailsId;
+
+    @Value("${mosip.pms.api.id.all.requested.policies.get}")
+    private String getAllRequestedPoliciesId;
+
+    @Value("${mosip.pms.api.id.all.approved.partner.ids.with.policy.groups.get}")
+    private String getAllApprovedPartnerIdsWithPolicyGroupsId;
+
+    @Value("${mosip.pms.api.id.all.approved.auth.partners.policies.get}")
+    private String getAllApprovedAuthPartnersPoliciesId;
+
+    @Value("${mosip.pms.api.id.all.api.keys.for.auth.partners.get}")
+    private String getAllApiKeysForAuthPartnersId;
+
+    @Value("${mosip.pms.api.id.save.user.consent.given.post}")
+    private String postSaveUserConsentGivenId;
+
+    @Value("${mosip.pms.api.id.user.consent.given.get}")
+    private String getUserConsentGivenId;
+
+    @Value("${mosip.pms.api.id.all.sbi.details.get}")
+    private  String getSbiDetailsId;
+
+    @Value("${mosip.pms.api.id.all.approved.device.provider.ids.get}")
+    private  String getApprovedDeviceProviderIds;
+
+    @Value("${mosip.pms.api.id.ftm.chip.details.get}")
+    private String getFtmChipDetails;
+
+    @Value("${mosip.pms.api.id.approved.ftm.provider.ids.get}")
+    private String getApprovedFtmProviderIds;
 
     @Autowired
     PartnerServiceRepository partnerRepository;
@@ -71,6 +106,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     PartnerServiceImpl partnerServiceImpl;
 
     @Autowired
+    FTPChipDetailServiceImpl ftpChipDetailServiceImpl;
+
+    @Autowired
     UserDetailsRepository userDetailsRepository;
 
     @Autowired
@@ -83,18 +121,22 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     DeviceDetailRepository deviceDetailRepository;
 
     @Autowired
+    FTPChipDetailRepository ftpChipDetailRepository;
+
+    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
-    MultiPartnerHelper multiPartnerHelper;
+    PartnerHelper partnerHelper;
 
     @Override
-    public List<CertificateDto> getAllCertificateDetails() {
-        List<CertificateDto> certificateDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<CertificateDto>> getAllCertificateDetails() {
+        ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                List<CertificateDto> certificateDtoList = new ArrayList<>();
                 for (Partner partner : partnerList) {
                     CertificateDto certificateDto = new CertificateDto();
                     try {
@@ -122,6 +164,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                     }
                     certificateDtoList.add(certificateDto);
                 }
+                responseWrapper.setResponse(certificateDtoList);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -129,24 +172,28 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllCertificateDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage());
+            String errorCode = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.PARTNER_CERTIFICATES_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return certificateDtoList;
+        responseWrapper.setId(getAllCertificatesDetailsId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public List<PolicyDto> getAllRequestedPolicies() {
-        List<PolicyDto> policyDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<PolicyDto>> getAllRequestedPolicies() {
+        ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                List<PolicyDto> policyDtoList = new ArrayList<>();
                 for (Partner partner : partnerList) {
                     if (!skipDeviceOrFtmPartner(partner)) {
                         validatePartnerId(partner, userId);
@@ -183,6 +230,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         }
                     }
                 }
+                responseWrapper.setResponse(policyDtoList);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -190,24 +238,28 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
+            String errorCode = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return policyDtoList;
+        responseWrapper.setId(getAllRequestedPoliciesId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public List<PolicyGroupDto> getAllApprovedPartnerIdsWithPolicyGroups() {
-        List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<PolicyGroupDto>> getAllApprovedPartnerIdsWithPolicyGroups() {
+        ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
                 for (Partner partner : partnerList) {
                     String partnerType = partner.getPartnerTypeCode();
                     // Ignore, If the partner is a DEVICE or FTM partnertype
@@ -225,6 +277,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         policyGroupDtoList.add(policyGroupDto);
                     }
                 }
+                responseWrapper.setResponse(policyGroupDtoList);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -232,24 +285,28 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorMessage());
+            String errorCode = ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.POLICY_GROUP_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return policyGroupDtoList;
+        responseWrapper.setId(getAllApprovedPartnerIdsWithPolicyGroupsId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public List<ApprovedPolicyDto> getAllApprovedAuthPartnerPolicies() {
-        List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
+    public ResponseWrapperV2<List<ApprovedPolicyDto>> getAllApprovedAuthPartnerPolicies() {
+        ResponseWrapperV2<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
                 for (Partner partner : partnerList) {
                     if (checkIfPartnerIsApprovedAuthPartner(partner)) {
                         validatePartnerId(partner, userId);
@@ -289,6 +346,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         }
                     }
                 }
+                responseWrapper.setResponse(approvedPolicyList);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -296,15 +354,18 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllPolicies method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage());
+            String errorCode = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return approvedPolicyList;
+        responseWrapper.setId(getAllApprovedAuthPartnersPoliciesId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
@@ -326,6 +387,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public static boolean checkIfPartnerIsDevicePartner(Partner partner) {
         String partnerType = partner.getPartnerTypeCode();
         return partnerType.equals(DEVICE_PROVIDER);
+    }
+
+    public static boolean checkIfPartnerIsFtmPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        return partnerType.equals(FTM_PROVIDER);
     }
 
     public static void validatePartnerId(Partner partner, String userId) {
@@ -364,12 +430,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<ApiKeyResponseDto> getAllApiKeysForAuthPartners() {
-        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAllApiKeysForAuthPartners() {
+        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
                 for (Partner partner : partnerList) {
                     if (checkIfPartnerIsApprovedAuthPartner(partner)) {
                         validatePartnerId(partner, userId);
@@ -409,8 +476,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             }
                         }
                     }
-
                 }
+                responseWrapper.setResponse(apiKeyResponseDtoList);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -418,15 +485,18 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
                     "In getAllApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage());
+            String errorCode = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return apiKeyResponseDtoList;
+        responseWrapper.setId(getAllApiKeysForAuthPartnersId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     private String getUserBy() {
@@ -435,8 +505,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public UserDetailsDto saveUserConsentGiven() {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
+    public ResponseWrapperV2<UserDetailsDto> saveUserConsentGiven() {
+        ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -465,10 +535,12 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 UserDetails respEntity = userDetailsRepository.save(userDetails);
                 LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
 
+                UserDetailsDto userDetailsDto = new UserDetailsDto();
                 userDetailsDto.setConsentGiven(true);
                 userDetailsDto.setUserId(respEntity.getUserId());
                 userDetailsDto.setConsentGivenDtimes(respEntity.getConsentGivenDtimes());
 
+                responseWrapper.setResponse(userDetailsDto);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -476,23 +548,27 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In saveUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
-            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode(),
-                    ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage());
+            String errorCode = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorCode();
+            String errorMessage = ErrorCode.PMS_CONSENT_UNABLE_TO_ADD.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return userDetailsDto;
+        responseWrapper.setId(postSaveUserConsentGivenId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public UserDetailsDto isUserConsentGiven() {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
+    public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven() {
+        ResponseWrapperV2<UserDetailsDto> responseWrapper =  new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
+                UserDetailsDto userDetailsDto = new UserDetailsDto();
                 userDetailsDto.setUserId(userId);
                 LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
                 Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
@@ -503,6 +579,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         userDetailsDto.setConsentGivenDtimes(entity.getConsentGivenDtimes());
                     }
                 }
+                responseWrapper.setResponse(userDetailsDto);
             } else {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
@@ -510,19 +587,22 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             }
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception e) {
             LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
             LOGGER.error("sessionId", "idType", "id", "In isUserConsentGiven method of MultiPartnerServiceImpl - " + e.getMessage());
-            throw new PartnerServiceException(ErrorCode.PMS_CONSENT_ERR.getErrorCode(),
-                    ErrorCode.PMS_CONSENT_ERR.getErrorMessage());
+            String errorCode = ErrorCode.PMS_CONSENT_ERR.getErrorCode();
+            String errorMessage = ErrorCode.PMS_CONSENT_ERR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return userDetailsDto;
+        responseWrapper.setId(getUserConsentGivenId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public List<SbiDetailsDto> getAllSBIDetails() {
-        List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails() {
+        ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -531,6 +611,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+            List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
             for (Partner partner : partnerList) {
                 validatePartnerId(partner, userId);
                 if (checkIfPartnerIsDevicePartner(partner)) {
@@ -541,33 +622,36 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
                             sbiDetailsDto.setSbiId(secureBiometricInterface.getId());
                             sbiDetailsDto.setPartnerId(partner.getId());
-                            sbiDetailsDto.setPartnerType(partner.getPartnerTypeCode());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
-                            sbiDetailsDto.setActive(secureBiometricInterface.isActive());
-                            sbiDetailsDto.setExpired(checkIfSbiExpired(secureBiometricInterface));
+                            sbiDetailsDto.setSbiActive(secureBiometricInterface.isActive());
+                            sbiDetailsDto.setSbiExpired(checkIfSbiExpired(secureBiometricInterface));
                             sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
                             sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
-                            sbiDetailsDto.setSbiSoftwareCreatedDtimes(secureBiometricInterface.getSwCreateDateTime());
-                            sbiDetailsDto.setSbiSoftwareExpiryDtimes(secureBiometricInterface.getSwExpiryDateTime());
-                            sbiDetailsDto.setCrDtimes(secureBiometricInterface.getCrDtimes());
+                            sbiDetailsDto.setSbiCreatedDateTime(secureBiometricInterface.getSwCreateDateTime());
+                            sbiDetailsDto.setSbiExpiryDateTime(secureBiometricInterface.getSwExpiryDateTime());
+                            sbiDetailsDto.setCreatedDateTime(secureBiometricInterface.getCrDtimes());
 
                             sbiDetailsDtoList.add(sbiDetailsDto);
                         }
                     }
                 }
             }
+            responseWrapper.setResponse(sbiDetailsDtoList);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            LOGGER.info("sessionId", "idType", "id", "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getSbiDetailsList method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage());
+                    "In sbiDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return sbiDetailsDtoList;
+        responseWrapper.setId(getSbiDetailsId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     private String countDevices(List<DeviceDetailSBI> deviceDetailSBIList, String status) {
@@ -599,8 +683,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     }
 
     @Override
-    public List<DeviceProviderDto> getAllApprovedDeviceProviderIds() {
-        List<DeviceProviderDto> approvedDeviceProviderIds = new ArrayList<>();
+    public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds() {
+        ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper =  new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -609,348 +693,135 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+            List<DeviceProviderDto> approvedDeviceProviderIds = new ArrayList<>();
             for (Partner partner : partnerList) {
                 validatePartnerId(partner, userId);
                 if (checkIfPartnerIsDevicePartner(partner)
                         && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
                     DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
                     deviceProviderDto.setPartnerId(partner.getId());
-                    deviceProviderDto.setPartnerType(partner.getPartnerTypeCode());
 
                     approvedDeviceProviderIds.add(deviceProviderDto);
                 }
             }
+            responseWrapper.setResponse(approvedDeviceProviderIds);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllApprovedPolicyGroups method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            LOGGER.info("sessionId", "idType", "id", "In approvedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllApprovedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage());
+                    "In approvedDeviceProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return approvedDeviceProviderIds;
+        responseWrapper.setId(getApprovedDeviceProviderIds);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public List<DeviceDetailDto> getAllDevicesForSBI(String sbiId) {
-        List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+    public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails() {
+        ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
+            if (!partnerList.isEmpty()) {
+                for (Partner partner : partnerList) {
+                    if (checkIfPartnerIsFtmPartner(partner)) {
+                        validatePartnerId(partner, userId);
+                        List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository.findByProviderId(partner.getId());
+                        if(!ftpChipDetailList.isEmpty()) {
+                            for(FTPChipDetail ftpChipDetail: ftpChipDetailList) {
+                                FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
+                                // Get certificate data if available
+                                if (ftpChipDetail.getCertificateAlias() != null) {
+                                    ftmChipDetailsDto.setIsCertificateAvailable(true);
+                                    FtpChipCertDownloadRequestDto requestDto = new FtpChipCertDownloadRequestDto();
+                                    requestDto.setFtpChipDetailId(ftpChipDetail.getFtpChipDetailId());
+                                    FtpCertDownloadResponeDto ftpCertDownloadResponeDto = ftpChipDetailServiceImpl.getCertificate(requestDto);
+                                    X509Certificate cert = MultiPartnerUtil.decodeCertificateData(ftpCertDownloadResponeDto.getCertificateData());
 
-            if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
+                                    ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore());
+                                    ftmChipDetailsDto.setCertificateExpiryDateTime(cert.getNotAfter());
 
-            Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
-
-            if (secureBiometricInterface.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
-                throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
-            }
-
-            SecureBiometricInterface sbi = secureBiometricInterface.get();
-            // check if partnerId is associated with user
-            boolean partnerIdExists = false;
-            for (Partner partner : partnerList) {
-                if (partner.getId().equals(sbi.getProviderId())) {
-                    validatePartnerId(partner, userId);
-                    validateDevicePartnerType(partner, userId);
-                    partnerIdExists = true;
-                    break;
-                }
-            }
-            if (!partnerIdExists) {
-                LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-                        ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-            }
-            // fetch devices list
-            List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
-            if (!deviceDetailSBIList.isEmpty()) {
-                for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
-                    Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
-                            findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
-                    if (deviceDetail.isPresent()) {
-                        DeviceDetailDto deviceDetailDto = objectMapper
-                                .convertValue(deviceDetail, DeviceDetailDto.class);
-                        deviceDetailDtoList.add(deviceDetailDto);
+                                    // Check the certificate expiration status
+                                    LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+                                    LocalDateTime certExpiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+                                    ftmChipDetailsDto.setIsCertificateExpired(certExpiryDate.isBefore(currentDateTime));
+                                } else {
+                                    ftmChipDetailsDto.setIsCertificateAvailable(false);
+                                    ftmChipDetailsDto.setIsCertificateExpired(false);
+                                }
+                                ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
+                                ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
+                                ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
+                                ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
+                                ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
+                                ftmChipDetailsDto.setIsActive(ftpChipDetail.isActive());
+                                ftmChipDetailsDto.setCreatedDateTime(ftpChipDetail.getCrDtimes());
+                                ftmChipDetailsDtoList.add(ftmChipDetailsDto);
+                            }
+                        }
                     }
                 }
             }
+            responseWrapper.setResponse(ftmChipDetailsDtoList);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            LOGGER.info("sessionId", "idType", "id", "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getAllDevicesForSBI method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorCode(),
-                    ErrorCode.DEVICES_LIST_FOR_SBI_FETCH_ERROR.getErrorMessage());
+                    "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return deviceDetailDtoList;
+        responseWrapper.setId(getFtmChipDetails);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     @Override
-    public Boolean addInactiveDeviceMappingToSbi(SbiAndDeviceMappingRequestDto requestDto) {
-        Boolean inactiveDeviceMappingToSbiFlag = false;
-        try {
-            String partnerId = requestDto.getPartnerId();
-            String sbiId = requestDto.getSbiId();
-            String deviceDetailId = requestDto.getDeviceDetailId();
-            if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)  ){
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-                        ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
-            }
-            String userId = getUserId();
-            List<Partner> partnerList = partnerRepository.findByUserId(userId);
-
-            if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
-
-            // check if partnerId is associated with user
-            boolean partnerIdExists = false;
-            String partnerOrgname = BLANK_STRING;
-            for (Partner partner : partnerList) {
-                if (partner.getId().equals(partnerId)) {
-                    validatePartnerId(partner, userId);
-                    partnerIdExists = true;
-                    partnerOrgname = partner.getName();
-                    break;
-                }
-            }
-            if (!partnerIdExists) {
-                LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-                throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-                        ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-            }
-
-            // validate sbi and device mapping
-            multiPartnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
-
-            DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
-            if (Objects.nonNull(deviceDetailSBI)){
-                LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
-                throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
-                        ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
-            }
-
-            DeviceDetailSBI entity = new DeviceDetailSBI();
-
-            DeviceDetailSBIPK pk = new DeviceDetailSBIPK();
-            pk.setSbiId(sbiId);
-            pk.setDeviceDetailId(deviceDetailId);
-
-            entity.setId(pk);
-            entity.setProviderId(partnerId);
-            entity.setPartnerName(partnerOrgname);
-            entity.setIsActive(false);
-            entity.setIsDeleted(false);
-            entity.setCrBy(userId);
-            entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-
-            DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
-            LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
-            inactiveDeviceMappingToSbiFlag = true;
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            deleteDeviceDetail(requestDto.getDeviceDetailId());
-            throw ex;
-        } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id",
-                    "In addInactiveDeviceMappingToSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            deleteDeviceDetail(requestDto.getDeviceDetailId());
-            throw new PartnerServiceException(ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode(),
-                    ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage());
-        }
-        return inactiveDeviceMappingToSbiFlag;
-    }
-
-    private void deleteDeviceDetail(String deviceDetailId) {
-        try {
-            deviceDetailRepository.deleteById(deviceDetailId);
-            LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
-        } catch (Exception e) {
-            LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
-        }
-    }
-    
-    @Override
-    public DeviceDetailResponseDto deactivateDevice(String deviceDetailId) {
-        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+    public ResponseWrapperV2<List<FtmProviderDto>> approvedFTMProviderIds() {
+        ResponseWrapperV2<List<FtmProviderDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
             String userId = getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
+            List <FtmProviderDto> approvedFtmProviderIds = new ArrayList<>();
             if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
-            if (Objects.isNull(deviceDetailId)) {
-                LOGGER.info("sessionId", "idType", "id", "Device id is null.");
-                throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_ID.getErrorCode(),
-                        ErrorCode.INVALID_DEVICE_ID.getErrorMessage());
-            }
-            Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-            if (!deviceDetail.isPresent()) {
-                LOGGER.error("Device not exists with id {}", deviceDetailId);
-                throw new PartnerServiceException(ErrorCode.DEVICE_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
-            }
-            DeviceDetail device = deviceDetail.get();
-            // check if the device is associated with user.
-            String deviceProviderId = device.getDeviceProviderId();
-            boolean deviceProviderExist = false;
-            Partner partnerDetails = new Partner();
             for (Partner partner : partnerList) {
-                if (partner.getId().equals(deviceProviderId)) {
-                    validatePartnerId(partner, userId);
-                    deviceProviderExist = true;
-                    partnerDetails = partner;
-                    break;
+                validatePartnerId(partner, userId);
+                if (checkIfPartnerIsFtmPartner(partner)
+                        && partner.getApprovalStatus().equalsIgnoreCase(APPROVED)) {
+                    FtmProviderDto ftmProviderDto = new FtmProviderDto();
+                    ftmProviderDto.setPartnerId(partner.getId());
+
+                    approvedFtmProviderIds.add(ftmProviderDto);
                 }
             }
-            if (!deviceProviderExist) {
-                LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
-                throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-                        ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-            }
-            //check if Partner is Active or not
-            if (!partnerDetails.getIsActive()) {
-                LOGGER.error("Partner is not Active with id {}", deviceProviderId);
-                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-            }
-            // Deactivate only if the device is approved status and is_active true.
-            if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {
-                device.setIsActive(false);
-                DeviceDetail updatedDetail = deviceDetailRepository.save(device);
-                deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
-                deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
-                deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
-            } else {
-                LOGGER.error("Unable to deactivate device with id {}", device.getId());
-                throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorCode(),
-                        ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorMessage());
-            }
+            responseWrapper.setResponse(approvedFtmProviderIds);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
+            LOGGER.info("sessionId", "idType", "id", "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
             LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In deactivateDevice method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorCode(),
-                    ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage());
+                    "In approvedFTMProviderIds method of MultiPartnerServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
-        return deviceDetailResponseDto;
-    }
-
-    @Override
-    public SbiDetailsResponseDto deactivateSbi(String sbiId) {
-        SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
-        try {
-            String userId = getUserId();
-            List<Partner> partnerList = partnerRepository.findByUserId(userId);
-            if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
-
-            if (Objects.isNull(sbiId)) {
-                LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
-                throw new PartnerServiceException(ErrorCode.INVALID_SBI_ID.getErrorCode(),
-                        ErrorCode.INVALID_SBI_ID.getErrorMessage());
-            }
-            Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
-            if (!secureBiometricInterface.isPresent()) {
-                LOGGER.error("SBI not exists with id {}", sbiId);
-                throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
-            }
-            SecureBiometricInterface sbi = secureBiometricInterface.get();
-            // check if the SBI is associated with user.
-            String sbiProviderId = sbi.getProviderId();
-            boolean sbiProviderExist = false;
-            Partner partnerDetails = new Partner();
-            for (Partner partner : partnerList) {
-                if (partner.getId().equals(sbiProviderId)) {
-                    validatePartnerId(partner, userId);
-                    sbiProviderExist = true;
-                    partnerDetails = partner;
-                    break;
-                }
-            }
-            if (!sbiProviderExist) {
-                LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
-                throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-                        ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-            }
-            //check if Partner is Active or not
-            if (!partnerDetails.getIsActive()) {
-                LOGGER.error("Partner is not Active with id {}", sbiProviderId);
-                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-            }
-            // Deactivate only if the SBI is approved and is_active true.
-            if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
-                // Deactivate approved devices
-                List <DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
-                if (!approvedDevices.isEmpty()) {
-                    for (DeviceDetail deviceDetail: approvedDevices) {
-                        deviceDetail.setIsActive(false);
-                        deviceDetailRepository.save(deviceDetail);
-                    }
-                }
-                // Reject pending_approval devices
-                List <DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
-                if (!pendingApprovalDevices.isEmpty()) {
-                    for (DeviceDetail deviceDetail: pendingApprovalDevices) {
-                        deviceDetail.setApprovalStatus(REJECTED);
-                        deviceDetailRepository.save(deviceDetail);
-                    }
-                }
-                sbi.setActive(false);
-                SecureBiometricInterface updatedSbi = secureBiometricInterfaceRepository.save(sbi);
-                sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
-                sbiDetailsResponseDto.setSbiVersion(updatedSbi.getSwVersion());
-                sbiDetailsResponseDto.setStatus(updatedSbi.getApprovalStatus());
-                sbiDetailsResponseDto.setActive(updatedSbi.isActive());
-            } else {
-                LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
-                throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorCode(),
-                        ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorMessage());
-            }
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw ex;
-        } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id",
-                    "In deactivateSbi method of MultiPartnerServiceImpl - " + ex.getMessage());
-            throw new PartnerServiceException(ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode(),
-                    ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage());
-        }
-        return sbiDetailsResponseDto;
-    }
-
-    private void validateDevicePartnerType(Partner partner, String userId) {
-        if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER)) {
-            LOGGER.info("Invalid Partner type for partner id : " + partner.getId());
-            throw new PartnerServiceException(ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorCode(),
-                    ErrorCode.INVALID_DEVICE_PARTNER_TYPE.getErrorMessage());
-        }
+        responseWrapper.setId(getApprovedFtmProviderIds);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     private AuthUserDetails authUserDetails() {

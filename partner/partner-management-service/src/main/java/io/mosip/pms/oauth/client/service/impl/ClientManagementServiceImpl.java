@@ -9,11 +9,16 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.request.dto.ErrorResponse;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +80,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
 	public static final String BLANK_STRING = "";
+	public static final String VERSION = "1.0";
+
+	@Value("${mosip.pms.api.id.all.oidc.clients.get}")
+	private String getAllOidcClientsId;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -614,11 +623,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public List<OidcClientDto> getAllOidcClients() {
-		List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+	public ResponseWrapperV2<List<OidcClientDto>> getAllOidcClients() {
+		ResponseWrapperV2<List<OidcClientDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
 			for (Partner partner : partnerList) {
 				String partnerId = partner.getId();
 				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
@@ -664,19 +674,23 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oidcClientDtoList.add(oidcClientDto);
 				}
 			}
+			responseWrapper.setResponse(oidcClientDtoList);
 		} catch (PartnerServiceException ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			throw ex;
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
-					ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
+			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		return oidcClientDtoList;
+		responseWrapper.setId(getAllOidcClientsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	private String getUserId() {

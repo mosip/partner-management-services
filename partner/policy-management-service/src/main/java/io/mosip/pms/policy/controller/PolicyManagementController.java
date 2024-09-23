@@ -6,6 +6,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,11 +71,6 @@ public class PolicyManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-
-	@Value("${mosip.pms.api.id.all.policy.groups.get}")
-	private String getAllPolicyGroupsId;
-
-	public static final String VERSION = "1.0";
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -296,13 +296,10 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicygroups())")
 	@GetMapping(value = "/getAllPolicyGroups")
 	@Operation(summary = "Service to get all policy groups", description = "Service to get all policy groups")
-	public ResponseWrapper<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
-		ResponseWrapper<List<PolicyGroup>> response = new ResponseWrapper<>();
-		response.setId(getAllPolicyGroupsId);
-		response.setVersion(VERSION);
-		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		response.setResponse(policyManagementService.getAllPolicyGroups());
-		logger.info("Returning response from PolicyManagementController.");
-		return response;
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<PolicyGroup>> getAllPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
+		return policyManagementService.getAllPolicyGroups();
 	}
 }

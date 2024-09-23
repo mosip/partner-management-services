@@ -106,8 +106,8 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
       input: '{
-    "desc": "desc mosip policy group",
-    "name": "mosip policy group",
+    "desc": "desc mosip policy group 1233",
+    "name": "mosip policy group 1233",
     "requesttime": "$REMOVE$"
   }'
       output: '{

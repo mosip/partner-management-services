@@ -32,16 +32,13 @@ public class DeviceDetailDto {
     private String model;
 
     @Schema(description = "Approval status of the device (e.g., approved, pending, rejected)", example = "approved")
-    private String approvalStatus;
+    private String status;
 
     @Schema(description = "Indicates whether the device is active (true if active, false otherwise)", example = "true")
     @JsonProperty("isActive")
     private boolean isActive;
 
-    @Schema(description = "Identifier for the user who created the record", example = "user456")
-    private String crBy;
-
     @Schema(description = "Date and time when the record was created", example = "2024-08-08T10:00:00Z")
-    private LocalDateTime crDtimes;
+    private LocalDateTime createdDateTime;
 
 }
