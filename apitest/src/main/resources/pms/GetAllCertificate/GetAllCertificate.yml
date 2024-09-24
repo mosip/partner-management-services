@@ -1,7 +1,7 @@
 GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/getAllCertificateDetails
-      description: Fetching all the API certificates of the Loggedin Partner
+      description: Fetching all the API certificates of the Logged in Partner
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
@@ -27,4 +27,36 @@ GetAllCertificate:
       "partnerID": "111996",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
+}'
+   Pms_GetAllCertificate_without_auth:
+      endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      description: Fetching all the API certificates of the partner without login
+      role: batch
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllCertificate_invalid_auth:
+      endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      description: Fetching all the API certificates of the partner invalid partner
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
 }'

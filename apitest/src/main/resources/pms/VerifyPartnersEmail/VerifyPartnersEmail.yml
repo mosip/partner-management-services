@@ -43,3 +43,54 @@ VerifyPartnersEmail:
       output: '{
    "emailExists": true
 }'
+   Pms_VerifyPartnersEmail_without_auth:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: batch
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "mosip98763@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "KER-ATH-401"
+        }
+       ]
+}'
+   Pms_VerifyPartnersEmail_missing_email:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: partnerrevamp
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": null
+        }
+       ]
+}'
+   Pms_VerifyPartnersEmail_invalid_email:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: partnerrevamp
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "gfhgytth",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_012"
+        }
+       ]
+}'

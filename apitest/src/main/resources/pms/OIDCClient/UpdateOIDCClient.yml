@@ -3,7 +3,7 @@ UpdateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
-      restMethod: post
+      restMethod: put
       inputTemplate: pms/OIDCClient/oIDCClientUpdate
       outputTemplate: pms/OIDCClient/oIDCClientResult
       input: '{

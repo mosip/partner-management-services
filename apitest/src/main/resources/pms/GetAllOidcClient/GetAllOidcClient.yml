@@ -9,5 +9,10 @@ GetAllOidcClient:
       outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
       input: '{
 }'
-      output: ' {
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
 }'

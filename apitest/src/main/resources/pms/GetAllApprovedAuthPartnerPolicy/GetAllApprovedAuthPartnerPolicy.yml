@@ -9,5 +9,5 @@ GetAllApprovedAuthPartnerPolicy:
       outputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicyResult
       input: '{
 }'
-      output: ' {
-}'
+      output: '{
+}'     

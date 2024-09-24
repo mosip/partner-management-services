@@ -9,4 +9,9 @@ GetAllApprovedPartnerId:
       input: '{
 }'
       output: '{
+  "errors": [
+    {
+      "errorCode": "PMS_CERTIFICATE_ERROR_002"
+    }
+  ]
 }'

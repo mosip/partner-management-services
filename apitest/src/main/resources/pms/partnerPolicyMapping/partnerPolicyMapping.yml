@@ -14,3 +14,83 @@ partnerPolicyMapping:
     }'
       output: '{
     }'
+    
+   Pms_partnerPolicyMapping_invalid_policyName:
+      endPoint: /v1/partnermanager/partners/111999/policy/map
+      description: Mapping Partner & Policy when invalid policyname is given      
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "%^776hfgsdf",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_073"
+        }
+       ]
+    }'
+   Pms_partnerPolicyMapping_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
+      description: Mapping Partner & Policy when invalid partnerId is given      
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_005"
+        }
+       ]
+    }'
+   Pms_partnerPolicyMapping_missing_policyName:
+      endPoint: /v1/partnermanager/partners/111999/policy/map
+      description: Mapping Partner & Policy when policyname is removed from request      
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "$REMOVE$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
+    }'
+   Pms_partnerPolicyMapping_missing_useCaseDescription:
+      endPoint: /v1/partnermanager/partners/111999/policy/map
+      description: Mapping Partner & Policy when usecaseDescription is removed from request      
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription":"$REMOVE$",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+  ]
+    }'                

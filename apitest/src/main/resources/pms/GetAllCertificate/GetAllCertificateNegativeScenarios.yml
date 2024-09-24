@@ -1,0 +1,17 @@
+GetAllCertificate:
+   Pms_GetAllCertificate_beforecertifiactes_upload:
+      endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      description: Fetching all the API certificates of the Logged in Partner
+      role: partnerrevamp
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
+}'

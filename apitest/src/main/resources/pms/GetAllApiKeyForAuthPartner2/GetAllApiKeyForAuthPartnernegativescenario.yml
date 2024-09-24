@@ -1,0 +1,19 @@
+GetAllApiKeyForAuthPartner:
+   Pms_GetAllApiKeyForAuthPartner:
+      endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
+      description: Fetching all the API Key available for Auth Partner
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
+      outputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartnerResult
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
+}'
+
