@@ -117,7 +117,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	FilterHelper filterHelper;
 
 	@Value("${mosip.pms.expiry.date.max.year}")
-	private int maxAllowedYear;
+	private int maxAllowedExpiryYear;
+
+	@Value("${mosip.pms.created.date.max.year}")
+	private int maxAllowedCreatedYear;
 
 	
 	@Override
@@ -411,19 +414,33 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode(),
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorMessage());
 		}
+		// Check if fromDate is less than 10 years from today
+		LocalDate maxCreatedYear = LocalDate.now().minusYears(maxAllowedCreatedYear);
+		if (fromDate.toLocalDate().isBefore(maxCreatedYear)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS.getErrorCode(),
+							SecureBiometricInterfaceConstant.CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS.getErrorMessage(), maxAllowedCreatedYear),
+					"AUT-015");
+			throw new RequestException(
+					SecureBiometricInterfaceConstant.CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS.getErrorMessage(), maxAllowedCreatedYear));
+		}
 		// Check if toDate is more than 10 years from today
-		LocalDate maxYear = LocalDate.now().plusYears(maxAllowedYear);
-		if (toDate.toLocalDate().isAfter(maxYear)) {
+		LocalDate maxExpiryYear = LocalDate.now().plusYears(maxAllowedExpiryYear);
+		if (toDate.toLocalDate().isAfter(maxExpiryYear)) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_CREATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC,
 							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode(),
-							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedYear),
+							SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedExpiryYear),
 					"AUT-015");
 			throw new RequestException(
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode(),
-					String.format(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedYear));
+					String.format(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedExpiryYear));
 		}
 	}
 

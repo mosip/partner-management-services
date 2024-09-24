@@ -42,7 +42,10 @@ public class UserController {
 	private String axiosTimeout;
 
 	@Value("${mosip.pms.expiry.date.max.year}")
-	private String maxAllowedYear;
+	private String maxAllowedExpiryYear;
+
+	@Value("${mosip.pms.created.date.max.year}")
+	private String maxAllowedCreatedYear;
 
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
@@ -97,7 +100,8 @@ public class UserController {
 		configMap.put("inActivityTimer", inActivityTimer);
 		configMap.put("inActivityPromptTimer", inActivityPromptTimer);
 		configMap.put("axiosTimeout", axiosTimeout);
-		configMap.put("maxAllowedyear", maxAllowedYear);
+		configMap.put("maxAllowedExpiryYear", maxAllowedExpiryYear);
+		configMap.put("maxAllowedCreatedYear", maxAllowedCreatedYear);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
