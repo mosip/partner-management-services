@@ -1,6 +1,6 @@
 GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/getAllApprovedAuthPartnerPolicies
+      endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
