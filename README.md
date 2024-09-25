@@ -2,6 +2,8 @@
 [![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_partner-management-services)
 
+## Note: This branch is created to host updated testrig code for CRE checks.
+
 ## Overview
 This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to [Partner-management UI github repo](https://github.com/mosip/partner-management-portal/)
 
