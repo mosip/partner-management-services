@@ -53,3 +53,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE pms.device_detail_sbi ADD CONSTRAINT fk_mapping_sbi_id FOREIGN KEY (sbi_id)
 REFERENCES pms.secure_biometric_interface(id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating unique index for make, model, and approval status
+CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
+ON pms.device_detail (dprovider_id,dtype_code,dstype_code,make,model)
+WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is_active = false);
+
+-- Creating unique index for make, model, and approval status
+CREATE UNIQUE INDEX uk_fcdtl_make_model_approval_status
+ON pms.ftp_chip_detail (foundational_trust_provider_id, make, model)
+WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is_active = false);
