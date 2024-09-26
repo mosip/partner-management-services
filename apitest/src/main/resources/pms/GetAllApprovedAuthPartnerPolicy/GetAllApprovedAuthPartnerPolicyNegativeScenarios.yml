@@ -1,6 +1,6 @@
 GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_without_auth:
-      endPoint: /v1/partnermanager/partners/getAllApprovedAuthPartnerPolicies
+      endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies without token
       role: batch
       checkErrorsOnlyInResponse: true
@@ -17,7 +17,7 @@ GetAllApprovedAuthPartnerPolicy:
        ]
 }'
    Pms_GetAllApprovedAuthPartnerPolicy_invalid_auth:
-      endPoint: /v1/partnermanager/partners/getAllApprovedAuthPartnerPolicies
+      endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies with invalid token
       role: regproc
       checkErrorsOnlyInResponse: true

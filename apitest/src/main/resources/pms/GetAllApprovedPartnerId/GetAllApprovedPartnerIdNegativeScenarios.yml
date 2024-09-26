@@ -1,6 +1,6 @@
 GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_without_auth:
-      endPoint: /v1/partnermanager/partners/getAllApprovedPartnerIdsWithPolicyGroups
+      endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
       description: Fetching all approved Partner Id without token
       role: batch
       restMethod: get
@@ -16,7 +16,7 @@ GetAllApprovedPartnerId:
        ]
 }'
    Pms_GetAllApprovedPartnerId_invalid_auth:
-      endPoint: /v1/partnermanager/partners/getAllApprovedPartnerIdsWithPolicyGroups
+      endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
       description: Fetching all approved Partner Id with invalid token
       role: regproc
       restMethod: get

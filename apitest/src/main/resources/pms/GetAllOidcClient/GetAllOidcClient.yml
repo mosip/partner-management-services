@@ -1,6 +1,6 @@
 GetAllOidcClient:
    Pms_GetAllOidcClient_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/getAllOidcClients
+      endPoint: /v1/partnermanager/oauth/clients
       description: Fetching all OIDC Clients of the loggedin Partner
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

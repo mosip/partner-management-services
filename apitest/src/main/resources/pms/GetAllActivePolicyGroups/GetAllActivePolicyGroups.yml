@@ -1,6 +1,6 @@
 GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_All_Valid_Smoke:
-      endPoint: /v1/policymanager/policies/getAllPolicyGroups
+      endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -12,7 +12,7 @@ GetAllActivePolicyGroups:
       output: ' {
 }'
    Pms_GetAllActivePolicyGroups_without_auth:
-      endPoint: /v1/policymanager/policies/getAllPolicyGroups
+      endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups without token
       role: batch
       checkErrorsOnlyInResponse: true
@@ -29,7 +29,7 @@ GetAllActivePolicyGroups:
        ]
 }'
    Pms_GetAllActivePolicyGroups_Invalid_auth:
-      endPoint: /v1/policymanager/policies/getAllPolicyGroups
+      endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups with invalid token
       role: regproc
       checkErrorsOnlyInResponse: true

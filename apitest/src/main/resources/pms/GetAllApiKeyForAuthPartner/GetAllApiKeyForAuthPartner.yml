@@ -1,6 +1,6 @@
 GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
+      endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
       description: Fetching all the API Key available for Auth Partner
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -12,7 +12,7 @@ GetAllApiKeyForAuthPartner:
       output: '{
 }'
    Pms_GetAllApiKeyForAuthPartner_without_auth:
-      endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
+      endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
       description: Fetching all the API Key available for Auth Partner without token
       role: batch
       checkErrorsOnlyInResponse: true
@@ -29,7 +29,7 @@ GetAllApiKeyForAuthPartner:
        ]
 }'
    Pms_GetAllApiKeyForAuthPartner_invalid_auth:
-      endPoint: /v1/partnermanager/partners/getAllApiKeysForAuthPartners
+      endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
       description: Fetching all the API Key available for Auth Partner with invalid token
       role: regproc
       checkErrorsOnlyInResponse: true

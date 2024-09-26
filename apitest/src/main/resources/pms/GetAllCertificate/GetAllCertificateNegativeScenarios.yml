@@ -1,6 +1,6 @@
 GetAllCertificate:
    Pms_GetAllCertificate_beforecertifiactes_upload:
-      endPoint: /v1/partnermanager/partners/getAllCertificateDetails
+      endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the Logged in Partner
       role: partnerrevamp
       restMethod: get
