@@ -777,39 +777,42 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
-			// Deactivate only if the SBI is approved and is_active true.
-			if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
-				// Deactivate approved devices
-				List <DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
-				if (!approvedDevices.isEmpty()) {
-					for (DeviceDetail deviceDetail: approvedDevices) {
-						deviceDetail.setIsActive(false);
-						deviceDetailRepository.save(deviceDetail);
-					}
-				}
-				// Reject pending_approval devices
-				List <DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
-				if (!pendingApprovalDevices.isEmpty()) {
-					for (DeviceDetail deviceDetail: pendingApprovalDevices) {
-						deviceDetail.setApprovalStatus(REJECTED);
-						deviceDetailRepository.save(deviceDetail);
-					}
-				}
-				sbi.setActive(false);
-				SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
-				SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
-
-				sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
-				sbiDetailsResponseDto.setSbiVersion(updatedSbi.getSwVersion());
-				sbiDetailsResponseDto.setStatus(updatedSbi.getApprovalStatus());
-				sbiDetailsResponseDto.setActive(updatedSbi.isActive());
-
-				responseWrapper.setResponse(sbiDetailsResponseDto);
-			} else {
+			if (!sbi.isActive()){
 				LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
-				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorCode(),
-						ErrorCode.UNABLE_TO_DEACTIVATE_SBI.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorMessage());
 			}
+			if (!sbi.getApprovalStatus().equals(APPROVED)){
+				LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED.getErrorCode(),
+						ErrorCode.SBI_NOT_APPROVED.getErrorMessage());
+			}
+			// Deactivate approved devices
+			List<DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
+			if (!approvedDevices.isEmpty()) {
+				for (DeviceDetail deviceDetail : approvedDevices) {
+					deviceDetail.setIsActive(false);
+					deviceDetailRepository.save(deviceDetail);
+				}
+			}
+			// Reject pending_approval devices
+			List<DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
+			if (!pendingApprovalDevices.isEmpty()) {
+				for (DeviceDetail deviceDetail : pendingApprovalDevices) {
+					deviceDetail.setApprovalStatus(REJECTED);
+					deviceDetailRepository.save(deviceDetail);
+				}
+			}
+			sbi.setActive(false);
+			SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
+			SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
+
+			sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
+			sbiDetailsResponseDto.setSbiVersion(updatedSbi.getSwVersion());
+			sbiDetailsResponseDto.setStatus(updatedSbi.getApprovalStatus());
+			sbiDetailsResponseDto.setActive(updatedSbi.isActive());
+
+			responseWrapper.setResponse(sbiDetailsResponseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));

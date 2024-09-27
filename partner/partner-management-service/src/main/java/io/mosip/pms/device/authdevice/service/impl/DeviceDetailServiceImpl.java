@@ -545,22 +545,26 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
-			// Deactivate only if the device is approved status and is_active true.
-			if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {
-				DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
-
-				device.setIsActive(false);
-				DeviceDetail updatedDetail = deviceDetailRepository.save(device);
-				deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
-				deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
-				deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
-
-				responseWrapper.setResponse(deviceDetailResponseDto);
-			} else {
+			if (!device.getIsActive()){
 				LOGGER.error("Unable to deactivate device with id {}", device.getId());
-				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorCode(),
-						ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.DEVICE_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorCode.DEVICE_ALREADY_DEACTIVATED.getErrorMessage());
 			}
+			if (!device.getApprovalStatus().equals(APPROVED)){
+				LOGGER.error("Unable to deactivate device with id {}", device.getId());
+				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_APPROVED.getErrorCode(),
+						ErrorCode.DEVICE_NOT_APPROVED.getErrorMessage());
+			}
+
+			DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+
+			device.setIsActive(false);
+			DeviceDetail updatedDetail = deviceDetailRepository.save(device);
+			deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
+			deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+			deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
+
+			responseWrapper.setResponse(deviceDetailResponseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
