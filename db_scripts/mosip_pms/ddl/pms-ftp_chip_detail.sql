@@ -27,8 +27,7 @@ CREATE TABLE pms.ftp_chip_detail(
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	approval_status character varying(36) NOT NULL,
-	CONSTRAINT pk_fcdtl_id PRIMARY KEY (id),
-	CONSTRAINT uk_fcdtl_id UNIQUE (foundational_trust_provider_id,make,model)
+	CONSTRAINT pk_fcdtl_id PRIMARY KEY (id)
 
 );
 -- ddl-end --

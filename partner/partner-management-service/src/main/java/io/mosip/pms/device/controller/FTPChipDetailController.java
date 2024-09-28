@@ -105,10 +105,11 @@ public class FTPChipDetailController {
 	 * @return ResponseEntity DeviceDetail which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
+	@Deprecated
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutftpchipdetail())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update ftp chip detail", description =  "Updates ftp chip detail and returns success message")
+	@Operation(summary = "Service to update ftp chip detail", description =  "This API has been deprecated since 1.3.x release.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating ftp chip detail any error occured") })
