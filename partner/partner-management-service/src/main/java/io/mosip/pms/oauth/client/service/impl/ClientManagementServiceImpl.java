@@ -667,7 +667,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oauthClientDto.setPartnerId(partnerId);
 					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(getOidcClientName(clientDetail.getName()));
+					oauthClientDto.setClientName(getClientName(clientDetail.getName()));
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());
 					oauthClientDto.setPolicyGroupName(policyGroup.getName());
 					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
@@ -714,7 +714,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	private String getOidcClientName(String jsonString) {
+	private String getClientName(String jsonString) {
 		try {
 			JsonNode jsonNode = objectMapper.readTree(jsonString);
 
