@@ -2,6 +2,7 @@ package io.mosip.pms.oauth.client.service.impl;
 
 import java.util.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
@@ -74,6 +75,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String ACTIVE = "ACTIVE";
 	public static final String BLANK_STRING = "";
 	public static final String VERSION = "1.0";
+	public static final String NONE_LANG_KEY = "@none";
+	public static final String ENG_KEY = "eng";
 
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
@@ -123,19 +126,24 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setStatus(clientDetail.getStatus());		
 		return response;
 	}
-	
+
 	@Override
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				createRequest.getClientNameLangMap(),
+				createRequest.getName()
+		);
+		clientDetail.setName(clientName);
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
-		response.setStatus(clientDetail.getStatus());		
+		response.setStatus(clientDetail.getStatus());
 		return response;
-		
+
 	}
 	
 	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
@@ -448,22 +456,27 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setStatus(clientDetail.getStatus());
 		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
 		return response;
-	}	
-	
-	
+	}
+
+
 	@Override
 	public ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception {
-		
+
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
 		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				updateRequest.getClientNameLangMap(),
+				updateRequest.getClientName()
+		);
+		clientDetail.setName(clientName);
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
 		response.setStatus(clientDetail.getStatus());
 		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
 		return response;
-	}	
+	}
 	
 	
 	
@@ -615,6 +628,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return dto;
 	}
 
+	private String getClientNameLanguageMapAsJsonString(Map<String, String> clientNameMap, String clientName) {
+		clientNameMap.put(NONE_LANG_KEY, clientName);
+		JSONObject clientNameObject = new JSONObject(clientNameMap);
+		return clientNameObject.toString();
+	}
+
 	@Override
 	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
 		ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
@@ -648,7 +667,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oauthClientDto.setPartnerId(partnerId);
 					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(clientDetail.getName());
+					oauthClientDto.setClientName(getOidcClientName(clientDetail.getName()));
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());
 					oauthClientDto.setPolicyGroupName(policyGroup.getName());
 					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
@@ -694,6 +713,29 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+
+	private String getOidcClientName(String jsonString) {
+		try {
+			JsonNode jsonNode = objectMapper.readTree(jsonString);
+
+			JsonNode engNode = jsonNode.get(ENG_KEY);
+			if (engNode != null && engNode.isTextual()) {
+				return engNode.asText();
+			}
+
+			JsonNode noneNode = jsonNode.get(NONE_LANG_KEY);
+			if (noneNode != null && noneNode.isTextual()) {
+				return noneNode.asText();
+			}
+
+			// If neither "eng" nor "@none" is present, return the original string
+			return jsonString;
+		} catch (JsonProcessingException e) {
+			// If the string is not a valid JSON, return it as is
+			return jsonString;
+		}
+	}
+
 	/**
 	 * 
 	 * @param commaSeparatedString
