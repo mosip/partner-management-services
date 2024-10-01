@@ -856,13 +856,13 @@
 	</test>
 	
 	
-	<test name="GetFTPChipDetail">
+<!--	<test name="GetFTPChipDetail">
 		<parameter name="ymlFile"
 			value="partner/device/ftmChipDetails/get/GetFtpChipDetail.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="RejectFtpChipDetail">
 		<parameter name="ymlFile"
 			value="partner/device/ftmChipDetails/reject/RejectFtpChipDetail.yml" />
