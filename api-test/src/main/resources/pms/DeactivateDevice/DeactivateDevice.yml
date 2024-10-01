@@ -1,0 +1,14 @@
+DeactivateDevice:
+   Pms_DeactivateDevice_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/devicedetail/deactivate-device
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/DeactivateDevice/DeactivateDeviceResult
+      input: '{
+     "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      
+}'

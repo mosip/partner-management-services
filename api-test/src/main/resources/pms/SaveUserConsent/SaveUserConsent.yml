@@ -1,0 +1,13 @@
+saveUserConsent:
+   Pms_saveUserConsent_AllValid_Smoke:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/saveUserConsent/SaveUserConsent
+      outputTemplate: pms/saveUserConsent/SaveUserConsentResult
+      input: '{
+}'
+      output: '{
+           "userId": "111999"
+}'

@@ -1,0 +1,22 @@
+SaveDeviceDetails:
+   Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "111998",
+    "make": "AcmeCorp",
+    "model": "X1000",
+    "approvalStatus": "approved",
+    "crBy": "user456",
+    "crDtimes": "$TIMESTAMPL$",
+    "isActive": true
+}'
+      output: '{
+          
+}'
