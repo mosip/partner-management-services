@@ -406,7 +406,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			String partnerId = requestDto.getPartnerId();
 			String sbiId = requestDto.getSbiId();
 			String deviceDetailId = requestDto.getDeviceDetailId();
-			if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)  ){
+			if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING) || Objects.isNull(sbiId) || sbiId.equals(BLANK_STRING) || Objects.isNull(deviceDetailId) || deviceDetailId.equals(BLANK_STRING)){
 				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
 						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
@@ -492,8 +492,16 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
-			deviceDetailRepository.deleteById(deviceDetailId);
-			LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
+				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+				if (deviceDetail.isPresent()) {
+					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+					if (deviceDetailSBIList.isEmpty()) {
+						deviceDetailRepository.deleteById(deviceDetailId);
+						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+					}
+				}
+			}
 		} catch (Exception e) {
 			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
 		}
