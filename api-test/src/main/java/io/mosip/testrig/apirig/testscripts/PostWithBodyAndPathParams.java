@@ -22,14 +22,13 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
-import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
+import io.mosip.testrig.apirig.utils.PMSConfigManger;
 import io.mosip.testrig.apirig.utils.PMSUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
@@ -43,7 +42,7 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (ConfigManager.IsDebugEnabled())
+		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);

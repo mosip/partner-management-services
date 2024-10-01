@@ -29,9 +29,9 @@ import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
-import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
+import io.mosip.testrig.apirig.utils.PMSConfigManger;
 import io.mosip.testrig.apirig.utils.PMSUtil;
 import io.restassured.response.Response;
 
@@ -50,7 +50,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 	
 	@BeforeClass
 	public static void setLogLevel() {
-		if (ConfigManager.IsDebugEnabled())
+		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -79,7 +79,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		List<String> queryProp = Arrays.asList(templateFields);
 		logger.info(queryProp);
-		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+propsKernel.getProperty("partner_userName")+"'";
+		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+PMSConfigManger.getproperty("partner_userName")+"'";
 		
 		
 		logger.info(query);
@@ -113,7 +113,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 	@AfterMethod(alwaysRun = true)
 	public void setResultTestName(ITestResult result) {
 		
-		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+propsKernel.getProperty("partner_userName")+"'";
+		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+PMSConfigManger.getproperty("partner_userName")+"'";
 		logger.info(deleteQuery);
 		AuditDBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {
