@@ -1,0 +1,15 @@
+RejectMappingDeviceToSbi:
+   Pms_RejectMappingDeviceToSbi_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/admin/reject-mapping-device-to-sbi
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi
+      outputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiResult
+      input: '{
+       "partnerId": "111998",
+       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+  }'
+      output: ' {
+        
+    }'

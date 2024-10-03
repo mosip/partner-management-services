@@ -10,3 +10,7 @@ delete from pms.policy_group where cr_by='111999';
 delete from pms.partner where cr_by='111999';
 delete FROM pms.user_details where cr_by='111999';
 delete FROM pms.partner where cr_by='111999';
+delete FROM pms.secure_biometric_interface where cr_by='111999';
+delete FROM pms.secure_biometric_interface where cr_by='111998';
+delete FROM pms.device_detail where dprovider_id='111998';
+
