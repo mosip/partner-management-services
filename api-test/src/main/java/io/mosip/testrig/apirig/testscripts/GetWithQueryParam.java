@@ -26,9 +26,9 @@ import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
-import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
+import io.mosip.testrig.apirig.utils.PMSConfigManger;
 import io.mosip.testrig.apirig.utils.PMSUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
@@ -40,7 +40,7 @@ public class GetWithQueryParam extends AdminTestUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (ConfigManager.IsDebugEnabled())
+		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -83,7 +83,7 @@ public class GetWithQueryParam extends AdminTestUtil implements ITest {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-		if (ConfigManager.isInServiceNotDeployedList(GlobalConstants.ADMIN) && testCaseName.contains("BulkUpload_")) {
+		if (PMSConfigManger.isInServiceNotDeployedList(GlobalConstants.ADMIN) && testCaseName.contains("BulkUpload_")) {
 			throw new SkipException(GlobalConstants.SERVICE_NOT_DEPLOYED_MESSAGE);
 		}
 
