@@ -2,6 +2,7 @@ package io.mosip.pms.partner.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -18,6 +19,8 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
@@ -36,6 +39,7 @@ public class PartnerHelper {
     private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
+    public static final String PARTNER_ADMIN = "ROLE_PARTNER_ADMIN";
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -141,5 +145,22 @@ public class PartnerHelper {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
+    }
+
+    private AuthUserDetails authUserDetails() {
+        return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public String getUserId() {
+        return authUserDetails().getUserId();
+    }
+
+    public boolean isAdmin() {
+        for (GrantedAuthority authority : authUserDetails().getAuthorities()) {
+            if (authority.getAuthority().equals(PARTNER_ADMIN)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
