@@ -33,6 +33,7 @@ import io.mosip.testrig.apirig.utils.KeyCloakUserAndAPIKeyGeneration;
 import io.mosip.testrig.apirig.utils.KeycloakUserManager;
 import io.mosip.testrig.apirig.utils.MispPartnerAndLicenseKeyGeneration;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
+import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.utils.PartnerRegistration;
 
 /**
@@ -68,7 +69,7 @@ public class MosipTestRunner {
 			} else {
 				ExtractResource.copyCommonResources();
 			}
-			ConfigManager.init();
+			PMSRevampConfigManger.init();
 			BaseTestCase.suiteSetup();
 			setLogLevels();
 			//AdminTestUtil.encryptDecryptUtil = new EncryptionDecrptionUtil();
