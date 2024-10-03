@@ -17,6 +17,9 @@ public interface DeviceDetailSbiRepository extends JpaRepository<DeviceDetailSBI
 	@Query(value = "select * from device_detail_sbi dds where dds.dprovider_id=?1 and dds.sbi_id = ?2",nativeQuery = true)
 	List<DeviceDetailSBI> findByDeviceProviderIdAndSbiId(String dproviderId, String sbiId);
 
+	@Query(value = "select * from device_detail_sbi dds where dds.device_detail_id=?1",nativeQuery = true)
+	List<DeviceDetailSBI> findByDeviceDetailId(String deviceDetailId);
+
 	@Query(value = "select * from device_detail_sbi dds where dds.dprovider_id=?1 and dds.sbi_id=?2 and dds.device_detail_id=?3",nativeQuery = true)
 	DeviceDetailSBI findByDeviceProviderIdAndSbiIdAndDeviceDetailId(String dproviderId, String sbiId, String deviceDetailId);
 }
