@@ -27,7 +27,4 @@ public class PMSConfigManger extends ConfigManager{
 		// Add module specific properties as well.
 		init(moduleSpecificPropertiesMap);
 	}
-
-	
-	 
 }
