@@ -21,6 +21,7 @@ import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,6 +116,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	@Autowired
 	FilterHelper filterHelper;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Value("${mosip.pms.expiry.date.max.year}")
 	private int maxAllowedExpiryYear;
@@ -640,7 +644,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId) {
 		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
+			String userId = partnerHelper.getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 
 			if (partnerList.isEmpty()) {
@@ -658,20 +662,22 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
-			// check if partnerId is associated with user
-			boolean partnerIdExists = false;
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(sbi.getProviderId())) {
-					validatePartnerId(partner, userId);
-					validateDevicePartnerType(partner, userId);
-					partnerIdExists = true;
-					break;
+			if (!partnerHelper.isAdmin()) {
+				// check if partnerId is associated with user
+				boolean partnerIdExists = false;
+				for (Partner partner : partnerList) {
+					if (partner.getId().equals(sbi.getProviderId())) {
+						validatePartnerId(partner, userId);
+						validateDevicePartnerType(partner, userId);
+						partnerIdExists = true;
+						break;
+					}
 				}
-			}
-			if (!partnerIdExists) {
-				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+				if (!partnerIdExists) {
+					LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+							ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+				}
 			}
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
@@ -734,7 +740,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
+			String userId =  partnerHelper.getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
@@ -754,28 +760,30 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
 			}
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
-			// check if the SBI is associated with user.
-			String sbiProviderId = sbi.getProviderId();
-			boolean sbiProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(sbiProviderId)) {
-					validatePartnerId(partner, userId);
-					sbiProviderExist = true;
-					partnerDetails = partner;
-					break;
+			if (!partnerHelper.isAdmin()) {
+				// check if the SBI is associated with user.
+				String sbiProviderId = sbi.getProviderId();
+				boolean sbiProviderExist = false;
+				Partner partnerDetails = new Partner();
+				for (Partner partner : partnerList) {
+					if (partner.getId().equals(sbiProviderId)) {
+						validatePartnerId(partner, userId);
+						sbiProviderExist = true;
+						partnerDetails = partner;
+						break;
+					}
 				}
-			}
-			if (!sbiProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", sbiProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				if (!sbiProviderExist) {
+					LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
+					throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+							ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+				}
+				//check if Partner is Active or not
+				if (!partnerDetails.getIsActive()) {
+					LOGGER.error("Partner is not Active with id {}", sbiProviderId);
+					throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				}
 			}
 			// Deactivate only if the SBI is approved and is_active true.
 			if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
@@ -824,14 +832,5 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		responseWrapper.setId(postDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
-	}
-
-	private AuthUserDetails authUserDetails() {
-		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private String getUserId() {
-		String userId = authUserDetails().getUserId();
-		return userId;
 	}
 }
