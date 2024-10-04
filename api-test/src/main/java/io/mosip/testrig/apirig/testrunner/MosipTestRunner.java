@@ -68,6 +68,7 @@ public class MosipTestRunner {
 			} else {
 				ExtractResource.copyCommonResources();
 			}
+			AdminTestUtil.init();
 			PMSConfigManger.init();
 			BaseTestCase.suiteSetup(getRunType());
 			SkipTestCaseHandler.loadTestcaseToBeSkippedList("testCaseSkippedList.txt");
