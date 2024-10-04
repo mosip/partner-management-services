@@ -1,6 +1,7 @@
 requetAPIKey:
    Partner_SubmitPartnerApiKeyRequest_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/apikey/request
+      uniqueIdentifier: TC_PMS_requetAPIKey_01
       description: Submit the Partner APIKey Request with Valid data
       role: partner
       restMethod: patch 
@@ -18,6 +19,7 @@ requetAPIKey:
     
    Partner_SubmitPartnerApiKeyRequest_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/ABCD/apikey/request
+      uniqueIdentifier: TC_PMS_requetAPIKey_02
       description: Submit the Partner APIKey Request with InValid PartnerID
       role: partner
       restMethod: patch 

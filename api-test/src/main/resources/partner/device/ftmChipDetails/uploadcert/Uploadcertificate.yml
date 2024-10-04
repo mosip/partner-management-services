@@ -1,6 +1,7 @@
 UploadCertificateOfFtpChip:
    Partner_UploadCertificate_InValid_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_01
       description: Upload Certificate for FTP chip provider Partner while keeping ftpProviderId parameter as invalid 
       role: partner
       restMethod: post
@@ -22,6 +23,7 @@ UploadCertificateOfFtpChip:
 }' 
    Partner_UploadCertificate_InValid_ftpChipId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_02
       description: Upload Certificate for FTP chip provider Partner while keeping ftpChipId parameter as invalid
       role: partner
       restMethod: post

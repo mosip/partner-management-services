@@ -1,6 +1,7 @@
 GetPartnerCert:
    Partner_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_01
       description: Retrieve Partner Certificate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -14,6 +15,7 @@ GetPartnerCert:
 }'
    Partner_GetPartnerCert_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_02
       description: Retrieve Partner Certificate with invalid Partner ID
       role: partner
       restMethod: get
@@ -31,6 +33,7 @@ GetPartnerCert:
 }'
    Partner_GetPartnerCert_invalid_certificate_doesnot_exist:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_03
       description: Reterive invalid Partner certificate which does not exist
       role: partner
       restMethod: get

@@ -1,6 +1,7 @@
 SearchMispLicense:
    Partner_SearchMispLicense_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_01
       description: Create Search Misp License with valid details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -22,6 +23,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Valid_Filter_Name:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_02
       description: Create Search Misp License with valid Filter Name
       role: partner
       checkErrorsOnlyInResponse: true
@@ -46,6 +48,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_NegPageFetch:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_03
       description: Create Search Misp License with invalid Page fetch
       role: partner
       restMethod: post
@@ -74,6 +77,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_NegPageStart:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_04
       description: Create Search Misp License with invalid Page Start
       role: partner
       restMethod: post
@@ -102,6 +106,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_SortType_neg:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_05
       description: Create Search Misp License with invalid SortType
       role: partner
       restMethod: post
@@ -130,6 +135,7 @@ SearchMispLicense:
 }'
    Partner_SearchMispLicense_Invalid_SortField_neg:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_06
       description: Create Search Misp License with invalid SortField
       role: partner
       restMethod: post
@@ -159,6 +165,7 @@ SearchMispLicense:
    
    Partner_SearchMispLicense_Blank_SortField:
       endPoint: /v1/partnermanager/misps/search
+      uniqueIdentifier: TC_PMS_SearchMispLicense_07
       description: Create Search Misp License with Empty Sort Field
       role: partner
       restMethod: post

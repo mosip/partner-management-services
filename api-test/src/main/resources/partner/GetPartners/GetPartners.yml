@@ -1,6 +1,7 @@
 GetPartners:
    Partner_GetPartners_allValid_smoke:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_GetPartners_01
       description: Retrieve all the Partner details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -13,6 +14,7 @@ GetPartners:
 }'
    Partner_GetPartners_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners?partnerType=Device_Provider
+      uniqueIdentifier: TC_PMS_GetPartners_02
       description: Retrieve all the Partner details while keeping valid PartnerType
       role: partner
       checkErrorsOnlyInResponse: true
@@ -25,6 +27,7 @@ GetPartners:
 }'
    Partner_GetPartners_invalid_partnerType:
       endPoint: /v1/partnermanager/partners?partnerType=zsfvgefb
+      uniqueIdentifier: TC_PMS_GetPartners_03
       description: Retrieve all the Partner details while keeping invalid PartnerType
       role: partner
       restMethod: get
@@ -42,6 +45,7 @@ GetPartners:
 
    Partner_PrintPartener_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v2?partnerType=Print_Partner
+      uniqueIdentifier: TC_PMS_GetPartners_04
       description: Retrieve all the Print Partner details while keeping valid PartnerType
       role: partner
       checkErrorsOnlyInResponse: true
