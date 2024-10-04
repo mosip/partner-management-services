@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.util;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
@@ -12,11 +13,13 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 public class MultiPartnerUtil {
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerUtil.class);
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
     private static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
+    public static final String BLANK_STRING = "";
 
     public static X509Certificate decodeCertificateData(String certificateData) {
         certificateData = certificateData.replaceAll(BEGIN_CERTIFICATE, "")
@@ -43,5 +46,13 @@ public class MultiPartnerUtil {
         errorResponse.setMessage(errorMessage);
         errorResponseList.add(errorResponse);
         return errorResponseList;
+    }
+
+    public static void validatePartnerId(Partner partner, String userId) {
+        if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+            LOGGER.info("Partner Id is null or empty for user id : " + userId);
+            throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+        }
     }
 }

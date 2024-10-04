@@ -425,7 +425,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			String partnerOrgname = BLANK_STRING;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(partnerId)) {
-					validatePartnerId(partner, userId);
+					MultiPartnerUtil.validatePartnerId(partner, userId);
 					partnerIdExists = true;
 					partnerOrgname = partner.getName();
 					break;
@@ -482,14 +482,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		return responseWrapper;
 	}
 
-	public static void validatePartnerId(Partner partner, String userId) {
-		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-			LOGGER.info("Partner Id is null or empty for user id : " + userId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-		}
-	}
-
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
 			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
@@ -530,28 +522,30 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
 			}
 			DeviceDetail device = deviceDetail.get();
-			// check if the device is associated with user.
-			String deviceProviderId = device.getDeviceProviderId();
-			boolean deviceProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(deviceProviderId)) {
-					validatePartnerId(partner, userId);
-					deviceProviderExist = true;
-					partnerDetails = partner;
-					break;
+			if (!partnerHelper.isAdmin()) {
+				// check if the device is associated with user.
+				String deviceProviderId = device.getDeviceProviderId();
+				boolean deviceProviderExist = false;
+				Partner partnerDetails = new Partner();
+				for (Partner partner : partnerList) {
+					if (partner.getId().equals(deviceProviderId)) {
+						MultiPartnerUtil.validatePartnerId(partner, userId);
+						deviceProviderExist = true;
+						partnerDetails = partner;
+						break;
+					}
 				}
-			}
-			if (!deviceProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", deviceProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				if (!deviceProviderExist) {
+					LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+					throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+							ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+				}
+				//check if Partner is Active or not
+				if (!partnerDetails.getIsActive()) {
+					LOGGER.error("Partner is not Active with id {}", deviceProviderId);
+					throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				}
 			}
 			// Deactivate only if the device is approved status and is_active true.
 			if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {

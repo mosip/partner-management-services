@@ -532,8 +532,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+			if (!partnerHelper.isAdmin()) {
+				validateAssociatedPartner(partnerList, ftm, userId);
+			}
 			// Deactivate only if the FTM is approved status and is_active true.
 			if (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive()) {
 				FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
@@ -582,8 +583,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+			if (!partnerHelper.isAdmin()) {
+				validateAssociatedPartner(partnerList, ftm, userId);
+			}
 
 			// Download only if the FTM is approved or pending_approval status.
 			if (ftm.getApprovalStatus().equals(PENDING_APPROVAL) || (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive())) {
@@ -636,14 +638,14 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}
 	}
 
-	public Partner getAssociatedPartner(List<Partner> partnerList, FTPChipDetail ftm, String userId) {
+	public void validateAssociatedPartner(List<Partner> partnerList, FTPChipDetail ftm, String userId) {
 		String ftmProviderId = ftm.getFtpProviderId();
 		boolean ftmProviderExist = false;
 		Partner partnerDetails = null;
 
 		for (Partner partner : partnerList) {
 			if (partner.getId().equals(ftmProviderId)) {
-				validatePartnerId(partner, userId);
+				MultiPartnerUtil.validatePartnerId(partner, userId);
 				ftmProviderExist = true;
 				partnerDetails = partner;
 				break;
@@ -655,16 +657,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			throw new PartnerServiceException(ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
 					ErrorCode.FTM_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 		}
-
-		return partnerDetails;
-	}
-
-	public static void validatePartnerId(Partner partner, String userId) {
-		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-			LOGGER.info("Partner Id is null or empty for user id : " + userId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-		}
+		checkIfPartnerIsNotActive(partnerDetails);
 	}
 
 	private AuthUserDetails authUserDetails() {

@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import java.util.UUID;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
@@ -75,7 +73,6 @@ import io.mosip.pms.device.util.AuditUtil;
 public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInterfaceService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(SecureBiometricInterfaceServiceImpl.class);
-	public static final String BLANK_STRING = "";
 	public static final String VERSION = "1.0";
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String APPROVED = "approved";
@@ -663,21 +660,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
 			if (!partnerHelper.isAdmin()) {
-				// check if partnerId is associated with user
-				boolean partnerIdExists = false;
-				for (Partner partner : partnerList) {
-					if (partner.getId().equals(sbi.getProviderId())) {
-						validatePartnerId(partner, userId);
-						validateDevicePartnerType(partner, userId);
-						partnerIdExists = true;
-						break;
-					}
-				}
-				if (!partnerIdExists) {
-					LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-							ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-				}
+				validateAssociatedPartner(partnerList, sbi, userId);
 			}
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
@@ -720,12 +703,26 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return responseWrapper;
 	}
 
-	public static void validatePartnerId(Partner partner, String userId) {
-		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-			LOGGER.info("Partner Id is null or empty for user id : " + userId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+	private void validateAssociatedPartner(List<Partner> partnerList, SecureBiometricInterface sbi, String userId) {
+		// check if the SBI is associated with user.
+		Partner partnerDetails = null;
+		boolean sbiProviderIdExists = false;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(sbi.getProviderId())) {
+				MultiPartnerUtil.validatePartnerId(partner, userId);
+				validateDevicePartnerType(partner, userId);
+				partnerDetails = partner;
+				sbiProviderIdExists = true;
+				break;
+			}
 		}
+		if (!sbiProviderIdExists) {
+			LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+		//check if Partner is Active or not
+		checkIfPartnerIsActiveOrNot(partnerDetails, sbi.getProviderId());
 	}
 
 	private void validateDevicePartnerType(Partner partner, String userId) {
@@ -761,29 +758,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
 			if (!partnerHelper.isAdmin()) {
-				// check if the SBI is associated with user.
-				String sbiProviderId = sbi.getProviderId();
-				boolean sbiProviderExist = false;
-				Partner partnerDetails = new Partner();
-				for (Partner partner : partnerList) {
-					if (partner.getId().equals(sbiProviderId)) {
-						validatePartnerId(partner, userId);
-						sbiProviderExist = true;
-						partnerDetails = partner;
-						break;
-					}
-				}
-				if (!sbiProviderExist) {
-					LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
-					throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-							ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-				}
-				//check if Partner is Active or not
-				if (!partnerDetails.getIsActive()) {
-					LOGGER.error("Partner is not Active with id {}", sbiProviderId);
-					throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-				}
+				validateAssociatedPartner(partnerList, sbi, userId);
 			}
 			// Deactivate only if the SBI is approved and is_active true.
 			if (sbi.getApprovalStatus().equals(APPROVED) && sbi.isActive()) {
@@ -832,5 +807,13 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		responseWrapper.setId(postDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private void checkIfPartnerIsActiveOrNot(Partner partnerDetails, String sbiProviderId) {
+		if (!partnerDetails.getIsActive()) {
+			LOGGER.error("Partner is not Active with id {}", sbiProviderId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 	}
 }

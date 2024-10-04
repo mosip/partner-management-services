@@ -30,6 +30,7 @@ import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -122,7 +123,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificates() {
         ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 List<CertificateDto> certificateDtoList = new ArrayList<>();
@@ -179,7 +180,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
         ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 List<PolicyDto> policyDtoList = new ArrayList<>();
@@ -245,7 +246,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<PolicyGroupDto>> getApprovedPartnerIdsWithPolicyGroups() {
         ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
@@ -292,7 +293,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<ApprovedPolicyDto>> getAuthPartnersPolicies() {
         ResponseWrapperV2<List<ApprovedPolicyDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
@@ -420,7 +421,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<ApiKeyResponseDto>> getApiKeysForAuthPartners() {
         ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (!partnerList.isEmpty()) {
                 List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
@@ -489,7 +490,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails() {
         ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (partnerList.isEmpty()) {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -571,7 +572,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds() {
         ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper =  new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             if (partnerList.isEmpty()) {
                 LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -610,7 +611,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails() {
         ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
             if (!partnerList.isEmpty()) {
@@ -674,7 +675,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     public ResponseWrapperV2<List<FtmProviderDto>> approvedFTMProviderIds() {
         ResponseWrapperV2<List<FtmProviderDto>> responseWrapper = new ResponseWrapperV2<>();
         try {
-            String userId = getUserId();
+            String userId = partnerHelper.getUserId();
             List<Partner> partnerList = partnerRepository.findByUserId(userId);
             List <FtmProviderDto> approvedFtmProviderIds = new ArrayList<>();
             if (partnerList.isEmpty()) {
@@ -707,15 +708,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         responseWrapper.setId(getApprovedFtmProviderIds);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
-    }
-
-    private AuthUserDetails authUserDetails() {
-        return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
-    private String getUserId() {
-        String userId = authUserDetails().getUserId();
-        return userId;
     }
 
     public static String getCertificateName(String subjectDN) {

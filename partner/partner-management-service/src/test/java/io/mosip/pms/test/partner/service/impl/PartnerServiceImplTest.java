@@ -19,6 +19,7 @@ import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,10 +130,10 @@ public class PartnerServiceImplTest {
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	@MockBean
 	private WebSubPublisher webSubPublisher;
-	@MockBean
-	UserDetailUtil userDetailUtil;
     @MockBean
 	AuditUtil auditUtil;
+	@MockBean
+	PartnerHelper partnerHelper;
     
     @Mock
 	FilterHelper filterHelper;
@@ -231,6 +232,7 @@ public class PartnerServiceImplTest {
 		partner.setId("123");
 		partner.setPartnerTypeCode("Auth_Partner");
 		partnerList.add(partner);
+		when(partnerHelper.isAdmin()).thenReturn(false);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");

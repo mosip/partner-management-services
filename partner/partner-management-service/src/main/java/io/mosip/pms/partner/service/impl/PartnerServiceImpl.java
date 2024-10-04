@@ -848,14 +848,8 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 		}
-		boolean isPartnerBelongsToTheUser = false;
-		for (Partner partner: partnerList) {
-			if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
-				isPartnerBelongsToTheUser = true;
-			}
-		}
 		T responseObject = null;
-		if (isPartnerBelongsToTheUser) {
+		if (partnerHelper.isAdmin() || isPartnerBelongsToTheUser(certDownloadRequestDto, partnerList)) {
 			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
 			if (partnerFromDb.isEmpty()) {
 				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
@@ -875,6 +869,15 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		return responseObject;
+	}
+
+	private boolean isPartnerBelongsToTheUser(PartnerCertDownloadRequestDto certDownloadRequestDto, List<Partner> partnerList) {
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
