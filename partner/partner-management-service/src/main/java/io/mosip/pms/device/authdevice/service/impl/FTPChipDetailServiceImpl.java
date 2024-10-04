@@ -314,6 +314,10 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorMessage());		
 			
 		}
+		if (chipDetail.get().getApprovalStatus().equals(APPROVED) && !chipDetail.get().isActive()){
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_DEACTIVATED.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_CHIP_DEACTIVATED.getErrorMessage());
+		}
 		FtpCertificateRequestDto certRequest = new FtpCertificateRequestDto();
 		certRequest.setCertificateData(ftpChipCertRequestDto.getCertificateData());
 		certRequest.setOrganizationName(ftpChipCertRequestDto.getOrganizationName());
@@ -346,6 +350,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			updateObject.setUpdBy(authN.getName());
 		}
 		updateObject.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		updateObject.setActive(false);
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		ftpChipDetailRepository.save(updateObject);
 		try {
