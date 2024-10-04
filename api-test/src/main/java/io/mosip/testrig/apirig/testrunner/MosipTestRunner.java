@@ -97,11 +97,11 @@ public class MosipTestRunner {
 			HealthChecker.bTerminate = true;
 		
 		if (BaseTestCase.listOfModules.contains("partner")) {
-			DBManager.executeDBQueries(ConfigManager.getPMSDbUrl(), ConfigManager.getPMSDbUser(),
-					ConfigManager.getPMSDbPass(), ConfigManager.getPMSDbSchema(),
+			DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
+					PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
 					getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-			DBManager.executeDBQueries(ConfigManager.getKMDbUrl(), ConfigManager.getKMDbUser(),
-					ConfigManager.getKMDbPass(), ConfigManager.getKMDbSchema(),
+			DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
+					PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
 					getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 		}
 		
