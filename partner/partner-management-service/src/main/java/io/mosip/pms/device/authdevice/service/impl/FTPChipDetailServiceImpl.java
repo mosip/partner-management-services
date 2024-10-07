@@ -346,6 +346,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			updateObject.setUpdBy(authN.getName());
 		}
 		updateObject.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		updateObject.setActive(false);
 		updateObject.setUpdDtimes(LocalDateTime.now());
 		ftpChipDetailRepository.save(updateObject);
 		try {
