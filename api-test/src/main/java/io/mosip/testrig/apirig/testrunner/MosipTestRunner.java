@@ -68,6 +68,7 @@ public class MosipTestRunner {
 			} else {
 				ExtractResource.copyCommonResources();
 			}
+			AdminTestUtil.init();
 			PMSConfigManger.init();
 			BaseTestCase.suiteSetup(getRunType());
 			SkipTestCaseHandler.loadTestcaseToBeSkippedList("testCaseSkippedList.txt");
@@ -96,8 +97,12 @@ public class MosipTestRunner {
 			HealthChecker.bTerminate = true;
 		
 		if (BaseTestCase.listOfModules.contains("partner")) {
-			DBManager.clearPMSDbData();
-			DBManager.clearKeyManagerDbData();
+			DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
+					PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+					getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+			DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
+					PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
+					getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 		}
 		
 
