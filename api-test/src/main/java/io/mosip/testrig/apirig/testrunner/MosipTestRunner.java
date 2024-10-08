@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -89,7 +88,7 @@ public class MosipTestRunner {
 			KeycloakUserManager.closeKeycloakInstance();
 
 			startTestRunner();
-			
+
 		} catch (Exception e) {
 			LOGGER.error("Exception " + e.getMessage());
 		}
@@ -103,7 +102,7 @@ public class MosipTestRunner {
 
 	}
 	
-	public static void suiteSetup( String runType) {
+	public static void suiteSetup(String runType) {
 		if (PMSRevampConfigManger.IsDebugEnabled())
 			LOGGER.setLevel(Level.ALL);
 		else
@@ -111,24 +110,8 @@ public class MosipTestRunner {
 		BaseTestCase.initialize();
 		LOGGER.info("Done with BeforeSuite and test case setup! su TEST EXECUTION!\n\n");
 
-		String[] modulesSpecified = System.getProperty("modules").split(",");
-		BaseTestCase.listOfModules = new ArrayList<String>(Arrays.asList(modulesSpecified));
 		if (!runType.equalsIgnoreCase("JAR")) {
 			AuthTestsUtil.removeOldMosipTempTestResource();
-		}
-		if (BaseTestCase.listOfModules.contains("partner")) {
-			BaseTestCase.currentModule = "partner";
-			DBManager.executeDBQueries(PMSRevampConfigManger.getPMSDbUrl(), PMSRevampConfigManger.getPMSDbUser(),
-					PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getPMSDbSchema(),
-					getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-
-			DBManager.executeDBQueries(PMSRevampConfigManger.getKMDbUrl(), PMSRevampConfigManger.getKMDbUser(),
-					PMSRevampConfigManger.getKMDbPass(), PMSRevampConfigManger.getKMDbSchema(),
-					getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-
-			BaseTestCase.currentModule = "partner";
-			BaseTestCase.setReportName("partner");
-			AdminTestUtil.copyPartnerTestResource();
 		}
 		if (BaseTestCase.listOfModules.contains(GlobalConstants.PARTNERNEW)) {
 			BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
@@ -171,7 +154,6 @@ public class MosipTestRunner {
 		File homeDir = null;
 		TestNG runner = new TestNG();
 		List<String> suitefiles = new ArrayList<>();
-		List<String> modulesToRun = BaseTestCase.listOfModules;
 		String os = System.getProperty("os.name");
 		LOGGER.info(os);
 		if (getRunType().contains("IDE") || os.toLowerCase().contains("windows")) {
@@ -183,12 +165,8 @@ public class MosipTestRunner {
 			LOGGER.info("ELSE :" + homeDir);
 		}
 		for (File file : homeDir.listFiles()) {
-			for (String fileName : modulesToRun) {
-				if (file.getName().toLowerCase().contains(fileName)) {
-					suitefiles.add(file.getAbsolutePath());
-				} else if (fileName.equals("all") && file.getName().toLowerCase().contains("testng")) {
-					suitefiles.add(file.getAbsolutePath());
-				}
+			if (file.getName().toLowerCase().contains(GlobalConstants.PARTNERNEW)) {
+				suitefiles.add(file.getAbsolutePath());
 			}
 		}
 		runner.setTestSuites(suitefiles);
