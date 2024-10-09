@@ -658,6 +658,7 @@ public class MultiPartnerServiceImplTest {
         SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
         secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
         secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+        secureBiometricInterface.setPartnerOrgName("ABC");
         secureBiometricInterface.setApprovalStatus("approved");
         secureBiometricInterface.setActive(true);
         secureBiometricInterface.setCrDtimes(LocalDateTime.now());

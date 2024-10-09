@@ -507,6 +507,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
                             sbiDetailsDto.setSbiId(secureBiometricInterface.getId());
                             sbiDetailsDto.setPartnerId(partner.getId());
+                            sbiDetailsDto.setOrgName(secureBiometricInterface.getPartnerOrgName());
                             sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
                             sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
                             sbiDetailsDto.setSbiActive(secureBiometricInterface.isActive());
