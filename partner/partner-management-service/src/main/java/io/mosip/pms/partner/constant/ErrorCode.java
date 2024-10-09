@@ -115,23 +115,26 @@ public enum ErrorCode {
 	APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),
 	SBI_DEVICE_MAPPING_NOT_EXISTS("PMS_DEVICE_ERROR_012","SBI and Device mapping does not exists."),
 	INVALID_DEVICE_ID("PMS_DEVICE_ERROR_013", "Device Id is invalid"),
-	UNABLE_TO_DEACTIVATE_DEVICE("PMS_DEVICE_ERROR_014", "The device can only be deactivated if it is approved and has not been previously deactivated."),
+	DEVICE_ALREADY_DEACTIVATED("PMS_DEVICE_ERROR_014", "The selected device has been already deactivated."),
 	DEACTIVATE_DEVICE_ERROR("PMS_DEVICE_ERROR_015", "Error while deactivating the device"),
 	DEVICE_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_016", "Device is not associated with user."),
 	INVALID_SBI_ID("PMS_DEVICE_ERROR_017", "SBI Id is invalid"),
 	DEACTIVATE_SBI_ERROR("PMS_DEVICE_ERROR_018", "Error while deactivating the SBI"),
 	SBI_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_019", "SBI is not associated with user."),
-	UNABLE_TO_DEACTIVATE_SBI("PMS_DEVICE_ERROR_020", "SBI can only be deactivated if it is approved and has not been previously deactivated."),
+	SBI_ALREADY_DEACTIVATED("PMS_DEVICE_ERROR_020", "The selected SBI is already deactivated."),
 	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired"),
+	SBI_NOT_APPROVED("PMS_DEVICE_ERROR_022", "The selected SBI is not in an approved status."),
+	DEVICE_NOT_APPROVED("PMS_DEVICE_ERROR_023", "The selected Device is not in an approved status."),
 	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
 	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids."),
 	DEACTIVATE_FTM_ERROR("PMS_FTM_ERROR_003", "Error while deactivating the FTM"),
 	INVALID_FTM_ID("PMS_FTM_ERROR_004", "FTM Id is invalid"),
 	FTM_NOT_EXISTS("PMS_FTM_ERROR_005", "FTM Details do not exists."),
 	FTM_NOT_ASSOCIATED_WITH_USER("PMS_FTM_ERROR_006", "FTM is not associated with user."),
-	UNABLE_TO_DEACTIVATE_FTM("PMS_FTM_ERROR_007", "The selected FTM must be active and approved"),
+	FTM_ALREADY_DEACTIVATED("PMS_FTM_ERROR_007", "The selected FTM is already deactivated."),
 	DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR("PMS_FTM_ERROR_008", "The selected FTM must be pending_approval or approved"),
-	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate");
+	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate"),
+	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status.");
 	/**
 	 * The error code.
 	 */
