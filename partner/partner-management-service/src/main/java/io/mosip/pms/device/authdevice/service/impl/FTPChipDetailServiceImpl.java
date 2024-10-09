@@ -535,22 +535,25 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			FTPChipDetail ftm = ftmChipDetail.get();
 			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
 			checkIfPartnerIsNotActive(partnerDetails);
-			// Deactivate only if the FTM is approved status and is_active true.
-			if (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive()) {
-				FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
-
-				ftm.setActive(false);
-				FTPChipDetail updatedDetail = ftpChipDetailRepository.save(ftm);
-				ftmDetailResponseDto.setFtmId(updatedDetail.getFtpChipDetailId());
-				ftmDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
-				ftmDetailResponseDto.setActive(updatedDetail.isActive());
-
-				responseWrapper.setResponse(ftmDetailResponseDto);
-			} else {
+			if (!ftm.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
-				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorCode(),
-						ErrorCode.UNABLE_TO_DEACTIVATE_FTM.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.FTM_NOT_APPROVED.getErrorCode(),
+						ErrorCode.FTM_NOT_APPROVED.getErrorMessage());
 			}
+			if (ftm.getApprovalStatus().equals(APPROVED) && !ftm.isActive()) {
+				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
+				throw new PartnerServiceException(ErrorCode.FTM_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorCode.FTM_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
+
+			ftm.setActive(false);
+			FTPChipDetail updatedDetail = ftpChipDetailRepository.save(ftm);
+			ftmDetailResponseDto.setFtmId(updatedDetail.getFtpChipDetailId());
+			ftmDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+			ftmDetailResponseDto.setActive(updatedDetail.isActive());
+
+			responseWrapper.setResponse(ftmDetailResponseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateFtm method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
