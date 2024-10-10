@@ -696,23 +696,7 @@ public class FTPChipDetailServiceTest {
 		doNothing().when(auditUtil)
 				.auditRequest((String) any(), (String) any(), (String) any(), (String) any(), (String) any(), (String) any());
 		when(environment.getProperty((String) any())).thenReturn("Property");
-		FTPChipDetail ftpChipDetail = mock(FTPChipDetail.class);
-		when(ftpChipDetail.getFtpChipDetailId()).thenReturn("ChipId");
-		when(ftpChipDetail.getFtpProviderId()).thenReturn("ProviderId");
-		doNothing().when(ftpChipDetail).setActive(anyBoolean());
-		doNothing().when(ftpChipDetail).setApprovalStatus((String) any());
-		doNothing().when(ftpChipDetail).setCertificateAlias((String) any());
-		doNothing().when(ftpChipDetail).setCrBy((String) any());
-		doNothing().when(ftpChipDetail).setCrDtimes((LocalDateTime) any());
-		doNothing().when(ftpChipDetail).setDelDtimes((LocalDateTime) any());
-		doNothing().when(ftpChipDetail).setDeleted(anyBoolean());
-		doNothing().when(ftpChipDetail).setFtpChipDetailId((String) any());
-		doNothing().when(ftpChipDetail).setFtpProviderId((String) any());
-		doNothing().when(ftpChipDetail).setMake((String) any());
-		doNothing().when(ftpChipDetail).setModel((String) any());
-		doNothing().when(ftpChipDetail).setPartnerOrganizationName((String) any());
-		doNothing().when(ftpChipDetail).setUpdBy((String) any());
-		doNothing().when(ftpChipDetail).setUpdDtimes((LocalDateTime) any());
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setActive(true);
 		ftpChipDetail.setApprovalStatus("Approval Status");
 		ftpChipDetail.setCertificateAlias("Certificate Alias");
@@ -727,8 +711,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setPartnerOrganizationName("Partner Organization Name");
 		ftpChipDetail.setUpdBy("Upd By");
 		ftpChipDetail.setUpdDtimes(LocalDateTime.of(1, 1, 1, 1, 1));
-		Optional<FTPChipDetail> ofResult = Optional.of(ftpChipDetail);
-		when(ftpChipDetailRepository.findById((String) any())).thenReturn(ofResult);
+		when(ftpChipDetailRepository.findById((String) any())).thenReturn(Optional.of(ftpChipDetail));
 
 		Partner partner = new Partner();
 		partner.setAdditionalInfo("Additional Info");
