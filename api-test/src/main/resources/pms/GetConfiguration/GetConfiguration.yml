@@ -1,6 +1,6 @@
 GetConfiguration:
    Partner_GetConfiguration_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/configs
+      endPoint: /v1/partnermanager/users/configs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

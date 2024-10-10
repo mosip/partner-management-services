@@ -75,6 +75,7 @@ partnerPolicyMapping:
         }
        ]
     }'
+    
    Pms_partnerPolicyMapping_missing_useCaseDescription:
       endPoint: /v1/partnermanager/partners/111999/policy/map
       description: Mapping Partner & Policy when usecaseDescription is removed from request      
@@ -90,7 +91,8 @@ partnerPolicyMapping:
     }'
       output: '{
         "errors": [
-    {
-      "errorCode": "PMS_COR_001"
-  ]
-    }'                
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
+    }'             
