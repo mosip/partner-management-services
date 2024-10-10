@@ -8,7 +8,7 @@ DeactivateDevice:
       outputTemplate: pms/DeactivateDevice/DeactivateDeviceResult
       input: '{
       "responseTime": "$TIMESTAMP$",
-     "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
       output: '{
       

@@ -8,7 +8,7 @@ DeactivateSBIWithAssociatedDevices:
       outputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesResult
       input: '{
       "requesttime": "$TIMESTAMP$",
-     "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
       output: '{
       
