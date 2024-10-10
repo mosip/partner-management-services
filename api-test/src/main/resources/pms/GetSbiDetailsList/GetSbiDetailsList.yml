@@ -1,7 +1,7 @@
 GetSbiDetailsList:
    Pms_GetSbiDetailsList_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/sbi-details
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList

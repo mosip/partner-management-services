@@ -1,7 +1,7 @@
 DeactivateSBIWithAssociatedDevices:
    Pms_DeactivateSBIWithAssociatedDevices_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/deactivate-sbi
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices

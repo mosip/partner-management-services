@@ -1,7 +1,7 @@
 SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto

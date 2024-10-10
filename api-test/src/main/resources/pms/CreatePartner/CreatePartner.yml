@@ -122,7 +122,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult

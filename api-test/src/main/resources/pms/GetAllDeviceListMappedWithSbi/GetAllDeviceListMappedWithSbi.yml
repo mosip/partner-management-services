@@ -1,7 +1,7 @@
 GetAllDeviceListMappedWithSbi:
    Pms_GetAllDeviceListMappedWithSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
@@ -10,4 +10,7 @@ GetAllDeviceListMappedWithSbi:
        "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
       output: ' {
+      "deviceTypeCode": "Face",
+      "deviceSubTypeCode": "Full face",
+      "deviceProviderId": "111998"
 }'
