@@ -1,6 +1,6 @@
 DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_all_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -24,7 +24,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Retry_with_same_policy_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -51,7 +51,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_Requesttime_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -77,7 +77,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_client_id_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -103,7 +103,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_clientName_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -129,7 +129,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_status_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -155,7 +155,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_logoUri_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -181,7 +181,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_redirectUris_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -207,7 +207,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_grantTypes_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -233,7 +233,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_clientNameLangMap_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -259,7 +259,7 @@ DeactivateOIDCClient:
 }'
 
    Pms_DeactivateOIDCClient_Missing_clientAuthMethods_Neg:
-      endPoint: /v1/partnermanager/oauth/clients/{client_id}
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

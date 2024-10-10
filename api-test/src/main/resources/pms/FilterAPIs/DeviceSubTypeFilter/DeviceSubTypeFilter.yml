@@ -7,8 +7,8 @@ DeviceSubTypeFilter:
       outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilterResult
       input: '{
     "filters": [{
-    "columnName": "code",
-    "type": "all",
+    "columnName": "deviceType",
+    "type": "unique",
     "text": "Finger"
   }],
    "purpose": "REGISTRATION",
@@ -17,18 +17,9 @@ DeviceSubTypeFilter:
       output: '{
       "filters": [
       {
-        "fieldID": "code",
+        "fieldID": "deviceType",
         "fieldValue": "Finger",
-        "fieldCode": "Finger"
-      }
-    ]
-  }'
-      output: ' {
-       "filters": [
-      {
-        "fieldID": "code",
-        "fieldValue": "Finger",
-        "fieldCode": "Finger"
+        "fieldCode": "Single"
       }
     ]
   }'

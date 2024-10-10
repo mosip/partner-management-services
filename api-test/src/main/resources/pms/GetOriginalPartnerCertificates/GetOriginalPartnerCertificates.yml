@@ -7,6 +7,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
+      "requesttime": "$TIMESTAMP$",
       "partnerId": "111999"
 }'
       output: '{
@@ -21,6 +22,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
+      "requesttime": "$TIMESTAMP$",
       "partnerId": "111998"
 }'
       output: '{

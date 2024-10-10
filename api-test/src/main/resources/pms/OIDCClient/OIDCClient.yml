@@ -1,6 +1,6 @@
 CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -23,7 +23,7 @@ CreateOIDCClient:
     	"status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_invalid_policyID:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid policyid      
       role: partnerrevamp
       restMethod: post
@@ -48,7 +48,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_logoUri:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid logoUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -74,7 +74,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_RedirectUri:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid redirectUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -100,7 +100,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_auth:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
       role: regproc
       checkErrorsOnlyInResponse: true
@@ -126,7 +126,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_publickey:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -147,12 +147,12 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_COR_00"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
    Pms_CreateOIDCClient_invalid_granttypes:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -178,7 +178,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_granttypes:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -204,7 +204,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_name:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without name field      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -230,7 +230,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_publickey:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
