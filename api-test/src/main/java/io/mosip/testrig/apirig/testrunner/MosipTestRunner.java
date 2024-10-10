@@ -113,24 +113,24 @@ public class MosipTestRunner {
 		if (!runType.equalsIgnoreCase("JAR")) {
 			AuthTestsUtil.removeOldMosipTempTestResource();
 		}
-		if (BaseTestCase.listOfModules.contains(GlobalConstants.PARTNERNEW)) {
-			BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
-			DBManager.executeDBQueries(PMSRevampConfigManger.getPMSDbUrl(), PMSRevampConfigManger.getPMSDbUser(),
-					PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getPMSDbSchema(),
-					getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
+	
+		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
+		DBManager.executeDBQueries(PMSRevampConfigManger.getPMSDbUrl(), PMSRevampConfigManger.getPMSDbUser(),
+				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getPMSDbSchema(),
+				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
 
-			DBManager.executeDBQueries(PMSRevampConfigManger.getKMDbUrl(), PMSRevampConfigManger.getKMDbUser(),
-					PMSRevampConfigManger.getKMDbPass(), PMSRevampConfigManger.getKMDbSchema(),
-					getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
+		DBManager.executeDBQueries(PMSRevampConfigManger.getKMDbUrl(), PMSRevampConfigManger.getKMDbUser(),
+				PMSRevampConfigManger.getKMDbPass(), PMSRevampConfigManger.getKMDbSchema(),
+				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
 
-			DBManager.executeDBQueries(PMSRevampConfigManger.getIdaDbUrl(), PMSRevampConfigManger.getIdaDbUser(),
-					PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getIdaDbSchema(),
-					getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
+		DBManager.executeDBQueries(PMSRevampConfigManger.getIdaDbUrl(), PMSRevampConfigManger.getIdaDbUser(),
+				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getIdaDbSchema(),
+				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
 
-			BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
-			BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);
-			AdminTestUtil.copyPmsNewTestResource();
-		}
+		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
+		BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);
+		AdminTestUtil.copyPmsNewTestResource();
+
 		BaseTestCase.otpListener = new OTPListener();
 		BaseTestCase.otpListener.run();
 	}

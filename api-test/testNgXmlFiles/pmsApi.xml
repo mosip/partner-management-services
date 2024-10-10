@@ -152,7 +152,7 @@
 
 	<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"
-			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
+			value="pms/ActivateDeactivatePartnerApiKey/ActivatePartnerApiKey.yml" />
 		<parameter name="pathParams" value="partnerId,policyId" />
 		<classes>
 			<class
