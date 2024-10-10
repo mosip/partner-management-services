@@ -314,6 +314,14 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorMessage());		
 			
 		}
+		if (!chipDetail.get().getApprovalStatus().equals(APPROVED) && !chipDetail.get().getApprovalStatus().equals(CommonConstant.PENDING_CERT_UPLOAD)){
+			throw new RequestException(FoundationalTrustProviderErrorMessages.INVALID_FTP_CHIP_STATUS.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.INVALID_FTP_CHIP_STATUS.getErrorMessage());
+		}
+		if (chipDetail.get().getApprovalStatus().equals(APPROVED) && !chipDetail.get().isActive()){
+			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_DEACTIVATED.getErrorCode(),
+					FoundationalTrustProviderErrorMessages.FTP_CHIP_DEACTIVATED.getErrorMessage());
+		}
 		FtpCertificateRequestDto certRequest = new FtpCertificateRequestDto();
 		certRequest.setCertificateData(ftpChipCertRequestDto.getCertificateData());
 		certRequest.setOrganizationName(ftpChipCertRequestDto.getOrganizationName());
