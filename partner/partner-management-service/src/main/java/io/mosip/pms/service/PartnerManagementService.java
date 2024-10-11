@@ -25,7 +25,7 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = AuthorizedRolesDto.class) })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-public class PartnerManagementService {
+public class  PartnerManagementService {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PartnerManagementService.class, args);

@@ -9,13 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Objects;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,12 +40,14 @@ import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.ClientDetailRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
@@ -59,6 +65,7 @@ import io.mosip.pms.oauth.client.dto.RequestWrapper;
 import io.mosip.pms.oauth.client.dto.UpdateClientRequestDto;
 import io.mosip.pms.oauth.client.dto.UpdateClientRequestDtoV2;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
+import io.mosip.pms.oauth.client.dto.OidcClientDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -91,7 +98,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
+	public static final String BLANK_STRING = "";
     public static final String NONE_LANG_KEY = "@none";
+	public static final String ENG_KEY = "eng";
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -104,6 +113,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	@Autowired
 	PartnerRepository partnerRepository;
+
+	@Autowired
+	PartnerServiceRepository partnerServiceRepository;
 
 	@Autowired
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
@@ -181,6 +193,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_TYPE.getErrorCode(), String
 					.format(ErrorCode.INVALID_PARTNER_TYPE.getErrorMessage(), partner.get().getPartnerTypeCode()));
 		}
+		//check if Partner is Active or not
+		if (!partner.get().getIsActive()) {
+			LOGGER.error("createOIDCClient::Partner is not Active with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					clientId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(createRequest.getPolicyId());
 		if (!policyFromDb.isPresent()) {
 			LOGGER.error("createOIDCClient::Policy with Id {} not exists", createRequest.getPolicyId());
@@ -207,16 +227,13 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-
-		if (!policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase(CommonConstant.APPROVED)) {
-			LOGGER.error(
-					"createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}",
-					createRequest.getPolicyId(), createRequest.getAuthPartnerId(),
-					policyMappingReqFromDb.get(0).getStatusCode().equalsIgnoreCase("approved"));
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
-					clientId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
+		List<PartnerPolicyRequest> approvedMappedPolicy = partnerPolicyRequestRepository
+				.findByPartnerIdAndPolicyIdAndStatusCode(partner.get().getUserId(), policy.getId(), PartnerConstants.APPROVED);
+		if (approvedMappedPolicy.isEmpty()) {
+			LOGGER.error("createOIDCClient::Policy and partner mapping is not approved for policy {} and partner {} and status {}"
+					, createRequest.getPolicyId(), createRequest.getAuthPartnerId());
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(), clientId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorCode(), ErrorCode.PARTNER_POLICY_NOT_APPROVED.getErrorMessage());
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
@@ -492,6 +509,29 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
+		//Check if OIDC client is already deactivated
+		if (result.get().getStatus().equalsIgnoreCase("inactive")) {
+			LOGGER.error("updateOIDCClient::Client already deactivated with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE, clientId,
+					result.get().getStatus());
+			throw new PartnerServiceException(ErrorCode.CLIENT_ALREADY_DEACTIVATED.getErrorCode(),
+					ErrorCode.CLIENT_ALREADY_DEACTIVATED.getErrorMessage());
+		}
+		Optional<Partner> partner = partnerRepository.findById(result.get().getRpId());
+		String partnerId = result.get().getRpId();
+		if (partner.isEmpty() || partnerId == null) {
+			LOGGER.error("updateOIDCClient::Partner not exists with id {}", partnerId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
+					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
+		}
+		//check if Partner is Active or not
+		if (!partner.get().getIsActive()) {
+			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		ClientDetail clientDetail = result.get();
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
@@ -614,7 +654,99 @@ public class ClientManagementServiceImpl implements ClientManagementService {
         JSONObject clientNameObject = new JSONObject(clientNameMap);
         return clientNameObject.toString();
     }
-	
+
+	@Override
+	public List<OidcClientDto> getAllOidcClients() {
+		List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			for (Partner partner : partnerList) {
+				String partnerId = partner.getId();
+				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
+					LOGGER.info("Partner Id is null or empty for user id : " + userId);
+					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				List<ClientDetail> clientDetailList = new ArrayList<>();
+				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
+				for (ClientDetail clientDetail : clientDetailList){
+					Optional <AuthPolicy> authPolicy = authPolicyRepository.findById(clientDetail.getPolicyId());
+					if (!authPolicy.isPresent()) {
+						LOGGER.info("Policy does not exists.");
+						throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+								ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
+					}
+					PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
+					if (Objects.isNull(policyGroup)) {
+						LOGGER.info("Policy Group is null or empty");
+						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+					}
+					OidcClientDto oidcClientDto = new OidcClientDto();
+					oidcClientDto.setPartnerId(partnerId);
+					oidcClientDto.setUserId(userId);
+					oidcClientDto.setOidcClientId(clientDetail.getId());
+					oidcClientDto.setOidcClientName(getOidcClientName(clientDetail.getName()));
+					oidcClientDto.setPolicyGroupId(policyGroup.getId());
+					oidcClientDto.setPolicyGroupName(policyGroup.getName());
+					oidcClientDto.setPolicyGroupDescription(policyGroup.getDesc());
+					oidcClientDto.setPolicyId(authPolicy.get().getId());
+					oidcClientDto.setPolicyName(authPolicy.get().getName());
+					oidcClientDto.setPolicyNameDescription(authPolicy.get().getDescr());
+					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
+					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
+					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
+					oidcClientDto.setStatus(clientDetail.getStatus());
+					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+					oidcClientDto.setCrDtimes(clientDetail.getCreatedDateTime());
+					oidcClientDto.setUpdDtimes(clientDetail.getUpdatedDateTime());
+					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
+					oidcClientDtoList.add(oidcClientDto);
+				}
+			}
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
+					ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
+		}
+		return oidcClientDtoList;
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getOidcClientName(String jsonString) {
+		try {
+			JsonNode jsonNode = objectMapper.readTree(jsonString);
+
+			JsonNode engNode = jsonNode.get(ENG_KEY);
+			if (engNode != null && engNode.isTextual()) {
+				return engNode.asText();
+			}
+
+			JsonNode noneNode = jsonNode.get(NONE_LANG_KEY);
+			if (noneNode != null && noneNode.isTextual()) {
+				return noneNode.asText();
+			}
+
+			// If neither "eng" nor "@none" is present, return the original string
+			return jsonString;
+		} catch (JsonProcessingException e) {
+			// If the string is not a valid JSON, return it as is
+			return jsonString;
+		}
+	}
+
 	/**
 	 * 
 	 * @param commaSeparatedString
