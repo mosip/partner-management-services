@@ -16,7 +16,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_uploadCertificateDeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       description: Upload Partner Cert
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCertDeviceProvider

@@ -14,17 +14,17 @@ GetAllCertificate:
       "isCertificateAvailable": true
 }'
 
-   Pms_GetAllCertificate_allValid_smoke:
+   Pms_GetAllCertificate_Device_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the Loggedin Partner
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/GetAllCertificate/getAllCertificateResult
       input: '{
 }'
       output: '{
-      "partnerID": "111996",
+      "partnerID": "111998",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'

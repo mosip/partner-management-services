@@ -17,7 +17,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult

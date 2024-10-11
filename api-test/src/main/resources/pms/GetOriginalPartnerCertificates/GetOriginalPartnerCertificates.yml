@@ -16,7 +16,7 @@ GetOriginalPartnerCertificates:
 
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager//partners/{partnerId}/original-partner-certificate()
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates

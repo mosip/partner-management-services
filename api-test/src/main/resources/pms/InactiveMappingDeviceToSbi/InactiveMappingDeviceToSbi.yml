@@ -1,8 +1,9 @@
 InactiveMappingDeviceToSbi:
    Pms_InactiveMappingDeviceToSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: post
+      checkErrorsOnlyInResponse: true
       inputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbi
       outputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbiResult
       input: '{
