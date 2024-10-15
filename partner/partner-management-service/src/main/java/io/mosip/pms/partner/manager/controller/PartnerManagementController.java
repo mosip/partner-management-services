@@ -5,16 +5,22 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.PartnerSummaryDto;
+import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
@@ -59,6 +65,12 @@ public class PartnerManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	RequestValidator requestValidator;
+
+	@Value("${mosip.pms.api.id.all.partners.post}")
+	private  String getAllPartnersId;
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -243,5 +255,20 @@ public class PartnerManagementController {
 		response.setResponse(partnerManagementService.updateAPIKeyStatus(partnerId, policyId, request.getRequest()));
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostallpartners())")
+	@PostMapping(value = "/v3")
+	@Operation(summary = "Get all partner details", description = "This endpoint will fetch list of all the partner details")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>> getAllPartners(
+			@RequestBody @Valid RequestWrapperV2<SearchDto> request) {
+		Optional<ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>>> validationResponse = requestValidator.validate(getAllPartnersId, request);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerManagementService.getAllPartners(request.getRequest());
 	}
 }
