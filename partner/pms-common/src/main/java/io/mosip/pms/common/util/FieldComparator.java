@@ -31,6 +31,16 @@ public class FieldComparator<T> implements Comparator<T> {
 			Class<?> type = field.getType();
 			Object value1 = field.get(o1);
 			Object value2 = field.get(o2);
+			// Null checks for both values before comparison
+			if (value1 == null && value2 == null) {
+				return 0; // Both values are null, treat as equal
+			}
+			if (value1 == null) {
+				return "ASC".equalsIgnoreCase(sort.getSortType()) ? -1 : 1; // Null values come first in ASC, last in DESC
+			}
+			if (value2 == null) {
+				return "ASC".equalsIgnoreCase(sort.getSortType()) ? 1 : -1; // Null values come last in ASC, first in DESC
+			}
 			if ("DESC".equalsIgnoreCase(sort.getSortType())) {
 				return compare(type, value2, value1);
 			} else if ("ASC".equalsIgnoreCase(sort.getSortType())) {
