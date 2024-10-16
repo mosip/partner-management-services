@@ -155,7 +155,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		String jwkPublicKeyString = getJWKString(requestJwkPublicKey);
 		//Generate a new public key using the key's most significant fields from the JWK
 		String generatedPublicKey = createPublicKeyFromJWK(requestJwkPublicKey);
-		//Create a hash of the newly generated public key to check for duplicate keys
+		//Create a Base64-encoded hash of the newly generated public key to check for duplicate keys
 		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(generatedPublicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
