@@ -149,8 +149,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
 	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
-		String publicKey = getJWKString(createRequest.getPublicKey());
-		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(createPublicKeyFromJWK(createRequest.getPublicKey()).getBytes()));
+		//get the JWK from request
+		Map<String, Object> requestJwkPublicKey = createRequest.getPublicKey();
+		//get String form of JWK
+		String jwkPublicKeyString = getJWKString(requestJwkPublicKey);
+		//Generate a new public key using the key's most significant fields from the JWK
+		String generatedPublicKey = createPublicKeyFromJWK(requestJwkPublicKey);
+		//Create a hash of the newly generated public key to check for duplicate keys
+		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(generatedPublicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
@@ -218,7 +224,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setPublicKey(publicKey);
+		clientDetail.setPublicKey(jwkPublicKeyString);
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
@@ -738,10 +744,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 	}
 
-	public static String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
+	public String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
+		// Parse the JWK
 		JWK parsedJwk = JWK.parse(jwk);
 		byte[] publicKeyBytes;
 
+		// Determine the key type and create the corresponding public key
 		switch (parsedJwk.getKeyType().getValue()) {
 			case "RSA":
 				publicKeyBytes = createRSAPublicKey((RSAKey) parsedJwk).getEncoded();
@@ -756,22 +764,32 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				break;
 
 			default:
+				// Throw an exception if the key type is unsupported
 				throw new UnsupportedOperationException("Unsupported key type: " + parsedJwk.getKeyType());
 		}
+		// Return the public key as a Base64 encoded string
 		return Base64.getEncoder().encodeToString(publicKeyBytes);
 	}
-	// RSA PublicKey Creation
-	private static PublicKey createRSAPublicKey(RSAKey rsaJwk) throws Exception {
+
+	// Method to create an RSA PublicKey from an RSAKey JWK
+	private PublicKey createRSAPublicKey(RSAKey rsaJwk) throws Exception {
 		return rsaJwk.toPublicKey();
 	}
 
-	// ECC PublicKey Creation
-	private static PublicKey createECCPublicKey(ECKey ecJwk) throws Exception {
+	// Method to create an EC PublicKey from an ECKey JWK
+	private PublicKey createECCPublicKey(ECKey ecJwk) throws Exception {
 		return ecJwk.toPublicKey();
 	}
 
-	// EdDSA PublicKey Creation
-	public static byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
+	/*
+	 * Note: The Nimbus library does not provide built-in support for creating
+	 * PublicKey instances from "OKP" key type JWKs (EdDSA). As a workaround,
+	 * the public key bytes are directly extracted from the JWK by retrieving
+	 * the x-coordinate and decoding it from Base64 URL format.
+	 */
+	// Method to create an EdDSA PublicKey from an OctetKeyPair JWK
+	public byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
+		// Retrieve the x-coordinate from the EdDSA key and decode it from Base64 URL
 		String xValue = octetJwk.getX().toString();
 		return Base64.getUrlDecoder().decode(xValue);
 	}
