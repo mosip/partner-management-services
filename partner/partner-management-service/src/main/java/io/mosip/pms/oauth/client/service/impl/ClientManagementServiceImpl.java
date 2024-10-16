@@ -1,8 +1,13 @@
 package io.mosip.pms.oauth.client.service.impl;
 
+import java.security.PublicKey;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetKeyPair;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
@@ -46,12 +51,9 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.lang.JoseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -146,9 +148,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	}
 	
-	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
+	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		String publicKey = getJWKString(createRequest.getPublicKey());
-		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
+		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(createPublicKeyFromJWK(createRequest.getPublicKey()).getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
@@ -531,9 +533,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 */
 	private String getJWKString(Map<String, Object> jwk) {
 		try {
-			RsaJsonWebKey jsonWebKey = new RsaJsonWebKey(jwk);
-			return jsonWebKey.toJson();
-		} catch (JoseException e) {
+			JWK jsonWebKey = JWK.parse(jwk);
+			return jsonWebKey.toJSONObject().toString();
+		} catch (Exception e) {
 			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
 			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
 					ErrorCode.FAILED_TO_PROCESS_JWK.getErrorMessage());
@@ -734,6 +736,44 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			// If the string is not a valid JSON, return it as is
 			return jsonString;
 		}
+	}
+
+	public static String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
+		JWK parsedJwk = JWK.parse(jwk);
+		byte[] publicKeyBytes;
+
+		switch (parsedJwk.getKeyType().getValue()) {
+			case "RSA":
+				publicKeyBytes = createRSAPublicKey((RSAKey) parsedJwk).getEncoded();
+				break;
+
+			case "EC":
+				publicKeyBytes = createECCPublicKey((ECKey) parsedJwk).getEncoded();
+				break;
+
+			case "OKP":
+				publicKeyBytes = createEdDSAPublicKey((OctetKeyPair) parsedJwk);
+				break;
+
+			default:
+				throw new UnsupportedOperationException("Unsupported key type: " + parsedJwk.getKeyType());
+		}
+		return Base64.getEncoder().encodeToString(publicKeyBytes);
+	}
+	// RSA PublicKey Creation
+	private static PublicKey createRSAPublicKey(RSAKey rsaJwk) throws Exception {
+		return rsaJwk.toPublicKey();
+	}
+
+	// ECC PublicKey Creation
+	private static PublicKey createECCPublicKey(ECKey ecJwk) throws Exception {
+		return ecJwk.toPublicKey();
+	}
+
+	// EdDSA PublicKey Creation
+	public static byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
+		String xValue = octetJwk.getX().toString();
+        return Base64.getUrlDecoder().decode(xValue);
 	}
 
 	/**
