@@ -150,11 +150,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		//get the JWK from request
-		Map<String, Object> requestJwkPublicKey = createRequest.getPublicKey();
+		Map<String, Object> jwkKeyFromRequest = createRequest.getPublicKey();
 		//get String form of JWK
-		String jwkPublicKeyString = getJWKString(requestJwkPublicKey);
+		String jwkKeyString = getJWKString(jwkKeyFromRequest);
 		//Generate a new public key using the key's most significant fields from the JWK
-		String generatedPublicKey = createPublicKeyFromJWK(requestJwkPublicKey);
+		String generatedPublicKey = createPublicKeyFromJWK(jwkKeyFromRequest);
 		//Create a Base64-encoded hash of the newly generated public key to check for duplicate keys
 		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(generatedPublicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
@@ -224,7 +224,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setPublicKey(jwkPublicKeyString);
+		clientDetail.setPublicKey(jwkKeyString);
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
@@ -744,6 +744,18 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 	}
 
+	/**
+	 * Creates a public key from the provided JWK (JSON Web Key).
+
+	 * Supported JWK types:
+	 * - RSA: Represented by "RSA" key type.
+	 * - EC: Represented by "EC" key type (Elliptic Curve).
+	 * - OKP: Represented by "OKP" key type (Octet Key Pair, typically used for EdDSA).
+	 *
+	 * @param jwk A map representing the JSON Web Key.
+	 * @return A Base64 encoded string representation of the public key.
+	 * @throws Exception If the JWK is invalid or an unsupported key type is provided.
+	 */
 	public String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
 		// Parse the JWK
 		JWK parsedJwk = JWK.parse(jwk);
