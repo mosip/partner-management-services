@@ -773,7 +773,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	// EdDSA PublicKey Creation
 	public static byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
 		String xValue = octetJwk.getX().toString();
-        return Base64.getUrlDecoder().decode(xValue);
+		return Base64.getUrlDecoder().decode(xValue);
 	}
 
 	/**
