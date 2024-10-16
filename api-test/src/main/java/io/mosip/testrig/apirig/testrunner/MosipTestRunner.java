@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.testng.TestNG;
@@ -23,6 +24,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
+import io.mosip.testrig.apirig.utils.AuthTestsUtil;
 import io.mosip.testrig.apirig.utils.CertsUtil;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.JWKKeyUtil;
@@ -68,8 +70,9 @@ public class MosipTestRunner {
 			} else {
 				ExtractResource.copyCommonResources();
 			}
+			AdminTestUtil.init();
 			PMSConfigManger.init();
-			BaseTestCase.suiteSetup(getRunType());
+			suiteSetup(getRunType());
 			SkipTestCaseHandler.loadTestcaseToBeSkippedList("testCaseSkippedList.txt");
 			setLogLevels();
 
@@ -94,15 +97,45 @@ public class MosipTestRunner {
 
 		if (BaseTestCase.isTargetEnvLTS())
 			HealthChecker.bTerminate = true;
-		
+
 		if (BaseTestCase.listOfModules.contains("partner")) {
-			DBManager.clearPMSDbData();
-			DBManager.clearKeyManagerDbData();
+			DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
+					PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+					getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+			DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
+					PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
+					getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 		}
-		
 
 		System.exit(0);
 
+	}
+	
+	public static void suiteSetup(String runType) {
+		if (PMSConfigManger.IsDebugEnabled())
+			LOGGER.setLevel(Level.ALL);
+		else
+			LOGGER.info("Test Framework for Mosip api Initialized");
+		BaseTestCase.initialize();
+		LOGGER.info("Done with BeforeSuite and test case setup! su TEST EXECUTION!\n\n");
+
+		if (!runType.equalsIgnoreCase("JAR")) {
+			AuthTestsUtil.removeOldMosipTempTestResource();
+		}
+		BaseTestCase.currentModule = "partner";
+		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
+				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+
+		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
+				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
+				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
+
+		BaseTestCase.currentModule = "partner";
+		BaseTestCase.setReportName("partner");
+		AdminTestUtil.copyPartnerTestResource();
+		BaseTestCase.otpListener = new OTPListener();
+		BaseTestCase.otpListener.run();
 	}
 
 	private static void setLogLevels() {
@@ -124,7 +157,6 @@ public class MosipTestRunner {
 		File homeDir = null;
 		TestNG runner = new TestNG();
 		List<String> suitefiles = new ArrayList<>();
-		List<String> modulesToRun = BaseTestCase.listOfModules;
 		String os = System.getProperty("os.name");
 		LOGGER.info(os);
 		if (getRunType().contains("IDE") || os.toLowerCase().contains("windows")) {
@@ -136,12 +168,8 @@ public class MosipTestRunner {
 			LOGGER.info("ELSE :" + homeDir);
 		}
 		for (File file : homeDir.listFiles()) {
-			for (String fileName : modulesToRun) {
-				if (file.getName().toLowerCase().contains(fileName)) {
-					suitefiles.add(file.getAbsolutePath());
-				} else if (fileName.equals("all") && file.getName().toLowerCase().contains("testng")) {
-					suitefiles.add(file.getAbsolutePath());
-				}
+			if (file.getName().toLowerCase().contains("partner")) {
+				suitefiles.add(file.getAbsolutePath());
 			}
 		}
 		runner.setTestSuites(suitefiles);

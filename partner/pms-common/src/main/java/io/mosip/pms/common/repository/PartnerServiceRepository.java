@@ -34,4 +34,7 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 
     @Query(value = "select p.id from partner p where lower(p.name) like lower(concat('%', concat(?1, '%')))", nativeQuery = true)
     List<String> findByNameIgnoreCase(String name);
+
+    @Query(value = "select * from partner ppr where ppr.user_id=?", nativeQuery = true)
+    public List<Partner> findByUserId(String userId);
 }

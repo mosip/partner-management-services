@@ -1,0 +1,2281 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0",
+    "title": "Partner Management Services API documentation",
+    "description": "Partner Management Services API documentation",
+    "license": {
+      "url": "https://docs.mosip.io/platform/license",
+      "name": "Mosip"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+      "description": "Partner Management Service"
+    }
+  ],
+  "paths": {
+    "/partners": {
+      "post": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "EXISTING: partner self registration",
+        "description": "Saves partner details",
+        "operationId": "partnerSelfRegistration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPartnerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPartnerResponse"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/{partnerId}/policy/{policyId}/apiKey/status": {
+      "patch": {
+        "tags": [
+          "partner-management-controller"
+        ],
+        "summary": "EXISTING: Service to activate/de-activate partner api key",
+        "description": "Service to activate/de-activate partner api key",
+        "operationId": "activateDeactivatePartnerAPIKey",
+        "parameters": [
+          {
+            "name": "partnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperAPIkeyStatusUpdateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperString"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/{partnerId}/originalPartnerCertificate": {
+      "get": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "NEW: Service to get both the partner certificates",
+        "description": "Service to get original ca signed and mosip signed partner certificates",
+        "operationId": "getOriginalPartnerCertificate",
+        "parameters": [
+          {
+            "name": "partnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperOriginalCertDownloadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/{partnerId}/policy/map": {
+      "post": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "EXISTING: To request for policy mapping",
+        "description": "To request for policy mapping",
+        "operationId": "mapPolicyToPartner",
+        "parameters": [
+          {
+            "name": "partnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPartnerPolicyMappingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPartnerPolicyMappingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/{partnerId}/generate/apikey": {
+      "patch": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "EXISTING: To generate apiKeys for approved policies",
+        "description": "To generate apiKeys for approved policies",
+        "operationId": "generateAPIKey",
+        "parameters": [
+          {
+            "name": "partnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperAPIKeyGenerateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperAPIKeyGenerateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/getAllApiKeysForAuthPartners": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "Get all api keys for auth partners",
+        "description": "fetch all api keys for auth partners",
+        "operationId": "getAllApiKeysForAuthPartners",
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListApiKeyResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partners/getAllRequestedPolicies": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Get all requested policies for all the associated Partner ID's",
+        "description": "For all the partner ID's mapped to the logged in user, \r\nthis endpoint will return all the Policy Requests.",
+        "operationId": "getAllRequestedPolicies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListPolicyDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/getAllCertificateDetails": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Get all certificates for all the associated Partner ID's",
+        "description": "For all the partner ID's mapped to the logged in user, \r\nthis endpoint will return all the Certificates.",
+        "operationId": "getAllCertificateDetails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListCertificateDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/getAllApprovedPartnerIdsWithPolicyGroups": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Get all approved partner ID's which have policy group",
+        "description": "This endpoint will fetch all those approved partner ID's (mapped to the logged in user)\r\nwhich have policy group.",
+        "operationId": "getAllApprovedPartnerIdsWithPolicyGroups",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListPolicyGroupDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/getAllApprovedAuthPartnerPolicies": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Get all approved auth partner policies",
+        "description": "This endpoint will fetch all those approved Auth partner ID's (mapped to the logged in user)\r\nwhich have approved policies.",
+        "operationId": "getAllApprovedAuthPartnerPolicies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListApprovedPolicyDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/configs": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Get config",
+        "description": "Get configuration values that can be used in UI code",
+        "operationId": "getConfigValues",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperMapStringString"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/isUserConsentGiven": {
+      "get": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: Retrieve the user consent status.",
+        "description": "Retrieve the user consent status.",
+        "operationId": "isUserConsentGiven",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperUserDetailsDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/saveUserConsentGiven": {
+      "post": {
+        "tags": [
+          "multi-partner-service-controller"
+        ],
+        "summary": "NEW: save user consent",
+        "description": "Store the user consent in the database.",
+        "operationId": "saveUserConsentGiven",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperUserDetailsDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/email/verify": {
+      "put": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "EXISTING: To verify partner's email",
+        "description": "Service to verify partner email",
+        "operationId": "isEmailExists",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperEmailVerificationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperEmailVerificationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/partners/certificate/upload": {
+      "post": {
+        "tags": [
+          "partner-service-controller"
+        ],
+        "summary": "EXISTING: Service to upload partner certificate",
+        "description": "Service to upload partner certificate",
+        "operationId": "uploadPartnerCertificate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPartnerCertificateUploadRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPartnerCertificateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/oauth/client": {
+      "post": {
+        "tags": [
+          "client-management-controller"
+        ],
+        "summary": "EXISTING: Create a new OAuth Client",
+        "operationId": "createOAUTHClient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperClientDetailCreateRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperClientDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "client-management-controller"
+        ],
+        "summary": "EXISTING: Update an existing OAuth Client",
+        "operationId": "updateClient",
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperClientDetailUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperClientDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/logout/user": {
+      "get": {
+        "tags": [
+          "login-controller"
+        ],
+        "summary": "EXISTING: Logout user",
+        "operationId": "logoutUser",
+        "parameters": [
+          {
+            "name": "redirecturi",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/login/{redirectURI}": {
+      "get": {
+        "tags": [
+          "login-controller"
+        ],
+        "summary": "EXISTING: Login Redirect",
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirectURI",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/login-redirect/{redirectURI}": {
+      "get": {
+        "tags": [
+          "login-controller"
+        ],
+        "summary": "EXISTING: Redirect on Login",
+        "operationId": "loginRedirect",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "session_state",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirectURI",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/getAllOidcClients": {
+      "get": {
+        "tags": [
+          "client-management-controller"
+        ],
+        "summary": "NEW: Get all OIDC clients created on all approved policies for an Auth Partner",
+        "description": "This endpoint will fetch all the OIDC client ID's created on all the approved policies\r\nfor all the partner ID's (associated with logged in user)",
+        "operationId": "getAllOidcClients",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListOidcClientDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
+    "/authorize/admin/validateToken": {
+      "get": {
+        "tags": [
+          "login-controller"
+        ],
+        "summary": "EXISTING: Validate the token",
+        "operationId": "validateAdminToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperMosipUserDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestWrapperPartnerRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PartnerRequest"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PartnerRequest": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "policyGroup": {
+            "type": "string"
+          },
+          "organizationName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "contactNumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "emailId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 254
+          },
+          "partnerType": {
+            "type": "string"
+          },
+          "langCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "partnerId",
+          "organizationName",
+          "address",
+          "contactNumber",
+          "emailId",
+          "partnerType"
+        ]
+      },
+      "ResponseWrapperPartnerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PartnerResponse"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PartnerResponse": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestWrapperAPIkeyStatusUpdateRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/APIkeyStatusUpdateRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "APIkeyStatusUpdateRequestDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "status"
+        ]
+      },
+      "ResponseWrapperString": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "ResponseWrapperOriginalCertDownloadResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/OriginalCertDownloadResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "OriginalCertDownloadResponseDto": {
+        "type": "object",
+        "properties": {
+          "caSignedCertificateData": {
+            "type": "string"
+          },
+          "isCaSignedCertificateExpired": {
+            "type": "boolean"
+          },
+          "mosipSignedCertificateData": {
+            "type": "string"
+          },
+          "isMosipSignedCertificateExpired": {
+            "type": "boolean"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RequestWrapperPartnerPolicyMappingRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PartnerPolicyMappingRequest"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PartnerPolicyMappingRequest": {
+        "type": "object",
+        "properties": {
+          "policyName": {
+            "type": "string"
+          },
+          "useCaseDescription": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "policyName",
+          "useCaseDescription"
+        ]
+      },
+      "ResponseWrapperPartnerPolicyMappingResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PartnerPolicyMappingResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PartnerPolicyMappingResponseDto": {
+        "type": "object",
+        "properties": {
+          "mappingkey": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestWrapperAPIKeyGenerateRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/APIKeyGenerateRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "APIKeyGenerateRequestDto": {
+        "type": "object",
+        "properties": {
+          "policyName": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "policyName",
+          "label"
+        ]
+      },
+      "ResponseWrapperAPIKeyGenerateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/APIKeyGenerateResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "APIKeyGenerateResponseDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "partnerId": {
+            "type": "string"
+          }
+        }
+      },
+       "ApiKeyResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "apiKeyLabel": {
+            "type": "string"
+          },
+          "partnerId": {
+            "type": "string"
+          },
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "policyGroupDescription": {
+            "type": "string"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "policyName": {
+            "type": "string"
+          },
+          "policyNameDescription": {
+            "type": "string"
+          },
+          "crDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updDtimes": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ResponseWrapperListApiKeyResponseDto": {
+        "required": [
+          "response"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiKeyResponseDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ResponseWrapperListPolicyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyDto": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "partnerType": {
+            "type": "string"
+          },
+          "policyName": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupDescription": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "policyDescription": {
+            "type": "string"
+          },
+          "partnerComments": {
+            "type": "string"
+          },
+          "updDtimes": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ResponseWrapperListCertificateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "CertificateDto": {
+        "type": "object",
+        "properties": {
+          "certificateName": {
+            "type": "string"
+          },
+          "certificateUploadDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "certificateExpiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "partnerType": {
+            "type": "string"
+          },
+          "partnerId": {
+            "type": "string"
+          },
+          "isCertificateAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResponseWrapperListPolicyGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyGroupDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyGroupDto": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "partnerType": {
+            "type": "string"
+          },
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "policyGroupDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseWrapperListApprovedPolicyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApprovedPolicyDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "ApprovedPolicyDto": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "partnerType": {
+            "type": "string"
+          },
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupDescription": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "activePolicies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivePolicyDto"
+            }
+          }
+        }
+      },
+      "ActivePolicyDto": {
+        "type": "object",
+        "properties": {
+          "policyName": {
+            "type": "string"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "policyDescription": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseWrapperMapStringString": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "ResponseWrapperUserDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/UserDetailsDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "UserDetailsDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "consentGiven": {
+            "type": "boolean"
+          },
+          "consentGivenDtimes": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RequestWrapperEmailVerificationRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/EmailVerificationRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "EmailVerificationRequestDto": {
+        "type": "object",
+        "properties": {
+          "emailId": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseWrapperEmailVerificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/EmailVerificationResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "EmailVerificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "emailExists": {
+            "type": "boolean"
+          },
+          "policyRequiredPartnerTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RequestWrapperPartnerCertificateUploadRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PartnerCertificateUploadRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PartnerCertificateUploadRequestDto": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "certificateData": {
+            "type": "string"
+          },
+          "partnerDomain": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "partnerId",
+          "certificateData",
+          "partnerDomain"
+        ]
+      },
+      "ResponseWrapperPartnerCertificateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PartnerCertificateResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PartnerCertificateResponseDto": {
+        "type": "object",
+        "properties": {
+          "signedCertificateData": {
+            "type": "string"
+          },
+          "certificateId": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RequestWrapperClientDetailCreateRequestV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ClientDetailCreateRequestV2"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "ClientDetailCreateRequestV2": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "policyId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 36
+          },
+          "publicKey": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "authPartnerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "logoUri": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "redirectUris": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "string"
+            }
+          },
+          "grantTypes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            }
+          },
+          "clientAuthMethods": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            }
+          },
+          "clientNameLangMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "policyId",
+          "publicKey",
+          "authPartnerId",
+          "logoUri",
+          "redirectUris",
+          "grantTypes",
+          "clientAuthMethods",
+          "clientNameLangMap"
+        ]
+      },
+      "ResponseWrapperClientDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ClientDetailResponse"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "ClientDetailResponse": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestWrapperClientDetailUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ClientDetailUpdateRequest"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "ClientDetailUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "logoUri": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "redirectUris": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "pattern": "(ACTIVE)|(INACTIVE)"
+          },
+          "grantTypes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            }
+          },
+          "clientName": {
+            "type": "string"
+          },
+          "clientAuthMethods": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "logoUri",
+          "redirectUris",
+          "status",
+          "grantTypes",
+          "clientName",
+          "clientAuthMethods"
+        ]
+      },
+      "ResponseWrapperListOidcClientDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OidcClientDto"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "OidcClientDto": {
+        "type": "object",
+        "properties": {
+          "partnerId": {
+            "type": "string"
+          },
+          "oidcClientId": {
+            "type": "string"
+          },
+          "oidcClientName": {
+            "type": "string"
+          },
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "policyGroupDescription": {
+            "type": "string"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "policyName": {
+            "type": "string"
+          },
+          "policyNameDescription": {
+            "type": "string"
+          },
+          "relyingPartyId": {
+            "type": "string"
+          },
+          "logoUri": {
+            "type": "string"
+          },
+          "redirectUris": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publicKey": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "grantTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "crDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updDtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clientAuthMethods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseWrapperMosipUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "response": {
+            "$ref": "#/components/schemas/MosipUserDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "MosipUserDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "mobile": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "langCode": {
+            "type": "string"
+          },
+          "userPassword": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "rid": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

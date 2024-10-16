@@ -44,7 +44,8 @@ public enum ErrorMessages {
 	PUBLISHED_POLICY_NOT_UPDATED("PMS_POL_055","Published policy cannot be updated."),
 	ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP("PMS_POL_056","Active policies exists under the policy group."),
 	ACTIVE_APIKEY_EXISTS_UNDER_POLICY("PMS_POL_057","Active apiKey exists under the policy."),
-	PUBLISHED_POLICY_STATUS_UPDATE("PMS_POL_058","Status cannot be changed for published policy.");
+	PUBLISHED_POLICY_STATUS_UPDATE("PMS_POL_058","Status cannot be changed for published policy."),
+	POLICY_GROUPS_NOT_AVAILABLE("PMS_POL_059", "There are no active policy groups.");
 	
 	
 	private final String errorCode;
