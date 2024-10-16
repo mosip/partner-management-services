@@ -670,8 +670,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			if (!partnerIdExists) {
 				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
