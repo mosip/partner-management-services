@@ -1,6 +1,7 @@
 updatePartnerDetails:
    Partner_UpdatePartnerDetails_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/Tech-123 
+      endPoint: /v1/partnermanager/partners/Tech-123
+      uniqueIdentifier: TC_PMS_updatePartnerDetails_01
       description: Update Partner Details for Partner with valid data
       role: partner
       restMethod: put
@@ -18,6 +19,7 @@ updatePartnerDetails:
     
    Partner_UpdatePartnerDetails_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/Tech-1231234
+      uniqueIdentifier: TC_PMS_updatePartnerDetails_02
       description: Update Partner Details for Partner with invalid partnerID
       role: partner
       restMethod: put
@@ -38,6 +40,7 @@ updatePartnerDetails:
 
    Partner_UpdatePartnerDetails_Missing_InputParameter_Address:
       endPoint: /v1/partnermanager/partners/Tech-123
+      uniqueIdentifier: TC_PMS_updatePartnerDetails_03
       description: Update Partner Details for Partner while keeping Address parameter as missing
       role: partner
       restMethod: put
@@ -58,6 +61,7 @@ updatePartnerDetails:
 
    Partner_UpdatePartnerDetails_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners/Tech-123
+      uniqueIdentifier: TC_PMS_updatePartnerDetails_04
       description: Update Partner Details for Partner while keeping Contact Number parameter as missing
       role: partner
       restMethod: put

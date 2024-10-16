@@ -1,6 +1,7 @@
 ServiceToFilterSBI:
    partner_ServiceToFilterSBI_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_01
       description: Create ServiceToFilterSBI for Partner while keeping Type parameter as Unique
       role: partner
       checkErrorsOnlyInResponse: true
@@ -19,6 +20,7 @@ ServiceToFilterSBI:
 }'
    partner_ServiceToFilterSBI_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_02
       description: Create ServiceToFilterSBI for Partner while keeping Type parameter as All
       role: partner
       checkErrorsOnlyInResponse: true
@@ -37,6 +39,7 @@ ServiceToFilterSBI:
 }'
    partner_ServiceToFilterSBI_InValid_Empty_type:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_03
       description: Create ServiceToFilterSBI for Partner while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
@@ -60,6 +63,7 @@ ServiceToFilterSBI:
 }'
    partner_ServiceToFilterSBI_InValid_Empty_column:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_04
       description: Create ServiceToFilterSBI for Partner while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
@@ -83,6 +87,7 @@ ServiceToFilterSBI:
 }'
    partner_ServiceToFilterSBI_InValid_type_doesnt_exist:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_05
       description: Create ServiceToFilterSBI for Partner while keeping invalid values in Type parameter
       role: partner
       restMethod: post
@@ -106,6 +111,7 @@ ServiceToFilterSBI:
 }'
    partner_ServiceToFilterSBI_InValid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_06
       description: Create ServiceToFilterSBI for Partner while keeping invalid values in Column parameter
       role: partner
       restMethod: post

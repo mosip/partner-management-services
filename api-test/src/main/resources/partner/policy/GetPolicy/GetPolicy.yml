@@ -1,6 +1,7 @@
 getPolicy:
    Partner_GetPolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_getPolicy_01
       description: Retrieve Parter Policy
       role: partner
       restMethod: get
@@ -19,6 +20,7 @@ getPolicy:
     }'
    Partner_GetPolicy_Invalid_InputParameter_policyId:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_getPolicy_02
       description: Retrieve Parter Policy with invalid PolicyId
       role: partner
       restMethod: get

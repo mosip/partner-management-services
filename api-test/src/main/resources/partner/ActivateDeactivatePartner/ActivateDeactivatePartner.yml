@@ -1,6 +1,7 @@
 ActivateDeactivatePartner:
    Partner_ActivateDeactivatePartner_deactivate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_01
       description: Update the status for Deactivated Partner as Deactivate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -17,6 +18,7 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_MISP3:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_02
       description: Update the status for Deactivated MISP Partner as Deactivate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -33,6 +35,7 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_Tech-1233:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_03
       description: Update the status for Deactivated Tech-1233 Partner as Deactivate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -50,6 +53,7 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_Tech_321:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_04
       description: Update the status for Deactivated Tech-321 Partner as Deactivate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -65,6 +69,7 @@ ActivateDeactivatePartner:
 }'
    Partner_ActivateDeactivatePartner_activate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_05
       description: Update the status for Activated Partner as Activate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -80,6 +85,7 @@ ActivateDeactivatePartner:
 }'
    Partner_ActivateDeactivatePartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartner_06
       description: Update the status for Deactivated Partner as Deactivate for Invalid PartnerID
       role: partner
       restMethod: patch

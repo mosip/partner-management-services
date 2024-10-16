@@ -1,6 +1,7 @@
 createApproveRejectDeviceDetail:
    Partner_ApproveRejectDeviceDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_01
       description: Create Device details for Approved Partner as Activate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -18,6 +19,7 @@ createApproveRejectDeviceDetail:
 
    Partner_ApproveRejectDeviceDetail_Missing_InputParameter_approvalStatus:
       endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_02
       description: Create Device details for Approved Partner while keeping approvalStatus as empty
       role: partner
       restMethod: patch
@@ -40,6 +42,7 @@ createApproveRejectDeviceDetail:
 
    Partner_ApproveRejectDeviceDetail_Missing_InputParameter_deviceId:
       endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_03
       description: Create Device details for Approved Partner as Activate while keeping deviceId as empty
       role: partner
       restMethod: patch

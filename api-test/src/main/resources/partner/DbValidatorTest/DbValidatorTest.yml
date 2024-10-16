@@ -1,6 +1,7 @@
 DBValidator:
    Partner_DBValidator_All_Valid_Smoke_data_created_using_PMS:
       endPoint: SELECT * FROM ida.partner_data where
+      uniqueIdentifier: TC_PMS_DBValidator_01
       description: Create Data in database using PMS with valid details
       role: partner
       restMethod: post
@@ -18,6 +19,7 @@ DBValidator:
 }'
    Partner_DBValidator_All_Valid_Smoke_data_created_using_Policy:
       endPoint: SELECT * FROM ida.policy_data where
+      uniqueIdentifier: TC_PMS_DBValidator_02
       description: Create Data in database using Policy with valid details
       role: partner
       restMethod: post
@@ -36,6 +38,7 @@ DBValidator:
 
    Partner_DBValidator_All_Valid_Smoke_data_created_using_APIKEY:
       endPoint: SELECT * FROM ida.api_key_data where
+      uniqueIdentifier: TC_PMS_DBValidator_03
       description: Create Data in database using APIKEY with valid details
       role: partner
       restMethod: post
@@ -54,6 +57,7 @@ DBValidator:
     
    Partner_DBValidator_All_Valid_Smoke_data_created_using_Misp:
       endPoint: SELECT * FROM ida.misp_license_data where
+      uniqueIdentifier: TC_PMS_DBValidator_04
       description: Create Data in database using MISPLicense with valid details
       role: partner
       restMethod: post

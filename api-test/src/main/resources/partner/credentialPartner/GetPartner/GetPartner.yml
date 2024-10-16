@@ -1,6 +1,7 @@
 getPartnerCert:
    Partner_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_01
       description: Retreive Partner details
       role: partner
       restMethod: get
@@ -16,6 +17,7 @@ getPartnerCert:
   
    Partner_GetPartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_02
       description: Retreive Partner details with invalid PartnerID
       role: partner
       restMethod: get
