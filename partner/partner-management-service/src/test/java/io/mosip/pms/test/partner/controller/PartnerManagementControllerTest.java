@@ -347,7 +347,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.getPartnerDetails(anyString()))
 				.thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/v3/{partnerId}", "samplePartnerId")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3/{partnerId}", "samplePartnerId")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
