@@ -3,6 +3,7 @@ package io.mosip.pms.partner.manager.service;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
 import io.mosip.pms.partner.manager.dto.ApikeyRequests;
 import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
@@ -10,6 +11,7 @@ import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
@@ -94,4 +96,5 @@ public interface PartnerManagerService {
 	 */
 	public PartnerDetailsResponse getPartners(Optional<String> partnerType);
 
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 }
