@@ -93,19 +93,15 @@ public class MosipTestRunner {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
-		OTPListener.bTerminate = true;
-
 		if (BaseTestCase.isTargetEnvLTS())
 			HealthChecker.bTerminate = true;
 
-		if (BaseTestCase.listOfModules.contains("partner")) {
-			DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-					PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
-					getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-			DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-					PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
-					getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-		}
+		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
+				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
+				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
+				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 
 		System.exit(0);
 
@@ -134,8 +130,6 @@ public class MosipTestRunner {
 		BaseTestCase.currentModule = "partner";
 		BaseTestCase.setReportName("partner");
 		AdminTestUtil.copyPartnerTestResource();
-		BaseTestCase.otpListener = new OTPListener();
-		BaseTestCase.otpListener.run();
 	}
 
 	private static void setLogLevels() {
