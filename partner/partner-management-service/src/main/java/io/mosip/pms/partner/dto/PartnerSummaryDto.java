@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @Getter
@@ -20,6 +20,9 @@ public class PartnerSummaryDto {
 
     @Schema(description = "Name of the partner organisation", example = "abc")
     private String orgName;
+
+    @Schema(description = "Unique Id for policy group", example = "12345")
+    private String policyGroupId;
 
     @Schema(description = "Name of the policy group", example = "Compliance Policies")
     private String policyGroupName;
@@ -37,5 +40,5 @@ public class PartnerSummaryDto {
     private Boolean isActive;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
-    private Timestamp createdDateTime;
+    private Date createdDateTime;
 }

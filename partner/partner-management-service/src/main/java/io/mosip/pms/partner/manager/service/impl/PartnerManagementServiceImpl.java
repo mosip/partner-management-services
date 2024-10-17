@@ -21,6 +21,9 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -714,18 +717,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>> getAllPartners(SearchDto searchDto) {
-		ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(SearchV2Dto searchV2Dto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			List<PartnerSummaryDto> partnerSummaryList = new ArrayList<>();
-			PageResponseDto<PartnerSummaryDto> pageResponse = new PageResponseDto<>();
-
-			List<PartnerSummaryEntity> partnerSummaryEntityList = partnerSummaryRepository.getSummaryOfAllPartners();
-			if (partnerSummaryEntityList != null && !partnerSummaryEntityList.isEmpty()) {
-				partnerSummaryList = MapperUtils.mapAll(partnerSummaryEntityList, PartnerSummaryDto.class);
-				pageResponse = pageUtils.sortPage(partnerSummaryList, searchDto.getSort(), searchDto.getPagination(), partnerSummaryEntityList.size());
+			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			int pageNo = searchV2Dto.getPagination().getPageNo();
+			int pageSize = searchV2Dto.getPagination().getPageSize();
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			Page<PartnerSummaryEntity> page = partnerSummaryRepository.getSummaryOfAllPartners(pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerSummaryDtoList);
 			}
-			responseWrapper.setResponse(pageResponse);
+			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getAllPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));

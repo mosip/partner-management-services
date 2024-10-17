@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.SearchV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.PartnerSummaryDto;
@@ -263,9 +263,9 @@ public class PartnerManagementController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>> getAllPartners(
-			@RequestBody @Valid RequestWrapperV2<SearchDto> request) {
-		Optional<ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>>> validationResponse = requestValidator.validate(getAllPartnersId, request);
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(
+			@RequestBody @Valid RequestWrapperV2<SearchV2Dto> request) {
+		Optional<ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>>> validationResponse = requestValidator.validate(getAllPartnersId, request);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}

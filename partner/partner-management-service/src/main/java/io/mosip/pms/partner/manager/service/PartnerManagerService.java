@@ -3,8 +3,8 @@ package io.mosip.pms.partner.manager.service;
 import java.util.List;
 import java.util.Optional;
 
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.SearchV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.manager.dto.StatusRequestDto;
@@ -98,6 +98,6 @@ public interface PartnerManagerService {
 	 */
 	public PartnerDetailsResponse getPartners(Optional<String> partnerType);
 
-	public ResponseWrapperV2<PageResponseDto<PartnerSummaryDto>> getAllPartners(SearchDto searchDto);
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(SearchV2Dto searchV2Dto);
 
 }
