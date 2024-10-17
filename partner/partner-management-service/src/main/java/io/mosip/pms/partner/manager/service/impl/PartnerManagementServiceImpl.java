@@ -114,12 +114,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@Autowired
-	SearchHelper partnerSearchHelper;
-
-	@Autowired
-	private PageUtils pageUtils;
-
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
 
