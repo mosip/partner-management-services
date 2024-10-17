@@ -29,7 +29,7 @@ public class PartnerDetailsV3Dto {
     private String organizationName;
 
     @Schema(description = "Name of the policy group name the partner has selected", example = "Policy123")
-    private String PolicyGroupName;
+    private String policyGroupName;
 
     @Schema(description = "Email address of the partner", example = "partner@email.com")
     private String emailId;
@@ -45,10 +45,4 @@ public class PartnerDetailsV3Dto {
 
     @Schema(description = "Indicates whether the certificate is available (true if available, false otherwise)", example = "true")
     private Boolean isCertificateAvailable;
-
-    @Schema(description = "Data for the CA (Certificate Authority) signed partner certificate", example = "MIICIjANBgkqhkiG9w0BAQEFA...") // Example value should be a realistic but truncated certificate string
-    private String caSignedCertificateData;
-
-    @Schema(description = "Data for the MOSIP signed partner certificate", example = "MIICIjANBgkqhkiG9w0BAQEFA...") // Example value should be a realistic but truncated certificate string
-    private String mosipSignedCertificateData;
 }

@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
-import io.mosip.pms.common.repository.*;
-import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -50,6 +48,14 @@ import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
@@ -1122,7 +1128,7 @@ public class PartnerManagementServiceImplTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setName("policygroup123");
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
-		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
+		PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = new PartnerCertDownloadResponeDto();
 		String certificate = "-----BEGIN CERTIFICATE-----\n" +
 				"MIIFfTCCA2WgAwIBAgIUOVZNyD46U0OAEhaGC/Y7NXbu+OkwDQYJKoZIhvcNAQEL\n" +
 				"BQAwTjELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQswCQYDVQQHDAJQTjELMAkG\n" +
@@ -1155,9 +1161,8 @@ public class PartnerManagementServiceImplTest {
 				"DdGs4hFikdUAfBT/Diug/n9/ZgfdN6Ctf4U/SM65vZvfRqtLIoTIs4PcF3YtKK04\n" +
 				"m0UA3Sxxre0vVWYO4GmmZUY=\n" +
 				"-----END CERTIFICATE-----";
-		originalCertDownloadResponseDto.setCaSignedCertificateData(certificate);
-		originalCertDownloadResponseDto.setMosipSignedCertificateData(certificate);
-		when(partnerHelper.getCertificate(any(),any(),any())).thenReturn(originalCertDownloadResponseDto);
+		partnerCertDownloadResponeDto.setCertificateData(certificate);
+		when(partnerHelper.getCertificate(any(),any(),any())).thenReturn(partnerCertDownloadResponeDto);
 
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
-import io.mosip.pms.partner.manager.dto.*;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -50,6 +49,13 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
+import io.mosip.pms.partner.manager.dto.ApikeyRequests;
+import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
+import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 

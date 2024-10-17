@@ -774,8 +774,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
 			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
-			if (Objects.nonNull(partner.getPolicyGroupId())){
+			if (Objects.nonNull(partner.getPolicyGroupId())) {
 				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+				if (Objects.isNull(policyGroup)) {
+					throw new PartnerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+					);
+				}
 				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
 			}
 			if (Objects.isNull(partner.getCertificateAlias())){
@@ -784,16 +790,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 				requestDto.setPartnerId(partner.getId());
 
-				OriginalCertDownloadResponseDto originalCertDownloadResponseDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
-						"pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-				String caSignedCertificateData = originalCertDownloadResponseDto.getCaSignedCertificateData();
-				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(caSignedCertificateData);
+				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
+						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
-
-				partnerDetailsV3Dto.setCaSignedCertificateData(caSignedCertificateData);
-				partnerDetailsV3Dto.setMosipSignedCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
 			}
 			responseWrapper.setResponse(partnerDetailsV3Dto);
