@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
+import io.mosip.pms.partner.manager.dto.*;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -48,12 +50,6 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.StatusRequestDto;
-import io.mosip.pms.partner.manager.dto.ApikeyRequests;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
-import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 
@@ -341,6 +337,19 @@ public class PartnerManagementControllerTest {
 		requestWrapper.setVersion("1.0");
 		partnerManagementController.activateDeactivatePartnerAPIKey("123", "456", requestWrapper);
 
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERADMIN"})
+	public void getPartnerDetailsTest() throws Exception {
+		ResponseWrapperV2<PartnerDetailsV3Dto> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getPartnerDetails(anyString()))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/v3/{partnerId}", "samplePartnerId")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 }

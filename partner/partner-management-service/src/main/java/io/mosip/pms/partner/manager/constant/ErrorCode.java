@@ -41,7 +41,8 @@ public enum ErrorCode {
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
 	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
-	JSON_NOT_VALID("PMS_PRT_096","Json is not valid");
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
+	FETCH_PARTNER_DETAILS_ERROR("PMS_PRT_059","Error while fetching partner details.");
 	
 
 	/**

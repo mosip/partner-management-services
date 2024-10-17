@@ -1673,14 +1673,4 @@ public class PartnerServiceImpl implements PartnerService {
 		String userId = authUserDetails().getUserId();
 		return userId;
 	}
-
-	public static String getCertificateName(String subjectDN) {
-		String[] parts = subjectDN.split(",");
-		for (String part : parts) {
-			if (part.trim().startsWith("CN=")) {
-				return part.trim().substring(3);
-			}
-		}
-		return BLANK_STRING;
-	}
 }
