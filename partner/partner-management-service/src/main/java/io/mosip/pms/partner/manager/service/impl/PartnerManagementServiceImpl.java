@@ -16,7 +16,6 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -29,6 +28,10 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +46,17 @@ import io.mosip.pms.common.dto.APIKeyDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.SearchV2Dto;
+import io.mosip.pms.common.dto.SearchSortV2;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PartnerSummaryEntity;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
@@ -60,6 +68,7 @@ import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.PartnerSummaryRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
@@ -80,6 +89,7 @@ import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnersDetails;
 import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
+import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -93,6 +103,28 @@ import io.mosip.pms.partner.util.PartnerUtil;
 public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
+  
+	private static final Map<String, String> aliasToColumnMap = new HashMap<>();
+
+	static {
+		aliasToColumnMap.put("partnerId", "id");
+		aliasToColumnMap.put("partnerType", "partner_type_code");
+		aliasToColumnMap.put("orgName", "name");
+		aliasToColumnMap.put("policyGroupId", "policy_group_id");
+		aliasToColumnMap.put("policyGroupName", "pg.name");
+		aliasToColumnMap.put("emailAddress", "email_id");
+		aliasToColumnMap.put("certificateUploadStatus", "certificate_alias");
+		aliasToColumnMap.put("status", "approval_status");
+		aliasToColumnMap.put("isActive", "is_active");
+		aliasToColumnMap.put("createdDateTime", "cr_dtimes");
+	}
+
+	@Value("${mosip.pms.api.id.all.partners.post}")
+	private String postAllPartnersId;
+
+	@Autowired
+	PartnerSummaryRepository partnerSummaryRepository;
+  
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String FTM_PROVIDER = "FTM_Provider";
 
@@ -834,6 +866,57 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(getPartnerDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(SearchV2Dto searchV2Dto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			int pageNo = searchV2Dto.getPagination().getPageNo();
+			int pageSize = searchV2Dto.getPagination().getPageSize();
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			SearchSortV2 searchSortV2 = searchV2Dto.getSort();
+			if (Objects.nonNull(searchSortV2.getSortFieldName()) && Objects.nonNull(searchSortV2.getSortType())) {
+				String sortFieldName = searchSortV2.getSortFieldName();
+				String sortType = searchSortV2.getSortType();
+				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<PartnerSummaryEntity> page = partnerSummaryRepository.getSummaryOfAllPartners(pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.PARTNERS_DETAIL_FETCH_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.PARTNERS_DETAIL_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postAllPartnersId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public static String getSortColumn(String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {
