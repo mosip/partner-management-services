@@ -745,7 +745,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			if (Objects.nonNull(searchSortV2.getSortFieldName()) && Objects.nonNull(searchSortV2.getSortType())) {
 				String sortFieldName = searchSortV2.getSortFieldName();
 				String sortType = searchSortV2.getSortType();
-				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus")) {
+				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
 					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
 				}
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
