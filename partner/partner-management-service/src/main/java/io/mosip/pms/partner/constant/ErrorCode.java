@@ -90,6 +90,7 @@ public enum ErrorCode {
 	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty."),
 	OIDC_CLIENTS_FETCH_ERROR("PMS_POLICY_ERROR_006","Error while fetching OIDC clients list."),
 	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
+	MATCHING_POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_008", "No matching policy group was found for the provided partner"),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
