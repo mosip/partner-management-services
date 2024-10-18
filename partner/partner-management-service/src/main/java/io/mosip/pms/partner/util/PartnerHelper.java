@@ -125,20 +125,17 @@ public class PartnerHelper {
     public void populateCertificateExpiryState(OriginalCertDownloadResponseDto originalCertDownloadResponseDto) {
         originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
         originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
-        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 
         // Check mosip signed certificate expiry date
         X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
-        LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedMosipSignedCert)) {
             originalCertDownloadResponseDto.setMosipSignedCertificateData("");
             originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
         }
 
         // Check ca signed partner certificate expiry date
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
-        LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedCaSignedCert)) {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
@@ -155,4 +152,12 @@ public class PartnerHelper {
         return sortingRequest;
     }
 
+    public boolean isCertificateExpired(X509Certificate cert) {
+        // Get the current date and time in UTC
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime expiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+
+        // Check if the certificate has expired
+        return expiryDate.isBefore(currentDateTime);
+    }
 }

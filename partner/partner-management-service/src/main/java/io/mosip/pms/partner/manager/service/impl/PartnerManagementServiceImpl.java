@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.manager.service.impl;
 
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -14,6 +15,23 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.*;
 import io.mosip.pms.partner.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Objects;
+import javax.transaction.Transactional;
+
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -26,6 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,6 +71,7 @@ import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnersDetails;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -134,11 +154,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	PartnerHelper partnerHelper;
+
+	@Autowired
+	PartnerServiceRepository partnerServiceRepository;
+
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
 
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
 	private int partnerPolicyExpiryInDays;
+
+	@Value("${mosip.pms.api.id.partner.details.get}")
+	private String getPartnerDetailsId;
+
+	public static final String VERSION = "1.0";
 
 	@Override
 	public PartnersPolicyMappingResponse updatePolicyAgainstApikey(PartnersPolicyMappingRequest request,
@@ -773,6 +804,88 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAllPartnersId);
+    responseWrapper.setId(getAllPartnersId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+  
+  @Override
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId) {
+		ResponseWrapperV2<PartnerDetailsV3Dto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage()
+				);
+			}
+			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
+			if (optionalPartner.isEmpty()) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
+				);
+			}
+			PartnerDetailsV3Dto partnerDetailsV3Dto = new PartnerDetailsV3Dto();
+			Partner partner = optionalPartner.get();
+			partnerDetailsV3Dto.setPartnerId(partner.getId());
+			partnerDetailsV3Dto.setApprovalStatus(partner.getApprovalStatus());
+			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
+			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
+			partnerDetailsV3Dto.setOrganizationName(partner.getName());
+			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
+			if (Objects.nonNull(partner.getPolicyGroupId())) {
+				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+				if (Objects.isNull(policyGroup)) {
+					throw new PartnerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+					);
+				}
+				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
+			}
+			if (Objects.isNull(partner.getCertificateAlias())){
+				partnerDetailsV3Dto.setIsCertificateAvailable(false);
+			} else {
+				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+				requestDto.setPartnerId(partner.getId());
+
+				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
+						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
+				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
+				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
+				partnerDetailsV3Dto.setIsCertificateExpired(partnerHelper.isCertificateExpired(cert));
+				partnerDetailsV3Dto.setIsCertificateAvailable(true);
+			}
+			responseWrapper.setResponse(partnerDetailsV3Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"Error in getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			// Error when keyalias is present and certificate is missing in Keymanager
+			if (ex instanceof ApiAccessibleException && "KER-PCM-012".equals(((ApiAccessibleException) ex).getErrorCode())) {
+				String errorCode = ErrorCode.CERTIFICATE_NOT_AVAILABLE_IN_KM.getErrorCode();
+				String errorMessage = ErrorCode.CERTIFICATE_NOT_AVAILABLE_IN_KM.getErrorMessage();
+				responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+			} else {
+				String errorCode = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorCode();
+				String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
+				responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+			}
+		}
+		responseWrapper.setId(getPartnerDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
@@ -781,5 +894,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
 }
 

@@ -14,6 +14,7 @@ import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
 import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
 import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
@@ -100,4 +101,5 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(SearchV2Dto searchV2Dto);
 
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 }

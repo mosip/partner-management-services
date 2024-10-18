@@ -182,5 +182,7 @@ public class AuthorizedRolesDto {
 	private List<String> postdeactivateftm;
 
 	private List<String> getoriginalftmcertificate;
+
+	private List<String> getpartnerdetails;
 		
 }
