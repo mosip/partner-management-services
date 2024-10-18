@@ -1,8 +1,13 @@
 package io.mosip.pms.oauth.client.service.impl;
 
+import java.security.PublicKey;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetKeyPair;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
@@ -46,12 +51,9 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.lang.JoseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -146,9 +148,15 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	}
 	
-	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
-		String publicKey = getJWKString(createRequest.getPublicKey());
-		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
+	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
+		//get the JWK from request
+		Map<String, Object> jwkKeyFromRequest = createRequest.getPublicKey();
+		//get String form of JWK
+		String jwkKeyString = getJWKString(jwkKeyFromRequest);
+		//Generate a new public key using the key's most significant fields from the JWK
+		String generatedPublicKey = createPublicKeyFromJWK(jwkKeyFromRequest);
+		//Create a Base64-encoded hash of the newly generated public key to check for duplicate keys
+		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(generatedPublicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
@@ -216,7 +224,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setPublicKey(publicKey);
+		clientDetail.setPublicKey(jwkKeyString);
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
@@ -531,9 +539,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 */
 	private String getJWKString(Map<String, Object> jwk) {
 		try {
-			RsaJsonWebKey jsonWebKey = new RsaJsonWebKey(jwk);
-			return jsonWebKey.toJson();
-		} catch (JoseException e) {
+			JWK jsonWebKey = JWK.parse(jwk);
+			return jsonWebKey.toJSONObject().toString();
+		} catch (Exception e) {
 			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
 			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
 					ErrorCode.FAILED_TO_PROCESS_JWK.getErrorMessage());
@@ -734,6 +742,68 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			// If the string is not a valid JSON, return it as is
 			return jsonString;
 		}
+	}
+
+	/**
+	 * Creates a public key from the provided JWK (JSON Web Key).
+
+	 * Supported JWK types:
+	 * - RSA: Represented by "RSA" key type.
+	 * - EC: Represented by "EC" key type (Elliptic Curve).
+	 * - OKP: Represented by "OKP" key type (Octet Key Pair, typically used for EdDSA).
+	 *
+	 * @param jwk A map representing the JSON Web Key.
+	 * @return A Base64 encoded string representation of the public key.
+	 * @throws Exception If the JWK is invalid or an unsupported key type is provided.
+	 */
+	public String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
+		// Parse the JWK
+		JWK parsedJwk = JWK.parse(jwk);
+		byte[] publicKeyBytes;
+
+		// Determine the key type and create the corresponding public key
+		switch (parsedJwk.getKeyType().getValue()) {
+			case "RSA":
+				publicKeyBytes = createRSAPublicKey((RSAKey) parsedJwk).getEncoded();
+				break;
+
+			case "EC":
+				publicKeyBytes = createECCPublicKey((ECKey) parsedJwk).getEncoded();
+				break;
+
+			case "OKP":
+				publicKeyBytes = createEdDSAPublicKey((OctetKeyPair) parsedJwk);
+				break;
+
+			default:
+				// Throw an exception if the key type is unsupported
+				throw new UnsupportedOperationException("Unsupported key type: " + parsedJwk.getKeyType());
+		}
+		// Return the public key as a Base64 encoded string
+		return Base64.getEncoder().encodeToString(publicKeyBytes);
+	}
+
+	// Method to create an RSA PublicKey from an RSAKey JWK
+	private PublicKey createRSAPublicKey(RSAKey rsaJwk) throws Exception {
+		return rsaJwk.toPublicKey();
+	}
+
+	// Method to create an EC PublicKey from an ECKey JWK
+	private PublicKey createECCPublicKey(ECKey ecJwk) throws Exception {
+		return ecJwk.toPublicKey();
+	}
+
+	/*
+	 * Note: The Nimbus library does not provide built-in support for creating
+	 * PublicKey instances from "OKP" key type JWKs (EdDSA). As a workaround,
+	 * the public key bytes are directly extracted from the JWK by retrieving
+	 * the x-coordinate and decoding it from Base64 URL format.
+	 */
+	// Method to create an EdDSA PublicKey from an OctetKeyPair JWK
+	public byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
+		// Retrieve the x-coordinate from the EdDSA key and decode it from Base64 URL
+		String xValue = octetJwk.getX().toString();
+		return Base64.getUrlDecoder().decode(xValue);
 	}
 
 	/**
