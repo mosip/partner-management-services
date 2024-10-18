@@ -15,6 +15,7 @@ import io.mosip.pms.common.util.*;
 import io.mosip.pms.partner.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,6 +25,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -65,6 +67,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
 
 	public static final String VERSION = "1.0";
+
+	private static final Map<String, String> aliasToColumnMap = new HashMap<>();
+
+	static {
+		aliasToColumnMap.put("partnerId", "id");
+		aliasToColumnMap.put("partnerType", "partner_type_code");
+		aliasToColumnMap.put("orgName", "name");
+		aliasToColumnMap.put("policyGroupId", "policy_group_id");
+		aliasToColumnMap.put("policyGroupName", "pg.name");
+		aliasToColumnMap.put("emailAddress", "email_id");
+		aliasToColumnMap.put("certificateUploadStatus", "certificate_alias");
+		aliasToColumnMap.put("status", "approval_status");
+		aliasToColumnMap.put("isActive", "is_active");
+		aliasToColumnMap.put("createdDateTime", "cr_dtimes");
+	}
 	
 	@Value("${mosip.pms.api.id.all.partners.post}")
 	private String getAllPartnersId;
@@ -104,6 +121,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	RestUtil restUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -715,9 +735,23 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
 			int pageNo = searchV2Dto.getPagination().getPageNo();
 			int pageSize = searchV2Dto.getPagination().getPageSize();
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			SearchSortV2 searchSortV2 = searchV2Dto.getSort();
+			if (Objects.nonNull(searchSortV2.getSortFieldName()) && Objects.nonNull(searchSortV2.getSortType())) {
+				String sortFieldName = searchSortV2.getSortFieldName();
+				String sortType = searchSortV2.getSortType();
+				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.getSummaryOfAllPartners(pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
@@ -742,5 +776,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
+
+	public static String getSortColumn(String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	}
+
 }
 

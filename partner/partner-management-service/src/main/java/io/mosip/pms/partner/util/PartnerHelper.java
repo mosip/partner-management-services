@@ -18,6 +18,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
@@ -142,4 +143,16 @@ public class PartnerHelper {
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
     }
+
+    public Sort getSortingRequest (String fieldName, String sortType) {
+        Sort sortingRequest = null;
+        if (sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+            sortingRequest = Sort.by(fieldName).ascending();
+        }
+        if (sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            sortingRequest = Sort.by(fieldName).descending();
+        }
+        return sortingRequest;
+    }
+
 }
