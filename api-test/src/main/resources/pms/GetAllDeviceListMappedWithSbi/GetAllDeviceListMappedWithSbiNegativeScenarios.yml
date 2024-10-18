@@ -1,0 +1,35 @@
+GetAllDeviceListMappedWithSbi:
+   Pms_GetAllDeviceListMappedWithSbi_without_authentication:
+      endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
+      role: batch
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/error
+      input: '{
+       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllDeviceListMappedWithSbi_Invalid_SBI_ID:
+      endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
+      role: partnerrevampdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/error
+      input: '{
+       "sbiId": "AJDJD9281"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
