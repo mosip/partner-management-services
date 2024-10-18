@@ -16,12 +16,8 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.pms.common.dto.*;
-import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
@@ -46,8 +42,33 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.APIKeyDataPublishDto;
+import io.mosip.pms.common.dto.PartnerDataPublishDto;
+import io.mosip.pms.common.dto.PolicyPublishDto;
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.SearchV2Dto;
+import io.mosip.pms.common.dto.SearchSortV2;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.BiometricExtractorProvider;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.PartnerSummaryEntity;
+import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
+import io.mosip.pms.common.repository.MispServiceRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.PartnerSummaryRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
@@ -58,6 +79,17 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
+import io.mosip.pms.partner.manager.dto.ApikeyRequests;
+import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsDto;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
+import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.RetrievePartnersDetails;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
+import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -87,7 +119,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Value("${mosip.pms.api.id.all.partners.post}")
-	private String getAllPartnersId;
+	private String postAllPartnersId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -854,17 +886,17 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAllPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
+					"In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
 			String errorCode = io.mosip.pms.partner.constant.ErrorCode.PARTNERS_DETAIL_FETCH_ERROR.getErrorCode();
 			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.PARTNERS_DETAIL_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAllPartnersId);
+		responseWrapper.setId(postAllPartnersId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

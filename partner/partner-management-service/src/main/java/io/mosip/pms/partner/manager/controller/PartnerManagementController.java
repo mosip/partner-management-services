@@ -9,7 +9,6 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.SearchV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,12 +19,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
+import io.mosip.pms.partner.manager.dto.StatusRequestDto;
+import io.mosip.pms.partner.manager.dto.ApikeyRequests;
+import io.mosip.pms.partner.manager.dto.PartnerAPIKeyRequestsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
+import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
+import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsV3Dto;
+import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.swagger.annotations.Api;
@@ -65,7 +81,7 @@ public class PartnerManagementController {
 	RequestValidator requestValidator;
 
 	@Value("${mosip.pms.api.id.all.partners.post}")
-	private  String getAllPartnersId;
+	private  String postAllPartnersId;
 	
 
 	/**
@@ -269,7 +285,7 @@ public class PartnerManagementController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(
 			@RequestBody @Valid RequestWrapperV2<SearchV2Dto> request) {
-		Optional<ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>>> validationResponse = requestValidator.validate(getAllPartnersId, request);
+		Optional<ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>>> validationResponse = requestValidator.validate(postAllPartnersId, request);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}

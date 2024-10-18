@@ -8,8 +8,6 @@ import lombok.Setter;
 import java.util.Date;
 
 @Data
-@Getter
-@Setter
 public class PartnerSummaryDto {
 
     @Schema(description = "Unique identifier for the partner", example = "partner123")
