@@ -93,6 +93,8 @@ import io.mosip.pms.partner.util.PartnerUtil;
 public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
+	public static final String DEVICE_PROVIDER = "Device_Provider";
+	public static final String FTM_PROVIDER = "FTM_Provider";
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
@@ -775,6 +777,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
 			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
+			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
+				LOGGER.info("sessionId", "idType", "id",
+						"Policy Group Id is empty for partner Id -" + partner.getId());
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
+				);
+			}
 			if (Objects.nonNull(partner.getPolicyGroupId())) {
 				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
 				if (Objects.isNull(policyGroup)) {
