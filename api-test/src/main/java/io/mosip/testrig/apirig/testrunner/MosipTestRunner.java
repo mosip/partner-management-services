@@ -93,8 +93,6 @@ public class MosipTestRunner {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
-		OTPListener.bTerminate = true;
-
 		if (BaseTestCase.isTargetEnvLTS())
 			HealthChecker.bTerminate = true;
 
@@ -130,9 +128,6 @@ public class MosipTestRunner {
 		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
 		BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);
 		AdminTestUtil.copyPmsNewTestResource();
-
-		BaseTestCase.otpListener = new OTPListener();
-		BaseTestCase.otpListener.run();
 	}
 
 	private static void setLogLevels() {
