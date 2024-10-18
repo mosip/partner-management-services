@@ -446,6 +446,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllDeviceListMappedWithSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="DeactivateDevice">
 		<parameter name="ymlFile"
 			value="pms/DeactivateDevice/DeactivateDevice.yml" />
