@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -778,8 +779,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
 				if (Objects.isNull(policyGroup)) {
 					throw new PartnerServiceException(
-							io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-							io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
 					);
 				}
 				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
@@ -796,6 +797,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
+				partnerDetailsV3Dto.setIsCertificateExpired(partnerHelper.isCertificateExpired(cert));
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
 			}
 			responseWrapper.setResponse(partnerDetailsV3Dto);
@@ -804,12 +806,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+					"Error in getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			// Error when keyalias is present and certificate is missing in Keymanager
+			if (ex instanceof ApiAccessibleException && "KER-PCM-012".equals(((ApiAccessibleException) ex).getErrorCode())) {
+				String errorCode = ErrorCode.CERTIFICATE_NOT_AVAILABLE_IN_KM.getErrorCode();
+				String errorMessage = ErrorCode.CERTIFICATE_NOT_AVAILABLE_IN_KM.getErrorMessage();
+				responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+			} else {
+				String errorCode = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorCode();
+				String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
+				responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+			}
 		}
 		responseWrapper.setId(getPartnerDetailsId);
 		responseWrapper.setVersion(VERSION);
