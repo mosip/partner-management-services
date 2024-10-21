@@ -770,6 +770,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Partner partner = optionalPartner.get();
 			partnerDetailsV3Dto.setPartnerId(partner.getId());
 			partnerDetailsV3Dto.setApprovalStatus(partner.getApprovalStatus());
+			partnerDetailsV3Dto.setIsActive(partner.getIsActive());
 			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
