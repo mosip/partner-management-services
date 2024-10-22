@@ -437,15 +437,15 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
 
-			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
-
 			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
 			if (Objects.nonNull(deviceDetailSBI)){
 				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
 				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
 						ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
 			}
+
+			// validate sbi and device mapping
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
 
 			DeviceDetailSBI entity = new DeviceDetailSBI();
 
