@@ -18,6 +18,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
@@ -124,22 +125,39 @@ public class PartnerHelper {
     public void populateCertificateExpiryState(OriginalCertDownloadResponseDto originalCertDownloadResponseDto) {
         originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
         originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
-        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 
         // Check mosip signed certificate expiry date
         X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
-        LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedMosipSignedCert)) {
             originalCertDownloadResponseDto.setMosipSignedCertificateData("");
             originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
         }
 
         // Check ca signed partner certificate expiry date
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
-        LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedCaSignedCert)) {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
+    }
+
+    public boolean isCertificateExpired(X509Certificate cert) {
+        // Get the current date and time in UTC
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime expiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+
+        // Check if the certificate has expired
+        return expiryDate.isBefore(currentDateTime);
+    }
+
+    public Sort getSortingRequest (String fieldName, String sortType) {
+        Sort sortingRequest = null;
+        if (sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+            sortingRequest = Sort.by(fieldName).ascending();
+        }
+        if (sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            sortingRequest = Sort.by(fieldName).descending();
+        }
+        return sortingRequest;
     }
 }

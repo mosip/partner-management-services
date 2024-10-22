@@ -130,6 +130,8 @@ public class AuthorizedRolesDto {
 	private List<String> putpartnerspolicymapping;
 	
 	private List<String> patchpartnerspolicyapikeystatus;
+
+	private List<String> getallpartners;
 	
 	//MISP License controller
 	
@@ -180,5 +182,7 @@ public class AuthorizedRolesDto {
 	private List<String> postdeactivateftm;
 
 	private List<String> getoriginalftmcertificate;
+
+	private List<String> getpartnerdetails;
 		
 }
