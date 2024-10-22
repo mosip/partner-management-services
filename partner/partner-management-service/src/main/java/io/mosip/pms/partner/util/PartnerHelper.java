@@ -160,4 +160,11 @@ public class PartnerHelper {
         }
         return sortingRequest;
     }
+
+    public boolean isPartnerAdmin(String roles) {
+        if (roles.contains(PartnerConstants.PARTNER_ADMIN)) {
+            return true;
+        }
+        return false;
+    }
 }
