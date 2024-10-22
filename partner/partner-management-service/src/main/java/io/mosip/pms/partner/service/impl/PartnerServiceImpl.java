@@ -149,8 +149,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private static final String FTM = "FTM";
 
-	private static final String PARTNER_ADMIN = "PARTNER_ADMIN";
-
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -861,7 +859,8 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 		}
 		T responseObject = null;
-		if (isPartnerBelongsToTheUser || isPartnerAdmin()) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (isPartnerBelongsToTheUser || isAdmin) {
 			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
 			if (partnerFromDb.isEmpty()) {
 				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
@@ -1678,13 +1677,5 @@ public class PartnerServiceImpl implements PartnerService {
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
-	}
-
-	private boolean isPartnerAdmin() {
-		String authorities = authUserDetails().getAuthorities().toString();
-		if (authorities.contains(PARTNER_ADMIN)) {
-			return true;
-		}
-		return false;
 	}
 }

@@ -39,4 +39,6 @@ public final class PartnerConstants {
 	public static final String ASC = "asc";
 
 	public static final String DESC = "desc";
+
+	public static final String PARTNER_ADMIN = "PARTNER_ADMIN";
 }
