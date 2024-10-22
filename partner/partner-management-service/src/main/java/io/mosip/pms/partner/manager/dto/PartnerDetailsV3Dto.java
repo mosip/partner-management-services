@@ -28,6 +28,9 @@ public class PartnerDetailsV3Dto {
     @Schema(description = "Name of the organization the partner belongs to", example = "Org")
     private String organizationName;
 
+    @Schema(description = "Contact Number of the partner", example = "8983983332")
+    private String contactNumber;
+
     @Schema(description = "Name of the policy group name the partner has selected", example = "Policy123")
     private String policyGroupName;
 
