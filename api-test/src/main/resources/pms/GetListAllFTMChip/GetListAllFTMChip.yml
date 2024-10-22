@@ -1,0 +1,15 @@
+GetListAllFTMChip:
+   Pms_GetListAllFTMChip_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/ftm-chip-details
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult
+      input: '{
+}'
+      output: ' {
+      "partnerId": "111888",
+      "make": "AcmeCorpFtm",
+      "model": "mode2
+}'

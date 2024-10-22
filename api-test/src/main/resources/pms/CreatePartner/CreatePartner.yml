@@ -140,3 +140,25 @@ createPartnerSelfRegistration:
         "partnerId": "111998",
         "status": "InProgress"
     }'
+    
+   Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerrevampftm
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip98788@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "111888",
+    "partnerType": "FTM_Provider",
+    "policyGroup": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "111888",
+        "status": "InProgress"
+    }'

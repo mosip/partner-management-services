@@ -12,3 +12,31 @@ GetPartnerCert:
 }'
       output: ' {
 }'
+
+   Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Fetching all the certificate for the Partner Id
+      role: partnerrevampdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetCertificate/getCert
+      outputTemplate: pms/GetCertificate/getCertResult
+      input: '{
+	"partnerId": "111998"
+}'
+      output: ' {
+}'
+
+   Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Fetching all the certificate for the Partner Id
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetCertificate/getCert
+      outputTemplate: pms/GetCertificate/getCertResult
+      input: '{
+	"partnerId": "111888"
+}'
+      output: ' {
+}'
