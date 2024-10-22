@@ -775,6 +775,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
 			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
+			partnerDetailsV3Dto.setContactNumber(partner.getContactNo());
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
