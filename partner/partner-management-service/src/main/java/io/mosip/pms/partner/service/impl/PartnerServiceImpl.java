@@ -859,7 +859,8 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 		}
 		T responseObject = null;
-		if (isPartnerBelongsToTheUser) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (isPartnerBelongsToTheUser || isAdmin) {
 			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
 			if (partnerFromDb.isEmpty()) {
 				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
