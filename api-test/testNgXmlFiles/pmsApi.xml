@@ -372,6 +372,15 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	
+		<test name="GetAllApprovedDeviceProviderIds">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml"
+	/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 
 	<test name="SaveSecureBiometricInterfaceCreateDto">
 		<parameter name="ymlFile"
@@ -412,7 +421,6 @@
 		</classes>
 	</test>
 
-
 	<test name="SaveDeviceDetails">
 		<parameter name="ymlFile"
 			value="pms/SaveDeviceDetails/SaveDeviceDetails.yml" />
@@ -434,6 +442,14 @@
 	<test name="ApproveMappingDeviceToSbi">
 		<parameter name="ymlFile"
 			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+		<test name="RejectMappingDeviceToSbi">
+		<parameter name="ymlFile"
+			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
