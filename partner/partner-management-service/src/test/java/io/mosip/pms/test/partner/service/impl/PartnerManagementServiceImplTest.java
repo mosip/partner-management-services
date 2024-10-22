@@ -1120,6 +1120,7 @@ public class PartnerManagementServiceImplTest {
 		partner.setId("123");
 		partner.setPartnerTypeCode("FTM_Provider");
 		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
 		partner.setCertificateAlias("abs");
 		partner.setPolicyGroupId("121");
 		partnerList.add(partner);
@@ -1179,6 +1180,7 @@ public class PartnerManagementServiceImplTest {
 		partner.setId("123");
 		partner.setPartnerTypeCode("DEVICE");
 		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
 		partnerList.add(partner);
 		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerServiceRepository.findById(anyString())).thenReturn(Optional.of(partner));

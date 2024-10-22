@@ -130,6 +130,8 @@ public class AuthorizedRolesDto {
 	private List<String> putpartnerspolicymapping;
 	
 	private List<String> patchpartnerspolicyapikeystatus;
+
+	private List<String> getallpartners;
 	
 	//MISP License controller
 	

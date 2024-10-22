@@ -48,4 +48,7 @@ public class PartnerDetailsV3Dto {
 
     @Schema(description = "Indicates whether the certificate is expired (true if expired, false otherwise)", example = "false")
     private Boolean isCertificateExpired;
+
+    @Schema(description = "Indicates whether the partner is active (true if active, false otherwise)", example = "true")
+    private Boolean isActive;
 }
