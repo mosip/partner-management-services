@@ -1,6 +1,7 @@
 createSearchSecureBiometric:
    Partner_SearchSecureBiometric_AllValid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
+      uniqueIdentifier: TC_PMS_createSearchSecureBiometric_01
       description: Create Search Secure Biometric with valid details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -16,6 +17,7 @@ createSearchSecureBiometric:
 }'
    Partner_SearchSecureBiometric_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
+      uniqueIdentifier: TC_PMS_createSearchSecureBiometric_02
       description: Create Search Secure Biometric with Only FilterCriteria
       role: partner
       checkErrorsOnlyInResponse: true
@@ -38,6 +40,7 @@ createSearchSecureBiometric:
 }'
    Partner_SearchSecureBiometric_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
+      uniqueIdentifier: TC_PMS_createSearchSecureBiometric_03
       description: Create Search Secure Biometric with Only SortCriteria
       role: partner
       checkErrorsOnlyInResponse: true
@@ -59,6 +62,7 @@ createSearchSecureBiometric:
 }'
    Partner_SearchSecureBiometric_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
+      uniqueIdentifier: TC_PMS_createSearchSecureBiometric_04
       description: Create Search Secure Biometric with Only PaginationCriteria
       role: partner
       checkErrorsOnlyInResponse: true
@@ -74,6 +78,7 @@ createSearchSecureBiometric:
 }'
    Partner_SearchSecureBiometric_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/search
+      uniqueIdentifier: TC_PMS_createSearchSecureBiometric_05
       description: Create Search Secure Biometric while keeping Type parameter as contains and filter data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true

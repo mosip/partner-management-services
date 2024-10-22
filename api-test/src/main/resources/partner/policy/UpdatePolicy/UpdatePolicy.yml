@@ -1,6 +1,7 @@
 createUpdatePolicy:
    Partner_UpdatePolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_01
       description: Update Policy with valid values
       role: partner
       restMethod: put
@@ -28,6 +29,7 @@ createUpdatePolicy:
     }'
    Partner_UpdatePolicy_Invalid_PolicyID:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_02
       description: Update Policy with invalid PolicyID
       role: partner
       restMethod: put
@@ -57,6 +59,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Invalid_PolicygroupName:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_03
       description: Update Policy with invalid PolicyGroupName
       role: partner
       restMethod: put
@@ -86,6 +89,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_04
       description: Update Policy with invalid PolicyParameterName
       role: partner
       restMethod: put
@@ -115,6 +119,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_05
       description: Update Policy while keeping InputParameter as empty
       role: partner
       restMethod: put
@@ -144,6 +149,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Invalid_InputParameter_policyID:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_06
       description: Update Policy while keeping InputParameter as invalid for PolicyID
       role: partner
       restMethod: put
@@ -173,6 +179,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_authTokenType:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_07
       description: Update Policy while keeping authTokeType Parameter as Empty
       role: partner
       restMethod: put
@@ -202,6 +209,7 @@ createUpdatePolicy:
 }'
    Partner_UpdatePolicy_Missing_InputParameter_policyGroupName:
       endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_08
       description: Update Policy while keeping PolicyGroupName Parameter as Empty
       role: partner
       restMethod: put
