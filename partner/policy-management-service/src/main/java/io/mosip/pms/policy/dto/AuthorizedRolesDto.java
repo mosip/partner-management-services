@@ -49,5 +49,7 @@ public class AuthorizedRolesDto {
 	
 	private List<String> postpoliciesfiltervalues;
 	
-	private List<String> getactivegroupgroupname;		
+	private List<String> getactivegroupgroupname;
+
+	private List<String> getallpolicygroups;
 }

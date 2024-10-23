@@ -1,6 +1,7 @@
 uploadPartnerCert:
    Partner_UploadPartnerCert_missing_PartnerDomain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_01
       description: Upload Partner certificate for Partner while keeping PartnerDomain parameter as missing
       role: partner
       restMethod: post
@@ -18,6 +19,7 @@ uploadPartnerCert:
 }'
    Partner_UploadPartnerCert_invalid_certificate:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_02
       description: Upload Partner certificate for Partner with invalid certificate
       role: partner
       restMethod: post
@@ -36,6 +38,7 @@ uploadPartnerCert:
 
    Partner_UploadPartnerCert_invalid_Domain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_03
       description: Upload Partner certificate for Partner with invalid domain
       role: partner
       restMethod: post
@@ -53,6 +56,7 @@ uploadPartnerCert:
 }'
    Partner_UploadPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_04
       description: Upload Partner certificate for Partner with valid certificate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -66,6 +70,7 @@ uploadPartnerCert:
 }' 
    Partner_UploadPartnerCert_UploadAgain_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_05
       description: Upload Partner certificate again for Partner for whos certificate is already uploaded
       role: partner
       checkErrorsOnlyInResponse: true

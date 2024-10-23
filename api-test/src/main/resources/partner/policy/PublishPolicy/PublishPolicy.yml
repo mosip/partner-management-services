@@ -1,6 +1,7 @@
 createPublishPolicy:
    Partner_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_01
       description: Create Publish Policy with valid details
       role: partner
       restMethod: post
@@ -29,6 +30,7 @@ createPublishPolicy:
     
    Partner_PublishPolicy_All_Publish_Policy:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_02
       description: Create Publish Policy with valid details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -48,6 +50,7 @@ createPublishPolicy:
     
    Partner_PublishPolicy_WIthRndomeToken_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_03
       description: Create Publish Policy with random Token
       role: partner
       restMethod: post
@@ -77,6 +80,7 @@ createPublishPolicy:
     
    Partner_PublishPolicy_Datashare_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_04
       description: Create Publish Policy with Datashare
       role: partner
       checkErrorsOnlyInResponse: true
@@ -97,6 +101,7 @@ createPublishPolicy:
         
    Partner_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_05
       description: Create Publish Policy with already Published data
       role: partner
       restMethod: post
@@ -116,6 +121,7 @@ createPublishPolicy:
 }'
    Partner_PublishPolicy_InValid_policygroupId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_06
       description: Create Publish Policy with invalid Policy GroupId
       role: partner
       restMethod: post
@@ -135,6 +141,7 @@ createPublishPolicy:
 }'
    Partner_PublishPolicy_InValid_policyId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_07
       description: Create Publish Policy with invalid PolicyId
       role: partner
       restMethod: post

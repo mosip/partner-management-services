@@ -1,6 +1,7 @@
 ApproveAPIKey:
    Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_01
       description: Update the status for Approved Partner as Approved
       role: partner
       checkErrorsOnlyInResponse: true
@@ -17,6 +18,7 @@ ApproveAPIKey:
 
    Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_02
       description: Update the status for Approved Partner with keeping status parameter as Missing
       role: partner
       restMethod: put
