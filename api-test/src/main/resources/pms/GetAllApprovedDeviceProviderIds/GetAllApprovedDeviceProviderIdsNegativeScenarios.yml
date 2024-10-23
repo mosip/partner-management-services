@@ -1,0 +1,35 @@
+GetAllApprovedDeviceProviderIds:
+   Pms_GetAllApprovedDeviceProviderIds_Without_Authentication:
+      endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
+      uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_01
+      description: Retrieve All Approved Device ProviderIds Without Authentication
+      role: batch
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllApprovedDeviceProviderIds_Invalid_Token:
+      endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
+      uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_02
+      description: Retrieve All Approved Device ProviderIds with invalid access token
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
