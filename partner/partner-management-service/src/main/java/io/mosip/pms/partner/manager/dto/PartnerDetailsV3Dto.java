@@ -28,6 +28,9 @@ public class PartnerDetailsV3Dto {
     @Schema(description = "Name of the organization the partner belongs to", example = "Org")
     private String organizationName;
 
+    @Schema(description = "Contact Number of the partner", example = "8983983332")
+    private String contactNumber;
+
     @Schema(description = "Name of the policy group name the partner has selected", example = "Policy123")
     private String policyGroupName;
 
@@ -48,4 +51,7 @@ public class PartnerDetailsV3Dto {
 
     @Schema(description = "Indicates whether the certificate is expired (true if expired, false otherwise)", example = "false")
     private Boolean isCertificateExpired;
+
+    @Schema(description = "Indicates whether the partner is active (true if active, false otherwise)", example = "true")
+    private Boolean isActive;
 }
