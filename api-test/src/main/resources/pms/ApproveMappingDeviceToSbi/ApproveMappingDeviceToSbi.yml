@@ -8,7 +8,7 @@ ApproveMappingDeviceToSbi:
       outputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiResult
       input: '{
        "requestTime": "$TIMESTAMP$",
-       "partnerId": "111998",
+       "partnerId": "pms-111998",
        "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
        "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
   }'
