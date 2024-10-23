@@ -1,6 +1,7 @@
 GetPartnerCert:
    Partner_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_01
       description: Retreive Device Partner Certificate
       role: partner
       checkErrorsOnlyInResponse: true
@@ -14,6 +15,7 @@ GetPartnerCert:
 }'
    Partner_GetPartnerCert_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_02
       description: Retreive Device Partner Certificate while keeping PartnerId as invalid 
       role: partner
       restMethod: get

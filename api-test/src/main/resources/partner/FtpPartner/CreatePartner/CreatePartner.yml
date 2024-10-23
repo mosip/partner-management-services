@@ -1,6 +1,7 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_Ftp_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
       description: Create PartnerSelfRegistration for FTP Partner
       role: partner
       restMethod: post

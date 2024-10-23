@@ -1,6 +1,7 @@
 UpdateMispLicense:
    Partner_UpdateMispLicense_Deactive_allValid_smoke:
       endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_01
       description: Update MispLicense Partner as Deactive
       role: partner
       restMethod: put
@@ -17,6 +18,7 @@ UpdateMispLicense:
 }'
    Partner_UpdateMispLicense_Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_02
       description: Update MispLicense Partner as active
       role: partner
       restMethod: put
@@ -33,6 +35,7 @@ UpdateMispLicense:
 }'
    Partner_UpdateMispLicense_InValid_licenseKeyStatus:
       endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_03
       description: Update MispLicense for Partner with InValid_licenseKeyStatus
       role: partner
       restMethod: put

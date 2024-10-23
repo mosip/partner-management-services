@@ -1,6 +1,7 @@
 DeviceTypeFilter:
    partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_01
       description: Create Device Type Filter for Partner with valid values
       role: partner
       restMethod: post
@@ -26,6 +27,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_02
       description: Create Device Type Filter for Partner with valid values
       role: partner
       restMethod: post
@@ -51,6 +53,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_03
       description: Create Device Type Filter for Partner while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
@@ -74,6 +77,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_04
       description: Create Device Type Filter for Partner while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
@@ -97,6 +101,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_05
       description: Create Device Type Filter for Partner while keeping invalid values in Column parameter
       role: partner
       restMethod: post
@@ -120,6 +125,7 @@ DeviceTypeFilter:
 }'
    partner_DeviceTypeFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceTypeFilter_06
       description: Create Device Type Filter for Partner while keeping invalid values in Type parameter
       role: partner
       restMethod: post

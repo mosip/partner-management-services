@@ -1,6 +1,7 @@
 RequestAPIKeyForAuthPartner:
    Partner_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
       description: Create Partner API Key Request for Partner with valid data
       role: partner
       checkErrorsOnlyInResponse: true
@@ -16,6 +17,7 @@ RequestAPIKeyForAuthPartner:
     }'
    Partner_SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_02
       description: Create Partner API Key Request for Partner with valid data
       role: partner
       checkErrorsOnlyInResponse: true
@@ -32,6 +34,7 @@ RequestAPIKeyForAuthPartner:
     
    Partner_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
       endPoint: /v1/partnermanager/partners/Tech-1233/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
       description: Create Partner API Key Request for Partner with Deactivated Policy
       role: partner
       checkErrorsOnlyInResponse: true
@@ -53,6 +56,7 @@ RequestAPIKeyForAuthPartner:
     
    Partner_SubmitPartnerApiKeyRequest_Map_partner_partner_inprogress_state_Neg:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_04
       description: Create Partner API Key Request for Partner and mapping the Partner with Inprogress Policy
       role: partner
       restMethod: post 
@@ -73,6 +77,7 @@ RequestAPIKeyForAuthPartner:
 
    Partner_SubmitPartnerApiKeyRequest_invalid_policyName:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_05
       description: Create Partner API Key Request for Partner with invalid Policy name
       role: partner
       restMethod: post 
@@ -92,6 +97,7 @@ RequestAPIKeyForAuthPartner:
 }'
    Partner_SubmitPartnerApiKeyRequest_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/Tech-123wegf/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_06
       description: Create Partner API Key Request for Partner with invalid PartnerID
       role: partner
       restMethod: post

@@ -1,6 +1,7 @@
 uploadCert:
    Partner_UploadCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCert_01
       description: Upload CA certificate for FTP Partner
       role: partner
       restMethod: post
@@ -14,6 +15,7 @@ uploadCert:
 }'  
    Partner_UploadSUBCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCert_02
       description: Upload SUBCA certificate for FTP Partner
       role: partner
       restMethod: post

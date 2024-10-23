@@ -1,6 +1,7 @@
 UpdatePrintPartner:
    Partner_UpdatePrintPartner_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/v2/{partnerId}
+      uniqueIdentifier: TC_PMS_UpdatePrintPartner_01
       description: Update Print Partner with valid details
       role: partner
       restMethod: put

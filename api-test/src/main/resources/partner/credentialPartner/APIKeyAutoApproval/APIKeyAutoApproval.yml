@@ -1,6 +1,7 @@
 requetAPIKey:
    Partner_APIKeyAutoApproval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/apikey/request
+      uniqueIdentifier: TC_PMS_requetAPIKey_01
       description: Update APIKey Auto Approval for valid ID
       role: partner
       restMethod: patch 
