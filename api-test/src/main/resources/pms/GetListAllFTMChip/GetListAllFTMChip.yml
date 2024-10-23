@@ -9,7 +9,7 @@ GetListAllFTMChip:
       input: '{
 }'
       output: ' {
-      "partnerId": "111888",
+      "partnerId": "pms-111888",
       "make": "AcmeCorpFtm",
       "model": "mode2
 }'

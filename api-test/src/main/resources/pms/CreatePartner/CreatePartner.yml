@@ -11,13 +11,13 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosip98763@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "111999",
+        "partnerId": "pms-111999",
         "status": "InProgress"
     }'
 
@@ -33,7 +33,7 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosip98763@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
@@ -131,13 +131,13 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosip98768@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111998",
+    "partnerId": "pms-111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "111998",
+        "partnerId": "pms-111998",
         "status": "InProgress"
     }'
     
@@ -153,12 +153,12 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosip98788@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111888",
+    "partnerId": "pms-111888",
     "partnerType": "FTM_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "111888",
+        "partnerId": "pms-111888",
         "status": "InProgress"
     }'

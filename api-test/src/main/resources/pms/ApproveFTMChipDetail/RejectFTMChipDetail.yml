@@ -7,7 +7,7 @@ ApproveFTMChipDetail:
       inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail
       outputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetailResult
       input: '{
-   "partnerId": "111999",
+   "partnerId": "pms-111999",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",

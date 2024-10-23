@@ -7,7 +7,7 @@ CreateFtmChipDetails:
       inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
       outputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetailsResult
       input: '{
-       "ftpProviderId": "111888",
+       "ftpProviderId": "pms-111888",
        "make": "AcmeCorpFtm",
        "model": "mode2"
 

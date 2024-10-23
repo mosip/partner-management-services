@@ -8,7 +8,7 @@ UploadCertificateOfFtpChip:
       outputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChipResult
       input: '{
       "requesttime":"$TIMESTAMP$",
-     "ftpProviderId": "111888",
+     "ftpProviderId": "pms-111888",
      "ftpChipDeatilId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
      "isItForRegistrationDevice": true,
      "organizationName": "PMS_API_ABC_ORG",

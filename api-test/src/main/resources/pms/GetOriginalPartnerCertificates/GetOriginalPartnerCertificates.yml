@@ -7,7 +7,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "111999"
+      "partnerId": "pms-111999"
 }'
       output: '{
      
@@ -21,7 +21,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "111998"
+      "partnerId": "pms-111998"
 }'
       output: '{
      
@@ -35,7 +35,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "111888"
+      "partnerId": "pms-111888"
 }'
       output: '{
      
