@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.cert.Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +36,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -133,6 +137,8 @@ public class PartnerServiceImplTest {
 	UserDetailUtil userDetailUtil;
     @MockBean
 	AuditUtil auditUtil;
+	@MockBean
+	PartnerHelper partnerHelper;
     
     @Mock
 	FilterHelper filterHelper;
@@ -222,8 +228,15 @@ public class PartnerServiceImplTest {
 	public void getPartnerCertificate_Test() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+                new SimpleGrantedAuthority("ROLE_USER")
+        );
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(partnerHelper.isPartnerAdmin(authentication.getAuthorities().toString())).thenReturn(true);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		List<Partner> partnerList = new ArrayList<>();
