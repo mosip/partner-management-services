@@ -20,7 +20,7 @@ uploadCACert:
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificateFTM
       outputTemplate: partner/authPartner/UploadCertificate/uploadCertificateResult
       input: '{
     "requesttime": "$TIMESTAMP$"
