@@ -267,7 +267,10 @@ public class PartnerManagementController {
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g. ASC or DESC
 			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
-		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize);
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId) {
+		FilterDto filterDto = new FilterDto();
+		filterDto.setPartnerId(partnerId);
+		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 }

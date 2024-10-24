@@ -1,5 +1,6 @@
 package io.mosip.pms.common.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,5 +17,5 @@ public class PageResponseV2Dto<T> {
     private long pageSize;
     private long totalResults;
     @Valid
-    private List<T> data;
+    private List<T> data = new ArrayList<>();
 }
