@@ -6,17 +6,15 @@ GetMISPLicenseByMispID:
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
-      outputTemplate: partner/error
+      outputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispIDResult
       input: '{
     "mispId": "MISP-AUTOMATION"
 }'
       output: '{
-    "errors": [
-    {
-      "errorCode": "PMS_MSP_413"
-    }
-  ]
+    "providerId": "MISP-AUTOMATION",
+    "licenseKeyStatus": "De-active"
     }'
+    
    Partner_GetMISPLicenseByMispID__Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
       uniqueIdentifier: TC_PMS_GetMISPLicenseByMispID_02
@@ -29,8 +27,10 @@ GetMISPLicenseByMispID:
     "mispId": "MISP2-AUTOMATION"
 }'
       output: '{
-    "providerId": "MISP2-AUTOMATION"
+    "providerId": "MISP2-AUTOMATION",
+    "licenseKeyStatus": "Active"
     }'
+    
    Partner_GetMISPLicenseByMispID_inValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
       uniqueIdentifier: TC_PMS_GetMISPLicenseByMispID_03
