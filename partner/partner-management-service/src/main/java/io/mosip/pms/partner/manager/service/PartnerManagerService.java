@@ -92,5 +92,5 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize);
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, FilterDto filterDto);
 }

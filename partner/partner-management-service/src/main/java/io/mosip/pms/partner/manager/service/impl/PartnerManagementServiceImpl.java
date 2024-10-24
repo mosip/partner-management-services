@@ -22,6 +22,7 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.manager.dto.FilterDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
@@ -76,15 +77,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	private final Map<String, String> aliasToColumnMap = new HashMap<>() {{
 		put("partnerId", "id");
-		put("partnerType", "partner_type_code");
+		put("partnerType", "partnerTypeCode");
 		put("orgName", "name");
-		put("policyGroupId", "policy_group_id");
+		put("policyGroupId", "policyGroupId");
 		put("policyGroupName", "pg.name");
-		put("emailAddress", "email_id");
-		put("certificateUploadStatus", "certificate_alias");
-		put("status", "approval_status");
-		put("isActive", "is_active");
-		put("createdDateTime", "cr_dtimes");
+		put("emailAddress", "emailId");
+		put("certificateUploadStatus", "certificateAlias");
+		put("status", "approvalStatus");
+		put("isActive", "isActive");
+		put("createdDateTime", "crDtimes");
 	}};
 
 	@Value("${mosip.pms.api.id.all.partners.get}")
@@ -836,7 +837,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize) {
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, FilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
@@ -852,7 +853,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
-			Page<PartnerSummaryEntity> page = partnerSummaryRepository.getSummaryOfAllPartners(pageable);
+			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
+					getSummaryOfAllPartners(filterDto.getPartnerId(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);

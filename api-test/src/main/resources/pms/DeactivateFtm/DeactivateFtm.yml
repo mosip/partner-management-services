@@ -1,0 +1,18 @@
+DeactivateFtm:
+   Pms_DeactivateFtm_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail/deactivate-ftm
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/DeactivateFtm/DeactivateFtm
+      outputTemplate: pms/DeactivateFtm/DeactivateFtmResult
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+          "status": "approved",
+          "isActive": true
+        
+}'

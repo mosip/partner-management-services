@@ -11,12 +11,12 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosip98763@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "111999",
+    "partnerId": "pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "111999",
+        "partnerId": "pms-111999",
         "status": "InProgress"
     }'
