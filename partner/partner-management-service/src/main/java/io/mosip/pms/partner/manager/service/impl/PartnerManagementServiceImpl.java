@@ -854,7 +854,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
-					getSummaryOfAllPartners(filterDto.getPartnerId(), pageable);
+					getSummaryOfAllPartners(filterDto.getPartnerId(),filterDto.getPartnerTypeCode(),
+							filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
+							filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
+							filterDto.getIsActive(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
