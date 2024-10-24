@@ -462,6 +462,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllDeviceListMappedWithSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>		
 	<test name="DeactivateDevice">
 		<parameter name="ymlFile"
 			value="pms/DeactivateDevice/DeactivateDevice.yml" />
@@ -470,9 +477,25 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="DeactivateDeviceNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDeviceNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>		
 	<test name="DeactivateSBIWithAssociatedDevices">
 		<parameter name="ymlFile"
 			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="DeactivateSBIWithAssociatedDevicesNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
