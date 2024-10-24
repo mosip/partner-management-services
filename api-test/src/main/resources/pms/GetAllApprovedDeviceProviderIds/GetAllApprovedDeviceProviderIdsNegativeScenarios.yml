@@ -1,5 +1,5 @@
-GetAllApprovedDeviceProviderIds:
-   Pms_GetAllApprovedDeviceProviderIds_Without_Authentication:
+GetAllApprovedDeviceProviderIdsNegativeScenarios:
+   Pms_GetAllApprovedDeviceProviderIds_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_01
       description: Retrieve All Approved Device ProviderIds Without Authentication
@@ -16,7 +16,7 @@ GetAllApprovedDeviceProviderIds:
        }
        ]
 }'
-   Pms_GetAllApprovedDeviceProviderIds_Invalid_Token:
+   Pms_GetAllApprovedDeviceProviderIds_Invalid_Token_Neg:
       endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_02
       description: Retrieve All Approved Device ProviderIds with invalid access token

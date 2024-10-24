@@ -1,8 +1,8 @@
-DeactivateDevice:
-   Pms_DeactivateDevice_without_authentication:
+DeactivateDeviceNegativeScenarios:
+   Pms_DeactivateDevice_without_authentication_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_01
-      description: Deactivate Device without authentication 
+      description: Deactivate Device without Partner authentication 
       role: batch
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -19,10 +19,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_with_Invalid_Device_ID:
+   Pms_DeactivateDevice_with_Invalid_Device_ID_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_02
-      description: Deactivate Device with Invalid Device ID
+      description: Deactivate Device by passing invalid Device ID
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -39,10 +39,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_with_Invalid_requestTime:
+   Pms_DeactivateDevice_with_Invalid_requestTime_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_03
-      description: Deactivate Device with Invalid Device ID
+      description: Deactivate Device by passing invalid requestTime
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -59,10 +59,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_Missing_requestTime:
+   Pms_DeactivateDevice_Missing_requestTime_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_04
-      description: Deactivate Device while keeping requestTime as Missing
+      description: Deactivate Device while keeping requestTime paramter as Missing
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -77,10 +77,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_Empty_requestTime:
+   Pms_DeactivateDevice_Empty_requestTime_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_05
-      description: Deactivate Device while keeping requestTime as Empty 
+      description: Deactivate Device while keeping requestTime paramter as Empty 
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -97,10 +97,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_with_Invalid_RandomDevice_ID:
+   Pms_DeactivateDevice_with_Invalid_RandomDevice_ID_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_06
-      description: Deactivate Device with Invalid Random Device ID
+      description: Deactivate Device by passwing invalid Random Device ID
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -117,10 +117,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_Already_deactivated_device:
+   Pms_DeactivateDevice_Already_deactivated_device_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_07
-      description: Deactivate Device which already Deactivated
+      description: Deactivate Device which has been already Deactivated
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -137,10 +137,10 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_with_Invalid_Version:
+   Pms_DeactivateDevice_with_Invalid_Version_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_08
-      description: Deactivate Device which invalid Version
+      description: Deactivate Device by passing invalid Version
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -159,7 +159,7 @@ DeactivateDevice:
        }
        ]
 }'
-   Pms_DeactivateDevice_with_Empty_Version:
+   Pms_DeactivateDevice_with_Empty_Version_Neg:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_09
       description: Deactivate Device while keeping Version parameter as Empty
