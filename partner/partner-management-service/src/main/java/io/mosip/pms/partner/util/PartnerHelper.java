@@ -38,6 +38,20 @@ public class PartnerHelper {
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
 
+    public final Map<String, String> aliasToColumnMap = new HashMap<>();
+    {
+        aliasToColumnMap.put("partnerId", "id");
+        aliasToColumnMap.put("partnerType", "partnerTypeCode");
+        aliasToColumnMap.put("orgName", "name");
+        aliasToColumnMap.put("policyGroupId", "policyGroupId");
+        aliasToColumnMap.put("policyGroupName", "pg.name");
+        aliasToColumnMap.put("emailAddress", "emailId");
+        aliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
+        aliasToColumnMap.put("status", "approvalStatus");
+        aliasToColumnMap.put("isActive", "isActive");
+        aliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
 
@@ -198,21 +212,5 @@ public class PartnerHelper {
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
                     ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
         }
-    }
-
-
-    public final Map<String, String> aliasToColumnMap = new HashMap<>();
-
-    {
-        aliasToColumnMap.put("partnerId", "id");
-        aliasToColumnMap.put("partnerType", "partnerTypeCode");
-        aliasToColumnMap.put("orgName", "name");
-        aliasToColumnMap.put("policyGroupId", "policyGroupId");
-        aliasToColumnMap.put("policyGroupName", "pg.name");
-        aliasToColumnMap.put("emailAddress", "emailId");
-        aliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
-        aliasToColumnMap.put("status", "approvalStatus");
-        aliasToColumnMap.put("isActive", "isActive");
-        aliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 }
