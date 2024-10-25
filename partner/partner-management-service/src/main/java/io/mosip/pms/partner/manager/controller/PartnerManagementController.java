@@ -259,18 +259,34 @@ public class PartnerManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartners())")
 	@GetMapping(value = "/v3")
-	@Operation(summary = "Get all partner details", description = "This endpoint will fetch list of all the partner details")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+	@Operation(summary = "Get all partner details", description = "This endpoint will fetch a list of all the partner details")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
-			@RequestParam(value = "sortType", required = false) String sortType, // e.g. ASC or DESC
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
 			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
-			@RequestParam(value = "partnerId", required = false) String partnerId) {
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "partnerType", required = false) String partnerType,
+			@RequestParam(value = "isActive", required = false) Boolean isActive,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
 		FilterDto filterDto = new FilterDto();
 		filterDto.setPartnerId(partnerId);
+		filterDto.setPartnerTypeCode(partnerType);
+		filterDto.setOrganizationName(orgName);
+		filterDto.setPolicyGroupName(policyGroupName);
+		filterDto.setCertificateUploadStatus(certificateUploadStatus);
+		filterDto.setEmailAddress(emailAddress);
+		filterDto.setIsActive(isActive);
 		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
+
 }
