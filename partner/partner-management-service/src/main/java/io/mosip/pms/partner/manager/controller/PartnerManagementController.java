@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,6 +60,9 @@ public class PartnerManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -278,14 +282,29 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize);
 		FilterDto filterDto = new FilterDto();
-		filterDto.setPartnerId(partnerId);
-		filterDto.setPartnerTypeCode(partnerType);
-		filterDto.setOrganizationName(orgName);
-		filterDto.setPolicyGroupName(policyGroupName);
-		filterDto.setCertificateUploadStatus(certificateUploadStatus);
-		filterDto.setEmailAddress(emailAddress);
-		filterDto.setIsActive(isActive);
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerType != null) {
+			filterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (certificateUploadStatus != null) {
+			filterDto.setCertificateUploadStatus(certificateUploadStatus);
+		}
+		if (emailAddress != null) {
+			filterDto.setEmailAddress(emailAddress.toLowerCase());
+		}
+		if (isActive != null) {
+			filterDto.setIsActive(isActive);
+		}
 		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 

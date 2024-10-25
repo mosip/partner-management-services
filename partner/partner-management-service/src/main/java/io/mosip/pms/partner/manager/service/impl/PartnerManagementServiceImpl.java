@@ -75,19 +75,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String FTM_PROVIDER = "FTM_Provider";
 
-	private final Map<String, String> aliasToColumnMap = new HashMap<>() {{
-		put("partnerId", "id");
-		put("partnerType", "partnerTypeCode");
-		put("orgName", "name");
-		put("policyGroupId", "policyGroupId");
-		put("policyGroupName", "pg.name");
-		put("emailAddress", "emailId");
-		put("certificateUploadStatus", "certificateAlias");
-		put("status", "approvalStatus");
-		put("isActive", "isActive");
-		put("createdDateTime", "crDtimes");
-	}};
-
 	@Value("${mosip.pms.api.id.all.partners.get}")
 	private String getAllPartnersId;
 
@@ -854,7 +841,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
-					getSummaryOfAllPartners(filterDto.getPartnerId(),filterDto.getPartnerTypeCode(),
+					getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
 							filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
 							filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
 							filterDto.getIsActive(), pageable);
@@ -883,7 +870,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	public String getSortColumn(String alias) {
-		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+		return partnerHelper.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

@@ -17,14 +17,14 @@ public interface PartnerSummaryRepository extends BaseRepository<PartnerSummaryE
             "p.approvalStatus, p.isActive, p.crDtimes) " +
             "FROM PartnerV3 p " +
             "LEFT JOIN p.policyGroup pg " +
-            "WHERE (:partnerId IS NULL OR p.id LIKE %:partnerId%) " +
-            "AND (:partnerTypeCode IS NULL OR p.partnerTypeCode LIKE %:partnerTypeCode%) " +
-            "AND (:organizationName IS NULL OR p.name LIKE %:organizationName%) " +
-            "AND (:policyGroupName IS NULL OR pg.name LIKE %:policyGroupName%) " +
+            "WHERE (:partnerId IS NULL OR lower(p.id) LIKE %:partnerId%) " +
+            "AND (:partnerTypeCode IS NULL OR lower(p.partnerTypeCode) LIKE %:partnerTypeCode%) " +
+            "AND (:organizationName IS NULL OR lower(p.name) LIKE %:organizationName%) " +
+            "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:certificateUploadStatus IS NULL OR " +
             "(:certificateUploadStatus = 'not_uploaded' AND p.certificateAlias IS NULL) " +
             "OR (:certificateUploadStatus = 'uploaded' AND p.certificateAlias IS NOT NULL)) " +
-            "AND (:emailAddress IS NULL OR p.emailId LIKE %:emailAddress%) " +
+            "AND (:emailAddress IS NULL OR lower(p.emailId) LIKE %:emailAddress%) " +
             "AND (:isActive IS NULL OR p.isActive = :isActive)"
     )
     Page<PartnerSummaryEntity> getSummaryOfAllPartners(
