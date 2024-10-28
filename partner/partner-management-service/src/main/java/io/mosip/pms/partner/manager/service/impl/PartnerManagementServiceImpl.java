@@ -687,7 +687,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorMessage());
 		}
-		/*
 		// check if Partner is Active or not
 		if (policyByLabel.getPartner() != null && !policyByLabel.getPartner().getIsActive()) {
 			LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
@@ -696,7 +695,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
-		*/
 		// check if API key has been already deactivated
 		if (!policyByLabel.getIsActive() && request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
 			LOGGER.error(
