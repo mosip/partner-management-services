@@ -837,15 +837,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 							filterDto.getIsActive(), pageable);
 
 			int totalPages = page.getTotalPages();
-			// Check if the requested page is empty and out of bounds, if so, fetch the first page
-			if (page.getContent().isEmpty() && totalPages > 0 && pageNo >= totalPages) {
-				pageNo = 0;  // Reset to the first page
+			if (page.getContent().isEmpty() && totalPages > 0 && pageNo >= page.getTotalPages()) {
+				pageNo = 0;
 				pageable = createPageable(pageNo, pageSize, sortFieldName, sortType);
-				page = partnerSummaryRepository.getSummaryOfAllPartners(
-						filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
-						filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
-						filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
-						filterDto.getIsActive(), pageable);
+				page = partnerSummaryRepository.getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
+						filterDto.getOrganizationName(), filterDto.getPolicyGroupName(), filterDto.getCertificateUploadStatus(),
+						filterDto.getEmailAddress(), filterDto.getIsActive(), pageable);
 			}
 
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
