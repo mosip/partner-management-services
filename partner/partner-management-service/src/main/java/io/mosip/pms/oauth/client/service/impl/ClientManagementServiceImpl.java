@@ -540,7 +540,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private String getJWKString(Map<String, Object> jwk) {
 		try {
 			JWK jsonWebKey = JWK.parse(jwk);
-			return jsonWebKey.toJSONObject().toString();
+			return objectMapper.writeValueAsString(jsonWebKey.toJSONObject());
 		} catch (Exception e) {
 			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
 			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
