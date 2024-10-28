@@ -130,9 +130,6 @@ public class MosipTestRunner {
 		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
 		BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);
 		AdminTestUtil.copyPmsNewTestResource();
-
-		BaseTestCase.otpListener = new OTPListener();
-		BaseTestCase.otpListener.run();
 	}
 
 	private static void setLogLevels() {

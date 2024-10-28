@@ -79,7 +79,14 @@
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
-
+	<test name="GetUserConsetbeforeconsetgiven">
+		<parameter name="ymlFile"
+			value="pms/GetUserConsent/GetUserConsent.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 	<test name="GetAllApiKeyForAuthPartnerwithoutpartnercertifcates">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
@@ -340,15 +347,15 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<!--		<test name="GetConfiguration">
+			<test name="GetConfiguration">
 		<parameter name="ymlFile"
 			value="pms/GetConfiguration/GetConfiguration.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>-->
+	</test>
 
-	<!--	<test name="saveUserConsent">
+	<test name="saveUserConsent">
 		<parameter name="ymlFile"
 			value="pms/SaveUserConsent/SaveUserConsent.yml" />
 		<classes>
@@ -371,7 +378,7 @@
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>-->
+	</test>
 
 	<test name="SaveSecureBiometricInterfaceCreateDto">
 		<parameter name="ymlFile"

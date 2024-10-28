@@ -11,4 +11,40 @@ GetUserConsent:
       output: '{
       "userId": "111999"
 }'
+   Pms_GetUserConsent_Get_consent_status_without_access_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: batch
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+		"errorCode": "KER-ATH-401",
+		"message": "Authentication Failed"
+}'
+   Pms_GetUserConsent_Get_consent_status_admin_user_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: batch
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+		"errorCode": "PMS_CERTIFICATE_ERROR_002",
+		 "message": "User Id does not exists.
+}'
+   Pms_GetUserConsent_Get_consent_status_invalid_auth_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+		"errorCode": "KER-ATH-403",
+		"message": "Forbidden"
+}' 
 
