@@ -796,7 +796,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
-				partnerDetailsV3Dto.setIsCertificateExpired(partnerHelper.isCertificateExpired(cert));
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
 			}
 			responseWrapper.setResponse(partnerDetailsV3Dto);
