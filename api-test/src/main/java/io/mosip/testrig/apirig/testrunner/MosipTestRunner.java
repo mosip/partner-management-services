@@ -93,8 +93,6 @@ public class MosipTestRunner {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
-		OTPListener.bTerminate = true;
-
 		if (BaseTestCase.isTargetEnvLTS())
 			HealthChecker.bTerminate = true;
 

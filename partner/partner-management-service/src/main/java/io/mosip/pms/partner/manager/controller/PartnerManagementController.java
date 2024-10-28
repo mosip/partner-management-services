@@ -5,6 +5,14 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.StatusRequestDto;
-import io.mosip.pms.partner.manager.dto.ApikeyRequests;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyRequestsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
-import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.swagger.annotations.Api;
@@ -59,6 +60,9 @@ public class PartnerManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -244,4 +248,64 @@ public class PartnerManagementController {
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
+	@GetMapping(value = "/v3/{partnerId}")
+	@Operation(summary = "Get Partner details.", description = "This endpoint will fetch partner details for the provided partner Id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(@PathVariable String partnerId) {
+		return partnerManagementService.getPartnerDetails(partnerId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartners())")
+	@GetMapping(value = "/v3")
+	@Operation(summary = "Get all partner details", description = "This endpoint will fetch a list of all the partner details")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "partnerType", required = false) String partnerType,
+			@RequestParam(value = "isActive", required = false) Boolean isActive,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize);
+		FilterDto filterDto = new FilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerType != null) {
+			filterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (certificateUploadStatus != null) {
+			filterDto.setCertificateUploadStatus(certificateUploadStatus);
+		}
+		if (emailAddress != null) {
+			filterDto.setEmailAddress(emailAddress.toLowerCase());
+		}
+		if (isActive != null) {
+			filterDto.setIsActive(isActive);
+		}
+		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
 }

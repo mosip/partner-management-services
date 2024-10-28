@@ -347,7 +347,8 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-			<test name="GetConfiguration">
+
+	<test name="GetConfiguration">
 		<parameter name="ymlFile"
 			value="pms/GetConfiguration/GetConfiguration.yml" />
 		<classes>
@@ -363,7 +364,7 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePostWithoutBody" />
 		</classes>
 	</test>
-	
+
 	<test name="GetUserConsent">
 		<parameter name="ymlFile"
 			value="pms/GetUserConsent/GetUserConsent.yml" />
@@ -374,12 +375,20 @@
 	<test name="GetOriginalPartnerCertificates">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml"
-	/>
+		/>
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
 
+	<test name="GetAllApprovedDeviceProviderIds">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	<test name="SaveSecureBiometricInterfaceCreateDto">
 		<parameter name="ymlFile"
 			value="pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto.yml" />
@@ -419,7 +428,6 @@
 		</classes>
 	</test>
 
-
 	<test name="SaveDeviceDetails">
 		<parameter name="ymlFile"
 			value="pms/SaveDeviceDetails/SaveDeviceDetails.yml" />
@@ -446,6 +454,14 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="RejectMappingDeviceToSbi">
+		<parameter name="ymlFile"
+			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
 	<test name="GetAllDeviceListMappedWithSbi">
 		<parameter name="ymlFile"
 			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi.yml" />
@@ -453,6 +469,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllDeviceListMappedWithSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>		
 	<test name="DeactivateDevice">
 		<parameter name="ymlFile"
 			value="pms/DeactivateDevice/DeactivateDevice.yml" />
@@ -461,12 +484,89 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="DeactivateDeviceNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDeviceNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>		
 	<test name="DeactivateSBIWithAssociatedDevices">
 		<parameter name="ymlFile"
 			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="DeactivateSBIWithAssociatedDevicesNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetAllApprovedFtmProvider">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="CreateFtmChipDetails">
+		<parameter name="ymlFile"
+			value="pms/CreateFtmChipDetails/CreateFtmChipDetails.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateOfFtpChip">
+		<parameter name="ymlFile"
+			value="pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="ApproveFTMChipDetail">
+		<parameter name="ymlFile"
+			value="pms/ApproveFTMChipDetail/ApproveFTMChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="GetListAllFTMChip">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFTMChip.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetOriginalFtmCertifacte">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="DeactivateFtm">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtm.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
 </suite>

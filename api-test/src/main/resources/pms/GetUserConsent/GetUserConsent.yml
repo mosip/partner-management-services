@@ -9,7 +9,7 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-      "userId": "111999"
+      "userId": "pms-111999"
 }'
    Pms_GetUserConsent_Get_consent_status_without_access_token_neg:
       endPoint: /v1/partnermanager/users/user-consent

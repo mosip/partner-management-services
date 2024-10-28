@@ -18,6 +18,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
@@ -36,6 +37,20 @@ public class PartnerHelper {
     private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
+
+    public final Map<String, String> aliasToColumnMap = new HashMap<>();
+    {
+        aliasToColumnMap.put("partnerId", "id");
+        aliasToColumnMap.put("partnerType", "partnerTypeCode");
+        aliasToColumnMap.put("orgName", "name");
+        aliasToColumnMap.put("policyGroupId", "policyGroupId");
+        aliasToColumnMap.put("policyGroupName", "pg.name");
+        aliasToColumnMap.put("emailAddress", "emailId");
+        aliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
+        aliasToColumnMap.put("status", "approvalStatus");
+        aliasToColumnMap.put("isActive", "isActive");
+        aliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -124,22 +139,78 @@ public class PartnerHelper {
     public void populateCertificateExpiryState(OriginalCertDownloadResponseDto originalCertDownloadResponseDto) {
         originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
         originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
-        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 
         // Check mosip signed certificate expiry date
         X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
-        LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedMosipSignedCert)) {
             originalCertDownloadResponseDto.setMosipSignedCertificateData("");
             originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
         }
 
         // Check ca signed partner certificate expiry date
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
-        LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedCaSignedCert)) {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
+        }
+    }
+
+    public boolean isCertificateExpired(X509Certificate cert) {
+        // Get the current date and time in UTC
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime expiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+
+        // Check if the certificate has expired
+        return expiryDate.isBefore(currentDateTime);
+    }
+
+    public Sort getSortingRequest (String fieldName, String sortType) {
+        Sort sortingRequest = null;
+        if (sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+            sortingRequest = Sort.by(fieldName).ascending();
+        }
+        if (sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            sortingRequest = Sort.by(fieldName).descending();
+        }
+        return sortingRequest;
+    }
+
+    public boolean isPartnerAdmin(String roles) {
+        if (roles.contains(PartnerConstants.PARTNER_ADMIN)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void validateGetAllPartnersRequestParameters(String sortFieldName, String sortType, int pageNo, int pageSize) {
+        // Validate sortFieldName
+        if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
+            LOGGER.error("Invalid sort field name: " + sortFieldName);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_FIELD.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_FIELD.getErrorMessage(), sortFieldName));
+        }
+
+        // Validate sortType
+        if (sortType != null &&
+                !sortType.equalsIgnoreCase(PartnerConstants.ASC) &&
+                !sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            LOGGER.error("Invalid sort type: " + sortType);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_TYPE.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_TYPE.getErrorMessage(), sortType));
+        }
+
+        // Validate pageNo
+        if (pageNo < 0) {
+            LOGGER.error("Invalid page no: " + pageNo);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+
+        // Validate pageSize
+        if (pageSize <= 0) {
+            LOGGER.error("Invalid page size: " + pageSize);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
         }
     }
 }
