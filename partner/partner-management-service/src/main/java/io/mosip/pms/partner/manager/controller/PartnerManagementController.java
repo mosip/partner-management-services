@@ -289,7 +289,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize, certificateUploadStatus);
+		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize);
 		FilterDto filterDto = new FilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

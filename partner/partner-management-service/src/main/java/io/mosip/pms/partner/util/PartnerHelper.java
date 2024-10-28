@@ -184,7 +184,7 @@ public class PartnerHelper {
         return false;
     }
 
-    public void validateGetAllPartnersRequestParameters(String sortFieldName, String sortType, int pageNo, int pageSize, String certificateUploadStatus) {
+    public void validateGetAllPartnersRequestParameters(String sortFieldName, String sortType, int pageNo, int pageSize) {
         // Validate sortFieldName
         if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
             LOGGER.error("Invalid sort field name: " + sortFieldName);
@@ -213,12 +213,6 @@ public class PartnerHelper {
             LOGGER.error("Invalid page size: " + pageSize);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
                     ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
-        }
-
-        if (!certificateUploadStatus.equals(CERTIFICATE_UPLOADED) && !certificateUploadStatus.equals(CERTIFICATE_NOT_UPLOADED)) {
-            LOGGER.error("Invalid certificate status: " + certificateUploadStatus);
-            throw new PartnerServiceException(ErrorCode.INVALID_CERTIFICATE_UPLOAD_STATUS.getErrorCode(),
-                    ErrorCode.INVALID_CERTIFICATE_UPLOAD_STATUS.getErrorMessage());
         }
     }
 }
