@@ -828,22 +828,23 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
-
-			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
-					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
-				}
-				Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
-				pageable = PageRequest.of(pageNo, pageSize, sort);
-			}
+			Pageable pageable = createPageable(pageNo, pageSize, sortFieldName, sortType);
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
 					getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
 							filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
 							filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
 							filterDto.getIsActive(), pageable);
+
+			int totalPages = page.getTotalPages();
+			if (page.getContent().isEmpty() && totalPages > 0 && pageNo >= page.getTotalPages()) {
+				pageNo = 0;
+				pageable = createPageable(pageNo, pageSize, sortFieldName, sortType);
+				page = partnerSummaryRepository.getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
+						filterDto.getOrganizationName(), filterDto.getPolicyGroupName(), filterDto.getCertificateUploadStatus(),
+						filterDto.getEmailAddress(), filterDto.getIsActive(), pageable);
+			}
+
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -866,6 +867,26 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(getAllPartnersId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private Pageable createPageable(int pageNo, int pageSize, String sortFieldName, String sortType) {
+		//Pageable
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+		//Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			if ("certificateUploadStatus".equalsIgnoreCase(sortFieldName) ||
+					"isActive".equalsIgnoreCase(sortFieldName)) {
+				sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC)
+						? PartnerConstants.DESC
+						: PartnerConstants.ASC;
+			}
+
+			// Create sorting request
+			Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
+			pageable = PageRequest.of(pageNo, pageSize, sort);
+		}
+		return pageable;
 	}
 
 	public String getSortColumn(String alias) {

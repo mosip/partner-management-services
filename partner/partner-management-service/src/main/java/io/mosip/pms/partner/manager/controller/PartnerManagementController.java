@@ -9,6 +9,8 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -279,10 +281,15 @@ public class PartnerManagementController {
 			@RequestParam(value = "isActive", required = false) Boolean isActive,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@Parameter(
+					in = ParameterIn.QUERY,
+					description = "Certificate upload status",
+					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
+			)
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize);
+		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize, certificateUploadStatus);
 		FilterDto filterDto = new FilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

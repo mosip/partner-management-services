@@ -18,6 +18,7 @@ public enum ErrorCode {
 	INVALID_SORT_FIELD("PMS_PRT_357", "Invalid sort field %s"),
 	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
 	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
+	INVALID_CERTIFICATE_UPLOAD_STATUS("PMS_PRT_362", "The certificate upload status can only be either 'uploaded' or 'not_uploaded"),
 	INVALID_VALUE("KER_PRT_390", "Invalid filter value"),
 	PARTNER_ALREADY_REGISTERED_EXCEPTION("PMS_PRT_001",  "A Partner is already registered with the same Name"),
 	PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION("PMS_PRT_051", "A Partner is already registered with the same Id"),
