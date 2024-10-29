@@ -38,6 +38,20 @@ public class PartnerHelper {
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
 
+    public final Map<String, String> aliasToColumnMap = new HashMap<>();
+    {
+        aliasToColumnMap.put("partnerId", "id");
+        aliasToColumnMap.put("partnerType", "partnerTypeCode");
+        aliasToColumnMap.put("orgName", "name");
+        aliasToColumnMap.put("policyGroupId", "policyGroupId");
+        aliasToColumnMap.put("policyGroupName", "pg.name");
+        aliasToColumnMap.put("emailAddress", "emailId");
+        aliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
+        aliasToColumnMap.put("status", "approvalStatus");
+        aliasToColumnMap.put("isActive", "isActive");
+        aliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
 
@@ -166,5 +180,37 @@ public class PartnerHelper {
             return true;
         }
         return false;
+    }
+
+    public void validateGetAllPartnersRequestParameters(String sortFieldName, String sortType, int pageNo, int pageSize) {
+        // Validate sortFieldName
+        if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
+            LOGGER.error("Invalid sort field name: " + sortFieldName);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_FIELD.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_FIELD.getErrorMessage(), sortFieldName));
+        }
+
+        // Validate sortType
+        if (sortType != null &&
+                !sortType.equalsIgnoreCase(PartnerConstants.ASC) &&
+                !sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            LOGGER.error("Invalid sort type: " + sortType);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_TYPE.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_TYPE.getErrorMessage(), sortType));
+        }
+
+        // Validate pageNo
+        if (pageNo < 0) {
+            LOGGER.error("Invalid page no: " + pageNo);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+
+        // Validate pageSize
+        if (pageSize <= 0) {
+            LOGGER.error("Invalid page size: " + pageSize);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+        }
     }
 }

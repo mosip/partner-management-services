@@ -75,19 +75,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String FTM_PROVIDER = "FTM_Provider";
 
-	private final Map<String, String> aliasToColumnMap = new HashMap<>() {{
-		put("partnerId", "id");
-		put("partnerType", "partnerTypeCode");
-		put("orgName", "name");
-		put("policyGroupId", "policyGroupId");
-		put("policyGroupName", "pg.name");
-		put("emailAddress", "emailId");
-		put("certificateUploadStatus", "certificateAlias");
-		put("status", "approvalStatus");
-		put("isActive", "isActive");
-		put("createdDateTime", "crDtimes");
-	}};
-
 	@Value("${mosip.pms.api.id.all.partners.get}")
 	private String getAllPartnersId;
 
@@ -700,8 +687,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorMessage());
 		}
-		/*
-		// check if Partner is Active or not
+		// check if Partner is Active or not.
 		if (policyByLabel.getPartner() != null && !policyByLabel.getPartner().getIsActive()) {
 			LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
 			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED, partnerId,
@@ -709,7 +695,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
-		*/
 		// check if API key has been already deactivated
 		if (!policyByLabel.getIsActive() && request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
 			LOGGER.error(
@@ -809,7 +794,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
-				partnerDetailsV3Dto.setIsCertificateExpired(partnerHelper.isCertificateExpired(cert));
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
 			}
 			responseWrapper.setResponse(partnerDetailsV3Dto);
@@ -854,7 +838,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
-					getSummaryOfAllPartners(filterDto.getPartnerId(),filterDto.getPartnerTypeCode(),
+					getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
 							filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
 							filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
 							filterDto.getIsActive(), pageable);
@@ -883,7 +867,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	public String getSortColumn(String alias) {
-		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+		return partnerHelper.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {
