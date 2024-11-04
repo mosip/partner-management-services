@@ -1,4 +1,4 @@
-package io.mosip.testrig.apirig.testscripts;
+package io.mosip.testrig.apirig.partner.testscripts;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,26 +22,25 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.testrunner.BaseTestCase;
+import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
+import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
-import io.mosip.testrig.apirig.utils.PMSConfigManger;
-import io.mosip.testrig.apirig.utils.PMSUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class SimplePut extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(SimplePut.class);
+public class SimplePatch extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(SimplePatch.class);
 	protected String testCaseName = "";
 	public Response response = null;
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (ConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -77,25 +76,21 @@ public class SimplePut extends AdminTestUtil implements ITest {
 	 * @throws AdminTestException
 	 */
 	@Test(dataProvider = "testcaselist")
-	public void test(TestCaseDTO testCaseDTO) throws AdminTestException {
+	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		testCaseName = isTestCaseValidForExecution(testCaseDTO);
+		String[] templateFields = testCaseDTO.getTemplateFields();
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-
-		testCaseName = isTestCaseValidForExecution(testCaseDTO);
-		String[] templateFields = testCaseDTO.getTemplateFields();
-
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
 			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);
-
-			languageList = new ArrayList<>(BaseTestCase.languageList);
 			for (int i = 0; i < languageList.size(); i++) {
-				response = putWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+				response = patchWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
 						getJsonFromTemplate(inputtestCases.get(i).toString(), testCaseDTO.getInputTemplate()),
 						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
@@ -108,8 +103,10 @@ public class SimplePut extends AdminTestUtil implements ITest {
 				if (!OutputValidationUtil.publishOutputResult(ouputValid))
 					throw new AdminTestException("Failed at output validation");
 			}
-		} else {
-			response = putWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+		}
+
+		else {
+			response = patchWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
@@ -119,15 +116,13 @@ public class SimplePut extends AdminTestUtil implements ITest {
 						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
 						response.getStatusCode());
 			
-
 			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
 			if (!OutputValidationUtil.publishOutputResult(ouputValid))
 				throw new AdminTestException("Failed at output validation");
 		}
-	}
 
-	
+	}
 
 	/**
 	 * The method ser current test name to result
