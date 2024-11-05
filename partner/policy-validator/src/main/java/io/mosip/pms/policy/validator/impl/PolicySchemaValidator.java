@@ -45,6 +45,8 @@ public class PolicySchemaValidator implements PolicyValidator{
 	private static final String MISSING = "missing";
 	private static final String UNWANTED = "unwanted";
 	public static final String EXPECTED = "expected";
+	public static final String MIN_ITEMS = "minItems";
+	public static final String MIN_LENGTH = "minLength";
 
 	/**
 	 * 
@@ -126,6 +128,12 @@ public class PolicySchemaValidator implements PolicyValidator{
 					}
 					if (processingMessageAsJson.hasNonNull(EXPECTED)) {
 						buildErrorMessages(errorList, processingMessageAsJson, PolicyValidatorErrorConstant.EXPECTED_INPUT_PARAMETER, EXPECTED);
+					}
+					if (processingMessageAsJson.hasNonNull(KEYWORD) && processingMessageAsJson.get(KEYWORD).asText().contentEquals(MIN_ITEMS)) {
+						buildErrorMessages(errorList, processingMessageAsJson, PolicyValidatorErrorConstant.EMPTY_ARRAY_INPUT_PARAMETER, KEYWORD);
+					}
+					if (processingMessageAsJson.hasNonNull(KEYWORD) && processingMessageAsJson.get(KEYWORD).asText().contentEquals(MIN_LENGTH)) {
+						buildErrorMessages(errorList, processingMessageAsJson, PolicyValidatorErrorConstant.EMPTY_STRING_INPUT_PARAMETER, KEYWORD);
 					}
 				}
 	        } 
