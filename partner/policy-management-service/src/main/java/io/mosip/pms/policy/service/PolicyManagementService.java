@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.SortUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +52,12 @@ import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.AuthPolicyH;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.PolicySummaryEntity;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
@@ -59,6 +65,7 @@ import io.mosip.pms.common.repository.AuthPolicyHRepository;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.PolicySummaryRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
@@ -82,6 +89,8 @@ import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.ResponseWrapper;
 import io.mosip.pms.policy.dto.PolicyGroupDto;
+import io.mosip.pms.policy.dto.PolicySummaryDto;
+import io.mosip.pms.policy.dto.PolicyFilterDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -122,6 +131,9 @@ public class PolicyManagementService {
 	private AuthPolicyHRepository authPolicyHRepository;
 
 	@Autowired
+	private PolicySummaryRepository policySummaryRepository;
+
+	@Autowired
 	PolicyValidator policyValidator;
 
 	@Autowired
@@ -138,6 +150,11 @@ public class PolicyManagementService {
 
 	@Value("${mosip.pms.api.id.policy.groups.get}")
 	private String getPolicyGroupsId;
+
+	@Value("${mosip.pms.api.id.policies.get}")
+	private String getPoliciesId;
+
+	private SortUtils sortUtils;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -1091,5 +1108,49 @@ public class PolicyManagementService {
 		responseWrapper.setId(getPolicyGroupsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> getAllPolicies(String sortFieldName, String sortType, int pageNo, int pageSize, PolicyFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PolicySummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = PolicyUtil.getSortingRequest(getSortColumn(sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<PolicySummaryEntity> page = policySummaryRepository.
+					getSummaryOfAllPolicies(filterDto.getPolicyId(), filterDto.getPolicyType(),
+							filterDto.getPolicyName(), filterDto.getPolicyDescription(),
+							filterDto.getPolicyGroupName(), filterDto.getIsActive(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PolicySummaryDto> policySummaryDtoList = MapperUtils.mapAll(page.getContent(), PolicySummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(policySummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICIES_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICIES_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPoliciesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(String alias) {
+		return PolicyUtil.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 }
