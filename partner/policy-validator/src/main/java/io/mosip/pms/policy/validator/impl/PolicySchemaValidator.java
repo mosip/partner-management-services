@@ -44,7 +44,8 @@ public class PolicySchemaValidator implements PolicyValidator{
 	public static final String PATH_SEPERATOR = "/";	
 	private static final String MISSING = "missing";
 	private static final String UNWANTED = "unwanted";
-	
+	public static final String EXPECTED = "expected";
+
 	/**
 	 * 
 	 */
@@ -122,6 +123,9 @@ public class PolicySchemaValidator implements PolicyValidator{
 					}
 					if (processingMessageAsJson.hasNonNull(KEYWORD) && processingMessageAsJson.get(KEYWORD).asText().contentEquals(ENUM)) {						
 						buildErrorMessages(errorList, processingMessageAsJson, PolicyValidatorErrorConstant.INVALID_INPUT_PARAMETER, KEYWORD);
+					}
+					if (processingMessageAsJson.hasNonNull(EXPECTED)) {
+						buildErrorMessages(errorList, processingMessageAsJson, PolicyValidatorErrorConstant.EXPECTED_INPUT_PARAMETER, EXPECTED);
 					}
 				}
 	        } 

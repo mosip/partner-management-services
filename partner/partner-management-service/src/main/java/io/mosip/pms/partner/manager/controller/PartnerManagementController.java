@@ -250,7 +250,7 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
-	@GetMapping(value = "/v3/{partnerId}")
+	@GetMapping(value = "/{partnerId}/v2")
 	@Operation(summary = "Get Partner details.", description = "This endpoint will fetch partner details for the provided partner Id.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
