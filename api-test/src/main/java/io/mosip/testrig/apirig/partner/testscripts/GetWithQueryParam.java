@@ -1,4 +1,4 @@
-package io.mosip.testrig.apirig.testscripts;
+package io.mosip.testrig.apirig.partner.testscripts;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,22 +22,20 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
-import io.mosip.testrig.apirig.utils.PMSConfigManger;
-import io.mosip.testrig.apirig.utils.PMSUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(PostWithBodyAndPathParams.class);
+public class GetWithQueryParam extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(GetWithQueryParam.class);
 	protected String testCaseName = "";
-	String pathParams = null;
-	String headers = null;
 	public Response response = null;
 
 	@BeforeClass
@@ -64,8 +62,6 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 	@DataProvider(name = "testcaselist")
 	public Object[] getTestCaseList(ITestContext context) {
 		String ymlFile = context.getCurrentXmlTest().getLocalParameters().get("ymlFile");
-		pathParams = context.getCurrentXmlTest().getLocalParameters().get("pathParams");
-		headers = context.getCurrentXmlTest().getLocalParameters().get("headers");
 		logger.info("Started executing yml: " + ymlFile);
 		return getYmlTestData(ymlFile);
 	}
@@ -82,24 +78,25 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
-		String[] templateFields = testCaseDTO.getTemplateFields();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
+		if (PMSConfigManger.isInServiceNotDeployedList(GlobalConstants.ADMIN) && testCaseName.contains("BulkUpload_")) {
+			throw new SkipException(GlobalConstants.SERVICE_NOT_DEPLOYED_MESSAGE);
+		}
 
-		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
-		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
-		String outputJson = getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate());
+
+		String[] templateFields = testCaseDTO.getTemplateFields();
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
 			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);
 			for (int i = 0; i < languageList.size(); i++) {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+				response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
 						getJsonFromTemplate(inputtestCases.get(i).toString(), testCaseDTO.getInputTemplate()),
-						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
+						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
 				Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 						response.asString(),
@@ -113,19 +110,22 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 		}
 
 		 else {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
+				response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+						getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
+						testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 			}
-			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
-					.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+			Map<String, List<OutputValidationDto>> ouputValid = null;
+			
+				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+						response.getStatusCode());
+			
 
+			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 			if (!OutputValidationUtil.publishOutputResult(ouputValid))
 				throw new AdminTestException("Failed at output validation");
 		}
-
 	
-
 
 	/**
 	 * The method ser current test name to result
