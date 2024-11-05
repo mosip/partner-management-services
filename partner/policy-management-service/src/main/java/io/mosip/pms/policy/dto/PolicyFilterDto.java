@@ -17,6 +17,4 @@ public class PolicyFilterDto {
     private String policyGroupName;
 
     private Boolean isActive;
-
-    private Date createdDateTime;
 }

@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.common.util.SortUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -153,8 +152,6 @@ public class PolicyManagementService {
 
 	@Value("${mosip.pms.api.id.policies.get}")
 	private String getPoliciesId;
-
-	private SortUtils sortUtils;
 
 	@Autowired
 	SearchHelper searchHelper;
