@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.policy.util.PolicyUtil;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -34,6 +35,7 @@ import io.mosip.pms.common.dto.PolicyFilterValueDto;
 import io.mosip.pms.common.dto.PolicySearchDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.dto.SearchDto;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.policy.dto.FilterResponseCodeDto;
@@ -53,6 +55,8 @@ import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.policy.dto.ResponseWrapper;
 import io.mosip.pms.policy.dto.PolicyGroupDto;
+import io.mosip.pms.policy.dto.PolicySummaryDto;
+import io.mosip.pms.policy.dto.PolicyFilterDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -301,5 +305,48 @@ public class PolicyManagementController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() throws JsonParseException, JsonMappingException, IOException {
 		return policyManagementService.getPolicyGroups();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
+	@GetMapping(value = "/search/v2")
+	@Operation(summary = "Get all policy details", description = "This endpoint will fetch a list of all the policy details")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> getAllPolicies(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "policyType", required = false) String policyType,
+			@RequestParam(value = "policyId", required = false) String policyId,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyDescription", required = false) String policyDescription,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@RequestParam(value = "isActive", required = false) Boolean isActive) {
+
+		PolicyUtil.validateGetAllPoliciesRequestParameters(sortFieldName, sortType, pageNo, pageSize);
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		if (policyType != null) {
+			filterDto.setPolicyType(policyType.toLowerCase());
+		}
+		if (policyId != null) {
+			filterDto.setPolicyId(policyId.toLowerCase());
+		}
+		if (policyName != null) {
+			filterDto.setPolicyName(policyName.toLowerCase());
+		}
+		if (policyDescription != null) {
+			filterDto.setPolicyDescription(policyDescription.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (isActive != null) {
+			filterDto.setIsActive(isActive);
+		}
+		return policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 }
