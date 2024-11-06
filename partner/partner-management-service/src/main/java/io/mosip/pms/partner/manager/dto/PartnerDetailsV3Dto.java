@@ -37,9 +37,6 @@ public class PartnerDetailsV3Dto {
     @Schema(description = "Email address of the partner", example = "partner@email.com")
     private String emailId;
 
-    @Schema(description = "Name of the certificate issued to the partner", example = "cert-001")
-    private String certificateIssuedTo;
-
     @Schema(description = "Date when the certificate was uploaded", example = "2024-07-15T10:00:00Z")
     private Date certificateUploadDateTime;
 

@@ -791,7 +791,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
 						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
 				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
-				partnerDetailsV3Dto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
