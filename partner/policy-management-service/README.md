@@ -3,7 +3,7 @@
 This repository contains the source code for policy management service. For an overview refer [here](https://nayakrounak.gitbook.io/mosip-docs/modules/partner-management).
 
 ## Build & run (for developers)
-The project requires JDK 1.21.
+The project requires JDK 21.0.3
 and mvn version - 3.9.6
 
 1. Build and install:

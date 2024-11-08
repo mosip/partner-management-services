@@ -13,7 +13,7 @@ Partnermanagement module contains following services:
 Refer to [SQL scripts](db_scripts).
 
 ## Build & run (for developers)
-The project requires JDK 1.21.
+The project requires JDK 21.0.3
 and mvn version - 3.9.6
 
 1. Build and install:
