@@ -19,7 +19,6 @@ import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import lombok.SneakyThrows;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -360,17 +359,17 @@ public class PartnerManagementControllerTest {
 		String sortType = "desc";
 		int pageNo = 0;
 		int pageSize = 8;
-		FilterDto filterDto = new FilterDto();
-		filterDto.setPartnerId("abc");
-		filterDto.setPartnerTypeCode("Auth_Partner");
-		filterDto.setOrganizationName("ABC");
-		filterDto.setEmailAddress("abc");
-		filterDto.setCertificateUploadStatus("not_uploaded");
-		filterDto.setPolicyGroupName("default");
-		filterDto.setIsActive(false);
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto))
+		Mockito.when(partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&" +
 						"partnerId=abc&partnerType=Auth_Partner&orgName=ABC&emailAddress=abc&certificateUploadStatus=not_uploaded&policyGroupName=default&isActive=false"))

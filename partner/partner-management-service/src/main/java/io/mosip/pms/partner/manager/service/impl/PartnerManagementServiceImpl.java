@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,9 +21,8 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.dto.*;
-import io.mosip.pms.partner.manager.dto.FilterDto;
+import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -78,8 +76,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.all.partners.get}")
 	private String getAllPartnersId;
 
+	@Value("${mosip.pms.api.id.all.partner.policy.mapping.requests.get}")
+	private String getAllPartnerPolicyMappingRequestsId;
+
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
+
+	@Autowired
+	PartnerPolicyMappingRequestRepository partnerPolicyMappingRequestRepository;
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
@@ -820,7 +824,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, FilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerFilterDto partnerFilterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
@@ -832,15 +836,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
 					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
 				}
-				Sort sort = partnerHelper.getSortingRequest(getSortColumn(sortFieldName), sortType);
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
-					getSummaryOfAllPartners(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
-							filterDto.getOrganizationName(), filterDto.getPolicyGroupName(),
-							filterDto.getCertificateUploadStatus(), filterDto.getEmailAddress(),
-							filterDto.getIsActive(), pageable);
+					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
+							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(),
+							partnerFilterDto.getIsActive(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -865,8 +869,51 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return responseWrapper;
 	}
 
-	public String getSortColumn(String alias) {
-		return partnerHelper.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerPolicyRequestFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
+							filterDto.getOrganizationName(), filterDto.getPolicyName(),
+							filterDto.getStatus(), filterDto.getRequestDetails(),
+							filterDto.getPolicyGroupName(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerPolicyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerPolicyRequestSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartnerPolicyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllPartnerPolicyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllPartnerPolicyMappingRequestsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

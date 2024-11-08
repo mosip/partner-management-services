@@ -44,7 +44,8 @@ public enum ErrorCode {
 	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
 	FETCH_PARTNER_DETAILS_ERROR("PMS_PM_059","Error while fetching partner details."),
 	CERTIFICATE_NOT_AVAILABLE_IN_KM("PMS_PM_060","The certificate for the specified partner is not available in the store"),
-	FETCH_ALL_PARTNER_DETAILS_ERROR("PMS_PM_061", "Error while fetching all partners details");
+	FETCH_ALL_PARTNER_DETAILS_ERROR("PMS_PM_061", "Error while fetching all partners details"),
+	FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR("PMS_PM_062", "Error while fetching all partner policy mapping requests");
 	
 
 	/**
