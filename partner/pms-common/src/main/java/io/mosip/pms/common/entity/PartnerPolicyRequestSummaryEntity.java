@@ -25,7 +25,8 @@ import javax.persistence.*;
                         @ColumnResult(name = "policyId", type = String.class),
                         @ColumnResult(name = "requestDetail", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
-                        @ColumnResult(name = "createdDateTime", type = Date.class)
+                        @ColumnResult(name = "createdDateTime", type = Date.class),
+                        @ColumnResult(name = "updatedDateTime", type = Date.class)
                 })
         }
 )
@@ -34,7 +35,7 @@ public class PartnerPolicyRequestSummaryEntity {
     public PartnerPolicyRequestSummaryEntity(
             String id, String partnerId, String orgName, String partnerType,
             String policyGroupName, String policyId, String policyName, String status,
-            Date createdDateTime, String requestDetail) {
+            Date createdDateTime, String requestDetail, Date updatedDateTime) {
         this.id = id;
         this.partnerId = partnerId;
         this.partnerType = partnerType;
@@ -45,6 +46,7 @@ public class PartnerPolicyRequestSummaryEntity {
         this.requestDetail = requestDetail;
         this.status = status;
         this.createdDateTime = createdDateTime;
+        this.updatedDateTime = updatedDateTime;
     }
 
     // No-argument constructor
@@ -72,4 +74,6 @@ public class PartnerPolicyRequestSummaryEntity {
     private String status;
 
     private Date createdDateTime;
+
+    private Date updatedDateTime;
 }

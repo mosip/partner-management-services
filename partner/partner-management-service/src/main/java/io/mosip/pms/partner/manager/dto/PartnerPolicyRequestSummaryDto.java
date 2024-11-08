@@ -38,4 +38,7 @@ public class PartnerPolicyRequestSummaryDto {
     @Schema(description = "Unique Id for policy", example = "12345")
     private String policyId;
 
+    @Schema(description = "Date and time when the request was updated", example = "2024-08-01T14:30:00Z")
+    private Date updatedDateTime;
+
 }

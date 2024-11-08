@@ -13,7 +13,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
 
     @Query(value = "SELECT new PartnerPolicyRequestSummaryEntity(" +
             "ppr.id, ppr.partnerId, p.name, p.partnerTypeCode, p.policyGroup.name, ppr.policyId, ap.name, " +
-            "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail) " +
+            "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime) " +
             "FROM PartnerPolicyRequestV2 ppr " +
             "LEFT JOIN ppr.policy ap " +
             "LEFT JOIN ppr.partner p " +
