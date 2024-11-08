@@ -13,10 +13,12 @@ Partnermanagement module contains following services:
 Refer to [SQL scripts](db_scripts).
 
 ## Build & run (for developers)
-The project requires JDK 1.21. 
+The project requires JDK 1.21.
+and mvn version - 3.9.6
+
 1. Build and install:
     ```
-    $ cd kernel
+    $ cd partner
     $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
     ```
    
@@ -51,7 +53,7 @@ defined here.
    <dependency>
        <groupId>io.mosip.kernel</groupId>
        <artifactId>kernel-auth-adapter</artifactId>
-       <version>${kernel.auth.adaptor.version}</version>
+       <version>${kernel.auth.adapter.version}</version>
    </dependency>
    ```
 
