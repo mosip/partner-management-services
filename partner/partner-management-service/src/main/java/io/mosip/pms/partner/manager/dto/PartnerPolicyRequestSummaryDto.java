@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 public class PartnerPolicyRequestSummaryDto {
 
-    @Schema(description = "Unique identifier for the partner", example = "partner123")
+    @Schema(description = "Unique identifier for the partner policy mapping request", example = "1213")
     private String id;
 
     @Schema(description = "Unique identifier for the partner", example = "partner123")

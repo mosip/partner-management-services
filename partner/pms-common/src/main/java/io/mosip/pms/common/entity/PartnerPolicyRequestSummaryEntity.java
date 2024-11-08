@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @SqlResultSetMapping(
-        name = "Mapping.PolicyRequestSummaryEntity",
+        name = "Mapping.PartnerPolicyRequestSummaryEntity",
         classes = { @ConstructorResult(
                 targetClass = PartnerPolicyRequestSummaryEntity.class,
                 columns = {
