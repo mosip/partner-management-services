@@ -20,7 +20,7 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.manager.dto.FilterDto;
+import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
 import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -41,7 +41,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -61,7 +60,6 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
 @SpringBootTest
@@ -1205,18 +1203,18 @@ public class PartnerManagementServiceImplTest {
 		String sortType = "desc";
 		int pageNo = 0;
 		int pageSize = 8;
-		FilterDto filterDto = new FilterDto();
-		filterDto.setPartnerId("abc");
-		filterDto.setPartnerTypeCode("Auth_Partner");
-		filterDto.setOrganizationName("ABC");
-		filterDto.setEmailAddress("abc");
-		filterDto.setCertificateUploadStatus("not_uploaded");
-		filterDto.setPolicyGroupName("default");
-		filterDto.setIsActive(false);
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
-		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
 
 	@Test
