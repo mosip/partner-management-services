@@ -41,4 +41,10 @@ public class PartnerPolicyRequestSummaryDto {
     @Schema(description = "Date and time when the request was updated", example = "2024-08-01T14:30:00Z")
     private Date updatedDateTime;
 
+    @Schema(description = "A description of the policy", example = "policy for compliance")
+    private String policyNameDescription;
+
+    @Schema(description = "A description of policy group", example = "contains all compliance policies")
+    private String policyGroupDescription;
+
 }
