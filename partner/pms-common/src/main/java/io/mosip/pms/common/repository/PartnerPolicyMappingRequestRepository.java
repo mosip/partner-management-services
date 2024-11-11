@@ -12,16 +12,17 @@ import org.springframework.stereotype.Repository;
 public interface PartnerPolicyMappingRequestRepository extends BaseRepository<PartnerPolicyRequestSummaryEntity, String> {
 
     @Query(value = "SELECT new PartnerPolicyRequestSummaryEntity(" +
-            "ppr.id, ppr.partnerId, p.name, p.partnerTypeCode, p.policyGroup.name, ppr.policyId, ap.name, " +
-            "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime) " +
+            "ppr.id, ppr.partnerId, p.name, p.partnerTypeCode, pg.name, ppr.policyId, ap.name, " +
+            "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime, ap.descr, pg.desc) " +
             "FROM PartnerPolicyRequestV2 ppr " +
             "LEFT JOIN ppr.policy ap " +
             "LEFT JOIN ppr.partner p " +
+            "LEFT JOIN p.policyGroup pg " +
             "WHERE (:partnerId IS NULL OR lower(ppr.partnerId) LIKE %:partnerId%) " +
             "AND (:partnerTypeCode IS NULL OR lower(p.partnerTypeCode) LIKE %:partnerTypeCode%) " +
             "AND (:organizationName IS NULL OR lower(p.name) LIKE %:organizationName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
-            "AND (:policyGroupName IS NULL OR lower(p.policyGroup.name) LIKE %:policyGroupName%) " +
+            "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:requestDetail IS NULL OR lower(ppr.requestDetail) LIKE %:requestDetail%) " +
             "AND (:statusCode IS NULL OR ppr.statusCode = :statusCode) "
     )
