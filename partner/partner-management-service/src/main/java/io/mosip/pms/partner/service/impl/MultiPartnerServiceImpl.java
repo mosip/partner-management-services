@@ -207,8 +207,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     policyDto.setPolicyName(policyDetails.getName());
 
                                     policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
-                                    policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes());
-                                    policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes());
+                                    policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes() != null ? partnerPolicyRequest.getUpdDtimes().toLocalDateTime() : null);
+                                    policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes().toLocalDateTime());
                                     policyDto.setStatus(partnerPolicyRequest.getStatusCode());
                                     policyDtoList.add(policyDto);
                                 } else {
@@ -458,7 +458,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                 apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
                                 apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
                                 apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
-                                apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes());
+                                apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
                                 apiKeyResponseDtoList.add(apiKeyResponseDto);
                             }
                         }
