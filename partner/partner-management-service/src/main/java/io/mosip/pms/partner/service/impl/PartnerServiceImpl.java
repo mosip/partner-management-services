@@ -813,22 +813,28 @@ public class PartnerServiceImpl implements PartnerService {
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 	}
+
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonProcessingException {
 		validateUser(certDownloadRequestDto);
 		// Fetch partner from DB
-		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-		if (partnerFromDb.isEmpty()) {
-			LOGGER.error("Partner not found with id {}", certDownloadRequestDto.getPartnerId());
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
+		Optional<Partner> partnerFromDb = getPartner(certDownloadRequestDto);
 		Partner partner = partnerFromDb.get();
 		validateCertificateAlias(certDownloadRequestDto, partner);
 
 		// Retrieve the certificate
 		return partnerHelper.getCertificate(partner.getCertificateAlias(),
 				"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+	}
+
+	private Optional<Partner> getPartner(PartnerCertDownloadRequestDto certDownloadRequestDto) {
+		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+		if (partnerFromDb.isEmpty()) {
+			LOGGER.error("Partner not found with id {}", certDownloadRequestDto.getPartnerId());
+			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		return partnerFromDb;
 	}
 
 	@Override
@@ -838,12 +844,7 @@ public class PartnerServiceImpl implements PartnerService {
 			validateUser(certDownloadRequestDto);
 
 			// Fetch partner from DB
-			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-			if (partnerFromDb.isEmpty()) {
-				LOGGER.error("Partner not found with id {}", certDownloadRequestDto.getPartnerId());
-				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-			}
+			Optional<Partner> partnerFromDb = getPartner(certDownloadRequestDto);
 			Partner partner = partnerFromDb.get();
 			validateCertificateAlias(certDownloadRequestDto, partner);
 
