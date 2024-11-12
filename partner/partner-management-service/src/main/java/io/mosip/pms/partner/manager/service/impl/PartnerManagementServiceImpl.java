@@ -72,6 +72,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String FTM_PROVIDER = "FTM_Provider";
+	private static final String APPROVED = "approved";
 
 	@Value("${mosip.pms.api.id.all.partners.get}")
 	private String getAllPartnersId;
@@ -206,6 +207,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		Partner updatePartnerObject = partnerFromDb.get();
+		if (updatePartnerObject.getApprovalStatus().equals(APPROVED) && !updatePartnerObject.getIsActive()){
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_ALREADY_DEACTIVATED.getErrorCode(),
+					ErrorCode.PARTNER_ALREADY_DEACTIVATED.getErrorMessage());
+		}
 		updatePartnerObject.setUpdBy(getUser());
 		updatePartnerObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();		

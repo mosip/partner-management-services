@@ -85,6 +85,7 @@ public enum ErrorCode {
 	UNABLE_TO_DECODE_CERTIFICATE("PMS_CERTIFICATE_ERROR_006", "Unable to decode the certificate data"),
 	PARTNER_DOES_NOT_BELONG_TO_THE_USER("PMS_CERTIFICATE_ERROR_007", "The given partner ID does not belong to the user.So unable to get the original partner certificates"),
 	CERTIFICATE_FETCH_ERROR("PMS_CERTIFICATE_ERROR_008","Error while fetching certificate."),
+	DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR("PMS_CERTIFICATE_ERROR_009","Unable to download the certificate for a deactivated partner"),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
 	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
 	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),
@@ -135,7 +136,8 @@ public enum ErrorCode {
 	FTM_NOT_EXISTS("PMS_FTM_ERROR_005", "FTM Details do not exists."),
 	FTM_NOT_ASSOCIATED_WITH_USER("PMS_FTM_ERROR_006", "FTM is not associated with user."),
 	FTM_ALREADY_DEACTIVATED("PMS_FTM_ERROR_007", "The selected FTM is already deactivated."),
-	DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR("PMS_FTM_ERROR_008", "The selected FTM must be pending_approval or approved"),
+	DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS("PMS_FTM_ERROR_008", "The selected FTM must have a status of either pending_approval or approved."),
+	DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR("PMS_FTM_ERROR_009", "Cannot download the certificate for a deactivated FTM"),
 	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate"),
 	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status.");
 	/**

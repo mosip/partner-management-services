@@ -597,17 +597,22 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
 			checkIfPartnerIsNotActive(partnerDetails);
 
-			// Download only if the FTM is approved or pending_approval status.
-			if (ftm.getApprovalStatus().equals(PENDING_APPROVAL) || (ftm.getApprovalStatus().equals(APPROVED) && ftm.isActive())) {
-				OriginalCertDownloadResponseDto responseObject = null;
-				responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-				partnerHelper.populateCertificateExpiryState(responseObject);
-				responseWrapper.setResponse(responseObject);
-			} else {
+			if (!(ftm.getApprovalStatus().equals(PENDING_APPROVAL) || ftm.getApprovalStatus().equals(APPROVED))) {
 				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
-				throw new PartnerServiceException(ErrorCode.DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR.getErrorCode(),
-						ErrorCode.DOWNLOAD_ORIGINAL_FTM_CERTIFICATE_ERROR.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS.getErrorCode(),
+						ErrorCode.DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS.getErrorMessage());
 			}
+			if (ftm.getApprovalStatus().equals(APPROVED) && !ftm.isActive()) {
+				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
+				throw new PartnerServiceException(ErrorCode.DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR.getErrorCode(),
+						ErrorCode.DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR.getErrorMessage());
+			}
+
+			// Download only if the FTM is approved or pending_approval status.
+			OriginalCertDownloadResponseDto responseObject = null;
+			responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+			partnerHelper.populateCertificateExpiryState(responseObject);
+			responseWrapper.setResponse(responseObject);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));

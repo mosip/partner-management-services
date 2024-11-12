@@ -611,7 +611,6 @@ public class PartnerManagementServiceImplTest {
 		req.setStatus("Active");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
-		partner.get().setIsActive(false);
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
@@ -1105,6 +1104,7 @@ public class PartnerManagementServiceImplTest {
 		part.setCertificateAlias("abcd");
 		part.setPolicyGroupId("234");
 		part.setPartnerTypeCode("Auth");
+		part.setApprovalStatus("approved");
 		return part;
 	}
 
