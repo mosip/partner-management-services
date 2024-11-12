@@ -149,6 +149,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private static final String FTM = "FTM";
 
+	private static final String APPROVED = "approved";
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -249,7 +251,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private int maxMobileNumberLength;
 
 	private String emptySpacesRegex = ".*\\s.*";
-	
+
 	@Override
 	public PartnerResponse registerPartner(PartnerRequestDto request) {
 		// Registered partner cannot create another partner 
@@ -812,27 +814,57 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 	}
 	@Override
-	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
-			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		return getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonProcessingException {
+		validateUser(certDownloadRequestDto);
+		// Fetch partner from DB
+		Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+		if (partnerFromDb.isEmpty()) {
+			LOGGER.error("Partner not found with id {}", certDownloadRequestDto.getPartnerId());
+			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+		Partner partner = partnerFromDb.get();
+		validateCertificateAlias(certDownloadRequestDto, partner);
+
+		// Retrieve the certificate
+		return partnerHelper.getCertificate(partner.getCertificateAlias(),
+				"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
 	}
 
 	@Override
-	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto)
-			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) {
 		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			OriginalCertDownloadResponseDto responseDto = null;
-			responseDto = getCertificateFromKeyMgr(certDownloadRequestDto, "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+			validateUser(certDownloadRequestDto);
+
+			// Fetch partner from DB
+			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
+			if (partnerFromDb.isEmpty()) {
+				LOGGER.error("Partner not found with id {}", certDownloadRequestDto.getPartnerId());
+				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			Partner partner = partnerFromDb.get();
+			validateCertificateAlias(certDownloadRequestDto, partner);
+
+			// Check if the partner is deactivated
+			if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+				throw new PartnerServiceException(ErrorCode.DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR.getErrorCode(),
+						ErrorCode.DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR.getErrorMessage());
+			}
+
+			// Retrieve the certificate
+			OriginalCertDownloadResponseDto responseDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
+					"pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
+
+			// Populate certificate expiry state
 			partnerHelper.populateCertificateExpiryState(responseDto);
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getOriginalPartnerCertificate method of PartnerServiceImpl - " + ex.getMessage());
+			LOGGER.error("sessionId", "idType", "id", "In getOriginalPartnerCertificate method - " + ex.getMessage(), ex);
 			String errorCode = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CERTIFICATE_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
@@ -842,44 +874,45 @@ public class PartnerServiceImpl implements PartnerService {
 		return responseWrapper;
 	}
 
-	protected <T> T getCertificateFromKeyMgr(PartnerCertDownloadRequestDto certDownloadRequestDto,
-										  String uriProperty, Class<T> responseType)
-			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+	private void validateCertificateAlias(PartnerCertDownloadRequestDto certDownloadRequestDto, Partner partner) {
+		// Check if certificate alias exists
+		if (partner.getCertificateAlias() == null || partner.getCertificateAlias().isEmpty()) {
+			LOGGER.error("Certificate not uploaded for partner {}", certDownloadRequestDto.getPartnerId());
+			throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
+					ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
+		}
+	}
+
+	private void validateUser(PartnerCertDownloadRequestDto certDownloadRequestDto) {
 		String userId = getUserId();
+
+		// Check if user ID exists in pms
 		List<Partner> partnerList = partnerRepository.findByUserId(userId);
 		if (partnerList.isEmpty()) {
-			LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
+			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
 			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 		}
-		boolean isPartnerBelongsToTheUser = false;
-		for (Partner partner: partnerList) {
-			if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
-				isPartnerBelongsToTheUser = true;
-			}
-		}
-		T responseObject = null;
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-		if (isPartnerBelongsToTheUser || isAdmin) {
-			Optional<Partner> partnerFromDb = partnerRepository.findById(certDownloadRequestDto.getPartnerId());
-			if (partnerFromDb.isEmpty()) {
-				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
-				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-			}
-			if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
-				LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());
-				throw new PartnerServiceException(ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorCode(),
-						ErrorCode.CERTIFICATE_NOT_UPLOADED_EXCEPTION.getErrorMessage());
-			}
-			responseObject = partnerHelper.getCertificate(partnerFromDb.get().getCertificateAlias(), uriProperty, responseType);
-		} else {
-			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorMessage());
-		}
 
-		return responseObject;
+		// Check if the user is an admin
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+
+		// If not admin, check if the partner belongs to the user
+		if (!isAdmin) {
+			boolean isPartnerBelongsToUser = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
+					isPartnerBelongsToUser = true;
+					break;
+				}
+			}
+
+			if (!isPartnerBelongsToUser) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_DOES_NOT_BELONG_TO_THE_USER.getErrorMessage());
+			}
+		}
 	}
 
 	@Override
