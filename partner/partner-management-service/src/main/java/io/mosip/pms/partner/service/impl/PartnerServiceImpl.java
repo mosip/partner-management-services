@@ -149,6 +149,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	private static final String FTM = "FTM";
 
+	private static final String APPROVED = "approved";
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -249,7 +251,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private int maxMobileNumberLength;
 
 	private String emptySpacesRegex = ".*\\s.*";
-	
+
 	@Override
 	public PartnerResponse registerPartner(PartnerRequestDto request) {
 		// Registered partner cannot create another partner 
@@ -866,6 +868,10 @@ public class PartnerServiceImpl implements PartnerService {
 				LOGGER.error("Partner not exists with id {}", certDownloadRequestDto.getPartnerId());
 				throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
 						ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+			if (partnerFromDb.get().getApprovalStatus().equals(APPROVED) && !partnerFromDb.get().getIsActive()){
+				throw new PartnerServiceException(ErrorCode.DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR.getErrorCode(),
+						ErrorCode.DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR.getErrorMessage());
 			}
 			if (partnerFromDb.get().getCertificateAlias() == null || partnerFromDb.get().getCertificateAlias().isEmpty()) {
 				LOGGER.error("Cert is not uploaded for given partner {}", certDownloadRequestDto.getPartnerId());

@@ -135,6 +135,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                             throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
                                     ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
                         }
+                        if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+                            LOGGER.info("Partner Id is null or empty for user id : " + userId);
+                            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                                    ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+                        }
                         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
                         requestDto.setPartnerId(partner.getId());
                         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerServiceImpl.getPartnerCertificate(requestDto);
@@ -146,11 +151,13 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         certificateDto.setCertificateExpiryDateTime(cert.getNotAfter());
                         certificateDto.setPartnerId(partner.getId());
                         certificateDto.setPartnerType(partner.getPartnerTypeCode());
+                        certificateDto.setIsPartnerActive(true);
                     } catch (PartnerServiceException ex) {
                         LOGGER.info("Could not fetch partner certificate :" + ex.getMessage());
                         certificateDto.setIsCertificateAvailable(false);
                         certificateDto.setPartnerId(partner.getId());
                         certificateDto.setPartnerType(partner.getPartnerTypeCode());
+                        certificateDto.setIsPartnerActive(false);
                     }
                     certificateDtoList.add(certificateDto);
                 }
