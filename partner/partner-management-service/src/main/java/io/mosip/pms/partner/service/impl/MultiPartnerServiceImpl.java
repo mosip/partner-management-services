@@ -152,6 +152,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         certificateDto.setPartnerId(partner.getId());
                         certificateDto.setPartnerType(partner.getPartnerTypeCode());
                     }
+                    if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+                        certificateDto.setIsPartnerActive(false);
+                    } else {
+                        certificateDto.setIsPartnerActive(true);
+                    }
                     certificateDtoList.add(certificateDto);
                 }
                 responseWrapper.setResponse(certificateDtoList);
