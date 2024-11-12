@@ -1,6 +1,7 @@
 UpdateOIDCClient:
    Pms_UpdateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
+      description: Update OIDC Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: put

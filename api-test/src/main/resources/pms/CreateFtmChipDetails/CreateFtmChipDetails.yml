@@ -1,6 +1,7 @@
 CreateFtmChipDetails:
    Pms_CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/ftpchipdetail
+      description: Create Ftm Chip Details
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: post

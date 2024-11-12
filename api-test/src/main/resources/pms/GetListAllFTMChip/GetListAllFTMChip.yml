@@ -1,6 +1,7 @@
 GetListAllFTMChip:
    Pms_GetListAllFTMChip_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/ftm-chip-details
+      description: Get List of All FTM chip
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get

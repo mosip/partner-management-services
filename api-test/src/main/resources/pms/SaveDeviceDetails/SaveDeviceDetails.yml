@@ -1,6 +1,7 @@
 SaveDeviceDetails:
    Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
+      description: Save Device Details
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -23,6 +24,7 @@ SaveDeviceDetails:
 
    Pms_SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
+      description: Save Device Details
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post

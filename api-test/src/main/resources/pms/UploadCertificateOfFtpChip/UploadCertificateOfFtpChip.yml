@@ -1,6 +1,7 @@
 UploadCertificateOfFtpChip:
    Pms_UploadCertificate_AllValid_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      description: Upload FTP chip Certificate
       role: partnerrevampftm
       restMethod: post
       checkErrorsOnlyInResponse: true

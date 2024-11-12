@@ -1,6 +1,7 @@
 DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      description: Device SubType Filter
       role: partnerrevampdevice
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter

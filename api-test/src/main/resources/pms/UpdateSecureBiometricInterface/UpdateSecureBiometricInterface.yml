@@ -1,6 +1,7 @@
 UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_DeviceProvider_AllValid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Update Secure Biometric Interface
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: patch

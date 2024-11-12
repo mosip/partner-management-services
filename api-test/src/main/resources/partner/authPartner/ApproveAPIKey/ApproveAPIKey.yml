@@ -1,6 +1,7 @@
 ApproveAPIKey:
    Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+	  description: Approve/Reject Partner APIKey Req
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -16,6 +17,7 @@ ApproveAPIKey:
 
    Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+	  description: Approve/Reject Partner APIKey Req without status
       role: partner
       restMethod: put
       inputTemplate: partner/authPartner/ApproveAPIKey/approveAPIKey

@@ -1,6 +1,7 @@
 SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Save Secure Biometric Interface
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -20,6 +21,7 @@ SaveSecureBiometricInterfaceCreateDto:
 
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
+      description: Save Secure Biometric Interface
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post

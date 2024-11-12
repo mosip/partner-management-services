@@ -1,6 +1,7 @@
 GetOriginalFtmCertifacte:
    Pms_GetOriginalPartnerCertificates_allValid_smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      description: Get Original Partner Certificates
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get

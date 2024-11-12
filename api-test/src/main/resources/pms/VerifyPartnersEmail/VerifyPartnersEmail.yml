@@ -45,6 +45,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_auth:
       endPoint: /v1/partnermanager/partners/email/verify
+      description: Verify Partners Email
       role: batch
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -62,6 +63,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_missing_email:
       endPoint: /v1/partnermanager/partners/email/verify
+      description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -79,6 +81,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_invalid_email:
       endPoint: /v1/partnermanager/partners/email/verify
+      description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail

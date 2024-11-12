@@ -1,6 +1,7 @@
 updatePartnerDetails:
    Partner_UpdatePartnerDetails_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/Tech-123  
+      endPoint: /v1/partnermanager/partners/Tech-123
+	  description: update Partner Details
       role: partner
       restMethod: put
       inputTemplate: partner/authPartner/UpdatePartner/updatePartner
@@ -17,6 +18,7 @@ updatePartnerDetails:
     
    Partner_UpdatePartnerDetails_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/Tech-1231234
+	  description: update Partner Details for invalid partner Id
       role: partner
       restMethod: put
       inputTemplate: partner/authPartner/UpdatePartner/updatePartner
@@ -36,6 +38,7 @@ updatePartnerDetails:
 
    Partner_UpdatePartnerDetails_Missing_InputParameter_Address:
       endPoint: /v1/partnermanager/partners/Tech-123
+	  description : update Partner Details without address field
       role: partner
       restMethod: put
       inputTemplate: partner/authPartner/UpdatePartner/updatePartner
@@ -55,6 +58,7 @@ updatePartnerDetails:
 
    Partner_UpdatePartnerDetails_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners/Tech-123
+	  description: Update Partner Details without contact number
       role: partner
       restMethod: put
       inputTemplate: partner/authPartner/UpdatePartner/updatePartner

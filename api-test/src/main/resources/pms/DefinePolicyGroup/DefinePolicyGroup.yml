@@ -62,6 +62,7 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies/group/new
+      description: Creating a Policy Group
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
@@ -81,6 +82,7 @@ definePolicyGroup:
 }'
    Pms_DefinePolicyGroup_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies/group/new
+      description: Creating a Policy Group
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
@@ -101,6 +103,7 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Missing_InputParameter_requesttime:
       endPoint: /v1/policymanager/policies/group/new
+      description: Creating a policy group
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
@@ -121,6 +124,7 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Without_Auth:
       endPoint: /v1/policymanager/policies/group/new
+      description: Creating a policy group
       role: temp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup

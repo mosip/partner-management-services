@@ -1,6 +1,7 @@
 GetPartnerCert:
    Partner_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+	  description: Get Partner Certificate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -13,6 +14,7 @@ GetPartnerCert:
 }'
    Partner_GetPartnerCert_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+	  description: Get partner certificate for invalid partnerId
       role: partner
       restMethod: get
       inputTemplate: partner/authPartner/GetCertificate/getCert
@@ -29,6 +31,7 @@ GetPartnerCert:
 }'
    Partner_GetPartnerCert_invalid_certificate_doesnot_exist:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+	  description: Get partner certificate for invalid partnerId which doesn't exist
       role: partner
       restMethod: get
       inputTemplate: partner/authPartner/GetCertificate/getCert

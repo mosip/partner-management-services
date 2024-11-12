@@ -1,6 +1,7 @@
 DeactivateFtm:
    Pms_DeactivateFtm_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/ftpchipdetail/deactivate-ftm
+      description: Deactivate Ftm
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -37,6 +37,7 @@ GetAllDeviceTypes:
     
       partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+	  description: Get device type
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter

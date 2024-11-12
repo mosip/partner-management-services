@@ -1,6 +1,7 @@
 GetOriginalFtmCertifacteAfterDeactiveFtm:
    Pms_GetOriginalFtmCertifacteAfterDeactiveFtm_allValid_smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      description: Get Original Ftm Certifacte After Deactivate Ftm
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get

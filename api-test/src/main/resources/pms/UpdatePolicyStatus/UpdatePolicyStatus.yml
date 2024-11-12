@@ -18,6 +18,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -34,6 +35,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -55,6 +57,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -76,6 +79,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -96,6 +100,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -116,6 +121,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+	  description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus

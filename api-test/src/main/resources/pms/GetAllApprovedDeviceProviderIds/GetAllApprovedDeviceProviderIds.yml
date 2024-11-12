@@ -1,6 +1,7 @@
 GetAllApprovedDeviceProviderIds:
    Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
       endPoint: /v1/partnermanager/partners/approved-device-provider-ids
+      description: Get All Approved Device ProviderId
       role: partnerrevampdevice
       restMethod: get
       inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds

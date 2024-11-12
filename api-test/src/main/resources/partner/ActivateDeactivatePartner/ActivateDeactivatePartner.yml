@@ -1,6 +1,8 @@
 ActivateDeactivatePartner:
    Partner_ActivateDeactivatePartner_deactivate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description : Deactivate all partners
+	  uniqueIdentifier: TC_PMS_Activatepartner_01
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -16,6 +18,8 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_MISP3:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description: Deactivate partner
+	  uniqueIdentifier: TC_ActivateDeactivatePartner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -31,6 +35,7 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_Tech-1233:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description: Deactivate Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -47,6 +52,7 @@ ActivateDeactivatePartner:
 
    Partner_ActivateDeactivatePartner_deactivate_Tech_321:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description: Deactivate partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -61,6 +67,7 @@ ActivateDeactivatePartner:
 }'
    Partner_ActivateDeactivatePartner_activate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description: Activate All partners
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -75,6 +82,7 @@ ActivateDeactivatePartner:
 }'
    Partner_ActivateDeactivatePartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
+	  description: Deactivate invalid partner ID
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner

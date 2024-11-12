@@ -1,6 +1,7 @@
 RequestAPIKeyCredentialPartner:
    Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
+	  description: Request API Key for Credential Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -15,6 +16,7 @@ RequestAPIKeyCredentialPartner:
     }'
    Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
+	  description: Reject API Key for Credential Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -29,6 +31,7 @@ RequestAPIKeyCredentialPartner:
     }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
+	  description: Request API Key for Credential Partner for invalid policy name
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -48,6 +51,7 @@ RequestAPIKeyCredentialPartner:
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
+	  description: Request API Key for Credential Partner with invalid usecase description
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -67,6 +71,7 @@ RequestAPIKeyCredentialPartner:
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
+	  description: Request API Key for Credential Partner with invalid policyname
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

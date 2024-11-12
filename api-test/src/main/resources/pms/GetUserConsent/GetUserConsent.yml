@@ -1,6 +1,7 @@
 GetUserConsent:
    Pms_GetUserConsent_allValid_smoke:
       endPoint: /v1/partnermanager/users/user-consent
+      description: Get User Consent
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
