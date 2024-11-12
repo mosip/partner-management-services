@@ -47,6 +47,9 @@ public class UserController {
 	@Value("${mosip.pms.created.date.max.year}")
 	private String maxAllowedCreatedYear;
 
+	@Value("${mosip.pms.pagination.items.per.page}")
+	private String itemsPerPage;
+
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
 
@@ -102,6 +105,7 @@ public class UserController {
 		configMap.put("axiosTimeout", axiosTimeout);
 		configMap.put("maxAllowedExpiryYear", maxAllowedExpiryYear);
 		configMap.put("maxAllowedCreatedYear", maxAllowedCreatedYear);
+		configMap.put("itemsPerPage", itemsPerPage);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
