@@ -9,6 +9,8 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -66,7 +68,7 @@ public class PartnerManagementController {
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
-	
+
 
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
@@ -279,33 +281,90 @@ public class PartnerManagementController {
 			@RequestParam(value = "isActive", required = false) Boolean isActive,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@Parameter(
+					description = "Status of certificate upload",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
+			)
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateGetAllPartnersRequestParameters(sortFieldName, sortType, pageNo, pageSize);
-		FilterDto filterDto = new FilterDto();
+		partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		if (partnerId != null) {
+			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerType != null) {
+			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		}
+		if (orgName != null) {
+			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (certificateUploadStatus != null) {
+			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
+		}
+		if (emailAddress != null) {
+			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
+		}
+		if (isActive != null) {
+			partnerFilterDto.setIsActive(isActive);
+		}
+		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
+	@GetMapping(value = "/partner-policy-requests")
+	@Operation(summary = "Get all partner policy mapping requests", description = "This endpoint will fetch a list of all the partner policy mapping requests")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "requestDetails", required = false) String requestDetails,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@Parameter(
+					description = "Status of request",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "InProgress"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@RequestParam(value = "partnerTypeCode", required = false) String partnerTypeCode
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
 		}
-		if (partnerType != null) {
-			filterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		if (requestDetails != null) {
+			filterDto.setRequestDetails(requestDetails.toLowerCase());
 		}
 		if (orgName != null) {
 			filterDto.setOrganizationName(orgName.toLowerCase());
 		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (policyName != null) {
+			filterDto.setPolicyName(policyName.toLowerCase());
+		}
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
 		}
-		if (certificateUploadStatus != null) {
-			filterDto.setCertificateUploadStatus(certificateUploadStatus);
+		if (partnerTypeCode != null) {
+			filterDto.setPartnerTypeCode(partnerTypeCode.toLowerCase());
 		}
-		if (emailAddress != null) {
-			filterDto.setEmailAddress(emailAddress.toLowerCase());
-		}
-		if (isActive != null) {
-			filterDto.setIsActive(isActive);
-		}
-		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 }

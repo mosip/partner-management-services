@@ -3,7 +3,7 @@ package io.mosip.pms.partner.manager.dto;
 import lombok.Data;
 
 @Data
-public class FilterDto {
+public class PartnerFilterDto {
     private String partnerId;
     private String partnerTypeCode;
     private String organizationName;

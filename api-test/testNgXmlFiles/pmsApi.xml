@@ -381,6 +381,14 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllApprovedDeviceProviderIdsNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsNegativeScenarios.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 
 	<test name="SaveSecureBiometricInterfaceCreateDto">
 		<parameter name="ymlFile"
@@ -509,6 +517,14 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllApprovedFtmProviderNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderNegativeScenarios.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="CreateFtmChipDetails">
 		<parameter name="ymlFile"
 			value="pms/CreateFtmChipDetails/CreateFtmChipDetails.yml" />
@@ -540,6 +556,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetListAllFTMChipNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFTMChipNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="GetOriginalFtmCertifacte">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
@@ -555,6 +578,14 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="DeactivateFtmNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtmNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>	
 	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />

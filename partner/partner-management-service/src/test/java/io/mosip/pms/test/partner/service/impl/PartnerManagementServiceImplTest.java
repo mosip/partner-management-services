@@ -15,6 +15,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.kernel.openid.bridge.model.MosipUserDto;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
+import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -30,10 +37,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -41,21 +48,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicy;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
-import io.mosip.pms.common.repository.MispLicenseRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
@@ -67,7 +60,6 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
-import io.mosip.pms.test.PartnerManagementServiceTest;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
 @SpringBootTest
@@ -93,6 +85,9 @@ public class PartnerManagementServiceImplTest {
 	
 	@Mock
 	PolicyGroupRepository policyGroupRepository;
+
+	@Mock
+	PartnerSummaryRepository partnerSummaryRepository;
 	
 	@Mock
 	AuthPolicyRepository authPolicyRepository;
@@ -616,7 +611,6 @@ public class PartnerManagementServiceImplTest {
 		req.setStatus("Active");
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(getPartner());
-		partner.get().setIsActive(false);
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
@@ -1110,6 +1104,7 @@ public class PartnerManagementServiceImplTest {
 		part.setCertificateAlias("abcd");
 		part.setPolicyGroupId("234");
 		part.setPartnerTypeCode("Auth");
+		part.setApprovalStatus("approved");
 		return part;
 	}
 
@@ -1194,6 +1189,50 @@ public class PartnerManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 		partnerManagementImpl.getPartnerDetails("123");
+	}
+
+	@Test
+	public void getAllPartnersTest() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<PartnerSummaryEntity> page = null;
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+	}
+
+	@Test
+	public void getAllPartnersTestException() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<PartnerSummaryEntity> page = null;
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

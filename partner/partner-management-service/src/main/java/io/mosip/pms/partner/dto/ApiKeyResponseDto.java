@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -39,5 +39,5 @@ public class ApiKeyResponseDto {
     private String policyDescription;
 
     @Schema(description = "Date and time when the record was created", example = "2024-07-15T10:00:00Z")
-    private Date createdDateTime;
+    private LocalDateTime createdDateTime;
 }
