@@ -556,6 +556,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
 
 			ftm.setActive(false);
+			ftm.setUpdDtimes(LocalDateTime.now());
+			ftm.setUpdBy(getUserId());
 			FTPChipDetail updatedDetail = ftpChipDetailRepository.save(ftm);
 			ftmDetailResponseDto.setFtmId(updatedDetail.getFtpChipDetailId());
 			ftmDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
