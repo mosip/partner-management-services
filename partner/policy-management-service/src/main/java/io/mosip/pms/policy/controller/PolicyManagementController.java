@@ -351,7 +351,7 @@ public class PolicyManagementController {
 		return policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdeactivatepolicy())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicy())")
 	@PatchMapping(value = "/{policyId}")
 	@Operation(summary = "Service to deactivate policy", description = "Service to deactivate policy")
 	@ApiResponses(value = {

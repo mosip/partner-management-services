@@ -160,7 +160,7 @@ public class PolicyManagementService {
 	private String getPoliciesId;
 
 	@Value("${mosip.pms.api.id.deactivate.policy.patch}")
-	private String getDeactivatePolicyId;
+	private String patchDeactivatePolicyId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -1216,7 +1216,7 @@ public class PolicyManagementService {
 			String errorMessage = ErrorMessages.POLICY_DEACTIVATION_ERROR.getErrorMessage();
 			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getDeactivatePolicyId);
+		responseWrapper.setId(patchDeactivatePolicyId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

@@ -55,5 +55,5 @@ public class AuthorizedRolesDto {
 
 	private List<String> getallpolicies;
 
-	private List<String> getdeactivatepolicy;
+	private List<String> patchdeactivatepolicy;
 }
