@@ -337,6 +337,7 @@ public class PartnerManagementController {
 					schema = @Schema(allowableValues = {"approved", "rejected", "InProgress"})
 			)
 			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyId", required = false) String policyId,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerTypeCode", required = false) String partnerTypeCode
@@ -354,6 +355,9 @@ public class PartnerManagementController {
 		}
 		if (status != null) {
 			filterDto.setStatus(status);
+		}
+		if (policyId != null) {
+			filterDto.setPolicyId(policyId.toLowerCase());
 		}
 		if (policyName != null) {
 			filterDto.setPolicyName(policyName.toLowerCase());
