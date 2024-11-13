@@ -1257,7 +1257,6 @@ public class PolicyServiceTest {
 		filterDto.setPolicyName("abc");
 		filterDto.setPolicyDescription("desc");
 		filterDto.setPolicyGroupName("default");
-		filterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PolicySummaryEntity> page = null;
 		when(policySummaryRepository.getSummaryOfAllPolicies(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
