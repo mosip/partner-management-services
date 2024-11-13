@@ -822,4 +822,13 @@ public class PolicyManagementControllerTest {
 				.thenReturn(responseWrapper);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", true);
 	}
+
+	@Test
+	public void deactivatePolicyTest() throws Exception {
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(policyManagementService.deactivatePolicy(anyString()))
+				.thenReturn(responseWrapper);
+		policyManagementController.deactivatePolicy("policy123");
+	}
 }

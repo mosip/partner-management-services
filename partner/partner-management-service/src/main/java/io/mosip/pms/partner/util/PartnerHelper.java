@@ -25,7 +25,6 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +37,31 @@ public class PartnerHelper {
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
 
-    public final Map<String, String> aliasToColumnMap = new HashMap<>();
+    public final Map<String, String> partnerAliasToColumnMap = new HashMap<>();
     {
-        aliasToColumnMap.put("partnerId", "id");
-        aliasToColumnMap.put("partnerType", "partnerTypeCode");
-        aliasToColumnMap.put("orgName", "name");
-        aliasToColumnMap.put("policyGroupId", "policyGroupId");
-        aliasToColumnMap.put("policyGroupName", "pg.name");
-        aliasToColumnMap.put("emailAddress", "emailId");
-        aliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
-        aliasToColumnMap.put("status", "approvalStatus");
-        aliasToColumnMap.put("isActive", "isActive");
-        aliasToColumnMap.put("createdDateTime", "crDtimes");
+        partnerAliasToColumnMap.put("partnerId", "id");
+        partnerAliasToColumnMap.put("partnerType", "partnerTypeCode");
+        partnerAliasToColumnMap.put("orgName", "name");
+        partnerAliasToColumnMap.put("policyGroupId", "policyGroupId");
+        partnerAliasToColumnMap.put("policyGroupName", "pg.name");
+        partnerAliasToColumnMap.put("emailAddress", "emailId");
+        partnerAliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
+        partnerAliasToColumnMap.put("status", "approvalStatus");
+        partnerAliasToColumnMap.put("isActive", "isActive");
+        partnerAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
+    public final Map<String, String> partnerPolicyMappingAliasToColumnMap = new HashMap<>();
+    {
+        partnerPolicyMappingAliasToColumnMap.put("partnerId", "partnerId");
+        partnerPolicyMappingAliasToColumnMap.put("partnerType", "p.partnerTypeCode");
+        partnerPolicyMappingAliasToColumnMap.put("orgName", "p.name");
+        partnerPolicyMappingAliasToColumnMap.put("policyId", "policyId");
+        partnerPolicyMappingAliasToColumnMap.put("policyGroupName", "p.policyGroup.name");
+        partnerPolicyMappingAliasToColumnMap.put("policyName", "ap.name");
+        partnerPolicyMappingAliasToColumnMap.put("status", "statusCode");
+        partnerPolicyMappingAliasToColumnMap.put("requestDetail", "requestDetail");
+        partnerPolicyMappingAliasToColumnMap.put("createdDateTime", "createdDateTime");
     }
 
     @Autowired
@@ -182,7 +194,7 @@ public class PartnerHelper {
         return false;
     }
 
-    public void validateGetAllPartnersRequestParameters(String sortFieldName, String sortType, int pageNo, int pageSize) {
+    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, int pageNo, int pageSize) {
         // Validate sortFieldName
         if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
             LOGGER.error("Invalid sort field name: " + sortFieldName);

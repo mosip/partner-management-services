@@ -184,5 +184,7 @@ public class AuthorizedRolesDto {
 	private List<String> getoriginalftmcertificate;
 
 	private List<String> getpartnerdetails;
+
+	private List<String> getallpartnerpolicymappingrequests;
 		
 }

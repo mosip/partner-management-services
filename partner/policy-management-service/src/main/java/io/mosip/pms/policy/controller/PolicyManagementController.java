@@ -57,6 +57,7 @@ import io.mosip.pms.policy.dto.ResponseWrapper;
 import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.dto.PolicySummaryDto;
 import io.mosip.pms.policy.dto.PolicyFilterDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -348,5 +349,17 @@ public class PolicyManagementController {
 			filterDto.setIsActive(isActive);
 		}
 		return policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicy())")
+	@PatchMapping(value = "/{policyId}")
+	@Operation(summary = "Service to deactivate policy", description = "Service to deactivate policy")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable String policyId) {
+		return policyManagementService.deactivatePolicy(policyId);
 	}
 }
