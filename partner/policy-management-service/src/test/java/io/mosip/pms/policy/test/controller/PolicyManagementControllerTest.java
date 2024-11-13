@@ -815,12 +815,11 @@ public class PolicyManagementControllerTest {
 		filterDto.setPolicyName("abc");
 		filterDto.setPolicyDescription("desc");
 		filterDto.setPolicyGroupName("default");
-		filterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
 		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
-		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", true);
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");
 	}
 
 	@Test
