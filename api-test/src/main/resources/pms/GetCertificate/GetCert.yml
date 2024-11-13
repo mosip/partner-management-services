@@ -2,6 +2,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+      uniqueIdentifier: TC_PMS_GetPartnerCert_01
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -16,6 +17,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+      uniqueIdentifier: TC_PMS_GetPartnerCert_02
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -30,6 +32,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+      uniqueIdentifier: TC_PMS_GetPartnerCert_03
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get

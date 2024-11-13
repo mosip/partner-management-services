@@ -2,6 +2,7 @@ GetConfiguration:
    Partner_GetConfiguration_allValid_smoke:
       endPoint: /v1/partnermanager/users/configs
       description: Get Configuration
+      uniqueIdentifier: TC_PMS_GetConfiguration_01
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

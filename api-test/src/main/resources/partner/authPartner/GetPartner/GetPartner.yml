@@ -1,7 +1,8 @@
 GetPartnerDetails: 
    Partner_GetPartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
-	  description: Get Partner details for invalid partnerId
+      uniqueIdentifier: TC_Partner_GetPartnerDetails_01
+      description: Get Partner details for invalid partnerId
       role: partner
       restMethod: get
       inputTemplate: partner/credentialPartner/GetPartner/getPartner
@@ -18,7 +19,8 @@ GetPartnerDetails:
 }'
    Partner_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
-	  description: Get Partner details for valid partnerId
+      uniqueIdentifier: TC_Partner_GetPartnerDetails_03
+      description: Get Partner details for valid partnerId
       role: partner
       restMethod: get
       inputTemplate: partner/authPartner/GetPartner/getPartner

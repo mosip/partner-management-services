@@ -1,7 +1,8 @@
 GetSbiDetailsList:
    Pms_GetSbiDetailsList_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/sbi-details
-      description: Get SBI details List
+      uniqueIdentifier: TC_PMS_GetSbiDetailsList_01
+      description: GetSbiDetailsList
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get

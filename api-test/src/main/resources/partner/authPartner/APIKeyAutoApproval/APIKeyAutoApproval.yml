@@ -1,7 +1,8 @@
 requetAPIKey:
    Partner_SubmitPartnerApiKeyRequest_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/apikey/request
-	  description: Submit Api key request for valid partner
+      uniqueIdentifier: TC_Partner_requestAPIkey_01
+      description: Submit Api key request for valid partner
       role: partner
       restMethod: patch 
       inputTemplate: partner/authPartner/APIKeyAutoApproval/apiKeyAutoApproval
@@ -18,7 +19,8 @@ requetAPIKey:
     
    Partner_SubmitPartnerApiKeyRequest_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/ABCD/apikey/request
-	  description: Submit Api key request for Invalid partnerId
+      uniqueIdentifier: TC_Partner_requestAPIkey_02
+      description: Submit Api key request for Invalid partnerId
       role: partner
       restMethod: patch 
       inputTemplate: partner/authPartner/APIKeyAutoApproval/apiKeyAutoApproval

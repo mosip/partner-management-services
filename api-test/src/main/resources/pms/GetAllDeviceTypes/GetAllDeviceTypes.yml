@@ -2,6 +2,7 @@ GetAllDeviceTypes:
    Pms_GetAllDeviceTypes_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
+      uniqueIdentifier: TC_PMS_GetAllDeviceTypes_01
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/GetAllDeviceTypes/GetAllDeviceTypes
@@ -38,6 +39,7 @@ GetAllDeviceTypes:
       partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
 	  description: Get device type
+	  uniqueIdentifier: TC_PMS_GetAllDeviceTypes_02
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter

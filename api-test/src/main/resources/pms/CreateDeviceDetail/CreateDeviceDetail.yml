@@ -2,6 +2,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
       role: partnerrevamp
       restMethod: post
       inputTemplate: pms/CreateDeviceDetail/CreateDeviceDetail

@@ -1,7 +1,8 @@
 RequestAPIKeyForAuthPartner:
    Partner_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
-	  description: Request APIKey For AuthPartner
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_01
+      description: Request APIKey For AuthPartner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post 
@@ -16,7 +17,8 @@ RequestAPIKeyForAuthPartner:
     }'
    Partner_SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
-	  description: Request APIKey For AuthPartner
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_02
+      description: Request APIKey For AuthPartner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post 
@@ -32,7 +34,8 @@ RequestAPIKeyForAuthPartner:
     
    Partner_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
       endPoint: /v1/partnermanager/partners/Tech-1233/policy/map
-	  description: Request API Key For AuthPartner for deactivated policy
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_03
+      description: Request API Key For AuthPartner for deactivated policy
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post 
@@ -53,7 +56,8 @@ RequestAPIKeyForAuthPartner:
     
    Partner_SubmitPartnerApiKeyRequest_Map_partner_partner_inprogress_state_Neg:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
-	  description: Request API Key For AuthPartner in inprogress status
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_04
+      description: Request API Key For AuthPartner in inprogress status
       role: partner
       restMethod: post 
       inputTemplate: partner/authPartner/RequestAPIKey/requestApiKey
@@ -73,7 +77,8 @@ RequestAPIKeyForAuthPartner:
 
    Partner_SubmitPartnerApiKeyRequest_invalid_policyName:
       endPoint: /v1/partnermanager/partners/Tech-123/policy/map
-	  description: Request API Key For AuthPartner invalid policy name
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_05
+      description: Request API Key For AuthPartner invalid policy name
       role: partner
       restMethod: post 
       inputTemplate: partner/authPartner/RequestAPIKey/requestApiKey
@@ -92,7 +97,8 @@ RequestAPIKeyForAuthPartner:
 }'
    Partner_SubmitPartnerApiKeyRequest_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/Tech-123wegf/policy/map
-	  description: Request API Key For invalid Partner Id
+      uniqueIdentifier: TC_Partner_RequestAPIKeyForAuthPartner_06
+      description: Request API Key For invalid Partner Id
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/RequestAPIKey/requestApiKey

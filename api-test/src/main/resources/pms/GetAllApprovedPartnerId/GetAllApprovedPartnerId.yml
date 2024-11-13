@@ -2,6 +2,7 @@ GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_allValid_smoke:
       endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
       description: Fetching all approved Partner Id
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerId_01
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId

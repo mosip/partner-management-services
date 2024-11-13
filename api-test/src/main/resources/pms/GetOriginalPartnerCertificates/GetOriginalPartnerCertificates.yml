@@ -1,7 +1,8 @@
 GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
-      description: Get Original Partner Certificates 
+      description: Get Original Partner Certificates
+      uniqueIdentifier: TC_PMS_GetOriginalPartnerCertificates_01
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -17,6 +18,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
       description: Get Original Partner Certificates
+      uniqueIdentifier: TC_PMS_GetOriginalPartnerCertificates_02
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -32,6 +34,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
       description: Get Original Partner Certificates
+      uniqueIdentifier: TC_PMS_GetOriginalPartnerCertificates_03
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get

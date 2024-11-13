@@ -2,6 +2,7 @@ GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_01
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get

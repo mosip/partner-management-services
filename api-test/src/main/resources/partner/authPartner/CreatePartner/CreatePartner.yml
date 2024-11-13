@@ -1,7 +1,8 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-	  description: Partner Self Registration
+      uniqueIdentifier: TC_Partner_createPartnerSelfRegistration_01
+      description: Partner Self Registration
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -23,7 +24,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
-	  description: Partner self Registration with deactivated Id
+      uniqueIdentifier: TC_Partner_createPartnerSelfRegistration_02
+      description: Partner self Registration with deactivated Id
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -45,7 +47,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
-	  description: Get API key for deactivated PId
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_03
+      description: Get API key for deactivated PId
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -67,7 +70,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_AlreadyExisting_Policy_Name:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration with existing policyname
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_04
+      description: Self Registration with existing policyname
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -92,7 +96,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_SpaceVAl_PartnerId_Neg:
       endPoint: /v1/partnermanager/partners
-	  description: Partner Self Registration with space 
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_05
+      description: Partner Self Registration with space 
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -117,7 +122,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_InActive_policyGroup:
       endPoint: /v1/partnermanager/partners
-	  description: Partner selfRegistration for Inactive policygroup
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_06
+      description: Partner selfRegistration for Inactive policygroup
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -142,7 +148,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_With_Existing_Email_Neg:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration with existing email
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_07
+      description: Self Registration with existing email
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -166,7 +173,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_AlreadyExists_invalid:
       endPoint: /v1/partnermanager/partners
-	  description: SelfRegistration with existing values
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_08
+      description: SelfRegistration with existing values
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -190,7 +198,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration passing update policy in partnerid
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_09
+      description: Self Registration passing update policy in partnerid
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -211,7 +220,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_Missing_InputParameter_PartnerId:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration without partnerId parameter
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_10
+      description: Self Registration without partnerId parameter
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -237,7 +247,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_address:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration with empty address
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_11
+      description: Self Registration with empty address
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -263,7 +274,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration without contact number
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_12
+      description: Self Registration without contact number
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -288,7 +300,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_emailId:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration without emailId
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_13
+      description: Self Registration without emailId
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -313,7 +326,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_partnerType:
       endPoint: /v1/partnermanager/partners
-	  description: Self Registration without partner type
+      uniqueIdentifier: TC_Partner_PartnerSelfRegistration_14
+      description: Self Registration without partner type
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
