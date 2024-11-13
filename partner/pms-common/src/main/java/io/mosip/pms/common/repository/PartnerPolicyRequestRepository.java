@@ -23,4 +23,7 @@ public interface PartnerPolicyRequestRepository extends JpaRepository<PartnerPol
 	
 	@Query(value = "select * from partner_policy_request ppr where ppr.part_id=?1 and ppr.policy_id=?2 and ppr.status_code=?3", nativeQuery = true )
 	List<PartnerPolicyRequest> findByPartnerIdAndPolicyIdAndStatusCode(String partnerId, String policyId, String status);
+
+	@Query(value = "select * from partner_policy_request ppr where ppr.policy_id=?1 and ppr.status_code=?2", nativeQuery = true )
+	List<PartnerPolicyRequest> findByPolicyIdAndStatusCode(String policyId, String status);
 }
