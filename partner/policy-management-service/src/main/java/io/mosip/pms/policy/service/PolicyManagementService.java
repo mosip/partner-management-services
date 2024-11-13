@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
@@ -1127,13 +1128,16 @@ public class PolicyManagementService {
 
 			//Sorting
 			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				if (sortFieldName.equalsIgnoreCase("status")) {
+					sortType = sortType.equalsIgnoreCase(CommonConstant.ASC) ? CommonConstant.DESC : CommonConstant.ASC;
+				}
 				Sort sort = PolicyUtil.getSortingRequest(getSortColumn(sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 			Page<PolicySummaryEntity> page = policySummaryRepository.
 					getSummaryOfAllPolicies(filterDto.getPolicyId(), filterDto.getPolicyType(),
 							filterDto.getPolicyName(), filterDto.getPolicyDescription(),
-							filterDto.getPolicyGroupName(), filterDto.getIsActive(), pageable);
+							filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PolicySummaryDto> policySummaryDtoList = MapperUtils.mapAll(page.getContent(), PolicySummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);

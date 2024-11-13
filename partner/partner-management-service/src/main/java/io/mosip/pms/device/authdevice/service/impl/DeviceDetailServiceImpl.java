@@ -567,6 +567,8 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
 
 			device.setIsActive(false);
+			device.setUpdDtimes(LocalDateTime.now());
+			device.setUpdBy(getUserId());
 			DeviceDetail updatedDetail = deviceDetailRepository.save(device);
 			deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
 			deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());

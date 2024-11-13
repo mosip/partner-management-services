@@ -804,6 +804,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				}
 			}
 			sbi.setActive(false);
+			sbi.setUpdDtimes(LocalDateTime.now());
+			sbi.setUpdBy(getUserId());
 			SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
 			SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 

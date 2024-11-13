@@ -31,7 +31,7 @@ public class PolicyUtil {
 		aliasToColumnMap.put("policyDescription", "descr");
 		aliasToColumnMap.put("policyGroupId", "pg.id");
 		aliasToColumnMap.put("policyGroupName", "pg.name");
-		aliasToColumnMap.put("isActive", "isActive");
+		aliasToColumnMap.put("status", "isActive");
 		aliasToColumnMap.put("createdDateTime", "crDtimes");
 	}
 	
