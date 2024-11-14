@@ -15,8 +15,8 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
             "CASE " +
             "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
-            "WHEN p.isActive = true THEN 'activated' " +
-            "ELSE 'deactivated' " +
+            "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +
+            "WHEN (p.schema IS NOT NULL AND p.isActive = false) THEN 'deactivated' " +
             "END, " +
             "p.crDtimes) " +
             "FROM AuthPolicy p " +
@@ -29,7 +29,7 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             "AND (:status IS NULL OR " +
             "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
             "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
-            "OR (:status = 'activated' AND p.isActive = true))"
+            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))"
     )
     Page<PolicySummaryEntity> getSummaryOfAllPolicies(
             @Param("policyId") String policyId,
