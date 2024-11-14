@@ -13,7 +13,12 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
 
     @Query(value = "SELECT new PolicySummaryEntity(" +
             "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
-            "p.isActive, p.crDtimes) " +
+            "CASE " +
+            "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
+            "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +
+            "WHEN (p.schema IS NOT NULL AND p.isActive = false) THEN 'deactivated' " +
+            "END, " +
+            "p.crDtimes) " +
             "FROM AuthPolicy p " +
             "LEFT JOIN p.policyGroup pg " +
             "WHERE (:policyId IS NULL OR lower(p.id) LIKE %:policyId%) " +
@@ -21,7 +26,10 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             "AND (:policyName IS NULL OR lower(p.name) LIKE %:policyName%) " +
             "AND (:policyDescription IS NULL OR lower(p.descr) LIKE %:policyDescription%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
-            "AND (:isActive IS NULL OR p.isActive = :isActive)"
+            "AND (:status IS NULL OR " +
+            "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
+            "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
+            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))"
     )
     Page<PolicySummaryEntity> getSummaryOfAllPolicies(
             @Param("policyId") String policyId,
@@ -29,7 +37,7 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             @Param("policyName") String policyName,
             @Param("policyDescription") String policyDescription,
             @Param("policyGroupName") String policyGroupName,
-            @Param("isActive") Boolean isActive,
+            @Param("status") String status,
             Pageable pageable
     );
 
