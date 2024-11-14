@@ -8,6 +8,7 @@ public class PartnerPolicyRequestFilterDto {
     private String partnerTypeCode;
     private String requestDetails;
     private String organizationName;
+    private String policyId;
     private String policyName;
     private String status;
     private String policyGroupName;
