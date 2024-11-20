@@ -75,6 +75,9 @@ public class PolicyServiceTest {
 	PartnerPolicyRepository partnerPolicyRepository;
 
 	@Mock
+	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
+
+	@Mock
 	PolicySummaryRepository policySummaryRepository;
 	
 	@Mock
@@ -1271,5 +1274,47 @@ public class PolicyServiceTest {
 		Page<PolicySummaryEntity> page = null;
 		when(policySummaryRepository.getSummaryOfAllPolicies(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
 		service.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, null);
+	}
+
+	@Test
+	public void deactivatePolicyTest() throws Exception {
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(new ArrayList<>());
+		authPolicy.setIsActive(false);
+		when(authPolicyRepository.save(any())).thenReturn(authPolicy);
+
+		service.deactivatePolicy("policy123");
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest0() throws Exception {
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
+		service.deactivatePolicy("policy123");
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest1() throws Exception {
+		service.deactivatePolicy("");
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest2() throws Exception {
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(partnerPolicyRequestList);
+
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(new ArrayList<>());
+		authPolicy.setIsActive(false);
+		when(authPolicyRepository.save(any())).thenReturn(authPolicy);
+
+		service.deactivatePolicy("policy123");
 	}
 }

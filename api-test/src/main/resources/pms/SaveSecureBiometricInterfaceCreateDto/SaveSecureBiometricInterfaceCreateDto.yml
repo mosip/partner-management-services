@@ -1,6 +1,7 @@
 SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_SaveSecureBiometricInterfaceCreateDto_01
       description: Save Secure Biometric Interface
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
@@ -21,6 +22,7 @@ SaveSecureBiometricInterfaceCreateDto:
 
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_SaveSecureBiometricInterfaceCreateDto_02
       description: Save Secure Biometric Interface
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

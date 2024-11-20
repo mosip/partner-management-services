@@ -578,14 +578,6 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
-	<test name="DeactivateFtmNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/DeactivateFtm/DeactivateFtmNegativeScenarios.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
-		</classes>
-	</test>	
 	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />

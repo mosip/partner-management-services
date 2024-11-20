@@ -28,4 +28,7 @@ public class CertificateDto {
 
     @Schema(description = "Indicates whether the certificate is available (true if available, false otherwise)", example = "true")
     private Boolean isCertificateAvailable;
+
+    @Schema(description = "Indicates if the partner is active. 'true' means active and 'false' means inactive.", example = "true")
+    private Boolean isPartnerActive; 
 }

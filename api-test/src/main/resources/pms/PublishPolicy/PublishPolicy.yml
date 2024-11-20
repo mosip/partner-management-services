@@ -1,6 +1,7 @@
 createPublishPolicy:
    Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_01
       description: Publish The Policy
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -8,9 +9,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -23,7 +24,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
@@ -31,6 +32,7 @@ createPublishPolicy:
    
    Pms_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_02
       description: Publish The Policy which is already published      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -38,9 +40,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -52,6 +54,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policygroupId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_03
       description: Publish The Policy with invalid policygroupid      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -59,9 +62,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "sgdasfgbv",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "sgdasfgbv",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -73,6 +76,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policyId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_04
       description: Publish The Policy with invalid policyid      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -80,9 +84,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "afgrwfg",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "afgrwfg",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -94,16 +98,17 @@ createPublishPolicy:
     
    Pms_PublishPolicy_invalid_auth:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      description: Publish The Policy without access token      
+      uniqueIdentifier: TC_PMS_createPublishPolicy_05
+      description: Publish The Policy without access token
       role: regproc
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [

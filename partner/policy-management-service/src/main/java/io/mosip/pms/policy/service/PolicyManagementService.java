@@ -53,6 +53,7 @@ import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.entity.AuthPolicyH;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PolicyGroup;
@@ -65,6 +66,7 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.repository.PolicySummaryRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
@@ -90,6 +92,7 @@ import io.mosip.pms.policy.dto.ResponseWrapper;
 import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.dto.PolicySummaryDto;
 import io.mosip.pms.policy.dto.PolicyFilterDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -140,6 +143,9 @@ public class PolicyManagementService {
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
+
+	@Autowired
+	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 	
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
@@ -152,6 +158,9 @@ public class PolicyManagementService {
 
 	@Value("${mosip.pms.api.id.policies.get}")
 	private String getPoliciesId;
+
+	@Value("${mosip.pms.api.id.deactivate.policy.patch}")
+	private String patchDeactivatePolicyId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -172,6 +181,8 @@ public class PolicyManagementService {
 	public static final String NOTACTIVE_STATUS = "de-active";
 	public static final String ALL = "all";
 	public static final String VERSION = "1.0";
+	public static final String APPROVED = "approved";
+	public static final String IN_PROGRESS = "InProgress";
 
 	/** The mapper. */
 	@Autowired
@@ -1149,5 +1160,64 @@ public class PolicyManagementService {
 
 	public String getSortColumn(String alias) {
 		return PolicyUtil.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	}
+
+	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(String policyId) {
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(policyId) || policyId.isBlank()){
+				logger.error("The policy id is null or empty");
+				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			Optional<AuthPolicy> policy = authPolicyRepository.findById(policyId);
+			if (policy.isEmpty()){
+				logger.error("The policy does not exits for policy Id:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_DOES_NOT_EXIST.getErrorCode(),
+						ErrorMessages.POLICY_DOES_NOT_EXIST.getErrorMessage());
+			}
+			if (!policy.get().getIsActive()){
+				logger.error("The policy is already deactivated for policy Id:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+			List<PartnerPolicyRequest> approvedPartnerPolicyRequest = partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(policyId, APPROVED);
+			if (!approvedPartnerPolicyRequest.isEmpty()){
+				logger.error("An approved partner policy request is associated with the policy having ID:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+						ErrorMessages.POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR.getErrorMessage());
+			}
+			List<PartnerPolicyRequest> pendingPartnerPolicyRequest = partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(policyId, IN_PROGRESS);
+			if (!pendingPartnerPolicyRequest.isEmpty()){
+				logger.error("A pending partner policy request is associated with the policy having ID:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+						ErrorMessages.POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR.getErrorMessage());
+			}
+			//deactivate policy
+			AuthPolicy authPolicy = policy.get();
+			authPolicy.setIsActive(false);
+			authPolicy.setUpdDtimes(LocalDateTime.now());
+			authPolicy.setUpdBy(getUser());
+			AuthPolicy updatedAuthPolicy = authPolicyRepository.save(authPolicy);
+			logger.error("policy has been deactivated successfully having Id:", policyId);
+
+			DeactivatePolicyResponseDto deactivatePolicyResponseDto = new DeactivatePolicyResponseDto();
+			deactivatePolicyResponseDto.setPolicyId(updatedAuthPolicy.getId());
+			deactivatePolicyResponseDto.setIsActive(updatedAuthPolicy.getIsActive());
+			responseWrapper.setResponse(deactivatePolicyResponseDto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In deactivatePolicy method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In deactivatePolicy method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_DEACTIVATION_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_DEACTIVATION_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivatePolicyId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 }

@@ -1,6 +1,7 @@
 SaveDeviceDetails:
    Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_01
       description: Save Device Details
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
@@ -24,6 +25,7 @@ SaveDeviceDetails:
 
    Pms_SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_02
       description: Save Device Details
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
