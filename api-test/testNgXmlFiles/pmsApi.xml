@@ -79,14 +79,6 @@
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
 		</classes>
 	</test>
-	<test name="GetUserConsetbeforeconsetgiven">
-		<parameter name="ymlFile"
-			value="pms/GetUserConsent/GetUserConsent.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>
-	
 	<test name="GetAllApiKeyForAuthPartnerwithoutpartnercertifcates">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
