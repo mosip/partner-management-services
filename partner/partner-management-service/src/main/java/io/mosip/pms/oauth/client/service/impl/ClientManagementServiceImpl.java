@@ -17,9 +17,14 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,6 +43,7 @@ import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
@@ -83,11 +89,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
 
+	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
+	private String getPartnersClientsId;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@Autowired
 	ClientDetailRepository clientDetailRepository;
+
+	@Autowired
+	ClientSummaryRepository clientSummaryRepository;
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
@@ -115,6 +127,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	@Autowired
 	private AuthenticationContextRefUtil authenticationContextClassRefUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
@@ -711,6 +726,53 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		responseWrapper.setId(getClientsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, int pageNo, int pageSize, ClientFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<ClientSummaryEntity> page = clientSummaryRepository.
+					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
+							filterDto.getOidcClientName(), filterDto.getStatus(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(clientSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnersClientsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private String getUserId() {
