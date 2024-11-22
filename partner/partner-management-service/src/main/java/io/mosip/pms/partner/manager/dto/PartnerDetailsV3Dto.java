@@ -34,6 +34,9 @@ public class PartnerDetailsV3Dto {
     @Schema(description = "Name of the policy group name the partner has selected", example = "Policy123")
     private String policyGroupName;
 
+    @Schema(description = "Description of the policy group the partner has selected", example = "PolicyGroup123")
+    private String policyGroupDescription;
+
     @Schema(description = "Email address of the partner", example = "partner@email.com")
     private String emailId;
 

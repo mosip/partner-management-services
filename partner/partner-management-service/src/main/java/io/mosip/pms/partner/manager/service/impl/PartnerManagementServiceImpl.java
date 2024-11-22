@@ -790,6 +790,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					);
 				}
 				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
+				partnerDetailsV3Dto.setPolicyGroupDescription(policyGroup.getDesc());
 			}
 			if (Objects.isNull(partner.getCertificateAlias())){
 				partnerDetailsV3Dto.setIsCertificateAvailable(false);
