@@ -144,8 +144,34 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return response;
 	}
 
+	private void validateUser(String partnerId, ErrorCode errorCode) {
+		String userId = getUserId();
+
+		// Check if user ID exists in pms
+		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+		if (partnerList.isEmpty()) {
+			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+		}
+		boolean isPartnerBelongsToUser = false;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(partnerId)) {
+				isPartnerBelongsToUser = true;
+				break;
+			}
+		}
+
+		if (!isPartnerBelongsToUser) {
+			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+			throw new PartnerServiceException(errorCode.getErrorCode(),
+					errorCode.getErrorMessage());
+		}
+	}
+
 	@Override
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
+		validateUser(createRequest.getAuthPartnerId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC);
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
@@ -527,12 +553,18 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			validateUser(partnerId, ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC);
+		}
 		//check if Partner is Active or not
-		if (!partner.get().getIsActive()) {
-			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		if (!isAdmin) {
+			if (!partner.get().getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
 		}
 		ClientDetail clientDetail = result.get();
 		clientDetail.setName(updateRequest.getClientName());
@@ -632,7 +664,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
-
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			validateUser(result.get().getRpId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC);
+		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
@@ -747,7 +782,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
 							filterDto.getClientName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
+				List<ClientSummaryDto> list = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
+				List<ClientSummaryDto> clientSummaryDtoList = new ArrayList<>();
+				for (ClientSummaryDto summaryDto : list) {
+					summaryDto.setClientName(getClientName(summaryDto.getClientName()));
+					clientSummaryDtoList.add(summaryDto);
+				}
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
