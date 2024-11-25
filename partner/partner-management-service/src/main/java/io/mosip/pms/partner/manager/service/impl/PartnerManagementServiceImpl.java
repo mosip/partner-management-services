@@ -80,6 +80,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.all.partner.policy.mapping.requests.get}")
 	private String getAllPartnerPolicyMappingRequestsId;
 
+	@Value("${mosip.pms.api.id.all.api.key.requests.get}")
+	private String getAllApiKeyRequestsId;
+
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
 
@@ -88,6 +91,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
+
+	@Autowired
+	ApiKeyRequestSummaryRepository apiKeyRequestSummaryRepository;
 
 	@Autowired
 	PartnerRepository partnerRepository;
@@ -914,6 +920,51 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAllPartnerPolicyMappingRequestsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, ApiKeyFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				if (sortFieldName.equalsIgnoreCase("status")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.apiKeyAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
+					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyName(),
+							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
+							filterDto.getStatus(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllApiKeyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllApiKeyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_API_KEY_REQUESTS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_API_KEY_REQUESTS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllApiKeyRequestsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

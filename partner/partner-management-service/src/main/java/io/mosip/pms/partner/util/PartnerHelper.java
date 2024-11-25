@@ -76,6 +76,18 @@ public class PartnerHelper {
         oidcClientsAliasToColumnMap.put("createdDateTime", "createdDateTime");
     }
 
+    public final Map<String, String> apiKeyAliasToColumnMap = new HashMap<>();
+    {
+        apiKeyAliasToColumnMap.put("partnerId", "partnerId");
+        apiKeyAliasToColumnMap.put("apiKeyName", "label");
+        apiKeyAliasToColumnMap.put("orgName", "p.name");
+        apiKeyAliasToColumnMap.put("policyName", "ap.name");
+        apiKeyAliasToColumnMap.put("policyGroupName", "pg.name");
+        apiKeyAliasToColumnMap.put("status", "isActive");
+        apiKeyAliasToColumnMap.put("createdDateTime", "createdDateTime");
+    }
+
+
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
 

@@ -1,0 +1,25 @@
+package io.mosip.pms.partner.manager.dto;
+
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class ApiKeyFilterDto {
+
+    private String apiKeyId;
+
+    private String partnerId;
+
+    private String apiKeyName;
+
+    private String orgName;
+
+    private String policyName;
+
+    private String policyGroupName;
+
+    private String status;
+
+    private Date createdDateTime;
+}
