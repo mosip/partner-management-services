@@ -19,10 +19,13 @@ import java.util.Date;
                         columns = {
                                 @ColumnResult(name = "apiKeyId", type = String.class),
                                 @ColumnResult(name = "partnerId", type = String.class),
-                                @ColumnResult(name = "apiKeyName", type = String.class),
+                                @ColumnResult(name = "apiKeyLabel", type = String.class),
                                 @ColumnResult(name = "orgName", type = String.class),
+                                @ColumnResult(name = "policyId", type = String.class),
                                 @ColumnResult(name = "policyName", type = String.class),
+                                @ColumnResult(name = "policyDescription", type = String.class),
                                 @ColumnResult(name = "policyGroupName", type = String.class),
+                                @ColumnResult(name = "policyGroupDescription", type = String.class),
                                 @ColumnResult(name = "status", type = String.class),
                                 @ColumnResult(name = "createdDateTime", type = Date.class)
                         }
@@ -32,13 +35,17 @@ import java.util.Date;
 public class ApiKeyRequestsSummaryEntity {
 
     public ApiKeyRequestsSummaryEntity(
-            String apiKeyId, String partnerId, String apiKeyName, String orgName,
-            String policyName, String policyGroupName, String status, Date createdDateTime) {
+            String apiKeyId, String partnerId, String apiKeyLabel, String orgName, String policyId,
+            String policyName, String policyDescription, String policyGroupName, String policyGroupDescription,
+            String status, Date createdDateTime) {
         this.apiKeyId = apiKeyId;
         this.partnerId = partnerId;
-        this.apiKeyName = apiKeyName;
+        this.apiKeyLabel = apiKeyLabel;
         this.orgName = orgName;
+        this.policyId = policyId;
         this.policyName = policyName;
+        this.policyDescription = policyDescription;
+        this.policyGroupDescription = policyGroupDescription;
         this.policyGroupName = policyGroupName;
         this.status = status;
         this.createdDateTime = createdDateTime;
@@ -54,13 +61,19 @@ public class ApiKeyRequestsSummaryEntity {
 
     private String partnerId;
 
-    private String apiKeyName;
+    private String apiKeyLabel;
 
     private String orgName;
 
+    private String policyId;
+
     private String policyName;
 
+    private String policyDescription;
+
     private String policyGroupName;
+
+    private String policyGroupDescription;
 
     private String status;
 

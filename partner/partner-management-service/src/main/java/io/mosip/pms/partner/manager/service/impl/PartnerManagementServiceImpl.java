@@ -942,7 +942,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
-					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyName(),
+					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyLabel(),
 							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
 							filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {

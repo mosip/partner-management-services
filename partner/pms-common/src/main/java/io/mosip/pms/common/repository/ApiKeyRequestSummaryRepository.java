@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyRequestsSummaryEntity, String> {
 
     @Query(value = "SELECT new io.mosip.pms.common.entity.ApiKeyRequestsSummaryEntity(" +
-            "pp.apiKeyId, pp.partnerId, pp.label, p.name, ap.name, pg.name, " +
+            "pp.apiKeyId, pp.partnerId, pp.label, p.name, pp.policyId, ap.name, ap.descr, pg.name, pg.desc, " +
             "CASE " +
             "WHEN pp.isActive = false THEN 'deactivated' " +
             "WHEN pp.isActive = true THEN 'activated' " +
@@ -23,7 +23,7 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
             "LEFT JOIN pp.policy ap " +
             "LEFT JOIN ap.policyGroup pg " +
             "WHERE (:partnerId IS NULL OR lower(pp.partnerId) LIKE %:partnerId%) " +
-            "AND (:apiKeyName IS NULL OR lower(pp.label) LIKE %:apiKeyName%) " +
+            "AND (:apiKeyLabel IS NULL OR lower(pp.label) LIKE %:apiKeyLabel%) " +
             "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
@@ -33,7 +33,7 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
     )
     Page<ApiKeyRequestsSummaryEntity> getSummaryOfAllApiKeyRequests(
             @Param("partnerId") String partnerId,
-            @Param("apiKeyName") String apiKeyName,
+            @Param("apiKeyLabel") String apiKeyLabel,
             @Param("orgName") String orgName,
             @Param("policyName") String policyName,
             @Param("policyGroupName") String policyGroupName,
