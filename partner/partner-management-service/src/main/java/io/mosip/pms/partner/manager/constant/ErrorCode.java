@@ -47,7 +47,7 @@ public enum ErrorCode {
 	FETCH_ALL_PARTNER_DETAILS_ERROR("PMS_PM_061", "Error while fetching all partners details"),
 	FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR("PMS_PM_062", "Error while fetching all partner policy mapping requests"),
 	PARTNER_ALREADY_DEACTIVATED("PMS_PM_063", "The selected partner has already been deactivated."),
-	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests"),;
+	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests");
 	
 
 	/**
