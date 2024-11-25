@@ -95,4 +95,6 @@ public interface PartnerManagerService {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerFilterDto partnerFilterDto);
 
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerPolicyRequestFilterDto filterDto);
+
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, ApiKeyFilterDto filterDto);
 }

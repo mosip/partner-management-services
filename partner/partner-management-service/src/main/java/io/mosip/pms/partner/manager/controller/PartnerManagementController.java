@@ -371,4 +371,52 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
+	@GetMapping(value = "/apikey/search/v2")
+	@Operation(summary = "Get all api key requests", description = "This endpoint will fetch a list of all api key requests")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "apiKeyName", required = false) String apiKeyName,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@Parameter(
+					description = "Status of request",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"activated", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (apiKeyName != null) {
+			filterDto.setApiKeyName(apiKeyName.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (policyName != null) {
+			filterDto.setPolicyName(policyName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
 }

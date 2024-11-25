@@ -188,5 +188,7 @@ public class AuthorizedRolesDto {
 	private List<String> getallpartnerpolicymappingrequests;
 
 	private List<String> getoauthpartnersclients;
+
+	private List<String> getpartnersapikeyrequests;
 		
 }
