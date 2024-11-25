@@ -70,8 +70,8 @@ public class PartnerHelper {
         oidcClientsAliasToColumnMap.put("orgName", "p.name");
         oidcClientsAliasToColumnMap.put("policyGroupName", "pg.name");
         oidcClientsAliasToColumnMap.put("policyName", "ap.name");
-        oidcClientsAliasToColumnMap.put("oidcClientId", "id");
-        oidcClientsAliasToColumnMap.put("oidcClientName", "name");
+        oidcClientsAliasToColumnMap.put("clientId", "id");
+        oidcClientsAliasToColumnMap.put("clientName", "name");
         oidcClientsAliasToColumnMap.put("status", "status");
         oidcClientsAliasToColumnMap.put("createdDateTime", "createdDateTime");
     }
