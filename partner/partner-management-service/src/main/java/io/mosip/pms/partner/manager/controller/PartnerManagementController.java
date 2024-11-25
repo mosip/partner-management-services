@@ -371,7 +371,7 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerapikeyrequests())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/apikey/search/v2")
 	@Operation(summary = "Get all api key requests", description = "This endpoint will fetch a list of all api key requests")
 	@ApiResponses(value = {

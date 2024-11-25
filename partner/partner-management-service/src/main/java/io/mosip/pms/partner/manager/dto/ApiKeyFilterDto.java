@@ -7,8 +7,6 @@ import java.util.Date;
 @Data
 public class ApiKeyFilterDto {
 
-    private String apiKeyId;
-
     private String partnerId;
 
     private String apiKeyName;
@@ -21,5 +19,4 @@ public class ApiKeyFilterDto {
 
     private String status;
 
-    private Date createdDateTime;
 }
