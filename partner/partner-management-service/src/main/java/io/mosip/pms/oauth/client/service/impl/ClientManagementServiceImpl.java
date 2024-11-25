@@ -144,13 +144,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return response;
 	}
 
-	private void validateUser(String partnerId, ErrorCode errorCode) {
+	private void validateUser(String partnerId, ErrorCode errorCode, ClientServiceAuditEnum auditEnum) {
 		String userId = getUserId();
 
 		// Check if user ID exists in pms
 		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
 		if (partnerList.isEmpty()) {
 			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 		}
@@ -164,6 +165,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 		if (!isPartnerBelongsToUser) {
 			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+			auditUtil.setAuditRequestDto(auditEnum);
 			throw new PartnerServiceException(errorCode.getErrorCode(),
 					errorCode.getErrorMessage());
 		}
@@ -171,7 +173,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Override
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
-		validateUser(createRequest.getAuthPartnerId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC);
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
@@ -206,6 +207,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
+		validateUser(createRequest.getAuthPartnerId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC, ClientServiceAuditEnum.CREATE_CLIENT_FAILURE);
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
 			LOGGER.error("createOIDCClient::AuthPartner with Id {} doesn't exists", createRequest.getAuthPartnerId());
@@ -555,7 +557,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		if (!isAdmin) {
-			validateUser(partnerId, ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC);
+			validateUser(partnerId, ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC, ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
 		}
 		//check if Partner is Active or not
 		if (!isAdmin) {
@@ -666,7 +668,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		if (!isAdmin) {
-			validateUser(result.get().getRpId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC);
+			validateUser(result.get().getRpId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC, ClientServiceAuditEnum.GET_CLIENT);
 		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
@@ -725,7 +727,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oauthClientDto.setPartnerId(partnerId);
 					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(getClientName(clientDetail.getName()));
+					oauthClientDto.setClientName(extractClientName(clientDetail.getName()));
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());
 					oauthClientDto.setPolicyGroupName(policyGroup.getName());
 					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
@@ -785,7 +787,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				List<ClientSummaryDto> list = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
 				List<ClientSummaryDto> clientSummaryDtoList = new ArrayList<>();
 				for (ClientSummaryDto summaryDto : list) {
-					summaryDto.setClientName(getClientName(summaryDto.getClientName()));
+					summaryDto.setClientName(extractClientName(summaryDto.getClientName()));
 					clientSummaryDtoList.add(summaryDto);
 				}
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -824,7 +826,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	private String getClientName(String jsonString) {
+	private String extractClientName(String jsonString) {
 		try {
 			JsonNode jsonNode = objectMapper.readTree(jsonString);
 
