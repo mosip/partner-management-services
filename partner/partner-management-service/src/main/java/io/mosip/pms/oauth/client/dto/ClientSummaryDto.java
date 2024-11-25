@@ -3,7 +3,6 @@ package io.mosip.pms.oauth.client.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,10 +27,10 @@ public class ClientSummaryDto {
     private String policyDescription;
 
     @Schema(description = "Unique identifier for the OIDC (OpenID Connect) client", example = "oidcClient456")
-    private String oidcClientId;
+    private String clientId;
 
     @Schema(description = "Name of the OIDC client", example = "MyOIDCClient")
-    private String oidcClientName;
+    private String clientName;
 
     @Schema(description = "Current status of the OIDC client", example = "active")
     private String status;

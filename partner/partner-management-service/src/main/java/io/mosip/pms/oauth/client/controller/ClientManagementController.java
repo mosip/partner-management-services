@@ -121,7 +121,7 @@ public class ClientManagementController {
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "oidcClientName", required = false) String oidcClientName,
+			@RequestParam(value = "clientName", required = false) String clientName,
 			@Parameter(
 					description = "Status of oidc client",
 					in = ParameterIn.QUERY,
@@ -143,8 +143,8 @@ public class ClientManagementController {
 		if (policyName != null) {
 			filterDto.setPolicyName(policyName.toLowerCase());
 		}
-		if (oidcClientName != null) {
-			filterDto.setOidcClientName(oidcClientName.toLowerCase());
+		if (clientName != null) {
+			filterDto.setClientName(clientName.toLowerCase());
 		}
 		if (status != null) {
 			filterDto.setStatus(status);

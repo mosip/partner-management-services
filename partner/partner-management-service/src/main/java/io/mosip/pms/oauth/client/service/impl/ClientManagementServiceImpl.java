@@ -745,7 +745,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			Page<ClientSummaryEntity> page = clientSummaryRepository.
 					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
-							filterDto.getOidcClientName(), filterDto.getStatus(), pageable);
+							filterDto.getClientName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);

@@ -22,7 +22,7 @@ public interface ClientSummaryRepository extends BaseRepository<ClientSummaryEnt
             "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
-            "AND (:oidcClientName IS NULL OR lower(c.name) LIKE %:oidcClientName%) " +
+            "AND (:clientName IS NULL OR lower(c.name) LIKE %:clientName%) " +
             "AND (:status IS NULL OR c.status = :status) "
     )
     Page<ClientSummaryEntity> getSummaryOfAllPartnerClients(
@@ -30,7 +30,7 @@ public interface ClientSummaryRepository extends BaseRepository<ClientSummaryEnt
             @Param("orgName") String orgName,
             @Param("policyGroupName") String policyGroupName,
             @Param("policyName") String policyName,
-            @Param("oidcClientName") String oidcClientName,
+            @Param("clientName") String clientName,
             @Param("status") String status,
             Pageable pageable
     );

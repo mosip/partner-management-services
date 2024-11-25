@@ -8,6 +8,6 @@ public class ClientFilterDto {
     private String orgName;
     private String policyGroupName;
     private String policyName;
-    private String oidcClientName;
+    private String clientName;
     private String status;
 }
