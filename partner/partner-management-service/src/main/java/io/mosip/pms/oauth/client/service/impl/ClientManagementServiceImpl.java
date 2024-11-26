@@ -582,7 +582,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
 			}
 		}
-		if (result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+		if ( !isAdmin || (isAdmin && result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
 			//check if Partner is Active or not
 			if (!partner.get().getIsActive()) {
 				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
@@ -592,12 +592,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			}
 		}
 		ClientDetail clientDetail = result.get();
+		if (!result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			return clientDetail;
+		}
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		return clientDetail;
