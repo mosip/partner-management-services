@@ -79,7 +79,7 @@ public class PartnerHelper {
     public final Map<String, String> apiKeyAliasToColumnMap = new HashMap<>();
     {
         apiKeyAliasToColumnMap.put("partnerId", "partnerId");
-        apiKeyAliasToColumnMap.put("apiKeyName", "label");
+        apiKeyAliasToColumnMap.put("apiKeyLabel", "label");
         apiKeyAliasToColumnMap.put("orgName", "p.name");
         apiKeyAliasToColumnMap.put("policyName", "ap.name");
         apiKeyAliasToColumnMap.put("policyGroupName", "pg.name");

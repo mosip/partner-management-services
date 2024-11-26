@@ -385,7 +385,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
-			@RequestParam(value = "apiKeyName", required = false) String apiKeyName,
+			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@Parameter(
 					description = "Status of request",
@@ -401,8 +401,8 @@ public class PartnerManagementController {
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
 		}
-		if (apiKeyName != null) {
-			filterDto.setApiKeyName(apiKeyName.toLowerCase());
+		if (apiKeyLabel != null) {
+			filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
 		}
 		if (orgName != null) {
 			filterDto.setOrgName(orgName.toLowerCase());

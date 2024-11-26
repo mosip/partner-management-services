@@ -9,7 +9,7 @@ public class ApiKeyFilterDto {
 
     private String partnerId;
 
-    private String apiKeyName;
+    private String apiKeyLabel;
 
     private String orgName;
 

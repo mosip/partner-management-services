@@ -14,8 +14,8 @@ public class ApiKeyRequestSummaryDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
-    @Schema(description = "Name of the API key", example = "Sample API Key")
-    private String apiKeyName;
+    @Schema(description = "Label of the API key", example = "Sample API Key")
+    private String apiKeyLabel;
 
     @Schema(description = "Name of the partner organization", example = "Organization ABC")
     private String orgName;
@@ -23,8 +23,17 @@ public class ApiKeyRequestSummaryDto {
     @Schema(description = "Name of the associated policy", example = "Access Control Policy")
     private String policyName;
 
+    @Schema(description = "Id of the associated policy", example = "123")
+    private String policyId;
+
+    @Schema(description = "Description of the policy name the partner has selected", example = "policy for authentication")
+    private String policyDescription;
+
     @Schema(description = "Name of the policy group", example = "Security Policies")
     private String policyGroupName;
+
+    @Schema(description = "Description of the policy group the partner has selected", example = "PolicyGroup123")
+    private String policyGroupDescription;
 
     @Schema(description = "Status of the API key (e.g., activated, deactivated)", example = "activated")
     private String status;
