@@ -581,6 +581,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
 						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
 			}
+		}
+		if (result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
 			//check if Partner is Active or not
 			if (!partner.get().getIsActive()) {
 				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
