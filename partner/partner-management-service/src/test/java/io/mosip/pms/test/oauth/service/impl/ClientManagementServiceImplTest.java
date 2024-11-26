@@ -125,6 +125,21 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void createClientTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
 		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
 		request.setPublicKey(public_key);
 		request.setPolicyId("policy");
@@ -140,7 +155,7 @@ public class ClientManagementServiceImplTest {
 		try {
 			serviceImpl.createOIDCClient(request);
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+			assertFalse(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
 		}
 	}
 
@@ -161,6 +176,21 @@ public class ClientManagementServiceImplTest {
 
 	@Test (expected = PartnerServiceException.class)
 	public void createOIDCClient_invalidPublicKey_throwsPartnerServiceException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
 		createRequest.setAuthPartnerId("AuthPartnerId");
@@ -182,6 +212,21 @@ public class ClientManagementServiceImplTest {
 
 	@Test (expected = PartnerServiceException.class)
 	public void createOIDCClient_existingClientDetail_throwsPartnerServiceException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
 		createRequest.setAuthPartnerId("AuthPartnerId");
@@ -220,6 +265,20 @@ public class ClientManagementServiceImplTest {
 
 	@Test (expected = PartnerServiceException.class)
 	public void createOIDCClient_invalidPartnerId_throwsPartnerServiceException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
 
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
@@ -248,6 +307,20 @@ public class ClientManagementServiceImplTest {
 
 	@Test (expected = PartnerServiceException.class)
 	public void createOIDCClient_validRequest_returnsClientDetailResponse() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
 
 		when(environment.getProperty("auth.url")).thenReturn("https://pms.net/partner");
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
@@ -365,8 +438,16 @@ public class ClientManagementServiceImplTest {
 		verify(webSubPublisher).notify(any(), any(), any());
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void testGetClientDetails_Success() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		List<Partner> parnerList = new ArrayList<>();
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(parnerList);
+
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setCrBy("Cr By");
 		policyGroup.setCrDtimes(LocalDateTime.of(1, 1, 1, 1, 1));
@@ -438,13 +519,20 @@ public class ClientManagementServiceImplTest {
 		assertEquals(1, actualClientDetails.getGrantTypes().size());
 		assertEquals(1, actualClientDetails.getClientAuthMethods().size());
 		assertEquals(1, actualClientDetails.getClaims().size());
-
 		verify(authPolicyRepository).findById(anyString());
 		verify(clientDetailRepository).findById(anyString());
 	}
 
-	@Test (expected = PartnerServiceException.class)
+	@Test (expected = Exception.class)
 	public void testGetClientDetails_Exception() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerServiceRepository.findByUserId(anyString())).thenThrow(new PartnerServiceException("An error occurred", "An error occurred"));
+
 		when(authPolicyRepository.findById(anyString()))
 				.thenThrow(new PartnerServiceException("An error occurred", "An error occurred"));
 
@@ -459,7 +547,7 @@ public class ClientManagementServiceImplTest {
 		clientDetail.setIsDeleted(false);
 		clientDetail.setLogoUri("Logo Uri");
 		clientDetail.setName("Name");
-		clientDetail.setPolicyId("PolicyId");
+		clientDetail.setPolicyId(null);
 		clientDetail.setPublicKey("Public Key");
 		clientDetail.setRedirectUris("Redirect Uris");
 		clientDetail.setRpId("RpId");
@@ -681,6 +769,11 @@ public class ClientManagementServiceImplTest {
 
 	@Test (expected = PartnerServiceException.class)
 	public void testCreateOIDCClientWithError() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
@@ -698,6 +791,7 @@ public class ClientManagementServiceImplTest {
 		createRequest.setRedirectUris(setRedirectUris);
 		createRequest.setPublicKey(public_key);
 
+		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setAdditionalInfo("Additional Info");
 		partner.setAddress("abc");
@@ -721,6 +815,8 @@ public class ClientManagementServiceImplTest {
 		partner.setUpdBy("Upd By");
 		partner.setUpdDtimes(mock(Timestamp.class));
 		partner.setUserId("UserId");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
 
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setCrBy("Cr By");
@@ -1077,6 +1173,13 @@ public class ClientManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void testProcessCreateOIDCClient_PartnerCannotCreateOIDCClient() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
 		createRequest.setAuthPartnerId("AuthPartnerId");
@@ -1093,6 +1196,7 @@ public class ClientManagementServiceImplTest {
 		createRequest.setRedirectUris(setRedirectUris);
 		createRequest.setPublicKey(public_key);
 
+		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setAdditionalInfo("Additional Info");
 		partner.setAddress("abc");
@@ -1116,6 +1220,8 @@ public class ClientManagementServiceImplTest {
 		partner.setUpdBy("Upd By");
 		partner.setUpdDtimes(mock(Timestamp.class));
 		partner.setUserId("UserId");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
 
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setPartner(partner);

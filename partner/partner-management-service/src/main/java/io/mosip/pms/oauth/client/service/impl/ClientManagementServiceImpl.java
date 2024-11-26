@@ -3,7 +3,6 @@ package io.mosip.pms.oauth.client.service.impl;
 import java.security.PublicKey;
 import java.util.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetKeyPair;
@@ -144,6 +143,23 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return response;
 	}
 
+	private List<Partner> validateUserId() {
+		String userId = getUserId();
+		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+		return partnerList;
+	}
+
+	private boolean validatePartnerIdBelongsToUser(List<Partner> partnerList, String partnerId) {
+		boolean isPartnerBelongsToUser = false;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(partnerId)) {
+				isPartnerBelongsToUser = true;
+				break;
+			}
+		}
+		return isPartnerBelongsToUser;
+	}
+
 	@Override
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
@@ -179,6 +195,24 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					clientId);
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
+		}
+		// Validate the logged-in user ID and fetch the list of partners associated to it
+		List<Partner> partnerList = validateUserId();
+		if (partnerList.isEmpty()) {
+			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					clientId);
+			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+		}
+		// Check if the partner ID belongs to the user.
+		boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, createRequest.getAuthPartnerId());
+		if (!isValidPartner) {
+			LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+					clientId);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorCode(),
+					ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorMessage());
 		}
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
@@ -527,12 +561,35 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
-		//check if Partner is Active or not
-		if (!partner.get().getIsActive()) {
-			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, partnerId);
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
+			}
+		}
+		if (result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			//check if Partner is Active or not
+			if (!partner.get().getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
 		}
 		ClientDetail clientDetail = result.get();
 		clientDetail.setName(updateRequest.getClientName());
@@ -632,7 +689,25 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
-
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, result.get().getRpId());
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorMessage());
+			}
+		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
@@ -690,7 +765,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oauthClientDto.setPartnerId(partnerId);
 					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(getClientName(clientDetail.getName()));
+					oauthClientDto.setClientName(clientDetail.getName());
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());
 					oauthClientDto.setPolicyGroupName(policyGroup.getName());
 					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
@@ -782,28 +857,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private String getClientName(String jsonString) {
-		try {
-			JsonNode jsonNode = objectMapper.readTree(jsonString);
-
-			JsonNode engNode = jsonNode.get(ENG_KEY);
-			if (engNode != null && engNode.isTextual()) {
-				return engNode.asText();
-			}
-
-			JsonNode noneNode = jsonNode.get(NONE_LANG_KEY);
-			if (noneNode != null && noneNode.isTextual()) {
-				return noneNode.asText();
-			}
-
-			// If neither "eng" nor "@none" is present, return the original string
-			return jsonString;
-		} catch (JsonProcessingException e) {
-			// If the string is not a valid JSON, return it as is
-			return jsonString;
-		}
 	}
 
 	/**
