@@ -207,6 +207,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
 		}
+		// Check if the partner ID belongs to the user.
 		validateUser(createRequest.getAuthPartnerId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC, ClientServiceAuditEnum.CREATE_CLIENT_FAILURE);
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
@@ -555,12 +556,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
+
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
 		if (!isAdmin) {
 			validateUser(partnerId, ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC, ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-		}
-		//check if Partner is Active or not
-		if (!isAdmin) {
+			//check if Partner is Active or not
 			if (!partner.get().getIsActive()) {
 				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
@@ -668,6 +669,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		if (!isAdmin) {
+			// Check if the partner ID belongs to the user.
 			validateUser(result.get().getRpId(), ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC, ClientServiceAuditEnum.GET_CLIENT);
 		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
