@@ -727,7 +727,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					oauthClientDto.setPartnerId(partnerId);
 					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(extractClientName(clientDetail.getName()));
+					oauthClientDto.setClientName(clientDetail.getName());
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());
 					oauthClientDto.setPolicyGroupName(policyGroup.getName());
 					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
@@ -784,12 +784,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
 							filterDto.getClientName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<ClientSummaryDto> list = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
-				List<ClientSummaryDto> clientSummaryDtoList = new ArrayList<>();
-				for (ClientSummaryDto summaryDto : list) {
-					summaryDto.setClientName(extractClientName(summaryDto.getClientName()));
-					clientSummaryDtoList.add(summaryDto);
-				}
+				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
@@ -824,28 +819,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private String extractClientName(String jsonString) {
-		try {
-			JsonNode jsonNode = objectMapper.readTree(jsonString);
-
-			JsonNode engNode = jsonNode.get(ENG_KEY);
-			if (engNode != null && engNode.isTextual()) {
-				return engNode.asText();
-			}
-
-			JsonNode noneNode = jsonNode.get(NONE_LANG_KEY);
-			if (noneNode != null && noneNode.isTextual()) {
-				return noneNode.asText();
-			}
-
-			// If neither "eng" nor "@none" is present, return the original string
-			return jsonString;
-		} catch (JsonProcessingException e) {
-			// If the string is not a valid JSON, return it as is
-			return jsonString;
-		}
 	}
 
 	/**
