@@ -8,6 +8,7 @@ fi
 
 NS=pms
 CHART_VERSION=0.0.1-develop
+COPY_UTIL=../copy_cm_func.sh
 
 echo Create $NS namespace
 kubectl create ns $NS
@@ -18,8 +19,9 @@ function installing_pms() {
   helm repo update
 
   echo Copy configmaps
-  sed -i 's/\r$//' copy_cm.sh
-  ./copy_cm.sh
+  $COPY_UTIL configmap global default $NS
+  $COPY_UTIL configmap artifactory-share artifactory $NS
+  $COPY_UTIL configmap config-server-share config-server $NS
 
   INTERNAL_API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
   PMP_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-host})
