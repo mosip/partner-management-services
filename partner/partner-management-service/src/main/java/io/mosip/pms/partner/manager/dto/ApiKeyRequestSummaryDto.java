@@ -8,9 +8,6 @@ import java.util.Date;
 @Data
 public class ApiKeyRequestSummaryDto {
 
-    @Schema(description = "Unique identifier for the API key", example = "apiKey123")
-    private String apiKeyId;
-
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
