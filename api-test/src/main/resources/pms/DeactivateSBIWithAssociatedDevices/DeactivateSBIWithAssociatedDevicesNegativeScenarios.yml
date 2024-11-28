@@ -3,7 +3,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/deactivate-sbi
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
       description: Deactivate SBI with associated Devices without Partner authentication
-      role: batch
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices

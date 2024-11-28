@@ -45,7 +45,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_auth:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: batch
+      role: invalid
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
