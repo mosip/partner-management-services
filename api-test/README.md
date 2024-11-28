@@ -15,7 +15,7 @@ The **Partner Management Services API Test Rig** is designed for the execution o
 
 ## Coverage
 
-This test rig covers only **external API endpoints** exposed by the admin services module.
+This test rig covers only **external API endpoints** exposed by the partner management services module.
 
 ---
 
@@ -96,7 +96,7 @@ To execute the tests using Jar, use the following steps:
 
 2. Run the automation test suite JAR file:
    ```
-   java -jar -Dmodules=prereg -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar
+   java -jar -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar
    ```
    
 # Using Eclipse IDE
@@ -128,7 +128,7 @@ To execute the tests using Eclipse IDE, use the following steps:
    - Go to `Run` > `Run Configurations`.
    - In the **Run Configurations** window, create a new configuration for your tests:
      - Right-click on **Java Application** and select **New**.
-     - In the **Main** tab, select the project by browsing the location where the `api-test` folder is saved, and select the **Main class** as `io.mosip.testrig.apirig.esignet.testrunner.MosipTestRunner`.
+     - In the **Main** tab, select the project by browsing the location where the `api-test` folder is saved, and select the **Main class** as `io.mosip.testrig.apirig.partner.testrunner.MosipTestRunner`.
    - In the **Arguments** tab, add the necessary **VM arguments**:
      - **VM Arguments**:
        ```
@@ -152,14 +152,14 @@ To execute the tests using Eclipse IDE, use the following steps:
 - **env.user**: Replace `<env_name>` with the appropriate environment name (e.g., `dev`, `qa`, etc.).
 - **env.endpoint**: The environment where the application under test is deployed. Replace `<base_env>` with the correct base URL for the environment (e.g., `https://api-internal.<env_name>.mosip.net`).
 - **env.testLevel**: Set this to `smoke` to run only smoke test cases, or `smokeAndRegression` to run both smoke and regression tests.
-- **jar**: Specify the name of the JAR file to execute. The version will change according to the development code version. For example, the current version may look like `apitest-prereg-1.3.0-SNAPSHOT-jar-with-dependencies.jar`.
+- **jar**: Specify the name of the JAR file to execute. The version will change according to the development code version. For example, the current version may look like `apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar`.
 
 ### Build and Run Info
 
 To run the tests for both **Smoke** and **Regression**:
 
 1. Ensure the correct environment and test level parameters are set.
-2. Execute the tests as shown in the command above to validate admin services API functionalities.
+2. Execute the tests as shown in the command above to validate partner management services API functionalities.
 
 ---
 
