@@ -3,7 +3,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_01
       description: Retrieve Original FTM Certifacte without partner Authentication and expecting an error in the response
-      role: batch
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
@@ -22,7 +22,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_02
       description: Retrieve Original FTM Certifacte with invalid partner access token and expecting an error in the response
-      role: regproc
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte

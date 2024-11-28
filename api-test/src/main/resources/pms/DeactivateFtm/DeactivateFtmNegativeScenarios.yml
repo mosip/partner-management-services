@@ -3,7 +3,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/deactivate-ftm
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_01
       description: Deactivate FTM without Partner authentication and expecting an error in the response 
-      role: batch
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateFtm/DeactivateFtm
