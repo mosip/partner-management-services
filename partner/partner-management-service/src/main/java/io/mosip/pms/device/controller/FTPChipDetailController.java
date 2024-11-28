@@ -7,26 +7,24 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,6 +54,9 @@ public class FTPChipDetailController {
 	
 	@Autowired	
 	FtpChipDetailService ftpChipDetaillService;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.post}")
 	private  String postDeactivateFtmId;
@@ -263,5 +264,49 @@ public class FTPChipDetailController {
 	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalFtmCertificate(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		return ftpChipDetaillService.getOriginalFtmCertificate(ftmId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
+	@GetMapping(value = "search/v2")
+	@Operation(summary = "Get all partners FTM chip details", description = "This endpoint will fetch a list of all the partners FTM chip details")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "make", required = false) String make,
+			@RequestParam(value = "model", required = false) String model,
+			@Parameter(
+					description = "Status of certificate upload",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "pending_cert_upload", "pending_approval", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.ftmAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (make != null) {
+			filterDto.setMake(make.toLowerCase());
+		}
+		if (model != null) {
+			filterDto.setModel(model.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		return ftpChipDetaillService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 }
