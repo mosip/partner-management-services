@@ -5,14 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.kernel.openid.bridge.model.MosipUserDto;
@@ -43,6 +40,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -802,12 +801,25 @@ public class PartnerManagementServiceImplTest {
 	}
 	
 	@Test
-	public void updateAPIKeyStatusTest01() {
+	public void updateAPIKeyStatusTest01() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
 		statusDto.setStatus("De-Activate");
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("ROLE_USER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(partnerHelper.isPartnerAdmin(authentication.getAuthorities().toString())).thenReturn(false);
 		try {
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456",statusDto);
 		}catch (PartnerManagerServiceException e) {
@@ -816,13 +828,27 @@ public class PartnerManagementServiceImplTest {
 	}
 	
 	@Test
-	public void updateAPIKeyStatusTest02() {
+	public void updateAPIKeyStatusTest02() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
 		statusDto.setStatus("De-Active");
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("ROLE_USER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(partnerHelper.isPartnerAdmin(authentication.getAuthorities().toString())).thenReturn(false);
+
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
 	
@@ -842,13 +868,27 @@ public class PartnerManagementServiceImplTest {
 	}
 	
 	@Test
-	public void updateAPIKeyStatusTest04() {
+	public void updateAPIKeyStatusTest04() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
 		statusDto.setStatus("Active");
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("ROLE_USER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(partnerHelper.isPartnerAdmin(authentication.getAuthorities().toString())).thenReturn(false);
+
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
 	

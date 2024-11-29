@@ -555,8 +555,13 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if(!isAdmin){
+				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+				checkIfPartnerIsNotActive(partnerDetails);
+			}
+
 			if (!ftm.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
 				throw new PartnerServiceException(ErrorCode.FTM_NOT_APPROVED.getErrorCode(),
@@ -610,8 +615,12 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if(!isAdmin){
+				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+				checkIfPartnerIsNotActive(partnerDetails);
+			}
 
 			if (!(ftm.getApprovalStatus().equals(PENDING_APPROVAL) || ftm.getApprovalStatus().equals(APPROVED))) {
 				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
