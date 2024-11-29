@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.constant.Purpose;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
@@ -404,5 +406,30 @@ public class FTPChipDetailControllerTest {
 		responseWrapper.setResponse(originalCertDownloadResponseDto);
 		Mockito.when(ftpChipDetaillService.getOriginalFtmCertificate(Mockito.any())).thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/original-ftm-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getPartnersFtmDetailsTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(ftpChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/search/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("partnerId", "123")
+						.param("orgName", "ABC")
+						.param("make", "test")
+						.param("model", "test")
+						.param("status", "approved"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
