@@ -15,6 +15,7 @@ import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceReposit
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -195,6 +196,29 @@ public class PartnerHelper {
 
         // Check ca signed partner certificate expiry date
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
+        if (isCertificateExpired(decodedCaSignedCert)) {
+            originalCertDownloadResponseDto.setCaSignedCertificateData("");
+            originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
+        }
+    }
+
+    public void populateFtmCertificateExpiryState(FtmCertificateDownloadResponseDto originalCertDownloadResponseDto) {
+        originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
+        originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
+
+        X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
+        originalCertDownloadResponseDto.setMosipSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        originalCertDownloadResponseDto.setMosipSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        // Check mosip signed certificate expiry date
+        if (isCertificateExpired(decodedMosipSignedCert)) {
+            originalCertDownloadResponseDto.setMosipSignedCertificateData("");
+            originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
+        }
+
+        X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
+        originalCertDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        originalCertDownloadResponseDto.setCaSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        // Check ca signed partner certificate expiry date
         if (isCertificateExpired(decodedCaSignedCert)) {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
