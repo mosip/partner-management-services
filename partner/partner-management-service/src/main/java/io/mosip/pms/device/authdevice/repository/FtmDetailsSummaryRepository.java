@@ -16,9 +16,9 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
             "CASE " +
             "WHEN f.approvalStatus = 'approved' AND f.isActive = true THEN 'approved' " +
             "WHEN f.approvalStatus = 'approved' AND f.isActive = false THEN 'deactivated' " +
-            "WHEN f.approvalStatus = 'rejected' AND f.isActive = false THEN 'rejected' " +
-            "WHEN f.approvalStatus = 'pending_approval' AND f.isActive = false THEN 'pending_approval' " +
-            "WHEN f.approvalStatus = 'pending_cert_upload' AND f.isActive = false THEN 'pending_cert_upload' " +
+            "WHEN f.approvalStatus = 'rejected' THEN 'rejected' " +
+            "WHEN f.approvalStatus = 'pending_approval' THEN 'pending_approval' " +
+            "WHEN f.approvalStatus = 'pending_cert_upload' THEN 'pending_cert_upload' " +
             "END AS approvalStatus, " +
             "f.isActive, CASE WHEN f.certificateAlias IS NULL THEN false ELSE true END, f.crDtimes) " +
             "FROM FTPChipDetail f " +
@@ -29,9 +29,9 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
             "AND (:status IS NULL OR " +
             "(:status = 'deactivated' AND f.approvalStatus = 'approved' AND f.isActive = false) " +
             "OR (:status = 'approved' AND f.approvalStatus = 'approved' AND f.isActive = true) " +
-            "OR (:status = 'rejected' AND f.approvalStatus = 'rejected' AND f.isActive = false) " +
-            "OR (:status = 'pending_approval' AND f.approvalStatus = 'pending_approval' AND f.isActive = false) " +
-            "OR (:status = 'pending_cert_upload' AND f.approvalStatus = 'pending_cert_upload' AND f.isActive = false))"
+            "OR (:status = 'rejected' AND f.approvalStatus = 'rejected') " +
+            "OR (:status = 'pending_approval' AND f.approvalStatus = 'pending_approval') " +
+            "OR (:status = 'pending_cert_upload' AND f.approvalStatus = 'pending_cert_upload'))"
     )
     Page<FtmDetailSummaryEntity> getSummaryOfPartnersFtmDetails(
             @Param("partnerId") String partnerId,
