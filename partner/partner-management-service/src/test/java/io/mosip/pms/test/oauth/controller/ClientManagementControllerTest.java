@@ -1,6 +1,7 @@
 package io.mosip.pms.test.oauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -36,7 +37,7 @@ public class ClientManagementControllerTest {
     @Autowired
     ClientManagementController clientManagementController;
 
-    @Autowired
+    @Mock
     private ClientManagementServiceImpl serviceImpl;
 
     @Mock
@@ -167,4 +168,18 @@ public class ClientManagementControllerTest {
         ResponseWrapperV2<List<OauthClientDto>> actualResponse = clientController.getClients();
     }
 
+    @Test
+    public void getPartnersClientsTest() throws Exception {
+        String sortFieldName = "createdDateTime";
+        String sortType = "desc";
+        int pageNo = 0;
+        int pageSize = 8;
+        ClientFilterDto filterDto = new ClientFilterDto();
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+        PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+        responseWrapper.setResponse(pageResponse);
+        when(serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
+                .thenReturn(responseWrapper);
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapperV2 = clientController.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, "abc", "org", "group123", "123", "test", "ACTIVE");
+    }
 }
