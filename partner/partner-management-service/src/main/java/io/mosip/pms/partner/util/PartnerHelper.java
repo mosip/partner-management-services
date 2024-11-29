@@ -202,26 +202,26 @@ public class PartnerHelper {
         }
     }
 
-    public void populateFtmCertificateExpiryState(FtmCertificateDownloadResponseDto originalCertDownloadResponseDto) {
-        originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
-        originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
+    public void populateFtmCertificateExpiryState(FtmCertificateDownloadResponseDto ftmCertificateDownloadResponseDto) {
+        ftmCertificateDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
+        ftmCertificateDownloadResponseDto.setIsCaSignedCertificateExpired(false);
 
-        X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
-        originalCertDownloadResponseDto.setMosipSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
-        originalCertDownloadResponseDto.setMosipSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(ftmCertificateDownloadResponseDto.getMosipSignedCertificateData());
+        ftmCertificateDownloadResponseDto.setMosipSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setMosipSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         // Check mosip signed certificate expiry date
         if (isCertificateExpired(decodedMosipSignedCert)) {
-            originalCertDownloadResponseDto.setMosipSignedCertificateData("");
-            originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
+            ftmCertificateDownloadResponseDto.setMosipSignedCertificateData("");
+            ftmCertificateDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
         }
 
-        X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
-        originalCertDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
-        originalCertDownloadResponseDto.setCaSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(ftmCertificateDownloadResponseDto.getCaSignedCertificateData());
+        ftmCertificateDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setCaSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         // Check ca signed partner certificate expiry date
         if (isCertificateExpired(decodedCaSignedCert)) {
-            originalCertDownloadResponseDto.setCaSignedCertificateData("");
-            originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
+            ftmCertificateDownloadResponseDto.setCaSignedCertificateData("");
+            ftmCertificateDownloadResponseDto.setIsCaSignedCertificateExpired(true);
         }
     }
 
