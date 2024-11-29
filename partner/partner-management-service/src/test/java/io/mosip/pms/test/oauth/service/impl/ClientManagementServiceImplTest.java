@@ -14,6 +14,7 @@ import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +23,7 @@ import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.oauth.client.dto.*;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -78,6 +81,9 @@ public class ClientManagementServiceImplTest {
 
 	@Mock
 	AuthPolicyRepository authPolicyRepository;
+
+	@Mock
+	ClientSummaryRepository clientSummaryRepository;
 
 	@Mock
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
@@ -1324,6 +1330,46 @@ public class ClientManagementServiceImplTest {
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
 
 		serviceImpl.getClients();
+	}
+
+	@Test
+	public void getPartnersClientsTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ClientFilterDto filterDto = new ClientFilterDto();
+		filterDto.setPartnerId("abc");
+		filterDto.setStatus("ACTIVE");
+		filterDto.setOrgName("ABC");
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<ClientSummaryEntity> page = null;
+		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getPartnersClientsTestException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<ClientSummaryEntity> page = null;
+		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

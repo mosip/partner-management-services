@@ -9,8 +9,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
+import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
+import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -20,6 +25,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,6 +109,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
+
+	@Autowired
+	FtmDetailsSummaryRepository ftmDetailsSummaryRepository;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -132,6 +143,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@Value("${mosip.pms.api.id.original.ftm.certificate.get}")
 	private  String getOriginalFtmCertificateId;
+
+	@Value("${mosip.pms.api.id.partners.ftm.chip.details.get}")
+	private  String getPartnersFtmChipDetailsId;
 	
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -541,8 +555,13 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if(!isAdmin){
+				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+				checkIfPartnerIsNotActive(partnerDetails);
+			}
+
 			if (!ftm.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate FTM with id {}", ftm.getFtpChipDetailId());
 				throw new PartnerServiceException(ErrorCode.FTM_NOT_APPROVED.getErrorCode(),
@@ -596,8 +615,12 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-			Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-			checkIfPartnerIsNotActive(partnerDetails);
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if(!isAdmin){
+				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
+				checkIfPartnerIsNotActive(partnerDetails);
+			}
 
 			if (!(ftm.getApprovalStatus().equals(PENDING_APPROVAL) || ftm.getApprovalStatus().equals(APPROVED))) {
 				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
@@ -629,6 +652,49 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		responseWrapper.setId(getOriginalFtmCertificateId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(String sortFieldName, String sortType, int pageNo, int pageSize, FtmChipFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto pageResponseV2Dto = new PageResponseV2Dto();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.ftmAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<FtmDetailSummaryEntity> page = ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
+					filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<FtmDetailSummaryDto> ftmDetailSummaryDtoList = MapperUtils.mapAll(page.getContent(), FtmDetailSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(ftmDetailSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getPartnersFtmChipDetails method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnersFtmChipDetails method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnersFtmChipDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	public static void validateFtmId(String ftmId) {
