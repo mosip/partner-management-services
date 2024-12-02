@@ -208,7 +208,7 @@ public class PartnerHelper {
 
         X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(ftmCertificateDownloadResponseDto.getMosipSignedCertificateData());
         ftmCertificateDownloadResponseDto.setMosipSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
-        ftmCertificateDownloadResponseDto.setMosipSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setMosipSignedCertUploadDateTime(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         // Check mosip signed certificate expiry date
         if (isCertificateExpired(decodedMosipSignedCert)) {
             ftmCertificateDownloadResponseDto.setMosipSignedCertificateData("");
@@ -217,7 +217,7 @@ public class PartnerHelper {
 
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(ftmCertificateDownloadResponseDto.getCaSignedCertificateData());
         ftmCertificateDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
-        ftmCertificateDownloadResponseDto.setCaSignedCertTimeOfUpload(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setCaSignedCertUploadDateTime(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         // Check ca signed partner certificate expiry date
         if (isCertificateExpired(decodedCaSignedCert)) {
             ftmCertificateDownloadResponseDto.setCaSignedCertificateData("");
