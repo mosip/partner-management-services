@@ -14,7 +14,7 @@ public class FtmCertificateDownloadResponseDto {
     private String caSignedCertificateData;
 
     @Schema(description = "DateTime when the CA certificate was uploaded", example = "2024-07-15T10:00:00Z")
-    private LocalDateTime caSignedCertTimeOfUpload;
+    private LocalDateTime caSignedCertUploadDateTime;
 
     @Schema(description = "DateTime when the CA certificate will get expired", example = "2024-07-15T10:00:00Z")
     private LocalDateTime caSignedCertExpiryDateTime;
@@ -29,7 +29,7 @@ public class FtmCertificateDownloadResponseDto {
     private String mosipSignedCertificateData;
 
     @Schema(description = "DateTime when the mosip certificate was uploaded", example = "2024-07-15T10:00:00Z")
-    private LocalDateTime mosipSignedCertTimeOfUpload;
+    private LocalDateTime mosipSignedCertUploadDateTime;
 
     @Schema(description = "DateTime when the mosip certificate will get expired", example = "2024-07-15T10:00:00Z")
     private LocalDateTime mosipSignedCertExpiryDateTime;
