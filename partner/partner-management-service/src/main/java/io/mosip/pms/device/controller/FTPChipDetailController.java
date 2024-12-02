@@ -13,7 +13,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -270,7 +270,7 @@ public class FTPChipDetailController {
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalFtmCertificate(
+	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getOriginalFtmCertificate(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		return ftpChipDetaillService.getOriginalFtmCertificate(ftmId);
 	}

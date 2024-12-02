@@ -15,8 +15,7 @@ import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.*;
-import io.mosip.pms.partner.constant.PartnerConstants;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -600,8 +599,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalFtmCertificate(String ftmId) {
-		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getOriginalFtmCertificate(String ftmId) {
+		ResponseWrapperV2<FtmCertificateDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -634,9 +633,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			}
 
 			// Download only if the FTM is approved or pending_approval status.
-			OriginalCertDownloadResponseDto responseObject = null;
-			responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", OriginalCertDownloadResponseDto.class);
-			partnerHelper.populateCertificateExpiryState(responseObject);
+			FtmCertificateDownloadResponseDto responseObject = null;
+			responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
+			partnerHelper.populateFtmCertificateExpiryState(responseObject);
 			responseWrapper.setResponse(responseObject);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());

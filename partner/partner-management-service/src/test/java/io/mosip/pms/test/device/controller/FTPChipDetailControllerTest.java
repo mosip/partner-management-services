@@ -17,7 +17,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -401,9 +401,9 @@ public class FTPChipDetailControllerTest {
 	@Test
 	@WithMockUser(roles = {"FTM_PROVIDER"})
 	public void getOriginalFtmCertificateTest() throws Exception {
-		ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
-		responseWrapper.setResponse(originalCertDownloadResponseDto);
+		ResponseWrapperV2<FtmCertificateDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		FtmCertificateDownloadResponseDto ftmCertificateDownloadResponseDto = new FtmCertificateDownloadResponseDto();
+		responseWrapper.setResponse(ftmCertificateDownloadResponseDto);
 		Mockito.when(ftpChipDetaillService.getOriginalFtmCertificate(Mockito.any())).thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/original-ftm-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
