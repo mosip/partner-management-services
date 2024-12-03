@@ -1126,18 +1126,7 @@ public class PolicyManagementService {
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				if (sortFieldName.equalsIgnoreCase("status")) {
-					sortType = sortType.equalsIgnoreCase(CommonConstant.ASC) ? CommonConstant.DESC : CommonConstant.ASC;
-				}
-				Sort sort = PolicyUtil.getSortingRequest(getSortColumn(sortFieldName), sortType);
-				pageable = PageRequest.of(pageNo, pageSize, sort);
-			}
-			Page<PolicySummaryEntity> page = policySummaryRepository.
-					getSummaryOfAllPolicies(filterDto.getPolicyId(), filterDto.getPolicyType(),
-							filterDto.getPolicyName(), filterDto.getPolicyDescription(),
-							filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+			Page<PolicySummaryEntity> page = getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PolicySummaryDto> policySummaryDtoList = MapperUtils.mapAll(page.getContent(), PolicySummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -1160,6 +1149,28 @@ public class PolicyManagementService {
 		responseWrapper.setId(getPoliciesId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private Page<PolicySummaryEntity> getAllPolicies(String sortFieldName, String sortType, int pageNo, int pageSize, PolicyFilterDto filterDto, Pageable pageable) {
+		//Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			//sorting handling for the 'status' field
+			if (sortFieldName.equalsIgnoreCase("status") && sortType.equalsIgnoreCase(CommonConstant.ASC)) {
+				return policySummaryRepository.
+						getSummaryOfAllPoliciesByStatusAsc(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+								filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+			} else if (sortFieldName.equalsIgnoreCase("status") && sortType.equalsIgnoreCase(CommonConstant.DESC)) {
+				return policySummaryRepository.
+						getSummaryOfAllPoliciesByStatusDesc(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+								filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+			}
+			//Sorting for other fields
+			Sort sort = PolicyUtil.getSortingRequest(getSortColumn(sortFieldName), sortType);
+			pageable = PageRequest.of(pageNo, pageSize, sort);
+		}
+		return policySummaryRepository.
+				getSummaryOfAllPolicies(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+						filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
 	}
 
 	public String getSortColumn(String alias) {
