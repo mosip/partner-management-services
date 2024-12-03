@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository("PolicySummaryRepository")
 public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEntity, String> {
 
-    @Query(value = "SELECT new PolicySummaryEntity(" +
+    String POLICY_SUMMARY_QUERY = "SELECT new PolicySummaryEntity(" +
             "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
             "CASE " +
             "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
@@ -29,8 +29,9 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             "AND (:status IS NULL OR " +
             "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
             "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
-            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))"
-    )
+            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))";
+
+    @Query(POLICY_SUMMARY_QUERY)
     Page<PolicySummaryEntity> getSummaryOfAllPolicies(
             @Param("policyId") String policyId,
             @Param("policyType") String policyType,
@@ -41,27 +42,7 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             Pageable pageable
     );
 
-    @Query(value = "SELECT new PolicySummaryEntity(" +
-            "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
-            "CASE " +
-            "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
-            "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +
-            "WHEN (p.schema IS NOT NULL AND p.isActive = false) THEN 'deactivated' " +
-            "END as status, " +
-            "p.crDtimes) " +
-            "FROM AuthPolicy p " +
-            "LEFT JOIN p.policyGroup pg " +
-            "WHERE (:policyId IS NULL OR lower(p.id) LIKE %:policyId%) " +
-            "AND (:policyType IS NULL OR lower(p.policyType) LIKE %:policyType%) " +
-            "AND (:policyName IS NULL OR lower(p.name) LIKE %:policyName%) " +
-            "AND (:policyDescription IS NULL OR lower(p.descr) LIKE %:policyDescription%) " +
-            "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
-            "AND (:status IS NULL OR " +
-            "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
-            "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
-            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true)) " +
-            "ORDER BY status ASC"
-    )
+    @Query(POLICY_SUMMARY_QUERY + " ORDER BY status ASC")
     Page<PolicySummaryEntity> getSummaryOfAllPoliciesByStatusAsc(
             @Param("policyId") String policyId,
             @Param("policyType") String policyType,
@@ -72,27 +53,7 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             Pageable pageable
     );
 
-    @Query(value = "SELECT new PolicySummaryEntity(" +
-            "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
-            "CASE " +
-            "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
-            "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +
-            "WHEN (p.schema IS NOT NULL AND p.isActive = false) THEN 'deactivated' " +
-            "END as status, " +
-            "p.crDtimes) " +
-            "FROM AuthPolicy p " +
-            "LEFT JOIN p.policyGroup pg " +
-            "WHERE (:policyId IS NULL OR lower(p.id) LIKE %:policyId%) " +
-            "AND (:policyType IS NULL OR lower(p.policyType) LIKE %:policyType%) " +
-            "AND (:policyName IS NULL OR lower(p.name) LIKE %:policyName%) " +
-            "AND (:policyDescription IS NULL OR lower(p.descr) LIKE %:policyDescription%) " +
-            "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
-            "AND (:status IS NULL OR " +
-            "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
-            "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
-            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true)) " +
-            "ORDER BY status DESC"
-    )
+    @Query(POLICY_SUMMARY_QUERY + " ORDER BY status DESC")
     Page<PolicySummaryEntity> getSummaryOfAllPoliciesByStatusDesc(
             @Param("policyId") String policyId,
             @Param("policyType") String policyType,
