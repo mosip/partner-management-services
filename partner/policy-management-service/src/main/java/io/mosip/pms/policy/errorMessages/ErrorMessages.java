@@ -52,11 +52,15 @@ public enum ErrorMessages {
 	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
 	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
 	POLICIES_FETCH_ERROR("PMS_POL_061", "Error while fetching policies"),
-	POLICY_ALREADY_DEACTIVATED("PMS_POL_062", "The policy is already deactivated."),
+	POLICY_ALREADY_DEACTIVATED("PMS_POL_062", "The policy has already been deactivated."),
 	POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR("PMS_POL_063", "An approved partner policy request is associated with this policy."),
 	POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR("PMS_POL_064", "A pending partner policy request is associated with this policy."),
 	POLICY_DOES_NOT_EXIST("PMS_POL_065", "The specified policy does not exist."),
-	POLICY_DEACTIVATION_ERROR("PMS_POL_066", "Error while deactivating policy");
+	POLICY_DEACTIVATION_ERROR("PMS_POL_066", "Error while deactivating policy"),
+	POLICY_GROUP_ALREADY_DEACTIVATED("PMS_POL_067", "The policy group has already been deactivated"),
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_POL_068", "The specified policy group does not exist"),
+	DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP("PMS_POL_069","Draft policies exists under the policy group."),
+	POLICY_GROUP_DEACTIVATION_ERROR("PMS_POL_070", "Error while deactivating policy group");
 	
 	private final String errorCode;
 	private final String errorMessage;
