@@ -94,6 +94,7 @@ import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.dto.PolicySummaryDto;
 import io.mosip.pms.policy.dto.PolicyFilterDto;
 import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyGroupResponseDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -162,6 +163,9 @@ public class PolicyManagementService {
 
 	@Value("${mosip.pms.api.id.deactivate.policy.patch}")
 	private String patchDeactivatePolicyId;
+
+	@Value("${mosip.pms.api.id.deactivate.policy.group.patch}")
+	private String patchDeactivatePolicyGroupId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -1232,6 +1236,64 @@ public class PolicyManagementService {
 			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchDeactivatePolicyId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(String policyGroupId) {
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(policyGroupId) || policyGroupId.isBlank()){
+				logger.error("The policy group id is null or empty");
+				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
+			if (policyGroupFromDb.isEmpty()){
+				logger.error("The policy group does not exits for policy group Id:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
+			}
+			if (!policyGroupFromDb.get().getIsActive()){
+				logger.error("The policy group is already deactivated for policy group Id:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+			if(isActivePolicesExists(policyGroupId)) {
+				logger.error("Active policies are associated with the policy group having ID:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());
+			}
+			List<AuthPolicy> draftPolicies = authPolicyRepository.findDraftPoliciesByPolicyGroupId(policyGroupId);
+			if (!draftPolicies.isEmpty()){
+				logger.error("Draft policies are associated with the policy group having ID:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());
+			}
+			//deactivate policy group
+			PolicyGroup policyGroup = policyGroupFromDb.get();
+			policyGroup.setIsActive(false);
+			policyGroup.setUpdDtimes(LocalDateTime.now());
+			policyGroup.setUpdBy(getUser());
+			PolicyGroup deactivatedPolicyGroup = policyGroupRepository.save(policyGroup);
+			logger.error("policy group has been deactivated successfully having Id:", policyGroupId);
+
+			DeactivatePolicyGroupResponseDto deactivatePolicyGroupResponseDto = new DeactivatePolicyGroupResponseDto();
+			deactivatePolicyGroupResponseDto.setPolicyGroupId(deactivatedPolicyGroup.getId());
+			deactivatePolicyGroupResponseDto.setIsActive(deactivatedPolicyGroup.getIsActive());
+			responseWrapper.setResponse(deactivatePolicyGroupResponseDto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In deactivatePolicyGroup method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In deactivatePolicyGroup method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_GROUP_DEACTIVATION_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_GROUP_DEACTIVATION_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivatePolicyGroupId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

@@ -60,6 +60,7 @@ import io.mosip.pms.policy.dto.PolicyGroupDto;
 import io.mosip.pms.policy.dto.PolicySummaryDto;
 import io.mosip.pms.policy.dto.PolicyFilterDto;
 import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyGroupResponseDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -107,7 +108,6 @@ public class PolicyManagementController {
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());		
 		return response;		
-
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpolicies())")
@@ -368,5 +368,17 @@ public class PolicyManagementController {
 	})
 	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable String policyId) {
 		return policyManagementService.deactivatePolicy(policyId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
+	@PatchMapping(value = "/group/{policyGroupId}/v2")
+	@Operation(summary = "Service to deactivate a policy group", description = "Service to deactivate a policy group")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(@PathVariable String policyGroupId) {
+		return policyManagementService.deactivatePolicyGroup(policyGroupId);
 	}
 }
