@@ -98,6 +98,19 @@ public class PartnerHelper {
         ftmAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
+    public final Map<String, String> sbiAliasToColumnMap = new HashMap<>();
+    {
+        sbiAliasToColumnMap.put("partnerId", "providerId");
+        sbiAliasToColumnMap.put("orgName", "partnerOrgName");
+        sbiAliasToColumnMap.put("partnerType", "p.partnerTypeCode");
+        sbiAliasToColumnMap.put("sbiId", "id");
+        sbiAliasToColumnMap.put("sbiVersion", "swVersion");
+        sbiAliasToColumnMap.put("sbiCreatedDateTime", "swCreateDateTime");
+        sbiAliasToColumnMap.put("sbiExpiryDateTime", "swExpiryDateTime");
+        sbiAliasToColumnMap.put("status", "approvalStatus");
+        sbiAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
