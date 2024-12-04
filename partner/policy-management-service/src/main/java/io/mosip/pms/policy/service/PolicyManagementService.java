@@ -45,6 +45,7 @@ import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PolicyCountDto;
 import io.mosip.pms.common.dto.PolicyFilterValueDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.PolicySearchDto;
@@ -1259,13 +1260,19 @@ public class PolicyManagementService {
 				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorCode(),
 						ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorMessage());
 			}
-			if(isActivePolicesExists(policyGroupId)) {
+			PolicyCountDto policyCountDto = authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId);
+
+			if (policyCountDto.getActivePoliciesCount() > 0 && policyCountDto.getDraftPoliciesCount() > 0) {
+				logger.error("Active and draft policies are associated with the policy group. PolicyGroupId: {}", policyGroupId);
+				throw new PolicyManagementServiceException(
+						ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorMessage()
+				);
+			} else if (policyCountDto.getActivePoliciesCount() > 0) {
 				logger.error("Active policies are associated with the policy group having ID:", policyGroupId);
 				throw new PolicyManagementServiceException(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
 						ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());
-			}
-			List<AuthPolicy> draftPolicies = authPolicyRepository.findDraftPoliciesByPolicyGroupId(policyGroupId);
-			if (!draftPolicies.isEmpty()){
+			} else if (policyCountDto.getDraftPoliciesCount() > 0) {
 				logger.error("Draft policies are associated with the policy group having ID:", policyGroupId);
 				throw new PolicyManagementServiceException(ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
 						ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());

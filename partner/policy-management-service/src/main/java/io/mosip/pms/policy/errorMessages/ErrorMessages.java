@@ -59,8 +59,9 @@ public enum ErrorMessages {
 	POLICY_DEACTIVATION_ERROR("PMS_POL_066", "Error while deactivating policy"),
 	POLICY_GROUP_ALREADY_DEACTIVATED("PMS_POL_067", "The policy group has already been deactivated"),
 	POLICY_GROUP_DOES_NOT_EXIST("PMS_POL_068", "The specified policy group does not exist"),
-	DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP("PMS_POL_069","Draft policies exists under the policy group."),
-	POLICY_GROUP_DEACTIVATION_ERROR("PMS_POL_070", "Error while deactivating policy group");
+	ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP(	"PMS_POL_069", "Active or draft policies are associated with the policy group"),
+	DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP("PMS_POL_070","Draft policies exists under the policy group."),
+	POLICY_GROUP_DEACTIVATION_ERROR("PMS_POL_071", "Error while deactivating policy group");
 	
 	private final String errorCode;
 	private final String errorMessage;
