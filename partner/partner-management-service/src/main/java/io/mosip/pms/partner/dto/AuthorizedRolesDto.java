@@ -54,6 +54,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getpartnersftmchipdetails;
 
+	private List<String> getallsbidetails;
+
 	//Secure Biometric Interface controller
 	
 	private List<String> postsecurebiometricinterface;

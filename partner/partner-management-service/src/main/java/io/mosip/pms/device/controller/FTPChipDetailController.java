@@ -276,7 +276,7 @@ public class FTPChipDetailController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
-	@GetMapping(value = "search/v2")
+	@GetMapping(value = "/search/v2")
 	@Operation(summary = "Get all partners FTM chip details", description = "This endpoint will fetch a list of all the partners FTM chip details")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
@@ -293,7 +293,7 @@ public class FTPChipDetailController {
 			@RequestParam(value = "make", required = false) String make,
 			@RequestParam(value = "model", required = false) String model,
 			@Parameter(
-					description = "Status of certificate upload",
+					description = "Status of FTM",
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"approved", "rejected", "pending_cert_upload", "pending_approval", "deactivated"})
 			)
