@@ -109,6 +109,7 @@ public class PartnerHelper {
         sbiAliasToColumnMap.put("sbiExpiryDateTime", "swExpiryDateTime");
         sbiAliasToColumnMap.put("status", "approvalStatus");
         sbiAliasToColumnMap.put("createdDateTime", "crDtimes");
+        sbiAliasToColumnMap.put("sbiExpiryStatus", "sbiExpiryStatus");
     }
 
     public final Map<String, String> deviceAliasToColumnMap = new HashMap<>();
