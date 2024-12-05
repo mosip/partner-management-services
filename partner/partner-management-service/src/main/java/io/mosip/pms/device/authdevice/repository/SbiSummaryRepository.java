@@ -19,7 +19,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "WHEN s.approvalStatus = 'rejected' THEN 'rejected' " +
             "WHEN s.approvalStatus = 'pending_approval' THEN 'pending_approval' " +
             "END AS status, " +
-            "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes, COUNT(dd.id.deviceDetailId) AS devicesCount, " +
+            "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes, COUNT(dd.id.deviceDetailId) AS countOfAssociatedDevices, " +
             "CASE " +
             "WHEN s.swExpiryDateTime < CURRENT_DATE THEN 'expired' " +
             "ELSE 'valid' " +
@@ -83,6 +83,26 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
 
     @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus DESC")
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusDesc(
+            @Param("partnerId") String partnerId,
+            @Param("orgName") String orgName,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            Pageable pageable
+    );
+
+    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices ASC")
+    Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountAsc(
+            @Param("partnerId") String partnerId,
+            @Param("orgName") String orgName,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            Pageable pageable
+    );
+
+    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices DESC")
+    Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
             @Param("sbiVersion") String sbiVersion,

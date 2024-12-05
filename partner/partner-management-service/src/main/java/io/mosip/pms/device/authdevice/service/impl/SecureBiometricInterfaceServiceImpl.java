@@ -901,6 +901,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			} else if (sortFieldName.equals("sbiExpiryStatus") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
 				return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
 						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+			} else if (sortFieldName.equals("countOfAssociatedDevices") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+				return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
+						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+			} else if (sortFieldName.equals("countOfAssociatedDevices") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+				return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
+						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
 			}
 			//Sorting for other fields
 			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
