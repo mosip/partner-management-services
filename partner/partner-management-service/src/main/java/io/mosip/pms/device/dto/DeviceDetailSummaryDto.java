@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 @Data
 public class DeviceDetailSummaryDto {
 
+    @Schema(description = "Unique identifier for the device", example = "device12")
+    private String deviceId;
+
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
