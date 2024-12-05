@@ -891,17 +891,23 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			//sorting handling for the 'status' field
 			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
 				return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getSbiVersion(), filterDto.getStatus(), pageable);
+								filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
 			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
 				return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getSbiVersion(), filterDto.getStatus(), pageable);
+								filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+			} else if (sortFieldName.equals("sbiExpiryStatus") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+				return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
+						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+			} else if (sortFieldName.equals("sbiExpiryStatus") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+				return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
+						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
 			}
 			//Sorting for other fields
 			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
 			pageable = PageRequest.of(pageNo, pageSize, sort);
 		}
 		return sbiSummaryRepository.getSummaryOfSbiDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
-						filterDto.getSbiVersion(), filterDto.getStatus(), pageable);
+						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

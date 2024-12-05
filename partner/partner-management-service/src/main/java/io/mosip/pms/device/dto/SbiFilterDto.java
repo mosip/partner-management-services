@@ -9,4 +9,5 @@ public class SbiFilterDto {
     private String orgName;
     private String sbiVersion;
     private String status;
+    private String sbiExpiryStatus;
 }

@@ -26,7 +26,8 @@ import java.time.LocalDateTime;
                         @ColumnResult(name = "sbiCreatedDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "sbiExpiryDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "createdDateTime", type = LocalDateTime.class),
-                        @ColumnResult(name = "countOfAssociatedDevices", type = Long.class)
+                        @ColumnResult(name = "countOfAssociatedDevices", type = Long.class),
+                        @ColumnResult(name = "sbiExpiryStatus", type = String.class)
                 })
         }
 )
@@ -34,7 +35,8 @@ public class SbiSummaryEntity {
 
     public SbiSummaryEntity(String partnerId, String orgName, String partnerType, String sbiId, String sbiVersion,
                             String status, Boolean isActive, LocalDateTime sbiCreatedDateTime,
-                            LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime, Long countOfAssociatedDevices) {
+                            LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime,
+                            Long countOfAssociatedDevices, String sbiExpiryStatus) {
         this.partnerId = partnerId;
         this.orgName = orgName;
         this.partnerType = partnerType;
@@ -46,6 +48,7 @@ public class SbiSummaryEntity {
         this.sbiExpiryDateTime = sbiExpiryDateTime;
         this.createdDateTime = createdDateTime;
         this.countOfAssociatedDevices = countOfAssociatedDevices;
+        this.sbiExpiryStatus = sbiExpiryStatus;
     }
 
     // No-argument constructor
@@ -75,4 +78,6 @@ public class SbiSummaryEntity {
     private LocalDateTime createdDateTime;
 
     private Long countOfAssociatedDevices;
+
+    private String sbiExpiryStatus;
 }

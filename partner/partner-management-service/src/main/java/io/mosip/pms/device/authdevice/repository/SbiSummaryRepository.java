@@ -19,7 +19,11 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "WHEN s.approvalStatus = 'rejected' THEN 'rejected' " +
             "WHEN s.approvalStatus = 'pending_approval' THEN 'pending_approval' " +
             "END AS status, " +
-            "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes, COUNT(dd.id.deviceDetailId) AS devicesCount) " +
+            "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes, COUNT(dd.id.deviceDetailId) AS devicesCount, " +
+            "CASE " +
+            "WHEN s.swExpiryDateTime < CURRENT_DATE THEN 'expired' " +
+            "ELSE 'valid' " +
+            "END AS sbiExpiryStatus ) " +
             "FROM SecureBiometricInterfaceV2 s " +
             "LEFT JOIN s.partner p " +
             "LEFT JOIN DeviceDetailSBI dd ON dd.id.sbiId = s.id " +
@@ -31,6 +35,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "OR (:status = 'approved' AND s.approvalStatus = 'approved' AND s.isActive = true) " +
             "OR (:status = 'rejected' AND s.approvalStatus = 'rejected') " +
             "OR (:status = 'pending_approval' AND s.approvalStatus = 'pending_approval')) " +
+            "AND (:sbiExpiryStatus IS NULL OR " +
+            "(:sbiExpiryStatus = 'expired' AND s.swExpiryDateTime < CURRENT_DATE) " +
+            "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE))" +
             "GROUP BY s.providerId, s.partnerOrgName, p.partnerTypeCode, s.id, s.swVersion, s.approvalStatus, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes";
 
@@ -40,6 +47,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("orgName") String orgName,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
             Pageable pageable
     );
 
@@ -49,6 +57,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("orgName") String orgName,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
             Pageable pageable
     );
 
@@ -58,6 +67,27 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("orgName") String orgName,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            Pageable pageable
+    );
+
+    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus ASC")
+    Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusAsc(
+            @Param("partnerId") String partnerId,
+            @Param("orgName") String orgName,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            Pageable pageable
+    );
+
+    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus DESC")
+    Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusDesc(
+            @Param("partnerId") String partnerId,
+            @Param("orgName") String orgName,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("status") String status,
+            @Param("sbiExpiryStatus") String sbiExpiryStatus,
             Pageable pageable
     );
 }

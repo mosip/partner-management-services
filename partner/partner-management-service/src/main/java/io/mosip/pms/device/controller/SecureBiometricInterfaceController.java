@@ -265,7 +265,13 @@ public class SecureBiometricInterfaceController {
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"approved", "rejected", "pending_approval", "deactivated"})
 			)
-			@RequestParam(value = "status", required = false) String status
+			@RequestParam(value = "status", required = false) String status,
+			@Parameter(
+					description = "Status of SBI based on expiry date time",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"expired", "valid"})
+			)
+			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus
 	) {
 		partnerHelper.validateRequestParameters(partnerHelper.sbiAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		SbiFilterDto filterDto = new SbiFilterDto();
@@ -280,6 +286,9 @@ public class SecureBiometricInterfaceController {
 		}
 		if (status != null) {
 			filterDto.setStatus(status);
+		}
+		if (sbiExpiryStatus != null) {
+			filterDto.setSbiExpiryStatus(sbiExpiryStatus);
 		}
 		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}

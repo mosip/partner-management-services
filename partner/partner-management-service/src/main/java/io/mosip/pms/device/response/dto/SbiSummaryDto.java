@@ -35,6 +35,9 @@ public class SbiSummaryDto {
     @Schema(description = "Date and time when the SBI expires", example = "2025-07-15T10:00:00Z")
     private LocalDateTime sbiExpiryDateTime;
 
+    @Schema(description = "Current status of the SBI based on expiry date time", example = "expired")
+    private String sbiExpiryStatus;
+
     @Schema(description = "Number of approved devices associated with the SBI", example = "29")
     private Long countOfAssociatedDevices;
 
