@@ -620,11 +620,11 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			Page<DeviceDetailEntity> page = getDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
 
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<DeviceDetailSummaryDto> detailSummaryDtoList = MapperUtils.mapAll(page.getContent(), DeviceDetailSummaryDto.class);
+				List<DeviceDetailSummaryDto> deviceDetailSummaryDtoList = MapperUtils.mapAll(page.getContent(), DeviceDetailSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
-				pageResponseV2Dto.setData(detailSummaryDtoList);
+				pageResponseV2Dto.setData(deviceDetailSummaryDtoList);
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
