@@ -886,28 +886,57 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto, Pageable pageable) {
-		//Sorting
+		// Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-			//sorting handling for the 'status' field
-			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
-				return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
-			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
-				return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
-			} else if (sortFieldName.equals("sbiExpiryStatus") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
-				return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
-						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
-			} else if (sortFieldName.equals("sbiExpiryStatus") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
-				return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
-						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
+			switch (sortKey) {
+				case "status_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "status_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "sbiExpiryStatus_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "sbiExpiryStatus_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "countOfAssociatedDevices_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "countOfAssociatedDevices_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				default:
+					// generic sorting logic for other fields
+					Sort sort = partnerHelper.getSortingRequest(
+							getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
+					pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
-			//Sorting for other fields
-			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
-			pageable = PageRequest.of(pageNo, pageSize, sort);
 		}
-		return sbiSummaryRepository.getSummaryOfSbiDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
-						filterDto.getSbiVersion(), filterDto.getStatus(), filterDto.getSbiExpiryStatus(), pageable);
+		return sbiSummaryRepository.getSummaryOfSbiDetails(
+				filterDto.getPartnerId(), filterDto.getOrgName(),
+				filterDto.getSbiVersion(), filterDto.getStatus(),
+				filterDto.getSbiExpiryStatus(), pageable);
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
