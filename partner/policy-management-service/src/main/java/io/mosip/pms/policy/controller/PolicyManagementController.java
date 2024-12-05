@@ -371,7 +371,7 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
-	@PatchMapping(value = "/group/{policyGroupId}/v2")
+	@PatchMapping(value = "/group/{policyGroupId}")
 	@Operation(summary = "Service to deactivate a policy group", description = "Service to deactivate a policy group")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
