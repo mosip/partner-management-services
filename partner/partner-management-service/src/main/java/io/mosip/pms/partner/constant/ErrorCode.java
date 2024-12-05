@@ -132,6 +132,7 @@ public enum ErrorCode {
 	SBI_EXPIRED("PMS_DEVICE_ERROR_021", "SBI for which device is being added is expired"),
 	SBI_NOT_APPROVED("PMS_DEVICE_ERROR_022", "The selected SBI is not in an approved status."),
 	DEVICE_NOT_APPROVED("PMS_DEVICE_ERROR_023", "The selected Device is not in an approved status."),
+	GET_ALL_DEVICE_DETAILS_FETCH_ERROR("PMS_FTM_ERROR_024", "Error occurred while retrieving all device details"),
 	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
 	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids."),
 	DEACTIVATE_FTM_ERROR("PMS_FTM_ERROR_003", "Error while deactivating the FTM"),

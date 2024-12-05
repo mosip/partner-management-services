@@ -111,6 +111,17 @@ public class PartnerHelper {
         sbiAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
+    public final Map<String, String> deviceAliasToColumnMap = new HashMap<>();
+    {
+        deviceAliasToColumnMap.put("partnerId", "deviceProviderId");
+        deviceAliasToColumnMap.put("orgName", "partnerOrganizationName");
+        deviceAliasToColumnMap.put("deviceType", "deviceTypeCode");
+        deviceAliasToColumnMap.put("deviceSubType", "deviceSubTypeCode");
+        deviceAliasToColumnMap.put("make", "make");
+        deviceAliasToColumnMap.put("model", "model");
+        deviceAliasToColumnMap.put("status", "approvalStatus");
+        deviceAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;

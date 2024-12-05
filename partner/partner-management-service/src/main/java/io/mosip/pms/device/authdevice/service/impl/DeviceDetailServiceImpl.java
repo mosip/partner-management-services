@@ -7,15 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Map;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
+import io.mosip.pms.common.entity.DeviceDetailEntity;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
+import io.mosip.pms.common.repository.DeviceDetailSummaryRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
@@ -25,6 +32,9 @@ import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -80,6 +90,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Value("${mosip.pms.api.id.deactivate.device.post}")
 	private  String postDeactivateDevice;
 
+	@Value("${mosip.pms.api.id.get.all.device.details.get}")
+	private  String getAllDeviceDetailsId;
+
 	@Autowired
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
 
@@ -106,6 +119,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	
 	@Autowired
 	SearchHelper searchHelper;
+
+	@Autowired
+	DeviceDetailSummaryRepository deviceDetailSummaryRepository;
 	
 	@Autowired
 	private PageUtils pageUtils;
@@ -590,6 +606,68 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		responseWrapper.setId(postDeactivateDevice);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<DeviceDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			// Fetch all device details
+			Page<DeviceDetailEntity> page = getDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<DeviceDetailSummaryDto> detailSummaryDtoList = MapperUtils.mapAll(page.getContent(), DeviceDetailSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(detailSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllDevices method of DeviceDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllDevices method of DeviceDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.GET_ALL_DEVICE_DETAILS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.GET_ALL_DEVICE_DETAILS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllDeviceDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private Page<DeviceDetailEntity> getDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto, Pageable pageable) {
+		//Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			//sorting handling for the 'status' field
+			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+				return deviceDetailSummaryRepository.
+						getSummaryOfAllDeviceDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+				return deviceDetailSummaryRepository.
+						getSummaryOfAllDeviceDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+			}
+			//Sorting for other fields
+			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.deviceAliasToColumnMap, sortFieldName), sortType);
+			pageable = PageRequest.of(pageNo, pageSize, sort);
+		}
+		//Default
+		return deviceDetailSummaryRepository.
+				getSummaryOfAllDeviceDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+						filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

@@ -194,5 +194,7 @@ public class AuthorizedRolesDto {
 	private List<String> getoauthpartnersclients;
 
 	private List<String> getpartnersapikeyrequests;
+
+	private List<String> getalldevicedetails;
 		
 }
