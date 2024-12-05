@@ -115,6 +115,7 @@ public class PartnerHelper {
 
     public final Map<String, String> deviceAliasToColumnMap = new HashMap<>();
     {
+        deviceAliasToColumnMap.put("deviceId", "id");
         deviceAliasToColumnMap.put("partnerId", "deviceProviderId");
         deviceAliasToColumnMap.put("orgName", "partnerOrganizationName");
         deviceAliasToColumnMap.put("deviceType", "deviceTypeCode");
