@@ -1,7 +1,7 @@
-package io.mosip.pms.common.repository;
+package io.mosip.pms.device.authdevice.repository;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
-import io.mosip.pms.common.entity.DeviceDetailEntity;
+import io.mosip.pms.device.authdevice.entity.DeviceDetailEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository("DeviceDetailSummaryRepository")
 public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDetailEntity, String> {
 
-    String DEVICE_DETAILS_SUMMARY_QUERY = "SELECT new io.mosip.pms.common.entity.DeviceDetailEntity(" +
+    String DEVICE_DETAILS_SUMMARY_QUERY = "SELECT new io.mosip.pms.device.authdevice.entity.DeviceDetailEntity(" +
             "d.id, d.deviceProviderId, d.partnerOrganizationName, d.deviceTypeCode, d.deviceSubTypeCode, " +
             "CASE " +
             "WHEN (d.approvalStatus = 'approved' AND d.isActive = true) THEN 'approved' " +

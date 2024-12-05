@@ -1,4 +1,4 @@
-package io.mosip.pms.common.entity;
+package io.mosip.pms.device.authdevice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
