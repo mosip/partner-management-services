@@ -559,7 +559,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if(!isAdmin){
 				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-				checkIfPartnerIsNotActive(partnerDetails);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 
 			if (!ftm.getApprovalStatus().equals(APPROVED)) {
@@ -619,7 +619,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if(!isAdmin){
 				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
-				checkIfPartnerIsNotActive(partnerDetails);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 
 			if (!(ftm.getApprovalStatus().equals(PENDING_APPROVAL) || ftm.getApprovalStatus().equals(APPROVED))) {
@@ -728,14 +728,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			LOGGER.error("FTM Details not exists");
 			throw new PartnerServiceException(ErrorCode.FTM_NOT_EXISTS.getErrorCode(),
 					ErrorCode.FTM_NOT_EXISTS.getErrorMessage());
-		}
-	}
-
-	public static void checkIfPartnerIsNotActive(Partner partner) {
-		if (!partner.getIsActive()) {
-			LOGGER.error("Partner is not Active with id {}", partner.getId());
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
 	}
 

@@ -546,28 +546,10 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
 			}
 			DeviceDetail device = deviceDetail.get();
-			// check if the device is associated with user.
-			String deviceProviderId = device.getDeviceProviderId();
-			boolean deviceProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(deviceProviderId)) {
-					validatePartnerId(partner, userId);
-					deviceProviderExist = true;
-					partnerDetails = partner;
-					break;
-				}
-			}
-			if (!deviceProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", deviceProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				Partner partnerDetails = getAssociatedPartner(partnerList, device.getDeviceProviderId(), userId);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 			if (!device.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate device with id {}", device.getId());
@@ -606,6 +588,25 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		responseWrapper.setId(postDeactivateDevice);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public Partner getAssociatedPartner (List<Partner> partnerList, String deviceProviderId, String userId) {
+		boolean deviceProviderExist = false;
+		Partner partnerDetails = null;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(deviceProviderId)) {
+				validatePartnerId(partner, userId);
+				deviceProviderExist = true;
+				partnerDetails = partner;
+				break;
+			}
+		}
+		if (!deviceProviderExist) {
+			LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+		return partnerDetails;
 	}
 
 	@Override
