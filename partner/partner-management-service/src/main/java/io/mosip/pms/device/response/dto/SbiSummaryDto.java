@@ -41,6 +41,12 @@ public class SbiSummaryDto {
     @Schema(description = "Number of approved devices associated with the SBI", example = "29")
     private Long countOfAssociatedDevices;
 
+    @Schema(description = "Number of approved devices associated with the SBI", example = "29")
+    private Long countOfApprovedDevices;
+
+    @Schema(description = "Number of pending devices associated with the SBI", example = "10")
+    private Long countOfPendingDevices;
+
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
     private LocalDateTime createdDateTime;
 }
