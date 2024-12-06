@@ -10,21 +10,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
+import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
+import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -37,6 +47,7 @@ import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
@@ -67,6 +78,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.device.util.AuditUtil;
 
 @Component
@@ -85,6 +97,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
 	private  String postDeactivateSbi;
+
+	@Value("${mosip.pms.api.id.all.sbi.details.get}")
+	private  String getAllSbiDetails;
 
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
@@ -111,10 +126,16 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
 
 	@Autowired
+	SbiSummaryRepository sbiSummaryRepository;
+
+	@Autowired
 	FilterColumnValidator filterColumnValidator;
 
 	@Autowired
 	FilterHelper filterHelper;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Value("${mosip.pms.expiry.date.max.year}")
 	private int maxAllowedExpiryYear;
@@ -829,6 +850,97 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		responseWrapper.setId(postDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto pageResponseV2Dto = new PageResponseV2Dto();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			// Fetch the SBI details
+			Page<SbiSummaryEntity> page = getSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<SbiSummaryDto> sbiSummaryDtoList = MapperUtils.mapAll(page.getContent(), SbiSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(sbiSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllSbiDetails);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto, Pageable pageable) {
+		// Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
+			switch (sortKey) {
+				case "status_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "status_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "sbiExpiryStatus_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "sbiExpiryStatus_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "countOfAssociatedDevices_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				case "countOfAssociatedDevices_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), pageable);
+
+				default:
+					// generic sorting logic for other fields
+					Sort sort = partnerHelper.getSortingRequest(
+							getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
+					pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+		}
+		return sbiSummaryRepository.getSummaryOfSbiDetails(
+				filterDto.getPartnerId(), filterDto.getOrgName(),
+				filterDto.getSbiVersion(), filterDto.getStatus(),
+				filterDto.getSbiExpiryStatus(), pageable);
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

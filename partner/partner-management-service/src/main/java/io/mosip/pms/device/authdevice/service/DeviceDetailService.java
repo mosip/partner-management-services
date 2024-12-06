@@ -1,6 +1,9 @@
 package io.mosip.pms.device.authdevice.service;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import org.springframework.stereotype.Service;
@@ -93,4 +96,5 @@ public interface DeviceDetailService {
 
 	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId);
 
+    ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto);
 }

@@ -98,6 +98,32 @@ public class PartnerHelper {
         ftmAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
+    public final Map<String, String> sbiAliasToColumnMap = new HashMap<>();
+    {
+        sbiAliasToColumnMap.put("partnerId", "providerId");
+        sbiAliasToColumnMap.put("orgName", "partnerOrgName");
+        sbiAliasToColumnMap.put("partnerType", "p.partnerTypeCode");
+        sbiAliasToColumnMap.put("sbiId", "id");
+        sbiAliasToColumnMap.put("sbiVersion", "swVersion");
+        sbiAliasToColumnMap.put("sbiCreatedDateTime", "swCreateDateTime");
+        sbiAliasToColumnMap.put("sbiExpiryDateTime", "swExpiryDateTime");
+        sbiAliasToColumnMap.put("status", "approvalStatus");
+        sbiAliasToColumnMap.put("createdDateTime", "crDtimes");
+        sbiAliasToColumnMap.put("sbiExpiryStatus", "sbiExpiryStatus");
+        sbiAliasToColumnMap.put("countOfAssociatedDevices", "countOfAssociatedDevices");
+    }
+
+    public final Map<String, String> deviceAliasToColumnMap = new HashMap<>();
+    {
+        deviceAliasToColumnMap.put("partnerId", "deviceProviderId");
+        deviceAliasToColumnMap.put("orgName", "partnerOrganizationName");
+        deviceAliasToColumnMap.put("deviceType", "deviceTypeCode");
+        deviceAliasToColumnMap.put("deviceSubType", "deviceSubTypeCode");
+        deviceAliasToColumnMap.put("make", "make");
+        deviceAliasToColumnMap.put("model", "model");
+        deviceAliasToColumnMap.put("status", "approvalStatus");
+        deviceAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
