@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
                         @ColumnResult(name = "sbiExpiryDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "createdDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "countOfAssociatedDevices", type = Long.class),
+                        @ColumnResult(name = "countOfApprovedDevices", type = Long.class),
+                        @ColumnResult(name = "countOfPendingDevices", type = Long.class),
                         @ColumnResult(name = "sbiExpiryStatus", type = String.class)
                 })
         }
@@ -34,9 +36,8 @@ import java.time.LocalDateTime;
 public class SbiSummaryEntity {
 
     public SbiSummaryEntity(String partnerId, String orgName, String partnerType, String sbiId, String sbiVersion,
-                            String status, Boolean isActive, LocalDateTime sbiCreatedDateTime,
-                            LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime,
-                            Long countOfAssociatedDevices, String sbiExpiryStatus) {
+                            String status, Boolean isActive, LocalDateTime sbiCreatedDateTime, LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime,
+                            Long countOfAssociatedDevices, Long countOfApprovedDevices, Long countOfPendingDevices, String sbiExpiryStatus) {
         this.partnerId = partnerId;
         this.orgName = orgName;
         this.partnerType = partnerType;
@@ -48,6 +49,8 @@ public class SbiSummaryEntity {
         this.sbiExpiryDateTime = sbiExpiryDateTime;
         this.createdDateTime = createdDateTime;
         this.countOfAssociatedDevices = countOfAssociatedDevices;
+        this.countOfApprovedDevices = countOfApprovedDevices;
+        this.countOfPendingDevices = countOfPendingDevices;
         this.sbiExpiryStatus = sbiExpiryStatus;
     }
 
@@ -78,6 +81,10 @@ public class SbiSummaryEntity {
     private LocalDateTime createdDateTime;
 
     private Long countOfAssociatedDevices;
+
+    private Long countOfApprovedDevices;
+
+    private Long countOfPendingDevices;
 
     private String sbiExpiryStatus;
 }
