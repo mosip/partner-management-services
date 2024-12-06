@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class DeviceDetailFilterDto {
+    private String deviceId;
     private String partnerId;
     private String orgName;
     private String deviceType;
@@ -11,4 +12,7 @@ public class DeviceDetailFilterDto {
     private String status;
     private String make;
     private String model;
+    private String sbiId;
+    private String sbiVersion;
+
 }

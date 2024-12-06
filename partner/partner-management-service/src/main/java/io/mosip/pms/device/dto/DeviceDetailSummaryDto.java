@@ -34,4 +34,11 @@ public class DeviceDetailSummaryDto {
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
     private LocalDateTime createdDateTime;
+
+    @Schema(description = "Unique identifier for the Secure Biometric Interface (SBI) associated with the device.", example = "sbi12")
+    private String sbiId;
+
+    @Schema(description = "Software version of the Secure Biometric Interface (SBI).", example = "sw12")
+    private String sbiVersion;
+
 }
