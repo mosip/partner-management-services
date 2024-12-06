@@ -651,11 +651,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
 				return deviceDetailSummaryRepository.
 						getSummaryOfAllDeviceDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
-								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+								filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
 			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
 				return deviceDetailSummaryRepository.
 						getSummaryOfAllDeviceDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
-								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+								filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
 			}
 			//Sorting for other fields
 			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.deviceAliasToColumnMap, sortFieldName), sortType);
@@ -664,7 +666,8 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		//Default
 		return deviceDetailSummaryRepository.
 				getSummaryOfAllDeviceDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
-						filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(), pageable);
+						filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+						filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

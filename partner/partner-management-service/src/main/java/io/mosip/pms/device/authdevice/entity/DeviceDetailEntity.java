@@ -25,7 +25,9 @@ import java.time.LocalDateTime;
                                 @ColumnResult(name = "status", type = String.class),
                                 @ColumnResult(name = "make", type = String.class),
                                 @ColumnResult(name = "model", type = String.class),
-                                @ColumnResult(name = "createdDateTime", type = LocalDateTime.class)
+                                @ColumnResult(name = "createdDateTime", type = LocalDateTime.class),
+                                @ColumnResult(name = "sbiId", type = String.class),
+                                @ColumnResult(name = "sbiVersion", type = String.class)
                         }
                 )
         }
@@ -34,7 +36,8 @@ public class DeviceDetailEntity {
 
     public DeviceDetailEntity(
             String deviceId, String partnerId, String orgName, String deviceType,
-            String deviceSubType, String status, String make, String model, LocalDateTime createdDateTime) {
+            String deviceSubType, String status, String make, String model,
+            LocalDateTime createdDateTime, String sbiId, String sbiVersion) {
         this.deviceId = deviceId;
         this.partnerId = partnerId;
         this.orgName = orgName;
@@ -44,6 +47,8 @@ public class DeviceDetailEntity {
         this.make = make;
         this.model = model;
         this.createdDateTime = createdDateTime;
+        this.sbiId = sbiId;
+        this.sbiVersion = sbiVersion;
     }
 
     // No-argument constructor
@@ -69,4 +74,8 @@ public class DeviceDetailEntity {
     private String model;
 
     private LocalDateTime createdDateTime;
+
+    private String sbiId;
+
+    private String sbiVersion;
 }
