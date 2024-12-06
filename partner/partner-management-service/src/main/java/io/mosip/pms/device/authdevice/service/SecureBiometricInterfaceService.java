@@ -1,8 +1,12 @@
 package io.mosip.pms.device.authdevice.service;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
+import io.mosip.pms.device.dto.SbiFilterDto;
+
 import org.springframework.stereotype.Service;
 
 import io.mosip.pms.common.dto.FilterValueDto;
@@ -41,4 +45,6 @@ public interface SecureBiometricInterfaceService {
 	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId);
 
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id);
+
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto);
 }

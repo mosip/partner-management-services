@@ -2,12 +2,17 @@ package io.mosip.pms.device.controller;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pms.common.dto.FilterValueDto;
@@ -41,6 +48,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -63,6 +71,9 @@ public class SecureBiometricInterfaceController {
 
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Autowired
 	RequestValidator requestValidator;
@@ -231,5 +242,54 @@ public class SecureBiometricInterfaceController {
 			return validationResponse.get();
 		}
 		return secureBiometricInterface.deactivateSbi(requestWrapper.getRequest().getSbiId());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
+	@GetMapping(value = "/search/v2")
+	@Operation(summary = "Get all partners SBI details", description = "This endpoint will fetch a list of all the partners SBI details")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
+			@Parameter(
+					description = "Status of SBI",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "pending_approval", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@Parameter(
+					description = "Status of SBI based on expiry date time",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"expired", "valid"})
+			)
+			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.sbiAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		SbiFilterDto filterDto = new SbiFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (sbiVersion != null) {
+			filterDto.setSbiVersion(sbiVersion.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (sbiExpiryStatus != null) {
+			filterDto.setSbiExpiryStatus(sbiExpiryStatus);
+		}
+		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 }
