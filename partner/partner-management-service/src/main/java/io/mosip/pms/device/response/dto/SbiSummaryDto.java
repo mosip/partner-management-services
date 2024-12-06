@@ -14,9 +14,6 @@ public class SbiSummaryDto {
     @Schema(description = "Name of the partner organisation", example = "abc")
     private String orgName;
 
-    @Schema(description = "Type of partner (e.g., device_provider, supplier, etc.)", example = "device_provider")
-    private String partnerType;
-
     @Schema(description = "Unique identifier for the SBI", example = "sbi-001")
     private String sbiId;
 
