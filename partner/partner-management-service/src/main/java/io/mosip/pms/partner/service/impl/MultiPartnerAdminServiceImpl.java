@@ -53,8 +53,18 @@ public class MultiPartnerAdminServiceImpl implements MultiPartnerAdminService {
             String partnerId = requestDto.getPartnerId();
             String sbiId = requestDto.getSbiId();
             String deviceDetailId = requestDto.getDeviceDetailId();
-            if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+            if(Objects.isNull(sbiId)) {
+                LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
+                if (!rejectFlag) {
+                    throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
+                            ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
+                } else {
+                    throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorCode(),
+                            ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorMessage());
+                }
+            }
+            if (Objects.isNull(partnerId) || Objects.isNull(deviceDetailId)) {
+                LOGGER.info("sessionId", "idType", "id", "Partner/Device id does not exist.");
                 throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
