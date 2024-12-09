@@ -1,8 +1,9 @@
 package io.mosip.pms.test.device.service.impl;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,12 @@ import java.util.Optional;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.repository.DeviceDetailSummaryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +30,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +47,7 @@ import io.mosip.pms.common.dto.DeviceFilterValueDto;
 import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.Pagination;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.entity.Partner;
@@ -53,11 +58,14 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.DeviceDetailEntity;
 import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pms.device.authdevice.service.DeviceDetailService;
 import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
@@ -114,6 +122,12 @@ public class DeviceDetailServiceTest {
 
 	@Mock
 	SecurityContext securityContext;
+
+	@Mock
+	DeviceDetailSummaryRepository deviceDetailSummaryRepository;
+
+	@Mock
+	PartnerHelper partnerHelper;
 
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 
@@ -577,6 +591,78 @@ public class DeviceDetailServiceTest {
 		SecureBiometricInterface sbi = new SecureBiometricInterface();
 		when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(sbi));
 		deviceDetaillService.deactivateDevice("23456");
+	}
+
+	@Test
+	public void getAllDeviceDetailsStatusAscSorting() {
+		String sortFieldName = "status";
+		String sortType = "ASC";
+		int pageNo = 0;
+		int pageSize = 10;
+		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		DeviceDetailEntity entity = new DeviceDetailEntity();
+		entity.setDeviceId("123");
+		entity.setStatus("approved");
+		Page<DeviceDetailEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+
+		when(deviceDetailSummaryRepository.getSummaryOfAllDeviceDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), eq(pageable)))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> response = deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+		// Assert
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testGetAllDeviceDetails_withStatusDescSorting() {
+		String sortFieldName = "status";
+		String sortType = "DESC";
+		int pageNo = 0;
+		int pageSize = 10;
+		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		DeviceDetailEntity entity = new DeviceDetailEntity();
+		entity.setDeviceId("123");
+		entity.setStatus("approved");
+		Page<DeviceDetailEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+
+		when(deviceDetailSummaryRepository.getSummaryOfAllDeviceDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), eq(pageable)))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> response = deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+		// Assert
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testGetAllDeviceDetails_withOtherFieldSorting() {
+		String sortFieldName = "deviceId";
+		String sortType = "ASC";
+		int pageNo = 0;
+		int pageSize = 10;
+		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		DeviceDetailEntity entity = new DeviceDetailEntity();
+		entity.setDeviceId("123");
+		entity.setStatus("approved");
+		Page<DeviceDetailEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+
+		when(deviceDetailSummaryRepository.getSummaryOfAllDeviceDetails(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), eq(pageable)))
+				.thenReturn(page);
+
+		Sort sort = mock(Sort.class);
+		when(partnerHelper.getSortingRequest(any(), eq(sortType))).thenReturn(sort);
+
+		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> response = deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+		// Assert
+		assertNotNull(response);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

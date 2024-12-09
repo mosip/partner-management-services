@@ -1,8 +1,10 @@
 package io.mosip.pms.test.device.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -13,9 +15,13 @@ import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +36,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -78,12 +85,15 @@ public class DeviceDetailControllerTest {
 	private RestTemplate restTemplate;
     
     @MockBean	
-    private DeviceDetailServiceImpl deviceDetaillService;    
+    private DeviceDetailServiceImpl deviceDetaillService;
+
+    @MockBean
+    PartnerHelper partnerHelper;
     
     @Before
     public void setup() {
-    	Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any());
-    	Mockito.doNothing().when(auditUtil).auditRequest(any(), any(), any(),any());
+    	doNothing().when(auditUtil).auditRequest(any(), any(), any());
+    	doNothing().when(auditUtil).auditRequest(any(), any(), any(),any());
     	
     	IdDto response = new IdDto();
     	String stringResponse = new String();
@@ -100,14 +110,14 @@ public class DeviceDetailControllerTest {
     	searchResponseWrapper.setResponse(searchResponse);
     	responseWrapper.setResponse(response);
     	responsewrapper.setResponse(stringResponse);
-        Mockito.when(deviceDetaillService.updateDeviceDetails(Mockito.any())).thenReturn(response);
-        Mockito.when(deviceDetaillService.createDeviceDetails(Mockito.any())).thenReturn(response);
-        Mockito.when(deviceDetaillService.updateDeviceDetailStatus(Mockito.any())).thenReturn(stringResponse);
-        Mockito.when(deviceDetaillService.searchDeviceDetails(Mockito.any(), Mockito.any())).thenReturn(searchResponse);
-        Mockito.when(deviceDetaillService.searchDeviceType(Mockito.any(), Mockito.any())).thenReturn(searchTypeResponse);
-        Mockito.when(deviceDetaillService.deviceFilterValues(Mockito.any())).thenReturn(filterResponse);
-        Mockito.when(deviceDetaillService.deviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
-        Mockito.when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
+        when(deviceDetaillService.updateDeviceDetails(Mockito.any())).thenReturn(response);
+        when(deviceDetaillService.createDeviceDetails(Mockito.any())).thenReturn(response);
+        when(deviceDetaillService.updateDeviceDetailStatus(Mockito.any())).thenReturn(stringResponse);
+        when(deviceDetaillService.searchDeviceDetails(Mockito.any(), Mockito.any())).thenReturn(searchResponse);
+        when(deviceDetaillService.searchDeviceType(Mockito.any(), Mockito.any())).thenReturn(searchTypeResponse);
+        when(deviceDetaillService.deviceFilterValues(Mockito.any())).thenReturn(filterResponse);
+        when(deviceDetaillService.deviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
+        when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
     }
     
     @WithMockUser(roles = {"PARTNER_ADMIN"})
@@ -455,7 +465,7 @@ public class DeviceDetailControllerTest {
         requestWrapper.setRequestTime(LocalDateTime.now());
         SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        Mockito.when(deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
+        when(deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/inactive-mapping-device-to-sbi").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
@@ -472,9 +482,51 @@ public class DeviceDetailControllerTest {
         requestWrapper.setRequest(deactivateDeviceRequestDto);
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         responseWrapper.setResponse(deviceDetailResponseDto);
-        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.any())).thenReturn(responseWrapper);
+        when(deviceDetaillService.deactivateDevice(Mockito.any())).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deactivate-device").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getAllDeviceDetailsTest() throws Exception {
+        String sortFieldName = "deviceId";
+        String sortType = "asc";
+        int pageNo = 0;
+        int pageSize = 8;
+        String partnerId = "test-partner";
+        String orgName = "test-org";
+        String deviceType = "Finger";
+        String deviceSubType = "single";
+        String status = "approved";
+        String make = "test-make";
+        String model = "test-model";
+        String sbiId = "test-sbi-id";
+        String sbiVersion = "1.0";
+        String deviceId = "test-device-id";
+
+        ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> mockResponse = new ResponseWrapperV2<>();
+        when(deviceDetaillService.getAllDeviceDetails(eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize), any(DeviceDetailFilterDto.class)))
+                .thenReturn(mockResponse);
+
+        doNothing().when(partnerHelper).validateRequestParameters(any(), eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/devicedetail/search/v2")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("partnerId", partnerId)
+                        .param("orgName", orgName)
+                        .param("deviceType", deviceType)
+                        .param("deviceSubType", deviceSubType)
+                        .param("status", status)
+                        .param("make", make)
+                        .param("model", model)
+                        .param("sbiId", sbiId)
+                        .param("sbiVersion", sbiVersion)
+                        .param("deviceId", deviceId))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
     
 }
