@@ -13,6 +13,8 @@ import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
@@ -30,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -43,6 +46,7 @@ import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
@@ -390,5 +394,28 @@ public class SecureBiometricInterfaceControllerTest {
 		mappingDto.setSbiId("sbiid");
 		request.setRequest(mappingDto);
 		return request;
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllSbiDetailsTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		SbiFilterDto filterDto = new SbiFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Mockito.when(secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto)).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/search/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("partnerId", "123")
+						.param("orgName", "ABC")
+						.param("sbiVersion", "test")
+						.param("status", "approved")
+						.param("sbiExpiryStatus", "expired"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
