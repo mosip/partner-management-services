@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
+import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
+import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +26,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -39,6 +45,7 @@ import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
@@ -109,6 +116,9 @@ public class SBIServiceTest {
 	
 	@Mock
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+	@Mock
+	SbiSummaryRepository sbiSummaryRepository;
 
 	@Mock
 	Authentication authentication;
@@ -607,6 +617,46 @@ public class SBIServiceTest {
 		List<Partner> partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		secureBiometricInterfaceService.deactivateSbi("23456");
+	}
+
+	@Test
+	public void getAllSbiDetailsTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		SbiFilterDto filterDto = new SbiFilterDto();
+		filterDto.setPartnerId("mosip123");
+		filterDto.setOrgName("abc");
+		filterDto.setSbiVersion("1.0.0");
+		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<SbiSummaryEntity> page = null;
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getAllSbiDetailsExceptionTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<SbiSummaryEntity> page = null;
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
