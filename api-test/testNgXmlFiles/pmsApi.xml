@@ -221,6 +221,46 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	
+	
+	
+	<test name="GetAllPartnerPolicyRequest">
+		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfPartners">
+		<parameter name="ymlFile" value="pms/GetListOfPartners/GetListOfPartners.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetDetailsOfPartner">
+		<parameter name="ymlFile" value="pms/GetDetailsOfPartner/GetDetailsOfPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
+	
+	<test name="GetListOfPolicies">
+		<parameter name="ymlFile" value="pms/GetListOfPolicies/GetListOfPolicies.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfPoliciesRequest">
+		<parameter name="ymlFile" value="pms/GetListOfPoliciesRequest/GetListOfPoliciesRequest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 	<test name="GetAllOidcClientBeforeOIDCCreation">
 		<parameter name="ymlFile" value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
 		<classes>
@@ -234,6 +274,14 @@
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+	
+	<test name="GetAllOauthClient">
+		<parameter name="ymlFile" value="pms/GetAllOauthClient/GetAllOauthClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 	<test name="UpdateOAuthClient">
 		<parameter name="ymlFile" value="pms/OIDCClient/UpdateOIDCClient.yml" />
 		<parameter name="pathParams" value="client_id" />
@@ -262,6 +310,13 @@
 	</test>
 	<test name="GetAllOidcClientAfterDeactivateOfOIDC">
 		<parameter name="ymlFile" value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfFtmChip">
+		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChip.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>

@@ -1,0 +1,13 @@
+GetListOfFtmChip:
+   Pms_GetListOfFtmChip_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail/search/v2
+      description: Fetching all the ftpchipdetail
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+}'
+      output: ' {
+}'

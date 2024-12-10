@@ -1,0 +1,13 @@
+GetListOfApiKey:
+   Pms_GetListOfApiKey_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      description: Fetching all the API Keys
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+}'
+      output: ' {
+}'
