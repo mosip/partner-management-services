@@ -37,8 +37,8 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             "AND (:make IS NULL OR lower(d.make) LIKE %:make%) " +
             "AND (:model IS NULL OR lower(d.model) LIKE %:model%)"+
             "AND (:deviceId IS NULL OR lower(d.id) LIKE %:deviceId%)"+
-            "AND (:sbiId IS NULL OR s.id LIKE %:sbiId%) " +
-            "AND (:sbiVersion IS NULL OR s.swVersion LIKE %:sbiVersion%)";
+            "AND (:sbiId IS NULL OR lower(s.id) LIKE %:sbiId%) " +
+            "AND (:sbiVersion IS NULL OR lower(s.swVersion) LIKE %:sbiVersion%)";
 
     @Query(DEVICE_DETAILS_SUMMARY_QUERY)
     Page<DeviceDetailEntity> getSummaryOfAllDeviceDetails(
