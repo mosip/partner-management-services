@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.CaCertificateFilterDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.bouncycastle.cert.ocsp.Req;
@@ -59,7 +58,6 @@ import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
 import io.mosip.pms.common.entity.Partner;
@@ -118,7 +116,6 @@ import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
-import io.mosip.pms.partner.request.dto.CaCertTypeListRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -130,8 +127,6 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.response.dto.CaCertificateSummaryDto;
-import io.mosip.pms.partner.response.dto.CaCertTypeListResponseDto;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -249,9 +244,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
 	private String getOriginalPartnerCertificateId;
-
-	@Value("${mosip.pms.api.id.all.ca.certificates.get}")
-	private String getCaCertificatesId;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -1711,72 +1703,6 @@ public class PartnerServiceImpl implements PartnerService {
 		updateRequest.setAdditionalInfo(null);
 		updateRequest.setLogoUrl(null);	
 		return updatePartnerDetails(updateRequest, partnerId);
-	}
-
-	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(String sortFieldName, String sortType, int pageNo, int pageSize, CaCertificateFilterDto filterDto) {
-		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			PageResponseV2Dto<CaCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
-			CaCertTypeListRequestDto caCertTypeListRequestDto = new CaCertTypeListRequestDto();
-			caCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
-			caCertTypeListRequestDto.setExcludeMosipCA(true);
-			caCertTypeListRequestDto.setPartnerDomain(filterDto.getPartnerDomain());
-			caCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
-			caCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
-			caCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
-			caCertTypeListRequestDto.setPageNumber(pageNo + 1);
-			caCertTypeListRequestDto.setPageSize(pageSize);
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				caCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.caCertificateAliasToColumnMap, sortFieldName));
-				caCertTypeListRequestDto.setSortOrder(sortType);
-			}
-			RequestWrapper<CaCertTypeListRequestDto> request = new RequestWrapper<>();
-			request.setRequest(caCertTypeListRequestDto);
-			CaCertTypeListResponseDto responseObject = null;
-			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.ca.certificates.post.rest.uri"), null, "", "",
-					MediaType.APPLICATION_JSON, request, Map.class);
-			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CaCertTypeListResponseDto.class);
-			if (responseObject == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
-				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
-						.get(PartnerConstants.ERRORS);
-				if (!certServiceErrorList.isEmpty()) {
-					LOGGER.error("Error occurred while getting the CA certificates list from keymanager");
-					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
-				} else {
-					LOGGER.error("Error occurred while getting the CA certificates list from keymanager {}", apiResponse);
-					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
-				}
-			}
-			if (responseObject == null) {
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
-			}
-			pageResponseV2Dto.setPageNo(responseObject.getPageNumber() - 1);
-			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
-			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
-			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
-			responseWrapper.setResponse(pageResponseV2Dto);
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getCaCertificates method of PartnerServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-		}
-		responseWrapper.setId(getCaCertificatesId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
-	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
-		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

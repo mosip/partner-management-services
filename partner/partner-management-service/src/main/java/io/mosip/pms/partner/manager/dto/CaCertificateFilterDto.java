@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.dto;
+package io.mosip.pms.partner.manager.dto;
 
 import lombok.Data;
 

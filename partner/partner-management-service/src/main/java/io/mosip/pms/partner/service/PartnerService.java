@@ -13,13 +13,10 @@ import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.partner.dto.CaCertificateFilterDto;
-import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
@@ -42,7 +39,6 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.response.dto.CaCertificateSummaryDto;
 
 public interface PartnerService {
 	
@@ -236,7 +232,5 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
-
-	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(String sortFieldName, String sortType, int pageNo, int pageSize, CaCertificateFilterDto filterDto);
 
 }

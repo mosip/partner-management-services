@@ -8,10 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.CaCertificateFilterDto;
-import io.mosip.pms.partner.util.PartnerHelper;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +28,6 @@ import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
@@ -66,7 +61,6 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.response.dto.CaCertificateSummaryDto;
 import io.mosip.pms.partner.service.PartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -87,9 +81,6 @@ public class PartnerServiceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
-
-	@Autowired
-	PartnerHelper partnerHelper;
 
 	public static final String VERSION = "1.0";
 
@@ -495,56 +486,5 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallcacertificates())")
-	@GetMapping(value = "/root-certificates")
-	@Operation(summary = "Get all root certificate details", description = "This endpoint will fetch a list of all the root certificate details")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(
-		@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
-		@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-		@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-		@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
-		@Parameter(
-				description = "Type of CA certificate",
-				in = ParameterIn.QUERY,
-				schema = @Schema(allowableValues = {"ROOT", "INTERMEDIATE"})
-		)
-		@RequestParam(value = "caCertificateType", required = false) String caCertificateType,
-		@RequestParam(value = "certificateId", required = false) String certificateId,
-		@Parameter(
-				description = "Type of partner domain",
-				in = ParameterIn.QUERY,
-				schema = @Schema(allowableValues = {"FTM", "DEVICE", "AUTH"})
-		)
-		@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
-		@RequestParam(value = "issuedTo", required = false) String issuedTo,
-		@RequestParam(value = "issuedBy", required = false) String issuedBy) {
-		partnerHelper.validateRequestParameters(partnerHelper.caCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
-		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
-		if (caCertificateType != null) {
-			filterDto.setCaCertificateType(caCertificateType);
-		}
-		if (certificateId != null) {
-			filterDto.setCertificateId(certificateId.toLowerCase());
-		}
-		if (caCertificateType != null) {
-			filterDto.setCaCertificateType(caCertificateType);
-		}
-		if (partnerDomain != null) {
-			filterDto.setPartnerDomain(partnerDomain);
-		}
-		if (issuedTo != null) {
-			filterDto.setIssuedTo(issuedTo.toLowerCase());
-		}
-		if (issuedBy != null) {
-			filterDto.setIssuedBy(issuedBy.toLowerCase());
-		}
-		return partnerService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 }
