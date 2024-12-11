@@ -1,0 +1,26 @@
+DeviceTypeFilter:
+   Pms_DeviceTypeFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      role: partnerrevampdevice
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
+      outputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilterResult
+      input: '{
+    "filters": [{
+    "columnName": "name",
+    "type": "unique",
+    "text": ""
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+      "filters": [
+      {
+        "fieldID": "name",
+        "fieldValue": "Face",
+        "fieldCode": "Face"
+      }
+    ]
+  }'
+    

@@ -46,8 +46,22 @@ public enum ErrorMessages {
 	ACTIVE_APIKEY_EXISTS_UNDER_POLICY("PMS_POL_057","Active apiKey exists under the policy."),
 	PUBLISHED_POLICY_STATUS_UPDATE("PMS_POL_058","Status cannot be changed for published policy."),
 	POLICY_GROUPS_NOT_AVAILABLE("PMS_POL_059", "There are no active policy groups."),
-	POLICY_GROUPS_FETCH_ERROR("PMS_POL_060", "Error while fetching policy groups.");
-	
+	POLICY_GROUPS_FETCH_ERROR("PMS_POL_060", "Error while fetching policy groups."),
+	INVALID_SORT_TYPE("PMS_PRT_358", "Sort type %s is not supported"),
+	INVALID_SORT_FIELD("PMS_PRT_357", "Invalid sort field %s"),
+	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
+	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
+	POLICIES_FETCH_ERROR("PMS_POL_061", "Error while fetching policies"),
+	POLICY_ALREADY_DEACTIVATED("PMS_POL_062", "The policy has already been deactivated."),
+	POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR("PMS_POL_063", "An approved partner policy request is associated with this policy."),
+	POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR("PMS_POL_064", "A pending partner policy request is associated with this policy."),
+	POLICY_DOES_NOT_EXIST("PMS_POL_065", "The specified policy does not exist."),
+	POLICY_DEACTIVATION_ERROR("PMS_POL_066", "Error while deactivating policy"),
+	POLICY_GROUP_ALREADY_DEACTIVATED("PMS_POL_067", "The policy group has already been deactivated"),
+	POLICY_GROUP_DOES_NOT_EXIST("PMS_POL_068", "The specified policy group does not exist"),
+	ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP(	"PMS_POL_069", "Active or draft policies are associated with the policy group"),
+	DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP("PMS_POL_070","Draft policies exists under the policy group."),
+	POLICY_GROUP_DEACTIVATION_ERROR("PMS_POL_071", "Error while deactivating policy group");
 	
 	private final String errorCode;
 	private final String errorMessage;

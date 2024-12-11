@@ -17,7 +17,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -45,7 +45,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_auth:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: batch
+      role: invalid
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -93,4 +93,19 @@ VerifyPartnersEmail:
           "errorCode": "PMS_PRT_012"
         }
        ]
+}'
+
+   Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      description: Verify Partners Email
+      role: partnerrevampftm
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "mosip98788@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
 }'

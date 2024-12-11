@@ -1,0 +1,11 @@
+GetAllApprovedDeviceProviderIds:
+   Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/approved-device-provider-ids
+      role: partnerrevampdevice
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
+      outputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsResult
+      input: '{
+}'
+      output: '{
+}'

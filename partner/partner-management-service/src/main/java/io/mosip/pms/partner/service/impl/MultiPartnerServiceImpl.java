@@ -28,6 +28,7 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -140,7 +141,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
 
                         certificateDto.setIsCertificateAvailable(true);
-                        certificateDto.setCertificateIssuedTo(getCertificateName(cert.getSubjectDN().getName()));
+                        certificateDto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
                         certificateDto.setCertificateUploadDateTime(cert.getNotBefore());
                         certificateDto.setCertificateExpiryDateTime(cert.getNotAfter());
                         certificateDto.setPartnerId(partner.getId());
@@ -150,6 +151,11 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                         certificateDto.setIsCertificateAvailable(false);
                         certificateDto.setPartnerId(partner.getId());
                         certificateDto.setPartnerType(partner.getPartnerTypeCode());
+                    }
+                    if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+                        certificateDto.setIsPartnerActive(false);
+                    } else {
+                        certificateDto.setIsPartnerActive(true);
                     }
                     certificateDtoList.add(certificateDto);
                 }
@@ -206,8 +212,8 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                     policyDto.setPolicyName(policyDetails.getName());
 
                                     policyDto.setPartnerComments(partnerPolicyRequest.getRequestDetail());
-                                    policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes());
-                                    policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes());
+                                    policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes() != null ? partnerPolicyRequest.getUpdDtimes().toLocalDateTime() : null);
+                                    policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes().toLocalDateTime());
                                     policyDto.setStatus(partnerPolicyRequest.getStatusCode());
                                     policyDtoList.add(policyDto);
                                 } else {
@@ -457,7 +463,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                                 apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
                                 apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
                                 apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
-                                apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes());
+                                apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
                                 apiKeyResponseDtoList.add(apiKeyResponseDto);
                             }
                         }
@@ -718,13 +724,4 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
         return userId;
     }
 
-    public static String getCertificateName(String subjectDN) {
-        String[] parts = subjectDN.split(",");
-        for (String part : parts) {
-            if (part.trim().startsWith("CN=")) {
-                return part.trim().substring(3);
-            }
-        }
-        return BLANK_STRING;
-    }
 }

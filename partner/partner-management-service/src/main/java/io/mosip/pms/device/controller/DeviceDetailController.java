@@ -2,12 +2,18 @@ package io.mosip.pms.device.controller;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +26,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
@@ -62,6 +70,9 @@ public class DeviceDetailController {
 	
 	@Autowired	
 	DeviceDetailService deviceDetaillService;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Autowired
 	RequestValidator requestValidator;
@@ -253,4 +264,67 @@ public class DeviceDetailController {
 		return deviceDetaillService.deactivateDevice(requestWrapper.getRequest().getDeviceId());
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
+	@GetMapping(value = "/search/v2")
+	@Operation(summary = "Get all device details", description = "This endpoint will fetch a list of all devices")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "deviceType", required = false) String deviceType,
+			@RequestParam(value = "deviceSubType", required = false) String deviceSubType,
+			@Parameter(
+					description = "Status of device",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "pending_approval", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "make", required = false) String make,
+			@RequestParam(value = "model", required = false) String model,
+			@RequestParam(value = "sbiId", required = false) String sbiId,
+			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
+			@RequestParam(value = "deviceId", required = false) String deviceId
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.deviceAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (deviceType != null) {
+			filterDto.setDeviceType(deviceType.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (deviceSubType != null) {
+			filterDto.setDeviceSubType(deviceSubType.toLowerCase());
+		}
+		if (make != null) {
+			filterDto.setMake(make.toLowerCase());
+		}
+		if (model != null) {
+			filterDto.setMake(model.toLowerCase());
+		}
+		if (sbiId != null) {
+			filterDto.setSbiId(sbiId.toLowerCase());
+		}
+		if (sbiVersion != null) {
+			filterDto.setSbiVersion(sbiVersion.toLowerCase());
+		}
+		if (deviceId != null) {
+			filterDto.setDeviceId(deviceId.toLowerCase());
+		}
+		return deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
 }

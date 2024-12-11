@@ -1,0 +1,34 @@
+InactiveMappingDeviceToSbi:
+   Pms_InactiveMappingDeviceToSbi_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
+      role: partnerrevampdevice
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbi
+      outputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbiResult
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+  }'
+      output: ' {
+        
+    }'
+    
+   Pms_InactiveMappingDeviceToSbi_Reject_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
+      role: partnerrevampdevice
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbi
+      outputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbiResult
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+  }'
+      output: ' {
+        
+    }'

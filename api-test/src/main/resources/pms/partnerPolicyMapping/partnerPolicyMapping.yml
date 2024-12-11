@@ -1,6 +1,6 @@
 partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/111999/policy/map
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -16,7 +16,7 @@ partnerPolicyMapping:
     }'
     
    Pms_partnerPolicyMapping_invalid_policyName:
-      endPoint: /v1/partnermanager/partners/111999/policy/map
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when invalid policyname is given      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -56,7 +56,7 @@ partnerPolicyMapping:
        ]
     }'
    Pms_partnerPolicyMapping_missing_policyName:
-      endPoint: /v1/partnermanager/partners/111999/policy/map
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when policyname is removed from request      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -75,8 +75,9 @@ partnerPolicyMapping:
         }
        ]
     }'
+    
    Pms_partnerPolicyMapping_missing_useCaseDescription:
-      endPoint: /v1/partnermanager/partners/111999/policy/map
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when usecaseDescription is removed from request      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -90,7 +91,8 @@ partnerPolicyMapping:
     }'
       output: '{
         "errors": [
-    {
-      "errorCode": "PMS_COR_001"
-  ]
-    }'                
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
+    }'             

@@ -1,0 +1,44 @@
+SaveDeviceDetails:
+   Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partnerrevampdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "pms-111998",
+    "make": "AcmeCorp",
+    "model": "X1000",
+    "approvalStatus": "approved",
+    "crBy": "user456",
+    "crDtimes": "$TIMESTAMPL$",
+    "isActive": true
+}'
+      output: '{
+          
+}'
+
+   Pms_SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partnerrevampdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "pms-111998",
+    "make": "AcmeCorpReject",
+    "model": "X1000Reject",
+    "approvalStatus": "approved",
+    "crBy": "user456",
+    "crDtimes": "$TIMESTAMPL$",
+    "isActive": true
+}'
+      output: '{
+          
+}'

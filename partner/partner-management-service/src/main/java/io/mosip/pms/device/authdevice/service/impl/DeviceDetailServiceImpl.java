@@ -7,15 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Map;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
+import io.mosip.pms.device.authdevice.entity.DeviceDetailEntity;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
+import io.mosip.pms.device.authdevice.repository.DeviceDetailSummaryRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
@@ -25,6 +32,9 @@ import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -80,6 +90,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Value("${mosip.pms.api.id.deactivate.device.post}")
 	private  String postDeactivateDevice;
 
+	@Value("${mosip.pms.api.id.get.all.device.details.get}")
+	private  String getAllDeviceDetailsId;
+
 	@Autowired
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
 
@@ -106,6 +119,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	
 	@Autowired
 	SearchHelper searchHelper;
+
+	@Autowired
+	DeviceDetailSummaryRepository deviceDetailSummaryRepository;
 	
 	@Autowired
 	private PageUtils pageUtils;
@@ -406,7 +422,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			String partnerId = requestDto.getPartnerId();
 			String sbiId = requestDto.getSbiId();
 			String deviceDetailId = requestDto.getDeviceDetailId();
-			if (Objects.isNull(partnerId) || Objects.isNull(sbiId) || Objects.isNull(deviceDetailId)  ){
+			if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING) || Objects.isNull(sbiId) || sbiId.equals(BLANK_STRING) || Objects.isNull(deviceDetailId) || deviceDetailId.equals(BLANK_STRING)){
 				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
 						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
@@ -437,15 +453,15 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
 
-			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
-
 			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
 			if (Objects.nonNull(deviceDetailSBI)){
 				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
 				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
 						ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
 			}
+
+			// validate sbi and device mapping
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
 
 			DeviceDetailSBI entity = new DeviceDetailSBI();
 
@@ -492,8 +508,16 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
-			deviceDetailRepository.deleteById(deviceDetailId);
-			LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
+				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+				if (deviceDetail.isPresent()) {
+					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+					if (deviceDetailSBIList.isEmpty()) {
+						deviceDetailRepository.deleteById(deviceDetailId);
+						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+					}
+				}
+			}
 		} catch (Exception e) {
 			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
 		}
@@ -522,45 +546,34 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
 			}
 			DeviceDetail device = deviceDetail.get();
-			// check if the device is associated with user.
-			String deviceProviderId = device.getDeviceProviderId();
-			boolean deviceProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(deviceProviderId)) {
-					validatePartnerId(partner, userId);
-					deviceProviderExist = true;
-					partnerDetails = partner;
-					break;
-				}
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				Partner partnerDetails = getAssociatedPartner(partnerList, device.getDeviceProviderId(), userId);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
-			if (!deviceProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", deviceProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
-			// Deactivate only if the device is approved status and is_active true.
-			if (device.getApprovalStatus().equals(APPROVED) && device.getIsActive()) {
-				DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
-
-				device.setIsActive(false);
-				DeviceDetail updatedDetail = deviceDetailRepository.save(device);
-				deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
-				deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
-				deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
-
-				responseWrapper.setResponse(deviceDetailResponseDto);
-			} else {
+			if (!device.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate device with id {}", device.getId());
-				throw new PartnerServiceException(ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorCode(),
-						ErrorCode.UNABLE_TO_DEACTIVATE_DEVICE.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.DEVICE_NOT_APPROVED.getErrorCode(),
+						ErrorCode.DEVICE_NOT_APPROVED.getErrorMessage());
 			}
+			if (device.getApprovalStatus().equals(APPROVED) && !device.getIsActive()) {
+				LOGGER.error("Unable to deactivate device with id {}", device.getId());
+				throw new PartnerServiceException(ErrorCode.DEVICE_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorCode.DEVICE_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+
+			DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+
+			device.setIsActive(false);
+			device.setUpdDtimes(LocalDateTime.now());
+			device.setUpdBy(getUserId());
+			DeviceDetail updatedDetail = deviceDetailRepository.save(device);
+			deviceDetailResponseDto.setDeviceId(updatedDetail.getId());
+			deviceDetailResponseDto.setStatus(updatedDetail.getApprovalStatus());
+			deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
+
+			responseWrapper.setResponse(deviceDetailResponseDto);
+
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -575,6 +588,90 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		responseWrapper.setId(postDeactivateDevice);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public Partner getAssociatedPartner (List<Partner> partnerList, String deviceProviderId, String userId) {
+		boolean deviceProviderExist = false;
+		Partner partnerDetails = null;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(deviceProviderId)) {
+				validatePartnerId(partner, userId);
+				deviceProviderExist = true;
+				partnerDetails = partner;
+				break;
+			}
+		}
+		if (!deviceProviderExist) {
+			LOGGER.info("sessionId", "idType", "id", "Device is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.DEVICE_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+		return partnerDetails;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<DeviceDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			// Fetch all device details
+			Page<DeviceDetailEntity> page = getDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<DeviceDetailSummaryDto> deviceDetailSummaryDtoList = MapperUtils.mapAll(page.getContent(), DeviceDetailSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(deviceDetailSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllDevices method of DeviceDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllDevices method of DeviceDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.GET_ALL_DEVICE_DETAILS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.GET_ALL_DEVICE_DETAILS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllDeviceDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private Page<DeviceDetailEntity> getDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto, Pageable pageable) {
+		//Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			//sorting handling for the 'status' field
+			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+				return deviceDetailSummaryRepository.
+						getSummaryOfAllDeviceDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+								filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
+			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+				return deviceDetailSummaryRepository.
+						getSummaryOfAllDeviceDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+								filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+								filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
+			}
+			//Sorting for other fields
+			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.deviceAliasToColumnMap, sortFieldName), sortType);
+			pageable = PageRequest.of(pageNo, pageSize, sort);
+		}
+		//Default
+		return deviceDetailSummaryRepository.
+				getSummaryOfAllDeviceDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getDeviceType(),
+						filterDto.getDeviceSubType(), filterDto.getStatus(), filterDto.getMake(), filterDto.getModel(),
+						filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getDeviceId(), pageable);
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

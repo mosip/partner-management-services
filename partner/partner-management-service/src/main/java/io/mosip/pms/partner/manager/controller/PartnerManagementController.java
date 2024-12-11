@@ -5,6 +5,16 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.StatusRequestDto;
-import io.mosip.pms.partner.manager.dto.ApikeyRequests;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyRequestsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
-import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.swagger.annotations.Api;
@@ -59,10 +62,13 @@ public class PartnerManagementController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
-	
+
 
 	/**
 	 * This API would be used by partner Manager, to update Partner api key to Policy Mappings.
@@ -244,4 +250,173 @@ public class PartnerManagementController {
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
+	@GetMapping(value = "/{partnerId}/v2")
+	@Operation(summary = "Get Partner details.", description = "This endpoint will fetch partner details for the provided partner Id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(@PathVariable String partnerId) {
+		return partnerManagementService.getPartnerDetails(partnerId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartners())")
+	@GetMapping(value = "/v3")
+	@Operation(summary = "Get all partner details", description = "This endpoint will fetch a list of all the partner details")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "partnerType", required = false) String partnerType,
+			@RequestParam(value = "isActive", required = false) Boolean isActive,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@Parameter(
+					description = "Status of certificate upload",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
+			)
+			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		if (partnerId != null) {
+			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerType != null) {
+			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		}
+		if (orgName != null) {
+			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (certificateUploadStatus != null) {
+			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
+		}
+		if (emailAddress != null) {
+			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
+		}
+		if (isActive != null) {
+			partnerFilterDto.setIsActive(isActive);
+		}
+		return partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
+	@GetMapping(value = "/partner-policy-requests")
+	@Operation(summary = "Get all partner policy mapping requests", description = "This endpoint will fetch a list of all the partner policy mapping requests")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "requestDetails", required = false) String requestDetails,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@Parameter(
+					description = "Status of request",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "InProgress"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyId", required = false) String policyId,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@RequestParam(value = "partnerTypeCode", required = false) String partnerTypeCode
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (requestDetails != null) {
+			filterDto.setRequestDetails(requestDetails.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (policyId != null) {
+			filterDto.setPolicyId(policyId.toLowerCase());
+		}
+		if (policyName != null) {
+			filterDto.setPolicyName(policyName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (partnerTypeCode != null) {
+			filterDto.setPartnerTypeCode(partnerTypeCode.toLowerCase());
+		}
+		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
+	@GetMapping(value = "/apikey/search/v2")
+	@Operation(summary = "Get all api key requests", description = "This endpoint will fetch a list of all api key requests")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@Parameter(
+					description = "Status of request",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"activated", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (apiKeyLabel != null) {
+			filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		if (policyName != null) {
+			filterDto.setPolicyName(policyName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
 }

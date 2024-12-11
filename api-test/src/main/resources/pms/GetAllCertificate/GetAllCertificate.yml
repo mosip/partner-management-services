@@ -9,29 +9,29 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "111999",
+      "partnerID": "pms-111999",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
 
-   Pms_GetAllCertificate_allValid_smoke:
+   Pms_GetAllCertificate_Device_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the Loggedin Partner
-      role: partnerrevamp
+      role: partnerrevampdevice
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/GetAllCertificate/getAllCertificateResult
       input: '{
 }'
       output: '{
-      "partnerID": "111996",
+      "partnerID": "pms-111998",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the partner without login
-      role: batch
+      role: invalid
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error
@@ -47,7 +47,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_invalid_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the partner invalid partner
-      role: regproc
+      role: invalid
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error

@@ -1,6 +1,6 @@
 CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -12,7 +12,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -23,7 +23,7 @@ CreateOIDCClient:
     	"status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_invalid_policyID:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid policyid      
       role: partnerrevamp
       restMethod: post
@@ -34,7 +34,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89767",
       	"policyId": "fgdggh",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -48,7 +48,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_logoUri:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid logoUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -60,7 +60,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -74,7 +74,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_RedirectUri:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid redirectUri      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -86,7 +86,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$abcdefg",
       	"grantTypes": "authorization_code",
@@ -100,9 +100,9 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_auth:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
-      role: regproc
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -112,7 +112,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -126,7 +126,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_publickey:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -138,7 +138,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$REMOVE$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -147,12 +147,12 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_COR_00"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
    Pms_CreateOIDCClient_invalid_granttypes:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -164,7 +164,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "hghghgg",
@@ -178,7 +178,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_granttypes:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without granttypes      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -190,7 +190,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "$REMOVE$",
@@ -204,7 +204,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_without_name:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without name field      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -216,7 +216,7 @@ CreateOIDCClient:
       	"name": "$REMOVE$",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
@@ -230,7 +230,7 @@ CreateOIDCClient:
        ]
 }'
    Pms_CreateOIDCClient_invalid_publickey:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid publickkey      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -242,7 +242,7 @@ CreateOIDCClient:
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "dhghfgfyt",
-      	"authPartnerId": "111999",
+      	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",

@@ -1,0 +1,42 @@
+GetOriginalPartnerCertificates:
+   Pms_GetOriginalPartnerCertificates_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111999"
+}'
+      output: '{
+     
+}'
+
+   Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
+      role: partnerrevampdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111998"
+}'
+      output: '{
+     
+}'
+
+   Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/original-partner-certificate
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111888"
+}'
+      output: '{
+     
+}'

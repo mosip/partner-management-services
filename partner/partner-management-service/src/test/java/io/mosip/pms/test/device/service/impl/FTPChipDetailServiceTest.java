@@ -20,7 +20,11 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
+import io.mosip.pms.device.dto.FtmChipFilterDto;
+import io.mosip.pms.device.response.dto.FtmDetailSummaryDto;
 import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
@@ -39,6 +43,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -52,6 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.pms.common.constant.Purpose;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.Pagination;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.SearchSort;
@@ -98,6 +104,9 @@ public class FTPChipDetailServiceTest {
 
 	@Mock
 	PartnerServiceRepository partnerRepository;
+
+	@Mock
+	FtmDetailsSummaryRepository ftmDetailsSummaryRepository;
 
 	@Mock
 	private Environment environment;
@@ -696,23 +705,7 @@ public class FTPChipDetailServiceTest {
 		doNothing().when(auditUtil)
 				.auditRequest((String) any(), (String) any(), (String) any(), (String) any(), (String) any(), (String) any());
 		when(environment.getProperty((String) any())).thenReturn("Property");
-		FTPChipDetail ftpChipDetail = mock(FTPChipDetail.class);
-		when(ftpChipDetail.getFtpChipDetailId()).thenReturn("ChipId");
-		when(ftpChipDetail.getFtpProviderId()).thenReturn("ProviderId");
-		doNothing().when(ftpChipDetail).setActive(anyBoolean());
-		doNothing().when(ftpChipDetail).setApprovalStatus((String) any());
-		doNothing().when(ftpChipDetail).setCertificateAlias((String) any());
-		doNothing().when(ftpChipDetail).setCrBy((String) any());
-		doNothing().when(ftpChipDetail).setCrDtimes((LocalDateTime) any());
-		doNothing().when(ftpChipDetail).setDelDtimes((LocalDateTime) any());
-		doNothing().when(ftpChipDetail).setDeleted(anyBoolean());
-		doNothing().when(ftpChipDetail).setFtpChipDetailId((String) any());
-		doNothing().when(ftpChipDetail).setFtpProviderId((String) any());
-		doNothing().when(ftpChipDetail).setMake((String) any());
-		doNothing().when(ftpChipDetail).setModel((String) any());
-		doNothing().when(ftpChipDetail).setPartnerOrganizationName((String) any());
-		doNothing().when(ftpChipDetail).setUpdBy((String) any());
-		doNothing().when(ftpChipDetail).setUpdDtimes((LocalDateTime) any());
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setActive(true);
 		ftpChipDetail.setApprovalStatus("Approval Status");
 		ftpChipDetail.setCertificateAlias("Certificate Alias");
@@ -727,8 +720,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setPartnerOrganizationName("Partner Organization Name");
 		ftpChipDetail.setUpdBy("Upd By");
 		ftpChipDetail.setUpdDtimes(LocalDateTime.of(1, 1, 1, 1, 1));
-		Optional<FTPChipDetail> ofResult = Optional.of(ftpChipDetail);
-		when(ftpChipDetailRepository.findById((String) any())).thenReturn(ofResult);
+		when(ftpChipDetailRepository.findById((String) any())).thenReturn(Optional.of(ftpChipDetail));
 
 		Partner partner = new Partner();
 		partner.setAdditionalInfo("Additional Info");
@@ -1191,5 +1183,45 @@ public class FTPChipDetailServiceTest {
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
 
 		ftpChipDetailService.getOriginalFtmCertificate("23456");
+	}
+
+	@Test
+	public void getPartnersFtmChipDetailsTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		filterDto.setPartnerId("abc");
+		filterDto.setMake("make");
+		filterDto.setOrgName("ABC");
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<FtmDetailSummaryEntity> page = null;
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		fTPChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getPartnersFtmChipDetailsTestException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<FtmDetailSummaryEntity> page = null;
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		fTPChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 }

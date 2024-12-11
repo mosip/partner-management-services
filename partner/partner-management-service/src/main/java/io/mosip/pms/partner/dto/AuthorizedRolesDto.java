@@ -52,6 +52,10 @@ public class AuthorizedRolesDto {
 	
 	private List<String> postftpchipdetailsearch;
 
+	private List<String> getpartnersftmchipdetails;
+
+	private List<String> getallsbidetails;
+
 	//Secure Biometric Interface controller
 	
 	private List<String> postsecurebiometricinterface;
@@ -130,6 +134,8 @@ public class AuthorizedRolesDto {
 	private List<String> putpartnerspolicymapping;
 	
 	private List<String> patchpartnerspolicyapikeystatus;
+
+	private List<String> getallpartners;
 	
 	//MISP License controller
 	
@@ -180,5 +186,15 @@ public class AuthorizedRolesDto {
 	private List<String> postdeactivateftm;
 
 	private List<String> getoriginalftmcertificate;
+
+	private List<String> getpartnerdetails;
+
+	private List<String> getallpartnerpolicymappingrequests;
+
+	private List<String> getoauthpartnersclients;
+
+	private List<String> getpartnersapikeyrequests;
+
+	private List<String> getalldevicedetails;
 		
 }

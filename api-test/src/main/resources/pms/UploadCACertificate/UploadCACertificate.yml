@@ -29,7 +29,7 @@ UploadCACertificate:
    Pms_UploadCertificateDeviceProvider_with_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       description: Upload CA Cert
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceCa
@@ -43,7 +43,7 @@ UploadCACertificate:
    Pms_UploadSubCACertificate_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       description: Upload Sub-CA Cert
-      role: partnerrevamp
+      role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceSubCa
@@ -107,3 +107,31 @@ UploadCACertificate:
        }
        ]
 }' 
+
+   Pms_UploadCertificate_Ftm_Provider_with_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload CA Cert
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificateFtmCa
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}'
+
+   Pms_UploadSubCACertificate_Ftm_Provider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      description: Upload Sub-CA Cert
+      role: partnerrevampftm
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificateFtmSubCa
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}'
