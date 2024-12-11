@@ -16,6 +16,24 @@ definePolicyGroup:
         "desc": "$IGNORE$",
         "is_Active": true
     }'
+   Pms_DefinePolicyGroup_create_then_deactivate_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group1923456",
+    "name": "mosip policy group1923456",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+    }'	
+
 
    Pms_DefinePolicyGroup_AlreadyExists_InValid:
       endPoint: /v1/policymanager/policies/group/new
@@ -138,20 +156,4 @@ definePolicyGroup:
     }
   ]
 }'
- Pms_DefinePolicyGroup_create_then_deactivate_sid:
-    endPoint: /v1/policymanager/policies/group/new
-    description: Creating a PolicyGroup and use in deactivate
-    role: partnerrevamp
-    restMethod: post
-    inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
-    outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
-    input: '{
-  "desc": "desc mosip policy group1923456",
-  "name": "mosip policy group1923456",
-  "requesttime": "$TIMESTAMP$"
-}'
-    output: ' {
-      "name": "$IGNORE$",
-      "desc": "$IGNORE$",
-      "is_Active": true
-  }'
+ 
