@@ -1029,12 +1029,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getCaCertificates method of PartnerServiceImpl - " + ex.getMessage());
+					"In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			String errorCode = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorCode();
 			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
