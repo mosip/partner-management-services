@@ -353,7 +353,7 @@ public class PartnerHelper {
 
             return Optional.ofNullable(mapper.readValue(mapper.writeValueAsString(getApiResponse.get(0)), KeycloakUserDto.class));
         } catch (Exception e) {
-            LOGGER.error("Error while fetching user details for partnerId: {}", partnerId, e);
+            LOGGER.error("Error while fetching user details for partnerId: {}", partnerId, e.getStackTrace());
             return Optional.empty();
         }
     }
