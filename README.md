@@ -3,9 +3,9 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_partner-management-services)
 
 ## Overview
-This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to [Partner-management UI github repo](https://github.com/mosip/partner-management-portal/)
+This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to [Partner-management UI GitHub repo](https://github.com/mosip/partner-management-portal)
 
-Partnermanagement module contains following services:
+Partner management module contains following services:
 1. Partner management service
 2. Policy management service
 
@@ -42,9 +42,9 @@ management.endpoint.env.show-values=ALWAYS
     ```
 
 ### Configuration
-[partner-management-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/partner-management-default.properties) 
+[partner-management-default.properties](https://github.com/mosip/mosip-config/blob/master/partner-management-default.properties) 
 
-[application-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/application-default.properties) 
+[application-default.properties](https://github.com/mosip/mosip-config/blob/master/application-default.properties) 
 
 defined here.
 
