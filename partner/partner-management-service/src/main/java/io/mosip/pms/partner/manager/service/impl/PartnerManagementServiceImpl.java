@@ -18,11 +18,16 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.manager.dto.CaCertificateFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
+import io.mosip.pms.partner.manager.dto.CaCertTypeListRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pms.partner.manager.dto.CaCertTypeListResponseDto;
+import io.mosip.pms.partner.manager.dto.CaCertificateSummaryDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -35,6 +40,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +88,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.all.api.key.requests.get}")
 	private String getAllApiKeyRequestsId;
+
+	@Value("${mosip.pms.api.id.all.ca.certificates.get}")
+	private String getCaCertificatesId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -969,6 +978,68 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAllApiKeyRequestsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(String sortFieldName, String sortType, int pageNo, int pageSize, CaCertificateFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<CaCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			CaCertTypeListRequestDto caCertTypeListRequestDto = new CaCertTypeListRequestDto();
+			caCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
+			caCertTypeListRequestDto.setExcludeMosipCA(true);
+			caCertTypeListRequestDto.setPartnerDomain(filterDto.getPartnerDomain());
+			caCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
+			caCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
+			caCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
+			caCertTypeListRequestDto.setPageNumber(pageNo + 1);
+			caCertTypeListRequestDto.setPageSize(pageSize);
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				caCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.caCertificateAliasToColumnMap, sortFieldName));
+				caCertTypeListRequestDto.setSortOrder(sortType);
+			}
+			RequestWrapper<CaCertTypeListRequestDto> request = new RequestWrapper<>();
+			request.setRequest(caCertTypeListRequestDto);
+			CaCertTypeListResponseDto responseObject = null;
+			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.ca.certificates.post.rest.uri"), null, "", "",
+					MediaType.APPLICATION_JSON, request, Map.class);
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CaCertTypeListResponseDto.class);
+			if (responseObject == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while getting the CA certificates list from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while getting the CA certificates list from keymanager {}", apiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+			if (responseObject == null) {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+			pageResponseV2Dto.setPageNo(responseObject.getPageNumber() - 1);
+			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
+			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
+			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getCaCertificatesId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
