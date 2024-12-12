@@ -19,8 +19,10 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             "WHEN (d.approvalStatus = 'pending_approval') THEN 'pending_approval' " +
             "WHEN (d.approvalStatus = 'rejected') THEN 'rejected' " +
             "END as status, " +
-            "d.make, d.model, d.crDtimes) " +
+            "d.make, d.model, d.crDtimes, s.id, s.swVersion) " +
             "FROM DeviceDetail d " +
+            "LEFT JOIN DeviceDetailSBI dds ON dds.id.deviceDetailId = d.id " +
+            "LEFT JOIN SecureBiometricInterface s ON dds.id.sbiId = s.id " +
             "WHERE (:partnerId IS NULL OR lower(d.deviceProviderId) LIKE %:partnerId%) " +
             "AND (:orgName IS NULL OR lower(d.partnerOrganizationName) LIKE %:orgName%) " +
             "AND (:deviceType IS NULL OR lower(d.deviceTypeCode) LIKE %:deviceType%) " +
@@ -33,7 +35,10 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             "  OR (:status = 'rejected' AND d.approvalStatus = 'rejected')" +
             ")) " +
             "AND (:make IS NULL OR lower(d.make) LIKE %:make%) " +
-            "AND (:model IS NULL OR lower(d.model) LIKE %:model%)";
+            "AND (:model IS NULL OR lower(d.model) LIKE %:model%)"+
+            "AND (:deviceId IS NULL OR lower(d.id) LIKE %:deviceId%)"+
+            "AND (:sbiId IS NULL OR lower(s.id) LIKE %:sbiId%) " +
+            "AND (:sbiVersion IS NULL OR lower(s.swVersion) LIKE %:sbiVersion%)";
 
     @Query(DEVICE_DETAILS_SUMMARY_QUERY)
     Page<DeviceDetailEntity> getSummaryOfAllDeviceDetails(
@@ -44,6 +49,9 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             @Param("status") String status,
             @Param("make") String make,
             @Param("model") String model,
+            @Param("sbiId") String sbiId,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("deviceId") String deviceId,
             Pageable pageable
     );
 
@@ -56,6 +64,9 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             @Param("status") String status,
             @Param("make") String make,
             @Param("model") String model,
+            @Param("sbiId") String sbiId,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("deviceId") String deviceId,
             Pageable pageable
     );
 
@@ -68,7 +79,9 @@ public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDeta
             @Param("status") String status,
             @Param("make") String make,
             @Param("model") String model,
+            @Param("sbiId") String sbiId,
+            @Param("sbiVersion") String sbiVersion,
+            @Param("deviceId") String deviceId,
             Pageable pageable
     );
-
 }

@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
                 columns = {
                         @ColumnResult(name = "partnerId", type = String.class),
                         @ColumnResult(name = "orgName", type = String.class),
-                        @ColumnResult(name = "partnerType", type = String.class),
                         @ColumnResult(name = "sbiId", type = String.class),
                         @ColumnResult(name = "sbiVersion", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
@@ -27,19 +26,19 @@ import java.time.LocalDateTime;
                         @ColumnResult(name = "sbiExpiryDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "createdDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "countOfAssociatedDevices", type = Long.class),
+                        @ColumnResult(name = "countOfApprovedDevices", type = Long.class),
+                        @ColumnResult(name = "countOfPendingDevices", type = Long.class),
                         @ColumnResult(name = "sbiExpiryStatus", type = String.class)
                 })
         }
 )
 public class SbiSummaryEntity {
 
-    public SbiSummaryEntity(String partnerId, String orgName, String partnerType, String sbiId, String sbiVersion,
-                            String status, Boolean isActive, LocalDateTime sbiCreatedDateTime,
-                            LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime,
-                            Long countOfAssociatedDevices, String sbiExpiryStatus) {
+    public SbiSummaryEntity(String partnerId, String orgName, String sbiId, String sbiVersion,
+                            String status, Boolean isActive, LocalDateTime sbiCreatedDateTime, LocalDateTime sbiExpiryDateTime, LocalDateTime createdDateTime,
+                            Long countOfAssociatedDevices, Long countOfApprovedDevices, Long countOfPendingDevices, String sbiExpiryStatus) {
         this.partnerId = partnerId;
         this.orgName = orgName;
-        this.partnerType = partnerType;
         this.sbiId = sbiId;
         this.sbiVersion = sbiVersion;
         this.status = status;
@@ -48,6 +47,8 @@ public class SbiSummaryEntity {
         this.sbiExpiryDateTime = sbiExpiryDateTime;
         this.createdDateTime = createdDateTime;
         this.countOfAssociatedDevices = countOfAssociatedDevices;
+        this.countOfApprovedDevices = countOfApprovedDevices;
+        this.countOfPendingDevices = countOfPendingDevices;
         this.sbiExpiryStatus = sbiExpiryStatus;
     }
 
@@ -59,8 +60,6 @@ public class SbiSummaryEntity {
     private String partnerId;
 
     private String orgName;
-
-    private String partnerType;
 
     @Id
     private String sbiId;
@@ -78,6 +77,10 @@ public class SbiSummaryEntity {
     private LocalDateTime createdDateTime;
 
     private Long countOfAssociatedDevices;
+
+    private Long countOfApprovedDevices;
+
+    private Long countOfPendingDevices;
 
     private String sbiExpiryStatus;
 }

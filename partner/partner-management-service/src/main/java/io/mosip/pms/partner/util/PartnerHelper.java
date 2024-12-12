@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -115,6 +116,9 @@ public class PartnerHelper {
 
     public final Map<String, String> deviceAliasToColumnMap = new HashMap<>();
     {
+        deviceAliasToColumnMap.put("deviceId", "id");
+        deviceAliasToColumnMap.put("sbiId", "s.id");
+        deviceAliasToColumnMap.put("sbiVersion", "s.swVersion");
         deviceAliasToColumnMap.put("partnerId", "deviceProviderId");
         deviceAliasToColumnMap.put("orgName", "partnerOrganizationName");
         deviceAliasToColumnMap.put("deviceType", "deviceTypeCode");
@@ -307,6 +311,14 @@ public class PartnerHelper {
             LOGGER.error("Invalid page size: " + pageSize);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
                     ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+        }
+    }
+
+    public void checkIfPartnerIsNotActive(Partner partner) {
+        if (!partner.getIsActive()) {
+            LOGGER.error("Partner is not Active with id {}", partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                    ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
         }
     }
 }

@@ -830,4 +830,14 @@ public class PolicyManagementControllerTest {
 				.thenReturn(responseWrapper);
 		policyManagementController.deactivatePolicy("policy123");
 	}
+
+	@Test
+	public void deactivatePolicyGroupTest() throws Exception {
+		String policyGroupId = "test-policy-group-id";
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		when(policyManagementService.deactivatePolicyGroup(policyGroupId)).thenReturn(responseWrapper);
+
+		policyManagementController.deactivatePolicyGroup(policyGroupId);
+	}
+
 }

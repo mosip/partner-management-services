@@ -288,7 +288,10 @@ public class DeviceDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "make", required = false) String make,
-			@RequestParam(value = "model", required = false) String model
+			@RequestParam(value = "model", required = false) String model,
+			@RequestParam(value = "sbiId", required = false) String sbiId,
+			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
+			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
 		partnerHelper.validateRequestParameters(partnerHelper.deviceAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
@@ -312,6 +315,15 @@ public class DeviceDetailController {
 		}
 		if (model != null) {
 			filterDto.setMake(model.toLowerCase());
+		}
+		if (sbiId != null) {
+			filterDto.setSbiId(sbiId.toLowerCase());
+		}
+		if (sbiVersion != null) {
+			filterDto.setSbiVersion(sbiVersion.toLowerCase());
+		}
+		if (deviceId != null) {
+			filterDto.setDeviceId(deviceId.toLowerCase());
 		}
 		return deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}

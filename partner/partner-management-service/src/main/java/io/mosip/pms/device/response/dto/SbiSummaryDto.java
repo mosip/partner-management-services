@@ -14,9 +14,6 @@ public class SbiSummaryDto {
     @Schema(description = "Name of the partner organisation", example = "abc")
     private String orgName;
 
-    @Schema(description = "Type of partner (e.g., device_provider, supplier, etc.)", example = "device_provider")
-    private String partnerType;
-
     @Schema(description = "Unique identifier for the SBI", example = "sbi-001")
     private String sbiId;
 
@@ -40,6 +37,12 @@ public class SbiSummaryDto {
 
     @Schema(description = "Number of approved devices associated with the SBI", example = "29")
     private Long countOfAssociatedDevices;
+
+    @Schema(description = "Number of approved devices associated with the SBI", example = "29")
+    private Long countOfApprovedDevices;
+
+    @Schema(description = "Number of pending devices associated with the SBI", example = "10")
+    private Long countOfPendingDevices;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
     private LocalDateTime createdDateTime;

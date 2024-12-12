@@ -775,28 +775,11 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
 			}
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
-			// check if the SBI is associated with user.
-			String sbiProviderId = sbi.getProviderId();
-			boolean sbiProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(sbiProviderId)) {
-					validatePartnerId(partner, userId);
-					sbiProviderExist = true;
-					partnerDetails = partner;
-					break;
-				}
-			}
-			if (!sbiProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", sbiProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				Partner partnerDetails = getAssociatedPartner(partnerList, sbi.getProviderId(), userId);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 			if (!sbi.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
@@ -850,6 +833,25 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		responseWrapper.setId(postDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public Partner getAssociatedPartner (List<Partner> partnerList, String sbiProviderId, String userId) {
+		boolean sbiProviderExist = false;
+		Partner partnerDetails = null;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(sbiProviderId)) {
+				validatePartnerId(partner, userId);
+				sbiProviderExist = true;
+				partnerDetails = partner;
+				break;
+			}
+		}
+		if (!sbiProviderExist) {
+			LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+		return partnerDetails;
 	}
 
 	@Override

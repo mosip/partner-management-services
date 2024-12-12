@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, String> {
 
     String SBI_DETAILS_SUMMARY_QUERY = "SELECT new SbiSummaryEntity(" +
-            "s.providerId, s.partnerOrgName, p.partnerTypeCode, s.id, s.swVersion, " +
+            "s.providerId, s.partnerOrgName, s.id, s.swVersion, " +
             "CASE " +
             "WHEN s.approvalStatus = 'approved' AND s.isActive = true THEN 'approved' " +
             "WHEN s.approvalStatus = 'approved' AND s.isActive = false THEN 'deactivated' " +
@@ -20,13 +20,15 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "WHEN s.approvalStatus = 'pending_approval' THEN 'pending_approval' " +
             "END AS status, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes, COUNT(dd.id.deviceDetailId) AS countOfAssociatedDevices, " +
+            "SUM(CASE WHEN d.approvalStatus = 'approved' AND d.isActive = true THEN 1 ELSE 0 END) AS countOfApprovedDevices, " +
+            "SUM(CASE WHEN d.approvalStatus = 'pending_approval' THEN 1 ELSE 0 END) AS countOfPendingDevices, " +
             "CASE " +
             "WHEN s.swExpiryDateTime < CURRENT_DATE THEN 'expired' " +
             "ELSE 'valid' " +
             "END AS sbiExpiryStatus ) " +
-            "FROM SecureBiometricInterfaceV2 s " +
-            "LEFT JOIN s.partner p " +
+            "FROM SecureBiometricInterface s " +
             "LEFT JOIN DeviceDetailSBI dd ON dd.id.sbiId = s.id " +
+            "LEFT JOIN DeviceDetail d ON d.id = dd.id.deviceDetailId " +
             "WHERE (:partnerId IS NULL OR lower(s.providerId) LIKE %:partnerId%) " +
             "AND (:orgName IS NULL OR lower(s.partnerOrgName) LIKE %:orgName%) " +
             "AND (:sbiVersion IS NULL OR lower(s.swVersion) LIKE %:sbiVersion%) " +
@@ -38,7 +40,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "AND (:sbiExpiryStatus IS NULL OR " +
             "(:sbiExpiryStatus = 'expired' AND s.swExpiryDateTime < CURRENT_DATE) " +
             "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE))" +
-            "GROUP BY s.providerId, s.partnerOrgName, p.partnerTypeCode, s.id, s.swVersion, s.approvalStatus, " +
+            "GROUP BY s.providerId, s.partnerOrgName, s.id, s.swVersion, s.approvalStatus, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes";
 
     @Query(SBI_DETAILS_SUMMARY_QUERY)
