@@ -448,7 +448,8 @@ public class PartnerManagementController {
 			)
 			@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
-			@RequestParam(value = "issuedBy", required = false) String issuedBy) {
+			@RequestParam(value = "issuedBy", required = false) String issuedBy
+	) {
 		partnerHelper.validateRequestParameters(partnerHelper.caCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
 		if (caCertificateType != null) {
@@ -456,9 +457,6 @@ public class PartnerManagementController {
 		}
 		if (certificateId != null) {
 			filterDto.setCertificateId(certificateId.toLowerCase());
-		}
-		if (caCertificateType != null) {
-			filterDto.setCaCertificateType(caCertificateType);
 		}
 		if (partnerDomain != null) {
 			filterDto.setPartnerDomain(partnerDomain);
