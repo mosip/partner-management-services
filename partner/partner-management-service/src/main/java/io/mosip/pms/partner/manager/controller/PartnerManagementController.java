@@ -456,16 +456,16 @@ public class PartnerManagementController {
 			filterDto.setCaCertificateType(caCertificateType);
 		}
 		if (certificateId != null) {
-			filterDto.setCertificateId(certificateId.toLowerCase());
+			filterDto.setCertificateId(certificateId);
 		}
 		if (partnerDomain != null) {
 			filterDto.setPartnerDomain(partnerDomain);
 		}
 		if (issuedTo != null) {
-			filterDto.setIssuedTo(issuedTo.toLowerCase());
+			filterDto.setIssuedTo(issuedTo);
 		}
 		if (issuedBy != null) {
-			filterDto.setIssuedBy(issuedBy.toLowerCase());
+			filterDto.setIssuedBy(issuedBy);
 		}
 		return partnerManagementService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
