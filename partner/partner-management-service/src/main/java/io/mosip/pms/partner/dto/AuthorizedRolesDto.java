@@ -196,5 +196,7 @@ public class AuthorizedRolesDto {
 	private List<String> getpartnersapikeyrequests;
 
 	private List<String> getalldevicedetails;
+
+	private List<String> getallcacertificates;
 		
 }

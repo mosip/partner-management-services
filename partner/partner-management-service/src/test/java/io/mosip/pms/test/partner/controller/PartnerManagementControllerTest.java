@@ -437,4 +437,34 @@ public class PartnerManagementControllerTest {
 						.param("partnerTypeCode", partnerTypeCode))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getCaCertificatesTest() throws Exception {
+		String sortFieldName = "uploadDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
+		filterDto.setCaCertificateType("root");
+		filterDto.setCertificateId("123");
+		filterDto.setPartnerDomain("FTM");
+		filterDto.setIssuedTo("CA");
+		filterDto.setIssuedBy("CA");
+		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/root-certificates")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("caCertificateType", "root")
+						.param("certificateId", "123")
+						.param("partnerDomain", "FTM")
+						.param("issuedTo", "CA")
+						.param("issuedBy", "CA"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }

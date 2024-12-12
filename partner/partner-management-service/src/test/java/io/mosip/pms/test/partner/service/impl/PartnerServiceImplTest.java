@@ -229,14 +229,13 @@ public class PartnerServiceImplTest {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("ROLE_USER")
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
 		);
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
 		addAuthoritiesMethod.setAccessible(true);
 		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(partnerHelper.isPartnerAdmin(authentication.getAuthorities().toString())).thenReturn(true);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		List<Partner> partnerList = new ArrayList<>();
