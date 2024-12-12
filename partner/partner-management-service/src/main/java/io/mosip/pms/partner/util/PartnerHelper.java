@@ -340,7 +340,7 @@ public class PartnerHelper {
         try {
             Map<String, String> pathSegments = Map.of("username", partnerId);
 
-            String apiUrl = environment.getProperty("auth.server.admin.uri") + "/users?username={username}";
+            String apiUrl = environment.getProperty("auth.server.get.user.details.url");
             MediaType mediaType = MediaType.APPLICATION_JSON;
 
             List<Map<String, Object>> getApiResponse = restUtil.getApiWithContentType(apiUrl, pathSegments, List.class, mediaType);
