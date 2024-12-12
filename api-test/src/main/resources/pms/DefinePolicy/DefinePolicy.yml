@@ -238,7 +238,7 @@ definePolicy:
     "is_Active": false
 }'
 
-   Pms_DefinePolicy_DEMOAUTH_with_SAME_POLICYNAME_NEG:
+   Pms_DefinePolicy_DemoAuth_With_Same_Policy_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post
@@ -266,7 +266,7 @@ definePolicy:
   ]
 }'
 
-   Pms_DefinePolicy_REMOVE_demo_Neg:
+   Pms_DefinePolicy_Remove_Demo_Neg:
       endPoint: /v1/policymanager/policies
       role: partnerrevamp
       restMethod: post

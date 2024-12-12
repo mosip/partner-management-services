@@ -2,7 +2,7 @@ GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_without_auth:
       endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies without token
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
@@ -19,7 +19,7 @@ GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_invalid_auth:
       endPoint: /v1/partnermanager/partners/auth-partners-policies
       description: Fetching all Approved Auth Partner Policies with invalid token
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy

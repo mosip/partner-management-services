@@ -14,7 +14,7 @@ GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_without_auth:
       endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups without token
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups
@@ -31,7 +31,7 @@ GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_Invalid_auth:
       endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups with invalid token
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups

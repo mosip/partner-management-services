@@ -31,7 +31,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_without_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the partner without login
-      role: invalid
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error
@@ -47,7 +47,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_invalid_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates
       description: Fetching all the API certificates of the partner invalid partner
-      role: invalid
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error

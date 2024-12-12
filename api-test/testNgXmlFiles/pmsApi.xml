@@ -47,7 +47,7 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApiKeyForAuthPartnerwithoutpartnerregister">
+	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerRegister">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
 		<classes>
@@ -80,7 +80,7 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApiKeyForAuthPartnerwithoutpartnercertifcates">
+	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerCertifcates">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
 		<classes>
@@ -160,7 +160,7 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApiKeyForAuthPartnerbeforepolicyMapping">
+	<test name="GetAllApiKeyForAuthPartnerBeforePolicyMapping">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
 		<classes>
@@ -235,7 +235,7 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApiKeyForAuthPartnerbeforeApikeygenerated">
+	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
 		<classes>
@@ -271,7 +271,7 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApiKeyForAuthPartnerafterdeactive">
+	<test name="GetAllApiKeyForAuthPartnerAfterDeactive">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartner.yml" />
 		<classes>
