@@ -1,7 +1,7 @@
 # Policy management service
 
 ## Overview
-This repository contains the source code for policy management service. For an overview refer [here](https://nayakrounak.gitbook.io/mosip-docs/modules/partner-management).
+This repository contains the source code for policy management service. For an overview refer [here](https://docs.mosip.io/1.2.0/partners).
 
 ## Databases
 Refer to [SQL scripts](../../db_scripts).
@@ -35,9 +35,9 @@ spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
 management.endpoint.env.show-values=ALWAYS
 
 ### Configuration
-[policy-management-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/policy-default.properties)
+[policy-management-default.properties](https://github.com/mosip/mosip-config/blob/master/policy-default.properties)
 
-[application-default.properties](https://github.com/mosip/mosip-config/blob/dev-integration/application-default.properties)
+[application-default.properties](https://github.com/mosip/mosip-config/blob/master/application-default.properties)
 
 defined here.
 
@@ -79,4 +79,4 @@ Automated functional tests available in [Functional Tests](../../api-test).
 API documentation is available [here](https://mosip.github.io/documentation/).
 
 ## License
-This project is licensed under the terms of [Mozilla Public License 2.0](LICENSE)
+This project is licensed under the terms of [Mozilla Public License 2.0](../../LICENSE)
