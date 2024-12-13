@@ -260,7 +260,7 @@ public class RestUtil {
 				result = (T) restTemplate
 						.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, mediaType), responseType).getBody();
 			} catch (Exception e) {
-				logger.error("Error occurred while calling {}", urlWithPath, e);
+				logger.error("Error occurred while calling {}", urlWithPath, e.getStackTrace());
 				throw new ApiAccessibleException(
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
 						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
