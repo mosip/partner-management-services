@@ -18,13 +18,13 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +36,57 @@ public class PartnerHelper {
     private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
+
+    public final Map<String, String> partnerAliasToColumnMap = new HashMap<>();
+    {
+        partnerAliasToColumnMap.put("partnerId", "id");
+        partnerAliasToColumnMap.put("partnerType", "partnerTypeCode");
+        partnerAliasToColumnMap.put("orgName", "name");
+        partnerAliasToColumnMap.put("policyGroupId", "policyGroupId");
+        partnerAliasToColumnMap.put("policyGroupName", "pg.name");
+        partnerAliasToColumnMap.put("emailAddress", "emailId");
+        partnerAliasToColumnMap.put("certificateUploadStatus", "certificateAlias");
+        partnerAliasToColumnMap.put("status", "approvalStatus");
+        partnerAliasToColumnMap.put("isActive", "isActive");
+        partnerAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
+    public final Map<String, String> partnerPolicyMappingAliasToColumnMap = new HashMap<>();
+    {
+        partnerPolicyMappingAliasToColumnMap.put("partnerId", "partnerId");
+        partnerPolicyMappingAliasToColumnMap.put("partnerType", "p.partnerTypeCode");
+        partnerPolicyMappingAliasToColumnMap.put("orgName", "p.name");
+        partnerPolicyMappingAliasToColumnMap.put("policyId", "policyId");
+        partnerPolicyMappingAliasToColumnMap.put("policyGroupName", "p.policyGroup.name");
+        partnerPolicyMappingAliasToColumnMap.put("policyName", "ap.name");
+        partnerPolicyMappingAliasToColumnMap.put("status", "statusCode");
+        partnerPolicyMappingAliasToColumnMap.put("requestDetail", "requestDetail");
+        partnerPolicyMappingAliasToColumnMap.put("createdDateTime", "createdDateTime");
+    }
+
+    public final Map<String, String> oidcClientsAliasToColumnMap = new HashMap<>();
+    {
+        oidcClientsAliasToColumnMap.put("partnerId", "rpId");
+        oidcClientsAliasToColumnMap.put("orgName", "p.name");
+        oidcClientsAliasToColumnMap.put("policyGroupName", "pg.name");
+        oidcClientsAliasToColumnMap.put("policyName", "ap.name");
+        oidcClientsAliasToColumnMap.put("clientId", "id");
+        oidcClientsAliasToColumnMap.put("clientName", "name");
+        oidcClientsAliasToColumnMap.put("status", "status");
+        oidcClientsAliasToColumnMap.put("createdDateTime", "createdDateTime");
+    }
+
+    public final Map<String, String> apiKeyAliasToColumnMap = new HashMap<>();
+    {
+        apiKeyAliasToColumnMap.put("partnerId", "partnerId");
+        apiKeyAliasToColumnMap.put("apiKeyLabel", "label");
+        apiKeyAliasToColumnMap.put("orgName", "p.name");
+        apiKeyAliasToColumnMap.put("policyName", "ap.name");
+        apiKeyAliasToColumnMap.put("policyGroupName", "pg.name");
+        apiKeyAliasToColumnMap.put("status", "isActive");
+        apiKeyAliasToColumnMap.put("createdDateTime", "createdDateTime");
+    }
+
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -124,22 +175,78 @@ public class PartnerHelper {
     public void populateCertificateExpiryState(OriginalCertDownloadResponseDto originalCertDownloadResponseDto) {
         originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
         originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(false);
-        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
 
         // Check mosip signed certificate expiry date
         X509Certificate decodedMosipSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getMosipSignedCertificateData());
-        LocalDateTime mosipSignedCertExpiryDate = decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (mosipSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedMosipSignedCert)) {
             originalCertDownloadResponseDto.setMosipSignedCertificateData("");
             originalCertDownloadResponseDto.setIsMosipSignedCertificateExpired(true);
         }
 
         // Check ca signed partner certificate expiry date
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(originalCertDownloadResponseDto.getCaSignedCertificateData());
-        LocalDateTime caSignedCertExpiryDate = decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        if (caSignedCertExpiryDate.isBefore(currentDateTime)) {
+        if (isCertificateExpired(decodedCaSignedCert)) {
             originalCertDownloadResponseDto.setCaSignedCertificateData("");
             originalCertDownloadResponseDto.setIsCaSignedCertificateExpired(true);
+        }
+    }
+
+    public boolean isCertificateExpired(X509Certificate cert) {
+        // Get the current date and time in UTC
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime expiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+
+        // Check if the certificate has expired
+        return expiryDate.isBefore(currentDateTime);
+    }
+
+    public Sort getSortingRequest (String fieldName, String sortType) {
+        Sort sortingRequest = null;
+        if (sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
+            sortingRequest = Sort.by(fieldName).ascending();
+        }
+        if (sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            sortingRequest = Sort.by(fieldName).descending();
+        }
+        return sortingRequest;
+    }
+
+    public boolean isPartnerAdmin(String roles) {
+        if (roles.contains(PartnerConstants.PARTNER_ADMIN)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, int pageNo, int pageSize) {
+        // Validate sortFieldName
+        if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
+            LOGGER.error("Invalid sort field name: " + sortFieldName);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_FIELD.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_FIELD.getErrorMessage(), sortFieldName));
+        }
+
+        // Validate sortType
+        if (sortType != null &&
+                !sortType.equalsIgnoreCase(PartnerConstants.ASC) &&
+                !sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+            LOGGER.error("Invalid sort type: " + sortType);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_TYPE.getErrorCode(),
+                    String.format(ErrorCode.INVALID_SORT_TYPE.getErrorMessage(), sortType));
+        }
+
+        // Validate pageNo
+        if (pageNo < 0) {
+            LOGGER.error("Invalid page no: " + pageNo);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+
+        // Validate pageSize
+        if (pageSize <= 0) {
+            LOGGER.error("Invalid page size: " + pageSize);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
         }
     }
 }

@@ -12,5 +12,5 @@ GetAllDeviceListMappedWithSbi:
       output: ' {
       "deviceTypeCode": "Face",
       "deviceSubTypeCode": "Full face",
-      "deviceProviderId": "111998"
+      "deviceProviderId": "pms-111998"
 }'

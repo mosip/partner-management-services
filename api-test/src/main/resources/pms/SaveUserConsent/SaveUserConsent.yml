@@ -9,5 +9,5 @@ saveUserConsent:
       input: '{
 }'
       output: '{
-           "userId": "111999"
+           "userId": "pms-111999"
 }'
