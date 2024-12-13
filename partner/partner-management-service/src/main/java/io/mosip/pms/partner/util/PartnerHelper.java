@@ -24,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 
 @Component
 public class PartnerHelper {
@@ -340,7 +342,12 @@ public class PartnerHelper {
         try {
             Map<String, String> pathSegments = Map.of("username", partnerId);
 
-            String apiUrl = environment.getProperty("auth.server.get.user.details.url");
+            String apiUrl = UriComponentsBuilder
+                    .fromHttpUrl(Objects.requireNonNull(environment.getProperty("mosip.iam.admin-url")))
+                    .path(Objects.requireNonNull(environment.getProperty("mosip.iam.users-extn-url")))
+                    .queryParam("username", "{username}")
+                    .build()
+                    .toUriString();
             MediaType mediaType = MediaType.APPLICATION_JSON;
 
             List<Map<String, Object>> getApiResponse = restUtil.getApiWithContentType(apiUrl, pathSegments, List.class, mediaType);
