@@ -1,0 +1,13 @@
+GetListOfPartners:
+   Pms_GetListOfPartners_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/v3
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
