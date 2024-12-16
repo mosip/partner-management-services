@@ -198,5 +198,7 @@ public class AuthorizedRolesDto {
 	private List<String> getalldevicedetails;
 
 	private List<String> getallcacertificates;
+
+	private List<String> getdownloadrootcertificate;
 		
 }

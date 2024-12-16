@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -11,6 +12,7 @@ import io.mosip.pms.partner.manager.dto.CaCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.dto.CaCertificateSummaryDto;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -468,5 +470,18 @@ public class PartnerManagementController {
 			filterDto.setIssuedBy(issuedBy);
 		}
 		return partnerManagementService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadrootcertificate())")
+	@GetMapping(value = "/download-root-certificate/{certificateId}")
+	@Operation(summary = "Download root certificate", description = "This endpoint will download p7b file for a CA / Intermediate CA certificate along with the trust chain.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	ResponseWrapperV2<CACertificateResponseDto> downloadRootCertificate(
+			@ApiParam("To download root certificate.")  @PathVariable("certificateId") @NotNull String certificateId) {
+		return partnerManagementService.downloadRootCertificate(certificateId);
 	}
 }

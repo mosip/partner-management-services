@@ -80,6 +80,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String FTM_PROVIDER = "FTM_Provider";
 	private static final String APPROVED = "approved";
+	public static final String BLANK_STRING = "";
 
 	@Value("${mosip.pms.api.id.all.partners.get}")
 	private String getAllPartnersId;
@@ -92,6 +93,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.all.ca.certificates.get}")
 	private String getCaCertificatesId;
+
+	@Value("${mosip.pms.api.id.download.ca.certificate.get}")
+	private String getDownloadCaCertificateId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -1046,6 +1050,54 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getCaCertificatesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<CACertificateResponseDto> downloadRootCertificate(String certificateId) {
+		ResponseWrapperV2<CACertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(certificateId) || certificateId.equals(BLANK_STRING)) {
+				LOGGER.info("sessionId", "idType", "id", "Certificate Id is null or empty -" + certificateId);
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_CERTIFICATE_ID.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_CERTIFICATE_ID.getErrorMessage()
+				);
+			}
+			CACertificateResponseDto responseObject = null;
+			Map<String, String> pathsegments = new HashMap<>();
+			pathsegments.put("caCertId", certificateId);
+			Map<String, Object> apiResponse = restUtil.getApi(environment.getProperty("pmp.download.ca.certificate.get.rest.uri"), pathsegments, Map.class);
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CACertificateResponseDto.class);
+			if (responseObject == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while downloading the CA certificate from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while downloading the CA certificate from keymanager {}", apiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+			if (responseObject == null) {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+			responseWrapper.setResponse(responseObject);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In downloadRootCertificate method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In downloadRootCertificate method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_CA_CERTIFICATE_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_CA_CERTIFICATE_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getDownloadCaCertificateId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

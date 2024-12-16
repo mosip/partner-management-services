@@ -23,6 +23,9 @@ public class CaCertificateSummaryDto {
     @Schema(description = "The entity or person issuing the certificate.", example = "Certificate Authority X")
     private String issuedBy;
 
+    @Schema(description = "The unique hash of the certificate.", example = "xyx-abc-123")
+    private String certThumbprint;
+
     @Schema(description = "The start date and time of the certificate's validity period", example = "2023-12-01T00:00:00")
     private LocalDateTime validFromDate;
 
