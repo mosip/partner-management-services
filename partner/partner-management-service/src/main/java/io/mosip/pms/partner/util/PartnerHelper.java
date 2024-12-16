@@ -15,13 +15,16 @@ import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
@@ -31,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 
 @Component
 public class PartnerHelper {
@@ -333,4 +337,32 @@ public class PartnerHelper {
                     ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
         }
     }
+
+    public Optional<KeycloakUserDto> getUserDetailsByPartnerId(String partnerId) throws Exception {
+        try {
+            Map<String, String> pathSegments = Map.of("username", partnerId);
+
+            String apiUrl = UriComponentsBuilder
+                    .fromHttpUrl(Objects.requireNonNull(environment.getProperty("mosip.iam.admin-url")))
+                    .path(Objects.requireNonNull(environment.getProperty("mosip.iam.users-extn-url")))
+                    .queryParam("username", "{username}")
+                    .build()
+                    .toUriString();
+            MediaType mediaType = MediaType.APPLICATION_JSON;
+
+            List<Map<String, Object>> getApiResponse = restUtil.getApiWithContentType(apiUrl, pathSegments, List.class, mediaType);
+
+            // Check if the response is empty or null
+            if (getApiResponse == null || getApiResponse.isEmpty()) {
+                LOGGER.error("Error while fetching user details for partnerId:", partnerId);
+                return Optional.empty();
+            }
+
+            return Optional.ofNullable(mapper.readValue(mapper.writeValueAsString(getApiResponse.get(0)), KeycloakUserDto.class));
+        } catch (Exception e) {
+            LOGGER.error("Error while fetching user details for partnerId: {}", partnerId, e.getStackTrace());
+            return Optional.empty();
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.manager.dto.CaCertificateFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.dto.*;
@@ -823,6 +824,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
 				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
 				partnerDetailsV3Dto.setIsCertificateAvailable(true);
+			}
+			Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
+			if (keycloakUserDto.isPresent()){
+				partnerDetailsV3Dto.setFirstName(keycloakUserDto.get().getFirstName());
+				partnerDetailsV3Dto.setLastName(keycloakUserDto.get().getLastName());
 			}
 			responseWrapper.setResponse(partnerDetailsV3Dto);
 		} catch (PartnerServiceException ex) {
