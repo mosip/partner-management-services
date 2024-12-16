@@ -87,6 +87,8 @@ public enum ErrorCode {
 	CERTIFICATE_FETCH_ERROR("PMS_CERTIFICATE_ERROR_008","Error while fetching certificate."),
 	DEACTIVATED_PARTNER_CERTIFICATE_DOWNLOAD_ERROR("PMS_CERTIFICATE_ERROR_009","Unable to download the certificate for a deactivated partner"),
 	CA_CERTIFICATES_FETCH_ERROR("PMS_CERTIFICATE_ERROR_010", "Error while fetching CA certificates."),
+	DOWNLOAD_CA_CERTIFICATE_ERROR("PMS_CERTIFICATE_ERROR_011", "Error while downloading CA certificate."),
+	INVALID_CERTIFICATE_ID("PMS_CERTIFICATE_ERROR_012", "Certificate id is null or empty"),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
 	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
 	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),

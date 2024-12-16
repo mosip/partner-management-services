@@ -101,4 +101,6 @@ public interface PartnerManagerService {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, ApiKeyFilterDto filterDto);
 
 	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(String sortFieldName, String sortType, int pageNo, int pageSize, CaCertificateFilterDto filterDto);
+
+	public ResponseWrapperV2<CACertificateResponseDto> downloadRootCertificate(String certificateId);
 }
