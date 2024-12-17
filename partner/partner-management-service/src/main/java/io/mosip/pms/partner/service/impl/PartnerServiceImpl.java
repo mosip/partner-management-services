@@ -861,6 +861,9 @@ public class PartnerServiceImpl implements PartnerService {
 			// Populate certificate expiry state
 			partnerHelper.populateCertificateExpiryState(responseDto);
 			responseWrapper.setResponse(responseDto);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalPartnerCertificate method - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));

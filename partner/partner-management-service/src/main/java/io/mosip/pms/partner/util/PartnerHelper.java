@@ -205,9 +205,8 @@ public class PartnerHelper {
         pathsegments.put("partnerCertId", certificateAlias);
         Map<String, Object> getApiResponse = restUtil
                 .getApi(environment.getProperty(uriProperty), pathsegments, Map.class);
-        responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
 
-        if (responseObject == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
+        if (getApiResponse.get("response") == null && getApiResponse.containsKey(PartnerConstants.ERRORS)) {
             List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse
                     .get(PartnerConstants.ERRORS);
             if (!certServiceErrorList.isEmpty()) {
@@ -221,11 +220,12 @@ public class PartnerHelper {
             }
         }
 
-        if (responseObject == null) {
+        if (getApiResponse.get("response") == null) {
             LOGGER.error("Got null response from {}", environment.getProperty(uriProperty));
             throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
                     ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
         }
+        responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), responseType);
         return responseObject;
     }
 

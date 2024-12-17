@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
@@ -660,6 +661,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 }
             }
             responseWrapper.setResponse(ftmChipDetailsDtoList);
+        } catch (ApiAccessibleException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In ftmChipDetails method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
