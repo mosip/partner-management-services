@@ -3,7 +3,7 @@ GetAllApprovedFtmProviderNegativeScenarios:
       endPoint: /v1/partnermanager/partners/approved-ftm-provider-ids
       uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_01
       description: Retrieve all approved FTM Providers without Partner authentication 
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
@@ -22,7 +22,7 @@ GetAllApprovedFtmProviderNegativeScenarios:
       endPoint: /v1/partnermanager/partners/approved-ftm-provider-ids
       uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_02
       description: Retrieve all approved FTM Providers with Invalid access token 
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
@@ -41,7 +41,7 @@ GetAllApprovedFtmProviderNegativeScenarios:
       endPoint: /v1/partnermanager/partners/approved-ftm-provider-ids
       uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_03
       description: Retrieve all approved FTM Providers before uploading CA certificates
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderBeforeUploadingCertificates
@@ -60,7 +60,7 @@ GetAllApprovedFtmProviderNegativeScenarios:
       endPoint: /v1/partnermanager/partners/approved-ftm-provider-ids
       uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_04
       description: Retrieve all approved FTM Providers before uploading Partner certificate
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderBeforeUploadingCertificates

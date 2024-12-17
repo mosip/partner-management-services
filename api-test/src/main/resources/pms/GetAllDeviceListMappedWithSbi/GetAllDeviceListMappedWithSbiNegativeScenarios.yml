@@ -3,7 +3,7 @@ GetAllDeviceListMappedWithSbiNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_01
       description: Retrieve all Device list which are mapped with SBI without Authentication
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi

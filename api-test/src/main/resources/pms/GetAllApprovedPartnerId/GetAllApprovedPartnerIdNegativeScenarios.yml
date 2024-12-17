@@ -2,7 +2,7 @@ GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_without_auth:
       endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
       description: Fetching all approved Partner Id without token
-      role: invalid
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
       outputTemplate: pms/error
@@ -18,7 +18,7 @@ GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_invalid_auth:
       endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
       description: Fetching all approved Partner Id with invalid token
-      role: invalid
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
       outputTemplate: pms/error

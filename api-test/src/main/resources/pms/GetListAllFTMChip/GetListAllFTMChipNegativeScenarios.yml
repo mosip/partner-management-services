@@ -3,7 +3,7 @@ GetListAllFTMChipNegativeScenarios:
       endPoint: /v1/partnermanager/partners/ftm-chip-details
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_01
       description: Retrieve all FTM chip details without Partner authentication
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
@@ -21,7 +21,7 @@ GetListAllFTMChipNegativeScenarios:
       endPoint: /v1/partnermanager/partners/ftm-chip-details
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_02
       description: Retrieve all FTM chip details with Invalid access token
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip

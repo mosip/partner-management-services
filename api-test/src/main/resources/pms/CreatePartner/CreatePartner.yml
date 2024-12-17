@@ -12,7 +12,7 @@ createPartnerSelfRegistration:
     "emailId": "mosip98763@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "pms-111999",
-    "partnerType": "Auth_Partner",
+    "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
@@ -34,7 +34,7 @@ createPartnerSelfRegistration:
     "emailId": "mosip98763@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "pms-111999",
-    "partnerType": "Auth_Partner",
+    "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
@@ -58,7 +58,7 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "1119911",
-    "partnerType": "Auth_Partner",
+    "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
@@ -83,7 +83,7 @@ createPartnerSelfRegistration:
     "emailId": "mosip98763125@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "1119910",
-    "partnerType": "Auth_Partner",
+    "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234"
   }'
       output: '{
@@ -107,7 +107,7 @@ createPartnerSelfRegistration:
     "emailId": "mosip98763123@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "11199911",
-    "partnerType": "Auth_Partner",
+    "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234",
     "requesttime": "1111-07-22T08:21:17.665Z"
   }'

@@ -95,7 +95,7 @@ createPublishPolicy:
    Pms_PublishPolicy_invalid_auth:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy without access token      
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -108,7 +108,7 @@ createPublishPolicy:
       output: '{
         "errors": [
         { 
-          "errorCode": "KER-ATH-403"
+          "errorCode": "KER-ATH-401"
         }
        ] 
     }'                 
