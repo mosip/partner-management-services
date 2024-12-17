@@ -166,6 +166,9 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
                 throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
                         ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+        } catch (ApiAccessibleException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificates method of MultiPartnerServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (PartnerServiceException ex) {
             LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificates method of MultiPartnerServiceImpl - " + ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
