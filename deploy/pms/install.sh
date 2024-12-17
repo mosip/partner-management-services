@@ -25,7 +25,7 @@ function installing_pms() {
 
   INTERNAL_API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
   PMP_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-host})
-  PMP_NEW_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-reactjs-ui-new-host})
+  PMP_REVAMP_UI_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-revamp-ui-host})
 
   PARTNER_MANAGER_SERVICE_NAME="pms-partner"
   POLICY_MANAGER_SERVICE_NAME="pms-policy"
@@ -33,13 +33,13 @@ function installing_pms() {
   echo Installing partner manager
   helm -n $NS install $PARTNER_MANAGER_SERVICE_NAME mosip/pms-partner \
   --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$PMP_HOST \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_NEW_HOST \
+  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_REVAMP_UI_HOST \
   --version $CHART_VERSION
 
   echo Installing policy manager
   helm -n $NS install $POLICY_MANAGER_SERVICE_NAME mosip/pms-policy \
   --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$PMP_HOST \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_NEW_HOST \
+  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_REVAMP_UI_HOST \
   --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
