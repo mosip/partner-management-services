@@ -16,8 +16,8 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
-import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.device.dto.SbiDetailsDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -366,7 +366,7 @@ public class SecureBiometricInterfaceControllerTest {
 		deviceDetailDtoList.add(deviceDetailDto);
 		responseWrapper.setResponse(deviceDetailDtoList);
 		Mockito.when(secureBiometricInterfaceService.getAllDevicesForSbi(Mockito.any())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/sbi-devices/123").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/123/devices").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
 	}
 
@@ -374,17 +374,14 @@ public class SecureBiometricInterfaceControllerTest {
 	@WithMockUser(roles = {"DEVICE_PROVIDER"})
 	public void deactivateSbiTest() throws Exception {
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		RequestWrapperV2<DeactivateSbiRequestDto> requestWrapper = new RequestWrapperV2<>();
-		requestWrapper.setVersion("1.0");
-		requestWrapper.setRequestTime(LocalDateTime.now());
-		DeactivateSbiRequestDto deactivateSbiRequestDto = new DeactivateSbiRequestDto();
-		deactivateSbiRequestDto.setSbiId("abc");
-		requestWrapper.setRequest(deactivateSbiRequestDto);
 		SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 		responseWrapper.setResponse(sbiDetailsResponseDto);
-		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.any())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/deactivate-sbi").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
+
+		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.anyString())).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
 	}
 
 	private RequestWrapper<DeviceDetailSBIMappingDto> createMappingRequest() {
@@ -417,5 +414,18 @@ public class SecureBiometricInterfaceControllerTest {
 						.param("status", "approved")
 						.param("sbiExpiryStatus", "expired"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"DEVICE_PROVIDER"})
+	public void getSbiDetailsTest() throws Exception {
+		ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
+		List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
+		SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
+		sbiDetailsDtoList.add(sbiDetailsDto);
+		responseWrapper.setResponse(sbiDetailsDtoList);
+		Mockito.when(secureBiometricInterfaceService.getSbiDetails()).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
 	}
 }

@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +21,14 @@ import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -91,15 +91,19 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String APPROVED = "approved";
 	public static final String REJECTED = "rejected";
+	public static final String PENDING_APPROVAL = "pending_approval";
 
 	@Value("${mosip.pms.api.id.sbi.devices.get}")
 	private  String getSbiDevicesId;
 
-	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
-	private  String postDeactivateSbi;
+	@Value("${mosip.pms.api.id.deactivate.sbi.patch}")
+	private  String patchDeactivateSbi;
 
 	@Value("${mosip.pms.api.id.all.sbi.details.get}")
 	private  String getAllSbiDetails;
+
+	@Value("${mosip.pms.api.id.sbi.details.get}")
+	private  String getSbiDetailsId;
 
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
@@ -463,6 +467,88 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode(),
 					String.format(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorMessage(), maxAllowedExpiryYear));
 		}
+	}
+
+	@Override
+	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails() {
+		ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
+			for (Partner partner : partnerList) {
+				validatePartnerId(partner, userId);
+				if (partnerHelper.checkIfPartnerIsDevicePartner(partner)) {
+					List<SecureBiometricInterface> secureBiometricInterfaceList = sbiRepository.findByProviderId(partner.getId());
+					if (!secureBiometricInterfaceList.isEmpty()) {
+						for (SecureBiometricInterface secureBiometricInterface : secureBiometricInterfaceList) {
+							SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
+							List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(partner.getId(), secureBiometricInterface.getId());
+							sbiDetailsDto.setSbiId(secureBiometricInterface.getId());
+							sbiDetailsDto.setPartnerId(partner.getId());
+							sbiDetailsDto.setSbiVersion(secureBiometricInterface.getSwVersion());
+							sbiDetailsDto.setStatus(secureBiometricInterface.getApprovalStatus());
+							sbiDetailsDto.setSbiActive(secureBiometricInterface.isActive());
+							sbiDetailsDto.setSbiExpired(checkIfSbiExpired(secureBiometricInterface));
+							sbiDetailsDto.setCountOfApprovedDevices(countDevices(deviceDetailSBIList, APPROVED));
+							sbiDetailsDto.setCountOfPendingDevices(countDevices(deviceDetailSBIList, PENDING_APPROVAL));
+							sbiDetailsDto.setSbiCreatedDateTime(secureBiometricInterface.getSwCreateDateTime());
+							sbiDetailsDto.setSbiExpiryDateTime(secureBiometricInterface.getSwExpiryDateTime());
+							sbiDetailsDto.setCreatedDateTime(secureBiometricInterface.getCrDtimes());
+
+							sbiDetailsDtoList.add(sbiDetailsDto);
+						}
+					}
+				}
+			}
+			responseWrapper.setResponse(sbiDetailsDtoList);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getSbiDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private boolean checkIfSbiExpired(SecureBiometricInterface secureBiometricInterface) {
+		return secureBiometricInterface.getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now());
+	}
+
+	private Integer countDevices(List<DeviceDetailSBI> deviceDetailSBIList, String status) {
+		Integer count = 0;
+		if (deviceDetailSBIList.isEmpty()) {
+			return count;
+		}
+		for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.
+					findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
+			if (deviceDetail.isPresent()) {
+				if (status.equals(APPROVED)) {
+					if (deviceDetail.get().getApprovalStatus().equals(status) && deviceDetail.get().getIsActive()) {
+						count++;
+					}
+				}
+				if (status.equals(PENDING_APPROVAL)) {
+					if (deviceDetail.get().getApprovalStatus().equals(status)) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
 	}
 
 	@Override
@@ -830,7 +916,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(postDeactivateSbi);
+		responseWrapper.setId(patchDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

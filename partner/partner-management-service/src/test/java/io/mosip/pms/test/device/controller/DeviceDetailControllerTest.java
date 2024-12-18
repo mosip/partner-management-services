@@ -18,7 +18,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.device.dto.DeviceDetailFilterDto;
 import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
-import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -474,18 +473,17 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void deactivateDeviceTest() throws Exception {
         ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapperV2<>();
-        requestWrapper.setVersion("1.0");
-        requestWrapper.setRequestTime(LocalDateTime.now());
-        DeactivateDeviceRequestDto deactivateDeviceRequestDto = new DeactivateDeviceRequestDto();
-        deactivateDeviceRequestDto.setDeviceId("abc");
-        requestWrapper.setRequest(deactivateDeviceRequestDto);
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         responseWrapper.setResponse(deviceDetailResponseDto);
-        when(deviceDetaillService.deactivateDevice(Mockito.any())).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deactivate-device").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+
+        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString())).thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+
     }
+
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})

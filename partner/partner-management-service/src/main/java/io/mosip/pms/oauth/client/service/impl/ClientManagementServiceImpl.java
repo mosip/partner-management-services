@@ -773,7 +773,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					}
 					OauthClientDto oauthClientDto = new OauthClientDto();
 					oauthClientDto.setPartnerId(partnerId);
-					oauthClientDto.setUserId(userId);
 					oauthClientDto.setClientId(clientDetail.getId());
 					oauthClientDto.setClientName(clientDetail.getName());
 					oauthClientDto.setPolicyGroupId(policyGroup.getId());

@@ -659,6 +659,52 @@ public class SBIServiceTest {
 		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
+	@Test
+	public void getSbiDetailsTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		List<SecureBiometricInterface> secureBiometricInterfaceList = new ArrayList<>();
+		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
+		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterface.setApprovalStatus("approved");
+		secureBiometricInterface.setActive(true);
+		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
+		secureBiometricInterfaceList.add(secureBiometricInterface);
+		secureBiometricInterface.setSwVersion("1.0");
+		when(sbiRepository.findByProviderId(anyString())).thenReturn(secureBiometricInterfaceList);
+		List<DeviceDetailSBI> deviceDetailSBIList = new ArrayList<>();
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		deviceDetailSBIList.add(deviceDetailSBI);
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(anyString(), anyString())).thenReturn(deviceDetailSBIList);
+
+		secureBiometricInterfaceService.getSbiDetails();
+	}
+
+	@Test
+	public void getSbiDetailsExceptionTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		secureBiometricInterfaceService.getSbiDetails();
+	}
+
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
 		mosipUserDto.setUserId("123");

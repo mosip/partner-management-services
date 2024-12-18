@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.dto;
+package io.mosip.pms.device.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -30,10 +30,10 @@ public class SbiDetailsDto {
     private boolean isSbiExpired;
 
     @Schema(description = "Number of approved devices associated with the SBI", example = "29")
-    private String countOfApprovedDevices;
+    private Integer countOfApprovedDevices;
 
     @Schema(description = "Number of pending devices associated with the SBI", example = "10")
-    private String countOfPendingDevices;
+    private Integer countOfPendingDevices;
 
     @Schema(description = "Date and time when the SBI was created", example = "2024-07-15T10:00:00Z")
     private LocalDateTime sbiCreatedDateTime;

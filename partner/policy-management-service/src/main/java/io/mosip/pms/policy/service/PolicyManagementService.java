@@ -1103,7 +1103,6 @@ public class PolicyManagementService {
 				policyGroupDto.setId(policyGroup.getId());
 				policyGroupDto.setDescription(policyGroup.getDesc());
 				policyGroupDto.setName(policyGroup.getName());
-				policyGroupDto.setIsActive(policyGroup.getIsActive());
 
 				policyGroupDtoList.add(policyGroupDto);
 			}
