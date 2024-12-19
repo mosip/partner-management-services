@@ -252,10 +252,10 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.policy.requests.get}")
 	private String getPolicyRequestsId;
 
-	@Value("${mosip.pms.api.id.auth.partner.api.keys.get}")
+	@Value("${mosip.pms.api.id.partner.certificates.get}")
 	private String getPartnerCertificatesId;
 
-	@Value("${mosip.pms.api.id.api.keys.for.auth.partners.get}")
+	@Value("${mosip.pms.api.id.auth.partner.api.keys.get}")
 	private String getAuthPartnerApiKeysId;
 
 	@Autowired
