@@ -790,7 +790,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					if (optionalDeviceDetail.isPresent()) {
 						DeviceDetail deviceDetail = optionalDeviceDetail.get();
 						DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
-						deviceDetailDto.setId(deviceDetail.getId());
+						deviceDetailDto.setDeviceId(deviceDetail.getId());
 						deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
 						deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
 						deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
