@@ -541,7 +541,7 @@ public class DeviceDetailControllerTest {
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(true);
         Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
-        mockMvc.perform(post("/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
     
