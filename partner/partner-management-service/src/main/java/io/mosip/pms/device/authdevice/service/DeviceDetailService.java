@@ -92,8 +92,6 @@ public interface DeviceDetailService {
 	 */
 	public FilterResponseCodeDto deviceTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto);
 
-	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto);
-
 	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId);
 
     ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto);

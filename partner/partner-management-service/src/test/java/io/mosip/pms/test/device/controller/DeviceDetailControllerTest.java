@@ -1,26 +1,25 @@
 package io.mosip.pms.test.device.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.pms.common.constant.Purpose;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
 import io.mosip.pms.device.dto.DeviceDetailFilterDto;
 import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
+import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
+import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.test.PartnerManagementServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,29 +38,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import io.mosip.pms.common.constant.Purpose;
-import io.mosip.pms.common.dto.DeviceFilterValueDto;
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.Pagination;
-import io.mosip.pms.common.dto.SearchFilter;
-import io.mosip.pms.common.dto.SearchSort;
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
-import io.mosip.pms.device.request.dto.DeviceDetailDto;
-import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
-import io.mosip.pms.device.request.dto.DeviceSearchDto;
-import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
-import io.mosip.pms.device.response.dto.DeviceDetailSearchResponseDto;
-import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.device.response.dto.IdDto;
-import io.mosip.pms.device.response.dto.RegistrationSubTypeDto;
-import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.test.PartnerManagementServiceTest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -455,20 +444,6 @@ public class DeviceDetailControllerTest {
     	RequestWrapper<DeviceFilterValueDto> request = filterRequest();
     	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void inactiveMappingDeviceToSbi() throws Exception {
-        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
-        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
-        requestWrapper.setVersion("1.0");
-        requestWrapper.setRequestTime(LocalDateTime.now());
-        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
-        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
-        when(deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest())).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/inactive-mapping-device-to-sbi").contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
     @Test

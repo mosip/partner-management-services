@@ -1,17 +1,29 @@
 package io.mosip.pms.device.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
+import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.entity.DeviceDetailSBI;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.device.dto.SbiFilterDto;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
-import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
+import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.dto.SbiDetailsDto;
+import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.request.dto.*;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,42 +31,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.entity.DeviceDetailSBI;
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
-import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
-import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
-import io.mosip.pms.device.request.dto.DeviceSearchDto;
-import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
-import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
-import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
-import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
-import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.device.response.dto.IdDto;
-import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
-import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
-import io.mosip.pms.device.response.dto.SbiSummaryDto;
-import io.mosip.pms.device.util.AuditUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +42,9 @@ import java.util.Optional;
 @RequestMapping(value = "/securebiometricinterface")
 @Api(tags = { "SecureBiometricInterface" })
 public class SecureBiometricInterfaceController {
+
+	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
+	private  String postAddDeviceToSbi;
 
 	@Autowired
 	SecureBiometricInterfaceService secureBiometricInterface;
@@ -211,6 +194,22 @@ public class SecureBiometricInterfaceController {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(secureBiometricInterface.filterValues(request.getRequest()));
 		return responseWrapper;
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
+	@PostMapping(value = "/{sbiId}/devices")
+	@Operation(summary = "Create device and add inactive mapping to SBI.", description = "Create device and add inactive mapping to SBI.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<io.mosip.pms.device.request.dto.DeviceDetailDto> requestWrapper) {
+		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")

@@ -1,17 +1,32 @@
 package io.mosip.pms.device.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
+import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.pms.common.dto.DeviceFilterValueDto;
+import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
+import io.mosip.pms.device.authdevice.service.DeviceDetailService;
+import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.dto.DeviceDetailFilterDto;
 import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
+import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
+import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
-import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,49 +35,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
-import io.mosip.kernel.core.http.ResponseFilter;
-import io.mosip.pms.common.dto.DeviceFilterValueDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.request.dto.RequestWrapper;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.device.authdevice.entity.DeviceDetail;
-import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
-import io.mosip.pms.device.authdevice.service.DeviceDetailService;
-import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.request.dto.DeviceDetailDto;
-import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
-import io.mosip.pms.device.request.dto.DeviceSearchDto;
-import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
-import io.mosip.pms.device.response.dto.DeviceDetailSearchResponseDto;
-import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.device.response.dto.IdDto;
-import io.mosip.pms.device.response.dto.RegistrationSubTypeDto;
-import io.mosip.pms.device.util.AuditUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
-
-	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
-	private  String postInactiveMappingDeviceToSbiId;
-
 	@Value("${mosip.pms.api.id.approval.mapping.device.to.sbi.post}")
 	private String postApprovalMappingDeviceToSbiId;
 	
@@ -231,22 +213,6 @@ public class DeviceDetailController {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostinactivemappingdevicetosbi())")
-	@PostMapping(value = "/inactive-mapping-device-to-sbi")
-	@Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
-	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postInactiveMappingDeviceToSbiId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		return deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatedevice())")

@@ -3,7 +3,9 @@ package io.mosip.pms.partner.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -15,6 +17,8 @@ import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
+import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
@@ -25,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -434,5 +440,22 @@ public class PartnerHelper {
                     ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
         }
         return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
+    }
+
+    public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
+        deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
+        deviceDetail.setIsActive(false);
+        deviceDetail.setIsDeleted(false);
+        deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+        Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+        if (!EmptyCheckUtils.isNullEmpty(authN)) {
+            deviceDetail.setCrBy(authN.getName());
+        }
+        deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+        deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+        deviceDetail.setMake(deviceDetailDto.getMake());
+        deviceDetail.setModel(deviceDetailDto.getModel());
+        return deviceDetail;
+
     }
 }

@@ -45,6 +45,8 @@ public interface SecureBiometricInterfaceService {
 
 	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails();
 
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto, String sbiId);
+
 	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId);
 
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id);
