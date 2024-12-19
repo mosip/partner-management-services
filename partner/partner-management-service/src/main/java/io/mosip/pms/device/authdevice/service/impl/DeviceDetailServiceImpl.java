@@ -94,8 +94,8 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Value("${mosip.pms.api.id.get.all.device.details.get}")
 	private  String getAllDeviceDetailsId;
 
-	@Value("${mosip.pms.api.id.mapping.device.to.sbi.post:mosip.pms.mapping.device.to.sbi.post}")
-	private String postMappingDeviceToSbiId;
+	@Value("${mosip.pms.api.id.approval.mapping.device.to.sbi.post}")
+	private String postApprovalMappingDeviceToSbiId;
 
 	@Autowired
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
@@ -654,7 +654,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			String errorMessage = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(postMappingDeviceToSbiId);
+		responseWrapper.setId(postApprovalMappingDeviceToSbiId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
