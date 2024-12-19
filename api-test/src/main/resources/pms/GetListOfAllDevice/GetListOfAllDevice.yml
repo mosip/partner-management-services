@@ -1,0 +1,13 @@
+GetListOfAllDevice:
+   Pms_GetListOfAllDevice_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/search/v2
+      description: Fetching all the active SBI
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+}'
+      output: ' {
+}'

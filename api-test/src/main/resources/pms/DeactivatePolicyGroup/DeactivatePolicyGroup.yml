@@ -1,0 +1,14 @@
+DeactivatePolicyGroup:
+   Pms_DeactivatePolicyGroup_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      description: Deactivate Policy Groups
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroupResult
+      input: '{
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_deactivate_sid_id$"
+}'
+      output: ' {
+}'

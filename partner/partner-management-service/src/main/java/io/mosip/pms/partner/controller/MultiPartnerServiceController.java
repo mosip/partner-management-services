@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.service.MultiPartnerService;
 import io.mosip.pms.partner.util.RequestValidator;
@@ -12,9 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -28,26 +27,6 @@ public class MultiPartnerServiceController {
 
     @Autowired
     RequestValidator requestValidator;
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
-    @GetMapping(value = "/partner-certificates")
-    @Operation(summary = "Get partner certificates", description = "fetch partner certificates")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificates() {
-        return  multiPartnerService.getPartnerCertificates();
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicyrequests())")
-    @GetMapping(value = "/policy-requests")
-    @Operation(summary = "Get all policies", description = "fetch all policies")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
-        return multiPartnerService.getPolicyRequests();
-    }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetauthpartnerspolicies())")
     @GetMapping(value = "/auth-partners-policies")
@@ -69,26 +48,6 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getApprovedPartnerIdsWithPolicyGroups();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
-    @GetMapping(value = "/api-keys-for-auth-partners")
-    @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getApiKeysForAuthPartners() {
-        return multiPartnerService.getApiKeysForAuthPartners();
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
-    @GetMapping(value = "/sbi-details")
-    @Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<SbiDetailsDto>> sbiDetails() {
-        return multiPartnerService.sbiDetails();
-    }
-
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapproveddeviceproviderids())")
     @GetMapping(value = "/approved-device-provider-ids")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")
@@ -97,16 +56,6 @@ public class MultiPartnerServiceController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds() {
         return multiPartnerService.approvedDeviceProviderIds();
-    }
-
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
-    @GetMapping(value = "/ftm-chip-details")
-    @Operation(summary = "Get list of all the FTM Chip details", description = "This endpoint will fetch the list of all the FTM Chip details created by all the partner Id's associated with the logged in user")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetails() {
-        return multiPartnerService.ftmChipDetails();
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedftmproviderids())")

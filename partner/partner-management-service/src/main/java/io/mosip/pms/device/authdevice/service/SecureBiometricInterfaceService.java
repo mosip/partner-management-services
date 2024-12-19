@@ -7,6 +7,7 @@ import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.device.dto.SbiFilterDto;
 
+import io.mosip.pms.device.dto.SbiDetailsDto;
 import org.springframework.stereotype.Service;
 
 import io.mosip.pms.common.dto.FilterValueDto;
@@ -41,6 +42,8 @@ public interface SecureBiometricInterfaceService {
 	public <E> PageResponseDto<MappedDeviceDetailsReponse> searchMappedDeviceDetails(Class<E> entity, DeviceSearchDto dto);
 	
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto);
+
+	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails();
 
 	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId);
 

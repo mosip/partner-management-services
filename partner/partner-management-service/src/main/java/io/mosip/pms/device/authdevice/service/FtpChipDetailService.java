@@ -1,9 +1,11 @@
 package io.mosip.pms.device.authdevice.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
@@ -88,8 +90,10 @@ public interface FtpChipDetailService {
 
 	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId);
 
-	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getOriginalFtmCertificate(String ftmId);
+	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(String ftmId);
 
 	public ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(String sortFieldName, String sortType, int pageNo, int pageSize, FtmChipFilterDto filterDto);
+
+	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail();
 
 }
