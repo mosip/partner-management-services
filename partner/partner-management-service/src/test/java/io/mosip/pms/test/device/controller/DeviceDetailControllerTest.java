@@ -70,6 +70,8 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 @EnableWebMvc
 public class DeviceDetailControllerTest {
 
+    public static final String VERSION = "1.0";
+
 	@Autowired
     private MockMvc mockMvc;
    
@@ -525,6 +527,22 @@ public class DeviceDetailControllerTest {
                         .param("sbiVersion", sbiVersion)
                         .param("deviceId", deviceId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void approveOrRejectMappingDeviceToSbiTest() throws Exception {
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setId("mosip.pms.mapping.device.to.sbi.post");
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
+        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(true);
+        Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
+        mockMvc.perform(post("/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
     
 }
