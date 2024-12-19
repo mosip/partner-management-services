@@ -46,9 +46,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     @Value("${mosip.pms.api.id.auth.partners.policies.get}")
     private String getAuthPartnersPoliciesId;
 
-    @Value("${mosip.pms.api.id.api.keys.for.auth.partners.get}")
-    private String getApiKeysForAuthPartnersId;
-
     @Value("${mosip.pms.api.id.approved.device.provider.ids.get}")
     private  String getApprovedDeviceProviderIds;
 
