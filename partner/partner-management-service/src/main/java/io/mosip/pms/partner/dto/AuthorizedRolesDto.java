@@ -195,6 +195,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> getdownloadrootcertificate;
 
-	private List<String> getapprovedpartners;
+	private List<String> getpartnersv4;
 		
 }

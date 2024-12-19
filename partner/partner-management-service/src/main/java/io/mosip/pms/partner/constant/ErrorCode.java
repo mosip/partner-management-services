@@ -146,7 +146,7 @@ public enum ErrorCode {
 	DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR("PMS_FTM_ERROR_009", "Cannot download the certificate for a deactivated FTM"),
 	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate"),
 	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status."),
-	APPROVED_PARTNERS_FETCH_ERROR("PMS_PS_ERROR_001", "Error while fetching approved partners list");
+	PARTNERS_FETCH_ERROR("PMS_PS_ERROR_001", "Error while fetching partners list");
 	/**
 	 * The error code.
 	 */
