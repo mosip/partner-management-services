@@ -1,7 +1,6 @@
 package io.mosip.pms.test.partner.controller;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.partner.controller.MultiPartnerServiceController;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.service.MultiPartnerService;
@@ -49,46 +48,5 @@ public class MultiPartnerServiceControllerTest {
         responseWrapper.setResponse(policyDtoList);
         Mockito.when(multiPartnerService.getAuthPartnersPolicies()).thenReturn(responseWrapper);
         ResponseWrapperV2<List<ApprovedPolicyDto>> response = multiPartnerServiceController.getAuthPartnersPolicies();
-    }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void getApprovedPartnerIdsWithPolicyGroupsTest() throws Exception {
-        ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
-        PolicyGroupDto policyGroupDto = new PolicyGroupDto();
-        policyGroupDto.setPartnerId("abc");
-        policyGroupDto.setPartnerType("Auth_Partner");
-        policyGroupDto.setPolicyGroupId("123");
-        policyGroupDto.setPolicyGroupName("testGroup");
-        policyGroupDto.setPolicyGroupDescription("testDesc");
-        List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
-        policyGroupDtoList.add(policyGroupDto);
-        responseWrapper.setResponse(policyGroupDtoList);
-        Mockito.when(multiPartnerService.getApprovedPartnerIdsWithPolicyGroups()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<PolicyGroupDto>> response = multiPartnerServiceController.getApprovedPartnerIdsWithPolicyGroups();
-    }
-
-    @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void approvedDeviceProviderIdsTest() throws Exception {
-        ResponseWrapperV2<List<DeviceProviderDto>> responseWrapper = new ResponseWrapperV2<>();
-        List<DeviceProviderDto> deviceProviderDtos = new ArrayList<>();
-        DeviceProviderDto deviceProviderDto = new DeviceProviderDto();
-        deviceProviderDtos.add(deviceProviderDto);
-        responseWrapper.setResponse(deviceProviderDtos);
-        Mockito.when(multiPartnerService.approvedDeviceProviderIds()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<DeviceProviderDto>> response = multiPartnerServiceController.approvedDeviceProviderIds();
-    }
-
-    @Test
-    @WithMockUser(roles = {"FTM_PROVIDER"})
-    public void approvedFTMProviderIdsTest() throws Exception {
-        ResponseWrapperV2<List<FtmProviderDto>> responseWrapper = new ResponseWrapperV2<>();
-        List<FtmProviderDto> ftmProviderDtoList = new ArrayList<>();
-        FtmProviderDto ftmProviderDto = new FtmProviderDto();
-        ftmProviderDtoList.add(ftmProviderDto);
-        responseWrapper.setResponse(ftmProviderDtoList);
-        Mockito.when(multiPartnerService.approvedFTMProviderIds()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<FtmProviderDto>> response = multiPartnerServiceController.approvedFTMProviderIds();
     }
 }

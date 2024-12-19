@@ -63,8 +63,8 @@ public class DeviceDetailController {
 	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
 	private  String postInactiveMappingDeviceToSbiId;
 
-	@Value("${mosip.pms.api.id.mapping.device.to.sbi.post:mosip.pms.mapping.device.to.sbi.post}")
-	private String postMappingDeviceToSbiId;
+	@Value("${mosip.pms.api.id.approval.mapping.device.to.sbi.post}")
+	private String postApprovalMappingDeviceToSbiId;
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -270,7 +270,7 @@ public class DeviceDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(@PathVariable("id") String deviceId, @RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postMappingDeviceToSbiId, requestWrapper);
+		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postApprovalMappingDeviceToSbiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}

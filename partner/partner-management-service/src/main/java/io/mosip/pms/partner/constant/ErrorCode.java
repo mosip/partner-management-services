@@ -91,7 +91,6 @@ public enum ErrorCode {
 	INVALID_CERTIFICATE_ID("PMS_CERTIFICATE_ERROR_012", "Certificate id is null or empty"),
 	POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_001","Policy Group does not exists."),
 	PARTNER_POLICY_FETCH_ERROR("PMS_POLICY_ERROR_002","Error while fetching partner policies."),
-	POLICY_GROUP_FETCH_ERROR("PMS_POLICY_ERROR_003", "Error while fetching all approved partner Ids with policy groups."),
 	MATCHING_POLICY_NOT_FOUND("PMS_POLICY_ERROR_004", "Matching Policy not found."),
 	POLICY_GROUP_ID_NOT_EXISTS("PMS_POLICY_ERROR_005","Policy Group Id is empty."),
 	OIDC_CLIENTS_FETCH_ERROR("PMS_POLICY_ERROR_006","Error while fetching OIDC clients list."),
@@ -104,7 +103,6 @@ public enum ErrorCode {
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
 	SBI_DETAILS_LIST_FETCH_ERROR("PMS_SBI_ERROR_001", "Unable to fetch SBI details."),
-	APPROVED_DEVICE_PROVIDER_IDS_FETCH_ERROR("PMS_DP_FETCH_001", "Unable to fetch approved device provider Ids."),
 	PARTNER_ID_NOT_ASSOCIATED_WITH_USER("PMS_DEVICE_ERROR_001", "Partner id is not associated with user."),
 	SBI_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_002", "SBI is not associated with partner Id."),
 	INVALID_DEVICE_PARTNER_TYPE("PMS_DEVICE_ERROR_003", "Invalid partner type."),
@@ -139,7 +137,6 @@ public enum ErrorCode {
 	NO_SBI_FOUND_FOR_REJECT("PMS_DEVICE_ERROR_025", "This device cannot be rejected as it does not have any SBI associated to it."),
 	GET_ALL_DEVICE_DETAILS_FETCH_ERROR("PMS_FTM_ERROR_024", "Error occurred while retrieving all device details"),
 	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
-	APPROVED_FTM_PROVIDER_IDS_FETCH_ERROR("PMS_FTM_ERROR_002", "Unable to fetch approved FTM provider Ids."),
 	DEACTIVATE_FTM_ERROR("PMS_FTM_ERROR_003", "Error while deactivating the FTM"),
 	INVALID_FTM_ID("PMS_FTM_ERROR_004", "FTM Id is invalid"),
 	FTM_NOT_EXISTS("PMS_FTM_ERROR_005", "FTM Details do not exists."),
@@ -148,7 +145,8 @@ public enum ErrorCode {
 	DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS("PMS_FTM_ERROR_008", "The selected FTM must have a status of either pending_approval or approved."),
 	DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR("PMS_FTM_ERROR_009", "Cannot download the certificate for a deactivated FTM"),
 	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate"),
-	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status.");
+	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status."),
+	APPROVED_PARTNERS_FETCH_ERROR("PMS_PS_ERROR_001", "Error while fetching approved partners list");
 	/**
 	 * The error code.
 	 */
