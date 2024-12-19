@@ -330,7 +330,7 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getOriginalPartnerCertificateTest() throws Exception{
+    public void getPartnerCertificateDataTest() throws Exception{
         ResponseWrapperV2<OriginalCertDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
         OriginalCertDownloadResponseDto originalCertDownloadResponseDto = new OriginalCertDownloadResponseDto();
         RequestWrapperV2<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapperV2<>();
@@ -608,11 +608,12 @@ public class PartnerServiceControllerTest {
 
         responseWrapper.setResponse(certificateDtoList);
         Mockito.when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-certificates-details")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getApiKeysForAuthPartners() throws Exception {
+    public void getAuthPartnerApiKeysTest() throws Exception {
         ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper =  new ResponseWrapperV2<>();
         ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
         apiKeyResponseDto.setStatus("ACTIVE");
@@ -627,6 +628,7 @@ public class PartnerServiceControllerTest {
         apiKeyResponseDtoList.add(apiKeyResponseDto);
         responseWrapper.setResponse(apiKeyResponseDtoList);
         Mockito.when(partnerService.getAuthPartnerApiKeys()).thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/auth-partner-api-keys")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 
