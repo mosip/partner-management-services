@@ -1,0 +1,14 @@
+GetDetailsOfPartner:
+   Pms_GetDetailsOfPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": "111999"
+}'
+      output: ' {
+}'

@@ -1,0 +1,13 @@
+GetListOfAllSBI:
+   Pms_GetListOfAllSBI_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface/search/v2
+      description: Fetching all the active SBI
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
+      input: '{
+}'
+      output: ' {
+}'

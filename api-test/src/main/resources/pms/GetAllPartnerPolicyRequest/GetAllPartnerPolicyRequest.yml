@@ -1,0 +1,13 @@
+GetAllPartnerPolicyRequest:
+   Pms_GetAllPartnerPolicyRequest_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-policy-requests
+      description: Fetching all the active Partnered PolicyGroups
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+}'
+      output: ' {
+}'

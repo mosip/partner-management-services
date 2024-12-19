@@ -6,6 +6,5 @@ import lombok.Data;
 public class PolicyGroupDto {
     private String id;
     private String description;
-    private Boolean isActive;
     private String name;
 }

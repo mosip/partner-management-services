@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.dto;
+package io.mosip.pms.device.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
