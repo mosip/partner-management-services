@@ -391,7 +391,7 @@ public class PartnerServiceController {
 		return  partnerService.getPartnerCertificatesDetails();
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapprovedpartners())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv4())")
 	@GetMapping(value = "/v4")
 	@Operation(summary = "Get approved partners", description = "Fetch approved partners")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
