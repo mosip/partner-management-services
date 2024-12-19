@@ -48,16 +48,6 @@ public class MultiPartnerServiceController {
         return multiPartnerService.getApprovedPartnerIdsWithPolicyGroups();
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
-    @GetMapping(value = "/auth-partner-api-keys")
-    @Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
-        return multiPartnerService.getAuthPartnerApiKeys();
-    }
-
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetapproveddeviceproviderids())")
     @GetMapping(value = "/approved-device-provider-ids")
     @Operation(summary = "get all approved device providers id.", description = "get all approved device providers id.")

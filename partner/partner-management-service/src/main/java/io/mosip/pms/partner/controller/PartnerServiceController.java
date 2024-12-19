@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -389,6 +390,16 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
 		return  partnerService.getPartnerCertificatesDetails();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
+	@GetMapping(value = "/auth-partner-api-keys")
+	@Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
+		return partnerService.getAuthPartnerApiKeys();
 	}
 
 	@ResponseFilter

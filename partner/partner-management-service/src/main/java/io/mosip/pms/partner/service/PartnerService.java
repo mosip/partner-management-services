@@ -16,6 +16,7 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
+import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.dto.PolicyDto;
@@ -237,5 +238,7 @@ public interface PartnerService {
 	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests();
 
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails();
+
+	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys();
 
 }

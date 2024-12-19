@@ -35,7 +35,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
     private static final Logger LOGGER = PMSLogger.getLogger(MultiPartnerServiceImpl.class);
     public static final String BLANK_STRING = "";
     public static final String DEVICE_PROVIDER = "Device_Provider";
-    public static final String AUTH_PARTNER = "Auth_Partner";
     public static final String APPROVED = "approved";
     public static final String ACTIVE = "ACTIVE";
     public static final String INACTIVE = "INACTIVE";
@@ -145,7 +144,7 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             if (!partnerList.isEmpty()) {
                 List<ApprovedPolicyDto> approvedPolicyList = new ArrayList<>();
                 for (Partner partner : partnerList) {
-                    if (checkIfPartnerIsApprovedAuthPartner(partner)) {
+                    if (partnerHelper.checkIfPartnerIsApprovedAuthPartner(partner)) {
                         partnerHelper.validatePartnerId(partner, userId);
                         partnerHelper.validatePolicyGroupId(partner, userId);
                         PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
@@ -199,91 +198,6 @@ public class MultiPartnerServiceImpl implements MultiPartnerService {
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
         }
         responseWrapper.setId(getAuthPartnersPoliciesId);
-        responseWrapper.setVersion(VERSION);
-        return responseWrapper;
-    }
-
-    public static boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
-        String partnerType = partner.getPartnerTypeCode();
-        String approvalStatus = partner.getApprovalStatus();
-        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
-            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
-            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
-        }
-        if ((Objects.isNull(approvalStatus) || approvalStatus.equals(BLANK_STRING))) {
-            LOGGER.info("Approval status is null or empty for partner id : " + partner.getId());
-            throw new PartnerServiceException(ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
-        }
-        return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
-    }
-
-    @Override
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
-        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
-        try {
-            String userId = getUserId();
-            List<Partner> partnerList = partnerRepository.findByUserId(userId);
-            if (!partnerList.isEmpty()) {
-                List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
-                for (Partner partner : partnerList) {
-                    if (checkIfPartnerIsApprovedAuthPartner(partner)) {
-                        partnerHelper.validatePartnerId(partner, userId);
-                        partnerHelper.validatePolicyGroupId(partner, userId);
-                        List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
-                        if (!apiKeyRequestsList.isEmpty()) {
-                            for (PartnerPolicy partnerPolicy : apiKeyRequestsList) {
-                                Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
-                                if (!authPolicy.isPresent()) {
-                                    LOGGER.info("Policy does not exists.");
-                                    throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-                                            ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-                                }
-                                PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-                                if (Objects.isNull(policyGroup)) {
-                                    LOGGER.info("Policy Group is null or empty");
-                                    throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-                                            ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-                                }
-                                ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-                                apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
-                                if (partnerPolicy.getIsActive()) {
-                                    apiKeyResponseDto.setStatus(ACTIVE);
-                                } else {
-                                    apiKeyResponseDto.setStatus(INACTIVE);
-                                }
-                                apiKeyResponseDto.setPartnerId(partner.getId());
-                                apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
-                                apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
-                                apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
-                                apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
-                                apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
-                                apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
-                                apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
-                                apiKeyResponseDtoList.add(apiKeyResponseDto);
-                            }
-                        }
-                    }
-                }
-                responseWrapper.setResponse(apiKeyResponseDtoList);
-            } else {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-        } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id",
-                    "In getApiKeysForAuthPartners method of MultiPartnerServiceImpl - " + ex.getMessage());
-            String errorCode = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode();
-            String errorMessage = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-        }
-        responseWrapper.setId(getApiKeysForAuthPartnersId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
     }

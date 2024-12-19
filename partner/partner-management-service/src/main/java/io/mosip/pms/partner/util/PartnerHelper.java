@@ -419,4 +419,20 @@ public class PartnerHelper {
                     ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
         }
     }
+
+    public boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
+        String partnerType = partner.getPartnerTypeCode();
+        String approvalStatus = partner.getApprovalStatus();
+        if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
+            LOGGER.info("Partner Type is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.PARTNER_TYPE_NOT_EXISTS.getErrorMessage());
+        }
+        if ((Objects.isNull(approvalStatus) || approvalStatus.equals(BLANK_STRING))) {
+            LOGGER.info("Approval status is null or empty for partner id : " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorCode(),
+                    ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
+        }
+        return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
+    }
 }

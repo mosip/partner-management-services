@@ -12,8 +12,6 @@ public interface MultiPartnerService {
 
     public ResponseWrapperV2<List<PolicyGroupDto>> getApprovedPartnerIdsWithPolicyGroups();
 
-    public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys();
-
     public ResponseWrapperV2<List<DeviceProviderDto>> approvedDeviceProviderIds();
 
     public ResponseWrapperV2<List<FtmProviderDto>> approvedFTMProviderIds();

@@ -14,6 +14,7 @@ import java.util.List;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.response.dto.*;
@@ -590,7 +591,6 @@ public class PartnerServiceControllerTest {
         policyDtoList.add(policyDto);
         responseWrapper.setResponse(policyDtoList);
         Mockito.when(partnerService.getPolicyRequests()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<PolicyDto>> response = partnerService.getPolicyRequests();
     }
 
     @Test
@@ -608,7 +608,25 @@ public class PartnerServiceControllerTest {
 
         responseWrapper.setResponse(certificateDtoList);
         Mockito.when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<CertificateDto>> response = partnerService.getPartnerCertificatesDetails();
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getApiKeysForAuthPartners() throws Exception {
+        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper =  new ResponseWrapperV2<>();
+        ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
+        apiKeyResponseDto.setStatus("ACTIVE");
+        apiKeyResponseDto.setApiKeyLabel("test");
+        apiKeyResponseDto.setPolicyId("policy123");
+        apiKeyResponseDto.setPolicyName("policy123name");
+        apiKeyResponseDto.setPolicyDescription("policy123desc");
+        apiKeyResponseDto.setPolicyGroupId("policygroup000");
+        apiKeyResponseDto.setPolicyGroupName("policygroup000name");
+        apiKeyResponseDto.setPolicyGroupDescription("policygroup000desc");
+        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
+        apiKeyResponseDtoList.add(apiKeyResponseDto);
+        responseWrapper.setResponse(apiKeyResponseDtoList);
+        Mockito.when(partnerService.getAuthPartnerApiKeys()).thenReturn(responseWrapper);
     }
 
 
