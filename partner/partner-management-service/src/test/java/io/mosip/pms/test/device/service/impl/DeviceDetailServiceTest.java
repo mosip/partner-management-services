@@ -19,6 +19,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailSummaryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
@@ -663,6 +664,111 @@ public class DeviceDetailServiceTest {
 
 		// Assert
 		assertNotNull(response);
+	}
+
+	@Test
+	public void approveOrRejectMappingDeviceToSbiTest() throws Exception {
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("123");
+		requestDto.setSbiId("112");
+		requestDto.setDeviceDetailId("dgdg");
+		requestDto.setStatus(DeviceConstant.APPROVE);
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
+
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setApprovalStatus("pending_approval");
+		when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(deviceDetail);
+
+		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
+		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterface.setApprovalStatus("approved");
+		secureBiometricInterface.setActive(true);
+		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
+		secureBiometricInterface.setSwVersion("1.0");
+		secureBiometricInterface.setProviderId("123");
+		when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
+
+		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+		deviceDetailSBI.setProviderId("123");
+		when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+	}
+
+	@Test
+	public void approveOrRejectMappingDeviceToSbiTest2() throws Exception {
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("123");
+		requestDto.setSbiId("112");
+		requestDto.setDeviceDetailId("dgdg");
+		requestDto.setStatus(DeviceConstant.APPROVE);
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
+
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setApprovalStatus("pending_approval");
+		when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(deviceDetail);
+
+		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
+		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterface.setApprovalStatus("approved");
+		secureBiometricInterface.setActive(true);
+		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
+		secureBiometricInterface.setSwVersion("1.0");
+		secureBiometricInterface.setProviderId("123");
+		when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
+
+		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+		deviceDetailSBI.setProviderId("123");
+		when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+	}
+
+	@Test
+	public void approveOrRejectMappingDeviceToSbiException() {
+
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("123");
+		requestDto.setSbiId("112");
+		requestDto.setStatus(DeviceConstant.APPROVE);
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+
+		requestDto.setDeviceDetailId("dgdg");
+
+		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
+		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
+		secureBiometricInterface.setApprovalStatus("approved");
+		secureBiometricInterface.setActive(true);
+		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
+		secureBiometricInterface.setSwVersion("1.0");
+		secureBiometricInterface.setProviderId("123");
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+		when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(secureBiometricInterface));
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setDeviceProviderId("123");
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(null);
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		deviceDetailSBI.setProviderId("123");
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
+
+		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

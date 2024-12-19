@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Map;
+import java.util.Set;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -87,11 +88,14 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
 	private  String postInactiveMappingDeviceToSbiId;
 
-	@Value("${mosip.pms.api.id.deactivate.device.post}")
-	private  String postDeactivateDevice;
+	@Value("${mosip.pms.api.id.deactivate.device.patch}")
+	private  String patchDeactivateDevice;
 
 	@Value("${mosip.pms.api.id.get.all.device.details.get}")
 	private  String getAllDeviceDetailsId;
+
+	@Value("${mosip.pms.api.id.mapping.device.to.sbi.post:mosip.pms.mapping.device.to.sbi.post}")
+	private String postMappingDeviceToSbiId;
 
 	@Autowired
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
@@ -585,7 +589,72 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(postDeactivateDevice);
+		responseWrapper.setId(patchDeactivateDevice);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(String deviceId, SbiAndDeviceMappingRequestDto requestDto) {
+		ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String partnerId = requestDto.getPartnerId();
+			String sbiId = requestDto.getSbiId();
+            String status = requestDto.getStatus();
+			if (Objects.isNull(partnerId) || Objects.isNull(deviceId) || Objects.isNull(status)) {
+				LOGGER.info("sessionId", "idType", "id", "Partner/Device id does not exist.");
+				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (!Set.of(DeviceConstant.APPROVE, DeviceConstant.REJECT).contains(status)) {
+				throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
+						ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
+			}
+			if (Objects.isNull(sbiId)) {
+				LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
+				if (status.equals(DeviceConstant.APPROVE)) {
+					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
+							ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
+				} else {
+					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorCode(),
+							ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorMessage());
+				}
+			}
+			// validate sbi and device mapping
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
+
+			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
+			if (Objects.isNull(deviceDetailSBI)) {
+				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
+						ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
+			}
+
+			UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
+			deviceDetails.setId(deviceId);
+			if (status.equals(DeviceConstant.REJECT)) {
+				deviceDetails.setApprovalStatus(DeviceConstant.REJECT);
+			} else {
+				deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
+			}
+			updateDeviceDetailStatus(deviceDetails);
+
+			deviceDetailSBI.setIsActive(true);
+			deviceDetailSbiRepository.save(deviceDetailSBI);
+			LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
+			responseWrapper.setResponse(true);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In approveOrRejectMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In approveOrRejectMappingDeviceToSbi method of DeviceDetailServiceImplN - " + ex.getMessage());
+			String errorCode = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postMappingDeviceToSbiId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

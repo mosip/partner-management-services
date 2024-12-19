@@ -8,8 +8,6 @@ import java.util.List;
 
 @Data
 public class OauthClientDto {
-    @Schema(description = "Unique identifier for the user", example = "user789")
-    private String userId;
 
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;

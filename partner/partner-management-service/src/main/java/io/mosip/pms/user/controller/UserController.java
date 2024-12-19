@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/users")
 public class UserController {
 
 	@Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
@@ -58,7 +57,7 @@ public class UserController {
 	@Autowired
 	UserManagementService userManagementService;
 
-	@PostMapping
+	@PostMapping(value = "/users")
 	@PreAuthorize("hasAnyRole('MISP_PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','SDK_PARTNER')")
 	public ResponseWrapper<MosipUserDto> registerUser(
 			@RequestBody @Valid RequestWrapper<UserRegistrationRequestDto> request) {
@@ -69,7 +68,7 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-	@PostMapping(value = "/user-consent")
+	@PostMapping(value = "users/user-consent")
 	@Operation(summary = "save user consent", description = "Store the user consent in the database.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -79,7 +78,7 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-	@GetMapping(value = "/user-consent")
+	@GetMapping(value = "users/user-consent")
 	@Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -88,12 +87,12 @@ public class UserController {
 		return userManagementService.isUserConsentGiven();
 	}
 
-	@GetMapping(value = "/configs")
+	@GetMapping(value = "/system-config")
 	@Operation(summary = "Get config", description = "Get configuration values")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<Map<String, String>> getConfigValues() {
+	public ResponseWrapperV2<Map<String, String>> getSystemConfig() {
 		ResponseWrapperV2<Map<String, String>> responseWrapper = new ResponseWrapperV2<>();
 		responseWrapper.setId(getConfigsId);
 		responseWrapper.setVersion(VERSION);
