@@ -261,7 +261,7 @@ public class DeviceDetailController {
 		return deviceDetaillService.deactivateDevice(deviceId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostapproveorrejectdevicewithsbimapping())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
 	@PostMapping(value = "/{id}/approval")
 	@Operation(summary = "Approve or Reject device and activate device mapping to sbi.", description = "Approve or Reject device and activate device mapping to sbi.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
@@ -269,12 +269,12 @@ public class DeviceDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(@PathVariable("id") String deviceId, @RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
 		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postMappingDeviceToSbiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(requestWrapper.getRequest());
+		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(deviceId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")

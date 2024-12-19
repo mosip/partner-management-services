@@ -173,7 +173,7 @@ public class AuthorizedRolesDto {
 
 	private List<String> postinactivemappingdevicetosbi;
 
-	private List<String> postapproveorrejectdevicewithsbimapping;
+	private List<String> postdevicewithsbimapping;
 
 	private List<String> patchdeactivatedevice;
 

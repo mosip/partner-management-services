@@ -595,14 +595,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto) {
+	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(String deviceId, SbiAndDeviceMappingRequestDto requestDto) {
 		ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String partnerId = requestDto.getPartnerId();
 			String sbiId = requestDto.getSbiId();
-			String deviceDetailId = requestDto.getDeviceDetailId();
-			String status = requestDto.getStatus();
-			if (Objects.isNull(partnerId) || Objects.isNull(deviceDetailId) || Objects.isNull(status)) {
+            String status = requestDto.getStatus();
+			if (Objects.isNull(partnerId) || Objects.isNull(deviceId) || Objects.isNull(status)) {
 				LOGGER.info("sessionId", "idType", "id", "Partner/Device id does not exist.");
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
 						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
@@ -622,9 +621,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				}
 			}
 			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
 
-			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
+			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
 			if (Objects.isNull(deviceDetailSBI)) {
 				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
 				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
@@ -632,7 +631,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			}
 
 			UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
-			deviceDetails.setId(deviceDetailId);
+			deviceDetails.setId(deviceId);
 			if (status.equals(DeviceConstant.REJECT)) {
 				deviceDetails.setApprovalStatus(DeviceConstant.REJECT);
 			} else {
