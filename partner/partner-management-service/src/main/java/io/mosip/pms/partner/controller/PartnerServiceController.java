@@ -8,11 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.ApiKeyResponseDto;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
-import io.mosip.pms.partner.dto.PartnerDtoV4;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.dto.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -413,6 +409,18 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
 		return partnerService.getAuthPartnerApiKeys();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetauthpartnerspolicies())")
+	@GetMapping(value = "/{partnerId}/policies")
+	@Operation(summary = "Get all approved auth partner policies", description = "Fetch all approved auth partner policies")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<List<ActivePolicyDto>> getAuthPartnersPolicies(@PathVariable("partnerId") String partnerId) {
+		return partnerService.getAuthPartnersPolicies(partnerId);
 	}
 
 	@ResponseFilter

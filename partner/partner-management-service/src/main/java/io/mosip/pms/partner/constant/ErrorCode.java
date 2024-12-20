@@ -146,7 +146,11 @@ public enum ErrorCode {
 	DOWNLOAD_CERTIFICATE_FTM_DEACTIVATED_ERROR("PMS_FTM_ERROR_009", "Cannot download the certificate for a deactivated FTM"),
 	UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE("PMS_FTM_ERROR_009", "Unable to download original FTM certificate"),
 	FTM_NOT_APPROVED("PMS_FTM_ERROR_010", "The selected FTM is not in an approved status."),
-	PARTNERS_FETCH_ERROR("PMS_PS_ERROR_001", "Error while fetching partners list");
+	PARTNERS_FETCH_ERROR("PMS_PS_ERROR_001", "Error while fetching partners list"),
+	PARTNER_DOES_NOT_EXIST_ERROR("PMS_PS_ERROR_002", "Partner does not exists"),
+	PARTNER_POLICIES_FETCH_ERROR("PMS_PS_ERROR_003", "Error while fetching partner policies"),
+	PARTNER_NOT_APPROVED_ERROR("PMS_PS_ERROR_004", "The Given partner is not approved"),
+	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_004", "The specified partner is not of type Authentication Partner");;
 	/**
 	 * The error code.
 	 */

@@ -39,7 +39,7 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
     public List<Partner> findByUserId(String userId);
 
     @Query("SELECT p FROM Partner p " +
-            "WHERE p.id = :userId " +
+            "WHERE p.userId = :userId " +
             "AND (p.approvalStatus = :status) " +
             "AND (:partnerType IS NULL OR p.partnerTypeCode = :partnerType) " +
             "AND ((:policyGroupAvailable IS NULL) " +

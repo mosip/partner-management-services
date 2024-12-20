@@ -239,4 +239,6 @@ public interface PartnerService {
 	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys();
 
 	ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType);
+
+	ResponseWrapperV2<List<ActivePolicyDto>> getAuthPartnersPolicies(String PartnerId);
 }
