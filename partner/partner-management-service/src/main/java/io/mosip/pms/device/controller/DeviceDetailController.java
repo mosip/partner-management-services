@@ -59,10 +59,6 @@ import java.util.Optional;
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
-
-	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
-	private  String postInactiveMappingDeviceToSbiId;
-
 	@Value("${mosip.pms.api.id.approval.mapping.device.to.sbi.post}")
 	private String postApprovalMappingDeviceToSbiId;
 	
@@ -231,22 +227,6 @@ public class DeviceDetailController {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceDetaillService.deviceSubTypeFilterValues(request.getRequest()));
 		return responseWrapper;
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostinactivemappingdevicetosbi())")
-	@PostMapping(value = "/inactive-mapping-device-to-sbi")
-	@Operation(summary = "Add inactive device mapping to SBI.", description = "Add inactive device mapping to SBI.")
-	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(@RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postInactiveMappingDeviceToSbiId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		return deviceDetaillService.inactiveMappingDeviceToSbi(requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatedevice())")

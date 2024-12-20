@@ -117,7 +117,7 @@ public enum ErrorCode {
 	SBI_NOT_EXISTS("PMS_DEVICE_ERROR_005", "SBI do not exists."),
 	DEVICE_NOT_EXISTS("PMS_DEVICE_ERROR_006", "Device do not exists."),
 	DEVICE_NOT_ASSOCIATED_WITH_PARTNER_ID("PMS_DEVICE_ERROR_007", "Device is not associated with partner Id."),
-	ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR("PMS_DEVICE_ERROR_008", "Error while adding inactive device mapping for sbi."),
+	CREATE_DEVICE_ERROR("PMS_DEVICE_ERROR_008", "Error while adding device for sbi."),
 	SBI_NOT_APPROVED_OR_INACTIVE("PMS_DEVICE_ERROR_009","Given SBI is either deactivated or not approved yet."),
 	DEVICE_NOT_PENDING_FOR_APPROVAL("PMS_DEVICE_ERROR_010","Given device details are not in pending for approval status."),
 	APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR("PMS_DEVICE_ERROR_011", "Error while approving or rejecting device for Sbi Mapping."),

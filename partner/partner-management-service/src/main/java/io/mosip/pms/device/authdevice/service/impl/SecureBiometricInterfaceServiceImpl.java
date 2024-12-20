@@ -20,6 +20,7 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
@@ -61,9 +62,11 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterfaceHistory;
+import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistoryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
@@ -105,8 +108,14 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	@Value("${mosip.pms.api.id.sbi.details.get}")
 	private  String getSbiDetailsId;
 
+	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
+	private  String postAddDeviceToSbi;
+
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
+
+	@Autowired
+	RegistrationDeviceSubTypeRepository registrationDeviceSubTypeRepository;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -741,6 +750,167 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			filterResponseDto.setFilters(columnValueList);
 		}
 		return filterResponseDto;
+	}
+
+	@Override
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto, String sbiId) {
+		ResponseWrapperV2<IdDto> responseWrapper = new ResponseWrapperV2<>();
+		String deviceId = null;
+		try {
+			String partnerId = deviceDetailDto.getDeviceProviderId();
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// check if partnerId is associated with user
+			boolean partnerIdExists = false;
+			String partnerOrgname = BLANK_STRING;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					validatePartnerId(partner, userId);
+					partnerIdExists = true;
+					partnerOrgname = partner.getName();
+					break;
+				}
+			}
+			if (!partnerIdExists) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			try {
+				IdDto dto = createDeviceDetails(deviceDetailDto);
+				deviceId = dto.getId();
+				addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+			} catch (PartnerServiceException ex) {
+				if ("PMS_AUT_003".equals(ex.getErrorCode())) {
+					DeviceDetail deviceDetail = deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
+							deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
+							deviceDetailDto.getDeviceTypeCode());
+					deviceId = deviceDetail.getId();
+					addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+				} else {
+					throw new PartnerServiceException(ex.getErrorCode(), ex.getErrorText());
+				}
+			}
+			IdDto responseDto = new IdDto();
+			responseDto.setId(deviceId);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			deleteDeviceDetail(deviceId);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			deleteDeviceDetail(deviceId);
+			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postAddDeviceToSbi);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private IdDto createDeviceDetails(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto) {
+		DeviceDetail entity = new DeviceDetail();
+		DeviceDetail deviceDetail = null;
+		IdDto dto = new IdDto();
+		RegistrationDeviceSubType registrationDeviceSubType = registrationDeviceSubTypeRepository
+				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+						deviceDetailDto.getDeviceSubTypeCode(), deviceDetailDto.getDeviceTypeCode());
+		if (registrationDeviceSubType == null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
+					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
+		} else {
+			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
+			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
+		}
+		Partner partner = partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				deviceDetailDto.getDeviceProviderId());
+		if (partner == null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
+					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
+		}
+		entity.setPartnerOrganizationName(partner.getName());
+		if (deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
+				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
+				deviceDetailDto.getDeviceTypeCode()) != null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
+					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
+		}
+		entity = getCreateMapping(entity, deviceDetailDto);
+		deviceDetail = deviceDetailRepository.save(entity);
+		dto.setId(deviceDetail.getId());
+		return dto;
+	}
+
+	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto) {
+		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			deviceDetail.setCrBy(authN.getName());
+		}
+		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+		deviceDetail.setMake(deviceDetailDto.getMake());
+		deviceDetail.setModel(deviceDetailDto.getModel());
+		return deviceDetail;
+
+	}
+
+	private void addInactiveMappingDeviceToSbi(String sbiId, String deviceId, String partnerId, String orgName, String userId) {
+		DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
+		if (Objects.nonNull(deviceDetailSBI)){
+			LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+			throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
+					ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
+		}
+
+		// validate sbi and device mapping
+		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
+
+		DeviceDetailSBI entity = new DeviceDetailSBI();
+
+		DeviceDetailSBIPK pk = new DeviceDetailSBIPK();
+		pk.setSbiId(sbiId);
+		pk.setDeviceDetailId(deviceId);
+
+		entity.setId(pk);
+		entity.setProviderId(partnerId);
+		entity.setPartnerName(orgName);
+		entity.setIsActive(false);
+		entity.setIsDeleted(false);
+		entity.setCrBy(userId);
+		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+
+		DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
+		LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
+	}
+
+	private void deleteDeviceDetail(String deviceDetailId) {
+		try {
+			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
+				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+				if (deviceDetail.isPresent()) {
+					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+					if (deviceDetailSBIList.isEmpty()) {
+						deviceDetailRepository.deleteById(deviceDetailId);
+						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
+		}
 	}
 
 	@Override

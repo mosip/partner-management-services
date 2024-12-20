@@ -167,7 +167,7 @@ public class AuthorizedRolesDto {
 
 	private List<String> getsbidetails;
 
-	private List<String> postinactivemappingdevicetosbi;
+	private List<String> postadddevicetosbi;
 
 	private List<String> postdevicewithsbimapping;
 

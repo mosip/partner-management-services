@@ -85,9 +85,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	public static final String VERSION = "1.0";
 	public static final String APPROVED = "approved";
 
-	@Value("${mosip.pms.api.id.add.inactive.mapping.device.to.sbi.id.post}")
-	private  String postInactiveMappingDeviceToSbiId;
-
 	@Value("${mosip.pms.api.id.deactivate.device.patch}")
 	private  String patchDeactivateDevice;
 
@@ -186,7 +183,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		return dto;
 	}
 
-	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {		
+	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setIsDeleted(false);
@@ -198,7 +195,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
 		deviceDetail.setMake(deviceDetailDto.getMake());
-		deviceDetail.setModel(deviceDetailDto.getModel());		
+		deviceDetail.setModel(deviceDetailDto.getModel());
 		return deviceDetail;
 
 	}
@@ -419,111 +416,11 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		return filterResponseDto;
 	}
 
-	@Override
-	public ResponseWrapperV2<Boolean> inactiveMappingDeviceToSbi(SbiAndDeviceMappingRequestDto requestDto) {
-		ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			String partnerId = requestDto.getPartnerId();
-			String sbiId = requestDto.getSbiId();
-			String deviceDetailId = requestDto.getDeviceDetailId();
-			if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING) || Objects.isNull(sbiId) || sbiId.equals(BLANK_STRING) || Objects.isNull(deviceDetailId) || deviceDetailId.equals(BLANK_STRING)){
-				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
-			}
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-
-			// check if partnerId is associated with user
-			boolean partnerIdExists = false;
-			String partnerOrgname = BLANK_STRING;
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(partnerId)) {
-					validatePartnerId(partner, userId);
-					partnerIdExists = true;
-					partnerOrgname = partner.getName();
-					break;
-				}
-			}
-			if (!partnerIdExists) {
-				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-
-			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceDetailId);
-			if (Objects.nonNull(deviceDetailSBI)){
-				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
-				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
-						ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
-			}
-
-			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceDetailId);
-
-			DeviceDetailSBI entity = new DeviceDetailSBI();
-
-			DeviceDetailSBIPK pk = new DeviceDetailSBIPK();
-			pk.setSbiId(sbiId);
-			pk.setDeviceDetailId(deviceDetailId);
-
-			entity.setId(pk);
-			entity.setProviderId(partnerId);
-			entity.setPartnerName(partnerOrgname);
-			entity.setIsActive(false);
-			entity.setIsDeleted(false);
-			entity.setCrBy(userId);
-			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-
-			DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
-			LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
-			responseWrapper.setResponse(true);
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In inactiveMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(requestDto.getDeviceDetailId());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In inactiveMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(requestDto.getDeviceDetailId());
-			String errorCode = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.ADD_INACTIVE_DEVICE_MAPPING_WITH_SBI_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-		}
-		responseWrapper.setId(postInactiveMappingDeviceToSbiId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
 	public static void validatePartnerId(Partner partner, String userId) {
 		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
 			LOGGER.info("Partner Id is null or empty for user id : " + userId);
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-		}
-	}
-
-	private void deleteDeviceDetail(String deviceDetailId) {
-		try {
-			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
-				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-				if (deviceDetail.isPresent()) {
-					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
-					if (deviceDetailSBIList.isEmpty()) {
-						deviceDetailRepository.deleteById(deviceDetailId);
-						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
 		}
 	}
 

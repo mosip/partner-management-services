@@ -63,6 +63,9 @@ import java.util.Optional;
 @Api(tags = { "SecureBiometricInterface" })
 public class SecureBiometricInterfaceController {
 
+	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
+	private  String postAddDeviceToSbi;
+
 	@Autowired
 	SecureBiometricInterfaceService secureBiometricInterface;
 
@@ -211,6 +214,22 @@ public class SecureBiometricInterfaceController {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(secureBiometricInterface.filterValues(request.getRequest()));
 		return responseWrapper;
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
+	@PostMapping(value = "/{sbiId}/devices")
+	@Operation(summary = "Create device and add inactive mapping to SBI.", description = "Create device and add inactive mapping to SBI.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<io.mosip.pms.device.request.dto.DeviceDetailDto> requestWrapper) {
+		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
