@@ -510,13 +510,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
 						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
 			}
-			if (!Set.of(DeviceConstant.APPROVE, DeviceConstant.REJECT).contains(status)) {
-				throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
-						ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
+			if (!Set.of(DeviceConstant.APPROVED, DeviceConstant.REJECTED).contains(status)) {
+				throw new PartnerServiceException(ErrorCode.APPROVE_REJECT_STATUS_CODE.getErrorCode(),
+						ErrorCode.APPROVE_REJECT_STATUS_CODE.getErrorMessage());
 			}
 			if (Objects.isNull(sbiId)) {
 				LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
-				if (status.equals(DeviceConstant.APPROVE)) {
+				if (status.equals(DeviceConstant.APPROVED)) {
 					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
 							ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
 				} else {
@@ -536,7 +536,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 
 			UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
 			deviceDetails.setId(deviceId);
-			if (status.equals(DeviceConstant.REJECT)) {
+			if (status.equals(DeviceConstant.REJECTED)) {
 				deviceDetails.setApprovalStatus(DeviceConstant.REJECT);
 			} else {
 				deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
@@ -544,6 +544,8 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			updateDeviceDetailStatus(deviceDetails);
 
 			deviceDetailSBI.setIsActive(true);
+			deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			deviceDetailSBI.setUpdBy(getUserId());
 			deviceDetailSbiRepository.save(deviceDetailSBI);
 			LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
 			responseWrapper.setResponse(true);
