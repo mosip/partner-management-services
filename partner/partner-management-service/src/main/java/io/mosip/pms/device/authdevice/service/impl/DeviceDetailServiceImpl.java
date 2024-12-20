@@ -183,7 +183,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		return dto;
 	}
 
-	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
+	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setIsDeleted(false);
