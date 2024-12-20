@@ -431,7 +431,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		try {
 			String status = requestDto.getStatus();
 			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
-				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-active)");
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
 				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
 						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
