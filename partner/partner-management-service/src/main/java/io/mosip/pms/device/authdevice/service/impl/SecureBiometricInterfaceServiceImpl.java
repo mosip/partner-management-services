@@ -20,6 +20,7 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.DeviceDetailDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
@@ -843,10 +844,27 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new PartnerServiceException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
 		}
-		entity = partnerHelper.getCreateMapping(entity, deviceDetailDto);
+		entity = getCreateMapping(entity, deviceDetailDto);
 		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
 		return dto;
+	}
+
+	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto) {
+		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			deviceDetail.setCrBy(authN.getName());
+		}
+		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+		deviceDetail.setMake(deviceDetailDto.getMake());
+		deviceDetail.setModel(deviceDetailDto.getModel());
+		return deviceDetail;
+
 	}
 
 	private void addInactiveMappingDeviceToSbi(String sbiId, String deviceId, String partnerId, String orgName, String userId) {

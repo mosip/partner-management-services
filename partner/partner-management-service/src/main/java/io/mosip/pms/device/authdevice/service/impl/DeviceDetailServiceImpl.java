@@ -177,10 +177,27 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
 		}
-		entity = partnerHelper.getCreateMapping(entity, deviceDetailDto);
+		entity = getCreateMapping(entity, deviceDetailDto);
 		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
 		return dto;
+	}
+
+	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
+		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			deviceDetail.setCrBy(authN.getName());
+		}
+		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+		deviceDetail.setMake(deviceDetailDto.getMake());
+		deviceDetail.setModel(deviceDetailDto.getModel());
+		return deviceDetail;
+
 	}
 
 	@Override
