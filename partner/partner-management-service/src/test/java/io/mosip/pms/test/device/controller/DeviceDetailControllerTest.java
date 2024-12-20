@@ -453,7 +453,7 @@ public class DeviceDetailControllerTest {
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         responseWrapper.setResponse(deviceDetailResponseDto);
 
-        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString())).thenReturn(responseWrapper);
+        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345")
                         .contentType(MediaType.APPLICATION_JSON_VALUE))

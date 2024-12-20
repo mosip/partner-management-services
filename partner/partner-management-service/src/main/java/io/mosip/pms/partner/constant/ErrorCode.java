@@ -135,6 +135,7 @@ public enum ErrorCode {
 	DEVICE_NOT_APPROVED("PMS_DEVICE_ERROR_023", "The selected Device is not in an approved status."),
 	NO_SBI_FOUND_FOR_APPROVE("PMS_DEVICE_ERROR_024", "This device cannot be approved as it does not have any SBI associated to it."),
 	NO_SBI_FOUND_FOR_REJECT("PMS_DEVICE_ERROR_025", "This device cannot be rejected as it does not have any SBI associated to it."),
+	DEACTIVATE_STATUS_CODE("PMS_DEVICE_ERROR_026", "Request status should be De-Activate"),
 	GET_ALL_DEVICE_DETAILS_FETCH_ERROR("PMS_FTM_ERROR_024", "Error occurred while retrieving all device details"),
 	FTM_CHIP_DETAILS_LIST_FETCH_ERROR("PMS_FTM_ERROR_001", "Error while fetching the FTM chip details"),
 	DEACTIVATE_FTM_ERROR("PMS_FTM_ERROR_003", "Error while deactivating the FTM"),

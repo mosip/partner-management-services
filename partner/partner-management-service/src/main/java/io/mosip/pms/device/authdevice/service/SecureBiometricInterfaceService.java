@@ -14,6 +14,7 @@ import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
@@ -50,7 +51,7 @@ public interface SecureBiometricInterfaceService {
 
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId);
 
-	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id);
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id, DeactivateSbiRequestDto deactivateSbiRequestDto);
 
 	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto);
 }

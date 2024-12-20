@@ -68,6 +68,7 @@ import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateFtmRequestDto;
 import io.mosip.pms.device.request.dto.FtpCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
@@ -547,9 +548,15 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId) {
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId, DeactivateFtmRequestDto requestDto) {
 		ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-active)");
+				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {

@@ -376,7 +376,7 @@ public class SecureBiometricInterfaceControllerTest {
 		SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 		responseWrapper.setResponse(sbiDetailsResponseDto);
 
-		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.anyString())).thenReturn(responseWrapper);
+		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
 		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))

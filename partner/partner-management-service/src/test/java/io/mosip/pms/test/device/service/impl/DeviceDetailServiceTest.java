@@ -31,6 +31,7 @@ import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
@@ -401,6 +402,9 @@ public class DeviceDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -416,7 +420,7 @@ public class DeviceDetailServiceTest {
 		deviceDetail.setIsActive(true);
 		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
 		when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
-		deviceDetaillService.deactivateDevice("23456");
+		deviceDetaillService.deactivateDevice("23456", requestDto);
 	}
 
 	@Test
@@ -427,6 +431,9 @@ public class DeviceDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -436,7 +443,7 @@ public class DeviceDetailServiceTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
-		deviceDetaillService.deactivateDevice(null);
+		deviceDetaillService.deactivateDevice(null, requestDto);
 	}
 
 	@Test
@@ -447,9 +454,12 @@ public class DeviceDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		deviceDetaillService.deactivateDevice("23456");
+		deviceDetaillService.deactivateDevice("23456", requestDto);
 	}
 
 	@Test
@@ -459,6 +469,9 @@ public class DeviceDetailServiceTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("De-Activate");
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -472,7 +485,7 @@ public class DeviceDetailServiceTest {
 
 		DeviceDetail deviceDetail = new DeviceDetail();
 		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
-		deviceDetaillService.deactivateDevice("23456");
+		deviceDetaillService.deactivateDevice("23456", requestDto);
 	}
 
 	@Test
@@ -482,6 +495,9 @@ public class DeviceDetailServiceTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("De-Activate");
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -495,7 +511,7 @@ public class DeviceDetailServiceTest {
 
 		SecureBiometricInterface sbi = new SecureBiometricInterface();
 		when(secureBiometricInterfaceRepository.findById(anyString())).thenReturn(Optional.of(sbi));
-		deviceDetaillService.deactivateDevice("23456");
+		deviceDetaillService.deactivateDevice("23456", requestDto);
 	}
 
 	@Test
