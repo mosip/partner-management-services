@@ -420,7 +420,7 @@ public class PartnerHelper {
         }
     }
 
-    public boolean checkIfPartnerIsApprovedAuthPartner(Partner partner) {
+    public void validateIfPartnerIsApprovedAuthPartner(Partner partner) {
         String partnerType = partner.getPartnerTypeCode();
         String approvalStatus = partner.getApprovalStatus();
         if (Objects.isNull(partnerType) || partnerType.equals(BLANK_STRING)) {
@@ -433,6 +433,15 @@ public class PartnerHelper {
             throw new PartnerServiceException(ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorCode(),
                     ErrorCode.APPROVAL_STATUS_NOT_EXISTS.getErrorMessage());
         }
-        return partnerType.equals(AUTH_PARTNER) && approvalStatus.equals(APPROVED);
+        if (!partnerType.equals(AUTH_PARTNER)) {
+            LOGGER.info("The specified partner is not of type Authentication Partner " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.NOT_AUTH_PARTNER_TYPE_ERROR.getErrorCode(),
+                    ErrorCode.NOT_AUTH_PARTNER_TYPE_ERROR.getErrorMessage());
+        }
+        if (!approvalStatus.equals(APPROVED)) {
+            LOGGER.info("The specified partner is not of type Authentication Partner " + partner.getId());
+            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_APPROVED_ERROR.getErrorCode(),
+                    ErrorCode.PARTNER_NOT_APPROVED_ERROR.getErrorMessage());
+        }
     }
 }
