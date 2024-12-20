@@ -1856,8 +1856,8 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<ApprovedPartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType) {
-		ResponseWrapperV2<List<ApprovedPartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType) {
+		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -1866,22 +1866,22 @@ public class PartnerServiceImpl implements PartnerService {
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
-			List<ApprovedPartnerDtoV4> approvedPartnerDtoV4List = new ArrayList<>();
+			List<PartnerDtoV4> partnerDtoV4List = new ArrayList<>();
 			List<Partner> partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			for (Partner partner : partners) {
-				ApprovedPartnerDtoV4 approvedPartnerDtoV4 = new ApprovedPartnerDtoV4();
+				PartnerDtoV4 partnerDtoV4 = new PartnerDtoV4();
 				partnerHelper.validatePartnerId(partner, userId);
-				approvedPartnerDtoV4.setPartnerId(partner.getId());
-				approvedPartnerDtoV4.setPartnerType(partner.getPartnerTypeCode());
+				partnerDtoV4.setPartnerId(partner.getId());
+				partnerDtoV4.setPartnerType(partner.getPartnerTypeCode());
 				if (Boolean.TRUE.equals(policyGroupAvailable)) {
 					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
-					approvedPartnerDtoV4.setPolicyGroupId(partner.getPolicyGroupId());
-					approvedPartnerDtoV4.setPolicyGroupName(policyGroup.getName());
-					approvedPartnerDtoV4.setPolicyGroupDescription(policyGroup.getDesc());
+					partnerDtoV4.setPolicyGroupId(partner.getPolicyGroupId());
+					partnerDtoV4.setPolicyGroupName(policyGroup.getName());
+					partnerDtoV4.setPolicyGroupDescription(policyGroup.getDesc());
 				}
-				approvedPartnerDtoV4List.add(approvedPartnerDtoV4);
+				partnerDtoV4List.add(partnerDtoV4);
 			}
-			responseWrapper.setResponse(approvedPartnerDtoV4List);
+			responseWrapper.setResponse(partnerDtoV4List);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getApprovedPartners method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));

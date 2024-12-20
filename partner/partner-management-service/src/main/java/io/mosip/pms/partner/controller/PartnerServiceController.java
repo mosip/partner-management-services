@@ -11,7 +11,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
-import io.mosip.pms.partner.dto.ApprovedPartnerDtoV4;
+import io.mosip.pms.partner.dto.PartnerDtoV4;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -397,7 +397,7 @@ public class PartnerServiceController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<ApprovedPartnerDtoV4>> getPartnersV4(
+	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(
 			@RequestParam(name = "status") String status,
 			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
 			@RequestParam(name = "partnerType", required = false) String partnerType) {
