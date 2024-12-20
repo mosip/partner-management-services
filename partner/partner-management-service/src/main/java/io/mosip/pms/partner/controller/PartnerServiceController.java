@@ -411,18 +411,6 @@ public class PartnerServiceController {
 		return partnerService.getAuthPartnerApiKeys();
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetauthpartnerspolicies())")
-	@GetMapping(value = "/{partnerId}/policies")
-	@Operation(summary = "Get all approved auth partner policies", description = "Fetch all approved auth partner policies")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<List<ActivePolicyDto>> getAuthPartnersPolicies(@PathVariable("partnerId") String partnerId) {
-		return partnerService.getAuthPartnersPolicies(partnerId);
-	}
-
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")
