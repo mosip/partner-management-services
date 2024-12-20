@@ -7,7 +7,7 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.SbiFilterDto;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -44,6 +44,7 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
@@ -224,7 +225,7 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<io.mosip.pms.device.request.dto.DeviceDetailDto> requestWrapper) {
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
 		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -240,7 +241,7 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
+	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
