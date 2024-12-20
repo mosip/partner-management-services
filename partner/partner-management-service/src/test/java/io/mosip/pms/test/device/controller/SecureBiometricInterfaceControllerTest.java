@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
@@ -54,6 +55,7 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
@@ -372,15 +374,18 @@ public class SecureBiometricInterfaceControllerTest {
 	@Test
 	@WithMockUser(roles = {"DEVICE_PROVIDER"})
 	public void deactivateSbiTest() throws Exception {
+		RequestWrapperV2<DeactivateSbiRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateSbiRequestDto requestDto = new DeactivateSbiRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 		responseWrapper.setResponse(sbiDetailsResponseDto);
 
 		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
 	private RequestWrapper<DeviceDetailSBIMappingDto> createMappingRequest() {

@@ -386,12 +386,14 @@ public class FTPChipDetailControllerTest {
 		@WithMockUser(roles = {"FTM_PROVIDER"})
 		public void deactivateFtmTest() throws Exception {
 			ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			RequestWrapperV2<DeactivateFtmRequestDto> requestWrapper = new RequestWrapperV2<>();
+			DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+			requestDto.setStatus("De-Activate");
+			requestWrapper.setRequest(requestDto);
 			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
 			responseWrapper.setResponse(ftmDetailResponseDto);
-			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any(), Mockito.any())).thenReturn(responseWrapper);
-			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232")
-							.contentType(MediaType.APPLICATION_JSON_VALUE))
-					.andExpect(status().isOk());
+			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232").contentType(MediaType.APPLICATION_JSON_VALUE)
+					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 		}
 
 	@Test

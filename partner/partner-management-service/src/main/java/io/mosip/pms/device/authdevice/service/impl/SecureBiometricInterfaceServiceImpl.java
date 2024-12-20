@@ -1014,7 +1014,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String status = requestDto.getStatus();
-			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVE)) {
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
 				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
 				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
 						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());

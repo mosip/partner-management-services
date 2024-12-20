@@ -14,6 +14,7 @@ import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.device.util.AuditUtil;
@@ -449,16 +450,18 @@ public class DeviceDetailControllerTest {
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void deactivateDeviceTest() throws Exception {
+        RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+        requestDto.setStatus("De-Activate");
+        requestWrapper.setRequest(requestDto);
         ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
         DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
         responseWrapper.setResponse(deviceDetailResponseDto);
 
         Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
-
+        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
 
