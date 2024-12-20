@@ -42,6 +42,7 @@ import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.response.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
@@ -59,8 +60,12 @@ import java.util.Optional;
 @RequestMapping(value = "/devicedetail")
 @Api(tags = { "DeviceDetail" })
 public class DeviceDetailController {
+
 	@Value("${mosip.pms.api.id.approval.mapping.device.to.sbi.post}")
 	private String postApprovalMappingDeviceToSbiId;
+
+	@Value("${mosip.pms.api.id.deactivate.device.patch}")
+	private  String patchDeactivateDevice;
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -237,8 +242,13 @@ public class DeviceDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(@PathVariable("deviceId") @NotBlank String deviceId) {
-		return deviceDetaillService.deactivateDevice(deviceId);
+	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(@PathVariable("deviceId") @NotBlank String deviceId, @RequestBody @Valid RequestWrapperV2<DeactivateDeviceRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<DeviceDetailResponseDto>> validationResponse = requestValidator.validate(patchDeactivateDevice, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return deviceDetaillService.deactivateDevice(deviceId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")

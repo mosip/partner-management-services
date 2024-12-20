@@ -72,6 +72,7 @@ import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateFtmRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailDto;
@@ -1024,6 +1025,9 @@ public class FTPChipDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -1039,7 +1043,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setActive(true);
 		when(ftpChipDetailRepository.findById(anyString())).thenReturn(Optional.of(ftpChipDetail));
 		when(ftpChipDetailRepository.save(any())).thenReturn(ftpChipDetail);
-		ftpChipDetailService.deactivateFtm("23456");
+		ftpChipDetailService.deactivateFtm("23456", requestDto);
 	}
 
 	@Test
@@ -1050,6 +1054,9 @@ public class FTPChipDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -1059,7 +1066,7 @@ public class FTPChipDetailServiceTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
-		ftpChipDetailService.deactivateFtm(null);
+		ftpChipDetailService.deactivateFtm(null, requestDto);
 	}
 
 	@Test
@@ -1070,9 +1077,12 @@ public class FTPChipDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		ftpChipDetailService.deactivateFtm("23456");
+		ftpChipDetailService.deactivateFtm("23456", requestDto);
 	}
 
 	@Test
@@ -1082,6 +1092,9 @@ public class FTPChipDetailServiceTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+		requestDto.setStatus("De-Activate");
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -1095,7 +1108,7 @@ public class FTPChipDetailServiceTest {
 
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		when(ftpChipDetailRepository.findById(anyString())).thenReturn(Optional.of(ftpChipDetail));
-		ftpChipDetailService.deactivateFtm("23456");
+		ftpChipDetailService.deactivateFtm("23456", requestDto);
 	}
 
 	@Test

@@ -22,6 +22,7 @@ import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -76,6 +77,7 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
@@ -1008,9 +1010,15 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId, DeactivateSbiRequestDto requestDto) {
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
@@ -1052,6 +1060,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!approvedDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : approvedDevices) {
 					deviceDetail.setIsActive(false);
+					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
 			}
@@ -1060,6 +1070,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!pendingApprovalDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : pendingApprovalDevices) {
 					deviceDetail.setApprovalStatus(REJECTED);
+					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
 			}

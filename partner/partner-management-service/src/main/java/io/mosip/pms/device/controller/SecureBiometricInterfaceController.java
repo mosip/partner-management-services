@@ -40,6 +40,7 @@ import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
@@ -66,6 +67,9 @@ public class SecureBiometricInterfaceController {
 
 	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
 	private  String postAddDeviceToSbi;
+
+	@Value("${mosip.pms.api.id.deactivate.sbi.patch}")
+	private  String patchDeactivateSbi;
 
 	@Autowired
 	SecureBiometricInterfaceService secureBiometricInterface;
@@ -263,8 +267,13 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@PathVariable("sbiId") @NotBlank String sbiId) {
-		return secureBiometricInterface.deactivateSbi(sbiId);
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeactivateSbiRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(patchDeactivateSbi, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return secureBiometricInterface.deactivateSbi(sbiId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")

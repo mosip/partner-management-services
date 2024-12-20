@@ -67,6 +67,7 @@ import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.DeviceDetailSearchResponseDto;
@@ -425,9 +426,15 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId) {
+	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId, DeactivateDeviceRequestDto requestDto) {
 		ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {

@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateFtmRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipDetailDto;
@@ -88,7 +89,7 @@ public interface FtpChipDetailService {
      */
     public <E> PageResponseDto<FTPSearchResponseDto> searchFTPChipDetails(Class<E> entity, DeviceSearchDto dto);
 
-	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId);
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId, DeactivateFtmRequestDto requestDto);
 
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(String ftmId);
 

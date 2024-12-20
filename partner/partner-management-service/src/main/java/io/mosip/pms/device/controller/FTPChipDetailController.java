@@ -3,12 +3,14 @@ package io.mosip.pms.device.controller;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
@@ -70,6 +72,9 @@ public class FTPChipDetailController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
+	private  String patchDeactivateFtm;
 
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
@@ -254,8 +259,13 @@ public class FTPChipDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(@PathVariable("ftmId") @NotBlank String ftmId) {
-		return ftpChipDetaillService.deactivateFtm(ftmId);
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(@PathVariable("ftmId") @NotBlank String ftmId, @RequestBody @Valid RequestWrapperV2<DeactivateFtmRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<FtmDetailResponseDto>> validationResponse = requestValidator.validate(patchDeactivateFtm, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoriginalftmcertificate())")
