@@ -392,6 +392,7 @@ public class FTPChipDetailControllerTest {
 			requestWrapper.setRequest(requestDto);
 			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
 			responseWrapper.setResponse(ftmDetailResponseDto);
+			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any(), Mockito.any())).thenReturn(responseWrapper);
 			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232").contentType(MediaType.APPLICATION_JSON_VALUE)
 					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 		}
