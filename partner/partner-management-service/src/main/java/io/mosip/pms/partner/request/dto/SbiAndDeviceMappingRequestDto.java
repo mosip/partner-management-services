@@ -11,9 +11,6 @@ public class SbiAndDeviceMappingRequestDto {
     @Schema(description = "Unique identifier for the SBI", example = "sbi456")
     private String sbiId;
 
-    @Schema(description = "Unique identifier for the device details", example = "device789")
-    private String deviceDetailId;
-
     @Schema(description = "status of the SBI and Device mapping request", example = "approved")
     private String status;
 }

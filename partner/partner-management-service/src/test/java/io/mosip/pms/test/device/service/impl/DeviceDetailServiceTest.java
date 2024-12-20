@@ -591,7 +591,6 @@ public class DeviceDetailServiceTest {
 		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
 		requestDto.setPartnerId("123");
 		requestDto.setSbiId("112");
-		requestDto.setDeviceDetailId("dgdg");
 		requestDto.setStatus(DeviceConstant.APPROVE);
 
 		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
@@ -624,7 +623,6 @@ public class DeviceDetailServiceTest {
 		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
 		requestDto.setPartnerId("123");
 		requestDto.setSbiId("112");
-		requestDto.setDeviceDetailId("dgdg");
 		requestDto.setStatus(DeviceConstant.APPROVE);
 
 		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
@@ -661,8 +659,6 @@ public class DeviceDetailServiceTest {
 		requestDto.setStatus(DeviceConstant.APPROVE);
 
 		deviceDetaillService.approveOrRejectMappingDeviceToSbi("1234", requestDto);
-
-		requestDto.setDeviceDetailId("dgdg");
 
 		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
 		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
