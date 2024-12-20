@@ -2,7 +2,7 @@ package io.mosip.pms.device.authdevice.service;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.device.dto.SbiFilterDto;
@@ -17,6 +17,7 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
@@ -45,9 +46,9 @@ public interface SecureBiometricInterfaceService {
 
 	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails();
 
-	public ResponseWrapperV2<IdDto> addDeviceToSbi(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto, String sbiId);
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(DeviceDetailDto deviceDetailDto, String sbiId);
 
-	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId);
+	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId);
 
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id);
 

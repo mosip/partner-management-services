@@ -11,11 +11,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
 import org.junit.Before;
@@ -360,11 +359,11 @@ public class SecureBiometricInterfaceControllerTest {
 	@Test
 	@WithMockUser(roles = {"DEVICE_PROVIDER"})
 	public void getAllDevicesForSbiTest() throws Exception {
-		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
-		List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
-		DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
-		deviceDetailDtoList.add(deviceDetailDto);
-		responseWrapper.setResponse(deviceDetailDtoList);
+		ResponseWrapperV2<List<DeviceDto>> responseWrapper = new ResponseWrapperV2<>();
+		List<DeviceDto> deviceDtoList = new ArrayList<>();
+		DeviceDto deviceDto = new DeviceDto();
+		deviceDtoList.add(deviceDto);
+		responseWrapper.setResponse(deviceDtoList);
 		Mockito.when(secureBiometricInterfaceService.getAllDevicesForSbi(Mockito.any())).thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/123/devices").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());

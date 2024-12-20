@@ -22,14 +22,13 @@ import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -76,6 +75,7 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
@@ -753,7 +753,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<IdDto> addDeviceToSbi(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto, String sbiId) {
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(DeviceDetailDto deviceDetailDto, String sbiId) {
 		ResponseWrapperV2<IdDto> responseWrapper = new ResponseWrapperV2<>();
 		String deviceId = null;
 		try {
@@ -817,7 +817,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return responseWrapper;
 	}
 
-	private IdDto createDeviceDetails(io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto) {
+	private IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
 		DeviceDetail entity = new DeviceDetail();
 		DeviceDetail deviceDetail = null;
 		IdDto dto = new IdDto();
@@ -850,7 +850,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return dto;
 	}
 
-	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, io.mosip.pms.device.request.dto.DeviceDetailDto deviceDetailDto) {
+	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
 		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
 		deviceDetail.setIsActive(false);
 		deviceDetail.setIsDeleted(false);
@@ -914,8 +914,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId) {
-		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId) {
+		ResponseWrapperV2<List<DeviceDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -953,27 +953,27 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
 			if (!deviceDetailSBIList.isEmpty()) {
-				List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+				List<DeviceDto> deviceDtoList = new ArrayList<>();
 				for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
 					Optional<DeviceDetail> optionalDeviceDetail = deviceDetailRepository.
 							findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
 					if (optionalDeviceDetail.isPresent()) {
 						DeviceDetail deviceDetail = optionalDeviceDetail.get();
-						DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
-						deviceDetailDto.setDeviceId(deviceDetail.getId());
-						deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
-						deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
-						deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
-						deviceDetailDto.setMake(deviceDetail.getMake());
-						deviceDetailDto.setModel(deviceDetail.getModel());
-						deviceDetailDto.setStatus(deviceDetail.getApprovalStatus());
-						deviceDetailDto.setActive(deviceDetail.getIsActive());
-						deviceDetailDto.setCreatedDateTime(deviceDetail.getCrDtimes());
+						DeviceDto deviceDto = new DeviceDto();
+						deviceDto.setDeviceId(deviceDetail.getId());
+						deviceDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
+						deviceDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
+						deviceDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
+						deviceDto.setMake(deviceDetail.getMake());
+						deviceDto.setModel(deviceDetail.getModel());
+						deviceDto.setStatus(deviceDetail.getApprovalStatus());
+						deviceDto.setActive(deviceDetail.getIsActive());
+						deviceDto.setCreatedDateTime(deviceDetail.getCrDtimes());
 
-						deviceDetailDtoList.add(deviceDetailDto);
+						deviceDtoList.add(deviceDto);
 					}
 				}
-				responseWrapper.setResponse(deviceDetailDtoList);
+				responseWrapper.setResponse(deviceDtoList);
 			}
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
