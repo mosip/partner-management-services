@@ -18,6 +18,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
+import io.mosip.pms.partner.dto.PartnerDtoV4;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -1860,6 +1861,76 @@ public class PartnerServiceImplTest {
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 		pserviceImpl.getAuthPartnerApiKeys();
+	}
+
+	@Test
+	public void getPartnersV4Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("abc");
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getPartnersV4Test1() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", null, "FTM_Provider");
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getPartnersV4TestException() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
 	}
 
 }
