@@ -1,0 +1,333 @@
+createSearchDeviceDetails:
+   Partner_SearchDeviceDetails_sort_type_desc_equals_Smoke_sid:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_01
+      description: Create Search Device Details while Type parameter as Equals and filter data in descending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetailsResult
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "equals",
+        "value": "device-id-123"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "id",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchDeviceDetails_AllValid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_02
+      description: Create Search Device Details with all valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetailsResult
+      input: '{
+    "deviceProviderId": "all",
+    "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchDeviceDetails_Only_FilterCriteria_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_03
+      description: Create Search Device Details with Only FilterCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetailsResult
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "equals",
+        "value": "device-id-123"
+      }
+    ],
+    "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchDeviceDetails_Only_SortCriteria_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_04
+      description: Create Search Device Details with Only SortCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetailsResult
+      input: '{
+    "deviceProviderId": "all",
+    "sort": [
+      {
+        "sortField": "id",
+        "sortType": "desc"
+      }
+    ],
+    "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchDeviceDetails_Only_PaginationCriteria_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_05
+      description: Create Search Device Details with Only PaginationCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetailsResult
+      input: '{
+    "deviceProviderId": "all",
+    "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchDeviceDetails_with_invalid_columnName:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_06
+      description: Create Search Device Details with invalid columnName
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "mo@@@@@@@2334412345del",
+        "type": "startswith",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "model",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310",
+      "message": "Invalid column received : mo@@@@@@@2334412345del"
+    }
+  ]
+}'
+   Partner_SearchDeviceDetails_with_missing_type:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_07
+      description: Create Search Device Details while keeping Type parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "model",
+        "type": "$REMOVE$",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "model",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-312",
+      "message": "Filter type is missing"
+    }
+  ]
+}'
+   Partner_SearchDeviceDetails_with_invalid_sort_type:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_08
+      description: Create Search Device Details while keeping sortType parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "model",
+        "type": "startswith",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "model",
+        "sortType": "dc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358",
+      "message": "Sort type dc is not supported"
+    }
+  ]
+}'
+   Partner_SearchDeviceDetails_with_missing_sort_type:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_09
+      description: Create Search Device Details while keeping sortType parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "model",
+        "type": "startswith",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "model",
+        "sortType": "$REMOVE$"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314",
+      "message": "Missing sort field or sort type values"
+    }
+  ]
+}'
+   Partner_SearchDeviceDetails_with_invalid_sort_field:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_10
+      description: Create Search Device Details while keeping sortField parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "model",
+        "type": "startswith",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "mo@@@del",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-357",
+      "message": "Invalid sort field mo@@@del"
+    }
+  ]
+}'
+   Partner_SearchDeviceDetails_with_missing_sort_field:
+      endPoint: /v1/partnermanager/devicedetail/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceDetails_11
+      description: Create Search Device Details while keeping sortField parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "all",
+    "filters": [
+      {
+        "columnName": "model",
+        "type": "startswith",
+        "value": "FACE01"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "$REMOVE$",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314",
+      "message": "Missing sort field or sort type values"
+    }
+  ]
+}'

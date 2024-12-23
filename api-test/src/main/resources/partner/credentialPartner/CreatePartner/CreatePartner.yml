@@ -1,0 +1,75 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create Partner self Registrartion with Valid data
+      role: partner
+      restMethod: post
+      inputTemplate: partner/credentialPartner/CreatePartner/createPartner
+      outputTemplate: partner/credentialPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "movp@gmail.com",
+    "organizationName": "movp",
+    "partnerId": "MOVP-AUTOMATION",
+    "partnerType": "Credential_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "MOVP-AUTOMATION",
+        "status": "InProgress"
+    }'
+    
+   Partner_PartnerSelfRegistration_WithOut_Mandatory_Neg:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      description: Create Partner self Registrartion without PartnerID
+      role: partner
+      restMethod: post
+      inputTemplate: partner/credentialPartner/CreatePartner/createPartner
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "movp@gmail.com",
+    "organizationName": "movp",
+    "partnerId": "$REMOVE$",
+    "partnerType": "Credential_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+       "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+    }'
+    
+   Partner_PartnerSelfRegistration_Same_Email:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      description: Create Partner self Registrartion with existing Email
+      role: partner
+      restMethod: post
+      inputTemplate: partner/credentialPartner/CreatePartner/createPartner
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "movp@gmail.com",
+    "organizationName": "movp",
+    "partnerId": "MOVP-AUTOMATION",
+    "partnerType": "Credential_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+       "errors": [
+    {
+      "errorCode": "PMS_PRT_011"
+    }
+  ]
+    }'

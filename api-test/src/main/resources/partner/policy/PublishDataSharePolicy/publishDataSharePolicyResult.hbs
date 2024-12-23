@@ -1,0 +1,42 @@
+{
+    "response": {
+        "policyGroupName": "{{policyGroupName}}",
+        "policyGroupDesc": "{{policyGroupDesc}}",
+        "policyGroupStatus": {{policyGroupStatus}},
+        "policyName": "{{policyName}}",
+        "policyDesc": "{{policyDesc}}",
+        "policyType": "{{policyType}}",
+        "is_Active": {{is_Active}},
+        "policies": {
+			"shareableAttributes": [{
+				"attributeName": "{{attributeName}}",
+				"source": [{
+					"attribute": "registration-client\/NEW\/individualBiometrics",
+					"filter": [{
+						"type": "Iris"
+					}]
+				}, {
+					"attribute": "CNIE\/verification\/biometrics",
+					"filter": [{
+						"type": "Finger"
+					}]
+				}, {
+					"attribute": "CNIE\/verification\/biometrics",
+					"filter": [{
+						"type": "Face"
+					}]
+				}],
+				"encrypted": true,
+				"format": "{{format}}"
+			}],
+			"dataSharePolicies": {
+				"typeOfShare": "Data Share",
+				"validForInMinutes": "30",
+				"transactionsAllowed": "2",
+				"encryptionType": "Partner Based",
+				"shareDomain": "datashare-service",
+				"source": "Packet Manager"
+			}
+		}
+	}
+}

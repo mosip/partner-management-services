@@ -1,0 +1,34 @@
+{
+  "id": "string",
+  "metadata": {},
+  "request": {
+    "filters": [
+    {{#each filters}}
+      {
+        "columnName": "{{columnName}}",
+        "fromValue": "string",
+        "toValue": "string",
+        "type": "{{type}}",
+        "value": "{{value}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+    "pagination": {
+      "pageFetch": "{{pageFetch}}",
+      "pageStart": "{{pageStart}}"
+    },
+	"purpose": "REGISTRATION",
+    "sort": [
+    	{{#each sort}}
+      {
+        "sortField": "{{sortField}}",
+        "sortType": "{{sortType}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ]
+},
+  "requesttime": "{{requesttime}}",
+  "version": "string"
+}

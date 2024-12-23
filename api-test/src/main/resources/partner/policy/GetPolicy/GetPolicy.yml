@@ -1,0 +1,39 @@
+getPolicy:
+   Partner_GetPolicy_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_getPolicy_01
+      description: Retrieve Parter Policy
+      role: partner
+      restMethod: get
+      inputTemplate: partner/policy/GetPolicy/getPolicy
+      outputTemplate: partner/policy/GetPolicy/getPolicyResult
+      input: '{
+    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$"
+  }'
+      output: ' {
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
+        "policyGroupStatus": true,
+        "policyName": "mosip policy",
+        "policyDesc": "desc mosip policy updated",
+        "authTokenType": "partner"
+    }'
+   Partner_GetPolicy_Invalid_InputParameter_policyId:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_getPolicy_02
+      description: Retrieve Parter Policy with invalid PolicyId
+      role: partner
+      restMethod: get
+      inputTemplate: partner/policy/GetPolicy/getPolicy
+      outputTemplate: partner/error
+      input: '{
+    "policyId": "policy123456"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_008",
+      "message": "Policy ID does not exist"
+    }
+  ]
+}'

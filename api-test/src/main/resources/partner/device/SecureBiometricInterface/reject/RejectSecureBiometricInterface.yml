@@ -1,0 +1,79 @@
+RejectSecureBiometricInterface:
+   Partner_RejectSecureBiometricInterface_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_01
+      description: Reject SecureBiometricInterface with valid detais
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterfaceResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_RejectSecureBiometricInterface_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_02
+      description: Reject SecureBiometricInterface with valid detais
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterfaceResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+    
+   Partner_RejectSecureBiometricInterface_SpaVal_neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_03
+      description: Reject SecureBiometricInterface with SpaVal invalid
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "a0f2b0ca-92 66-4cf4-832c-7741d5b6a174",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+    }'
+    
+   Partner_RejectSecureBiometricInterface_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_04
+      description: Reject SecureBiometricInterface while keeping parameter approvalStatus as Empty
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

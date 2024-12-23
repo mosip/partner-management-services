@@ -1,0 +1,805 @@
+defineDataSharePolicy:
+   Partner_DefineDataSharePolicy_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_01
+      description: Create Data Share Policy with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy",
+		"policyId": "MDSP",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policy",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_All_for_req_ApiKey_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_02
+      description: Create Data Share Policy for requested API Key
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy ApiKey",
+		"name": "mosip data share policy ApiKey",
+		"policyId": "MDSPFA",
+		"policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "name": "mosip data share policy",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_All_for_Update_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_03
+      description: Create Data Share Policy for update partner	  
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "desc mosip policy group for req key For Update",
+		"name": "mosip policy group for req key For Update",
+		"policyId": "MDSPFU",
+		"policyGroupName": "mosip policy group for req key For Update",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group for req key For Update",
+    "name": "mosip data share policy",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_ToCheckStatus_Smoke_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_04
+      description: Create Data Share Policy To check status
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy check status",
+		"name": "mosip data share policy to check status22",
+		"policyId": "MDSP8",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policy to check status22",
+    "desc": "mosip policy group",
+    "is_Active": false      
+    }'
+   Partner_DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_05
+      description: Create Data Share Policy Without Mandatory Fields
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy2",
+		"name": "mosip data share policy2",
+		"policyId": "MDSP2",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"$REMOVE$",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policy2",
+    "desc": "mosip data share policy2",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_duplicate_policy_name:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_06
+      description: Create Data Share Policy with duplicate Policy name
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_009"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_InActive_policyGroup:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_07
+      description: Create Data Share Policy for inactive Policy Group
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group2",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+            "errorCode": "PMS_POL_053"
+        }
+  ]
+}'
+   Partner_DefineDataSharePolicy_invalid_policy_grp_name:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_08
+      description: Create Data Share Policy while keeping invalid Policy Group name
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "abcd",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_019"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_invalid_policy_type:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_09
+      description: Create Data Share Policy while keeping invalid Policy Type
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group",
+    "policyType": "abcd",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_023"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_missing_name:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_10
+      description: Create Data Share Policy while keeping name parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "$REMOVE$",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_missing_descr:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_11
+      description: Create Data Share Policy while keeping description parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "$REMOVE$",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_missing_PolicyGrpName:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_12
+      description: Create Data Share Policy while keeping Policy Group Name parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "$REMOVE$",
+    "policyType": "DataShare",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Partner_DefineDataSharePolicy_missing_PolicyType:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_13
+      description: Create Data Share Policy while keeping Policy Type parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+    "desc": "mosip data share policy",
+    "name": "mosip data share policy",
+    "policyId": "MDSP",
+    "policyGroupName": "mosip policy group",
+    "policyType": "$REMOVE$",
+    "format":"extraction",
+    "attributeName":"biometrics",
+    "version": "1.0",
+    "typeOfShare": "Data Share",
+	"validForInMinutes": "30",
+	"transactionsAllowed": "2",
+	"encryptionType": "Partner Based",
+	"shareDomain": "datashare-service",
+	"source": "Packet Manager",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_DefineDataSharePolicy_RemovedAttribute_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_14
+      description: Create Data Share Policy while keeping AttributeName parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"desc": "mosip data share policy7",
+		"name": "mosip data share policy7",
+		"policyId": "MDSP",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"attributeName":"$REMOVE$",
+		"version": "1.0",
+        "typeOfShare": "Data Share",
+	    "validForInMinutes": "30",
+	    "transactionsAllowed": "2",
+	    "encryptionType": "Partner Based",
+	    "shareDomain": "datashare-service",
+	    "source": "Packet Manager",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+      "errors": [
+    {
+      "errorCode": "PMS_PV_006"
+    }
+  ]
+
+    }'
+
+   Partner_DefineDataSharePolicy_format_SpaceVal_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_15
+      description: Create Data Share Policy while keeping Format parameter with spaces value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policya",
+		"policyId": "MDSPA",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":" ",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policya",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_IndividualBiometrics_Attribute:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_16
+      description: Create Data Share Policy while keeping attributeName parameter as IndividualBiometrics
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyb",
+		"policyId": "MDSPB",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"individualBiometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policyb",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_Zipcode_Attribute:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_17
+      description: Create Data Share Policy while keeping attributeName parameter as Zipcode
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyd",
+		"policyId": "MDSPC",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"Zipcode",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policyd",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_typeOfShare_SpaceVal_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_18
+      description: Create Data Share Policy while keeping typeofShare parameter with spaces value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policye",
+		"policyId": "MDSPDD",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": " ",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+            "errors": [
+    {
+      "errorCode": "PMS_PV_005"
+    }
+  ]
+    }'
+    
+   Partner_DefineDataSharePolicy_typeOfShare_Direct_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_19
+      description: Create Data Share Policy while keeping typeOfShare parameter as Direct value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyf",
+		"policyId": "MDSPEE",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Direct",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "PMS_PV_005"
+    }
+  ]     
+    }'
+    
+   Partner_DefineDataSharePolicy_typeOfShare_Remove_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_20
+      description: Create Data Share Policy while keeping typeOfShare parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyi",
+		"policyId": "MDSPEE",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "$REMOVE$",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "PMS_PV_006"
+    }
+  ]     
+    }'
+    
+   Partner_DefineDataSharePolicy_shareDomain_https_Smoke:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_21
+      description: Create Data Share Policy while keeping shareDomain parameter as https
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyg",
+		"policyId": "MDSPGG",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "https",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policyg",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_EncryptionType_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_22
+      description: Create Data Share Policy while keeping EncryptionType parameter as none value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyh",
+		"policyId": "MDSPHH",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "none",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policyh",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+    
+   Partner_DefineDataSharePolicy_AttributeName_Custom_Name_Neg:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_23
+      description: Create Data Share Policy while keeping AttributeName parameter as custome name value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policyk",
+		"policyId": "MDSPm",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"custom name",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policyk",
+    "desc": "mosip data share policy",
+    "is_Active": false      
+    }'
+   Partner_DefineDataSharePolicy_Cancelling_the_create_dataSharePolicy:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_24
+      description: Create Data Share Policy while Cancelling the created dataSharePolicy
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy name",
+		"policyId": "MDSP239fhfdndn",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group",
+    "name": "mosip data share policy name",
+    "desc": "mosip data share policy",
+    "is_Active": false
+    }'
+   Partner_DefineDataSharePolicy_without_policyId:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_defineDataSharePolicy_25
+      description: Create Data Share Policy without PolicyId
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicy
+      outputTemplate: partner/policy/DefineDataSharePolicy/defineDataSharePolicyResult
+      input: '{
+		"desc": "mosip data share policy",
+		"name": "mosip data share policy without policy id",
+		"policyId": "$REMOVE$",
+		"policyGroupName": "mosip policy group",
+		"policyType": "DataShare",
+		"format":"extraction",
+		"typeOfShare": "Data Share",
+		"validForInMinutes": "30",
+		"transactionsAllowed": "2",
+		"encryptionType": "Partner Based",
+		"shareDomain": "datashare-service",
+		"source": "Packet Manager",
+		"attributeName":"biometrics",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "PMS_PV_005"
+    }
+  ]     
+    }'

@@ -1,0 +1,18 @@
+{
+	"id": "string",
+	"metadata": {},
+	"requesttime": "{{requesttime}}",
+	"version": "string",
+	"request": {
+		"filters": [
+		{{#each filters}}
+		{
+			"columnName": "{{columnName}}",
+			"type": "{{type}}",
+			"text": "{{text}}"
+		}
+	     {{#unless @last}},{{/unless}}
+	      	{{/each}}
+    	]
+	}
+}

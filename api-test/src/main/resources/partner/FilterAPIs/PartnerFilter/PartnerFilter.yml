@@ -1,0 +1,143 @@
+PartnerFilter:
+   partner_PartnerFilter_unique_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_01
+      description: Create Partner Filter while keeping Type parameter as Unique
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "id",
+    "type": "unique",
+    "text": "mpartner-default-abis"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "filters": [
+      {
+        "fieldID": "id",
+        "fieldValue": "mpartner-default-abis",
+        "fieldCode": "mpartner-default-abis"
+      }
+    ]
+}'
+   partner_PartnerFilter_all_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_02
+      description: Create Partner Filter while keeping Type parameter as All
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "id",
+    "type": "all",
+    "text": "mpartner-default-abis"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+       "filters": [
+      {
+        "fieldID": "id",
+        "fieldValue": "mpartner-default-abis",
+        "fieldCode": "mpartner-default-abis"
+      }
+    ]
+}'
+   partner_PartnerFilter_Invalid_EmptyFilterType:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_03
+      description: Create Partner Filter while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "",
+		"text": "mpartner-default-abis"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   partner_PartnerFilter_Invalid_Column_doesnt_exist:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_04
+      description: Create Partner Filter while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "asfgs",
+		"type": "unique",
+		"text": "mpartner-default-abis"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'
+   partner_PartnerFilter_Invalid_type_doesnt_exist:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_05
+      description: Create Partner Filter while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "asdg",
+		"text": "mpartner-default-abis"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'
+   partner_PartnerFilter_Invalid_Empty_column:
+      endPoint: /v1/partnermanager/partners/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerFilter_06
+      description: Create Partner Filter while keeping FilterColumn parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "unique",
+		"text": "mpartner-default-abis"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

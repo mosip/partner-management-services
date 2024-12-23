@@ -1,0 +1,18 @@
+requetAPIKey:
+   Partner_APIKeyAutoApproval_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/apikey/request
+      uniqueIdentifier: TC_PMS_requetAPIKey_01
+      description: Update APIKey Auto Approval for valid ID
+      role: partner
+      restMethod: patch 
+      inputTemplate: partner/credentialPartner/APIKeyAutoApproval/apiKeyAutoApproval
+      outputTemplate: partner/credentialPartner/APIKeyAutoApproval/apiKeyAutoApprovalResult
+      input: '{
+        "policyName": "mosip data share policy",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: ' {
+        "apiRequestId": "254785",
+		"apikeyId": "254785"
+    }'

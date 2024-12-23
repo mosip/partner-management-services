@@ -1,0 +1,167 @@
+createServiceToUpdateDeviceDetail:
+   Partner_ServiceToUpdateDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_01
+      description: Create Service To Update DeviceDetail with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/device/makeAndModel/update/updateDeviceDetailResult
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slap",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcdef",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+  }'
+
+   Partner_ServiceToUpdateDeviceDetail_afterReject_InValid:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_02
+      description: Create Service To Update DeviceDetail afterReject
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Single",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-124",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcdef",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+ 	"errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+  }'
+
+   Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_DeviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_03
+      description: Create Service To Update DeviceDetail while keeping DeviceId as empty
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "Finger",
+    "id": "$REMOVE$",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+
+
+   Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceProviderId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_04
+      description: Create Service To Update DeviceDetail while keeping DeviceProvideId as empty
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "$REMOVE$",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_AUT_001"
+    }
+  ]
+}'
+
+
+   Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceSubTypeCode:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_05
+      description: Create Service To Update DeviceDetail while keeping DeviceSubTypeCode as empty
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "$REMOVE$",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceTypeCode:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_06
+      description: Create Service To Update DeviceDetail while keeping DeviceTypeCode as empty
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "$REMOVE$",
+    "id": "device-id-123",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

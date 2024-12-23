@@ -1,0 +1,72 @@
+addBioExtractors:
+   Partner_AddBioExtractors_MosipDataSharePolicy_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_addBioExtractors_01
+      description: Add BioExtractors for MOSIPDataSharePolicy for valid PolicyID
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractorsResult
+      input: '{
+	"partnerId":"MOVP-AUTOMATION",
+	"policyId":"MDSP",
+	"requesttime": "$TIMESTAMP$"
+  }'
+
+   Partner_AddBioExtractors_MosipPolicy_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_addBioExtractors_02
+      description: Add BioExtractors for MOSIP Policy for valid PolicyID
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractorsResult
+      input: '{
+	"partnerId":"MOVP-AUTOMATION",
+	"policyId":"$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      
+   Partner_AddBioExtractors_invalid_policyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_addBioExtractors_03
+      description: Add BioExtractors for invalid PolicyID
+      role: partner
+      restMethod: post
+      inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: partner/error
+      input: '{
+  "partnerId":"MOVP-AUTOMATION",
+  "policyId":"abcd",
+  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_061"
+    }
+  ]
+}'
+
+   Partner_AddBioExtractors_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_addBioExtractors_04
+      description: Add BioExtractors for invalid PartnerID
+      role: partner
+      restMethod: post
+      inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: partner/error
+      input: '{
+  "partnerId":"abcd",
+  "policyId":"MDSP",
+  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_061"
+    }
+  ]
+}'    

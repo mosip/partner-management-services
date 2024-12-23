@@ -1,0 +1,12 @@
+{
+  "response": {
+    "data": [
+     {{#each data}}
+      {
+        "active": "{{active}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ]
+  }
+}

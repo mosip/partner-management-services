@@ -1,0 +1,15 @@
+UploadPartnerCert:
+   Partner_UploadCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadPartnerCert_01
+      description: Upload Partner certificate for FTP Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/FtpPartner/UploadCert/uploadCert
+      outputTemplate: partner/FtpPartner/UploadCert/uploadCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'   

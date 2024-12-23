@@ -1,0 +1,107 @@
+UpdatePolicyAgainstApiKey:
+   Partner_UpdatePolicyAgainstApiKey_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_01
+      description: Update Policy Against ApiKey with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKeyResult
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_02
+      description: Update Policy Against ApiKey with invalid PartnerId
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "asgfdg",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50"
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_apiKey:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_03
+      description: Update Policy Against ApiKey with invalid ApiKey
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "asvbgn",
+   "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50"
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_OldPolicyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_04
+      description: Update Policy Against ApiKey with invalid OldPolicyId
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "asfbgt",
+   "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_50"
+    }
+  ]
+}'
+   Partner_UpdatePolicyAgainstApiKey_invalid_newPolicyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
+      uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_05
+      description: Update Policy Against ApiKey with invalid NewPolicyId
+      role: partner
+      restMethod: put
+      inputTemplate: partner/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+   "oldPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "newPolicyID": "INVALID",
+   "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_014"
+    }
+  ]
+}'

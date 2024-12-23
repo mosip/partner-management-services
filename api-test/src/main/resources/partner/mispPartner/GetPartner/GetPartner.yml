@@ -1,0 +1,30 @@
+getPartnerCert:
+   Partner_GetPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_01
+      description: Retrieve Misp Partner details
+      role: partner
+      restMethod: get
+      inputTemplate: partner/mispPartner/GetPartner/getPartner
+      outputTemplate: partner/mispPartner/GetPartner/getPartnerResult
+      input: '{
+	"partnerId": "MISP-AUTOMATION"
+}'
+      output: '  {
+ 	"partnerID": "MISP-AUTOMATION"
+  }'
+  
+   Partner_GetPartner_MISP3_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_02
+      description: Retrieve Misp Partner details with valid PartnerId
+      role: partner
+      restMethod: get
+      inputTemplate: partner/mispPartner/GetPartner/getPartner
+      outputTemplate: partner/mispPartner/GetPartner/getPartnerResult
+      input: '{
+	"partnerId": "MISP3"
+}'
+      output: '  {
+ 	"partnerID": "MISP3"
+  }'

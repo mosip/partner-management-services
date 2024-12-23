@@ -1,0 +1,731 @@
+createSearchPartner:
+   Partner_SearchPartner_type_contains_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_01
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartner_type__Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_02
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartner_type_contains_Smoke_desc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_03
+      description: Create Partner search while keeping Type parameter as Contains and filter the data in Descending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartner_type_equals_Smoke_desc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_04
+      description: Create Partner search while keeping Type parameter as Equals and filter the data in descending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartner_type_equals_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_05
+      description: Create Partner search while keeping Type parameter as Equals and filter the data in ascending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartner_type_startswith_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_06
+      description: Create Partner search while keeping Type parameter as Starts with and filter the data in ascending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartner_type_startswith_Smoke_desc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_07
+      description: Create Partner search while keeping Type parameter as Starts with and filter the data in descending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartner_columnname_id_desc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_08
+      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in descending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "startswith",
+        "value": "MOSIP.PROXY.SBI"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "id",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "isActive": true
+      }
+    ]
+   
+}'
+   Partner_SearchPartner_columnname_id_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_09
+      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in ascending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "startswith",
+        "value": "MOSIP.PROXY.SBI"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "id",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartner_columnname_address_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_10
+      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in ascending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "isActive": true
+      }
+    ]
+  
+}'
+   Partner_SearchPartner_columnname_address_desc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_11
+      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in descending order
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/search/searchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "isActive": true
+      }
+    ]
+   
+}'
+   Partner_SearchPartner_with_invalid_value_containts:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_12
+      description: Create Partner search while keeping Type parameter contains invalid value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "containts",
+        "value": "@22333sssdddfghmnjkiouyttrsx76"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_invalid_value_equals:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_13
+      description: Create Partner search while keeping Type parameter as invalid value equals
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "equals",
+        "value": "@22333sssdddfghmnjkiouyttrsx76"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_invalid_value_startswith:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_14
+      description: Create Partner search while keeping Type parameter as invalid value Starts with
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "@22333sssdddfghmnjkiouyttrsx76"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_invalid_columnName:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_15
+      description: Create Partner search while keeping ColumnName parameter as invalid value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "a@@@334455667788s",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_missing_columnName:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_16
+      description: Create Partner search while keeping ColumnName parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "$REMOVE$",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-311"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_missing_type:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_17
+      description: Create Partner search while keeping Type parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "$REMOVE$",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-312"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_invalid_sort_type:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_18
+      description: Create Partner search while keeping SortType parameter as invalid value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "dc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_missing_sort_type:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_19
+      description: Create Partner search while keeping SortType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "address",
+        "sortType": "$REMOVE$"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_invalid_sort_field:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_20
+      description: Create Partner search while keeping SortField parameter as invalid value
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "mo@@@del",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-357"
+    }
+  ]
+}'
+   Partner_SearchPartner_with_missing_sort_field:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_21
+      description: Create Partner search while keeping SortField parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/search/searchPartner
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "address",
+        "type": "startswith",
+        "value": "Bangalore"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "$REMOVE$",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'

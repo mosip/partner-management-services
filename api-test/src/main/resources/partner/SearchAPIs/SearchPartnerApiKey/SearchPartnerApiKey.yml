@@ -1,0 +1,243 @@
+SearchPartnerApiKey:
+   Partner_SearchPartnerApiKey_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_01
+      description: Create Search Partner API Key with valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKeyResult
+      input: '{
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiKey_Only_FilterCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_02
+      description: Create Search Partner API Key with Only FilterCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKeyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "policyApiKey",
+        "type": "unique",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiKey_Only_SortCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_03
+      description: Create Search Partner API Key with Only SortCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKeyResult
+      input: '{
+    "sort": [
+      {
+        "sortField": "isActive",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiKey_Only_Pagination_Criteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_04
+      description: Create Search Partner API Key with Only PaginationCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKeyResult
+      input: '{
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiKey_type_contains_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_05
+      description: Create Search Partner API Key while keeping Type parameter as contains and filter data in ascending order 
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKeyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "policyApiKey",
+        "type": "unique",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "isActive",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "1",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiKey_type_contains_invalid_pagination:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_06
+      description: Create Search Partner API Key while keeping Type parameter as contains and invalid pagination
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "policyApiKey",
+        "type": "contains",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "policyApiKey",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "0",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-313"
+    }
+  ]
+}'
+   Partner_SearchPartnerApiKey_type_contains_invalid_sortField:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_07
+      description: Create Search Partner API Key while keeping Type parameter as contains and invalid sortField
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "policyApiKey",
+        "type": "contains",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "abcd",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "0",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-357"
+    }
+  ]
+}'
+   Partner_SearchPartnerApiKey_type_contains_invalid_sortType:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_08
+      description: Create Search Partner API Key while keeping Type parameter as contains and invalid sortType
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "policyApiKey",
+        "type": "contains",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "policyApiKey",
+        "sortType": "abcd"
+      }
+    ],
+  "pageFetch": "0",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchPartnerApiKey_type_contains_invalid_columnName:
+      endPoint: /v1/partnermanager/partners/apikey/search
+      uniqueIdentifier: TC_PMS_SearchPartnerApiKey_09
+      description: Create Search Partner API Key while keeping Type parameter as contains and invalid columnName
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "abcd",
+        "type": "contains",
+        "value": "mpolicy_part_auth_api"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "policyApiKey",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "0",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310"
+    }
+  ]
+}'

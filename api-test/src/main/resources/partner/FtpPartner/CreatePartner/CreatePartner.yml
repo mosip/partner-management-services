@@ -1,0 +1,22 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_Ftp_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create PartnerSelfRegistration for FTP Partner
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FtpPartner/CreatePartner/createPartner
+      outputTemplate: partner/FtpPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "ftp@gmail.com",
+    "organizationName": "ftp",
+    "partnerId": "FTP-AUTOMATION",
+    "partnerType": "FTM_Provider",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+     "partnerId": "FTP-AUTOMATION",
+     "status": "InProgress"
+    }'

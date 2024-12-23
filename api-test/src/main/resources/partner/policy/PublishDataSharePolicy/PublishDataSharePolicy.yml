@@ -1,0 +1,86 @@
+createPublishPolicy:
+   Partner_PublishDataSharePolicy_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_01
+      description: Create Publish Data Share Policy with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
+      outputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
+        "policyGroupStatus": true,
+        "policyName": "mosip data share policy",
+        "policyDesc": "mosip data share policy",
+        "policyType": "DataShare",
+        "status": "PUBLISHED",
+        "is_Active": true,
+		"format":"extraction",
+		"attributeName":"biometrics"
+    }'
+   Partner_PublishDataSharePolicy_InValid_AlreadyPublished:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_02
+      description: Create Publish Data Share Policy with already published data
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+        "errorCode": "PMS_POL_020"
+     }
+  ]        
+}'
+   Partner_PublishDataSharePolicy_InValid_policygroupId:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_03
+      description: Create Publish Data Share Policy with invalid Policy GroupID
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "sgdasfgbv",
+		"policyId": "MDSP",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_POL_016"
+        }
+  ]        
+}'
+   Partner_PublishDataSharePolicy_InValid_policyId:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_04
+      description: Create Publish Data Share Policy with invalid PolicyID
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishDataSharePolicy/publishDataSharePolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "afgrwfg",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+  "errors": [
+    {
+        "errorCode": "PMS_POL_008"
+    }
+  ]     
+}'

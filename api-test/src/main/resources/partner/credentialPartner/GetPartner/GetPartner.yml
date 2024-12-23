@@ -1,0 +1,36 @@
+getPartnerCert:
+   Partner_GetPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_01
+      description: Retreive Partner details
+      role: partner
+      restMethod: get
+      inputTemplate: partner/credentialPartner/GetPartner/getPartner
+      outputTemplate: partner/credentialPartner/GetPartner/getPartnerResult
+      input: '{
+	"partnerId": "MOVP-AUTOMATION"
+}'
+      output: '  {
+    "partnerID": "MOVP-AUTOMATION",
+    "errors": "[]"
+  }'
+  
+   Partner_GetPartner_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_getPartnerCert_02
+      description: Retreive Partner details with invalid PartnerID
+      role: partner
+      restMethod: get
+      inputTemplate: partner/credentialPartner/GetPartner/getPartner
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "abcd"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_005"
+    }
+  ]
+}'
+  

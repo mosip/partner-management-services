@@ -1,0 +1,22 @@
+ApproveFtpChipDetail:
+   Partner_ApproveFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_ApproveFtpChipDetail_01
+      description: Update FTM Chip provider Partner while keeping ftpChipDetailID as missing
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/ftmChipDetails/approve/approveFtpChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": true,
+    "ftpChipDetailId": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

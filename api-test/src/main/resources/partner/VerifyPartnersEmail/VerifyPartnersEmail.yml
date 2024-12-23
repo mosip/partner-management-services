@@ -1,0 +1,16 @@
+VerifyPartnersEmail:
+   Partner_VerifyPartnersEmail_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_01
+      description: Update Parter email with valid data
+      role: partner
+      restMethod: put
+      inputTemplate: partner/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: partner/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "print@mosip.io",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'

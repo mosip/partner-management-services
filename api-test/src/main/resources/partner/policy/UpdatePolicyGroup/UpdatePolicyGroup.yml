@@ -1,0 +1,71 @@
+updatePolicyGroup: 
+  Partner_UpdatePolicyGroup_deactivate_All_Valid_Smoke: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_01
+    description: Update Policy Group as Deactivate with valid details
+    input: "{ \"isActive\": false, \"desc\": \"desc mosip policy group\", \"name\": \"mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: " { \"name\": \"mosip policy group\", \"desc\": \"desc mosip policy group\", \"is_Active\": false }"
+    outputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroupResult
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_All_Valid_Smoke: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_02
+    description: Update Policy Group with valid details
+    input: "{ \"isActive\": false, \"desc\": \"desc mosip policy group2\", \"name\": \"mosip policy group2\", \"policyGroupId\": \"$ID:DefinePolicyGroup_InActive_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: " { \"name\": \"mosip policy group2\", \"desc\": \"desc mosip policy group2\", \"is_Active\": false }"
+    outputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroupResult
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_activate_All_Valid_Smoke: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_03
+    description: Update Policy Group as Activate with valid details
+    input: "{ \"isActive\": true, \"desc\": \"desc mosip policy group updated\", \"name\": \"mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: " { \"name\": \"mosip policy group\", \"desc\": \"desc mosip policy group updated\", \"is_Active\": true }"
+    outputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroupResult
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_Invalid_InputParameter_policyGroupId: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_04
+    description: Update Policy Group while keeping PolicyGroupID parameter as invalid
+    input: "{ \"isActive\": true, \"desc\": \"desc mosip policy group\", \"name\": \"mosip policy group\", \"policyGroupId\": \"1234abcxyz\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: "{ \"errors\": [ { \"errorCode\": \"PMS_POL_008\", \"message\": \"Policy ID does not exist\" } ] }"
+    outputTemplate: partner/error
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_Missing_InputParameter_desc: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_05
+    description: Update Policy Group while keeping PolicyGroupID parameter as missing and filter data in descending order
+    input: "{ \"isActive\": true, \"desc\": \"$REMOVE$\", \"name\": \"mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: "{ \"errors\": [ { \"errorCode\": \"PMS_COR_001\", \"message\": \"Invalid request parameter - value is empty or null :request.desc\" } ] }"
+    outputTemplate: partner/error
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_Missing_InputParameter_name: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_06
+    description: Update Policy Group while keeping Name parameter as missing
+    input: "{ \"isActive\": true, \"desc\": \"desc mosip policy group\", \"name\": \"$REMOVE$\", \"policyGroupId\": \"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: "{ \"errors\": [ { \"errorCode\": \"PMS_COR_001\", \"message\": \"Invalid request parameter - value is empty or null :request.name\" } ] }"
+    outputTemplate: partner/error
+    restMethod: put
+    role: partner
+  Partner_UpdatePolicyGroup_Missing_InputParameter_isActive: 
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_07
+    description: Update Policy Group while keeping isActive parameter as missing
+    input: "{ \"isActive\": \"$REMOVE$\", \"desc\": \"desc mosip policy group\", \"name\": \"mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: partner/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: "{ \"errors\": [ { \"errorCode\": \"PMS_COR_003\", \"message\": \"Could not process the request\" } ] }"
+    outputTemplate: partner/error
+    restMethod: put
+    role: partner

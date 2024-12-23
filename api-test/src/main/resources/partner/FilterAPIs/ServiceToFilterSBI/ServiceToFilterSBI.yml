@@ -1,0 +1,134 @@
+ServiceToFilterSBI:
+   partner_ServiceToFilterSBI_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_01
+      description: Create ServiceToFilterSBI for Partner while keeping Type parameter as Unique
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBIResult
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "providerId",
+    "type": "unique"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   partner_ServiceToFilterSBI_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_02
+      description: Create ServiceToFilterSBI for Partner while keeping Type parameter as All
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBIResult
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "providerId",
+    "type": "all"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   partner_ServiceToFilterSBI_InValid_Empty_type:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_03
+      description: Create ServiceToFilterSBI for Partner while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/error
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "providerId",
+    "type": ""
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS-MSD-322",
+      "message": "Filter Type cannot be empty or null"
+    }
+  ]
+}'
+   partner_ServiceToFilterSBI_InValid_Empty_column:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_04
+      description: Create ServiceToFilterSBI for Partner while keeping FilterColumn parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/error
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "",
+    "type": "all"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - must not be blank :request.filters[0].columnName"
+    }
+  ]
+}'
+   partner_ServiceToFilterSBI_InValid_type_doesnt_exist:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_05
+      description: Create ServiceToFilterSBI for Partner while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/error
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "providerId",
+    "type": "asdfg"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS-MSD-324",
+      "message": "Received Filter Type not supported"
+    }
+  ]
+}'
+   partner_ServiceToFilterSBI_InValid_Column_doesnt_exist:
+      endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
+      uniqueIdentifier: TC_PMS_ServiceToFilterSBI_06
+      description: Create ServiceToFilterSBI for Partner while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
+      outputTemplate: partner/error
+      input: '{
+  "filters": [{
+    "text": "Tech-123",
+    "columnName": "asrfg",
+    "type": "all"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'

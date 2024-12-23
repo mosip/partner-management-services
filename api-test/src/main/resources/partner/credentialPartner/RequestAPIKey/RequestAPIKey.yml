@@ -1,0 +1,96 @@
+RequestAPIKeyCredentialPartner:
+   Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_01
+      description: Create Partner API Key Request for Credential Partner with valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/credentialPartner/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip data share policy",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: ' {
+    }'
+   Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_02
+      description: Create Partner API Key Request for Credential Partner with valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/credentialPartner/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "mosip policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: ' {
+    }'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_03
+      description: Create Partner API Key Request for Credential Partner with invalid Policy Name
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_04
+      description: Create Partner API Key Request for Credential Partner with invalid use case description
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_05
+      description: Create Partner API Key Request for Credential Partner with invalid Policy Name use case description
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosi182736@636",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'

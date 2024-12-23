@@ -1,0 +1,30 @@
+uploadCert:
+   Partner_UploadCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCert_01
+      description: Upload valid CA certificate for Misp Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/mispPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/mispPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'  
+   Partner_UploadSUBCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCert_02
+      description: Upload valid SUBCA certificate for Misp Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/mispPartner/UploadCertificate/uploadSUBCACertificate
+      outputTemplate: partner/mispPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'  
+      

@@ -1,0 +1,40 @@
+UpdateFtpChipDetail:
+   Partner_UpdateFtpChipDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_01
+      description: Update FTP Chip detail for Partner with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/ftmChipDetails/update/updateFtpChipDetail
+      outputTemplate: partner/device/ftmChipDetails/update/updateFtpChipDetailResult
+      input: '{
+    "ftpChipDetailId": "$ID:CreateFTPChipDetail_All_Valid_Smoke_sid_id$",
+    "make": "Make123Updated",
+    "model": "MODEL-001",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+
+   Partner_UpdateFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_02
+      description: Update FTP Chip detail for Partner while keeping ftpChipDetailId parameter as missing
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/ftmChipDetails/update/updateFtpChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "ftpChipDetailId": "$REMOVE$",
+    "make": "Make123",
+    "model": "MODEL-001",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

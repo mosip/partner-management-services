@@ -1,0 +1,17 @@
+RequestAPIKeyForAuthPartner:
+   Partner_SubmitPartnerApiKeyRequest_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/partner-111997/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
+      description: Create API Key request for Auth Partner
+      role: partner
+      restMethod: post 
+      inputTemplate: partner/GenerateApiKeyForApprovedPolicies/RequestAPIKey/requestApiKey
+      outputTemplate: partner/GenerateApiKeyForApprovedPolicies/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "Need to submit the payment",
+        "requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "message": "Policy mapping request submitted successfully."
+    }'

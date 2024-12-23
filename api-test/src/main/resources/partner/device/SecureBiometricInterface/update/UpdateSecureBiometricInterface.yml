@@ -1,0 +1,71 @@
+createUpdateSecureBiometricInterface:
+   Partner_UpdateSecureBiometricInterface_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_01
+      description: Create UpdateSecureBiometricInterface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterfaceResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+	"id": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-31T07:00:13.375Z",
+    "swVersion": "MO.TD.100",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_UpdateSecureBiometricInterface_AfterReject_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
+      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterfaceResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+	"id": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-31T07:00:13.375Z",
+    "swVersion": "MO.TD.200",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "id": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
+    }'
+   Partner_UpdateSecureBiometricInterface_Missing_InputParameter_Id:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_03
+      description: Create UpdateSecureBiometricInterface while keeping parameter ID as empty
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "deviceDetailId": "device-id-123",
+	"id": "$REMOVE$",
+    "isActive": true,
+    "isItForRegistrationDevice": true,
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2020-12-31T07:00:13.375Z",
+    "swVersion": "MO.TD.011",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

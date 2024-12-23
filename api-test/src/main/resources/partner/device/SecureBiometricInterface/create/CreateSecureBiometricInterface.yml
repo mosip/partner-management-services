@@ -1,0 +1,156 @@
+createSaveSecureBiometricInterface:
+   Partner_SaveSecureBiometricInterface_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_01
+      description: Create SaveSecureBiometricInterface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterfaceResult
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.01",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech-123"
+  }'
+      output: '{
+    }'
+   Partner_SaveSecureBiometricInterface_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_02
+      description: Create SaveSecureBiometricInterface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterfaceResult
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.02",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech-123"
+  }'
+      output: '{
+    }'
+    
+   Partner_SaveSecureBiometricInterface_TO_Map_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_03
+      description: Create SaveSecureBiometricInterface To Map sId
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterfaceResult
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.04",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech-123"
+  }'
+      output: '{
+    }'
+    
+   Partner_SaveSecureBiometricInterface_dublicate_swVersion_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_04
+      description: Create SaveSecureBiometricInterface with duplicate swVersion
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.01",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech-123"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_512"
+    }
+  ]
+    }'
+    
+   Partner_SaveSecureBiometricInterface_Missing_swVersion_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_05
+      description: Create SaveSecureBiometricInterface while keeping parameter swVersion as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech-123"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+    }'
+
+    
+   Partner_SaveSecureBiometricInterface_Missing_partnerId_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_06
+      description: Create SaveSecureBiometricInterface while keeping parameter PartnerId as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.01",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "$REMOVE$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+    }'
+    
+   Partner_SaveSecureBiometricInterface_SpaceVal_partnerId_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_07
+      description: Create SaveSecureBiometricInterface while keeping parameter SpaceVal as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/SecureBiometricInterface/create/createSecureBiometricInterface
+      outputTemplate: partner/error
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2222-12-30T08:23:57.986Z",
+    "swVersion": "MO.TD.01",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "Tech- 123"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_002"
+    }
+  ]
+    }'

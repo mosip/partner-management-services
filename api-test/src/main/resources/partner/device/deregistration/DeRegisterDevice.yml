@@ -1,0 +1,18 @@
+createDeRegisterDevice:
+   Partner_DeRegisterDevice_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/registereddevices/deregister
+      uniqueIdentifier: TC_PMS_createDeRegisterDevice_01
+      description: Create Device Partner Registration with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/deregistration/deRegisterDevice
+      outputTemplate: partner/device/deregistration/deRegisterDeviceResult
+      input: '{
+    "device": "ewoJImRldmljZUNvZGUiOiAiZWRmNjRkYTYtYzA1My00NjdkLWFiN2YtODFjNTcwNWM1MTQ3IiwKCSJlbnYiOiAiRGV2ZWxvcGVyIgp9",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+

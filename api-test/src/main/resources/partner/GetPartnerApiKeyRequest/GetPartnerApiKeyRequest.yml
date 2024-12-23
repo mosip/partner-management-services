@@ -1,0 +1,19 @@
+GetPartnerApiKeyRequest:
+   Partner_GetPartnerApiKeyRequest_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/request
+      uniqueIdentifier: TC_PMS_GetPartnerApiKeyRequest_01
+      description: Retrieve ApiKeyRequests for Partner while keeping invalid PartnerId
+      role: partner
+      restMethod: get
+      inputTemplate: partner/GetPartnerApiKeyRequest/getPartnerApiKeyRequest
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "fqgfg"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_006"
+    }
+  ]      
+}'
