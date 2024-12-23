@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class DeactivateFtmRequestDto {
 
-    @Schema(description = "Unique identifier for the FTM", example = "ftm456")
-    private String ftmId;
+    @Schema(description = "Status for deactivate FTM", example = "De-Activate")
+    private String status;
 }

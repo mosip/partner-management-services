@@ -33,6 +33,7 @@ import io.mosip.testrig.apirig.utils.KeycloakUserManager;
 import io.mosip.testrig.apirig.utils.MispPartnerAndLicenseKeyGeneration;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.utils.PartnerRegistration;
 import io.mosip.testrig.apirig.utils.SkipTestCaseHandler;
 
@@ -88,7 +89,7 @@ public class MosipTestRunner {
 			KeycloakUserManager.closeKeycloakInstance();
 
 			startTestRunner();
-
+			PMSRevampUtil.DbCleanRevamp();
 		} catch (Exception e) {
 			LOGGER.error("Exception " + e.getMessage());
 		}
@@ -112,18 +113,7 @@ public class MosipTestRunner {
 			AuthTestsUtil.removeOldMosipTempTestResource();
 		}
 	
-		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
-		DBManager.executeDBQueries(PMSRevampConfigManger.getPMSDbUrl(), PMSRevampConfigManger.getPMSDbUser(),
-				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
-
-		DBManager.executeDBQueries(PMSRevampConfigManger.getKMDbUrl(), PMSRevampConfigManger.getKMDbUser(),
-				PMSRevampConfigManger.getKMDbPass(), PMSRevampConfigManger.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
-
-		DBManager.executeDBQueries(PMSRevampConfigManger.getIdaDbUrl(), PMSRevampConfigManger.getIdaDbUser(),
-				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getIdaDbSchema(),
-				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
+		PMSRevampUtil.DbCleanRevamp();
 
 		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
 		BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);

@@ -14,7 +14,7 @@ GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_without_auth:
       endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
       description: Fetching all the API Key available for Auth Partner without token
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
@@ -31,7 +31,7 @@ GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_invalid_auth:
       endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
       description: Fetching all the API Key available for Auth Partner with invalid token
-      role: regproc
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner

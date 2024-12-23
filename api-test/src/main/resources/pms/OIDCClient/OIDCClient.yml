@@ -102,7 +102,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_auth:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
-      role: regproc
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient

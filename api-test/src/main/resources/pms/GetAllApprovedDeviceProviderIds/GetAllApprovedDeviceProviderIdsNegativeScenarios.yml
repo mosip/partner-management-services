@@ -3,7 +3,7 @@ GetAllApprovedDeviceProviderIdsNegativeScenarios:
       endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_01
       description: Retrieve All Approved Device ProviderIds Without Authentication
-      role: batch
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
       outputTemplate: pms/error
@@ -20,7 +20,7 @@ GetAllApprovedDeviceProviderIdsNegativeScenarios:
       endPoint: /v1/partnermanager/partners/getAllApprovedDeviceProviderIds
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_02
       description: Retrieve All Approved Device ProviderIds with invalid access token
-      role: regproc
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
       outputTemplate: pms/error

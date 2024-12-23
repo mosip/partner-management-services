@@ -2,14 +2,13 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +35,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -357,18 +355,62 @@ public class PartnerServiceController {
     }
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
-	@RequestMapping(value = "/{partnerId}/original-partner-certificate", method = RequestMethod.GET)
-	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
+	@GetMapping(value = "/{partnerId}/certificate-data")
+	@Operation(summary = "Service to get original partner certificate data", description = "Service to get original partner certificate data")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		return partnerService.getOriginalPartnerCertificate(requestDto);
+		return partnerService.getPartnerCertificateData(requestDto);
 	}
-	
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicyrequests())")
+	@GetMapping(value = "/policy-requests")
+	@Operation(summary = "Get all policies", description = "fetch all policies")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
+		return partnerService.getPolicyRequests();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
+	@GetMapping(value = "/partner-certificates-details")
+	@Operation(summary = "Get partner certificates", description = "fetch partner certificates")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
+		return  partnerService.getPartnerCertificatesDetails();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv4())")
+	@GetMapping(value = "/v4")
+	@Operation(summary = "Get approved partners", description = "Fetch approved partners")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(
+			@RequestParam(name = "status") String status,
+			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
+			@RequestParam(name = "partnerType", required = false) String partnerType) {
+
+		return partnerService.getPartnersV4(status, policyGroupAvailable, partnerType);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
+	@GetMapping(value = "/auth-partner-api-keys")
+	@Operation(summary = "Get all api keys for auth partners", description = "fetch all api keys for auth partners")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
+		return partnerService.getAuthPartnerApiKeys();
+	}
+
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")

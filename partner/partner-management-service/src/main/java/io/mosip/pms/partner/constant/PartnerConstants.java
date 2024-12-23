@@ -41,4 +41,6 @@ public final class PartnerConstants {
 	public static final String DESC = "desc";
 
 	public static final String PARTNER_ADMIN = "PARTNER_ADMIN";
+
+	public static final String DEACTIVATE = "De-Activate";
 }

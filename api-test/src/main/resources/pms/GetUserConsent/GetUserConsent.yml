@@ -1,6 +1,8 @@
 GetUserConsent:
    Pms_GetUserConsent_allValid_smoke:
       endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_01
+      description: Retrieve the PMS GetUserConsent for All Valid Smoke
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -9,6 +11,48 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-      "userId": "pms-111999"
+       "userId": "pms-111999"
 }'
+   Pms_GetUserConsent_Get_consent_status_without_access_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_02
+      description: Retrieve the PMS GetUserConsent Status Without an Access Token and Expecting an Error in The Response
+      role: batch
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+        "errorCode": "KER-ATH-401",
+        "message": "Authentication Failed"
+}'
+   Pms_GetUserConsent_Get_consent_status_admin_user_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_03
+      description: Retrieve the PMS GetUserConsent Status for Admin User and Expecting an Error in The Response
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+        "errorCode": "PMS_CERTIFICATE_ERROR_002",
+        "message":  "User Id does not exists"
+}'
+   Pms_GetUserConsent_Get_consent_status_invalid_auth_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_04
+      description: Retrieve PMS GetUserConsent Status with an Invalid Auth Token an Error in The Response
+      role: ftm
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+        "errorCode": "KER-ATH-403",
+        "message": "Forbidden"
+}' 
 

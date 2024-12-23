@@ -1,8 +1,9 @@
 package io.mosip.pms.policy.test.service;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
@@ -1316,4 +1317,162 @@ public class PolicyServiceTest {
 
 		service.deactivatePolicy("policy123");
 	}
+
+	@Test
+	public void deactivatePolicyGroupTestSuccess() {
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(0L);
+		mockPolicyCountDto.setDraftPoliciesCount(0L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+		when(policyGroupRepository.save(any(PolicyGroup.class))).thenReturn(mockPolicyGroup);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertFalse(response.getResponse().getIsActive());
+		assertEquals(policyGroupId, response.getResponse().getPolicyGroupId());
+
+		verify(policyGroupRepository).save(any(PolicyGroup.class));
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestNullPolicyGroupId() {
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(null);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestEmptyPolicyGroupId() {
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup("");
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestInvalidPolicyGroup() {
+		String policyGroupId = "group123";
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_AlreadyDeactivated() {
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(false);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_ActivePoliciesExist() {
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(2L);
+		mockPolicyCountDto.setDraftPoliciesCount(0L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_DraftPoliciesExist() {
+		// Arrange
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(0L);
+		mockPolicyCountDto.setDraftPoliciesCount(3L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_ActiveAndDraftPoliciesExist() {
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(2L);
+		mockPolicyCountDto.setDraftPoliciesCount(1L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
 }

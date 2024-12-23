@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 @Repository("PolicySummaryRepository")
 public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEntity, String> {
 
-    @Query(value = "SELECT new PolicySummaryEntity(" +
+    String POLICY_SUMMARY_QUERY = "SELECT new PolicySummaryEntity(" +
             "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
             "CASE " +
             "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
             "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +
             "WHEN (p.schema IS NOT NULL AND p.isActive = false) THEN 'deactivated' " +
-            "END, " +
+            "END as status, " +
             "p.crDtimes) " +
             "FROM AuthPolicy p " +
             "LEFT JOIN p.policyGroup pg " +
@@ -29,9 +29,32 @@ public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEnt
             "AND (:status IS NULL OR " +
             "(:status = 'draft' AND p.schema IS NULL AND p.isActive = false) " +
             "OR (:status = 'deactivated' AND p.schema IS NOT NULL AND p.isActive = false) " +
-            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))"
-    )
+            "OR (:status = 'activated' AND p.schema IS NOT NULL AND p.isActive = true))";
+
+    @Query(POLICY_SUMMARY_QUERY)
     Page<PolicySummaryEntity> getSummaryOfAllPolicies(
+            @Param("policyId") String policyId,
+            @Param("policyType") String policyType,
+            @Param("policyName") String policyName,
+            @Param("policyDescription") String policyDescription,
+            @Param("policyGroupName") String policyGroupName,
+            @Param("status") String status,
+            Pageable pageable
+    );
+
+    @Query(POLICY_SUMMARY_QUERY + " ORDER BY status ASC")
+    Page<PolicySummaryEntity> getSummaryOfAllPoliciesByStatusAsc(
+            @Param("policyId") String policyId,
+            @Param("policyType") String policyType,
+            @Param("policyName") String policyName,
+            @Param("policyDescription") String policyDescription,
+            @Param("policyGroupName") String policyGroupName,
+            @Param("status") String status,
+            Pageable pageable
+    );
+
+    @Query(POLICY_SUMMARY_QUERY + " ORDER BY status DESC")
+    Page<PolicySummaryEntity> getSummaryOfAllPoliciesByStatusDesc(
             @Param("policyId") String policyId,
             @Param("policyType") String policyType,
             @Param("policyName") String policyName,

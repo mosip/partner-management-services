@@ -3,7 +3,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/deactivate-device
       uniqueIdentifier: TC_PMS_DeactivateDevice_01
       description: Deactivate Device without Partner authentication 
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
