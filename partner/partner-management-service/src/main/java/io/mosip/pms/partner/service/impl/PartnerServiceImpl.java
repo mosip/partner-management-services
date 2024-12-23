@@ -1882,12 +1882,12 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			responseWrapper.setResponse(partnerDtoV4List);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getApprovedPartners method of PartnerServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getPartnersV4 method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getApprovedPartners method of PartnerServiceImpl - " + ex.getMessage());
+					"In getPartnersV4 method of PartnerServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.PARTNERS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.PARTNERS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));

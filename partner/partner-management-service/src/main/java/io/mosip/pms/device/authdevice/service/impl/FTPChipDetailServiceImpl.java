@@ -653,15 +653,15 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			partnerHelper.populateFtmCertificateExpiryState(responseObject);
 			responseWrapper.setResponse(responseObject);
 		} catch (ApiAccessibleException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getFtmCertificateData method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getFtmCertificateData method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+					"In getFtmCertificateData method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE.getErrorCode();
 			String errorMessage = ErrorCode.UNABLE_TO_DOWNLOAD_ORIGINAL_FTM_CERTIFICATE.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
