@@ -147,7 +147,7 @@ DeactivateDeviceNegativeScenarios:
       inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios
       outputTemplate: pms/error
       input: '{
-      "id": "mosip.pms.deactivate.device.post",
+      "id": "mosip.pms.deactivate.device.patch",
       "version": "99",
       "requesttime": "$TIMESTAMP$",
       "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
@@ -169,7 +169,7 @@ DeactivateDeviceNegativeScenarios:
       inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios
       outputTemplate: pms/error
       input: '{
-      "id": "mosip.pms.deactivate.device.post",
+      "id": "mosip.pms.deactivate.device.patch",
       "version": "$REMOVE$",
       "requesttime": "$TIMESTAMP$",
       "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
