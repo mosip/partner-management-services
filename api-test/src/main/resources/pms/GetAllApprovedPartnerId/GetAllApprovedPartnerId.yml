@@ -1,6 +1,6 @@
 GetAllApprovedPartnerId:
    Pms_GetAllApprovedPartnerId_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/approved-partner-ids-with-policy-groups
+      endPoint: /v1/partnermanager/partners/v4?status=approved&policyGroupAvailable=true
       description: Fetching all approved Partner Id
       role: partnerrevamp
       restMethod: get
@@ -9,9 +9,5 @@ GetAllApprovedPartnerId:
       input: '{
 }'
       output: '{
-  "errors": [
-    {
-      "errorCode": "PMS_CERTIFICATE_ERROR_002"
-    }
-  ]
+
 }'

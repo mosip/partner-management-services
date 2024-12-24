@@ -1,6 +1,6 @@
 SaveDeviceDetails:
    Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
-      endPoint: /v1/partnermanager/devicedetail
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -15,6 +15,8 @@ SaveDeviceDetails:
     "approvalStatus": "approved",
     "crBy": "user456",
     "crDtimes": "$TIMESTAMPL$",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
     "isActive": true
 }'
       output: '{
@@ -22,7 +24,7 @@ SaveDeviceDetails:
 }'
 
    Pms_SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid:
-      endPoint: /v1/partnermanager/devicedetail
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -37,6 +39,8 @@ SaveDeviceDetails:
     "approvalStatus": "approved",
     "crBy": "user456",
     "crDtimes": "$TIMESTAMPL$",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
     "isActive": true
 }'
       output: '{
