@@ -68,6 +68,7 @@ import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
 import io.mosip.pms.device.constant.SecureBiometricInterfaceConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
@@ -559,6 +560,9 @@ public class SBIServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateSbiRequestDto requestDto = new DeactivateSbiRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -584,7 +588,7 @@ public class SBIServiceTest {
 		when(deviceDetailRepository.findApprovedDevicesBySbiId(anyString())).thenReturn(deviceDetailList);
 		when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
 		when(sbiRepository.save(any())).thenReturn(sbi);
-		secureBiometricInterfaceService.deactivateSbi("12345");
+		secureBiometricInterfaceService.deactivateSbi("12345", requestDto);
 	}
 
 	@Test
@@ -595,6 +599,9 @@ public class SBIServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateSbiRequestDto requestDto = new DeactivateSbiRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -603,7 +610,7 @@ public class SBIServiceTest {
 		partner.setIsActive(true);
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		secureBiometricInterfaceService.deactivateSbi(null);
+		secureBiometricInterfaceService.deactivateSbi(null, requestDto);
 	}
 
 	@Test
@@ -614,9 +621,12 @@ public class SBIServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
+		DeactivateSbiRequestDto requestDto = new DeactivateSbiRequestDto();
+		requestDto.setStatus("De-Activate");
+
 		List<Partner> partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		secureBiometricInterfaceService.deactivateSbi("23456");
+		secureBiometricInterfaceService.deactivateSbi("23456", requestDto);
 	}
 
 	@Test

@@ -107,5 +107,7 @@ public class DeviceConstant {
 	public static final String GET_CERTIFICATE_API_IS_CALLED = "GET Certificate API called::";
 	public static final String SUCCESSFUL_UPLOAD="Upload %s - Success";
 	public static final String SUCCESSFUL_DOWNLOAD="Download %s - Success";
+	public static final String APPROVED = "approved";
+	public static final String REJECTED = "rejected";
 
 }

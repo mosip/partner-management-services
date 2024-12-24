@@ -258,6 +258,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.auth.partner.api.keys.get}")
 	private String getAuthPartnerApiKeysId;
 
+	@Value("${mosip.pms.api.id.partners.v4.get}")
+	private String getPartnersV4Id;
+
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -1792,41 +1795,40 @@ public class PartnerServiceImpl implements PartnerService {
 			if (!partnerList.isEmpty()) {
 				List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
 				for (Partner partner : partnerList) {
-					if (partnerHelper.checkIfPartnerIsApprovedAuthPartner(partner)) {
-						partnerHelper.validatePartnerId(partner, userId);
-						partnerHelper.validatePolicyGroupId(partner, userId);
-						List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
-						if (!apiKeyRequestsList.isEmpty()) {
-							for (PartnerPolicy partnerPolicy : apiKeyRequestsList) {
-								Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
-								if (!authPolicy.isPresent()) {
-									LOGGER.info("Policy does not exists.");
-									throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-											ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-								}
-								PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-								if (Objects.isNull(policyGroup)) {
-									LOGGER.info("Policy Group is null or empty");
-									throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-											ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-								}
-								ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-								apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
-								if (partnerPolicy.getIsActive()) {
-									apiKeyResponseDto.setStatus(ACTIVE);
-								} else {
-									apiKeyResponseDto.setStatus(INACTIVE);
-								}
-								apiKeyResponseDto.setPartnerId(partner.getId());
-								apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
-								apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
-								apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
-								apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
-								apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
-								apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
-								apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
-								apiKeyResponseDtoList.add(apiKeyResponseDto);
+					partnerHelper.validateIfPartnerIsApprovedAuthPartner(partner);
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerHelper.validatePolicyGroupId(partner, userId);
+					List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
+					if (!apiKeyRequestsList.isEmpty()) {
+						for (PartnerPolicy partnerPolicy : apiKeyRequestsList) {
+							Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
+							if (!authPolicy.isPresent()) {
+								LOGGER.info("Policy does not exists.");
+								throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
+										ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
 							}
+							PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
+							if (Objects.isNull(policyGroup)) {
+								LOGGER.info("Policy Group is null or empty");
+								throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+										ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
+							}
+							ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
+							apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
+							if (partnerPolicy.getIsActive()) {
+								apiKeyResponseDto.setStatus(ACTIVE);
+							} else {
+								apiKeyResponseDto.setStatus(INACTIVE);
+							}
+							apiKeyResponseDto.setPartnerId(partner.getId());
+							apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
+							apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
+							apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
+							apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
+							apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
+							apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
+							apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
+							apiKeyResponseDtoList.add(apiKeyResponseDto);
 						}
 					}
 				}
@@ -1848,6 +1850,49 @@ public class PartnerServiceImpl implements PartnerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAuthPartnerApiKeysId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType) {
+		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			List<PartnerDtoV4> partnerDtoV4List = new ArrayList<>();
+			List<Partner> partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
+			for (Partner partner : partners) {
+				PartnerDtoV4 partnerDtoV4 = new PartnerDtoV4();
+				partnerHelper.validatePartnerId(partner, userId);
+				partnerDtoV4.setPartnerId(partner.getId());
+				partnerDtoV4.setPartnerType(partner.getPartnerTypeCode());
+				if (Boolean.TRUE.equals(policyGroupAvailable)) {
+					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
+					partnerDtoV4.setPolicyGroupId(partner.getPolicyGroupId());
+					partnerDtoV4.setPolicyGroupName(policyGroup.getName());
+					partnerDtoV4.setPolicyGroupDescription(policyGroup.getDesc());
+				}
+				partnerDtoV4List.add(partnerDtoV4);
+			}
+			responseWrapper.setResponse(partnerDtoV4List);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getApprovedPartners method of PartnerServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getApprovedPartners method of PartnerServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.PARTNERS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.PARTNERS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnersV4Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

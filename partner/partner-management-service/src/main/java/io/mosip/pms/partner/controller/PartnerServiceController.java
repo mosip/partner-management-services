@@ -2,17 +2,13 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.ApiKeyResponseDto;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
+import io.mosip.pms.partner.dto.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,7 +35,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -390,6 +385,20 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
 		return  partnerService.getPartnerCertificatesDetails();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv4())")
+	@GetMapping(value = "/v4")
+	@Operation(summary = "Get approved partners", description = "Fetch approved partners")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(
+			@RequestParam(name = "status") String status,
+			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
+			@RequestParam(name = "partnerType", required = false) String partnerType) {
+
+		return partnerService.getPartnersV4(status, policyGroupAvailable, partnerType);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
