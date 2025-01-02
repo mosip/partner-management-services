@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PartnerPolicyRequestFilterDto {
     private String partnerId;
-    private String partnerTypeCode;
+    private String partnerType;
     private String requestDetails;
     private String organizationName;
     private String policyId;

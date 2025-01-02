@@ -1196,9 +1196,15 @@ public class PolicyManagementService {
 						ErrorMessages.POLICY_DOES_NOT_EXIST.getErrorMessage());
 			}
 			if (!policy.get().getIsActive()){
-				logger.error("The policy is already deactivated for policy Id:", policyId);
-				throw new PolicyManagementServiceException(ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorCode(),
-						ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorMessage());
+				if (policy.get().getPolicySchema() == null) {
+					logger.error("The selected policy is not in an activated status:", policyId);
+					throw new PolicyManagementServiceException(ErrorMessages.POLICY_NOT_APPROVED.getErrorCode(),
+							ErrorMessages.POLICY_NOT_APPROVED.getErrorMessage());
+				} else {
+					logger.error("The policy is already deactivated for policy Id:", policyId);
+					throw new PolicyManagementServiceException(ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorCode(),
+							ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorMessage());
+				}
 			}
 			List<PartnerPolicyRequest> approvedPartnerPolicyRequest = partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(policyId, APPROVED);
 			if (!approvedPartnerPolicyRequest.isEmpty()){
