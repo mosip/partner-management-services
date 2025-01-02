@@ -1,6 +1,6 @@
-GetAllApprovedPartnerId:
-   Pms_GetAllApprovedPartnerId_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/v4?status=approved&policyGroupAvailable=true
+GetAllApprovedAuthPartnerId:
+   Pms_GetAllApprovedAuthPartnerId_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/v4?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
       description: Fetching all approved Partner Id
       role: partnerrevamp
       restMethod: get
