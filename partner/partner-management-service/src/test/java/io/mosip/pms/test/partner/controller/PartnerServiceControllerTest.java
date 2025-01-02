@@ -17,6 +17,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
+import io.mosip.pms.partner.dto.PartnerDtoV4;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -631,5 +632,43 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/auth-partner-api-keys")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getPartnersV4Test() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV4 partnerDto = new PartnerDtoV4();
+
+        List<PartnerDtoV4> partnerDtoList = new ArrayList<>();
+        partnerDtoList.add(partnerDto);
+        responseWrapper.setResponse(partnerDtoList);
+
+        Mockito.when(partnerService.getPartnersV4(Mockito.anyString(), Mockito.any(), Mockito.any()))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v4")
+                        .param("status", "approved")
+                        .param("policyGroupAvailable", "true")
+                        .param("partnerType", "Auth_Partner"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getPartnersV4Test2() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV4 partnerDto = new PartnerDtoV4();
+
+        List<PartnerDtoV4> partnerDtoList = new ArrayList<>();
+        partnerDtoList.add(partnerDto);
+        responseWrapper.setResponse(partnerDtoList);
+
+        Mockito.when(partnerService.getPartnersV4(Mockito.anyString(), Mockito.any(), Mockito.any()))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v4")
+                        .param("status", "approved")
+                        .param("partnerType", "Device_Provider"))
+                .andExpect(status().isOk());
+    }
 
 }
