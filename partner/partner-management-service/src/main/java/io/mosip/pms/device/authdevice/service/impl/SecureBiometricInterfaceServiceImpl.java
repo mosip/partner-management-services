@@ -803,7 +803,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			if (deviceId != null) {
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
 				deleteDeviceDetail(deviceId);
 			}
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -811,7 +811,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			if (deviceId != null) {
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
 				deleteDeviceDetail(deviceId);
 			}
 			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
@@ -904,14 +904,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
-			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
-				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-				if (deviceDetail.isPresent()) {
-					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
-					if (deviceDetailSBIList.isEmpty()) {
-						deviceDetailRepository.deleteById(deviceDetailId);
-						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
-					}
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+			if (deviceDetail.isPresent()) {
+				List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+				if (deviceDetailSBIList.isEmpty()) {
+					deviceDetailRepository.deleteById(deviceDetailId);
+					LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
 				}
 			}
 		} catch (Exception e) {
