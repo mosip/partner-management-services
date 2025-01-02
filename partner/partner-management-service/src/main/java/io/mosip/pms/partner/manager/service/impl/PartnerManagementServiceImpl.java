@@ -1031,7 +1031,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 			}
 			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CaCertTypeListResponseDto.class);
-			pageResponseV2Dto.setPageNo((int) ((long) responseObject.getPageNumber() - 1));
+			pageResponseV2Dto.setPageNo((responseObject.getPageNumber() - 1));
 			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
 			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
