@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -13,6 +15,7 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.constant.PartnerConstants;
@@ -65,6 +68,7 @@ import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateFtmRequestDto;
 import io.mosip.pms.device.request.dto.FtpCertificateRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
 import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
@@ -138,15 +142,18 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	@Value("${pms.certs.datashare.policyId}")
 	private String policyId;
 
-	@Value("${mosip.pms.api.id.deactivate.ftm.post}")
-	private  String postDeactivateFtm;
+	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
+	private  String patchDeactivateFtm;
 
 	@Value("${mosip.pms.api.id.original.ftm.certificate.get}")
 	private  String getOriginalFtmCertificateId;
 
 	@Value("${mosip.pms.api.id.partners.ftm.chip.details.get}")
 	private  String getPartnersFtmChipDetailsId;
-	
+
+	@Value("${mosip.pms.api.id.ftm.chip.details.get}")
+	private String getFtmChipDetailsId;
+
 	@Autowired
 	private WebSubPublisher webSubPublisher;
 	
@@ -412,11 +419,12 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorMessage());		
 	
 		}
+		FtpCertDownloadResponeDto responseObject = null;
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", chipDetail.get().getCertificateAlias());
 		Map<String, Object> getApiResponse = restUtil.getApi(environment.getProperty("pmp.partner.certificaticate.get.rest.uri"), pathsegments, Map.class);
-		FtpCertDownloadResponeDto responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), FtpCertDownloadResponeDto.class);
-		if(responseObject == null && getApiResponse.containsKey(ERRORS)) {
+
+		if(getApiResponse.get("response") == null && getApiResponse.containsKey(ERRORS)) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) getApiResponse.get(ERRORS);
 			if(!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
@@ -425,11 +433,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
-		if(responseObject == null) {
+		if(getApiResponse.get("response") == null) {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
 		}
-
+		responseObject = mapper.readValue(mapper.writeValueAsString(getApiResponse.get("response")), FtpCertDownloadResponeDto.class);
 		return responseObject;
 	}
 
@@ -540,9 +548,15 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId) {
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(String ftmId, DeactivateFtmRequestDto requestDto) {
 		ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
@@ -594,13 +608,13 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			String errorMessage = ErrorCode.DEACTIVATE_FTM_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(postDeactivateFtm);
+		responseWrapper.setId(patchDeactivateFtm);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
 
 	@Override
-	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getOriginalFtmCertificate(String ftmId) {
+	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(String ftmId) {
 		ResponseWrapperV2<FtmCertificateDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
@@ -638,6 +652,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			responseObject = partnerHelper.getCertificate(ftm.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
 			partnerHelper.populateFtmCertificateExpiryState(responseObject);
 			responseWrapper.setResponse(responseObject);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getOriginalFtmCertificate method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -709,6 +726,73 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		//Default
 		return ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
 				filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+	}
+
+	@Override
+	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail() {
+		ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
+			if (!partnerList.isEmpty()) {
+				for (Partner partner : partnerList) {
+					if (partnerHelper.checkIfPartnerIsFtmPartner(partner)) {
+						partnerHelper.validatePartnerId(partner, userId);
+						List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository.findByProviderId(partner.getId());
+						if(!ftpChipDetailList.isEmpty()) {
+							for(FTPChipDetail ftpChipDetail: ftpChipDetailList) {
+								FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
+								// Get certificate data if available
+								if (ftpChipDetail.getCertificateAlias() != null) {
+									ftmChipDetailsDto.setIsCertificateAvailable(true);
+									FtpChipCertDownloadRequestDto requestDto = new FtpChipCertDownloadRequestDto();
+									requestDto.setFtpChipDetailId(ftpChipDetail.getFtpChipDetailId());
+									FtpCertDownloadResponeDto ftpCertDownloadResponeDto = getCertificate(requestDto);
+									X509Certificate cert = MultiPartnerUtil.decodeCertificateData(ftpCertDownloadResponeDto.getCertificateData());
+
+									ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore());
+									ftmChipDetailsDto.setCertificateExpiryDateTime(cert.getNotAfter());
+
+									// Check the certificate expiration status
+									LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+									LocalDateTime certExpiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+									ftmChipDetailsDto.setIsCertificateExpired(certExpiryDate.isBefore(currentDateTime));
+								} else {
+									ftmChipDetailsDto.setIsCertificateAvailable(false);
+									ftmChipDetailsDto.setIsCertificateExpired(false);
+								}
+								ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
+								ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
+								ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
+								ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
+								ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
+								ftmChipDetailsDto.setIsActive(ftpChipDetail.isActive());
+								ftmChipDetailsDto.setCreatedDateTime(ftpChipDetail.getCrDtimes());
+								ftmChipDetailsDtoList.add(ftmChipDetailsDto);
+							}
+						}
+					}
+				}
+			}
+			responseWrapper.setResponse(ftmChipDetailsDtoList);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In ftmChipDetails method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In ftmChipDetail method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In ftmChipDetail method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FTM_CHIP_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getFtmChipDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

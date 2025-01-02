@@ -1,14 +1,15 @@
 package io.mosip.pms.device.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.SbiFilterDto;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
-import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
+import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
+import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -40,10 +40,12 @@ import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
@@ -63,8 +65,11 @@ import java.util.Optional;
 @Api(tags = { "SecureBiometricInterface" })
 public class SecureBiometricInterfaceController {
 
-	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
-	private  String postDeactivateSbiId;
+	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
+	private  String postAddDeviceToSbi;
+
+	@Value("${mosip.pms.api.id.deactivate.sbi.patch}")
+	private  String patchDeactivateSbi;
 
 	@Autowired
 	SecureBiometricInterfaceService secureBiometricInterface;
@@ -216,32 +221,59 @@ public class SecureBiometricInterfaceController {
 		return responseWrapper;
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
+	@PostMapping(value = "/{sbiId}/devices")
+	@Operation(summary = "Create device and add inactive mapping to SBI.", description = "Create device and add inactive mapping to SBI.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
+		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
+	}
+
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
-	@GetMapping(value = "/sbi-devices/{sbiId}")
+	@GetMapping(value = "/{sbiId}/devices")
 	@Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
+	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeactivatesbi())")
-	@PostMapping(value = "/deactivate-sbi")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
+	@GetMapping
+	@Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails() {
+		return secureBiometricInterface.getSbiDetails();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatesbi())")
+	@PatchMapping(value = "/{sbiId}")
 	@Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@RequestBody @Valid RequestWrapperV2<DeactivateSbiRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(postDeactivateSbiId, requestWrapper);
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeactivateSbiRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(patchDeactivateSbi, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		return secureBiometricInterface.deactivateSbi(requestWrapper.getRequest().getSbiId());
+		return secureBiometricInterface.deactivateSbi(sbiId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")

@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class DeactivateSbiRequestDto {
 
-    @Schema(description = "Unique identifier for the SBI", example = "sbi456")
-    private String sbiId;
+    @Schema(description = "Status for deactivate SBI", example = "De-Activate")
+    private String status;
 }

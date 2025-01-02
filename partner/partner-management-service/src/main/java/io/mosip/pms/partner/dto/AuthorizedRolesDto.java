@@ -157,10 +157,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> getpolicyrequests;
 
-	private List<String> getauthpartnerspolicies;
-
-	private List<String> getapprovedpartneridswithpolicygroups;
-
 	private List<String> getapikeysforauthpartners;
 
 	private List<String> getoauthclients;
@@ -169,21 +165,17 @@ public class AuthorizedRolesDto {
 
 	private List<String> getsbidetails;
 
-	private List<String> getapproveddeviceproviderids;
+	private List<String> postadddevicetosbi;
 
-	private List<String> postinactivemappingdevicetosbi;
+	private List<String> postdevicewithsbimapping;
 
-	private List<String> postapproveorrejectdevicewithsbimapping;
+	private List<String> patchdeactivatedevice;
 
-	private List<String> postdeactivatedevice;
-
-	private List<String> postdeactivatesbi;
+	private List<String> patchdeactivatesbi;
 
 	private List<String> getftmchipdetails;
 
-	private List<String> getapprovedftmproviderids;
-
-	private List<String> postdeactivateftm;
+	private List<String> patchdeactivateftm;
 
 	private List<String> getoriginalftmcertificate;
 
@@ -198,5 +190,9 @@ public class AuthorizedRolesDto {
 	private List<String> getalldevicedetails;
 
 	private List<String> getallcacertificates;
+
+	private List<String> getdownloadrootcertificate;
+
+	private List<String> getpartnersv4;
 		
 }

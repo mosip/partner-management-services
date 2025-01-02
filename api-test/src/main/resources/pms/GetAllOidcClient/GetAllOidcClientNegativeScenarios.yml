@@ -2,7 +2,7 @@ GetAllOidcClient:
    Pms_GetAllOidcClient_without_Auth:
       endPoint: /v1/partnermanager/oauth/clients
       description: Fetching all OIDC Clients of the loggedin Partner
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
@@ -19,7 +19,7 @@ GetAllOidcClient:
    Pms_GetAllOidcClient_Invalid_Auth:
       endPoint: /v1/partnermanager/oauth/clients
       description: Fetching all OIDC Clients of the loggedin Partner
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient

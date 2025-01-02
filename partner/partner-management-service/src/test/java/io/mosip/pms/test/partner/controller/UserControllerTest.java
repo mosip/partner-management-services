@@ -92,7 +92,7 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
 	public void getConfigValuesTest() throws Exception {
-		mockMvc.perform(get("/users/configs").contentType(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get("/system-config").contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
 	}
 }

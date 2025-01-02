@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
@@ -386,26 +387,24 @@ public class FTPChipDetailControllerTest {
 		public void deactivateFtmTest() throws Exception {
 			ResponseWrapperV2<FtmDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
 			RequestWrapperV2<DeactivateFtmRequestDto> requestWrapper = new RequestWrapperV2<>();
-			requestWrapper.setVersion("1.0");
-			requestWrapper.setRequestTime(LocalDateTime.now());
-			DeactivateFtmRequestDto deactivateFtmRequestDto = new DeactivateFtmRequestDto();
-			deactivateFtmRequestDto.setFtmId("abc");
-			requestWrapper.setRequest(deactivateFtmRequestDto);
+			DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+			requestDto.setStatus("De-Activate");
+			requestWrapper.setRequest(requestDto);
 			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
 			responseWrapper.setResponse(ftmDetailResponseDto);
-			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any())).thenReturn(responseWrapper);
-			mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/deactivate-ftm").contentType(MediaType.APPLICATION_JSON_VALUE)
+			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any(), Mockito.any())).thenReturn(responseWrapper);
+			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232").contentType(MediaType.APPLICATION_JSON_VALUE)
 					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 		}
 
 	@Test
 	@WithMockUser(roles = {"FTM_PROVIDER"})
-	public void getOriginalFtmCertificateTest() throws Exception {
+	public void getFtmCertificateDataTest() throws Exception {
 		ResponseWrapperV2<FtmCertificateDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		FtmCertificateDownloadResponseDto ftmCertificateDownloadResponseDto = new FtmCertificateDownloadResponseDto();
 		responseWrapper.setResponse(ftmCertificateDownloadResponseDto);
-		Mockito.when(ftpChipDetaillService.getOriginalFtmCertificate(Mockito.any())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/original-ftm-certificate")).andExpect(MockMvcResultMatchers.status().isOk());
+		Mockito.when(ftpChipDetaillService.getFtmCertificateData(Mockito.any())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/1234/certificate-data")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 	@Test
@@ -431,5 +430,18 @@ public class FTPChipDetailControllerTest {
 						.param("model", "test")
 						.param("status", "approved"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"FTM_PROVIDER"})
+	public void ftmChipDetailTest() throws Exception {
+		ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
+		List<FtmChipDetailsDto> ftmChipDetailsDtoList = new ArrayList<>();
+		FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
+		ftmChipDetailsDtoList.add(ftmChipDetailsDto);
+		responseWrapper.setResponse(ftmChipDetailsDtoList);
+		Mockito.when(ftpChipDetaillService.ftmChipDetail()).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail")).
+				andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

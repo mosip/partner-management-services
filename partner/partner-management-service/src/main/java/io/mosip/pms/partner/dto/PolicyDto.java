@@ -42,7 +42,7 @@ public class PolicyDto {
     private String policyDescription;
 
     @Schema(description = "Comments or notes from the partner about the policy", example = "Requires annual review.")
-    private String partnerComments;
+    private String partnerComment;
 
     @Schema(description = "Date and time when the policy was last updated", example = "2024-08-01T14:30:00Z")
     private LocalDateTime updatedDateTime;
