@@ -1,0 +1,161 @@
+createPublishPolicy:
+   Partner_PublishPolicy_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_01
+      description: Create Publish Policy with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
+        "policyGroupStatus": true,
+        "policyName": "mosip policy",
+        "policyDesc": "desc mosip policy updated",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "bio",
+        "authSubType": "FINGER",
+		"mandatory": true,
+        "attributeName": "string",
+        "authTokenType": "partner"
+    }'
+    
+   Partner_PublishPolicy_All_Publish_Policy:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_02
+      description: Create Publish Policy with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_For_updatePolicy_sid_id$",
+		"policyId": "$ID:DefineDataSharePolicy_All_for_Update_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupStatus": true,
+		"mandatory": true
+       
+    }'
+    
+   Partner_PublishPolicy_WIthRndomeToken_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_03
+      description: Create Publish Policy with random Token
+      role: partner
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "$ID:DefinePolicy_RandomTokenType_All_Valid_Smoke_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
+        "policyGroupStatus": true,
+        "policyName": "	mosip policy2",
+        "policyDesc": "desc mosip policy2",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "bio",
+        "authSubType": "FINGER",
+		"mandatory": false,
+        "attributeName": "string",
+        "authTokenType": "random"
+    }'
+    
+   Partner_PublishPolicy_Datashare_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_04
+      description: Create Publish Policy with Datashare
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "$ID:DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group",
+        "policyGroupDesc": "desc mosip policy group updated",
+        "policyGroupStatus": true,
+        "is_Active": true
+    }'
+        
+   Partner_PublishPolicy_InValid_AlreadyPublished:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_05
+      description: Create Publish Policy with already Published data
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+        "errorCode": "PMS_POL_020"
+     }
+  ]        
+}'
+   Partner_PublishPolicy_InValid_policygroupId:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_06
+      description: Create Publish Policy with invalid Policy GroupId
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "sgdasfgbv",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "errors": [
+    {
+            "errorCode": "PMS_POL_016"
+        }
+  ]        
+}'
+   Partner_PublishPolicy_InValid_policyId:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_createPublishPolicy_07
+      description: Create Publish Policy with invalid PolicyId
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/PublishPolicy/publishPolicy
+      outputTemplate: partner/error
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+		"policyId": "afgrwfg",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+  "errors": [
+    {
+        "errorCode": "PMS_POL_008"
+    }
+  ]     
+}'

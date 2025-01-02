@@ -1,0 +1,170 @@
+PolicyGroupFilter:
+   partner_PolicyGroupFilter_using_name_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_01
+      description: Create Policy Group Filter for Partner using valid name
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "name",
+    "type": "unique",
+    "text": "update_policy_group"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+       "filters": [
+      {
+        "fieldID": "name",
+        "fieldValue": "update_policy_group",
+        "fieldCode": "update_policy_group"
+      }
+    ]
+}'
+   partner_PolicyGroupFilter_all_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_02
+      description: Create Policy Group Filter for Partner with valid values
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "name",
+    "type": "all",
+    "text": "mpolicygroup-default-auth"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+       "filters": [
+      {
+        "fieldID": "name",
+        "fieldValue": "mpolicygroup-default-auth",
+        "fieldCode": "mpolicygroup-default-auth"
+      }
+    ]
+}'
+   partner_PolicyGroupFilter_using_name_with_columnname_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_03
+      description: Create Policy Group Filter for Partner while keeping valid name for coulmnname parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "name",
+    "type": "all",
+    "text": "mpolicygroup-default-auth"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "filters": [
+      {
+        "fieldID": "name",
+        "fieldValue": "mpolicygroup-default-auth",
+        "fieldCode": "mpolicygroup-default-auth"
+      }
+    ]
+}'
+   partner_PolicyGroupFilter_Invalid_EmptyFilterType:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_04
+      description: Create Policy Group Filter for Partner while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "name",
+		"type": "",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_003",
+      "message": "Could not process the request"
+    }
+  ]
+}'
+   partner_PolicyGroupFilter_Invalid_EmptyColumnName:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_05
+      description: Create Policy Group Filter for Partner while keeping ColumnName parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/error
+      input: '{
+  "filters": [{
+    "columnName": "",
+    "type": "all",
+    "text": "mpolicygroup-default-auth"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   partner_PolicyGroupFilter_Invalid_Column_doesnt_exist:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_06
+      description: Create Policy Group Filter for Partner while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "sfg",
+		"type": "all",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_003"
+    }
+  ]
+}'
+   partner_PolicyGroupFilter_Invalid_Type_doesnt_exist:
+      endPoint: /v1/policymanager/policies/group/filtervalues
+      uniqueIdentifier: TC_PMS_PolicyGroupFilter_07
+      description: Create Policy Group Filter for Partner while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "name",
+		"type": "sfgar",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_003",
+      "message": "Could not process the request"
+    }
+  ]
+}'

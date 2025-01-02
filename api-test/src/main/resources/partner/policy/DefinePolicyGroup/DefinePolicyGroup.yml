@@ -1,0 +1,234 @@
+definePolicyGroup:
+   Partner_DefinePolicyGroup_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      description: Create Policy Group with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group",
+    "name": "mosip policy group",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy group",
+        "desc": "desc mosip policy group",
+        "is_Active": true
+    }'
+    
+   Partner_DefinePolicyGroup_All_Valid_Smoke_For_Req_Key_deactivaed_Policy_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_02
+      description: Create Policy Group with valid details For Req Key deactivated Policy
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "name": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+        "desc": "desc mosip policy group for req key For_Req_Key_deactivaed_Policy",
+        "is_Active": true
+    }'
+    
+   Partner_DefinePolicyGroup_All_Valid_Smoke_For_Test_AuthTypeToken_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_03
+      description: Create Policy Group with valid details For Test AuthTypeToken
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group AuthTypeToken",
+    "name": "mosip policy group for AuthTypeToken",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy group for AuthTypeToken",
+        "desc": "desc mosip policy group AuthTypeToken",
+        "is_Active": true
+    }'    
+
+   Partner_DefinePolicyGroup_All_Valid_Smoke_For_updatePolicy_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_04
+      description: Create Polciy Group for updated Policy
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group for req key For Update",
+    "name": "mosip policy group for req key For Update",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy group for req key For Update",
+        "desc": "desc mosip policy group for req key For Update",
+        "is_Active": true
+    }'    
+    
+   Partner_DefinePolicyGroup_with_policy_manager_role_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_05
+      description: Create Policy Group with policy manager role
+      role: policytest
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group 9983",
+    "name": "mosip policy role testing groupp",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy role testing groupp",
+        "desc": "desc mosip policy group 9983",
+        "is_Active": true
+    }'
+    
+   Partner_DefinePolicyGroup_with_policy_manager_role_To_CheckStatus_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_06
+      description: Create Policy Group with policy manager role to check status
+      role: policytest
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group 8888",
+    "name": "mosip policy status testing groupp with policy",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy status testing groupp with policy",
+        "desc": "desc mosip policy group 8888",
+        "is_Active": true
+    }'
+   Partner_DefinePolicyGroup_without_policy_manager_role_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_07
+      description: Create Policy Group without policy manager role
+      role: admin
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/error
+      input: '{
+    "desc": "desc mosip policy group 9983",
+    "name": "mosip policy role testing groupp",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+      "errors": [
+       {
+            "errorCode": "KER-ATH-403",
+            "message": "Forbidden"
+        }
+  ]
+    }'
+   Partner_DefinePolicyGroup_InActive_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_08
+      description: Create Policy Group for Inactive Policy
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy group2",
+    "name": "mosip policy group2",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "mosip policy group2",
+        "desc": "desc mosip policy group2",
+        "is_Active": true
+    }'
+   Partner_DefinePolicyGroup_AlreadyExists_InValid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_09
+      description: Create Policy Group for already existing Policy Group
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/error
+      input: '{
+    "desc": "desc mosip policy group",
+    "name": "mosip policy group",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+      "errors": [
+       {
+            "errorCode": "PMS_POL_014",
+            "message": "Policy group exists with name : mosip policy group"
+        }
+  ]
+    }'
+   Partner_DefinePolicyGroup_UpdatePolicyGroupForPartner_AllValid_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_10
+      description: Create Policy Group to UpdatePolicyGroupForPartner
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc update policy group",
+    "name": "update_policy_group",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "update_policy_group",
+        "desc": "desc update policy group",
+        "is_Active": true
+    }'
+   Partner_DefinePolicyGroup_Missing_InputParameter_desc:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_11
+      description: Create Policy Group while keeping desc parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/error
+      input: '{
+    "desc": "$REMOVE$",
+    "name": "mosip policy group",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.desc"
+    }
+  ]
+}'
+   Partner_DefinePolicyGroup_Missing_InputParameter_name:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_12
+      description: Create Policy Group while keeping name parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: partner/error
+      input: '{
+    "desc": "desc mosip policy group",
+    "name": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.name"
+    }
+  ]
+}'

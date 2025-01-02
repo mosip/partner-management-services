@@ -1,0 +1,60 @@
+ApproveAPIKey:
+   Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_01
+      description: Update the status for Approved Partner as Approved
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/credentialPartner/ApproveAPIKey/approveAPIKey
+      outputTemplate: partner/credentialPartner/ApproveAPIKey/approveAPIKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping approved successfully"
+    }'
+   Partner_ApproveRejectPartnerAPIKeyReq_Map_partner_toalready_mapped_policy:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_02
+      description: Update the status for Approved Partner while keeping the status parameter as missing
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/credentialPartner/ApproveAPIKey/approveAPIKey
+      outputTemplate: partner/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PM_034"
+    }
+  ]
+}'
+
+   Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_03
+      description: Update the status for Approved Partner while keeping the status parameter as missing
+      role: partner
+      restMethod: put
+      inputTemplate: partner/credentialPartner/ApproveAPIKey/approveAPIKey
+      outputTemplate: partner/error
+      input: '{
+      "status": "$REMOVE$",
+      "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

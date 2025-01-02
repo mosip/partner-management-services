@@ -1,0 +1,63 @@
+createApproveRejectDeviceDetail:
+   Partner_ApproveRejectDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_01
+      description: Create Device details for Approved Partner as Activate
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+
+   Partner_ApproveRejectDeviceDetail_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_02
+      description: Create Device details for Approved Partner while keeping approvalStatus as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+
+   Partner_ApproveRejectDeviceDetail_Missing_InputParameter_deviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_03
+      description: Create Device details for Approved Partner as Activate while keeping deviceId as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

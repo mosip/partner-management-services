@@ -1,0 +1,15 @@
+GetMispLicense:
+   Partner_GetMispLicense_allValid_smoke:
+      endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_GetMispLicense_01
+      description: Retreive MispLicense for Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/MispLicense/GetMispLicense/getMispLicense
+      outputTemplate: partner/MispLicense/GetMispLicense/getMispLicenseResult
+      input: '{
+}'
+      output: '{
+    }'
+   

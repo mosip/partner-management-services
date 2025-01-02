@@ -1,0 +1,33 @@
+GetPartnerDetails:
+   Partner_GetPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_GetPartnerDetails_01
+      description: Retrieve Device Partner Deatils
+      role: partner
+      restMethod: get
+      inputTemplate: partner/devicePartner/GetPartner/getPartner
+      outputTemplate: partner/devicePartner/GetPartner/getPartnerResult
+      input: '{
+		"partnerId": "DPP-AUTOMATION"
+}'
+      output: '  {
+ 	"partnerID": "DPP-AUTOMATION"
+  }'
+   Partner_GetPartner_invalid_partner:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_GetPartnerDetails_02
+      description: Retrieve Device Partner Deatils by providing invalid partner 
+      role: partner
+      restMethod: get
+      inputTemplate: partner/devicePartner/GetPartner/getPartner
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "ABCD"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_005"
+    }
+  ]
+}'

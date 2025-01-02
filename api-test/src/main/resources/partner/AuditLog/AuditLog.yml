@@ -1,0 +1,16 @@
+addContact:
+   Partner_AddContact_All_Valid_Smoke:
+      endPoint: SELECT module_name,cr_by FROM audit.app_audit_log where module_name LIKE '%partner%' order by action_dtimes desc LIMIT 5
+      uniqueIdentifier: TC_PMS_addContact_01
+      description: Get the AuditLogs for add contact scenario
+      role: audit
+      templateFields: ["partnerQuery","partner service"]
+      restMethod: post
+      inputTemplate: partner/authPartner/AddContacts/addContact
+      outputTemplate: partner/authPartner/AddContacts/addContactResult
+      input: '{
+  }'
+      output: '{
+   "module_name": "partner service"
+   "cr_by": "111997"
+    }'

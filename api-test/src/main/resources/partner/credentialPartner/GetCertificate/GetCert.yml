@@ -1,0 +1,15 @@
+getPartnerCert:
+   Partner_GetPartnerCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_getPartnerCert_01
+      description: Retreive Partner certificate
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/credentialPartner/GetCertificate/getCert
+      outputTemplate: partner/credentialPartner/GetCertificate/getCertResult
+      input: '{
+	"partnerId": "MOVP-AUTOMATION"
+}'
+      output: ' {
+}'

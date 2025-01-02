@@ -1,0 +1,72 @@
+MapDeviceWithSBI:
+   Partner_MapDeviceWithSBI_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      uniqueIdentifier: TC_PMS_MapDeviceWithSBI_01
+      description: MapDeviceWithSBI with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+    }'
+   Partner_MapDeviceWithSBI_Multiple_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      uniqueIdentifier: TC_PMS_MapDeviceWithSBI_02
+      description: MapDevice Partner With Multiple SBI valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+    }'
+    
+   Partner_MapDeviceWithSBI_Multiple_map:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      uniqueIdentifier: TC_PMS_MapDeviceWithSBI_03
+      description: MapDevice Partner With Multiple SBI
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/error
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_TO_Map_sid_id$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_511"
+    }
+  ]
+    }'
+    
+   Partner_MapDeviceWithSBI_Multiple_MapDeviceWith_Diff_Provider:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      uniqueIdentifier: TC_PMS_MapDeviceWithSBI_04
+      description: MapDevice Partner With Multiple SBI with different Provider
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/error
+      input: '{
+    "deviceDetailId": "MOSIP.PROXY.SBI",
+    "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_005"
+    }
+  ]
+    }'

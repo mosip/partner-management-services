@@ -1,0 +1,55 @@
+UpdateMispLicense:
+   Partner_UpdateMispLicense_Deactive_allValid_smoke:
+      endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_01
+      description: Update MispLicense Partner as Deactive
+      role: partner
+      restMethod: put
+      inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
+      outputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicenseResult
+      input: '{
+   "providerId": "MISP-AUTOMATION",
+   "licenseKeyStatus": "De-active",
+   "licenseKey": "$ID:CreateMispLicense_allValid_smoke_sid_licenseKey$"
+}'
+      output: '{
+   "providerId": "MISP-AUTOMATION",
+    "licenseKeyStatus": "de-active"
+}'
+   Partner_UpdateMispLicense_Active_allValid_smoke:
+      endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_02
+      description: Update MispLicense Partner as active
+      role: partner
+      restMethod: put
+      inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
+      outputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicenseResult
+      input: '{
+   "providerId": "MISP2-AUTOMATION",
+   "licenseKeyStatus": "Active",
+   "licenseKey": "$ID:CreateMispLicense_MispLicense_allValid_smoke_sid_licenseKey$"
+}'
+      output: '{
+   "providerId": "MISP2-AUTOMATION",
+    "licenseKeyStatus": "active"
+}'
+   Partner_UpdateMispLicense_InValid_licenseKeyStatus:
+      endPoint: /v1/partnermanager/misps
+      uniqueIdentifier: TC_PMS_UpdateMispLicense_03
+      description: Update MispLicense for Partner with InValid_licenseKeyStatus
+      role: partner
+      restMethod: put
+      inputTemplate: partner/MispLicense/UpdateMispLicense/updateMispLicense
+      outputTemplate: partner/error
+      input: '{
+   "providerId": "MISP-AUTOMATION",
+    "licenseKeyStatus": "inactive",
+    "licenseKey": "adfvad"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_MSP_407"
+    }
+  ]
+}'

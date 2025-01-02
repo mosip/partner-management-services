@@ -1,0 +1,53 @@
+CreateBioExtractors:
+   Partner_CreateBioExtractors_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_CreateBioExtractors_01
+      description: Create BioExtractors for Partner with invalid PartnerID
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/CreateBioExtractors/createBioExtractors
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "asvgasfbkasdm",
+    "policyId": "mpolicy-default-auth",
+    "attributeName": "iris",
+	"biometric": "iris",     
+	"provider": "mock",
+	"version": "1.1",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_061"
+    }
+  ]      
+}'
+
+   Partner_CreateBioExtractors_InValid_PolicyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_CreateBioExtractors_02
+      description: Create BioExtractors for Partner with invalid PolicyID
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/CreateBioExtractors/createBioExtractors
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "mpartner-default-auth",
+    "policyId": "vdsfhfx",
+    "attributeName": "iris",
+	"biometric": "iris",     
+	"provider": "mock",
+	"version": "1.1",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_061"
+    }
+  ]      
+}'
+

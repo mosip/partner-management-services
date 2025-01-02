@@ -1,0 +1,15 @@
+GetRoles:
+   Partner_GetRoles_allValid_smoke:
+      endPoint: /v1/partnermanager/roles
+      uniqueIdentifier: TC_PMS_GetRoles_01
+      description: Retrieve all Partner Roles
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetRoles/getRoles
+      outputTemplate: partner/GetRoles/getRolesResult
+      input: '{
+    
+}'
+      output: '{
+}'

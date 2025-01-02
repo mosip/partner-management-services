@@ -1,0 +1,642 @@
+createSearchRegisteredDevice:
+   Partner_SearchRegisteredDevice_AllValid_Smoke:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device with all valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_Only_FilterCriteria_Smoke:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device with Only FilterCriteria
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_Only_SortCriteria_Smoke:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device with Only SortCriteria
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_Only_PaginationCriteria_Smoke:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device with Only PaginationCriteria
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_contains_Smoke_asc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as contains and filter data in ascending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_contains_Smoke_desc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as contains and filter data in descending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_equals_Smoke_desc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as equals and filter data in descending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_equals_Smoke_asc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as equals and filter data in ascending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_startswith_Smoke_asc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as startswith and filter data in ascending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_type_startswith_Smoke_desc_sid:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as startswith and filter data in descending order
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDeviceResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+       "active": "true"
+      }
+    ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_value_containts:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping value parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "containts",
+        "value": "b692b@@@3344##$$$f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_value_equals:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping value parameter as invalid and type parameter as equals
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b@@@3344##$$$f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_value_startswith:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as startswith
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "b692b@@@3344##$$$f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-MSD-355"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_columnName:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping columnName parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "D@@@@##3334FFFGare",
+        "type": "startswith",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-MSD-310"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_missing_columnName:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping columnName parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "$REMOVE$",
+        "type": "startswith",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-311"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_missing_type:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping Type parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "$REMOVE$",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-312"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_sort_type:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping sortType parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "dc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_missing_sort_type:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping sortType parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "$REMOVE$"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_invalid_sort_field:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping sortField parameter as invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "c@@@#333DDSSD",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-357"
+    }
+  ]
+}'
+   Partner_SearchRegisteredDevice_with_missing_sort_field:
+      endPoint: /partnermanagement/v1/partners/registereddevices/search
+      description: Create Search Registered Device while keeping sortField parameter as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/Search/SearchRegisteredDevice/createSearchRegisteredDevice
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "b692b595-3523-face-99fc-bd76e35f190f"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "$REMOVE$",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'

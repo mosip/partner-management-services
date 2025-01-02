@@ -1,0 +1,68 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create MISP Partner Self Registration
+      role: partner
+      restMethod: post
+      inputTemplate: partner/mispPartner/CreatePartner/createPartner
+      outputTemplate: partner/mispPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "misp@gmail.com",
+    "organizationName": "misp",
+    "partnerId": "MISP-AUTOMATION",
+    "partnerType": "MISP_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "MISP-AUTOMATION",
+        "status": "InProgress"
+    }'
+   Partner_PartnerSelfRegistration_MispLicense_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      description: Create MISP Partner Self Registration for Misp License
+      role: partner
+      restMethod: post
+      inputTemplate: partner/mispPartner/CreatePartner/createPartner
+      outputTemplate: partner/mispPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "mis2p@gmail.com",
+    "organizationName": "misp2",
+    "partnerId": "MISP2-AUTOMATION",
+    "partnerType": "MISP_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "MISP2-AUTOMATION",
+        "status": "InProgress"
+    }'
+    
+   Partner_PartnerSelfRegistration_MispLicense_Msip:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      description: Create MISP Partner Self Registration for Misp License
+      role: partner
+      restMethod: post
+      inputTemplate: partner/mispPartner/CreatePartner/createPartner
+      outputTemplate: partner/mispPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "90110300",
+    "emailId": "mis3p@gmail.com",
+    "organizationName": "misp3",
+    "partnerId": "MISP3",
+    "partnerType": "MISP_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "MISP3",
+        "status": "InProgress"
+    }'

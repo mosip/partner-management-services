@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+
+<suite name="Partner Suite">
+
+	<!-- Passing Group as parmeter unsing "testType" Possible Groups are: smoke 
+		regression smokeAndRegression -->
+	<listeners>
+		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport"/>
+	</listeners>
+
+      <test name="CreatePolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/policy/DefinePolicyGroup/DefinePolicyGroup.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogCreatePolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+	 <test name="GetPolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/policy/GetPolicyGroup/GetPolicyGroup.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+ 	<test name="UpdatePolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/policy/UpdatePolicyGroup/UpdatePolicyGroup.yml" />
+		<parameter name="pathParams" value="policyGroupId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+  	<test name="DefinePolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/DefinePolicy/DefinePolicy.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogDefinePolicy">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	 <test name="DefineDataSharePolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/DefineDataSharePolicy/DefineDataSharePolicy.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UpdatePolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/UpdatePolicy/UpdatePolicy.yml" />
+		<parameter name="pathParams" value="policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="AuditLogDataSharePolicy">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name="UpdatePolicyStatus">
+		<parameter name="ymlFile"
+			value="partner/policy/UpdatePolicyStatus/UpdatePolicyStatus.yml" />
+		<parameter name="pathParams" value="policygroupId,policyId"/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="PublishPolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/PublishPolicy/PublishPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogPublishPolicy">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="PublishDataSharePolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/PublishDataSharePolicy/PublishDataSharePolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogPublishDataSharePolicy">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name="GetPolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/GetPolicy/GetPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	<test name="SearchPolicy">
+		<parameter name="ymlFile"
+			value="partner/policy/Search/SearchPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="PrintPartner">
+		<parameter name="ymlFile"
+			value="partner/PrintPartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name ="UploadCACertificatePrintPartner">
+		<parameter name ="ymlFile"
+			value= "partner/PrintPartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name ="UploadPartnerCertificatePrintPartner">
+		<parameter name ="ymlFile"
+			value= "partner/PrintPartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UpdatePrintPartner">
+		<parameter name="ymlFile"
+			value="partner/PrintPartner/UpdatePrintPartner/UpdatePrintPartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetPrintPartnerDetails">
+		<parameter name="ymlFile"
+			value="partner/PrintPartner/GetPartnerDetails/GetPartnerDetails.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	
+    <test name="CreatePartner">
+		<parameter name="ymlFile"
+			value="partner/authPartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogCreatePartner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	 <test name ="UploadCACertificate">
+		<parameter name ="ymlFile"
+			value= "partner/authPartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	
+	<test name="AuditLogUploadCACertificate">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	 <test name ="UploadPartnerCertificate">
+		<parameter name ="ymlFile"
+			value= "partner/authPartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogUploadPartnerCertificate">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetPartnerDetails">
+		<parameter name="ymlFile"
+			value="partner/authPartner/GetPartner/GetPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name ="GetPartnerCertificate">
+		<parameter name ="ymlFile"
+			value= "partner/authPartner/GetCertificate/GetCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="UpdatePartner">
+		<parameter name="ymlFile"
+			value="partner/authPartner/UpdatePartner/UpdatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogUpdatePartner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+    <test name="AddAdditionalContact">
+		<parameter name="ymlFile"
+			value="partner/authPartner/AddContacts/AddContact.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+ 	 <test name="RequestAPIKeyForAuthPartner">
+		<parameter name="ymlFile"
+			value="partner/authPartner/RequestAPIKey/RequestAPIKey.yml" />
+		<parameter name="idKeyName" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="AuditLogAddAdditionalContact">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+	<test name="RejectAPIKey">
+		<parameter name="ymlFile"
+			value="partner/authPartner/RejectAPIKey/RejectAPIKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="ApproveAPIKey">
+		<parameter name="ymlFile"
+			value="partner/authPartner/ApproveAPIKey/ApproveAPIKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test> 
+	
+	<test name="AuditLogApproveAPIKey">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+    <test name="CreatePartner_Online_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogOnline_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name ="UploadCACertificate_Online_Verification_Partner">
+		<parameter name ="ymlFile"
+			value= "partner/credentialPartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLog_UploadCACertificateOnline_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	 <test name ="UploadPartnerCertificate_Online_Verification_Partner">
+		<parameter name ="ymlFile"
+			value= "partner/credentialPartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLog_OVP">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetPartnerDetails_Online_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/GetPartner/GetPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name ="GetPartnerCertificate_Online_Verification_Partner">
+		<parameter name ="ymlFile"
+			value= "partner/credentialPartner/GetCertificate/GetCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+  	<test name="RequestAPIKeyCredentialPartner">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/RequestAPIKey/RequestAPIKey.yml" />
+		<parameter name="idKeyName" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test> 
+	
+	<test name="AuditLogAPIKeyCredentialPartner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name="AddBioExtractors">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/AddBioExtractors/AddBioExtractors.yml" />
+		<parameter name="pathParams" value="partnerId,policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogAddBioExtractors">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="RejectAPIKey_Online_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/RejectAPIKey/RejectAPIKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="ApproveAPIKey_Online_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/credentialPartner/ApproveAPIKey/ApproveAPIKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogApproveAPIKey_Online_Verification_Partner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	 <test name="CreatePartner_Device_Provider">
+		<parameter name="ymlFile"
+			value="partner/devicePartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogCreatePartner_Device_Provider">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name ="UploadCACertificate_Device_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/devicePartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	 <test name ="UploadPartnerCertificate_Device_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/devicePartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLog9">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetPartnerDetails_Device_Provider">
+		<parameter name="ymlFile"
+			value="partner/devicePartner/GetPartner/GetPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name ="GetPartnerCertificate_Device_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/devicePartner/GetCertificate/GetCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="CreatePartner_MISP_Provider">
+		<parameter name="ymlFile"
+			value="partner/mispPartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name ="UploadCACertificate_MISP_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/mispPartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="AuditLogUploadCACertificate_MISP_Provider">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	 <test name ="UploadPartnerCertificate_MISP_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/mispPartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogUploadPartnerCertificate_MISP_Provider">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetPartnerDetails_MISP_Provider">
+		<parameter name="ymlFile"
+			value="partner/mispPartner/GetPartner/GetPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name ="GetPartnerCertificate_MISP_Provider">
+		<parameter name ="ymlFile"
+			value= "partner/mispPartner/GetCertificate/GetCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	
+	<test name="SearchPartner">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchPartner/createSearchPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>	 	
+	<test name="CreatePartner_FTM_Partner">
+		<parameter name="ymlFile"
+			value="partner/FtpPartner/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	 <test name ="UploadCACertificate_FTM_Partner">
+		<parameter name ="ymlFile"
+			value= "partner/FtpPartner/UploadCertificate/UploadCertificate.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>	
+	
+	<test name="AuditLogFTM_Partner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	 <test name ="UploadPartnerCertificate_FTM_Partner">
+		<parameter name ="ymlFile"
+			value= "partner/FtpPartner/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>		
+	
+	<test name="AuditLogUploadPartnerCertificate_FTM_Partner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+   	<test name="CreateDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/device/makeAndModel/create/CreateDeviceDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="RejectDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/device/makeAndModel/reject/RejectDeviceDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="AuditLogCreateDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="ApproveDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/device/makeAndModel/approve/ApproveDeviceDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="UpdateDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/device/makeAndModel/update/UpdateDeviceDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogUpdateDeviceDetail">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+	<test name="DeviceSubTypeFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="DeviceDetailsFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/DeviceDetailsFilter/DeviceDetailsFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	
+    <test name="createSearchDeviceType">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchDeviceType/createSearchDeviceType.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="createSearchDeviceDetails">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>	
+	
+ 	<test name="CreateSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/create/CreateSecureBiometricInterface.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogCreateSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="RejectSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/reject/RejectSecureBiometricInterface.yml" />
+		<parameter name="pathParams" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+		<test name="ApproveSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/approve/ApproveSecureBiometricInterface.yml" />
+		<parameter name="pathParams" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="UpdateSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/update/UpdateSecureBiometricInterface.yml" />
+		<parameter name="pathParams" value="" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>	 
+	
+	
+	<test name="AuditLogUpdateSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="createSearchSecureBiometric">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchSecureBiometric/createSearchSecureBiometric.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="ServiceToFilterSBI">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/ServiceToFilterSBI/ServiceToFilterSBI.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>	
+	<test name="MapDeviceWithSBI">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/MapDeviceWithSBI/MapDeviceWithSBI.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name="RemoveMapDeviceWithSBI">
+		<parameter name="ymlFile"
+			value="partner/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/RemoveMapDeviceWithSBI.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	<test name="GetPartnersPolicy">
+		<parameter name="ymlFile"
+			value="partner/GetPartnersPolicy/GetPartnersPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	<test name="GetAllPolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/GetAllPolicyGroup/GetAllPolicyGroup.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	<test name="createSearchPolicyGroup">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchPolicyGroup/createSearchPolicyGroup.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	<test name="PolicyGroupFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/PolicyGroupFilter/PolicyGroupFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	
+	
+	<test name="GetValueForConfigKey">
+		<parameter name="ymlFile"
+			value="partner/GetValueForConfigKey/GetValueForConfigKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="PartnerFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/PartnerFilter/PartnerFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	<test name="SearchPartnerApiKey">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchPartnerApiKey/SearchPartnerApiKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	<test name="SearchPartnerApiRequestKey">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchPartnerApiRequestKey/SearchPartnerApiRequestKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test> 
+	<test name="PartnerApiKeyRequestFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/PartnerApiKeyRequestFilter/PartnerApiKeyRequestFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="createSearchPartnerType">
+		<parameter name="ymlFile"
+			value="partner/SearchAPIs/SearchPartnerType/createSearchPartnerType.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>  
+	<test name="DeviceTypeFilter">
+		<parameter name="ymlFile"
+			value="partner/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	 <test name="SaveFTPChipDetail">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/create/CreateFTPChipDetail.yml" />
+			<parameter name="idKeyName" value="id"></parameter>
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test> 
+	<test name="ApproveFtpChipDetail">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/approve/ApproveFtpChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogFtpChipDetail">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="UpdateFtpChipDetail">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/update/UpdateFtpChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	<test name="UploadCertificate">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/uploadcert/Uploadcertificate.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	
+	<test name="AuditLogUploadCertificate_FTP">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+<!--	<test name="GetFTPChipDetail">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/get/GetFtpChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>-->
+	<test name="RejectFtpChipDetail">
+		<parameter name="ymlFile"
+			value="partner/device/ftmChipDetails/reject/RejectFtpChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="CreateMispLicense">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/CreateMispLicense/CreateMispLicense.yml" />
+		<parameter name="idKeyName" value="licenseKey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="GetMispLicense">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/GetMispLicense/GetMispLicense.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="UpdateMispLicense">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/UpdateMispLicense/UpdateMispLicense.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogMispLicense">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	
+	<test name="GetMISPLicenseByMispID">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/GetMISPLicenseByMispID/GetMISPLicenseByMispID.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	
+	<test name="SearchMispLicense">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/SearchMispLicense/SearchMispLicense.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="FilterMispLicense">
+		<parameter name="ymlFile"
+			value="partner/MispLicense/FilterMispLicense/FilterMispLicense.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>	
+	<test name="GetPartnerApiKeyRequest">
+		<parameter name="ymlFile"
+			value="partner/GetPartnerApiKeyRequest/GetPartnerApiKeyRequest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetBioExtractors">
+		<parameter name="ymlFile"
+			value="partner/GetBioExtractors/GetBioExtractors.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="CreateBioExtractors">
+		<parameter name="ymlFile"
+			value="partner/CreateBioExtractors/CreateBioExtractors.yml" />
+		<parameter name="pathParams" value="partnerId,policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="MapPartnerAndPolicytoCredentialType">
+		<parameter name="ymlFile"
+			value="partner/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogBioExtractors">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	<test name="GetPolicyforMappedPartnerAndCredentialtype">
+		<parameter name="ymlFile"
+			value="partner/GetPolicyforMappedPartnerAndCredentialtype/GetPolicyforMappedPartnerAndCredentialtype.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test> 
+	<test name="GetRoles">
+		<parameter name="ymlFile"
+			value="partner/GetRoles/GetRoles.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="VerifyPartnersEmail">
+		<parameter name="ymlFile"
+			value="partner/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	<test name="GetPartners">
+		<parameter name="ymlFile"
+			value="partner/GetPartners/GetPartners.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="ActivateDeactivatePartner">
+		<parameter name="ymlFile"
+			value="partner/ActivateDeactivatePartner/ActivateDeactivatePartner.yml" />
+		<parameter name="pathParams"	value="partnerId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogActivateDeactivatePartner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetApiKeyRequests">
+		<parameter name="ymlFile"
+			value="partner/GetApiKeyRequests/GetApiKeyRequests.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	 <test name="CreatePartner_for_generateApiKey">
+		<parameter name="ymlFile"
+			value="partner/GenerateApiKeyForApprovedPolicies/CreatePartner/CreatePartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	 <test name ="UploadPartnerCertificate_for_generateApiKey">
+		<parameter name ="ymlFile"
+			value= "partner/GenerateApiKeyForApprovedPolicies/UploadCert/UploadCert.yml" />
+	<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="AuditLoggenerateApiKey">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+  	<test name="RequestAPIKey_for_generateApiKey">
+		<parameter name="ymlFile"
+			value="partner/GenerateApiKeyForApprovedPolicies/RequestAPIKey/RequestAPIKey.yml" />
+		<parameter name="idKeyName" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test> 
+	<test name="ApproveAPIKey__for_generateApiKey">
+		<parameter name="ymlFile"
+			value="partner/GenerateApiKeyForApprovedPolicies/ApproveAPIKey/ApproveAPIKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GenerateApiKey">
+		<parameter name="ymlFile"
+			value="partner/GenerateApiKeyForApprovedPolicies/GenerateApiKey/GenerateApiKey.yml" />
+		<parameter name="idKeyName"	value="apiKey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePatchForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogGenerateApiKey">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="GetPolicyForApiKey">
+		<parameter name="ymlFile"
+			value="partner/GetPolicyForApiKey/GetPolicyForApiKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="UpdatePolicyAgainstApiKey">
+		<parameter name="ymlFile"
+			value="partner/UpdatePolicyAgainstApiKey/UpdatePolicyAgainstApiKey.yml" />
+		<parameter name="pathParams"	value="partnerId,apiKey" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="ActivateDeactivatePartnerApiKey">
+		<parameter name="ymlFile"
+			value="partner/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
+			<parameter name="pathParams"	value="partnerId,policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="AuditLogPartnerApiKey_">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="UpdatePolicyGroupForPartner">
+		<parameter name="ymlFile"
+			value="partner/UpdatePolicyGroupForPartner/UpdatePolicyGroupForPartner.yml" />
+		<parameter name="pathParams"	value="partnerId,policygroupName" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	
+	<test name="AuditLogUpdatePolicyGroupForPartner">
+		<parameter name="ymlFile"
+			value="partner/AuditLog/AuditLog.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
+		</classes>
+	</test>
+	
+	<test name="DBValidator">
+		<parameter name="ymlFile"
+			value="partner/DbValidatorTest/DbValidatorTest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
+		</classes>
+	</test>
+</suite>

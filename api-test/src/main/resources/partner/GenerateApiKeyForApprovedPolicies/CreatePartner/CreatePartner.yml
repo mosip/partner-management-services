@@ -1,0 +1,23 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create Partner Self Registration with valid values
+      role: partner
+      restMethod: post
+      inputTemplate: partner/GenerateApiKeyForApprovedPolicies/CreatePartner/createPartner
+      outputTemplate: partner/GenerateApiKeyForApprovedPolicies/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "123456789",
+    "emailId": "mosip@automationlab.com",
+    "organizationName": "Techno",
+    "partnerId": "partner-111997",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "partner-111997",
+        "status": "InProgress"
+    }'

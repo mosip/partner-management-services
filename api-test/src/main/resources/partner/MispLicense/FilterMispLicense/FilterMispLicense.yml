@@ -1,0 +1,151 @@
+FilterMispLicense:
+   Partner_FilterMispLicense_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_01
+      description: Create MispLicense Filter for Partner while keeping Type All
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
+      input: '{
+	"filters": [{
+	   "columnName": "isActive",
+        "type": "all",
+        "text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "filters": [
+      {
+        "fieldID": "isActive",
+        "fieldValue": "true"
+      },
+      {
+        "fieldID": "isActive",
+        "fieldValue": "false"
+      }
+    ],
+    "errors": null
+}'
+   Partner_FilterMispLicense_Valid_Smoke:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_02
+      description: Create MispLicense Filter for Partner while keeping Type Unique
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
+      input: '{
+	"filters": [{
+	   "columnName": "isActive",
+        "type": "unique",
+        "text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "filters": [
+      {
+        "fieldID": "isActive",
+        "fieldValue": "true"
+      },
+      {
+        "fieldID": "isActive",
+        "fieldValue": "false"
+      }
+    ],
+    "errors": null
+}'
+   Partner_FilterMispLicense_InValid_FilterType:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_03
+      description: Create MispLicense Filter for Partner while keeping Text parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "iSActive",
+		"type": "between",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_Blank_FilterType:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_04
+      description: Create MispLicense Filter for Partner while keeping Type parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "isActive",
+		"type": "",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_InValid_columnName:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_05
+      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Invalid
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "lang_code",
+		"type": "unique",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_InValid_Empty_columnName:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      uniqueIdentifier: TC_PMS_FilterMispLicense_06
+      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "unique",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

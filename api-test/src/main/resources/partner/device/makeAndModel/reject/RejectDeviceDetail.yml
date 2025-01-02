@@ -1,0 +1,79 @@
+rejectDeviceDetail:
+   Partner_rejectDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_rejectDeviceDetail_01
+      description: Reject Device Details with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_rejectDeviceDetail_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_rejectDeviceDetail_02
+      description: Reject Device Details with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "device-id-124",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_rejectDeviceDetail_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_rejectDeviceDetail_03
+      description: Reject Device Details while keeping approvalStatus as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+
+   Partner_rejectDeviceDetail_Missing_InputParameter_deviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_rejectDeviceDetail_04
+      description: Reject Device Details while keeping deviceId as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

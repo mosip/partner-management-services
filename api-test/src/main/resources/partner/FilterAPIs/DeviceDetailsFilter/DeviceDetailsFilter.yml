@@ -1,0 +1,160 @@
+DeviceDetailsFilter:
+   partner_DeviceDetailsFilter_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_01
+      description: Create Device Details Filter with valid values
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilterResult
+      input: '{
+  "filters": [{
+        "columnName": "id",
+        "type": "unique",
+        "text": "device-id-123"
+      }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+
+   partner_DeviceDetailsFilter_To_MapSBI:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_02
+      description: Create Device Details Filter to MapSBI
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilterResult
+      input: '{
+  "filters": [{
+        "columnName": "id",
+        "type": "unique",
+        "text": "device-id-321"
+      }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+   partner_DeviceDetailsFilter_all_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_03
+      description: Create Device Details Filter with valid values
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "id",
+    "type": "all",
+    "text": "device-id-123"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "fieldID": "id",
+        "fieldCode": "device-id-123"
+}'
+   partner_DeviceDetailsFilter_Invalid_EmptyFilterType:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_04
+      description: Create Device Details Filter while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   partner_DeviceDetailsFilter_Invalid_EmptyFilterColumn:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_05
+      description: Create Device Details Filter while keeping FilterColumn parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "all",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   partner_DeviceDetailsFilter_Invalid_Column_doesnt_exist:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_06
+      description: Create Device Details Filter while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "asff",
+		"type": "all",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'
+   partner_DeviceDetailsFilter_Invalid_type_doesnt_exist:
+      endPoint: /v1/partnermanager/devicedetail/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceDetailsFilter_07
+      description: Create Device Details Filter while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "asdf",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'

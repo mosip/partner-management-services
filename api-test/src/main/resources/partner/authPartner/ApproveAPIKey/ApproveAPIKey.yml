@@ -1,0 +1,38 @@
+ApproveAPIKey:
+   Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_01
+      description: Update the status for Approved Partner as Approved
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/authPartner/ApproveAPIKey/approveAPIKey
+      outputTemplate: partner/authPartner/ApproveAPIKey/approveAPIKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+
+   Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_02
+      description: Update the status for Approved Partner with keeping status parameter as Missing
+      role: partner
+      restMethod: put
+      inputTemplate: partner/authPartner/ApproveAPIKey/approveAPIKey
+      outputTemplate: partner/error
+      input: '{
+      "status": "$REMOVE$",
+      "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

@@ -1,0 +1,75 @@
+DBValidator:
+   Partner_DBValidator_All_Valid_Smoke_data_created_using_PMS:
+      endPoint: SELECT * FROM ida.partner_data where
+      uniqueIdentifier: TC_PMS_DBValidator_01
+      description: Create Data in database using PMS with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/DbValidatorTest/dbValidatorTest
+      outputTemplate: partner/DbValidatorTest/DbValidatorResult
+      input: '{
+    "partner_id": "Tech-123",
+    "policy_name": "$REMOVE$",
+    "api_key_id": "$REMOVE$",
+    "license_key": "$REMOVE$"
+ }'
+      output: '{
+   "module_name": "partner service",
+   "cr_by": "111997"
+}'
+   Partner_DBValidator_All_Valid_Smoke_data_created_using_Policy:
+      endPoint: SELECT * FROM ida.policy_data where
+      uniqueIdentifier: TC_PMS_DBValidator_02
+      description: Create Data in database using Policy with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/DbValidatorTest/dbValidatorTest
+      outputTemplate: partner/DbValidatorTest/DbValidatorResult
+      input: '{
+    "partner_id": "$REMOVE$",
+    "policy_name": "mosip data share policy",
+    "api_key_id": "$REMOVE$",
+    "license_key": "$REMOVE$"
+}'
+      output: '{
+   "module_name": "partner service",
+   "cr_by": "111997"
+}'
+
+   Partner_DBValidator_All_Valid_Smoke_data_created_using_APIKEY:
+      endPoint: SELECT * FROM ida.api_key_data where
+      uniqueIdentifier: TC_PMS_DBValidator_03
+      description: Create Data in database using APIKEY with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/DbValidatorTest/dbValidatorTest
+      outputTemplate: partner/DbValidatorTest/DbValidatorResult
+      input: '{
+    "partner_id": "$REMOVE$",
+    "policy_name": "$REMOVE$",
+    "api_key_id": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
+    "license_key": "$REMOVE$"
+}'
+      output: '{
+   "module_name": "partner service",
+   "cr_by": "Tech-123"
+}'
+    
+   Partner_DBValidator_All_Valid_Smoke_data_created_using_Misp:
+      endPoint: SELECT * FROM ida.misp_license_data where
+      uniqueIdentifier: TC_PMS_DBValidator_04
+      description: Create Data in database using MISPLicense with valid details
+      role: partner
+      restMethod: post
+      inputTemplate: partner/DbValidatorTest/dbValidatorTest
+      outputTemplate: partner/DbValidatorTest/DbValidatorResult
+      input: '{
+    "partner_id": "$REMOVE$",
+    "policy_name": "$REMOVE$",
+    "api_key_id": "$REMOVE$",
+    "license_key": "$ID:CreateMispLicense_MispLicense_allValid_smoke_sid_licenseKey$"
+}'
+      output: '{
+   "module_name": "partner service",
+   "cr_by": "partner-111997"
+}'

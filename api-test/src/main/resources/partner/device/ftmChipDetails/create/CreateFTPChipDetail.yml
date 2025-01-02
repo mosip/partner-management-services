@@ -1,0 +1,63 @@
+CreateFTPChipDetail:
+   Partner_CreateFTPChipDetail_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_01
+      description: Create FTP Chip Deatils for Partner with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetailResult
+      input: '{
+    "ftpProviderId": "FTP-AUTOMATION",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "id": "$IGNORE$"
+}'
+
+   Partner_CreateFTPChipDetail_Missing_InputParameter_ftpProviderId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_02
+      description: Create FTP Chip Deatils for Partner while keeping ftpProviderId parameter as missing
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "FTP-AUTOMATION",
+    "make": "$REMOVE$",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_CreateFTPChipDetail_Missing_InputParameter_ftpId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_03
+      description: Create FTP Chip Deatils for Partner while keeping ftpId parameter as missing
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/ftmChipDetails/create/createFTPChipDetail
+      outputTemplate: partner/error
+      input: '{
+    "ftpProviderId": "$REMOVE$",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

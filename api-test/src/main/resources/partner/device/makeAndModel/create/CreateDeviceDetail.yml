@@ -1,0 +1,223 @@
+createServiceToSaveDeviceDetail:
+   Partner_ServiceToSaveDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_01
+      description: Create Service To Save Device Details with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/device/makeAndModel/create/createDeviceDetailResult
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slap",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+  }
+    }'
+   Partner_ServiceToSaveDeviceDetail_sameMakeModelType_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_02
+      description: Create Service To Save Device Details while keeping same Make Model Type with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/device/makeAndModel/create/createDeviceDetailResult
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Single",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-124",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_ServiceToSaveDeviceDetail_sameMakeModel_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_03
+      description: Create Service To Save Device Details while keeping same Make Model with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/device/makeAndModel/create/createDeviceDetailResult
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Single",
+    "deviceTypeCode": "Iris",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_ServiceToSaveDeviceDetail_sameTypeSubType_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_04
+      description: Create Service To Save Device Details while keeping same Type SubType with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/device/makeAndModel/create/createDeviceDetailResult
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slap",
+    "deviceTypeCode": "Finger",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "make": "abcdef",
+    "model": "FRO900000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_ServiceToSaveDeviceDetail_AlreadyExists_Invalid:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_05
+      description: Create Service To Save Device Details while keeping already exisits Model
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slap",
+    "deviceTypeCode": "Finger",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_AUT_003"
+    }
+  ]
+}'
+   Partner_ServiceToSaveDeviceDetail_Missing_InputParameter_DeviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_06
+      description: Create Service To Save Device Details while keeping DeviceId as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "test",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_AUT_001"
+    }
+  ]
+}'
+
+   Partner_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceProviderId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_07
+      description: Create Service To Save Device Details while keeping DeviceProviderId as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "$REMOVE$",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceSubTypeCode:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_08
+      description: Create Service To Save Device Details while keeping DeviceSubTypeCode as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "$REMOVE$",
+    "deviceTypeCode": "Finger",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Partner_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceTypeCode:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_09
+      description: Create Service To Save Device Details while keeping DeviceTypeCode as empty
+      role: partner
+      restMethod: post
+      inputTemplate: partner/device/makeAndModel/create/createDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "deviceProviderId": "Tech-123",
+    "deviceSubTypeCode": "Slab",
+    "deviceTypeCode": "$REMOVE$",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": true,
+    "make": "abcde",
+    "model": "FRO90000",
+    "partnerOrganizationName": "Techno",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

@@ -1,0 +1,51 @@
+GetPartnerCert:
+   Partner_GetPartnerCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_01
+      description: Retrieve Partner Certificate
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/authPartner/GetCertificate/getCert
+      outputTemplate: partner/authPartner/GetCertificate/getCertResult
+      input: '{
+	"partnerId": "Tech-123"
+}'
+      output: ' {
+}'
+   Partner_GetPartnerCert_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_02
+      description: Retrieve Partner Certificate with invalid Partner ID
+      role: partner
+      restMethod: get
+      inputTemplate: partner/authPartner/GetCertificate/getCert
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "Tech-1231234"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_005"
+    }
+  ]
+}'
+   Partner_GetPartnerCert_invalid_certificate_doesnot_exist:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      uniqueIdentifier: TC_PMS_GetPartnerCert_03
+      description: Reterive invalid Partner certificate which does not exist
+      role: partner
+      restMethod: get
+      inputTemplate: partner/authPartner/GetCertificate/getCert
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "updatepolicy"
+}'
+      output: '{
+   "errors": [
+    {
+            "errorCode": "PMS_PRT_108"
+    }
+  ]
+}'

@@ -1,0 +1,15 @@
+uploadCert:
+   Partner_UploadCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCert_01
+      description: Upload valid CA Certificate for Print Partner
+      role: partner
+      restMethod: post
+      inputTemplate: partner/PrintPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/PrintPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+   "status": "Upload Success."
+}'

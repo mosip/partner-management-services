@@ -1,0 +1,15 @@
+uploadPartnerCert:
+   Partner_UploadPartnerCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_01
+      description: Upload valid Partner Certificate for Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/GenerateApiKeyForApprovedPolicies/UploadCert/uploadCert
+      outputTemplate: partner/GenerateApiKeyForApprovedPolicies/UploadCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'   
