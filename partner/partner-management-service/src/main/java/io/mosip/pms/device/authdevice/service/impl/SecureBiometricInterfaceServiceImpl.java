@@ -803,13 +803,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (deviceId != null) {
+				deleteDeviceDetail(deviceId);
+			}
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (deviceId != null) {
+				deleteDeviceDetail(deviceId);
+			}
 			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
