@@ -344,7 +344,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyId", required = false) String policyId,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
-			@RequestParam(value = "partnerTypeCode", required = false) String partnerTypeCode
+			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
 		partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
@@ -369,8 +369,8 @@ public class PartnerManagementController {
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
 		}
-		if (partnerTypeCode != null) {
-			filterDto.setPartnerTypeCode(partnerTypeCode.toLowerCase());
+		if (partnerType != null) {
+			filterDto.setPartnerType(partnerType.toLowerCase());
 		}
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
