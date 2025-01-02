@@ -1,6 +1,6 @@
 GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner:
-      endPoint: /v1/partnermanager/partners/api-keys-for-auth-partners
+      endPoint: /v1/partnermanager/partners/auth-partner-api-keys
       description: Fetching all the API Key available for Auth Partner
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
