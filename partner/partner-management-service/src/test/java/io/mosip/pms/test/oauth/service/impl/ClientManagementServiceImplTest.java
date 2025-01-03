@@ -33,7 +33,6 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import net.minidev.json.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +44,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,13 +58,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static io.mosip.pms.common.util.UserDetailUtil.getLoggedInUserId;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.oauth.client.dto.ClientDetailCreateRequest;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -77,22 +82,22 @@ public class ClientManagementServiceImplTest {
 	@Mock
 	private Environment environment;
 
-	@Mock
+	@MockBean
 	PartnerRepository partnerRepository;
 
-	@Mock
+	@MockBean
 	ClientDetailRepository clientDetailRepository;
 
-	@Mock
+	@MockBean
 	AuthPolicyRepository authPolicyRepository;
 
-	@Mock
+	@MockBean
 	ClientSummaryRepository clientSummaryRepository;
 
-	@Mock
+	@MockBean
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 
-	@MockBean
+	@Mock
 	private RestUtil restUtil;
 	
 	@MockBean
@@ -110,7 +115,7 @@ public class ClientManagementServiceImplTest {
 	@Mock
 	SecurityContext securityContext;
 
-	@Mock
+	@MockBean
 	PartnerServiceRepository partnerServiceRepository;
 
 	Map<String, Object> public_key;
@@ -118,9 +123,6 @@ public class ClientManagementServiceImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		ReflectionTestUtils.setField(serviceImpl, "clientDetailRepository", clientDetailRepository);
-		ReflectionTestUtils.setField(serviceImpl, "authPolicyRepository", authPolicyRepository);
-		ReflectionTestUtils.setField(serviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
 
@@ -520,6 +522,64 @@ public class ClientManagementServiceImplTest {
 		assertEquals(1, actualClientDetails.getClaims().size());
 		verify(authPolicyRepository).findById(anyString());
 		verify(clientDetailRepository).findById(anyString());
+	}
+
+	@Test (expected = PartnerServiceException.class)
+	public void testGetClientDetails_Exception1() {
+        when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		serviceImpl.getClientDetails("Id");
+	}
+
+	@Test (expected = PartnerServiceException.class)
+	public void testGetClientDetails_Exception2() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		io.mosip.pms.common.entity.ClientDetail clientDetail = new io.mosip.pms.common.entity.ClientDetail();
+		clientDetail.setAcrValues("values");
+		clientDetail.setClaims("Claims");
+		Optional<io.mosip.pms.common.entity.ClientDetail> clientDetailOptional = Optional.of(clientDetail);
+		when(clientDetailRepository.findById(anyString())).thenReturn(clientDetailOptional);
+
+		serviceImpl.getClientDetails("Id");
+	}
+
+	@Test (expected = PartnerServiceException.class)
+	public void testGetClientDetails_Exception3() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		io.mosip.pms.common.entity.ClientDetail clientDetail = new io.mosip.pms.common.entity.ClientDetail();
+		clientDetail.setAcrValues("values");
+		clientDetail.setClaims("Claims");
+		Optional<io.mosip.pms.common.entity.ClientDetail> clientDetailOptional = Optional.of(clientDetail);
+		when(clientDetailRepository.findById(anyString())).thenReturn(clientDetailOptional);
+
+		ArrayList<Partner> partnerArrayList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partnerArrayList.add(partner);
+		when(partnerServiceRepository.findByUserId(any())).thenReturn(partnerArrayList);
+
+		serviceImpl.getClientDetails("Id");
 	}
 
 	@Test (expected = Exception.class)
@@ -1261,8 +1321,9 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(result.getPartner());
 		assertNotNull(result.getPolicy());
 	}
+
 	@Test
-	public void getClients() throws Exception {
+	public void getClientsTest() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1297,6 +1358,7 @@ public class ClientManagementServiceImplTest {
 		clientDetail.setUpdatedBy("updater-user");
 		clientDetail.setUpdatedDateTime(LocalDateTime.now());
 		clientDetail.setIsDeleted(false);
+		clientDetailList.add(clientDetail);
 		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
 
 		AuthPolicy authPolicy = new AuthPolicy();
@@ -1306,8 +1368,142 @@ public class ClientManagementServiceImplTest {
 		authPolicy.setName("abc");
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
 
-		serviceImpl.getClients();
+		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
+
+		// Assert response is not null
+		assertNotNull(result);
+		assertNotNull(result.getResponse());
 	}
+
+	@Test
+	public void getClientsExceptionTest() {
+		serviceImpl.getClients();
+		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
+
+		// Assert response is not null
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+	}
+
+	@Test
+	public void getClientsPartnerIdNotExistsExceptionTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId(null);
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
+
+		// Assert response is not null
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+	}
+
+	@Test
+	public void getClientsPolicyNotExistsExceptionTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		List<ClientDetail> clientDetailList = new ArrayList<>();
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("id123");
+		clientDetail.setName("Sample Client");
+		clientDetail.setRpId("rp123");
+		clientDetail.setPolicyId("policy123");
+		clientDetail.setLogoUri("https://example.com/logo.png");
+		clientDetail.setRedirectUris("https://example.com/callback");
+		clientDetail.setPublicKey("public-key-string");
+		clientDetail.setClaims("claims-string");
+		clientDetail.setAcrValues("acr-values-string");
+		clientDetail.setStatus("active");
+		clientDetail.setGrantTypes("grant-type-string");
+		clientDetail.setClientAuthMethods("auth-methods-string");
+		clientDetail.setCreatedBy("creator-user");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		clientDetail.setUpdatedBy("updater-user");
+		clientDetail.setUpdatedDateTime(LocalDateTime.now());
+		clientDetail.setIsDeleted(false);
+		clientDetailList.add(clientDetail);
+		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
+
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
+
+		// Assert response is not null
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+	}
+
+	@Test
+	public void getClientsPolicyGroupNotExistsExceptionTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		List<ClientDetail> clientDetailList = new ArrayList<>();
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("id123");
+		clientDetail.setName("Sample Client");
+		clientDetail.setRpId("rp123");
+		clientDetail.setPolicyId("policy123");
+		clientDetail.setLogoUri("https://example.com/logo.png");
+		clientDetail.setRedirectUris("https://example.com/callback");
+		clientDetail.setPublicKey("public-key-string");
+		clientDetail.setClaims("claims-string");
+		clientDetail.setAcrValues("acr-values-string");
+		clientDetail.setStatus("active");
+		clientDetail.setGrantTypes("grant-type-string");
+		clientDetail.setClientAuthMethods("auth-methods-string");
+		clientDetail.setCreatedBy("creator-user");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		clientDetail.setUpdatedBy("updater-user");
+		clientDetail.setUpdatedDateTime(LocalDateTime.now());
+		clientDetail.setIsDeleted(false);
+		clientDetailList.add(clientDetail);
+		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setName("abc");
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
+
+		// Assert response is not null
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+	}
+
 
 	@Test
 	public void getPartnersClientsTest() throws Exception {
@@ -1325,8 +1521,11 @@ public class ClientManagementServiceImplTest {
 		filterDto.setPartnerId("abc");
 		filterDto.setStatus("ACTIVE");
 		filterDto.setOrgName("ABC");
-		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
-		Page<ClientSummaryEntity> page = null;
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		ClientSummaryEntity entity = new ClientSummaryEntity();
+		entity.setClientId("123");
+		Page<ClientSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+
 		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
 		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
@@ -1344,7 +1543,10 @@ public class ClientManagementServiceImplTest {
 		int pageNo = 0;
 		int pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
-		Page<ClientSummaryEntity> page = null;
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		ClientSummaryEntity entity = new ClientSummaryEntity();
+		entity.setClientId("123");
+		Page<ClientSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
 		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
 		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, null);
 	}
