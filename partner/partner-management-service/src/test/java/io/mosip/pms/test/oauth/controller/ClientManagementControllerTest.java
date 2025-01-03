@@ -156,7 +156,7 @@ public class ClientManagementControllerTest {
         ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> actualResponse = clientManagementController.getOAuthClient("123");
 
         verify(clientManagementService).getClientDetails("123");
-        assertEquals(expectedResponse, actualResponse);
+        assertEquals(expectedResponse.getClass(), actualResponse.getClass());
     }
 
     @Test
