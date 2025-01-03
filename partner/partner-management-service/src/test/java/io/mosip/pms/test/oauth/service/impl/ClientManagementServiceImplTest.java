@@ -298,7 +298,9 @@ public class ClientManagementServiceImplTest {
 
 		when(environment.getProperty(any(String.class))).thenReturn("https://testcase.pms.net/browse/OIDCClient.png");
 		when(clientDetailRepository.findById(any(String.class))).thenReturn(Optional.empty());
-		when(partnerRepository.findById(any(String.class))).thenReturn(Optional.of(new Partner()));
+		Partner partner = new Partner();
+		partner.setPartnerTypeCode("Device_Provider");
+		when(partnerRepository.findById(any(String.class))).thenReturn(Optional.of(partner));
 
 		ClientDetailResponse response = serviceImpl.createOIDCClient(createRequest);
 
@@ -321,7 +323,7 @@ public class ClientManagementServiceImplTest {
 
 		when(environment.getProperty("auth.url")).thenReturn("https://pms.net/partner");
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(new Partner()));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
 
 		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
 		createRequest.setName("ClientName");
