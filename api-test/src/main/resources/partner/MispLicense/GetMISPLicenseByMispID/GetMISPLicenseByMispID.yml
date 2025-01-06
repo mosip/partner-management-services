@@ -12,7 +12,7 @@ GetMISPLicenseByMispID:
 }'
       output: '{
     "providerId": "MISP-AUTOMATION",
-    "licenseKeyStatus": "De-active"
+    "licenseKeyStatus": "Active"
     }'
     
    Partner_GetMISPLicenseByMispID__Active_allValid_smoke:
