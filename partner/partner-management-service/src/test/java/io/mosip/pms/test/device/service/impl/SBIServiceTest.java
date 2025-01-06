@@ -57,11 +57,13 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
+import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterfaceHistory;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistoryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.authdevice.service.impl.SecureBiometricInterfaceServiceImpl;
 import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
@@ -69,6 +71,7 @@ import io.mosip.pms.device.constant.SecureBiometricInterfaceConstant;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
@@ -117,6 +120,9 @@ public class SBIServiceTest {
 	
 	@Mock
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
+
+	@Mock
+	RegistrationDeviceSubTypeRepository registrationDeviceSubTypeRepository;
 
 	@Mock
 	SbiSummaryRepository sbiSummaryRepository;
@@ -550,6 +556,257 @@ public class SBIServiceTest {
 		filterValueDto.setFilters(filterDtos);
 		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		secureBiometricInterfaceService.filterValues(filterValueDto);
+	}
+
+	@Test
+	public void addDeviceToSbiTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("123");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		RegistrationDeviceSubType registrationDeviceSubType = new RegistrationDeviceSubType();
+		registrationDeviceSubType.setCode("Slap");
+		registrationDeviceSubType.setDeviceTypeCode("Finger");
+		when(registrationDeviceSubTypeRepository.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString(), anyString())). thenReturn(registrationDeviceSubType);
+		when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		when(deviceDetailRepository.findUniqueDeviceDetail(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(null);
+
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setId("123456");
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setDeviceTypeCode("Finger");
+		deviceDetail.setDeviceSubTypeCode("Slap");
+		deviceDetail.setMake("make");
+		deviceDetail.setModel("model");
+		deviceDetail.setApprovalStatus("pending_approval");
+		deviceDetail.setIsActive(false);
+		when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(null);
+
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setActive(true);
+		sbi.setApprovalStatus("approved");
+		sbi.setProviderId("123");
+		sbi.setSwCreateDateTime(LocalDateTime.now());
+		sbi.setSwExpiryDateTime(LocalDateTime.now().plusDays(1));
+		when(sbiRepository.findById(anyString())).thenReturn(Optional.of(sbi));
+		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		DeviceDetailSBIPK deviceDetailSBIPK = new DeviceDetailSBIPK();
+		deviceDetailSBIPK.setSbiId("sbi123");
+		deviceDetailSBIPK.setDeviceDetailId("123456");
+		deviceDetailSBI.setId(deviceDetailSBIPK);
+		deviceDetailSBI.setPartnerName("abc");
+		deviceDetailSBI.setProviderId("123");
+		deviceDetailSBI.setIsActive(false);
+		when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+	}
+
+	@Test
+	public void addDeviceToSbiTest1() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("123");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		RegistrationDeviceSubType registrationDeviceSubType = new RegistrationDeviceSubType();
+		registrationDeviceSubType.setCode("Slap");
+		registrationDeviceSubType.setDeviceTypeCode("Finger");
+		when(registrationDeviceSubTypeRepository.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString(), anyString())). thenReturn(registrationDeviceSubType);
+		when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setId("123456");
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setDeviceTypeCode("Finger");
+		deviceDetail.setDeviceSubTypeCode("Slap");
+		deviceDetail.setMake("make");
+		deviceDetail.setModel("model");
+		deviceDetail.setApprovalStatus("pending_approval");
+		deviceDetail.setIsActive(false);
+		when(deviceDetailRepository.findUniqueDeviceDetail(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(deviceDetail);
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(null);
+
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setActive(true);
+		sbi.setApprovalStatus("approved");
+		sbi.setProviderId("123");
+		sbi.setSwCreateDateTime(LocalDateTime.now());
+		sbi.setSwExpiryDateTime(LocalDateTime.now().plusDays(1));
+		when(sbiRepository.findById(anyString())).thenReturn(Optional.of(sbi));
+		when(deviceDetailRepository.findById(anyString())).thenReturn(Optional.of(deviceDetail));
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		DeviceDetailSBIPK deviceDetailSBIPK = new DeviceDetailSBIPK();
+		deviceDetailSBIPK.setSbiId("sbi123");
+		deviceDetailSBIPK.setDeviceDetailId("123456");
+		deviceDetailSBI.setId(deviceDetailSBIPK);
+		deviceDetailSBI.setPartnerName("abc");
+		deviceDetailSBI.setProviderId("123");
+		deviceDetailSBI.setIsActive(false);
+		when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+	}
+
+	@Test
+	public void addDeviceToSbiExceptionTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("123");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		RegistrationDeviceSubType registrationDeviceSubType = new RegistrationDeviceSubType();
+		registrationDeviceSubType.setCode("Slap");
+		registrationDeviceSubType.setDeviceTypeCode("Finger");
+		when(registrationDeviceSubTypeRepository.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString(), anyString())). thenReturn(registrationDeviceSubType);
+		when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		when(deviceDetailRepository.findUniqueDeviceDetail(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(null);
+
+		DeviceDetail deviceDetail = new DeviceDetail();
+		deviceDetail.setId("123456");
+		deviceDetail.setDeviceProviderId("123");
+		deviceDetail.setDeviceTypeCode("Finger");
+		deviceDetail.setDeviceSubTypeCode("Slap");
+		deviceDetail.setMake("make");
+		deviceDetail.setModel("model");
+		deviceDetail.setApprovalStatus("pending_approval");
+		deviceDetail.setIsActive(false);
+		when(deviceDetailRepository.save(any())).thenReturn(deviceDetail);
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		DeviceDetailSBIPK deviceDetailSBIPK = new DeviceDetailSBIPK();
+		deviceDetailSBIPK.setSbiId("sbi123");
+		deviceDetailSBIPK.setDeviceDetailId("123456");
+		deviceDetailSBI.setId(deviceDetailSBIPK);
+		deviceDetailSBI.setPartnerName("abc");
+		deviceDetailSBI.setProviderId("123");
+		deviceDetailSBI.setIsActive(false);
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString())).thenReturn(deviceDetailSBI);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+	}
+
+	@Test
+	public void addDeviceToSbiExceptionTest2() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("123");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		RegistrationDeviceSubType registrationDeviceSubType = new RegistrationDeviceSubType();
+		registrationDeviceSubType.setCode("Slap");
+		registrationDeviceSubType.setDeviceTypeCode("Finger");
+		when(registrationDeviceSubTypeRepository.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString(), anyString())). thenReturn(registrationDeviceSubType);
+		when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(null);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+
+		when(registrationDeviceSubTypeRepository.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString(), anyString())). thenReturn(null);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+	}
+
+	@Test
+	public void addDeviceToSbiExceptionTest3() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("345");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+
+		partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
 	}
 
 	@Test

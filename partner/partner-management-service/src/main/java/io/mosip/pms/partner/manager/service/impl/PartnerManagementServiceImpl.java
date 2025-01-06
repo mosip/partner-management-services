@@ -916,7 +916,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
-					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
 							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
 							filterDto.getStatus(), filterDto.getRequestDetails(),
 							filterDto.getPolicyGroupName(), pageable);
@@ -1031,7 +1031,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 			}
 			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CaCertTypeListResponseDto.class);
-			pageResponseV2Dto.setPageNo(responseObject.getPageNumber() - 1);
+			pageResponseV2Dto.setPageNo((responseObject.getPageNumber() - 1));
 			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
 			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());

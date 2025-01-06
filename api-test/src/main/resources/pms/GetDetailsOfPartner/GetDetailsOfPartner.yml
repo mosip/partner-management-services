@@ -8,7 +8,7 @@ GetDetailsOfPartner:
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
       input: '{
-	"partnerId": "111999"
+	"partnerId": "pms-111999"
 }'
       output: ' {
 }'

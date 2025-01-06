@@ -446,11 +446,6 @@ public class PartnerManagementControllerTest {
 		int pageNo = 0;
 		int pageSize = 8;
 		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
-		filterDto.setCaCertificateType("root");
-		filterDto.setCertificateId("123");
-		filterDto.setPartnerDomain("FTM");
-		filterDto.setIssuedTo("CA");
-		filterDto.setIssuedBy("CA");
 		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
 		Mockito.when(partnerManagementService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto))
@@ -465,6 +460,16 @@ public class PartnerManagementControllerTest {
 						.param("partnerDomain", "FTM")
 						.param("issuedTo", "CA")
 						.param("issuedBy", "CA"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void downloadRootCertificateTest() throws Exception {
+		ResponseWrapperV2<CACertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.downloadRootCertificate(anyString())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/download-root-certificate/{certificateId}", "123")
+						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

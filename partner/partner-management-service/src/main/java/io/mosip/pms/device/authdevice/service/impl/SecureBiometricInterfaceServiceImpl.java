@@ -493,7 +493,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
 			for (Partner partner : partnerList) {
-				validatePartnerId(partner, userId);
+				partnerHelper.validatePartnerId(partner, userId);
 				if (partnerHelper.checkIfPartnerIsDevicePartner(partner)) {
 					List<SecureBiometricInterface> secureBiometricInterfaceList = sbiRepository.findByProviderId(partner.getId());
 					if (!secureBiometricInterfaceList.isEmpty()) {
@@ -772,7 +772,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			String partnerOrgname = BLANK_STRING;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(partnerId)) {
-					validatePartnerId(partner, userId);
+					partnerHelper.validatePartnerId(partner, userId);
 					partnerIdExists = true;
 					partnerOrgname = partner.getName();
 					break;
@@ -803,13 +803,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
 			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
@@ -900,14 +904,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
-			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
-				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-				if (deviceDetail.isPresent()) {
-					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
-					if (deviceDetailSBIList.isEmpty()) {
-						deviceDetailRepository.deleteById(deviceDetailId);
-						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
-					}
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+			if (deviceDetail.isPresent()) {
+				List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+				if (deviceDetailSBIList.isEmpty()) {
+					deviceDetailRepository.deleteById(deviceDetailId);
+					LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
 				}
 			}
 		} catch (Exception e) {
@@ -941,7 +943,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			boolean partnerIdExists = false;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(sbi.getProviderId())) {
-					validatePartnerId(partner, userId);
+					partnerHelper.validatePartnerId(partner, userId);
 					validateDevicePartnerType(partner, userId);
 					partnerIdExists = true;
 					break;
@@ -991,14 +993,6 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		responseWrapper.setId(getSbiDevicesId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
-	}
-
-	public static void validatePartnerId(Partner partner, String userId) {
-		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-			LOGGER.info("Partner Id is null or empty for user id : " + userId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-		}
 	}
 
 	private void validateDevicePartnerType(Partner partner, String userId) {
@@ -1108,7 +1102,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		Partner partnerDetails = null;
 		for (Partner partner : partnerList) {
 			if (partner.getId().equals(sbiProviderId)) {
-				validatePartnerId(partner, userId);
+				partnerHelper.validatePartnerId(partner, userId);
 				sbiProviderExist = true;
 				partnerDetails = partner;
 				break;
