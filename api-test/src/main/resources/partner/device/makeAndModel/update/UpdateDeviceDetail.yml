@@ -23,14 +23,15 @@ createServiceToUpdateDeviceDetail:
       output: '{
   }'
 
-   Partner_ServiceToUpdateDeviceDetail_afterReject_InValid:
+   Partner_ServiceToUpdateDeviceDetail_afterReject_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_02
       description: Create Service To Update DeviceDetail afterReject
       role: partner
+      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: partner/device/makeAndModel/update/updateDeviceDetail
-      outputTemplate: partner/error
+      outputTemplate: partner/device/makeAndModel/update/updateDeviceDetailResult
       input: '{
     "deviceProviderId": "Tech-123",
     "deviceSubTypeCode": "Single",
@@ -44,11 +45,6 @@ createServiceToUpdateDeviceDetail:
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
- 	"errors": [
-    {
-      "errorCode": "PMS_COR_001"
-    }
-  ]
   }'
 
    Partner_ServiceToUpdateDeviceDetail_Missing_InputParameter_DeviceId:
