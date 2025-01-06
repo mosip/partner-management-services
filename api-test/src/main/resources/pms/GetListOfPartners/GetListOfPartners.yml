@@ -11,3 +11,267 @@ GetListOfPartners:
 }'
       output: ' {
 }'
+   Pms_GetListOfPartners_All_Valid_Smoke_admin_dashboard:
+      endPoint: /v1/partnermanager/partners/v3
+      description: Fetching all the active List Of Partnered in the system
+      role: admin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_invalid_sort:
+      endPoint: /v1/partnermanager/partners/v3?sortType=3@@#&pageNo=0&pageSize=8
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_empty_sort:
+      endPoint: /v1/partnermanager/partners/v3?sortType= &pageNo=0&pageSize=8
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_without_token:
+      endPoint: /v1/partnermanager/partners/v3?sortType=3@@#&pageNo=0&pageSize=8
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_sortfield:
+      endPoint: /v1/partnermanager/partners/v3?sortFieldName=a2a33
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_sorttype:
+      endPoint: /v1/partnermanager/partners/v3?sortFieldName=a2a33
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_pageno:
+      endPoint: /v1/partnermanager/partners/v3?pageNo=22
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_empty_pageno:
+      endPoint: /v1/partnermanager/partners/v3?pageNo=
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_pagesize:
+      endPoint: /v1/partnermanager/partners/v3?pageSize=-12
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_partnerid:
+      endPoint: /v1/partnermanager/partners/v3?partnerId=-dndn333
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_empty_partnerid:
+      endPoint: /v1/partnermanager/partners/v3?partnerId= 
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_invalid_partnertype:
+      endPoint: /v1/partnermanager/partners/v3?partnerType=2233ddd
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_empty_partnertype:
+      endPoint: /v1/partnermanager/partners/v3?partnerType= 
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_deactivated_partner:
+      endPoint: /v1/partnermanager/partners/v3?isActive=false
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_invalid_organization_name:
+      endPoint: /v1/partnermanager/partners/v3?orgName=123@1sse
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_empty_organization_name:
+      endPoint: /v1/partnermanager/partners/v3?orgName= 
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_empty_emailAddress:
+      endPoint: /v1/partnermanager/partners/v3?emailAddress= 
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_invalid_email:
+      endPoint: /v1/partnermanager/partners/v3?emailAddress=2t63t@@@
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_not_uploaded_email:
+      endPoint: /v1/partnermanager/partners/v3?certificateUploadStatus=not_uploaded
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_invalid_policyGroup_Name:
+      endPoint: /v1/partnermanager/partners/v3?policyGroupName=-12
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_empty_policyGroup_Name:
+      endPoint: /v1/partnermanager/partners/v3?policyGroupName= 
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfPartners_with_invalid_policyGroup_Name:
+      endPoint: /v1/partnermanager/partners/v3?policyGroupName=@374b
+      description: Fetching all the active List Of Partnered in the system
+      role: partnerrevamp 
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: ' {
+}'

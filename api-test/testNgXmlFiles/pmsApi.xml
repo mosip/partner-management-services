@@ -681,4 +681,11 @@
 		</classes>
 	</test>
 	
+	<test name="GetAllRootCertificate">
+		<parameter name="ymlFile" value="pms/GetListOfPartners/GetListOfPartners.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 </suite>

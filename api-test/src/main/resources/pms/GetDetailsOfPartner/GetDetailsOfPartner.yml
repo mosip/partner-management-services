@@ -12,3 +12,94 @@ GetDetailsOfPartner:
 }'
       output: ' {
 }'
+   Pms_GetDetailsOfPartner_with_admin_role:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: admin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": "111999"
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_without_token:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: invalid
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": "111999"
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_with_invalid_partner:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: invalid
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": "@334ds356"
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_with_invalid_partner:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: invalid
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": " "
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_with_unauthorized_token:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: resident
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": " "
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_with_unauthor_token:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: resident
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": " "
+}'
+      output: ' {
+}'
+   Pms_GetDetailsOfPartner_without_admin_role:
+      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      description: Fetching all the details of the Partner Id
+      role: idrepo
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
+      outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
+      input: '{
+	"partnerId": " "
+}'
+      output: ' {
+}'
