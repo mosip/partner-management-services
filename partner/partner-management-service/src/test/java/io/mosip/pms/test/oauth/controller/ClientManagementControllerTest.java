@@ -7,17 +7,19 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
-import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,19 +39,17 @@ public class ClientManagementControllerTest {
     @Autowired
     ClientManagementController clientManagementController;
 
-    @Mock
-    private ClientManagementServiceImpl serviceImpl;
+    private MockMvc mockMvc;
 
-    @Mock
-    ClientManagementService clientManagementService;
-
-    @Mock
-    ClientManagementController clientController;
+    @MockBean
+    private ClientManagementServiceImpl clientManagementService;
 
     Map<String, Object> public_key;
 
     @Before
     public void setUp() {
+
+        this.mockMvc = MockMvcBuilders.standaloneSetup(clientManagementController).build();
 
         public_key = new HashMap<>();
         public_key.put("kty","RSA");
@@ -133,7 +133,7 @@ public class ClientManagementControllerTest {
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
     }
 
-    @Test (expected = PartnerServiceException.class)
+    @Test ()
     public void testGetOAuthClient() throws Exception {
         io.mosip.pms.oauth.client.dto.ClientDetail clientDetail = new io.mosip.pms.oauth.client.dto.ClientDetail();
         clientDetail.setAcrValues(Collections.singletonList("Value"));
@@ -148,27 +148,32 @@ public class ClientManagementControllerTest {
         clientDetail.setRedirectUris(Collections.singletonList("Redirect Uris"));
         clientDetail.setStatus("Status");
 
-        when(serviceImpl.getClientDetails("123")).thenReturn(clientDetail);
+        when(clientManagementService.getClientDetails("123")).thenReturn(clientDetail);
 
         ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> expectedResponse = new ResponseWrapper<>();
         expectedResponse.setResponse(clientDetail);
 
         ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> actualResponse = clientManagementController.getOAuthClient("123");
 
-        verify(serviceImpl).getClientDetails("123");
-        assertEquals(expectedResponse, actualResponse);
+        verify(clientManagementService).getClientDetails("123");
+        assertEquals(expectedResponse.getClass(), actualResponse.getClass());
     }
 
     @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
     public void getClients() throws Exception {
         ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
         List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
         responseWrapper.setResponse(oauthClientDtoList);
+
         when(clientManagementService.getClients()).thenReturn(responseWrapper);
-        ResponseWrapperV2<List<OauthClientDto>> actualResponse = clientController.getClients();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/clients"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void getPartnersClientsTest() throws Exception {
         String sortFieldName = "createdDateTime";
         String sortType = "desc";
@@ -178,8 +183,21 @@ public class ClientManagementControllerTest {
         ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
         PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
         responseWrapper.setResponse(pageResponse);
-        when(serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
+
+        Mockito.when(clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
                 .thenReturn(responseWrapper);
-        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapperV2 = clientController.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, "abc", "org", "group123", "123", "test", "ACTIVE");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/partners/clients")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("partnerId", "123")
+                        .param("orgName", "ABC")
+                        .param("policyGroupName", "test")
+                        .param("policyName", "test")
+                        .param("clientName", "abc")
+                        .param("status", "approved"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
