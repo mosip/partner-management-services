@@ -71,6 +71,7 @@
 		<kernel-dataaccess-hibernate.version>1.2.0.1</kernel-dataaccess-hibernate.version>
 		<kernel-websubclient-api.version>1.2.0.1</kernel-websubclient-api.version>
 		<kernel.templatemanager.velocity.version>1.2.0.1</kernel.templatemanager.velocity.version>
+		<kernel.authadapter.version>1.2.0.1</kernel.authadapter.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
