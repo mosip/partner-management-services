@@ -17,6 +17,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             "WHEN p.approvalStatus = 'approved' AND p.isActive = true THEN 'approved' " +
             "WHEN p.approvalStatus = 'approved' AND p.isActive = false THEN 'deactivated' " +
             "WHEN p.approvalStatus = 'InProgress' THEN 'InProgress' " +
+            "WHEN p.approvalStatus = 'rejected' THEN 'rejected' " +
             "END AS status, " +
             "p.name, p.partnerTypeCode, pg.name, ppr.policyId, ap.name, " +
             "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime, ap.descr, pg.desc) " +
