@@ -12,7 +12,13 @@ import org.springframework.stereotype.Repository;
 public interface PartnerPolicyMappingRequestRepository extends BaseRepository<PartnerPolicyRequestSummaryEntity, String> {
 
     @Query(value = "SELECT new PartnerPolicyRequestSummaryEntity(" +
-            "ppr.id, ppr.partnerId, p.name, p.partnerTypeCode, pg.name, ppr.policyId, ap.name, " +
+            "ppr.id, ppr.partnerId, " +
+            "CASE " +
+            "WHEN p.approvalStatus = 'approved' AND p.isActive = true THEN 'approved' " +
+            "WHEN p.approvalStatus = 'approved' AND p.isActive = false THEN 'deactivated' " +
+            "WHEN p.approvalStatus = 'InProgress' THEN 'InProgress' " +
+            "END AS status, " +
+            "p.name, p.partnerTypeCode, pg.name, ppr.policyId, ap.name, " +
             "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime, ap.descr, pg.desc) " +
             "FROM PartnerPolicyRequestV2 ppr " +
             "LEFT JOIN ppr.policy ap " +
