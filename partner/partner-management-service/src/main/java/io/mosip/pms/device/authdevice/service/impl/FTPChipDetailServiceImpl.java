@@ -133,6 +133,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	public static final String APPROVED = "approved";
 
+	public static final String DEACTIVATED = "deactivated";
+
 	public static final String PENDING_APPROVAL = "pending_approval";
 
 	public static final String BLANK_STRING = "";
@@ -739,6 +741,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 				for (Partner partner : partnerList) {
 					if (partnerHelper.checkIfPartnerIsFtmPartner(partner)) {
 						partnerHelper.validatePartnerId(partner, userId);
+						String partnerStatus = getPartnerStatus(partner);
 						List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository.findByProviderId(partner.getId());
 						if(!ftpChipDetailList.isEmpty()) {
 							for(FTPChipDetail ftpChipDetail: ftpChipDetailList) {
@@ -764,6 +767,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 								}
 								ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
 								ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
+								ftmChipDetailsDto.setPartnerStatus(partnerStatus);
 								ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
 								ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
 								ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
@@ -793,6 +797,16 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		responseWrapper.setId(getFtmChipDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public String getPartnerStatus(Partner partner) {
+		if(partner.getApprovalStatus().equals(APPROVED) && partner.getIsActive()) {
+			return APPROVED;
+		} else if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+			return DEACTIVATED;
+		} else {
+			return partner.getApprovalStatus();
+		}
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

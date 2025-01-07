@@ -15,6 +15,9 @@ public class FtmChipDetailsDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
+    @Schema(description = "Current status of the partner. Possible values are approved, deactivated and InProgress", example = "approved")
+    private String partnerStatus;
+
     @Schema(description = "Make of the FTM chip", example = "make-123")
     private String make;
 
