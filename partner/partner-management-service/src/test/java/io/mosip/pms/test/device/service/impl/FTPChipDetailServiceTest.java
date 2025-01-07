@@ -1725,6 +1725,7 @@ public class FTPChipDetailServiceTest {
 		partner.setId("123");
 		partner.setPartnerTypeCode("FTM_Provider");
 		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
 		partner.setCertificateAlias("abs");
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(any())).thenReturn(partnerList);
