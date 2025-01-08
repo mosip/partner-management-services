@@ -291,6 +291,7 @@ public class SecureBiometricInterfaceController {
 			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "sbiId", required = false) String sbiId,
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@Parameter(
 					description = "Status of SBI",
@@ -312,6 +313,9 @@ public class SecureBiometricInterfaceController {
 		}
 		if (orgName != null) {
 			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (sbiId != null) {
+			filterDto.setSbiId(sbiId.toLowerCase());
 		}
 		if (sbiVersion != null) {
 			filterDto.setSbiVersion(sbiVersion.toLowerCase());
