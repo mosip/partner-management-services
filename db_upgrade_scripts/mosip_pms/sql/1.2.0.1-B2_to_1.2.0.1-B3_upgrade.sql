@@ -11,7 +11,7 @@
 
 
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) VALUES
 	 ('Binding_Partner','Binding Partner',true,true,'superadmin',now(),NULL,NULL,false,NULL) ON CONFLICT (code) DO NOTHING;

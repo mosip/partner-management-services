@@ -10,6 +10,6 @@
 
 
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 DELETE FROM pms.partner_type WHERE code = 'Binding_Partner';

@@ -8,7 +8,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- --------------------------------------------------------------------------------------------------
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 ALTER TABLE pms.device_detail DROP CONSTRAINT fk_devdtl_id;
 

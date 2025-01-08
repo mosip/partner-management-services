@@ -8,7 +8,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- -------------------------------------------------------------------------------------------------
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 
 \ir ../ddl/pms-partner_policy_credential_type.sql

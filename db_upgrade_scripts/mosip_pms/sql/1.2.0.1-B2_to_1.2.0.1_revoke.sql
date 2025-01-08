@@ -8,7 +8,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- -------------------------------------------------------------------------------------------------
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 ALTER TABLE pms.partner DROP COLUMN logo_url;
 

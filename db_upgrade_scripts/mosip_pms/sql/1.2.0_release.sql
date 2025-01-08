@@ -10,7 +10,7 @@
 -- 15-07-2022           Nagarjuna K          Merged 1.2.0.1 changes to 1.2.0 release patch
 -- -------------------------------------------------------------------------------------------------
 
-\c mosip_pms sysadmin
+\c :mosipdbname sysadmin
 
 
 \ir ../ddl/pms-device_detail.sql
