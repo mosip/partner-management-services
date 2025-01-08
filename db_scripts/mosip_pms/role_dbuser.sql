@@ -1,4 +1,4 @@
-CREATE ROLE pmsuser WITH 
+CREATE ROLE :dbuname WITH
 	INHERIT
 	LOGIN
-	PASSWORD :dbuserpwd;
+	PASSWORD ':dbuserpwd';

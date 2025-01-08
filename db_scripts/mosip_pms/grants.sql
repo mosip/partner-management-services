@@ -1,17 +1,16 @@
-\c mosip_pms 
+\c :mosipdbname
 
 GRANT CONNECT
-   ON DATABASE mosip_pms
-   TO pmsuser;
+   ON DATABASE :mosipdbname
+   TO :dbuname;
 
 GRANT USAGE
    ON SCHEMA pms
-   TO pmsuser;
+   TO :dbuname;
 
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
    ON ALL TABLES IN SCHEMA pms
-   TO pmsuser;
+   TO :dbuname;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA pms
-	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO pmsuser;
-
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO :dbuname;
