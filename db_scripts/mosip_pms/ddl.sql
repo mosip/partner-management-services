@@ -1,4 +1,4 @@
-\c mosip_pms 
+\c :mosipdbname 
 
 \ir ddl/pms-auth_policy.sql
 \ir ddl/pms-auth_policy_h.sql
