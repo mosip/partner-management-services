@@ -1155,7 +1155,7 @@ public class SBIServiceTest {
 		field.set(partnerHelper, mockMap);
 
 		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by(Sort.Order.asc("crDtimes")));
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(any(), any(), any(), any(), anyString(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> response = secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 
 		Assert.assertNotNull(response);
@@ -1175,7 +1175,7 @@ public class SBIServiceTest {
 		int pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<SbiSummaryEntity> page = null;
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
 		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
@@ -1331,13 +1331,13 @@ public class SBIServiceTest {
 	@Test
 	public void testGetSbiDetails() throws NoSuchFieldException, IllegalAccessException {
 		Page<SbiSummaryEntity> page = null;
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
 
 		// Create and set the mock map
 		Map<String, String> mockMap = new HashMap<>();
@@ -1394,31 +1394,31 @@ public class SBIServiceTest {
 			switch (sortKey) {
 				case "status_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				case "status_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				case "sbiExpiryStatus_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				case "sbiExpiryStatus_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				case "countOfAssociatedDevices_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				case "countOfAssociatedDevices_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), any());
 					break;
 				default:
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), any());
 					break;
 			}
 

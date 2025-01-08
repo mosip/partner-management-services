@@ -714,11 +714,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
 				return ftmDetailsSummaryRepository.
 						getSummaryOfPartnersFtmDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+								filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
 				return ftmDetailsSummaryRepository.
 						getSummaryOfPartnersFtmDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+								filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 			}
 			//Sorting for other fields
 			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.ftmAliasToColumnMap, sortFieldName), sortType);
@@ -726,7 +726,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}
 		//Default
 		return ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
-				filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+				filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 	}
 
 	@Override
