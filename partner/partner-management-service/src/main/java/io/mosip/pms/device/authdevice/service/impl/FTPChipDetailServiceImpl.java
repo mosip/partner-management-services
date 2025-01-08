@@ -359,7 +359,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
 		}
-		if(uploadApiResponse.containsKey(ERRORS)) {
+		if(uploadApiResponse.containsKey(ERRORS) && uploadApiResponse.get(ERRORS) != null) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
 			if(!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
