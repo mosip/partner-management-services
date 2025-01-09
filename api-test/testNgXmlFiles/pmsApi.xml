@@ -674,9 +674,15 @@
 	</test>
 	
 	<test name="GetAllRootCertificate">
-		<parameter name="ymlFile" value="pms/GetListOfPartners/GetListOfPartners.yml" />
+		<parameter name="ymlFile" value="pms/GetAllRootCertificate/GetAllRootCertificate.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="DownloadRootCertificate">
+		<parameter name="ymlFile" value="pms/DownloadRootCertificate/DownloadRootCertificate.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.DownloadRootCertificate" />
 		</classes>
 	</test>
 	
