@@ -46,4 +46,17 @@ public class UserDetailUtil {
 
 		return null;
 	}
+
+	public static Collection<String> getLoggedInUserRoles() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	
+		if (authentication != null && authentication.isAuthenticated()) {
+			// Extract roles from GrantedAuthority
+			return authentication.getAuthorities().stream()
+					.map(GrantedAuthority::getAuthority)  // Convert GrantedAuthority to role name
+					.collect(Collectors.toList());       // Collect roles into a list
+		}
+	
+		return null; // Return null if no authentication exists
+	}
 }

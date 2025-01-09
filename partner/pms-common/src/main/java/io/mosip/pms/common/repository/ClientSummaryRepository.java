@@ -23,10 +23,12 @@ public interface ClientSummaryRepository extends BaseRepository<ClientSummaryEnt
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
             "AND (:clientName IS NULL OR lower(c.name) LIKE %:clientName%) " +
-            "AND (:status IS NULL OR c.status = :status) "
+            "AND (:status IS NULL OR c.status = :status) " +
+            "AND (:partnerIds IS NULL OR c.rpId IN :partnerIds) "
     )
     Page<ClientSummaryEntity> getSummaryOfAllPartnerClients(
             @Param("partnerId") String partnerId,
+            @Param("partnerIds") List<String> partnerIds,
             @Param("orgName") String orgName,
             @Param("policyGroupName") String policyGroupName,
             @Param("policyName") String policyName,

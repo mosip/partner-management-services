@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ClientFilterDto {
     private String partnerId;
+    private List<String> partnerIds;
     private String orgName;
     private String policyGroupName;
     private String policyName;

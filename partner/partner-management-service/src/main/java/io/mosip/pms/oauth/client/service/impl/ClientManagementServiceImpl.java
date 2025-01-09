@@ -815,11 +815,16 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, int pageNo, int pageSize, ClientFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		List<String> partnerIds = null;
+		if(!UserDetailUtil.getLoggedInUserRoles().contains("admin")) {
+			filterDto.setPartnerIds(getLoggedInUserPartnerList());
+		}
 		try {
 			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			Pageable pageable = Pageable.unpaged();//PageRequest.of(pageNo, pageSize);
 
 			//Sorting
 			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
@@ -827,7 +832,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 			Page<ClientSummaryEntity> page = clientSummaryRepository.
-					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
+					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getPartnerIds(), filterDto.getOrgName(),
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
 							filterDto.getClientName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
@@ -946,4 +951,22 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private String getLoggedInUserId() {
 		return UserDetailUtil.getLoggedInUserId();
 	}
+
+	private getLoggedInUserPartnerList() {
+		List<String> partnerIds =  new ArrayList<>();
+		String userId = getUserId();
+		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+		List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
+		for (Partner partner : partnerList) {
+			String partnerId = partner.getId();
+			if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
+				LOGGER.info("Partner Id is null or empty for user id : " + userId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			partnerIds.add(partnerId);
+		}
+		return partnerIds
+	}
+	
 }
