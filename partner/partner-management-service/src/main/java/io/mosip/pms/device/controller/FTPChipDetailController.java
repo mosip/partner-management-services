@@ -110,19 +110,14 @@ public class FTPChipDetailController {
 
 	}
 
-	/**
-	 * Put API to update a row of DeviceDetail data
-	 * 
-	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
-	 * @return ResponseEntity DeviceDetail which is updated successfully
-	 *         {@link ResponseEntity}
+	/*
+	 * This API has been deprecated since the release-1.3.0
 	 */
-	@Deprecated
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutftpchipdetail())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update ftp chip detail", description =  "This API has been deprecated since 1.3.x release.")
+	@Operation(summary = "Service to update ftp chip detail - deprecated since 1.3.0 release.", description =  "This API has been deprecated since 1.3.0 release.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating ftp chip detail any error occured") })
@@ -239,11 +234,19 @@ public class FTPChipDetailController {
 				"AUT-007", ftpChipDetailId, "ftpChipDetailId");
 		return response;
     }
-	
+
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /ftpchipdetail/search/v2 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailsearch())")
-	@Operation(summary = "Service to serach ftp chip details", description = "Service to serach ftp chip details")
+	@Operation(summary = "Service to search ftp chip details - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /ftpchipdetail/search/v2 endpoint.")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -282,7 +285,8 @@ public class FTPChipDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
 	@GetMapping(value = "/search/v2")
-	@Operation(summary = "Added in release-1.3.0, This endpoint retrieves the list of all FTM chip details created by all partners", description = "This endpoint, available for Partner Admin users only, retrieves the list of all FTM chip details created by all partners. It upgrades the earlier GET endpoint /ftpchipdetail/search by adding performance improvements and support for deactivated status. Additionally, it supports pagination, sorting, and filtering. This endpoint is configured for the role: PARTNER_ADMIN")
+	@Operation(summary = "Added in release-1.3.0, available only for Partner Admin users, retrieves a list of all FTM chip details created by all partners",
+			description = "This endpoint, available for Partner Admin users only, retrieves the list of all FTM chip details created by all partners. It upgrades the earlier GET endpoint /ftpchipdetail/search by adding performance improvements and support for deactivated status. Additionally, it supports pagination, sorting, and filtering. This endpoint is configured for the role: PARTNER_ADMIN")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

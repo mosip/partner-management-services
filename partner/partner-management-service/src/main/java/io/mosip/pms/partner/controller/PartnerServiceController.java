@@ -264,20 +264,19 @@ public class PartnerServiceController {
 		response.setVersion(VERSION);
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}			
+	}
 
-	/**
-	 * This API would be used to retrieve all API key requests submitted by partner
-	 * till date.
-	 * 
-	 * @param partnerId
-	 *            this is unique id created after self registered by partner
-	 * @return partnersRetrieveApiKeyRequests this is a list of partner request for
-	 *         creation of partner API Key
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/policy-requests endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
 	 */
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequest())")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
-	@Operation(summary = "Service to get api key requests of partner", description = "Service to get api key requests of partner")
+	@Operation(summary = "Service to get api key requests of partner - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/policy-requests endpoint.")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
 			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
@@ -332,19 +331,17 @@ public class PartnerServiceController {
 		return response;
 	}
 
-    /**
-	 * To Download Partner Certificate.
-	 * 
-	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
-	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
-     * @throws IOException 
-     * @throws JsonProcessingException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/{partnerId}/certificate-data endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
 	 */
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
 	@RequestMapping(value = "/{partnerId}/certificate", method = RequestMethod.GET)
-	@Operation(summary = "Service to get partner certificate", description = "Service to get partner certificate")
+	@Operation(summary = "Service to get partner certificate - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/{partnerId}/certificate-data endpoint.")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
@@ -416,10 +413,18 @@ public class PartnerServiceController {
 		return partnerService.getAuthPartnerApiKeys();
 	}
 
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/v3 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")
-	@Operation(summary = "Service to search partner details", description = "Service to search partner details")
+	@Operation(summary = "Service to search partner details - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/v3 endpoint")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -439,11 +444,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.searchPartnerType(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/v3 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersfiltervalues())")
-	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
+	@Operation(summary = "Service to filter partner details - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/v3 endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -451,11 +464,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.filterValues(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/apikey/request/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestfiltervalues())")
-	@Operation(summary = "Service to filter api key requests", description = "Service to filter api key requests")
+	@Operation(summary = "Service to filter api key requests - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/partner-policy-requests endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> apikeyRequetsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -463,11 +484,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.apiKeyRequestFilter(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/apikey/request/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestsearch())")
-	@Operation(summary = "Service to search api key requests", description = "Service to search api key requests")
+	@Operation(summary = "Service to search api key requests - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the GET /partners/partner-policy-requests endpoint.")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -475,11 +504,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeyRequests(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This API has been deprecated since the release-1.3.0
+	 * It has been replaced by the new  GET /partners/apikey/search/v2 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0")
 	@ResponseFilter
 	@PostMapping("/apikey/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeysearch())")
-	@Operation(summary = "Service to search api key", description = "Service to search api key")
+	@Operation(summary = "Service to search api key - deprecated since 1.3.0 release.",
+			description = "This API has been deprecated since the 1.3.0 release and replaced by the  GET /partners/apikey/search/v2 endpoint.")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> responseWrapper = new ResponseWrapper<>();
