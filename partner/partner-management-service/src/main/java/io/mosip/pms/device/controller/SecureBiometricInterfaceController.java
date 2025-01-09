@@ -223,7 +223,7 @@ public class SecureBiometricInterfaceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
 	@PostMapping(value = "/{sbiId}/devices")
-	@Operation(summary = "Create device and add inactive mapping to SBI.", description = "Create device and add inactive mapping to SBI.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint adds a new device and creates an inactive mapping between the device and an approved SBI.", description = "This endpoint adds a new device and creates an inactive mapping between the device and an approved SBI, with device status as \"pending_approval.\" If the mapping fails, the device is deleted to prevent orphaned records. This ensures every device is associated with an SBI as per the new UI design. It is accessible to users with the DEVICE_PROVIDER or PARTNER_ADMIN roles.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -239,7 +239,7 @@ public class SecureBiometricInterfaceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
 	@GetMapping(value = "/{sbiId}/devices")
-	@Operation(summary = "Get all device list mapped with SBI.", description = "Get all device list mapped with SBI.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the list of devices associated with a given SBI ID", description = "This endpoint fetches the list of devices associated with a given SBI ID and validates whether the SBI ID belongs to the logged-in user. If no devices are found, it returns an empty array along with metadata attributes. It is accessible to users with the DEVICE_PROVIDER or PARTNER_ADMIN roles.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -251,7 +251,8 @@ public class SecureBiometricInterfaceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
 	@GetMapping
-	@Operation(summary = "get all SBI details list.", description = "get all SBI details list associated with partner.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the list of SBI details associated with all partner IDs linked to the user.",
+			description = "This endpoint fetches the list of SBI details associated with all partner IDs linked to the logged-in user. If no SBI details are found, it returns an empty array along with metadata attributes. It is accessible for users with the DEVICE_PROVIDER or PARTNER_ADMIN roles.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -261,7 +262,8 @@ public class SecureBiometricInterfaceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatesbi())")
 	@PatchMapping(value = "/{sbiId}")
-	@Operation(summary = "Deactivate SBI along with associated devices", description = "Deactivate SBI along with associated devices")
+	@Operation(summary = "Added in release-1.3.0, This endpoint deactivates an SBI along with associated devices",
+			description = "This endpoint deactivates an SBI based on the provided SBI ID and request body status, ensuring the SBI belongs to the logged-in user. It only allows deactivation for SBIs with status \"approved\" and is_active as true. On deactivation, the SBI's is_active is set to false, and associated devices are updated: approved devices become inactive, and pending devices are marked as rejected. It is accessible to users with the DEVICE_PROVIDER or PARTNER_ADMIN roles.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -278,7 +280,7 @@ public class SecureBiometricInterfaceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
 	@GetMapping(value = "/search/v2")
-	@Operation(summary = "Get all partners SBI details", description = "This endpoint will fetch a list of all the partners SBI details")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches a list of all SBIs created by all partners", description = "This endpoint is for Partner Admin users and fetches a list of all SBIs created by all partners. It enhances the earlier /partners/securebiometricinterface/search endpoint by improving performance, handling deactivated statuses, and including associated device details (counts for associated, approved, and pending devices). The API supports pagination, sorting and filtering and is accessible to users with the PARTNER_ADMIN role")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

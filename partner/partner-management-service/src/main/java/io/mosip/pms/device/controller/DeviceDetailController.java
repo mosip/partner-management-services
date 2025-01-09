@@ -236,7 +236,8 @@ public class DeviceDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatedevice())")
 	@PatchMapping(value = "/{deviceId}")
-	@Operation(summary = "Deactivate device details", description = "Deactivate device details")
+	@Operation(summary = "Added in release-1.3.0, This endpoint deactivates a device based on the provided Device ID and status",
+			description = "This endpoint deactivates a device based on the provided Device ID and status, ensuring the device belongs to the logged-in user. It only allows deactivation for devices with status \"approved\" and is_active as true; other statuses result in an error. Upon deactivation, the device's is_active is set to false while retaining the \"approved\" status. It is accessible to users with the DEVICE_PROVIDER or PARTNER_ADMIN roles.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -253,7 +254,8 @@ public class DeviceDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
 	@PostMapping(value = "/{id}/approval")
-	@Operation(summary = "Approve or Reject device and activate device mapping to sbi.", description = "Approve or Reject device and activate device mapping to sbi.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint allows Partner Admin users to approve or reject devices and activate the mapping between a device and an SBI",
+			description = "This endpoint allows Partner Admin users to approve or reject devices and activate the mapping between a device and an SBI. It is exclusively accessible to users with the PARTNER_ADMIN role.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -269,7 +271,7 @@ public class DeviceDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
 	@GetMapping(value = "/search/v2")
-	@Operation(summary = "Get all device details", description = "This endpoint will fetch a list of all devices")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the list of all devices created by all partners", description = "This endpoint fetches the list of all devices created by all partners. It enhances the earlier /partners/devicedetail/search endpoint by improving performance, handling deactivated statuses, and adding SBI ID and version details. The API supports pagination, sorting and filtering and is designed exclusively for Partner Admin users.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

@@ -69,7 +69,8 @@ public class UserController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
 	@PostMapping(value = "users/user-consent")
-	@Operation(summary = "save user consent", description = "Store the user consent in the database.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint saves the user's consent related to data captured by the PMS portal",
+			description = "This endpoint saves the user's consent related to data captured by the PMS portal, which is requested only once after the user's first login. Once provided, the consent will not be asked again. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -79,7 +80,8 @@ public class UserController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
 	@GetMapping(value = "users/user-consent")
-	@Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the user's consent related to the data captured by PMS",
+			description = "This endpoint fetches the user's consent related to the data captured by PMS. The consent is requested only once after the user's first login, and won't be asked again if already given. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -88,7 +90,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/system-config")
-	@Operation(summary = "Get config", description = "Get configuration values")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the configurations for PMS", description = "This endpoint fetches the configurations for PMS and sends them to the UI. No roles are required for access.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
