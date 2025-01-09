@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import java.util.List;
 
 
 public class UserDetailUtil {
@@ -47,7 +48,7 @@ public class UserDetailUtil {
 		return null;
 	}
 
-	public static Collection<String> getLoggedInUserRoles() {
+	public static List<String> getLoggedInUserRoles() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 		if (authentication != null && authentication.isAuthenticated()) {
