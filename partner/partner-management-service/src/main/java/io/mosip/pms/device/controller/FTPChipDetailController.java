@@ -294,6 +294,7 @@ public class FTPChipDetailController {
 			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "ftmId", required = false) String ftmId,
 			@RequestParam(value = "make", required = false) String make,
 			@RequestParam(value = "model", required = false) String model,
 			@Parameter(
@@ -310,6 +311,9 @@ public class FTPChipDetailController {
 		}
 		if (orgName != null) {
 			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (ftmId != null) {
+			filterDto.setFtmId(ftmId.toLowerCase());
 		}
 		if (make != null) {
 			filterDto.setMake(make.toLowerCase());
