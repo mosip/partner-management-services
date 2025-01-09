@@ -7,7 +7,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -------------------------------------------------------------------------------------------------
-\c :mosipdbname
+\c :mosipdbname sysadmin
 -- Dropping unique constraint from pms.device_detail table
 ALTER TABLE pms.device_detail DROP CONSTRAINT uk_devdtl_id;
 
