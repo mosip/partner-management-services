@@ -7,7 +7,7 @@ UploadPartnerCert:
       inputTemplate: partner/PrintPartner/UploadCert/uploadCert
       outputTemplate: partner/PrintPartner/UploadCert/uploadCertResult
       input: '{
-  		"requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
 }'   

@@ -15,7 +15,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "Tech-123",
@@ -38,7 +38,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-321",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "Tech-321",
@@ -61,7 +61,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-1233",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "Tech-1233",
@@ -84,7 +84,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "errors": [
@@ -110,7 +110,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech -123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "errors": [
@@ -136,7 +136,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-3241",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group2",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "errors": [
@@ -162,7 +162,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
          "errors": [
@@ -187,7 +187,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
    "errors": [
@@ -212,7 +212,7 @@ createPartnerSelfRegistration:
     "partnerId": "updatepolicy",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "updatepolicy",
@@ -234,7 +234,7 @@ createPartnerSelfRegistration:
     "partnerId": "$REMOVE$",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -261,7 +261,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -288,7 +288,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -314,7 +314,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -340,7 +340,7 @@ createPartnerSelfRegistration:
     "partnerId": "Tech-123",
     "partnerType": "$REMOVE$",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

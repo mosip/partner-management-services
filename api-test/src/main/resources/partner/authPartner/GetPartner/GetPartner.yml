@@ -26,9 +26,9 @@ GetPartnerDetails:
       inputTemplate: partner/authPartner/GetPartner/getPartner
       outputTemplate: partner/authPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "Tech-123"
+      "partnerId": "Tech-123"
 }'
       output: '  {
- 	"partnerID": "Tech-123"
+      "partnerID": "Tech-123"
 }' 
   

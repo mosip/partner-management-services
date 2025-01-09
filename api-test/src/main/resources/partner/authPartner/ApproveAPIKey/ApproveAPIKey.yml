@@ -11,7 +11,7 @@ ApproveAPIKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     }'
@@ -27,7 +27,7 @@ ApproveAPIKey:
       input: '{
       "status": "$REMOVE$",
       "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

@@ -38,8 +38,8 @@ GetAllDeviceTypes:
     
       partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
-	  description: Get device type
-	  uniqueIdentifier: TC_PMS_GetAllDeviceTypes_02
+      description: Get device type
+      uniqueIdentifier: TC_PMS_GetAllDeviceTypes_02
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter

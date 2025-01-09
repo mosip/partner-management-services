@@ -13,7 +13,7 @@ createPartnerSelfRegistration:
     "partnerId": "mosipprint",
     "partnerType": "Print_Partner",
     "policyGroup":"mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
      "partnerId": "mosipprint",
@@ -34,7 +34,7 @@ createPartnerSelfRegistration:
     "partnerId": "mosipprint",
     "partnerType": "Print_Partner",
     "policyGroup":"mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     "errors": [
@@ -58,7 +58,7 @@ createPartnerSelfRegistration:
     "partnerId": "mosip print",
     "partnerType": "Print_Partner",
     "policyGroup":"mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: '{
      "errors": [

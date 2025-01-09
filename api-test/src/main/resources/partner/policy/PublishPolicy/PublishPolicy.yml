@@ -6,9 +6,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "mosip policy group",
@@ -21,7 +21,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "bio",
         "authSubType": "FINGER",
-		"mandatory": true,
+      "mandatory": true,
         "attributeName": "string",
         "authTokenType": "partner"
     }'
@@ -34,13 +34,13 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_For_updatePolicy_sid_id$",
-		"policyId": "$ID:DefineDataSharePolicy_All_for_Update_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_For_updatePolicy_sid_id$",
+      "policyId": "$ID:DefineDataSharePolicy_All_for_Update_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupStatus": true,
-		"mandatory": true
+      "mandatory": true
        
     }'
     
@@ -52,9 +52,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"policyId": "$ID:DefinePolicy_RandomTokenType_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_RandomTokenType_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "mosip policy group",
@@ -67,7 +67,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "bio",
         "authSubType": "FINGER",
-		"mandatory": false,
+      "mandatory": false,
         "attributeName": "string",
         "authTokenType": "random"
     }'
@@ -80,9 +80,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/policy/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"policyId": "$ID:DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "mosip policy group",
@@ -98,9 +98,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
     "errors": [
@@ -116,9 +116,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/error
       input: '{
-		"policygroupId": "sgdasfgbv",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "sgdasfgbv",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
     "errors": [
@@ -134,9 +134,9 @@ createPublishPolicy:
       inputTemplate: partner/policy/PublishPolicy/publishPolicy
       outputTemplate: partner/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"policyId": "afgrwfg",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyId": "afgrwfg",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
   "errors": [

@@ -7,7 +7,7 @@ GetPartnerDetails:
       inputTemplate: partner/PrintPartner/GetPartnerDetails/GetPartnerDetails
       outputTemplate: partner/PrintPartner/GetPartnerDetails/GetPartnerDetailsResult
       input: '{
-		"partnerType":"Print_Partner"
+      "partnerType":"Print_Partner"
 }'
       output: '{
 }'

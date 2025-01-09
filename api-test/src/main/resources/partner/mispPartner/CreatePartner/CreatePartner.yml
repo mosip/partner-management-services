@@ -13,7 +13,7 @@ createPartnerSelfRegistration:
     "partnerId": "MISP",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "MISP",
@@ -33,7 +33,7 @@ createPartnerSelfRegistration:
     "partnerId": "MISP2",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "MISP2",
@@ -54,7 +54,7 @@ createPartnerSelfRegistration:
     "partnerId": "MISP3",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "MISP3",

@@ -8,6 +8,8 @@ import javax.validation.Valid;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.policy.util.PolicyUtil;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -326,7 +328,12 @@ public class PolicyManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyDescription", required = false) String policyDescription,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
-			@RequestParam(value = "isActive", required = false) Boolean isActive) {
+			@Parameter(
+					description = "Status of policy",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
+			)
+			@RequestParam(value = "status", required = false) String status) {
 
 		PolicyUtil.validateGetAllPoliciesRequestParameters(sortFieldName, sortType, pageNo, pageSize);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
@@ -345,8 +352,8 @@ public class PolicyManagementController {
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
 		}
-		if (isActive != null) {
-			filterDto.setIsActive(isActive);
+		if (status != null) {
+			filterDto.setStatus(status);
 		}
 		return policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}

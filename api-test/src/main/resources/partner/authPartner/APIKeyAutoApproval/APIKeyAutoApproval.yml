@@ -10,11 +10,11 @@ requetAPIKey:
       input: '{
         "policyName": "mosip policy",
         "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: ' {
         "apiRequestId": "254785",
-		"apikeyId": "254785"
+        "apikeyId": "254785"
     }'
     
    Partner_SubmitPartnerApiKeyRequest_invalid_partnerId:

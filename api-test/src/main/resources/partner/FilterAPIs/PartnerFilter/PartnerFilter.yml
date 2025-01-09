@@ -52,12 +52,12 @@ PartnerFilter:
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "id",
-		"type": "",
-		"text": "mpartner-default-abis"
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "id",
+      "type": "",
+      "text": "mpartner-default-abis"
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -73,12 +73,12 @@ PartnerFilter:
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "asfgs",
-		"type": "unique",
-		"text": "mpartner-default-abis"
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "asfgs",
+      "type": "unique",
+      "text": "mpartner-default-abis"
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -94,12 +94,12 @@ PartnerFilter:
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "id",
-		"type": "asdg",
-		"text": "mpartner-default-abis"
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "id",
+      "type": "asdg",
+      "text": "mpartner-default-abis"
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -115,12 +115,12 @@ PartnerFilter:
       inputTemplate: partner/FilterAPIs/PartnerFilter/partnerFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "",
-		"type": "unique",
-		"text": "mpartner-default-abis"
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "",
+      "type": "unique",
+      "text": "mpartner-default-abis"
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

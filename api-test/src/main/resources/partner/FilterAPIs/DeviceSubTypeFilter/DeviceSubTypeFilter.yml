@@ -42,13 +42,13 @@ DeviceSubTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "code",
-		"type": "",
-		"text": "Single"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "code",
+      "type": "",
+      "text": "Single"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -64,13 +64,13 @@ DeviceSubTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "",
-		"type": "all",
-		"text": "Single"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "",
+      "type": "all",
+      "text": "Single"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -86,13 +86,13 @@ DeviceSubTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "code",
-		"type": "asfdg",
-		"text": "Single"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "code",
+      "type": "asfdg",
+      "text": "Single"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -108,13 +108,13 @@ DeviceSubTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "asdf",
-		"type": "all",
-		"text": "Single"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "asdf",
+      "type": "all",
+      "text": "Single"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

@@ -1,7 +1,7 @@
 RequestAPIKeyCredentialPartner:
    Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
-	  description: Request API Key for Credential Partner
+      description: Request API Key for Credential Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -10,13 +10,13 @@ RequestAPIKeyCredentialPartner:
       input: '{
         "policyName": "mosip data share policy",
         "useCaseDescription": "mosip data share policy",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
-	  description: Reject API Key for Credential Partner
+      description: Reject API Key for Credential Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -25,13 +25,13 @@ RequestAPIKeyCredentialPartner:
       input: '{
         "policyName": "mosip policy",
         "useCaseDescription": "mosip policy",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
-	  description: Request API Key for Credential Partner for invalid policy name
+      description: Request API Key for Credential Partner for invalid policy name
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -40,7 +40,7 @@ RequestAPIKeyCredentialPartner:
       input: '{
         "policyName": "mosip@8474748",
         "useCaseDescription": "mosip data share policy",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
    "errors": [
@@ -51,7 +51,7 @@ RequestAPIKeyCredentialPartner:
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
-	  description: Request API Key for Credential Partner with invalid usecase description
+      description: Request API Key for Credential Partner with invalid usecase description
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -60,7 +60,7 @@ RequestAPIKeyCredentialPartner:
       input: '{
         "policyName": "mosip@8474748",
         "useCaseDescription": "mosip data share policy",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
    "errors": [
@@ -71,7 +71,7 @@ RequestAPIKeyCredentialPartner:
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
       endPoint: /v1/partnermanager/partners/MOVP/policy/map
-	  description: Request API Key for Credential Partner with invalid policyname
+      description: Request API Key for Credential Partner with invalid policyname
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -80,7 +80,7 @@ RequestAPIKeyCredentialPartner:
       input: '{
         "policyName": "mosip@8474748",
         "useCaseDescription": "mosi182736@636",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
    "errors": [

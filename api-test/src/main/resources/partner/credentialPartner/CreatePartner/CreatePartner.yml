@@ -1,7 +1,7 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-	  description: create Partner Self Registration
+      description: create Partner Self Registration
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -14,7 +14,7 @@ createPartnerSelfRegistration:
     "partnerId": "MOVP",
     "partnerType": "Online_Verification_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "MOVP",
@@ -23,7 +23,7 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_WithOut_Mandatory_Neg:
       endPoint: /v1/partnermanager/partners
-	  description: create Partner Self Registration without mandatory
+      description: create Partner Self Registration without mandatory
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -36,7 +36,7 @@ createPartnerSelfRegistration:
     "partnerId": "$REMOVE$",
     "partnerType": "Online_Verification_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
        "errors": [
@@ -48,7 +48,7 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_Same_Email:
       endPoint: /v1/partnermanager/partners
-	  description: create Partner Self Registration for same Email
+      description: create Partner Self Registration for same Email
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -61,7 +61,7 @@ createPartnerSelfRegistration:
     "partnerId": "MOVP",
     "partnerType": "Online_Verification_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
        "errors": [

@@ -9,7 +9,7 @@ ApproveAPIKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:SubmitPartnerApiKeyRequest_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     }'

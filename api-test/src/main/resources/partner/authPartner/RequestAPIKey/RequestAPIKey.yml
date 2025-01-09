@@ -11,7 +11,7 @@ RequestAPIKeyForAuthPartner:
       input: '{
         "policyName": "mosip data share policy",
         "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
     }'
@@ -27,7 +27,7 @@ RequestAPIKeyForAuthPartner:
       input: '{
         "policyName": "mosip policy",
         "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
     }'
@@ -44,7 +44,7 @@ RequestAPIKeyForAuthPartner:
       input: '{
         "policyName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
         "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
       "errors": [
@@ -65,7 +65,7 @@ RequestAPIKeyForAuthPartner:
       input: '{
         "policyName": "mosip policy",
         "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: '{
       "errors": [

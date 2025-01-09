@@ -16,5 +16,5 @@ public class PolicyFilterDto {
 
     private String policyGroupName;
 
-    private Boolean isActive;
+    private String status;
 }

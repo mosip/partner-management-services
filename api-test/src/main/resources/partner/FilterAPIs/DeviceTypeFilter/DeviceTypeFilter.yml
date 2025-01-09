@@ -54,13 +54,13 @@ DeviceTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "code",
-		"type": "",
-		"text": "Finger"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "code",
+      "type": "",
+      "text": "Finger"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -76,13 +76,13 @@ DeviceTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "",
-		"type": "unique",
-		"text": "Finger"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "",
+      "type": "unique",
+      "text": "Finger"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -98,13 +98,13 @@ DeviceTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "asdf",
-		"type": "unique",
-		"text": "Finger"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "asdf",
+      "type": "unique",
+      "text": "Finger"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -120,13 +120,13 @@ DeviceTypeFilter:
       inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "code",
-		"type": "asdf",
-		"text": "Finger"
-	}],
-	"purpose": "REGISTRATION",
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "code",
+      "type": "asdf",
+      "text": "Finger"
+      }],
+      "purpose": "REGISTRATION",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

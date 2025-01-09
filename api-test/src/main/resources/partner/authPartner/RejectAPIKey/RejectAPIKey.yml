@@ -11,7 +11,7 @@ RejectAPIKey:
       input: '{
       "status": "rejected",
       "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     }'
@@ -27,7 +27,7 @@ RejectAPIKey:
       input: '{
       "status": "$REMOVE$",
       "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

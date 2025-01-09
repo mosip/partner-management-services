@@ -13,7 +13,7 @@ createPartnerSelfRegistration:
     "partnerId": "DPP",
     "partnerType": "Device_Provider",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "DPP",
@@ -34,7 +34,7 @@ createPartnerSelfRegistration:
     "partnerId": "$REMOVE$",
     "partnerType": "Device_Provider",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "errors": [

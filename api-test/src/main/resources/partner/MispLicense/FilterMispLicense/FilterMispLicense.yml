@@ -6,12 +6,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
       input: '{
-	"filters": [{
-	   "columnName": "isActive",
+      "filters": [{
+      "columnName": "isActive",
         "type": "all",
         "text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+        }],
+        "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "filters": [
@@ -33,12 +33,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
       input: '{
-	"filters": [{
-	   "columnName": "isActive",
+      "filters": [{
+      "columnName": "isActive",
         "type": "unique",
         "text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+        }],
+        "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "filters": [
@@ -60,12 +60,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "iSActive",
-		"type": "between",
-		"text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "iSActive",
+      "type": "between",
+      "text": ""
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -81,12 +81,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "isActive",
-		"type": "",
-		"text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "isActive",
+      "type": "",
+      "text": ""
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -102,12 +102,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "lang_code",
-		"type": "unique",
-		"text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "lang_code",
+      "type": "unique",
+      "text": ""
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -123,12 +123,12 @@ FilterMispLicense:
       inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
       outputTemplate: partner/error
       input: '{
-	"filters": [{
-		"columnName": "",
-		"type": "unique",
-		"text": ""
-	}],
-	"requesttime": "$TIMESTAMP$"
+      "filters": [{
+      "columnName": "",
+      "type": "unique",
+      "text": ""
+      }],
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

@@ -9,7 +9,7 @@ GetPartnerCert:
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111999"
+      "partnerId": "pms-111999"
 }'
       output: ' {
 }'
@@ -24,7 +24,7 @@ GetPartnerCert:
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111998"
+      "partnerId": "pms-111998"
 }'
       output: ' {
 }'
@@ -39,7 +39,7 @@ GetPartnerCert:
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111888"
+      "partnerId": "pms-111888"
 }'
       output: ' {
 }'

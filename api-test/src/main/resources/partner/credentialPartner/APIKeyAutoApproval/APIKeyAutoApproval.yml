@@ -1,7 +1,7 @@
 requetAPIKey:
    Partner_APIKeyAutoApproval_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP/apikey/request
-	  description: requestAPIKey
+      description: requestAPIKey
       role: partner
       restMethod: patch 
       inputTemplate: partner/credentialPartner/APIKeyAutoApproval/apiKeyAutoApproval
@@ -9,9 +9,9 @@ requetAPIKey:
       input: '{
         "policyName": "mosip data share policy",
         "useCaseDescription": "mosip data share policy",
-		"requesttime": "$TIMESTAMP$"
+        "requesttime": "$TIMESTAMP$"
     }'
       output: ' {
         "apiRequestId": "254785",
-		"apikeyId": "254785"
+        "apikeyId": "254785"
     }'

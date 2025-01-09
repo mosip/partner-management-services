@@ -6,7 +6,7 @@ uploadCert:
       inputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificate
       outputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificateResult
       input: '{
- 	"requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
    "status": "Upload Success."
@@ -18,7 +18,7 @@ uploadCert:
       inputTemplate: partner/FtpPartner/UploadCertificate/uploadSUBCACertificate
       outputTemplate: partner/FtpPartner/UploadCertificate/uploadCertificateResult
       input: '{
- 	"requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
    "status": "Upload Success."

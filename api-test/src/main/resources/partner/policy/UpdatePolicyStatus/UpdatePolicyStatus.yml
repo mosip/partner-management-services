@@ -5,11 +5,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatusResult
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"De-Active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{	
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"De-Active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
        "message": "status updated successfully"
@@ -21,11 +21,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatusResult
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_For_Req_Key_deactivaed_Policy_sid_id$",
-		"status":"De-Active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_For_Req_Key_deactivaed_Policy_sid_id$",
+      "status":"De-Active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
        "message": "status updated successfully"
@@ -38,11 +38,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatusResult
-      input: '{		
-		"policyId": "MDSP",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"De-Active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "MDSP",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"De-Active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
        "message": "status updated successfully"
@@ -53,11 +53,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/error
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
   "errors": [
@@ -73,11 +73,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/error
-      input: '{		
-		"policyId": "asfgv",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"Active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "asfgv",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"Active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
   "errors": [
@@ -93,11 +93,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/error
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"asfg",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"asfg",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
   "errors": [
@@ -113,11 +113,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/error
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"policygroupId":"asfbvef",
-		"status":"Active",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "policygroupId":"asfbvef",
+      "status":"Active",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
   "errors": [
@@ -133,11 +133,11 @@ UpdatePolicyStatus:
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: partner/error
-      input: '{		
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
-		"status":"$REMOVE$",
-		"requesttime": "$TIMESTAMP$"
+      input: '{      
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_sid_id$",
+      "status":"$REMOVE$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
   "errors": [

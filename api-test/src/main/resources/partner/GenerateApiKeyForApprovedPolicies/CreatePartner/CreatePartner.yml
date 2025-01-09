@@ -13,7 +13,7 @@ createPartnerSelfRegistration:
     "partnerId": "partner-111997",
     "partnerType": "Auth_Partner",
     "policyGroup": "mosip policy group",
-	"requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
         "partnerId": "partner-111997",

@@ -11,7 +11,7 @@ ApproveMappingKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
         "response": "Policy mapping approved successfully"
@@ -28,7 +28,7 @@ ApproveMappingKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "1111-07-22T08:21:17.665Z"
+      "requesttime": "1111-07-22T08:21:17.665Z"
   }'
       output: '{
    "errors": [
@@ -68,7 +68,7 @@ ApproveMappingKey:
       outputTemplate: pms/error
       input: '{
       "status": "Approved",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -88,7 +88,7 @@ ApproveMappingKey:
       outputTemplate: pms/error
       input: '{
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

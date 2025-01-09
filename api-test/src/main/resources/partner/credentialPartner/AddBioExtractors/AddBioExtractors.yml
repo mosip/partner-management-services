@@ -1,35 +1,35 @@
 addBioExtractors:
    Partner_AddBioExtractors_MosipDataSharePolicy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: AddBioExtractors Mosip DataShare Policy
+      description: AddBioExtractors Mosip DataShare Policy
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
-	"partnerId":"MOVP",
-	"policyId":"MDSP",
-	"requesttime": "$TIMESTAMP$"
+      "partnerId":"MOVP",
+      "policyId":"MDSP",
+      "requesttime": "$TIMESTAMP$"
   }'
 
    Partner_AddBioExtractors_MosipPolicy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: Add Add BioExtractors MosipPolicy
+      description: Add Add BioExtractors MosipPolicy
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
-	"partnerId":"MOVP",
-	"policyId":"$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-	"requesttime": "$TIMESTAMP$"
+      "partnerId":"MOVP",
+      "policyId":"$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
   }'
       
    Partner_AddBioExtractors_invalid_policyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: AddBioExtractors invalid PolicyId
+      description: AddBioExtractors invalid PolicyId
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors
@@ -49,7 +49,7 @@ addBioExtractors:
 
    Partner_AddBioExtractors_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-	  description: AddBioExtractors invalid partnerId
+      description: AddBioExtractors invalid partnerId
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/AddBioExtractors/addBioExtractors

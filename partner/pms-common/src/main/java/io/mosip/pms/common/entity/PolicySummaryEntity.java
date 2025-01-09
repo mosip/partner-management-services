@@ -21,7 +21,7 @@ import java.util.Date;
                         @ColumnResult(name = "policyDescription", type = String.class),
                         @ColumnResult(name = "policyGroupId", type = String.class),
                         @ColumnResult(name = "policyGroupName", type = String.class),
-                        @ColumnResult(name = "isActive", type = Boolean.class),
+                        @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "createdDateTime", type = Date.class)
                 })
         }
@@ -29,13 +29,13 @@ import java.util.Date;
 public class PolicySummaryEntity {
 
     public PolicySummaryEntity(String policyId, String policyName, String policyDescription,
-                               String policyGroupId, String policyGroupName, Boolean isActive, Date createdDateTime) {
+                               String policyGroupId, String policyGroupName, String status, Date createdDateTime) {
         this.policyId = policyId;
         this.policyName = policyName;
         this.policyDescription = policyDescription;
         this.policyGroupId = policyGroupId;
         this.policyGroupName = policyGroupName;
-        this.isActive = isActive;
+        this.status = status;
         this.createdDateTime = createdDateTime;
     }
 
@@ -54,7 +54,7 @@ public class PolicySummaryEntity {
 
     private String policyGroupName;
 
-    private Boolean isActive;
+    private String status;
 
     private Date createdDateTime;
 }

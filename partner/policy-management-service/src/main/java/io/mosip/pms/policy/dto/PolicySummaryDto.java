@@ -23,8 +23,8 @@ public class PolicySummaryDto {
     @Schema(description = "Name of the policy group", example = "abc")
     private String policyGroupName;
 
-    @Schema(description = "Indicates whether the policy is active (true if active, false otherwise)", example = "true")
-    private Boolean isActive;
+    @Schema(description = "Indicates status of the policy (activated, deactivated, draft)", example = "draft")
+    private String status;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-01T14:30:00Z")
     private Date createdDateTime;

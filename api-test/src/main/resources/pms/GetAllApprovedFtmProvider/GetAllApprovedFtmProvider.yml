@@ -9,7 +9,7 @@ GetAllApprovedFtmProvider:
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
       outputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderResult
       input: '{
-	"partnerId": "pms-111888"
+      "partnerId": "pms-111888"
 }'
       output: ' {
 }'

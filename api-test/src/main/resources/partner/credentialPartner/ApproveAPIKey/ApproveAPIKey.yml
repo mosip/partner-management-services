@@ -1,7 +1,7 @@
 ApproveAPIKey:
    Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  description: ApproveAPIKey
+      description: ApproveAPIKey
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -10,14 +10,14 @@ ApproveAPIKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
         "response": "Policy mapping approved successfully"
     }'
    Partner_ApproveRejectPartnerAPIKeyReq_Map_partner_toalready_mapped_policy:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  description: ApproveAPIKey for mapped policy
+      description: ApproveAPIKey for mapped policy
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -26,7 +26,7 @@ ApproveAPIKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -38,7 +38,7 @@ ApproveAPIKey:
 
    Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  description: ApproveAPIKey without status
+      description: ApproveAPIKey without status
       role: partner
       restMethod: put
       inputTemplate: partner/credentialPartner/ApproveAPIKey/approveAPIKey
@@ -46,7 +46,7 @@ ApproveAPIKey:
       input: '{
       "status": "$REMOVE$",
       "mappingkey": "$ID:CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid_mappingkey$",
-	  "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
