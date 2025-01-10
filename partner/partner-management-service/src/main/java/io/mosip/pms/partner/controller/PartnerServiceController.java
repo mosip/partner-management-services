@@ -266,17 +266,9 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	/*
-	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/policy-requests endpoint.
-	 * The functionality provided by this API is now available in the new endpoint.
-	 * Please use the new endpoint for all future requests.
-	 */
-	@Deprecated(since = "release-1.3.x")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequest())")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
-	@Operation(summary = "Service to get API key requests of partner - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/policy-requests endpoint.")
+	@Operation(summary = "Service to get API key requests of partner")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
 			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
@@ -331,17 +323,9 @@ public class PartnerServiceController {
 		return response;
 	}
 
-	/*
-	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/{partnerId}/certificate-data endpoint.
-	 * The functionality provided by this API is now available in the new endpoint.
-	 * Please use the new endpoint for all future requests.
-	 */
-	@Deprecated(since = "release-1.3.x")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
 	@RequestMapping(value = "/{partnerId}/certificate", method = RequestMethod.GET)
-	@Operation(summary = "Service to get partner certificate - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/{partnerId}/certificate-data endpoint.")
+	@Operation(summary = "Service to get partner certificate")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
 			@ApiParam("To download resigned partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {		
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
