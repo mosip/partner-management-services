@@ -93,13 +93,12 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		auditLogCheck = testCaseDTO.isAuditLogCheck();
 		
 		
-		String responseJson = RestClient.getRequestWithCookie(
-		    ApplnURI + "/v1/partnermanager/partners/root-certificates",
-		    MediaType.APPLICATION_JSON,
-		    MediaType.APPLICATION_JSON,
-		    COOKIENAME, "partnerrevamp").asString();
-
-		JSONObject jsonObject = new JSONObject(responseJson);
+		
+		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/partners/root-certificates",
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+		String responseBody = response.getBody().asString();
+		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
 
 		String certId = ""; 
@@ -117,11 +116,11 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		}
 		String url="/v1/partnermanager/partners/download-root-certificate/"+certId;
 		
-		response = RestClient.getRequestWithCookie(
-			    ApplnURI + url,
-			    MediaType.APPLICATION_JSON,
-			    MediaType.APPLICATION_JSON,
-			    COOKIENAME, "partnerrevamp");
+		response = getWithPathParamAndCookie(ApplnURI + url,
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+		
+		
 		
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 		if (testCaseName.contains("_StatusCode")) {
