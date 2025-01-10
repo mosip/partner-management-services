@@ -302,7 +302,8 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicygroups())")
 	@GetMapping(value = "/policy-groups")
-	@Operation(summary = "Added in release-1.3.0, This endpoint retrieves details about all active Policy Groups in PMS", description = "This endpoint retrieves details about all active Policy Groups in PMS, which are created and can be deactivated by the Partner Admin. It is configured for all partner type roles and PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves details about all active Policy Groups", 
+	description = "Available since release-1.3.x.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -312,7 +313,8 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
 	@GetMapping(value = "/search/v2")
-	@Operation(summary = "Added in release-1.3.0, This endpoint retrieves the list of all policies created in the PMS system", description = "This endpoint, available for Partner Admin (Policy Manager) users, retrieves the list of all policies created in the PMS system. It enhances the earlier POST endpoint /policies/search by adding performance improvements and support for sorting by policyGroupName. The endpoint also supports pagination, sorting, and filtering, and is configured for both the POLICYMANAGER and PARTNER_ADMIN roles.")
+	@Operation(summary = "This endpoint retrieves the list of all Policies",
+	description = "Available since release-1.3.x. It is configured for both the POLICYMANAGER and PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -360,7 +362,7 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
 	@PatchMapping(value = "/{policyId}")
-	@Operation(summary = "Added in release-1.3.0, This endpoint deactivates a policy based on the Policy Id", description = "This endpoint deactivates a policy based on the Policy Id, accessible only by Partner Admin. It checks if any policy requests are associated with the policy: it can be deactivated if there are no requests or if there are rejected requests. It cannot be deactivated if there are approved or pending requests, returning error codes PMS_POL_063 or PMS_POL_064, respectively. This endpoint is configured for both POLICYMANAGER and PARTNER_ADMIN roles.")
+	@Operation(summary = "Available since release-1.3.x. This endpoint deactivates a policy based on the Policy Id", description = "This endpoint deactivates a policy based on the Policy Id, accessible only by Partner Admin. It checks if any policy requests are associated with the policy: it can be deactivated if there are no requests or if there are rejected requests. It cannot be deactivated if there are approved or pending requests, returning error codes PMS_POL_063 or PMS_POL_064, respectively. This endpoint is configured for both POLICYMANAGER and PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -372,8 +374,8 @@ public class PolicyManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
 	@PatchMapping(value = "/group/{policyGroupId}")
-	@Operation(summary = "Added in release-1.3.0, This endpoint allows Partner Admin users to deactivate a Policy Group based on the Policy Group Id.",
-			description = "This endpoint allows Partner Admin users to deactivate a Policy Group based on the Policy Group Id. The deactivation is allowed only if there are no active or draft policies associated with the group. If there are activated or draft policies, specific error codes (PMS_POL_056 and PMS_POL_069) will be returned. It should be configured for the POLICYMANAGER and PARTNER_ADMIN roles.")
+	@Operation(summary = "This endpoint allows Partner Admin users to deactivate a Policy Group based on the Policy Group Id.",
+			description = "Available since release-1.3.x. It is configured for the POLICYMANAGER and PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
