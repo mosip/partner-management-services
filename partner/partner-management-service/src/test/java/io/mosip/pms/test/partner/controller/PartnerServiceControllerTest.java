@@ -19,7 +19,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PolicyDto;
-import io.mosip.pms.partner.dto.PartnerDtoV4;
+import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +51,6 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
-import io.mosip.pms.partner.dto.PartnerDtoV4;
 import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -648,18 +647,18 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getPartnersV4Test() throws Exception {
-        ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
-        PartnerDtoV4 partnerDto = new PartnerDtoV4();
+    public void getPartnersV3Test() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
 
-        List<PartnerDtoV4> partnerDtoList = new ArrayList<>();
+        List<PartnerDtoV3> partnerDtoList = new ArrayList<>();
         partnerDtoList.add(partnerDto);
         responseWrapper.setResponse(partnerDtoList);
 
-        Mockito.when(partnerService.getPartnersV4(Mockito.anyString(), Mockito.any(), Mockito.any()))
+        Mockito.when(partnerService.getPartnersV3(Mockito.anyString(), Mockito.any(), Mockito.any()))
                 .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v4")
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3")
                         .param("status", "approved")
                         .param("policyGroupAvailable", "true")
                         .param("partnerType", "Auth_Partner"))
@@ -668,18 +667,18 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getPartnersV4Test2() throws Exception {
-        ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
-        PartnerDtoV4 partnerDto = new PartnerDtoV4();
+    public void getPartnersV3Test2() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
 
-        List<PartnerDtoV4> partnerDtoList = new ArrayList<>();
+        List<PartnerDtoV3> partnerDtoList = new ArrayList<>();
         partnerDtoList.add(partnerDto);
         responseWrapper.setResponse(partnerDtoList);
 
-        Mockito.when(partnerService.getPartnersV4(Mockito.anyString(), Mockito.any(), Mockito.any()))
+        Mockito.when(partnerService.getPartnersV3(Mockito.anyString(), Mockito.any(), Mockito.any()))
                 .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v4")
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3")
                         .param("status", "approved")
                         .param("partnerType", "Device_Provider"))
                 .andExpect(status().isOk());
@@ -711,18 +710,18 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void testGetPartnersV4() throws Exception {
-        List<PartnerDtoV4> partnerDtoV4List = new ArrayList<>();
-        PartnerDtoV4 partnerDto = new PartnerDtoV4();
+    public void testGetPartnersV3() throws Exception {
+        List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
         partnerDto.setPartnerId("123");
-        partnerDtoV4List.add(partnerDto);
+        partnerDtoV3List.add(partnerDto);
 
-        ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setResponse(partnerDtoV4List);
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(partnerDtoV3List);
 
-        Mockito.when(partnerService.getPartnersV4("approved", true, "typeA")).thenReturn(responseWrapper);
+        Mockito.when(partnerService.getPartnersV3("approved", true, "typeA")).thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v4?status=approved")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3?status=approved")).andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 
