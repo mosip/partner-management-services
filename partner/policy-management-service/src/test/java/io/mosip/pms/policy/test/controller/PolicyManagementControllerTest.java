@@ -19,6 +19,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
@@ -825,19 +826,29 @@ public class PolicyManagementControllerTest {
 	@Test
 	public void deactivatePolicyTest() throws Exception {
 		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
 
-		Mockito.when(policyManagementService.deactivatePolicy(anyString()))
+		Mockito.when(policyManagementService.deactivatePolicy(anyString(), any()))
 				.thenReturn(responseWrapper);
-		policyManagementController.deactivatePolicy("policy123");
+		policyManagementController.deactivatePolicy("policy123", requestWrapper);
 	}
 
 	@Test
 	public void deactivatePolicyGroupTest() throws Exception {
 		String policyGroupId = "test-policy-group-id";
 		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		when(policyManagementService.deactivatePolicyGroup(policyGroupId)).thenReturn(responseWrapper);
 
-		policyManagementController.deactivatePolicyGroup(policyGroupId);
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		when(policyManagementService.deactivatePolicyGroup(policyGroupId, requestDto)).thenReturn(responseWrapper);
+
+		policyManagementController.deactivatePolicyGroup(policyGroupId, requestWrapper);
 	}
 
 }

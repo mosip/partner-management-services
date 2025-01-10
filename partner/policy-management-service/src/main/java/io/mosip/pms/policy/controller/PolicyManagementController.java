@@ -3,10 +3,14 @@ package io.mosip.pms.policy.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.policy.util.PolicyUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -16,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -61,6 +66,7 @@ import io.mosip.pms.policy.dto.PolicySummaryDto;
 import io.mosip.pms.policy.dto.PolicyFilterDto;
 import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
 import io.mosip.pms.policy.dto.DeactivatePolicyGroupResponseDto;
+import io.mosip.pms.policy.dto.DeactivateRequestDto;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.util.AuditUtil;
 import io.swagger.annotations.Api;
@@ -74,11 +80,20 @@ public class PolicyManagementController {
 
 	private static final Logger logger = PMSLogger.getLogger(PolicyManagementController.class);
 
+	@Value("${mosip.pms.api.id.deactivate.policy.patch}")
+	private  String patchDeactivatePolicy;
+
+	@Value("${mosip.pms.api.id.deactivate.policy.group.patch}")
+	private String patchDeactivatePolicyGroupId;
+
 	@Autowired
 	private PolicyManagementService policyManagementService;
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	RequestValidator requestValidator;
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -312,7 +327,7 @@ public class PolicyManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
-	@GetMapping(value = "/search/v2")
+	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves the list of all Policies",
 	description = "Available since release-1.3.x. It is configured for both the POLICYMANAGER and PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
@@ -368,8 +383,13 @@ public class PolicyManagementController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable String policyId) {
-		return policyManagementService.deactivatePolicy(policyId);
+	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable("policyId") @NotBlank String policyId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<DeactivatePolicyResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicy, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
@@ -381,7 +401,12 @@ public class PolicyManagementController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(@PathVariable String policyGroupId) {
-		return policyManagementService.deactivatePolicyGroup(policyGroupId);
+	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(@PathVariable("policyGroupId") @NotBlank String policyGroupId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<DeactivatePolicyGroupResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicyGroupId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return policyManagementService.deactivatePolicyGroup(policyGroupId, requestWrapper.getRequest());
 	}
 }

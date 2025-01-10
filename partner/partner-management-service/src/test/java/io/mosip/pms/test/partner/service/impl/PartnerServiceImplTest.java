@@ -18,7 +18,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
-import io.mosip.pms.partner.dto.PartnerDtoV4;
+import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -1864,7 +1864,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
-	public void getPartnersV4Test() throws Exception{
+	public void getPartnersV3Test() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1884,12 +1884,12 @@ public class PartnerServiceImplTest {
 		PolicyGroup policyGroup = new PolicyGroup();
 		policyGroup.setName("abc");
 		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
-		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", true, "Auth_Partner");
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
 		assertNotNull(responseWrapper);
 	}
 
 	@Test
-	public void getPartnersV4Test1() throws Exception{
+	public void getPartnersV3Test1() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1905,12 +1905,12 @@ public class PartnerServiceImplTest {
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
 
-		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", null, "FTM_Provider");
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", null, "FTM_Provider");
 		assertNotNull(responseWrapper);
 	}
 
 	@Test
-	public void getPartnersV4TestException() throws Exception{
+	public void getPartnersV3TestException() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1929,7 +1929,7 @@ public class PartnerServiceImplTest {
 
 		PolicyGroup policyGroup = new PolicyGroup();
 		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
-		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = pserviceImpl.getPartnersV4("approved", true, "Auth_Partner");
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
 		assertNotNull(responseWrapper);
 	}
 

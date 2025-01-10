@@ -8,7 +8,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class PartnerDtoV4 {
+public class PartnerDtoV3 {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 

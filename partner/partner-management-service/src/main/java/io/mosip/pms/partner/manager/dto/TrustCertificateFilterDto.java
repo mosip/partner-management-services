@@ -3,7 +3,7 @@ package io.mosip.pms.partner.manager.dto;
 import lombok.Data;
 
 @Data
-public class CaCertificateFilterDto {
+public class TrustCertificateFilterDto {
 
     private String caCertificateType;
     private String certificateId;

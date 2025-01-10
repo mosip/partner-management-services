@@ -18,7 +18,7 @@ import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
-import io.mosip.pms.partner.util.RequestValidator;
+import io.mosip.pms.common.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;

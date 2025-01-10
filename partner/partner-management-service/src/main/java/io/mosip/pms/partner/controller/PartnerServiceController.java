@@ -371,19 +371,19 @@ public class PartnerServiceController {
 		return  partnerService.getPartnerCertificatesDetails();
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv4())")
-	@GetMapping(value = "/v4")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
+	@GetMapping(value = "/v3")
 	@Operation(summary = "This endpoint retrieves a list of Partners associated with the logged in user, based on the query parameters",
 			description = "Avaiable since release-1.3.x. It is configured for role any of the partner type or PARTNER_ADMIN.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(
+	public ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(
 			@RequestParam(name = "status") String status,
 			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
 			@RequestParam(name = "partnerType", required = false) String partnerType) {
 
-		return partnerService.getPartnersV4(status, policyGroupAvailable, partnerType);
+		return partnerService.getPartnersV3(status, policyGroupAvailable, partnerType);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")

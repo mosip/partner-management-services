@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import io.mosip.pms.common.constant.CommonConstant;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.policy.dto.*;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -73,29 +74,6 @@ import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
-import io.mosip.pms.policy.dto.ColumnCodeValue;
-import io.mosip.pms.policy.dto.FilterResponseCodeDto;
-import io.mosip.pms.policy.dto.KeyValuePair;
-import io.mosip.pms.policy.dto.PartnerPolicySearchDto;
-import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
-import io.mosip.pms.policy.dto.PolicyCreateResponseDto;
-import io.mosip.pms.policy.dto.PolicyDetailsDto;
-import io.mosip.pms.policy.dto.PolicyDto;
-import io.mosip.pms.policy.dto.PolicyGroupCreateRequestDto;
-import io.mosip.pms.policy.dto.PolicyGroupCreateResponseDto;
-import io.mosip.pms.policy.dto.PolicyGroupUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyManageEnum;
-import io.mosip.pms.policy.dto.PolicyResponseDto;
-import io.mosip.pms.policy.dto.PolicyStatusUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyStatusUpdateResponseDto;
-import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
-import io.mosip.pms.policy.dto.ResponseWrapper;
-import io.mosip.pms.policy.dto.PolicyGroupDto;
-import io.mosip.pms.policy.dto.PolicySummaryDto;
-import io.mosip.pms.policy.dto.PolicyFilterDto;
-import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
-import io.mosip.pms.policy.dto.DeactivatePolicyGroupResponseDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -125,6 +103,8 @@ import io.mosip.pms.policy.validator.spi.PolicyValidator;
 public class PolicyManagementService {
 
 	private static final Logger logger = PMSLogger.getLogger(PolicyManagementService.class);
+
+	private static final String DEACTIVATE = "De-Activate";
 
 	@Autowired
 	private AuthPolicyRepository authPolicyRepository;
@@ -1181,13 +1161,19 @@ public class PolicyManagementService {
 		return PolicyUtil.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
-	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(String policyId) {
+	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(String policyId, DeactivateRequestDto requestDto) {
 		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(policyId) || policyId.isBlank()){
 				logger.error("The policy id is null or empty");
 				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
 						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.isBlank() || !status.equals(DEACTIVATE)) {
+				logger.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PolicyManagementServiceException(ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
 			Optional<AuthPolicy> policy = authPolicyRepository.findById(policyId);
 			if (policy.isEmpty()){
@@ -1246,13 +1232,19 @@ public class PolicyManagementService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(String policyGroupId) {
+	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(String policyGroupId, DeactivateRequestDto requestDto) {
 		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(policyGroupId) || policyGroupId.isBlank()){
 				logger.error("The policy group id is null or empty");
 				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
 						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.isBlank() || !status.equals(DEACTIVATE)) {
+				logger.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PolicyManagementServiceException(ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
 			Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
 			if (policyGroupFromDb.isEmpty()){

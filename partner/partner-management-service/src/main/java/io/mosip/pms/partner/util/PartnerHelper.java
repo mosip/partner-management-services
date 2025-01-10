@@ -139,16 +139,16 @@ public class PartnerHelper {
         deviceAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
-    public final Map<String, String> caCertificateAliasToColumnMap = new HashMap<>();
+    public final Map<String, String> trustCertificateAliasToColumnMap = new HashMap<>();
     {
-        caCertificateAliasToColumnMap.put("caCertificateType", "caCertificateType");
-        caCertificateAliasToColumnMap.put("certificateId", "certId");
-        caCertificateAliasToColumnMap.put("partnerDomain", "partnerDomain");
-        caCertificateAliasToColumnMap.put("issuedTo", "certSubject");
-        caCertificateAliasToColumnMap.put("issuedBy", "certIssuer");
-        caCertificateAliasToColumnMap.put("validFrom", "certNotBefore");
-        caCertificateAliasToColumnMap.put("validTill", "certNotAfter");
-        caCertificateAliasToColumnMap.put("uploadedDateTime", "createdtimes");
+        trustCertificateAliasToColumnMap.put("caCertificateType", "caCertificateType");
+        trustCertificateAliasToColumnMap.put("certificateId", "certId");
+        trustCertificateAliasToColumnMap.put("partnerDomain", "partnerDomain");
+        trustCertificateAliasToColumnMap.put("issuedTo", "certSubject");
+        trustCertificateAliasToColumnMap.put("issuedBy", "certIssuer");
+        trustCertificateAliasToColumnMap.put("validFrom", "certNotBefore");
+        trustCertificateAliasToColumnMap.put("validTill", "certNotAfter");
+        trustCertificateAliasToColumnMap.put("uploadedDateTime", "createdtimes");
     }
 
     @Autowired
