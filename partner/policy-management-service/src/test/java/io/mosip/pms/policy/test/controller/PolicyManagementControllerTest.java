@@ -825,30 +825,36 @@ public class PolicyManagementControllerTest {
 
 	@Test
 	public void deactivatePolicyTest() throws Exception {
-		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
 		DeactivateRequestDto requestDto = new DeactivateRequestDto();
 		requestDto.setStatus("De-Activate");
 		requestWrapper.setRequest(requestDto);
 
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyResponseDto deactivatePolicyResponseDto = new DeactivatePolicyResponseDto();
+		responseWrapper.setResponse(deactivatePolicyResponseDto);
+
 		Mockito.when(policyManagementService.deactivatePolicy(anyString(), any()))
 				.thenReturn(responseWrapper);
-		policyManagementController.deactivatePolicy("policy123", requestWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
 	@Test
 	public void deactivatePolicyGroupTest() throws Exception {
-		String policyGroupId = "test-policy-group-id";
-		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
-
 		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
 		DeactivateRequestDto requestDto = new DeactivateRequestDto();
 		requestDto.setStatus("De-Activate");
 		requestWrapper.setRequest(requestDto);
 
-		when(policyManagementService.deactivatePolicyGroup(policyGroupId, requestDto)).thenReturn(responseWrapper);
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyGroupResponseDto deactivatePolicyGroupResponseDto = new DeactivatePolicyGroupResponseDto();
+		responseWrapper.setResponse(deactivatePolicyGroupResponseDto);
 
-		policyManagementController.deactivatePolicyGroup(policyGroupId, requestWrapper);
+		Mockito.when(policyManagementService.deactivatePolicyGroup(anyString(), any())).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
 }
