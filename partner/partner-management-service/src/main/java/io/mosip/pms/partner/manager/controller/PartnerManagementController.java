@@ -75,7 +75,7 @@ public class PartnerManagementController {
 
 
 	/**
-	 * This endpoint would be used by partner Manager, to update Partner api key to Policy Mappings.
+	 * This endpoint would be used by partner Manager, to update Partner API key to Policy Mappings.
 	 * @param request this class contain oldPolicyID and newPolicyID
 	 * @param partnerId this is unique id created after self registered by partner
 	 * @param partnerApiKey this is unique id created by partner manager at the time of approving partner request
@@ -83,7 +83,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnersapikeypolicies())")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}/policies", method = RequestMethod.PUT)
-	@Operation(summary = "Service to update policies against to api key", description = "Service to update policies against to api key")
+	@Operation(summary = "Service to update policies against to API key", description = "Service to update policies against to API key")
 	public ResponseEntity<ResponseWrapper<PartnersPolicyMappingResponse>> partnerApiKeyToPolicyMappings(
 			@RequestBody @Valid RequestWrapper<PartnersPolicyMappingRequest> request, 
 			@PathVariable String partnerId,
@@ -183,7 +183,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/{partnerId}/apikey/{apikey}" , method = RequestMethod.GET)
-	@Operation(summary = "Service to get policy for given api key", description = "Service to get policy for given api key")
+	@Operation(summary = "Service to get policy for given API key", description = "Service to get policy for given API key")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyToPolicyMappingsResponse>> getPolicyMappedToAPIKey(
 			@PathVariable String partnerId,
 			@PathVariable String apikey){
@@ -199,15 +199,15 @@ public class PartnerManagementController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/apikey/search/v2 endpoint.
+	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
 	@Deprecated(since = "release-1.3.x")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/apikey" , method = RequestMethod.GET)
-	@Operation(summary = "Service to get api key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/apikey/search/v2 endpoint")
+	@Operation(summary = "Service to get API key requests - deprecated since release-1.3.x.",
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/partner-policy-requests endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
@@ -227,7 +227,7 @@ public class PartnerManagementController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/apikey/{apikey}" , method = RequestMethod.GET)
-	@Operation(summary = "Service to get api key request", description = "Service to get api key request")
+	@Operation(summary = "Service to get API key request", description = "Service to get API key request")
 	public ResponseEntity<ResponseWrapper<ApikeyRequests>> getAPIKeyRequest(
 			@PathVariable String apikey) {
 		ResponseWrapper<ApikeyRequests> response = new ResponseWrapper<>();
@@ -255,7 +255,7 @@ public class PartnerManagementController {
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnerspolicyapikeystatus())")
 	@RequestMapping(value = "/{partnerId}/policy/{policyId}/apiKey/status", method = RequestMethod.PATCH)
-	@Operation(summary = "Service to activate/de-activate partner api key", description = "Service to activate/de-activate partner api key")
+	@Operation(summary = "Service to activate/de-activate partner API key", description = "Service to activate/de-activate partner API key")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,
 			@PathVariable String policyId, @RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
