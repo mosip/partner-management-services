@@ -1493,7 +1493,7 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.downloadTrustCertificates("123");
 	}
@@ -1510,7 +1510,7 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.downloadTrustCertificates("123");
 	}
@@ -1531,7 +1531,7 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.downloadTrustCertificates("123");
 	}
@@ -1546,7 +1546,7 @@ public class PartnerManagementServiceImplTest {
 		Map<String, Object> apiResponse = new HashMap<>();
 		apiResponse.put("response", null);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.downloadTrustCertificates("123");
 	}
