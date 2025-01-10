@@ -1,6 +1,6 @@
 GetOriginalFtmCertifacteNegativeScenarios:
    Pms_GetOriginalPartnerCertificates_without_Authentication_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_01
       description: Retrieve Original FTM Certifacte without partner Authentication and expecting an error in the response
       role: invalidtoken
@@ -19,7 +19,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
        ]
 }'
    Pms_GetOriginalPartnerCertificates_with_Invalid_AccessToken_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_02
       description: Retrieve Original FTM Certifacte with invalid partner access token and expecting an error in the response
       role: invalidtoken
@@ -38,7 +38,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
        ]
 }'
    Pms_GetOriginalPartnerCertificates_Before_Uploading_Partner_Cert_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_03
       description: Retrieve Original FTM Certifacte before uploading Partner certificates and expecting an error in the response
       role: partnerrevampftm
@@ -57,7 +57,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
        ]
 }'
    Pms_GetOriginalPartnerCertificates_Missing_FTM_ID_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_04
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Missing and expecting an error in the response
       role: partnerrevampftm
@@ -76,7 +76,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
        ]
 }'
    Pms_GetOriginalPartnerCertificates_Invalid_FTM_ID_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_05
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
       role: partnerrevampftm
@@ -95,7 +95,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
        ]
 }'
    Pms_GetOriginalPartnerCertificates_Invalid_Value_FTM_ID_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/original-ftm-certificate
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_06
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
       role: partnerrevampftm

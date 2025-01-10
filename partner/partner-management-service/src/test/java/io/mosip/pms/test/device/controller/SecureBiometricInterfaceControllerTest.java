@@ -416,6 +416,7 @@ public class SecureBiometricInterfaceControllerTest {
 						.param("pageSize", String.valueOf(pageSize))
 						.param("partnerId", "123")
 						.param("orgName", "ABC")
+						.param("sbiId", "sbi123")
 						.param("sbiVersion", "test")
 						.param("status", "approved")
 						.param("sbiExpiryStatus", "expired"))

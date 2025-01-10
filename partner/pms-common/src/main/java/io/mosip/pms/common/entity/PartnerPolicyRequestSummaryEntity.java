@@ -18,6 +18,7 @@ import javax.persistence.*;
                 columns = {
                         @ColumnResult(name = "id", type = String.class),
                         @ColumnResult(name = "partnerId", type = String.class),
+                        @ColumnResult(name = "partnerStatus", type = String.class),
                         @ColumnResult(name = "partnerType", type = String.class),
                         @ColumnResult(name = "policyGroupName", type = String.class),
                         @ColumnResult(name = "orgName", type = String.class),
@@ -35,12 +36,13 @@ import javax.persistence.*;
 public class PartnerPolicyRequestSummaryEntity {
 
     public PartnerPolicyRequestSummaryEntity(
-            String id, String partnerId, String orgName, String partnerType,
+            String id, String partnerId, String partnerStatus, String orgName, String partnerType,
             String policyGroupName, String policyId, String policyName, String status,
             Date createdDateTime, String requestDetail, Date updatedDateTime,
             String policyNameDescription, String policyGroupDescription) {
         this.id = id;
         this.partnerId = partnerId;
+        this.partnerStatus = partnerStatus;
         this.partnerType = partnerType;
         this.orgName = orgName;
         this.policyId = policyId;
@@ -63,6 +65,8 @@ public class PartnerPolicyRequestSummaryEntity {
     private String id;
 
     private String partnerId;
+
+    private String partnerStatus;
 
     private String partnerType;
 

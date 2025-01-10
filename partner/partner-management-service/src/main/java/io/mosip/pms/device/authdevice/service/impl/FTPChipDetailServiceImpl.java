@@ -133,6 +133,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	public static final String APPROVED = "approved";
 
+	public static final String DEACTIVATED = "deactivated";
+
 	public static final String PENDING_APPROVAL = "pending_approval";
 
 	public static final String BLANK_STRING = "";
@@ -352,9 +354,12 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		RequestWrapper<FtpCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(certRequest);
 		Map<String, Object> uploadApiResponse = restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, Map.class);		
-		FtpCertificateResponseDto responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), FtpCertificateResponseDto.class);
-		if(responseObject == null && uploadApiResponse.containsKey(ERRORS)) {
+				MediaType.APPLICATION_JSON, request, Map.class);
+		if(uploadApiResponse == null) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
+		}
+		if(uploadApiResponse.containsKey(ERRORS) && uploadApiResponse.get(ERRORS) != null) {
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse.get(ERRORS);
 			if(!certServiceErrorList.isEmpty()) {
 				throw new ApiAccessibleException(certServiceErrorList.get(0).get(ERRORCODE).toString(),certServiceErrorList.get(0).get(ERRORMESSAGE).toString());
@@ -363,11 +368,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
-		if(responseObject == null) {
-			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());			
-		}
-
+		FtpCertificateResponseDto responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")), FtpCertificateResponseDto.class);
 		FTPChipDetail updateObject = chipDetail.get();
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
@@ -713,11 +714,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.ASC)) {
 				return ftmDetailsSummaryRepository.
 						getSummaryOfPartnersFtmDetailsByStatusAsc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+								filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 			} else if (sortFieldName.equals("status") && sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
 				return ftmDetailsSummaryRepository.
 						getSummaryOfPartnersFtmDetailsByStatusDesc(filterDto.getPartnerId(), filterDto.getOrgName(),
-								filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+								filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 			}
 			//Sorting for other fields
 			Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.ftmAliasToColumnMap, sortFieldName), sortType);
@@ -725,7 +726,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		}
 		//Default
 		return ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(filterDto.getPartnerId(), filterDto.getOrgName(),
-				filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
+				filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(), filterDto.getStatus(), pageable);
 	}
 
 	@Override
@@ -739,6 +740,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 				for (Partner partner : partnerList) {
 					if (partnerHelper.checkIfPartnerIsFtmPartner(partner)) {
 						partnerHelper.validatePartnerId(partner, userId);
+						String partnerStatus = getPartnerStatus(partner);
 						List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository.findByProviderId(partner.getId());
 						if(!ftpChipDetailList.isEmpty()) {
 							for(FTPChipDetail ftpChipDetail: ftpChipDetailList) {
@@ -764,6 +766,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 								}
 								ftmChipDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
 								ftmChipDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
+								ftmChipDetailsDto.setPartnerStatus(partnerStatus);
 								ftmChipDetailsDto.setMake(ftpChipDetail.getMake());
 								ftmChipDetailsDto.setModel(ftpChipDetail.getModel());
 								ftmChipDetailsDto.setStatus(ftpChipDetail.getApprovalStatus());
@@ -793,6 +796,16 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		responseWrapper.setId(getFtmChipDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public String getPartnerStatus(Partner partner) {
+		if(partner.getApprovalStatus().equals(APPROVED) && partner.getIsActive()) {
+			return APPROVED;
+		} else if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+			return DEACTIVATED;
+		} else {
+			return partner.getApprovalStatus();
+		}
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

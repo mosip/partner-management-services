@@ -803,13 +803,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			deleteDeviceDetail(deviceId);
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
 			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
@@ -900,14 +904,12 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 	private void deleteDeviceDetail(String deviceDetailId) {
 		try {
-			if (!deviceDetailId.equals(BLANK_STRING) && Objects.nonNull(deviceDetailId)) {
-				Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
-				if (deviceDetail.isPresent()) {
-					List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
-					if (deviceDetailSBIList.isEmpty()) {
-						deviceDetailRepository.deleteById(deviceDetailId);
-						LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
-					}
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+			if (deviceDetail.isPresent()) {
+				List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+				if (deviceDetailSBIList.isEmpty()) {
+					deviceDetailRepository.deleteById(deviceDetailId);
+					LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
 				}
 			}
 		} catch (Exception e) {
@@ -1154,37 +1156,37 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			switch (sortKey) {
 				case "status_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "status_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "sbiExpiryStatus_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "sbiExpiryStatus_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "countOfAssociatedDevices_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "countOfAssociatedDevices_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
@@ -1196,7 +1198,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 		}
 		return sbiSummaryRepository.getSummaryOfSbiDetails(
-				filterDto.getPartnerId(), filterDto.getOrgName(),
+				filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 				filterDto.getSbiVersion(), filterDto.getStatus(),
 				filterDto.getSbiExpiryStatus(), pageable);
 	}
