@@ -45,7 +45,17 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/error
       input: '{
-      "sortType": "hdjfdfhg"
+      "sortType": "hdjfdfhg",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
       "errors": [
@@ -64,7 +74,17 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/error
       input: '{
-      "pageSize": "-9"
+      "pageSize": "-9",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
       "errors": [
@@ -83,7 +103,17 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/error
       input: '{
-      "pageSize": "-9"
+      "pageNo": "-9",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
       "errors": [
@@ -102,7 +132,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/error
       input: '{
-      "sortFieldName": "$%^%^&&^"
+      "sortFieldName": "$%^%^&&^",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
       "errors": [

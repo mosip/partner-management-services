@@ -45,7 +45,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "sortFieldName": "$%$^&&"
+      "sortFieldName": "$%$^&&",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [
@@ -64,7 +73,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "sortType": "$%$^&&"
+      "sortType": "$%$^&&",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [
@@ -83,7 +101,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "pageSize": "-7"
+      "pageSize": "-7",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [
@@ -102,7 +129,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "pageNo": "-7"
+      "pageNo": "-7",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [

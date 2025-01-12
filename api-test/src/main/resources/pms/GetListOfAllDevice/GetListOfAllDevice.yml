@@ -58,7 +58,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "pageSize": "pageSize"      
+      "pageSize": "7",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"                                                                                          
 }'
       output: ' {
 }'
@@ -72,7 +85,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/error
       input: '{
-      "pageNo": "-5"
+      "pageNo": "-5",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"      
 }'
       output: '{
       "errors": [
@@ -91,7 +117,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/error
       input: '{
-      "pageSize": "-5"
+      "pageSize": "-5",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"      
 }'
       output: '{
       "errors": [
@@ -110,7 +149,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "status": "rejected"      
+      "status": "rejected",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -124,7 +176,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "status": "approved"      
+      "status": "approved",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -138,7 +203,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "status": "deactivated"      
+      "status": "deactivated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: ' {
 }'
@@ -152,7 +230,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "status": "pending_approval"      
+      "status": "pending_approval",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -166,7 +257,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "partnerId": "a"      
+      "partnerId": "a",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: ' {
 }'
@@ -180,7 +284,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "orgName": "1"      
+      "orgName": "1",
+      "status": "$REMOVE",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -194,7 +311,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortType": "$$$$$$"      
+      "sortType": "$$$$$$",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: '{
       "errors": [
@@ -213,7 +343,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortType": "asc"      
+      "sortType": "asc",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: '{
 }'
@@ -227,7 +370,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortType": "desc"      
+      "sortType": "desc",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: '{
 }'
@@ -241,7 +397,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sbiVersion": "abcd"      
+      "sbiVersion": "abcd",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: '{
 }'
@@ -255,7 +424,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortFieldName": "$$$$$$"      
+      "sortFieldName": "$$$$$$",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: '{
       "errors": [
@@ -274,7 +456,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "deviceType": "i"      
+      "deviceType": "i",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: '{
 }'
@@ -288,7 +483,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "deviceSubType": "f"      
+      "deviceSubType": "f",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: '{
 }'
@@ -302,7 +510,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "make": "3"      
+      "make": "3",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: '{
 }'
@@ -316,7 +537,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "model": "4"      
+      "model": "4"
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
 }'
       output: '{
 }'
@@ -330,7 +564,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sbiId": "q"      
+      "sbiId": "q",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
 }'
       output: '{
 }'
@@ -344,7 +591,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "deviceId": "9"      
+      "deviceId": "9",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$"            
 }'
       output: '{
 }'
@@ -359,7 +619,19 @@ GetListOfAllDevice:
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
       "make": "1",
-      "model": "1"            
+      "model": "1",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"                 
 }'
       output: '{
 }'
@@ -373,7 +645,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "deviceId": "*****&%"      
+      "deviceId": "*****&%",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$"
 }'
       output: '{
 }'

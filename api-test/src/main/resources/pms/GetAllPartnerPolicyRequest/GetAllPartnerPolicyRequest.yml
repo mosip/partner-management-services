@@ -22,7 +22,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "partnerId": "a"
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -36,7 +47,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "orgName": "1"
+      "partnerId": "$REMOVE$",
+      "orgName": "1",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -50,7 +72,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "requestDetails": "ab"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "ab",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -64,7 +97,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "policyId": "2"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "2",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -78,7 +122,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "policyName": "policy"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "policy",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -92,7 +147,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "policyGroupName": "Group"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "Group",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -106,6 +172,17 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
       "partnerType": "a"
 }'
       output: ' {
@@ -120,7 +197,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "sortType": "DESC"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "DESC",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -134,7 +222,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "sortType": "ASC"
+      "sortType": "ASC",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
 }'
@@ -148,7 +247,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "status": "InProgress"
+      "status": "InProgress",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
 }'
@@ -162,7 +272,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "status": "approved"
+      "status": "approved",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: ' {
 }'
@@ -176,7 +297,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "status": "rejected"
+      "status": "rejected",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: '{
 }'
@@ -190,7 +322,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "pageNo": "6"
+      "pageNo": "6",
+      "status": "$REMOVE$",
+      "sortType": "$REMOVE$"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: '{    
 }'
@@ -204,7 +347,17 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "partnerId": "%^%$$%^%"
+      "partnerId": "%^%$$%^%",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
 }'
       output: '{    
 }'
@@ -219,7 +372,17 @@ GetAllPartnerPolicyRequest:
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
       "partnerId": "1",
-      "requestDetails": "2"      
+      "requestDetails": "2"
+      "sortType": "$REMOVE$"
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"            
 }'
       output: '{    
 }'

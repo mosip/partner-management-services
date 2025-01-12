@@ -22,7 +22,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "status": "rejected"
+      "status": "rejected",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"                                                      
 }'
       output: ' {
 }'
@@ -36,7 +45,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "status": "approved"
+      "status": "approved",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -50,7 +68,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "status": "deactivated"
+      "status": "deactivated",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -64,7 +91,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "status": "pending_approval"
+      "status": "pending_approval",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -78,7 +114,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sbiExpiryStatus": "expired"
+      "sbiExpiryStatus": "expired",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -92,7 +137,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sbiExpiryStatus": "valid"
+      "sbiExpiryStatus": "valid",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -106,7 +160,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "orgName": "1"
+      "orgName": "1",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -120,7 +183,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "partnerId": "a"
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -134,7 +206,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sortType": "ASC"
+      "sortType": "ASC",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -148,7 +229,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sortType": "DESC"
+      "sortType": "DESC",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -162,7 +252,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "partnerId": "^&&%%%"
+      "partnerId": "^&&%%%",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -176,7 +275,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sbiVersion": "abcd"
+      "sbiVersion": "abcd",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'
@@ -190,7 +298,16 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "pageSize": "12"
+      "pageSize": "12",
+      "sbiVersion": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "policyId": "$REMOVE$      
 }'
       output: ' {
 }'

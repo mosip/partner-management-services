@@ -22,7 +22,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "sortType": "ASC"      
+      "sortType": "ASC",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -36,7 +44,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "sortType": "DESC"      
+      "sortType": "DESC",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"           
 }'
       output: ' {
 }'
@@ -50,7 +66,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "orgName": "1"      
+      "orgName": "1",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -64,7 +88,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "partnerId": "a"      
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -78,7 +110,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "status": "rejected"      
+      "status": "rejected",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -92,7 +132,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "status": "approved"      
+      "status": "approved",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -106,7 +154,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "status": "deactivated"      
+      "status": "deactivated",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -120,7 +176,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "status": "pending_cert_upload"      
+      "status": "pending_cert_upload",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -134,7 +198,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "status": "pending_approval"      
+      "status": "pending_approval",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -148,7 +220,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "pageSize": "5"      
+      "pageSize": "5",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -162,7 +242,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "make": "abcd"      
+      "make": "abcd",
+      "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "model": "$REMOVE$"            
 }'
       output: ' {
 }'
@@ -176,7 +264,15 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "model": "xyz"      
+      "model": "xyz",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -190,7 +286,14 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "partnerId": "%^$#!!@"      
+      "partnerId": "%^$#!!@",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$"           
 }'
       output: ' {
 }'
@@ -205,7 +308,13 @@ GetListOfFtmChip:
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
       "make": "1",
-      "model": "2"           
+      "model": "2",
+      "partnerId": "%^$#!!@",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$"                 
 }'
       output: ' {
 }'
