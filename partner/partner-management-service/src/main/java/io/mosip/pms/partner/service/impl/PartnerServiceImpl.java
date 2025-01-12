@@ -258,8 +258,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.auth.partner.api.keys.get}")
 	private String getAuthPartnerApiKeysId;
 
-	@Value("${mosip.pms.api.id.partners.v4.get}")
-	private String getPartnersV4Id;
+	@Value("${mosip.pms.api.id.partners.v3.get}")
+	private String getPartnersV3Id;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -1855,8 +1855,8 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType) {
-		ResponseWrapperV2<List<PartnerDtoV4>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType) {
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -1865,34 +1865,34 @@ public class PartnerServiceImpl implements PartnerService {
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
-			List<PartnerDtoV4> partnerDtoV4List = new ArrayList<>();
+			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			List<Partner> partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			for (Partner partner : partners) {
-				PartnerDtoV4 partnerDtoV4 = new PartnerDtoV4();
+				PartnerDtoV3 partnerDtoV3 = new PartnerDtoV3();
 				partnerHelper.validatePartnerId(partner, userId);
-				partnerDtoV4.setPartnerId(partner.getId());
-				partnerDtoV4.setPartnerType(partner.getPartnerTypeCode());
+				partnerDtoV3.setPartnerId(partner.getId());
+				partnerDtoV3.setPartnerType(partner.getPartnerTypeCode());
 				if (Boolean.TRUE.equals(policyGroupAvailable)) {
 					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
-					partnerDtoV4.setPolicyGroupId(partner.getPolicyGroupId());
-					partnerDtoV4.setPolicyGroupName(policyGroup.getName());
-					partnerDtoV4.setPolicyGroupDescription(policyGroup.getDesc());
+					partnerDtoV3.setPolicyGroupId(partner.getPolicyGroupId());
+					partnerDtoV3.setPolicyGroupName(policyGroup.getName());
+					partnerDtoV3.setPolicyGroupDescription(policyGroup.getDesc());
 				}
-				partnerDtoV4List.add(partnerDtoV4);
+				partnerDtoV3List.add(partnerDtoV3);
 			}
-			responseWrapper.setResponse(partnerDtoV4List);
+			responseWrapper.setResponse(partnerDtoV3List);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getPartnersV4 method of PartnerServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getPartnersV3 method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getPartnersV4 method of PartnerServiceImpl - " + ex.getMessage());
+					"In getPartnersV3 method of PartnerServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.PARTNERS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.PARTNERS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getPartnersV4Id);
+		responseWrapper.setId(getPartnersV3Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

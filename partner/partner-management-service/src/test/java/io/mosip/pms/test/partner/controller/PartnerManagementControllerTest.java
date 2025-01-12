@@ -9,9 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -198,7 +196,7 @@ public class PartnerManagementControllerTest {
 		request.setVersion("1.0");
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
-		Mockito.when(partnerManagementService.approveRejectPartnerPolicyMapping(mappingKey,requestDto))
+		Mockito.when(partnerManagementService.approveRejectPartnerPolicyMapping(any(), any()))
 				.thenReturn("Success");
 		
 		mockMvc.perform(MockMvcRequestBuilders.put("/partners/policy/56789").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -347,7 +345,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.getPartnerDetails(anyString()))
 				.thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/{partnerId}/v2", "samplePartnerId")
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners/{partnerId}", "samplePartnerId")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -369,10 +367,33 @@ public class PartnerManagementControllerTest {
 		partnerFilterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto))
+		Mockito.when(partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&" +
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&" +
 						"partnerId=abc&partnerType=Auth_Partner&orgName=ABC&emailAddress=abc&certificateUploadStatus=not_uploaded&policyGroupName=default&isActive=false"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartners_NoFiltersTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -404,7 +425,66 @@ public class PartnerManagementControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequests_NoFiltersTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/search/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getAllPartnerPolicyRequestsTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		String partnerId = "123";
+		String requestDetails = "Request details";
+		String orgName = "ABC";
+		String status = "approved";
+		String policyId = "policy-123";
+		String policyName = "Sample Policy";
+		String policyGroupName = "Default Group";
+		String partnerTypeCode = "Auth_Partner";
+		String partnerType = "partnerType";
+		PartnerPolicyRequestFilterDto partnerPolicyRequestFilterDto = new PartnerPolicyRequestFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("partnerId", partnerId)
+						.param("requestDetails", requestDetails)
+						.param("orgName", orgName)
+						.param("status", status)
+						.param("policyId", policyId)
+						.param("policyName", policyName)
+						.param("policyGroupName", policyGroupName)
+						.param("partnerType", partnerType)
+						.param("partnerTypeCode", partnerTypeCode))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartnerPolicyRequests_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
 		int pageNo = 0;
@@ -426,31 +506,23 @@ public class PartnerManagementControllerTest {
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
-						.param("pageSize", String.valueOf(pageSize))
-						.param("partnerId", partnerId)
-						.param("requestDetails", requestDetails)
-						.param("orgName", orgName)
-						.param("status", status)
-						.param("policyId", policyId)
-						.param("policyName", policyName)
-						.param("policyGroupName", policyGroupName)
-						.param("partnerTypeCode", partnerTypeCode))
+						.param("pageSize", String.valueOf(pageSize)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getCaCertificatesTest() throws Exception {
-		String sortFieldName = "uploadDateTime";
+		String sortFieldName = "caCertificateType";
 		String sortType = "desc";
 		int pageNo = 0;
 		int pageSize = 8;
-		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
-		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto))
+		Mockito.when(partnerManagementService.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/root-certificates")
+		mockMvc.perform(MockMvcRequestBuilders.get("/trust-chain-certificates")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -465,10 +537,30 @@ public class PartnerManagementControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getCaCertificates_NoFiltersTest() throws Exception {
+		String sortFieldName = "caCertificateType";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/trust-chain-certificates")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void downloadRootCertificateTest() throws Exception {
-		ResponseWrapperV2<CACertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		Mockito.when(partnerManagementService.downloadRootCertificate(anyString())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/download-root-certificate/{certificateId}", "123")
+		ResponseWrapperV2<TrustCertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.downloadTrustCertificates(anyString())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/trust-chain-certificates/{certificateId}/certificateFile", "123")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}

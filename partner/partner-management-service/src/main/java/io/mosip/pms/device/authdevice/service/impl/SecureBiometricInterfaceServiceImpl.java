@@ -1156,37 +1156,37 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			switch (sortKey) {
 				case "status_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "status_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "sbiExpiryStatus_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "sbiExpiryStatus_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "countOfAssociatedDevices_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
 				case "countOfAssociatedDevices_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
-							filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
 							filterDto.getSbiExpiryStatus(), pageable);
 
@@ -1198,7 +1198,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 		}
 		return sbiSummaryRepository.getSummaryOfSbiDetails(
-				filterDto.getPartnerId(), filterDto.getOrgName(),
+				filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 				filterDto.getSbiVersion(), filterDto.getStatus(),
 				filterDto.getSbiExpiryStatus(), pageable);
 	}

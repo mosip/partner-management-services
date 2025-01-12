@@ -1237,7 +1237,7 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
-	public void getAllPartnersTest() throws Exception {
+	public void getAdminPartnersTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1259,11 +1259,11 @@ public class PartnerManagementServiceImplTest {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
-		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
 
 	@Test
-	public void getAllPartnersTestException() throws Exception {
+	public void getAdminPartnersTestException() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1277,7 +1277,7 @@ public class PartnerManagementServiceImplTest {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
-		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, null);
+		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	@Test
@@ -1361,7 +1361,7 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
-	public void getCaCertificatesTest() throws Exception {
+	public void getTrustCertificatesTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1372,39 +1372,39 @@ public class PartnerManagementServiceImplTest {
 		String sortType = "desc";
 		int pageNo = 0;
 		int pageSize = 8;
-		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
+		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		filterDto.setCertificateId("abc");
 		filterDto.setCaCertificateType("root");
 		filterDto.setPartnerDomain("Auth");
 
-		CaCertificateSummaryDto caCertificateSummaryDto = new CaCertificateSummaryDto();
-		caCertificateSummaryDto.setCaCertificateType("ROOT");
-		caCertificateSummaryDto.setCertId("abc");
-		caCertificateSummaryDto.setPartnerDomain("AUTH");
-		List<CaCertificateSummaryDto> caCertificateSummaryDtoList = new ArrayList<>();
-		caCertificateSummaryDtoList.add(caCertificateSummaryDto);
+		TrustCertificateSummaryDto trustCertificateSummaryDto = new TrustCertificateSummaryDto();
+		trustCertificateSummaryDto.setCaCertificateType("ROOT");
+		trustCertificateSummaryDto.setCertId("abc");
+		trustCertificateSummaryDto.setPartnerDomain("AUTH");
+		List<TrustCertificateSummaryDto> trustCertificateSummaryDtoList = new ArrayList<>();
+		trustCertificateSummaryDtoList.add(trustCertificateSummaryDto);
 
-		CaCertTypeListResponseDto caCertTypeListResponseDto = new CaCertTypeListResponseDto();
-		caCertTypeListResponseDto.setPageNumber(1);
-		caCertTypeListResponseDto.setPageSize(8);
-		caCertTypeListResponseDto.setTotalRecords(10);
-		caCertTypeListResponseDto.setAllPartnerCertificates(caCertificateSummaryDtoList);
+		TrustCertTypeListResponseDto trustCertTypeListResponseDto = new TrustCertTypeListResponseDto();
+		trustCertTypeListResponseDto.setPageNumber(1);
+		trustCertTypeListResponseDto.setPageSize(8);
+		trustCertTypeListResponseDto.setTotalRecords(10);
+		trustCertTypeListResponseDto.setAllPartnerCertificates(trustCertificateSummaryDtoList);
 
 		Map<String, Object> apiResponse = new HashMap<>();
-		apiResponse.put("response", caCertTypeListResponseDto);
+		apiResponse.put("response", trustCertTypeListResponseDto);
 
 		when(restUtil.postApi(eq("https://localhost/v1/keymanager/getCaCertificates"), any(), eq(""), eq(""),
 				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
 
-		when(mapper.writeValueAsString(any())).thenReturn(new ObjectMapper().writeValueAsString(caCertTypeListResponseDto));
-		when(mapper.readValue(anyString(), eq(CaCertTypeListResponseDto.class))).thenReturn(caCertTypeListResponseDto);
+		when(mapper.writeValueAsString(any())).thenReturn(new ObjectMapper().writeValueAsString(trustCertTypeListResponseDto));
+		when(mapper.readValue(anyString(), eq(TrustCertTypeListResponseDto.class))).thenReturn(trustCertTypeListResponseDto);
 
-		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper =
-				partnerManagementImpl.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper =
+				partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	@Test
-	public void getCaCertificatesExceptionTest() throws Exception {
+	public void getTrustCertificatesExceptionTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1415,11 +1415,11 @@ public class PartnerManagementServiceImplTest {
 		String sortType = "desc";
 		int pageNo = 0;
 		int pageSize = 8;
-		partnerManagementImpl.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, null);
+		partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	@Test
-	public void downloadRootCertificateTest() throws Exception {
+	public void downloadTrustCertificatesTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1462,23 +1462,23 @@ public class PartnerManagementServiceImplTest {
 				"-----END CERTIFICATE-----");
 		apiResponse.put("response", response);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		partnerManagementImpl.downloadRootCertificate("123");
+		partnerManagementImpl.downloadTrustCertificates("123");
 	}
 
 	@Test
-	public void downloadRootCertificateExceptionTest1() throws Exception {
+	public void downloadTrustCertificatesExceptionTest1() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		partnerManagementImpl.downloadRootCertificate("");
+		partnerManagementImpl.downloadTrustCertificates("");
 	}
 
 	@Test
-	public void downloadRootCertificateExceptionTest2() throws Exception {
+	public void downloadTrustCertificatesExceptionTest2() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1493,13 +1493,13 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		partnerManagementImpl.downloadRootCertificate("123");
+		partnerManagementImpl.downloadTrustCertificates("123");
 	}
 
 	@Test
-	public void downloadRootCertificateExceptionTes3() throws Exception {
+	public void downloadTrustCertificatesExceptionTes3() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1510,13 +1510,13 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		partnerManagementImpl.downloadRootCertificate("123");
+		partnerManagementImpl.downloadTrustCertificates("123");
 	}
 
 	@Test
-	public void downloadRootCertificateExceptionTest5() throws Exception {
+	public void downloadTrustCertificatesExceptionTest5() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1531,13 +1531,13 @@ public class PartnerManagementServiceImplTest {
 		apiResponse.put("response", null);
 		apiResponse.put("errors", errorList);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		partnerManagementImpl.downloadRootCertificate("123");
+		partnerManagementImpl.downloadTrustCertificates("123");
 	}
 
 	@Test
-	public void downloadRootCertificateExceptionTes4() throws Exception {
+	public void downloadTrustCertificatesExceptionTes4() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1546,9 +1546,9 @@ public class PartnerManagementServiceImplTest {
 		Map<String, Object> apiResponse = new HashMap<>();
 		apiResponse.put("response", null);
 
-		when(environment.getProperty("pmp.download.ca.certificate.get.rest.uri")).thenReturn("uri");
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		partnerManagementImpl.downloadRootCertificate("123");
+		partnerManagementImpl.downloadTrustCertificates("123");
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
