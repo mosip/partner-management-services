@@ -24,6 +24,7 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
             "FROM FTPChipDetail f " +
             "WHERE (:partnerId IS NULL OR lower(f.ftpProviderId) LIKE %:partnerId%) " +
             "AND (:orgName IS NULL OR lower(f.partnerOrganizationName) LIKE %:orgName%) " +
+            "AND (:ftmId IS NULL OR lower(f.ftpChipDetailId) LIKE %:ftmId%) " +
             "AND (:make IS NULL OR lower(f.make) LIKE %:make%) " +
             "AND (:model IS NULL OR lower(f.model) LIKE %:model%) " +
             "AND (:status IS NULL OR " +
@@ -37,6 +38,7 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
     Page<FtmDetailSummaryEntity> getSummaryOfPartnersFtmDetails(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("ftmId") String ftmId,
             @Param("make") String make,
             @Param("model") String model,
             @Param("status") String status,
@@ -47,6 +49,7 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
     Page<FtmDetailSummaryEntity> getSummaryOfPartnersFtmDetailsByStatusAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("ftmId") String ftmId,
             @Param("make") String make,
             @Param("model") String model,
             @Param("status") String status,
@@ -57,6 +60,7 @@ public interface FtmDetailsSummaryRepository extends BaseRepository<FtmDetailSum
     Page<FtmDetailSummaryEntity> getSummaryOfPartnersFtmDetailsByStatusDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("ftmId") String ftmId,
             @Param("make") String make,
             @Param("model") String model,
             @Param("status") String status,
