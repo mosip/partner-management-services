@@ -1,6 +1,6 @@
 GetListOfPolicies:
    Pms_GetListOfPolicies_All_Valid_Smoke:
-      endPoint: /v1/policymanager/policies/search/v2
+      endPoint: /v1/policymanager/policies/v2
       description: Fetching all the active List Of Policies in the system
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

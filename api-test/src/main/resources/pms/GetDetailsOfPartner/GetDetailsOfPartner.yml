@@ -1,6 +1,6 @@
 GetDetailsOfPartner:
    Pms_GetDetailsOfPartner_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/{partnerId}/v2
+      endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
