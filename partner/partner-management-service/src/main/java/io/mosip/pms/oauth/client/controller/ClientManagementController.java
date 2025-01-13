@@ -98,8 +98,8 @@ public class ClientManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthclients())")
 	@GetMapping(value = "/oauth/clients")
-	@Operation(summary = "Added in release-1.3.0, This endpoint retrieves a list of all OAuth clients created for approved policies by Auth Partners associated with the user."
-			, description = "This endpoint retrieves a list of all OAuth clients created for approved policies by Auth Partners associated with the logged-in user. If no OIDC clients are found, it returns an empty array with optional metadata attributes. This endpoint is configured for the roles AUTH_PARTNER and PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by all the Auth Partners associated with the logged in user."
+			, description = "Available since release-1.3.x. This endpoint is configured for the roles AUTH_PARTNER or PARTNER_ADMIN.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -109,8 +109,8 @@ public class ClientManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
 	@GetMapping(value = "/oauth/partners/clients")
-	@Operation(summary = "Added in release-1.3.0, This endpoint, available only for Partner Admin users, retrieves a list of all OAuth clients created by all Partners. ",
-			description = "This endpoint, available only for Partner Admin users, retrieves a list of all OAuth clients created by all Partners. It supports pagination, sorting, and filtering.")
+	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by all the Auth Partners.",
+			description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -125,7 +125,7 @@ public class ClientManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "clientName", required = false) String clientName,
 			@Parameter(
-					description = "Status of oidc client",
+					description = "Status of OAuth client",
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"ACTIVE", "INACTIVE"})
 			)

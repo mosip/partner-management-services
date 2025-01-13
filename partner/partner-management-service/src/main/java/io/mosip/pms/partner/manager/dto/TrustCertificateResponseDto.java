@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CACertificateResponseDto {
+public class TrustCertificateResponseDto {
 
     /**
      * CA Certificate Data
