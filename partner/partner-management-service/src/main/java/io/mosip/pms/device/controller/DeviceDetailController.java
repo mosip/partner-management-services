@@ -186,7 +186,7 @@ public class DeviceDetailController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailsearch())")
 	@Operation(summary = "Service to search DeviceDetails - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail endpoint.")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -216,7 +216,7 @@ public class DeviceDetailController {
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailfiltervalues())")
 	@Operation(summary = "Service to filter DeviceDetails - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
