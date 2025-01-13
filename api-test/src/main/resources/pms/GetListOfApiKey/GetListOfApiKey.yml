@@ -49,7 +49,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_pageSize:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_04
       description: Fetching the API Keys with pageSize
       role: partnerrevamp
@@ -58,12 +58,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "pageSize": "5"
+      "pageSize": "5",
+      "partnerId": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_negative_pageNo_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_05
       description: Fetching the API Keys with negative pageNo
       role: partnerrevamp
@@ -72,7 +80,15 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/error
       input: '{
-      "pageNo": "-1"
+      "pageNo": "-1",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
          "errors": [
@@ -82,7 +98,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_negative_pageSize_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_06
       description: Fetching the API Keys with negative pageSize
       role: partnerrevamp
@@ -91,7 +107,15 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/error
       input: '{
-      "pageSize": "-5"
+      "pageSize": "-5",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
          "errors": [
@@ -101,7 +125,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_status_activated:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_07
       description: Fetching the API Keys with status activated
       role: partnerrevamp
@@ -110,12 +134,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "status": "activated"
+      "status": "activated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_status_deactivated:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_08
       description: Fetching the API Keys with status deactivated
       role: partnerrevamp
@@ -124,12 +156,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "status": "deactivated"
+      "status": "deactivated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_partnerId_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_09
       description: Fetching the API Keys on passing partial partnerId value
       role: partnerrevamp
@@ -138,12 +178,21 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "partnerId": "A"
+      "partnerId": "A",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+	  
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_policyGroupName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?policyGroupName={policyGroupName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_10
       description: Fetching the API Keys on passing partial policyGroupName value
       role: partnerrevamp
@@ -152,12 +201,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "policyGroupName": "1"
+      "policyGroupName": "1",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_invalid_sortType_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_11
       description: Fetching the API Keys with invalid sortType
       role: partnerrevamp
@@ -166,7 +223,15 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/error
       input: '{
-      "sortType": "cas"
+      "sortType": "cas",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
          "errors": [
@@ -176,7 +241,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_valid_ascending_sortType:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_12
       description: Fetching the API Keys with ascending sortType
       role: partnerrevamp
@@ -185,12 +250,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "sortType": "asc"
+      "sortType": "asc",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_valid_descending_sortType:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_13
       description: Fetching the API Keys with ascending sortType
       role: partnerrevamp
@@ -199,12 +272,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "sortType": "desc"
+      "sortType": "desc",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_orgName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_14
       description: Fetching the API Keys with partial orgName value
       role: partnerrevamp
@@ -213,12 +294,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "orgName": "sp"
+      "orgName": "sp",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_policyName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?policyName={policyName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_15
       description: Fetching the API Keys with partial policyName values
       role: partnerrevamp
@@ -227,12 +316,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "policyName": "pqr"
+      "policyName": "pqr",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_apiKeyLabel_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?apiKeyLabel={apiKeyLabel}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_16
       description: Fetching the API Keys with partial apiKeyLabel values
       role: partnerrevamp
@@ -241,12 +338,20 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "apiKeyLabel": "tyy1"
+      "apiKeyLabel": "tyy1",
+      "policyName": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfApiKey_with_random_data:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partners/apikey/search/v2?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_17
       description: Fetching the API Keys with random values given to a valid parameter
       role: partnerrevamp
@@ -255,7 +360,15 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "orgName": "zz6762j"
+      "orgName": "zz6762j",
+      "apiKeyLabel": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$"
 }'
       output: ' {
 }'
