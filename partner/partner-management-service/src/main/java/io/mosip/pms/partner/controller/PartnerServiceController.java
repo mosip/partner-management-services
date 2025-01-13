@@ -408,7 +408,7 @@ public class PartnerServiceController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")
 	@Operation(summary = "Service to search partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -440,7 +440,7 @@ public class PartnerServiceController {
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersfiltervalues())")
 	@Operation(summary = "Service to filter partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();

@@ -135,7 +135,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartners())")
 	@RequestMapping(value = "/partners", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -157,7 +157,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersnew())")
 	@RequestMapping(value = "/partners/v2", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<PartnerDetailsResponse> response=new ResponseWrapper<>();
