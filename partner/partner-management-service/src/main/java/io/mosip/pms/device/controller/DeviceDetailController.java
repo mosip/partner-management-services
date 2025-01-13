@@ -283,7 +283,7 @@ public class DeviceDetailController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
-	@GetMapping(value = "/v2")
+	@GetMapping
 	@Operation(summary = "This endpoint retrieves a list of all the Devices.",
 	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {

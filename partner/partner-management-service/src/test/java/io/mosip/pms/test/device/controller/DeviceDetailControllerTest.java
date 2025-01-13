@@ -489,7 +489,7 @@ public class DeviceDetailControllerTest {
 
         doNothing().when(partnerHelper).validateRequestParameters(any(), eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/devicedetail/v2")
+        mockMvc.perform(MockMvcRequestBuilders.get("/devicedetail")
                         .param("sortFieldName", sortFieldName)
                         .param("sortType", sortType)
                         .param("pageNo", String.valueOf(pageNo))
