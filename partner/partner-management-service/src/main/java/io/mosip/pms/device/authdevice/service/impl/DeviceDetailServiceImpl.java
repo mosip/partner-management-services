@@ -525,7 +525,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				}
 			}
 			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, false);
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
 
 			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
 			if (Objects.isNull(deviceDetailSBI)) {
