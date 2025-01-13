@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository("PartnerPolicyMappingRequestRepository")
+import java.util.List;
+
+@Repository
 public interface PartnerPolicyMappingRequestRepository extends BaseRepository<PartnerPolicyRequestSummaryEntity, String> {
 
     @Query(value = "SELECT new PartnerPolicyRequestSummaryEntity(" +
@@ -19,7 +21,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             "WHEN p.approvalStatus = 'InProgress' THEN 'InProgress' " +
             "WHEN p.approvalStatus = 'rejected' THEN 'rejected' " +
             "END AS status, " +
-            "p.name, p.partnerTypeCode, pg.name, ppr.policyId, ap.name, " +
+            "p.name, p.partnerTypeCode, p.policyGroupId, pg.name, ppr.policyId, ap.name, " +
             "ppr.statusCode, ppr.createdDateTime, ppr.requestDetail, ppr.updatedDateTime, ap.descr, pg.desc) " +
             "FROM PartnerPolicyRequestV2 ppr " +
             "LEFT JOIN ppr.policy ap " +
@@ -32,7 +34,8 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:requestDetail IS NULL OR lower(ppr.requestDetail) LIKE %:requestDetail%) " +
-            "AND (:statusCode IS NULL OR ppr.statusCode = :statusCode) "
+            "AND (:statusCode IS NULL OR ppr.statusCode = :statusCode) " +
+            "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList)) "
     )
     Page<PartnerPolicyRequestSummaryEntity> getSummaryOfAllPartnerPolicyRequests(
             @Param("partnerId") String partnerId,
@@ -43,6 +46,8 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             @Param("statusCode") String statusCode,
             @Param("requestDetail") String requestDetail,
             @Param("policyGroupName") String policyGroupName,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 }

@@ -1246,8 +1246,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -1272,8 +1272,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
@@ -1290,8 +1290,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		apiKeyFilterDto.setPartnerId("abc");
 		apiKeyFilterDto.setPolicyName("policy");
@@ -1312,8 +1312,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<ApiKeyRequestsSummaryEntity> page = null;
 		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
@@ -1330,8 +1330,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerPolicyRequestFilterDto partnerPolicyRequestFilterDto = new PartnerPolicyRequestFilterDto();
 		partnerPolicyRequestFilterDto.setPartnerId("abc");
 		partnerPolicyRequestFilterDto.setPolicyName("policy");
@@ -1352,8 +1352,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerPolicyRequestSummaryEntity> page = null;
 		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
@@ -1370,8 +1370,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "partnerDomain";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		filterDto.setCertificateId("abc");
 		filterDto.setCaCertificateType("root");
@@ -1414,7 +1414,7 @@ public class PartnerManagementServiceImplTest {
 		String sortFieldName = "partnerDomain";
 		String sortType = "desc";
 		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageSize = 8;
 		partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 

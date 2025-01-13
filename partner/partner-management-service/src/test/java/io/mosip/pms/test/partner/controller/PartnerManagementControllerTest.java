@@ -355,8 +355,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -379,8 +379,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartners_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -402,8 +402,8 @@ public class PartnerManagementControllerTest {
 	public void getAllApiKeyRequestsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
@@ -428,8 +428,8 @@ public class PartnerManagementControllerTest {
 	public void getAllApiKeyRequests_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
@@ -449,8 +449,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnerPolicyRequestsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		String partnerId = "123";
 		String requestDetails = "Request details";
 		String orgName = "ABC";
@@ -487,8 +487,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnerPolicyRequests_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		String partnerId = "123";
 		String requestDetails = "Request details";
 		String orgName = "ABC";
@@ -515,8 +515,8 @@ public class PartnerManagementControllerTest {
 	public void getCaCertificatesTest() throws Exception {
 		String sortFieldName = "caCertificateType";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
@@ -540,8 +540,8 @@ public class PartnerManagementControllerTest {
 	public void getCaCertificates_NoFiltersTest() throws Exception {
 		String sortFieldName = "caCertificateType";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 

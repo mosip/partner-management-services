@@ -23,6 +23,9 @@ public class PartnerPolicyRequestSummaryDto {
     @Schema(description = "Name of the policy", example = "Compliance Policy")
     private String policyName;
 
+    @Schema(description = "Unique Id for policy group", example = "Compliance Policy group")
+    private String policyGroupId;
+
     @Schema(description = "Name of the policy group", example = "Compliance Policy group")
     private String policyGroupName;
 

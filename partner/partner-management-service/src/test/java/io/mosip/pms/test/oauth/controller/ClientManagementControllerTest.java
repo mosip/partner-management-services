@@ -188,8 +188,8 @@ public class ClientManagementControllerTest {
     public void getPartnersClientsTest() throws Exception {
         String sortFieldName = "createdDateTime";
         String sortType = "desc";
-        int pageNo = 0;
-        int pageSize = 8;
+        Integer pageNo = 0;
+        Integer pageSize = 8;
         ClientFilterDto filterDto = new ClientFilterDto();
         ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
         PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();

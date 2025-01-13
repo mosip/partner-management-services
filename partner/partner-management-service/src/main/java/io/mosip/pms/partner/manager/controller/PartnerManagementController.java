@@ -8,9 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
-import io.mosip.pms.partner.manager.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -269,7 +267,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
 	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Avaiable since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -282,7 +280,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
 	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -291,8 +289,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "partnerType", required = false) String partnerType,
 			@RequestParam(value = "isActive", required = false) Boolean isActive,
@@ -334,8 +332,8 @@ public class PartnerManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
 	@GetMapping(value = "/partners/partner-policy-requests")
-	@Operation(summary = "This endpoint retrieves a list of all the Policy Requests made by all the Partners.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves a list of all the Policy Requests.",
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. For the role PARTNER_ADMIN, it fetches all Policy Requests made by all Partners. For logged-in partners, it retrieves all Policy Requests associated with their account.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -344,8 +342,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "requestDetails", required = false) String requestDetails,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -392,7 +390,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partners/apikey/search/v2")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by all the Auth Partners.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -401,8 +399,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -441,7 +439,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGettrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates")
 	@Operation(summary = "This endpoint retrieves a list of all the Trust Certificates uploaded by the Partner Admin.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -450,8 +448,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@Parameter(
 					description = "Type of CA certificate",
 					in = ParameterIn.QUERY,
@@ -491,7 +489,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadtrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates/{certificateId}/certificateFile")
 	@Operation(summary = "This endpoint will download p7b file for a CA / Intermediate CA certificate along with the trust chain based on Certificate Id.",
-			description = "Avaiable since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

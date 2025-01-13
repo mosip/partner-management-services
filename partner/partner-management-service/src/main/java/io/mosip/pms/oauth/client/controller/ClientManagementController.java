@@ -110,15 +110,15 @@ public class ClientManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
 	@GetMapping(value = "/oauth/partners/clients")
 	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by all the Auth Partners.",
-			description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
