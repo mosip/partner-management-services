@@ -1338,7 +1338,7 @@ public class PartnerManagementServiceImplTest {
 		partnerPolicyRequestFilterDto.setOrganizationName("ABC");
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerPolicyRequestSummaryEntity> page = null;
-		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto);
 	}
 
@@ -1356,7 +1356,7 @@ public class PartnerManagementServiceImplTest {
 		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerPolicyRequestSummaryEntity> page = null;
-		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
