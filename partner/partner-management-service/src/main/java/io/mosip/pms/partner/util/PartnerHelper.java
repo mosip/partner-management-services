@@ -172,13 +172,13 @@ public class PartnerHelper {
     @Autowired
     private Environment environment;
 
-    public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
+    public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean skipSbiIdBelongsToUser) {
         Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
         if (secureBiometricInterface.isEmpty()) {
             LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
                     ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
-        } else if (!secureBiometricInterface.get().getProviderId().equals(partnerId)) {
+        } else if (!skipSbiIdBelongsToUser && !secureBiometricInterface.get().getProviderId().equals(partnerId)) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
                     ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
