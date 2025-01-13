@@ -880,14 +880,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
 					ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
 		}
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 
 		// validate sbi and device mapping
-		if (isAdmin) {
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, true);
-		} else {
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, false);
-		}
+		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
 
 		DeviceDetailSBI entity = new DeviceDetailSBI();
 
@@ -926,39 +921,38 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId) {
 		ResponseWrapperV2<List<DeviceDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
 			Optional<SecureBiometricInterface> secureBiometricInterface = sbiRepository.findById(sbiId);
+
 			if (secureBiometricInterface.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
 				throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
 						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
 			}
-			SecureBiometricInterface sbi = secureBiometricInterface.get();
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			if (!isAdmin) {
-				String userId = getUserId();
-				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			SecureBiometricInterface sbi = secureBiometricInterface.get();
+			// check if partnerId is associated with user
+			boolean partnerIdExists = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(sbi.getProviderId())) {
+					partnerHelper.validatePartnerId(partner, userId);
+					validateDevicePartnerType(partner, userId);
+					partnerIdExists = true;
+					break;
 				}
-				
-				// check if partnerId is associated with user
-				boolean partnerIdExists = false;
-				for (Partner partner : partnerList) {
-					if (partner.getId().equals(sbi.getProviderId())) {
-						partnerHelper.validatePartnerId(partner, userId);
-						validateDevicePartnerType(partner, userId);
-						partnerIdExists = true;
-						break;
-					}
-				}
-				if (!partnerIdExists) {
-					LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
-					throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-							ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-				}
+			}
+			if (!partnerIdExists) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
