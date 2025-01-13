@@ -426,6 +426,7 @@ public class FTPChipDetailControllerTest {
 						.param("pageSize", String.valueOf(pageSize))
 						.param("partnerId", "123")
 						.param("orgName", "ABC")
+						.param("ftmId", "ftm123")
 						.param("make", "test")
 						.param("model", "test")
 						.param("status", "approved"))

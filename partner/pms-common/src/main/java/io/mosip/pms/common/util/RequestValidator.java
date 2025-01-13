@@ -1,20 +1,18 @@
-package io.mosip.pms.partner.util;
+package io.mosip.pms.common.util;
 
 import io.micrometer.core.lang.NonNull;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.constant.ValidationErrorCode;
+import io.mosip.pms.common.exception.RequestException;
+import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.exception.PartnerServiceException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class RequestValidator {
@@ -27,13 +25,13 @@ public class RequestValidator {
         if (Objects.nonNull(requestId)) {
             if (!requestId.equals(operation)) {
                 LOGGER.error("", "", "validateId", "\n" + "Id is not correct");
-                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_ID.getErrorCode(),
-                        ErrorCode.INVALID_REQUEST_ID.getErrorMessage());
+                throw new RequestException(ValidationErrorCode.INVALID_REQUEST_ID.getErrorCode(),
+                        ValidationErrorCode.INVALID_REQUEST_ID.getErrorMessage());
             }
         } else {
             LOGGER.error("", "", "validateId", "\n" + "Id is null");
-            throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_ID.getErrorCode(),
-                    ErrorCode.INVALID_REQUEST_ID.getErrorMessage());
+            throw new RequestException(ValidationErrorCode.INVALID_REQUEST_ID.getErrorCode(),
+                    ValidationErrorCode.INVALID_REQUEST_ID.getErrorMessage());
         }
     }
 
@@ -43,11 +41,11 @@ public class RequestValidator {
             validateReqTime(requestWrapper.getRequestTime());
             validateVersion(requestWrapper.getVersion());
             validateRequest(requestWrapper.getRequest());
-        } catch (PartnerServiceException ex) {
+        } catch (RequestException ex) {
             ResponseWrapperV2<T> responseWrapper = new ResponseWrapperV2<>();
             responseWrapper.setId(operation);
             responseWrapper.setVersion(VERSION);
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+            responseWrapper.setErrors(setErrorResponse(ex.getErrors().get(0).getErrorCode(), ex.getErrors().get(0).getMessage()));
             return Optional.of(responseWrapper);
         }
         return Optional.empty();
@@ -56,13 +54,14 @@ public class RequestValidator {
     protected void validateReqTime(LocalDateTime reqTime) {
         if (Objects.isNull(reqTime)) {
             LOGGER.error("", "", "validateReqTime", "requesttime is null");
-            throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_DATETIME.getErrorCode(), ErrorCode.INVALID_REQUEST_DATETIME.getErrorMessage());
+            throw new RequestException(ValidationErrorCode.INVALID_REQUEST_DATETIME.getErrorCode(),
+                    ValidationErrorCode.INVALID_REQUEST_DATETIME.getErrorMessage());
         } else {
             LocalDate localDate = reqTime.toLocalDate();
             LocalDate serverDate = new Date().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
             if (localDate.isBefore(serverDate) || localDate.isAfter(serverDate)) {
-                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE.getErrorCode(),
-                        ErrorCode.INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE.getErrorMessage());
+                throw new RequestException(ValidationErrorCode.INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE.getErrorCode(),
+                        ValidationErrorCode.INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE.getErrorMessage());
             }
         }
     }
@@ -70,20 +69,29 @@ public class RequestValidator {
     protected void validateVersion(String ver) {
         if (Objects.isNull(ver)) {
             LOGGER.error("", "", "validateVersion", "version is null");
-            throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
-                    ErrorCode.INVALID_REQUEST_VERSION.getErrorMessage());
+            throw new RequestException(ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
+                    ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorMessage());
         } else if (!VERSION.equalsIgnoreCase(ver)) {
             LOGGER.error("", "", "validateVersion", "version is not correct");
-            throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
-                    ErrorCode.INVALID_REQUEST_VERSION.getErrorMessage());
+            throw new RequestException(ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
+                    ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorMessage());
         }
     }
 
     protected void validateRequest(Object request) {
         if (Objects.isNull(request)) {
             LOGGER.error("", "", "validateRequest", "\n" + "request is null");
-            throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
-                    ErrorCode.INVALID_REQUEST_BODY.getErrorMessage());
+            throw new RequestException(ValidationErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
+                    ValidationErrorCode.INVALID_REQUEST_BODY.getErrorMessage());
         }
+    }
+
+    public static List<ErrorResponse> setErrorResponse(String errorCode, String errorMessage) {
+        List<ErrorResponse> errorResponseList = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode(errorCode);
+        errorResponse.setMessage(errorMessage);
+        errorResponseList.add(errorResponse);
+        return errorResponseList;
     }
 }

@@ -11,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(description = "Class representing All CA Certificate Data Response")
-public class CaCertTypeListResponseDto {
+public class TrustCertTypeListResponseDto {
     private int pageNumber;
     private int pageSize;
     private long totalRecords;
     private int totalPages;
-    private List<CaCertificateSummaryDto> allPartnerCertificates;
+    private List<TrustCertificateSummaryDto> allPartnerCertificates;
 
 }
