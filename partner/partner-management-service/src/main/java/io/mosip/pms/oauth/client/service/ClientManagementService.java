@@ -57,5 +57,5 @@ public interface ClientManagementService {
 
     ResponseWrapperV2<List<OauthClientDto>> getClients();
 
-	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, int pageNo, int pageSize, ClientFilterDto filterDto);
+	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto);
 }

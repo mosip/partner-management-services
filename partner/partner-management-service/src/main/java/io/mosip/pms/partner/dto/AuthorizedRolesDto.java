@@ -155,8 +155,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> getpartnercertificates;
 
-	private List<String> getpolicyrequests;
-
 	private List<String> getapikeysforauthpartners;
 
 	private List<String> getoauthclients;
