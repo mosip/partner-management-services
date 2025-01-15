@@ -139,16 +139,16 @@ public class PartnerHelper {
         deviceAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
-    public final Map<String, String> caCertificateAliasToColumnMap = new HashMap<>();
+    public final Map<String, String> trustCertificateAliasToColumnMap = new HashMap<>();
     {
-        caCertificateAliasToColumnMap.put("caCertificateType", "caCertificateType");
-        caCertificateAliasToColumnMap.put("certificateId", "certId");
-        caCertificateAliasToColumnMap.put("partnerDomain", "partnerDomain");
-        caCertificateAliasToColumnMap.put("issuedTo", "certSubject");
-        caCertificateAliasToColumnMap.put("issuedBy", "certIssuer");
-        caCertificateAliasToColumnMap.put("validFrom", "certNotBefore");
-        caCertificateAliasToColumnMap.put("validTill", "certNotAfter");
-        caCertificateAliasToColumnMap.put("uploadedDateTime", "createdtimes");
+        trustCertificateAliasToColumnMap.put("caCertificateType", "caCertificateType");
+        trustCertificateAliasToColumnMap.put("certificateId", "certId");
+        trustCertificateAliasToColumnMap.put("partnerDomain", "partnerDomain");
+        trustCertificateAliasToColumnMap.put("issuedTo", "certSubject");
+        trustCertificateAliasToColumnMap.put("issuedBy", "certIssuer");
+        trustCertificateAliasToColumnMap.put("validFrom", "certNotBefore");
+        trustCertificateAliasToColumnMap.put("validTill", "certNotAfter");
+        trustCertificateAliasToColumnMap.put("uploadedDateTime", "createdtimes");
     }
 
     @Autowired
@@ -307,7 +307,7 @@ public class PartnerHelper {
         return false;
     }
 
-    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, int pageNo, int pageSize) {
+    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
         // Validate sortFieldName
         if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
             LOGGER.error("Invalid sort field name: " + sortFieldName);
@@ -324,15 +324,22 @@ public class PartnerHelper {
                     String.format(ErrorCode.INVALID_SORT_TYPE.getErrorMessage(), sortType));
         }
 
+        // Validate pageNo and pageSize
+        if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
+            LOGGER.error("Both pageNo and pageSize must be provided together.");
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
+        }
+
         // Validate pageNo
-        if (pageNo < 0) {
+        if (Objects.nonNull(pageNo) && pageNo < 0) {
             LOGGER.error("Invalid page no: " + pageNo);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
                     ErrorCode.INVALID_PAGE_NO.getErrorMessage());
         }
 
         // Validate pageSize
-        if (pageSize <= 0) {
+        if (Objects.nonNull(pageSize) && pageSize <= 0) {
             LOGGER.error("Invalid page size: " + pageSize);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
                     ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());

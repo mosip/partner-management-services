@@ -1117,7 +1117,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto pageResponseV2Dto = new PageResponseV2Dto();
@@ -1149,7 +1149,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return responseWrapper;
 	}
 
-	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto, Pageable pageable) {
+	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto, Pageable pageable) {
 		// Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 			String sortKey = sortFieldName + "_" + sortType.toLowerCase();

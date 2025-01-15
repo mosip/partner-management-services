@@ -53,5 +53,5 @@ public interface SecureBiometricInterfaceService {
 
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id, DeactivateSbiRequestDto deactivateSbiRequestDto);
 
-	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto);
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto);
 }

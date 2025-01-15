@@ -232,12 +232,10 @@ public interface PartnerService {
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
 
-	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests();
-
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails();
 
 	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys();
 
-	ResponseWrapperV2<List<PartnerDtoV4>> getPartnersV4(String status, Boolean policyGroupAvailable, String partnerType);
+	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
 }

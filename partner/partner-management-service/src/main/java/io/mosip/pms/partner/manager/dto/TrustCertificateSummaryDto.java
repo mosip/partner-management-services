@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class CaCertificateSummaryDto {
+public class TrustCertificateSummaryDto {
 
     @Schema(description = "Type of the CA certificate (e.g., ROOT, INTERMEDIATE)", example = "ROOT")
     private String caCertificateType;
