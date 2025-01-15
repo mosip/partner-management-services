@@ -452,7 +452,7 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		String partnerId = "123";
-		String requestDetails = "Request details";
+		String partnerComment = "Request details";
 		String orgName = "ABC";
 		String status = "approved";
 		String policyId = "policy-123";
@@ -471,7 +471,7 @@ public class PartnerManagementControllerTest {
 						.param("pageNo", String.valueOf(pageNo))
 						.param("pageSize", String.valueOf(pageSize))
 						.param("partnerId", partnerId)
-						.param("requestDetails", requestDetails)
+						.param("partnerComment", partnerComment)
 						.param("orgName", orgName)
 						.param("status", status)
 						.param("policyId", policyId)
@@ -490,7 +490,7 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		String partnerId = "123";
-		String requestDetails = "Request details";
+		String partnerComment = "Request details";
 		String orgName = "ABC";
 		String status = "approved";
 		String policyId = "policy-123";

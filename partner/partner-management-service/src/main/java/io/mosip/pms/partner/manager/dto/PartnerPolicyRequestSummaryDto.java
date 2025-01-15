@@ -30,7 +30,7 @@ public class PartnerPolicyRequestSummaryDto {
     private String policyGroupName;
 
     @Schema(description = "Request details about partner-policy mapping", example = "Requesting for compliance policies")
-    private String requestDetail;
+    private String partnerComment;
 
     @Schema(description = "Status of the partner policy mapping request (e.g., approved, InProgress)", example = "approved")
     private String status;
@@ -48,7 +48,7 @@ public class PartnerPolicyRequestSummaryDto {
     private Date updatedDateTime;
 
     @Schema(description = "A description of the policy", example = "policy for compliance")
-    private String policyNameDescription;
+    private String policyDescription;
 
     @Schema(description = "A description of policy group", example = "contains all compliance policies")
     private String policyGroupDescription;

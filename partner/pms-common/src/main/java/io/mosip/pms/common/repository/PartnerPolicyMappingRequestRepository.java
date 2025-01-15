@@ -33,7 +33,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             "AND (:policyId IS NULL OR lower(ap.id) LIKE %:policyId%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
-            "AND (:requestDetail IS NULL OR lower(ppr.requestDetail) LIKE %:requestDetail%) " +
+            "AND (:partnerComment IS NULL OR lower(ppr.requestDetail) LIKE %:partnerComment%) " +
             "AND (:statusCode IS NULL OR ppr.statusCode = :statusCode) " +
             "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList)) "
     )
@@ -44,7 +44,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             @Param("policyId") String policyId,
             @Param("policyName") String policyName,
             @Param("statusCode") String statusCode,
-            @Param("requestDetail") String requestDetail,
+            @Param("partnerComment") String partnerComment,
             @Param("policyGroupName") String policyGroupName,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,

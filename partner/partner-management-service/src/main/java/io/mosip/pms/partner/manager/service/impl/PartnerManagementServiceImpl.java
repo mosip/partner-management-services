@@ -953,7 +953,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
 					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
 							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
-							filterDto.getStatus(), filterDto.getRequestDetails(),
+							filterDto.getStatus(), filterDto.getPartnerComment(),
 							filterDto.getPolicyGroupName(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerPolicyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerPolicyRequestSummaryDto.class);

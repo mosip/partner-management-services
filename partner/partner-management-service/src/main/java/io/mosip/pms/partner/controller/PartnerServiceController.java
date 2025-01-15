@@ -349,17 +349,6 @@ public class PartnerServiceController {
 		return partnerService.getPartnerCertificateData(requestDto);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicyrequests())")
-	@GetMapping(value = "/policy-requests")
-	@Operation(summary = "This endpoint retrieves a list of all policy requests created by the Partner Ids associated with the logged in user",
-			description = "Available since release-1.3.x. It is configured for users with any of the roles: AUTH_PARTNER, ABIS_PARTNER, SDK_PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, ONLINE_VERIFICATION_PARTNER.")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
-		return partnerService.getPolicyRequests();
-	}
-
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
 	@GetMapping(value = "/partner-certificates-details")
 	@Operation(summary = "This endpoint retrieves a list of all Partner Certicates uploaded by the logged in user",

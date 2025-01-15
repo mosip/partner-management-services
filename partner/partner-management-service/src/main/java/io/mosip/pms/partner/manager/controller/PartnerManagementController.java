@@ -331,9 +331,9 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
-	@GetMapping(value = "/partners/partner-policy-requests")
-	@Operation(summary = "This endpoint retrieves a list of all the Policy Requests.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. For the role PARTNER_ADMIN, it fetches all Policy Requests made by all Partners. For logged-in partners, it retrieves all Policy Requests associated with their account.")
+	@GetMapping(value = "/partners/policy-requests")
+	@Operation(summary = "This endpoint fetches list of all the policy requests made by the partners.",
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners associated with the logged in user only.If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -345,7 +345,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
-			@RequestParam(value = "requestDetails", required = false) String requestDetails,
+			@RequestParam(value = "partnerComment", required = false) String partnerComment,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@Parameter(
 					description = "Status of request",
@@ -363,8 +363,8 @@ public class PartnerManagementController {
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
 		}
-		if (requestDetails != null) {
-			filterDto.setRequestDetails(requestDetails.toLowerCase());
+		if (partnerComment != null) {
+			filterDto.setPartnerComment(partnerComment.toLowerCase());
 		}
 		if (orgName != null) {
 			filterDto.setOrganizationName(orgName.toLowerCase());

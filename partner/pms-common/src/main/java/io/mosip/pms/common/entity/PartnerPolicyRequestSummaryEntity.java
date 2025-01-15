@@ -25,11 +25,11 @@ import javax.persistence.*;
                         @ColumnResult(name = "orgName", type = String.class),
                         @ColumnResult(name = "policyName", type = String.class),
                         @ColumnResult(name = "policyId", type = String.class),
-                        @ColumnResult(name = "requestDetail", type = String.class),
+                        @ColumnResult(name = "partnerComment", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "createdDateTime", type = Date.class),
                         @ColumnResult(name = "updatedDateTime", type = Date.class),
-                        @ColumnResult(name = "policyNameDescription", type = String.class),
+                        @ColumnResult(name = "policyDescription", type = String.class),
                         @ColumnResult(name = "policyGroupDescription", type = String.class)
                 })
         }
@@ -39,8 +39,8 @@ public class PartnerPolicyRequestSummaryEntity {
     public PartnerPolicyRequestSummaryEntity(
             String id, String partnerId, String partnerStatus, String orgName, String partnerType,
             String policyGroupId, String policyGroupName, String policyId, String policyName, String status,
-            Date createdDateTime, String requestDetail, Date updatedDateTime,
-            String policyNameDescription, String policyGroupDescription) {
+            Date createdDateTime, String partnerComment, Date updatedDateTime,
+            String policyDescription, String policyGroupDescription) {
         this.id = id;
         this.partnerId = partnerId;
         this.partnerStatus = partnerStatus;
@@ -50,11 +50,11 @@ public class PartnerPolicyRequestSummaryEntity {
         this.policyGroupId = policyGroupId;
         this.policyGroupName = policyGroupName;
         this.policyName = policyName;
-        this.requestDetail = requestDetail;
+        this.partnerComment = partnerComment;
         this.status = status;
         this.createdDateTime = createdDateTime;
         this.updatedDateTime = updatedDateTime;
-        this.policyNameDescription = policyNameDescription;
+        this.policyDescription = policyDescription;
         this.policyGroupDescription = policyGroupDescription;
     }
 
@@ -82,7 +82,7 @@ public class PartnerPolicyRequestSummaryEntity {
 
     private String policyName;
 
-    private String requestDetail;
+    private String partnerComment;
 
     private String status;
 
@@ -90,7 +90,7 @@ public class PartnerPolicyRequestSummaryEntity {
 
     private Date updatedDateTime;
 
-    private String policyNameDescription;
+    private String policyDescription;
 
     private String policyGroupDescription;
 }
