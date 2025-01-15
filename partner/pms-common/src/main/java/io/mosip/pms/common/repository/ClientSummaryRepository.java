@@ -15,9 +15,7 @@ public interface ClientSummaryRepository extends BaseRepository<ClientSummaryEnt
 
     @Query(value = "SELECT new ClientSummaryEntity(" +
             "c.rpId, p.name, pg.name, pg.desc, ap.name, " +
-            "ap.descr, c.id, c.name, c.status, c.createdDateTime, " +
-            "pg.id, ap.id, c.rpId, c.logoUri, c.redirectUris, " +
-            "c.publicKey, c.updatedDateTime, c.clientAuthMethods, c.grantTypes) " +
+            "ap.descr, c.id, c.name, c.status, c.createdDateTime, pg.id, c.updatedDateTime) " +
             "FROM ClientDetailV2 c " +
             "LEFT JOIN c.policy ap " +
             "LEFT JOIN c.partner p " +

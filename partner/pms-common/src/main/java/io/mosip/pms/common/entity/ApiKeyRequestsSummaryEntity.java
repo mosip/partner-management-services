@@ -24,6 +24,7 @@ import java.util.Date;
                                 @ColumnResult(name = "policyId", type = String.class),
                                 @ColumnResult(name = "policyName", type = String.class),
                                 @ColumnResult(name = "policyDescription", type = String.class),
+                                @ColumnResult(name = "policyGroupId", type = String.class),
                                 @ColumnResult(name = "policyGroupName", type = String.class),
                                 @ColumnResult(name = "policyGroupDescription", type = String.class),
                                 @ColumnResult(name = "status", type = String.class),
@@ -36,7 +37,7 @@ public class ApiKeyRequestsSummaryEntity {
 
     public ApiKeyRequestsSummaryEntity(
             String apiKeyId, String partnerId, String apiKeyLabel, String orgName, String policyId,
-            String policyName, String policyDescription, String policyGroupName, String policyGroupDescription,
+            String policyName, String policyDescription, String policyGroupId, String policyGroupName, String policyGroupDescription,
             String status, Date createdDateTime) {
         this.apiKeyId = apiKeyId;
         this.partnerId = partnerId;
@@ -45,6 +46,7 @@ public class ApiKeyRequestsSummaryEntity {
         this.policyId = policyId;
         this.policyName = policyName;
         this.policyDescription = policyDescription;
+        this.policyGroupId = policyGroupId;
         this.policyGroupDescription = policyGroupDescription;
         this.policyGroupName = policyGroupName;
         this.status = status;
@@ -70,6 +72,8 @@ public class ApiKeyRequestsSummaryEntity {
     private String policyName;
 
     private String policyDescription;
+
+    private String policyGroupId;
 
     private String policyGroupName;
 
