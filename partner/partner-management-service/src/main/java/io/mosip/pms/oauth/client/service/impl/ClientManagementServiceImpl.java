@@ -58,6 +58,7 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -743,97 +744,63 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
-		ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
-			for (Partner partner : partnerList) {
-				String partnerId = partner.getId();
-				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
-					LOGGER.info("Partner Id is null or empty for user id : " + userId);
-					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-				}
-				List<ClientDetail> clientDetailList = new ArrayList<>();
-				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
-				for (ClientDetail clientDetail : clientDetailList){
-					Optional <AuthPolicy> authPolicy = authPolicyRepository.findById(clientDetail.getPolicyId());
-					if (!authPolicy.isPresent()) {
-						LOGGER.info("Policy does not exists.");
-						throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-								ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-					}
-					PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-					if (Objects.isNull(policyGroup)) {
-						LOGGER.info("Policy Group is null or empty");
-						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-					}
-					OauthClientDto oauthClientDto = new OauthClientDto();
-					oauthClientDto.setPartnerId(partnerId);
-					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(clientDetail.getName());
-					oauthClientDto.setPolicyGroupId(policyGroup.getId());
-					oauthClientDto.setPolicyGroupName(policyGroup.getName());
-					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
-					oauthClientDto.setPolicyId(authPolicy.get().getId());
-					oauthClientDto.setPolicyName(authPolicy.get().getName());
-					oauthClientDto.setPolicyDescription(authPolicy.get().getDescr());
-					oauthClientDto.setRelyingPartyId(clientDetail.getRpId());
-					oauthClientDto.setLogoUri(clientDetail.getLogoUri());
-					oauthClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
-					oauthClientDto.setPublicKey(clientDetail.getPublicKey());
-					oauthClientDto.setStatus(clientDetail.getStatus());
-					oauthClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oauthClientDto.setCreatedDateTime(clientDetail.getCreatedDateTime());
-					oauthClientDto.setUpdatedDateTime(clientDetail.getUpdatedDateTime());
-					oauthClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
-					oauthClientDtoList.add(oauthClientDto);
-				}
-			}
-			responseWrapper.setResponse(oauthClientDtoList);
-		} catch (PartnerServiceException ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-		}
-		responseWrapper.setId(getClientsId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
-	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerHelper.validatePolicyGroupId(partner, userId);
+					partnerHelper.validatePolicyGroup(partner);
+					partnerIdList.add(partner.getId());
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			// If sorting is requested but pagination is not enabled
+			if (!isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.manager.constant.ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorCode(),
+						io.mosip.pms.partner.manager.constant.ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorMessage()
+				);
+			}
 
 			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 			Page<ClientSummaryEntity> page = clientSummaryRepository.
 					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
-							filterDto.getClientName(), filterDto.getStatus(), pageable);
+							filterDto.getClientName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
+				List<ClientSummaryDto> clientSummaryDtoList = page.getContent()
+						.stream()
+						.map(this::mapEntityToDto)
+						.collect(Collectors.toList());
+
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				pageResponseV2Dto.setData(clientSummaryDtoList);
 			}
@@ -853,6 +820,30 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		responseWrapper.setId(getPartnersClientsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private ClientSummaryDto mapEntityToDto(ClientSummaryEntity entity) {
+		return ClientSummaryDto.builder()
+				.partnerId(entity.getPartnerId())
+				.orgName(entity.getOrgName())
+				.policyGroupId(entity.getPolicyGroupId())
+				.policyGroupName(entity.getPolicyGroupName())
+				.policyGroupDescription(entity.getPolicyGroupDescription())
+				.policyId(entity.getPolicyId())
+				.policyName(entity.getPolicyName())
+				.policyDescription(entity.getPolicyDescription())
+				.clientId(entity.getClientId())
+				.clientName(entity.getClientName())
+				.relyingPartyId(entity.getRelyingPartyId())
+				.logoUri(entity.getLogoUri())
+				.redirectUris(convertStringToList(entity.getRedirectUris()))
+				.publicKey(entity.getPublicKey())
+				.grantTypes(convertStringToList(entity.getGrantTypes()))
+				.status(entity.getStatus())
+				.updatedDateTime(entity.getUpdatedDateTime())
+				.clientAuthMethods(convertStringToList(entity.getClientAuthMethods()))
+				.createdDateTime(entity.getCreatedDateTime())
+				.build();
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
