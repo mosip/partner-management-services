@@ -6,7 +6,7 @@ import lombok.Data;
 public class PartnerPolicyRequestFilterDto {
     private String partnerId;
     private String partnerType;
-    private String requestDetails;
+    private String partnerComment;
     private String organizationName;
     private String policyId;
     private String policyName;

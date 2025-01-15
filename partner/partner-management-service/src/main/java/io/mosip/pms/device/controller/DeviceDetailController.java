@@ -250,7 +250,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatedevice())")
 	@PatchMapping(value = "/{deviceId}")
 	@Operation(summary = "This endpoint deactivates a Device based on the Device Id.",
-	description = "Avaiable since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -268,7 +268,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
 	@PostMapping(value = "/{id}/approval")
 	@Operation(summary = "This endpoint is for the Partner Admin user to approve or reject a Device and activate the mapping between the Device and the SBI.",
-			description = "Avaiable since release-1.3.x.  It is configured for the role PARTNER_ADMIN")
+			description = "Available since release-1.3.x.  It is configured for the role PARTNER_ADMIN")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -285,7 +285,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
 	@GetMapping
 	@Operation(summary = "This endpoint retrieves a list of all the Devices.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -294,8 +294,8 @@ public class DeviceDetailController {
 	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "deviceType", required = false) String deviceType,

@@ -673,7 +673,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(String sortFieldName, String sortType, int pageNo, int pageSize, FtmChipFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, FtmChipFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto pageResponseV2Dto = new PageResponseV2Dto();
@@ -706,8 +706,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		return responseWrapper;
 	}
 
-	private Page<FtmDetailSummaryEntity> getFtmChipDetails(String sortFieldName, String sortType, int pageNo,
-														   int pageSize, FtmChipFilterDto filterDto, Pageable pageable) {
+	private Page<FtmDetailSummaryEntity> getFtmChipDetails(String sortFieldName, String sortType, Integer pageNo,
+														   Integer pageSize, FtmChipFilterDto filterDto, Pageable pageable) {
 		//Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 			//sorting handling for the 'status' field
