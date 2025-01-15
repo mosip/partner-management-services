@@ -247,7 +247,6 @@ extraEnvVars: []
 extraEnvVarsCM:
   - global
   - config-server-share
-  - artifactory-share
 
 ## Secret with extra environment variables
 ##
