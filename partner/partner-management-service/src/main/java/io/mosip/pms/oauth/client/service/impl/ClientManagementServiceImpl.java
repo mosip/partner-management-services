@@ -776,14 +776,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				pageable = PageRequest.of(pageNo, pageSize);
 			}
 
-			// If sorting is requested but pagination is not enabled
-			if (!isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.manager.constant.ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorCode(),
-						io.mosip.pms.partner.manager.constant.ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorMessage()
-				);
-			}
-
 			//Sorting
 			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName), sortType);
@@ -794,11 +786,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
 							filterDto.getClientName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<ClientSummaryDto> clientSummaryDtoList = page.getContent()
-						.stream()
-						.map(this::mapEntityToDto)
-						.collect(Collectors.toList());
-
+				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
 				pageResponseV2Dto.setPageNo(page.getNumber());
 				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
@@ -820,30 +808,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		responseWrapper.setId(getPartnersClientsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
-	}
-
-	private ClientSummaryDto mapEntityToDto(ClientSummaryEntity entity) {
-		return ClientSummaryDto.builder()
-				.partnerId(entity.getPartnerId())
-				.orgName(entity.getOrgName())
-				.policyGroupId(entity.getPolicyGroupId())
-				.policyGroupName(entity.getPolicyGroupName())
-				.policyGroupDescription(entity.getPolicyGroupDescription())
-				.policyId(entity.getPolicyId())
-				.policyName(entity.getPolicyName())
-				.policyDescription(entity.getPolicyDescription())
-				.clientId(entity.getClientId())
-				.clientName(entity.getClientName())
-				.relyingPartyId(entity.getRelyingPartyId())
-				.logoUri(entity.getLogoUri())
-				.redirectUris(convertStringToList(entity.getRedirectUris()))
-				.publicKey(entity.getPublicKey())
-				.grantTypes(convertStringToList(entity.getGrantTypes()))
-				.status(entity.getStatus())
-				.updatedDateTime(entity.getUpdatedDateTime())
-				.clientAuthMethods(convertStringToList(entity.getClientAuthMethods()))
-				.createdDateTime(entity.getCreatedDateTime())
-				.build();
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

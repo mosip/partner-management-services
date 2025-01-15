@@ -409,7 +409,7 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -435,7 +435,7 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
