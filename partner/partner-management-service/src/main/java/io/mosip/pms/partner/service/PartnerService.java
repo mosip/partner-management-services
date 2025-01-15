@@ -232,8 +232,6 @@ public interface PartnerService {
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
 
-	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests();
-
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails();
 
 	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys();

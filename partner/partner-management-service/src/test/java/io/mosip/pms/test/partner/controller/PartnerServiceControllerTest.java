@@ -593,22 +593,6 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void getPolicyRequestsTest() throws Exception {
-        ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
-        PolicyDto policyDto = new PolicyDto();
-        policyDto.setPartnerId("abc");
-        policyDto.setPartnerType("Auth_Partner");
-        policyDto.setPolicyGroupName("123");
-        policyDto.setPolicyName("test");
-        List<PolicyDto> policyDtoList = new ArrayList<>();
-        policyDtoList.add(policyDto);
-        responseWrapper.setResponse(policyDtoList);
-        when(partnerService.getPolicyRequests()).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners//policy-requests")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"AUTH_PARTNER"})
     public void getPartnerCertificatesDetailsTest() throws Exception {
         ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 

@@ -1517,8 +1517,8 @@ public class ClientManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ClientFilterDto filterDto = new ClientFilterDto();
 		filterDto.setPartnerId("abc");
 		filterDto.setStatus("ACTIVE");
@@ -1542,8 +1542,8 @@ public class ClientManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		ClientSummaryEntity entity = new ClientSummaryEntity();
