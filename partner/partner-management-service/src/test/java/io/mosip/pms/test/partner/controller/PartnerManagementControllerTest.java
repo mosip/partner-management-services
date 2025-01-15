@@ -465,7 +465,7 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -502,7 +502,7 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))

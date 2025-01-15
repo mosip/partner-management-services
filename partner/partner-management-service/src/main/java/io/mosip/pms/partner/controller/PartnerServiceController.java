@@ -440,7 +440,7 @@ public class PartnerServiceController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -449,7 +449,7 @@ public class PartnerServiceController {
 	@PostMapping("/apikey/request/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestfiltervalues())")
 	@Operation(summary = "Service to filter API key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/partner-policy-requests endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partner-policy-requests endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> apikeyRequetsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -460,7 +460,7 @@ public class PartnerServiceController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -469,7 +469,7 @@ public class PartnerServiceController {
 	@PostMapping("/apikey/request/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestsearch())")
 	@Operation(summary = "Service to search API key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/partner-policy-requests endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partner-policy-requests endpoint.")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> responseWrapper = new ResponseWrapper<>();

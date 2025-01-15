@@ -196,7 +196,7 @@ public class PartnerManagementController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -204,7 +204,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/partners/apikey" , method = RequestMethod.GET)
 	@Operation(summary = "Service to get API key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/partner-policy-requests endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partner-policy-requests endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
@@ -331,7 +331,7 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
-	@GetMapping(value = "/partners/policy-requests")
+	@GetMapping(value = "/partner-policy-requests")
 	@Operation(summary = "This endpoint fetches list of all the policy requests made by the partners.",
 	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners associated with the logged in user only.If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners.")
 	@ApiResponses(value = {
