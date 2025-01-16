@@ -217,7 +217,7 @@
 		</classes>
 	</test>
 
-	<!--<test name="GetAllApprovedAuthPartnerPolicy">
+	<test name="GetAllApprovedAuthPartnerPolicy">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedAuthPartnerPolicy/GetAllApprovedAuthPartnerPolicy.yml" />
 		<classes>
@@ -231,7 +231,7 @@
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>-->
+	</test>
 
 	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
 		<parameter name="ymlFile"
@@ -285,6 +285,12 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllPartnerPolicyRequestNegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequestNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	
 	<test name="GetListOfPartners">
 		<parameter name="ymlFile" value="pms/GetListOfPartners/GetListOfPartners.yml" />
@@ -593,14 +599,14 @@
 	</test>
 	<test name="GetListAllFTMChip">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFTMChip.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFtmChip.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
 	<test name="GetListAllFTMChipNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFTMChipNegativeScenarios.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -651,6 +657,12 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetListOfFtmChipNegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChipNegtiveScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	
 	<test name="GetListOfAllSBI">
 		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
@@ -658,6 +670,12 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetListOfAllSBINegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBINegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	
 	<test name="GetListOfAllDevice">
 		<parameter name="ymlFile" value="pms/GetListOfAllDevice/GetListOfAllDevice.yml" />

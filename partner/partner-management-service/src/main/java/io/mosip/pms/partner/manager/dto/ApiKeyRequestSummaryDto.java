@@ -26,6 +26,9 @@ public class ApiKeyRequestSummaryDto {
     @Schema(description = "Description of the policy name the partner has selected", example = "policy for authentication")
     private String policyDescription;
 
+    @Schema(description = "Unique identifier for the policy group", example = "policyGroup789")
+    private String policyGroupId;
+
     @Schema(description = "Name of the policy group", example = "Security Policies")
     private String policyGroupName;
 

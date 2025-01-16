@@ -375,17 +375,6 @@ public class PartnerServiceController {
 		return partnerService.getPartnersV3(status, policyGroupAvailable, partnerType);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetapikeysforauthpartners())")
-	@GetMapping(value = "/auth-partner-api-keys")
-	@Operation(summary = "This endpoint retrieves a list of all API keys created by the Auth Partners associated with the logged in user.",
-			description = "Available since release-1.3.x. It is configured for the role AUTH_PARTNER or PARTNER_ADMIN")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
-		return partnerService.getAuthPartnerApiKeys();
-	}
-
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
 	 * It has been replaced by the new GET /partners/v3 endpoint.
@@ -480,7 +469,7 @@ public class PartnerServiceController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new  GET /partners/apikey/search/v2 endpoint.
+	 * It has been replaced by the new  GET /partner-api-keys endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -489,7 +478,7 @@ public class PartnerServiceController {
 	@PostMapping("/apikey/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeysearch())")
 	@Operation(summary = "Service to search API key - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the  GET /partners/apikey/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the  GET /partner-api-keys endpoint.")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> responseWrapper = new ResponseWrapper<>();

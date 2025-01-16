@@ -931,14 +931,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize);
 			}
 
-			// If sorting is requested but pagination is not enabled
-			if (!isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				throw new PartnerServiceException(
-						ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorCode(),
-						ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorMessage()
-				);
-			}
-
 			//Sorting
 			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName), sortType);
@@ -979,11 +971,35 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+						partnerHelper.validatePartnerId(partner, userId);
+						partnerHelper.validatePolicyGroupId(partner, userId);
+						partnerHelper.validatePolicyGroup(partner);
+						partnerIdList.add(partner.getId());
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
 
 			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				if (sortFieldName.equalsIgnoreCase("status")) {
 					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
 				}
@@ -994,11 +1010,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
 					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyLabel(),
 							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
-							filterDto.getStatus(), pageable);
+							filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
 			}

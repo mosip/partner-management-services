@@ -171,19 +171,6 @@ public class ClientManagementControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void getClients() throws Exception {
-        ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
-        List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
-        responseWrapper.setResponse(oauthClientDtoList);
-
-        when(clientManagementService.getClients()).thenReturn(responseWrapper);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/clients"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void getPartnersClientsTest() throws Exception {
         String sortFieldName = "createdDateTime";
@@ -198,7 +185,7 @@ public class ClientManagementControllerTest {
         Mockito.when(clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
                 .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/partners/clients")
+        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/client")
                         .param("sortFieldName", sortFieldName)
                         .param("sortType", sortType)
                         .param("pageNo", String.valueOf(pageNo))
