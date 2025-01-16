@@ -286,7 +286,7 @@
 		</classes>
 	</test>
 	<test name="GetAllPartnerPolicyRequestNegativeScenarios">
-		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequestNegativeSceenarios.yml" />
+		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequestNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -599,14 +599,14 @@
 	</test>
 	<test name="GetListAllFTMChip">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFTMChip.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFtmChip.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
 	<test name="GetListAllFTMChipNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFTMChipNegativeScenarios.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
