@@ -169,7 +169,7 @@ public class SecureBiometricInterfaceController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /securebiometricinterface/search/v2 endpoint.
+	 * It has been replaced by the new GET /securebiometricinterface endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -178,7 +178,7 @@ public class SecureBiometricInterfaceController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacesearch())")
 	@Operation(summary = "Service to search SecureBiometricInterface details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface endpoint.")
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -244,7 +244,7 @@ public class SecureBiometricInterfaceController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /securebiometricinterface/search/v2 endpoint.
+	 * It has been replaced by the new GET /securebiometricinterface endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -253,7 +253,7 @@ public class SecureBiometricInterfaceController {
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacefiltervalues())")
 	@Operation(summary = "Service to filter SBI's - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();

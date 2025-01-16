@@ -1333,7 +1333,8 @@ public class SBIServiceTest {
 		String sortType = "asc";
 		Integer pageNo = 0;
 		Integer pageSize = 10;
-		SbiFilterDto filterDto = new SbiFilterDto(); // Add appropriate setup
+		SbiFilterDto filterDto = new SbiFilterDto();
+		List<String> partnerIdList = new ArrayList<>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 
 		// Test different cases
@@ -1355,7 +1356,7 @@ public class SBIServiceTest {
 			}
 
 			Page result = (Page) ReflectionTestUtils.invokeMethod(
-					secureBiometricInterfaceService, "getSbiDetails", sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+					secureBiometricInterfaceService, "getSbiDetails", sortFieldName, sortType, pageNo, pageSize, filterDto, pageable, partnerIdList, false);
 
 			// Verify repository calls based on sort key
 			switch (sortKey) {
