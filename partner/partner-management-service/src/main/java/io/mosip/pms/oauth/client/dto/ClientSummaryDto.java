@@ -14,6 +14,9 @@ public class ClientSummaryDto {
     @Schema(description = "Name of the partner organisation", example = "abc")
     private String orgName;
 
+    @Schema(description = "Unique identifier for the policy group", example = "policyGroup789")
+    private String policyGroupId;
+
     @Schema(description = "Name of the policy group", example = "Security Policies")
     private String policyGroupName;
 
@@ -34,6 +37,9 @@ public class ClientSummaryDto {
 
     @Schema(description = "Current status of the OIDC client", example = "active")
     private String status;
+
+    @Schema(description = "Date and time when the record was last updated", example = "2024-08-08T12:00:00Z")
+    private Date updatedDateTime;
 
     @Schema(description = "Date and time when the record was created", example = "2024-08-08T10:00:00Z")
     private Date createdDateTime;

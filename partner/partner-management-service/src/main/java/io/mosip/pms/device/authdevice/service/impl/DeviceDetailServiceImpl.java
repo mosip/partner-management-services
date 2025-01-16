@@ -525,7 +525,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				}
 			}
 			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, false);
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
 
 			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
 			if (Objects.isNull(deviceDetailSBI)) {
@@ -585,7 +585,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, DeviceDetailFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<DeviceDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
@@ -619,7 +619,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		return responseWrapper;
 	}
 
-	private Page<DeviceDetailEntity> getDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto, Pageable pageable) {
+	private Page<DeviceDetailEntity> getDeviceDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, DeviceDetailFilterDto filterDto, Pageable pageable) {
 		//Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 			//sorting handling for the 'status' field

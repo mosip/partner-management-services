@@ -26,6 +26,8 @@ import java.util.Date;
                         @ColumnResult(name = "clientName", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "createdDateTime", type = Date.class),
+                        @ColumnResult(name = "policyGroupId", type = String.class),
+                        @ColumnResult(name = "updatedDateTime", type = Date.class)
                 })
         }
 )
@@ -33,18 +35,21 @@ public class ClientSummaryEntity {
 
     public ClientSummaryEntity(String partnerId, String orgName, String policyGroupName, String policyGroupDescription,
                                String policyName, String policyDescription, String clientId,
-                               String clientName, String status, Date createdDateTime) {
+                               String clientName, String status, Date createdDateTime, String policyGroupId,
+                               Date updatedDateTime) {
 
         this.partnerId = partnerId;
         this.orgName = orgName;
         this.policyGroupName = policyGroupName;
-        this.policyGroupDescription= policyGroupDescription;
+        this.policyGroupDescription = policyGroupDescription;
         this.policyName = policyName;
         this.policyDescription = policyDescription;
         this.clientId = clientId;
         this.clientName = clientName;
         this.status = status;
         this.createdDateTime = createdDateTime;
+        this.policyGroupId = policyGroupId;
+        this.updatedDateTime = updatedDateTime;
     }
 
     // No-argument constructor
@@ -72,4 +77,8 @@ public class ClientSummaryEntity {
     private String status;
 
     private Date createdDateTime;
+
+    private String policyGroupId;
+
+    private Date updatedDateTime;
 }

@@ -1682,8 +1682,8 @@ public class FTPChipDetailServiceTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		filterDto.setPartnerId("abc");
 		filterDto.setMake("make");
@@ -1704,8 +1704,8 @@ public class FTPChipDetailServiceTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<FtmDetailSummaryEntity> page = null;
 		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);

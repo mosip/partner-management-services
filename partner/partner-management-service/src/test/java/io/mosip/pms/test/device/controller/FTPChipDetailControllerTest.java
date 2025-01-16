@@ -412,8 +412,8 @@ public class FTPChipDetailControllerTest {
 	public void getPartnersFtmDetailsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 

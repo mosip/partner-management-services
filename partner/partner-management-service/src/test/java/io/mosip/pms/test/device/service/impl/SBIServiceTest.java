@@ -1117,8 +1117,8 @@ public class SBIServiceTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		SbiFilterDto filterDto = new SbiFilterDto();
 		filterDto.setPartnerId("mosip123");
 		filterDto.setOrgName("abc");
@@ -1171,8 +1171,8 @@ public class SBIServiceTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<SbiSummaryEntity> page = null;
 		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
@@ -1364,8 +1364,8 @@ public class SBIServiceTest {
 		// Prepare parameters
 		String sortFieldName = "status";
 		String sortType = "asc";
-		int pageNo = 0;
-		int pageSize = 10;
+		Integer pageNo = 0;
+		Integer pageSize = 10;
 		SbiFilterDto filterDto = new SbiFilterDto(); // Add appropriate setup
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 

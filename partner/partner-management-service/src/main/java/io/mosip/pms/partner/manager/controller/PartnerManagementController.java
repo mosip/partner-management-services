@@ -8,9 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
-import io.mosip.pms.partner.manager.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -135,7 +133,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartners())")
 	@RequestMapping(value = "/partners", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -157,7 +155,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersnew())")
 	@RequestMapping(value = "/partners/v2", method = RequestMethod.GET)
 	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/v3 endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<PartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -198,7 +196,7 @@ public class PartnerManagementController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /partners/partner-policy-requests endpoint.
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -206,7 +204,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/partners/apikey" , method = RequestMethod.GET)
 	@Operation(summary = "Service to get API key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partners/partner-policy-requests endpoint")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partner-policy-requests endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
@@ -269,7 +267,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
 	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Avaiable since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -282,7 +280,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
 	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -291,8 +289,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "partnerType", required = false) String partnerType,
 			@RequestParam(value = "isActive", required = false) Boolean isActive,
@@ -333,9 +331,9 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
-	@GetMapping(value = "/partners/partner-policy-requests")
-	@Operation(summary = "This endpoint retrieves a list of all the Policy Requests made by all the Partners.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@GetMapping(value = "/partner-policy-requests")
+	@Operation(summary = "This endpoint fetches list of all the policy requests made by the partners.",
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners associated with the logged in user only.If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -344,10 +342,10 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
-			@RequestParam(value = "requestDetails", required = false) String requestDetails,
+			@RequestParam(value = "partnerComment", required = false) String partnerComment,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@Parameter(
 					description = "Status of request",
@@ -365,8 +363,8 @@ public class PartnerManagementController {
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
 		}
-		if (requestDetails != null) {
-			filterDto.setRequestDetails(requestDetails.toLowerCase());
+		if (partnerComment != null) {
+			filterDto.setPartnerComment(partnerComment.toLowerCase());
 		}
 		if (orgName != null) {
 			filterDto.setOrganizationName(orgName.toLowerCase());
@@ -390,9 +388,9 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
-	@GetMapping(value = "/partners/apikey/search/v2")
+	@GetMapping(value = "/partner-api-keys")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by all the Auth Partners.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -401,8 +399,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -441,7 +439,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGettrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates")
 	@Operation(summary = "This endpoint retrieves a list of all the Trust Certificates uploaded by the Partner Admin.",
-	description = "Avaiable since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -450,8 +448,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@Parameter(
 					description = "Type of CA certificate",
 					in = ParameterIn.QUERY,
@@ -491,7 +489,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadtrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates/{certificateId}/certificateFile")
 	@Operation(summary = "This endpoint will download p7b file for a CA / Intermediate CA certificate along with the trust chain based on Certificate Id.",
-			description = "Avaiable since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
