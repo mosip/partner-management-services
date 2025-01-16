@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(description = "Model representing request to get CA/Sub-CA certificates.")
-public class CaCertTypeListRequestDto {
+public class TrustCertTypeListRequestDto {
 
     /**
      * Certificate Type

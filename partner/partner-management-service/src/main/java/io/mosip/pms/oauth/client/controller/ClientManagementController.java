@@ -96,36 +96,25 @@ public class ClientManagementController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthclients())")
-	@GetMapping(value = "/oauth/clients")
-	@Operation(summary = "Added in release-1.3.0, This endpoint retrieves a list of all OAuth clients created for approved policies by Auth Partners associated with the user."
-			, description = "This endpoint retrieves a list of all OAuth clients created for approved policies by Auth Partners associated with the logged-in user. If no OIDC clients are found, it returns an empty array with optional metadata attributes. This endpoint is configured for the roles AUTH_PARTNER and PARTNER_ADMIN.")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
-		return clientManagementService.getClients();
-	}
-
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
-	@GetMapping(value = "/oauth/partners/clients")
-	@Operation(summary = "Added in release-1.3.0, This endpoint, available only for Partner Admin users, retrieves a list of all OAuth clients created by all Partners. ",
-			description = "This endpoint, available only for Partner Admin users, retrieves a list of all OAuth clients created by all Partners. It supports pagination, sorting, and filtering.")
+	@GetMapping(value = "/oauth/client")
+	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by the Auth Partners.",
+			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "clientName", required = false) String clientName,
 			@Parameter(
-					description = "Status of oidc client",
+					description = "Status of OAuth client",
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"ACTIVE", "INACTIVE"})
 			)

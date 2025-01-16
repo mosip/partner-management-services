@@ -1,6 +1,6 @@
 GetListOfPartners:
    Pms_GetListOfPartners_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/admin-partners/v3
+      endPoint: /v1/partnermanager/admin-partners
       description: Fetching all the active List Of Partnered in the system
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

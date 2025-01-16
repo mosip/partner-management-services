@@ -45,13 +45,11 @@ public interface SecureBiometricInterfaceService {
 	
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto);
 
-	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails();
-
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(DeviceDetailDto deviceDetailDto, String sbiId);
 
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId);
 
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String id, DeactivateSbiRequestDto deactivateSbiRequestDto);
 
-	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, int pageNo, int pageSize, SbiFilterDto filterDto);
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto);
 }
