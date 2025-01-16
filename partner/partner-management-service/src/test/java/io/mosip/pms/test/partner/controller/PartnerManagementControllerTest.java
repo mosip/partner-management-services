@@ -355,8 +355,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -379,8 +379,8 @@ public class PartnerManagementControllerTest {
 	public void getAllPartners_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -402,14 +402,14 @@ public class PartnerManagementControllerTest {
 	public void getAllApiKeyRequestsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
 		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -428,14 +428,14 @@ public class PartnerManagementControllerTest {
 	public void getAllApiKeyRequests_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
 		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/apikey/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -449,10 +449,10 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnerPolicyRequestsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		String partnerId = "123";
-		String requestDetails = "Request details";
+		String partnerComment = "Request details";
 		String orgName = "ABC";
 		String status = "approved";
 		String policyId = "policy-123";
@@ -465,13 +465,13 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
 						.param("pageSize", String.valueOf(pageSize))
 						.param("partnerId", partnerId)
-						.param("requestDetails", requestDetails)
+						.param("partnerComment", partnerComment)
 						.param("orgName", orgName)
 						.param("status", status)
 						.param("policyId", policyId)
@@ -487,10 +487,10 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnerPolicyRequests_NoFiltersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		String partnerId = "123";
-		String requestDetails = "Request details";
+		String partnerComment = "Request details";
 		String orgName = "ABC";
 		String status = "approved";
 		String policyId = "policy-123";
@@ -502,7 +502,7 @@ public class PartnerManagementControllerTest {
 
 		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -515,8 +515,8 @@ public class PartnerManagementControllerTest {
 	public void getCaCertificatesTest() throws Exception {
 		String sortFieldName = "caCertificateType";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
@@ -540,8 +540,8 @@ public class PartnerManagementControllerTest {
 	public void getCaCertificates_NoFiltersTest() throws Exception {
 		String sortFieldName = "caCertificateType";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 

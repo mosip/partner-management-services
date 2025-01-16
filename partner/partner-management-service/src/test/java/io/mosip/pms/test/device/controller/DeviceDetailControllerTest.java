@@ -470,8 +470,8 @@ public class DeviceDetailControllerTest {
     public void getAllDeviceDetailsTest() throws Exception {
         String sortFieldName = "deviceId";
         String sortType = "asc";
-        int pageNo = 0;
-        int pageSize = 8;
+        Integer pageNo = 0;
+        Integer pageSize = 8;
         String partnerId = "test-partner";
         String orgName = "test-org";
         String deviceType = "Finger";

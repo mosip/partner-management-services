@@ -1325,189 +1325,6 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void getClientsTest() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("abc");
-		partner.setApprovalStatus("approved");
-		partnerList.add(partner);
-		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
-
-		List<ClientDetail> clientDetailList = new ArrayList<>();
-		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setId("id123");
-		clientDetail.setName("Sample Client");
-		clientDetail.setRpId("rp123");
-		clientDetail.setPolicyId("policy123");
-		clientDetail.setLogoUri("https://example.com/logo.png");
-		clientDetail.setRedirectUris("https://example.com/callback");
-		clientDetail.setPublicKey("public-key-string");
-		clientDetail.setClaims("claims-string");
-		clientDetail.setAcrValues("acr-values-string");
-		clientDetail.setStatus("active");
-		clientDetail.setGrantTypes("grant-type-string");
-		clientDetail.setClientAuthMethods("auth-methods-string");
-		clientDetail.setCreatedBy("creator-user");
-		clientDetail.setCreatedDateTime(LocalDateTime.now());
-		clientDetail.setUpdatedBy("updater-user");
-		clientDetail.setUpdatedDateTime(LocalDateTime.now());
-		clientDetail.setIsDeleted(false);
-		clientDetailList.add(clientDetail);
-		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setName("abc");
-		authPolicy.setPolicyGroup(policyGroup);
-		authPolicy.setName("abc");
-		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
-
-		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
-
-		// Assert response is not null
-		assertNotNull(result);
-		assertNotNull(result.getResponse());
-	}
-
-	@Test
-	public void getClientsExceptionTest() {
-		serviceImpl.getClients();
-		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
-
-		// Assert response is not null
-		assertNotNull(result);
-		assertNotNull(result.getErrors());
-	}
-
-	@Test
-	public void getClientsPartnerIdNotExistsExceptionTest() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId(null);
-		partnerList.add(partner);
-		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
-
-		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
-
-		// Assert response is not null
-		assertNotNull(result);
-		assertNotNull(result.getErrors());
-	}
-
-	@Test
-	public void getClientsPolicyNotExistsExceptionTest() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("abc");
-		partner.setApprovalStatus("approved");
-		partnerList.add(partner);
-		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
-
-		List<ClientDetail> clientDetailList = new ArrayList<>();
-		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setId("id123");
-		clientDetail.setName("Sample Client");
-		clientDetail.setRpId("rp123");
-		clientDetail.setPolicyId("policy123");
-		clientDetail.setLogoUri("https://example.com/logo.png");
-		clientDetail.setRedirectUris("https://example.com/callback");
-		clientDetail.setPublicKey("public-key-string");
-		clientDetail.setClaims("claims-string");
-		clientDetail.setAcrValues("acr-values-string");
-		clientDetail.setStatus("active");
-		clientDetail.setGrantTypes("grant-type-string");
-		clientDetail.setClientAuthMethods("auth-methods-string");
-		clientDetail.setCreatedBy("creator-user");
-		clientDetail.setCreatedDateTime(LocalDateTime.now());
-		clientDetail.setUpdatedBy("updater-user");
-		clientDetail.setUpdatedDateTime(LocalDateTime.now());
-		clientDetail.setIsDeleted(false);
-		clientDetailList.add(clientDetail);
-		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
-
-		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
-
-		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
-
-		// Assert response is not null
-		assertNotNull(result);
-		assertNotNull(result.getErrors());
-	}
-
-	@Test
-	public void getClientsPolicyGroupNotExistsExceptionTest() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("abc");
-		partner.setApprovalStatus("approved");
-		partnerList.add(partner);
-		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
-
-		List<ClientDetail> clientDetailList = new ArrayList<>();
-		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setId("id123");
-		clientDetail.setName("Sample Client");
-		clientDetail.setRpId("rp123");
-		clientDetail.setPolicyId("policy123");
-		clientDetail.setLogoUri("https://example.com/logo.png");
-		clientDetail.setRedirectUris("https://example.com/callback");
-		clientDetail.setPublicKey("public-key-string");
-		clientDetail.setClaims("claims-string");
-		clientDetail.setAcrValues("acr-values-string");
-		clientDetail.setStatus("active");
-		clientDetail.setGrantTypes("grant-type-string");
-		clientDetail.setClientAuthMethods("auth-methods-string");
-		clientDetail.setCreatedBy("creator-user");
-		clientDetail.setCreatedDateTime(LocalDateTime.now());
-		clientDetail.setUpdatedBy("updater-user");
-		clientDetail.setUpdatedDateTime(LocalDateTime.now());
-		clientDetail.setIsDeleted(false);
-		clientDetailList.add(clientDetail);
-		when(clientDetailRepository.findAllByPartnerId(anyString())).thenReturn(clientDetailList);
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setName("abc");
-		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
-
-		ResponseWrapperV2<List<OauthClientDto>> result = serviceImpl.getClients();
-
-		// Assert response is not null
-		assertNotNull(result);
-		assertNotNull(result.getErrors());
-	}
-
-
-	@Test
 	public void getPartnersClientsTest() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -1517,8 +1334,8 @@ public class ClientManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ClientFilterDto filterDto = new ClientFilterDto();
 		filterDto.setPartnerId("abc");
 		filterDto.setStatus("ACTIVE");
@@ -1528,7 +1345,7 @@ public class ClientManagementServiceImplTest {
 		entity.setClientId("123");
 		Page<ClientSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
 
-		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
@@ -1542,14 +1359,14 @@ public class ClientManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		ClientSummaryEntity entity = new ClientSummaryEntity();
 		entity.setClientId("123");
 		Page<ClientSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
-		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 

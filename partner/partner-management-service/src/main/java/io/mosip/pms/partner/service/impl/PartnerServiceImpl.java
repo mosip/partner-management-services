@@ -249,9 +249,6 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
 	private String getOriginalPartnerCertificateId;
 
-	@Value("${mosip.pms.api.id.policy.requests.get}")
-	private String getPolicyRequestsId;
-
 	@Value("${mosip.pms.api.id.partner.certificates.get}")
 	private String getPartnerCertificatesId;
 
@@ -1656,72 +1653,6 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<PolicyDto>> getPolicyRequests() {
-		ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
-				List<PolicyDto> policyDtoList = new ArrayList<>();
-				for (Partner partner : partnerList) {
-					if (!partnerHelper.skipDeviceOrFtmPartner(partner)) {
-						partnerHelper.validatePartnerId(partner, userId);
-						partnerHelper.validatePolicyGroupId(partner, userId);
-						PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
-						List<PartnerPolicyRequest> partnerPolicyRequestList = partner.getPartnerPolicyRequests();
-						if (!partnerPolicyRequestList.isEmpty()) {
-							for (PartnerPolicyRequest partnerPolicyRequest : partnerPolicyRequestList) {
-								AuthPolicy policyDetails = authPolicyRepository.findByPolicyGroupAndId(partner.getPolicyGroupId(), partnerPolicyRequest.getPolicyId());
-								if (Objects.nonNull(policyDetails)) {
-									PolicyDto policyDto = new PolicyDto();
-									policyDto.setPartnerId(partner.getId());
-									policyDto.setPartnerType(partner.getPartnerTypeCode());
-
-									policyDto.setPolicyGroupId(policyGroup.getId());
-									policyDto.setPolicyGroupDescription(policyGroup.getDesc());
-									policyDto.setPolicyGroupName(policyGroup.getName());
-
-									policyDto.setPolicyId(policyDetails.getId());
-									policyDto.setPolicyDescription(policyDetails.getDescr());
-									policyDto.setPolicyName(policyDetails.getName());
-
-									policyDto.setPartnerComment(partnerPolicyRequest.getRequestDetail());
-									policyDto.setUpdatedDateTime(partnerPolicyRequest.getUpdDtimes() != null ? partnerPolicyRequest.getUpdDtimes().toLocalDateTime() : null);
-									policyDto.setCreatedDateTime(partnerPolicyRequest.getCrDtimes().toLocalDateTime());
-									policyDto.setStatus(partnerPolicyRequest.getStatusCode());
-									policyDtoList.add(policyDto);
-								} else {
-									LOGGER.info("No matching policy not found for policy group ID :" + partner.getPolicyGroupId() + "and Policy ID :" + partnerPolicyRequest.getPolicyId());
-									throw new PartnerServiceException(ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorCode(),
-											ErrorCode.MATCHING_POLICY_NOT_FOUND.getErrorMessage());
-								}
-							}
-						}
-					}
-				}
-				responseWrapper.setResponse(policyDtoList);
-			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getPolicyRequests method of PartnerServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getPolicyRequests method of PartnerServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.PARTNER_POLICY_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-		}
-		responseWrapper.setId(getPolicyRequestsId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
-	@Override
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
 		ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
@@ -1782,74 +1713,6 @@ public class PartnerServiceImpl implements PartnerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getPartnerCertificatesId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
-	@Override
-	public ResponseWrapperV2<List<ApiKeyResponseDto>> getAuthPartnerApiKeys() {
-		ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
-				List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
-				for (Partner partner : partnerList) {
-					partnerHelper.validateIfPartnerIsApprovedAuthPartner(partner);
-					partnerHelper.validatePartnerId(partner, userId);
-					partnerHelper.validatePolicyGroupId(partner, userId);
-					List<PartnerPolicy> apiKeyRequestsList = partnerPolicyRepository.findAPIKeysByPartnerId(partner.getId());
-					if (!apiKeyRequestsList.isEmpty()) {
-						for (PartnerPolicy partnerPolicy : apiKeyRequestsList) {
-							Optional<AuthPolicy> authPolicy = authPolicyRepository.findById(partnerPolicy.getPolicyId());
-							if (!authPolicy.isPresent()) {
-								LOGGER.info("Policy does not exists.");
-								throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-										ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-							}
-							PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-							if (Objects.isNull(policyGroup)) {
-								LOGGER.info("Policy Group is null or empty");
-								throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-										ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-							}
-							ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-							apiKeyResponseDto.setApiKeyLabel(partnerPolicy.getLabel());
-							if (partnerPolicy.getIsActive()) {
-								apiKeyResponseDto.setStatus(ACTIVE);
-							} else {
-								apiKeyResponseDto.setStatus(INACTIVE);
-							}
-							apiKeyResponseDto.setPartnerId(partner.getId());
-							apiKeyResponseDto.setPolicyGroupId(policyGroup.getId());
-							apiKeyResponseDto.setPolicyGroupName(policyGroup.getName());
-							apiKeyResponseDto.setPolicyGroupDescription(policyGroup.getDesc());
-							apiKeyResponseDto.setPolicyId(authPolicy.get().getId());
-							apiKeyResponseDto.setPolicyName(authPolicy.get().getName());
-							apiKeyResponseDto.setPolicyDescription(authPolicy.get().getDescr());
-							apiKeyResponseDto.setCreatedDateTime(partnerPolicy.getCrDtimes().toLocalDateTime());
-							apiKeyResponseDtoList.add(apiKeyResponseDto);
-						}
-					}
-				}
-				responseWrapper.setResponse(apiKeyResponseDtoList);
-			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAuthPartnerApiKeys method of PartnerServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getAuthPartnerApiKeys method of PartnerServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.API_KEY_REQUESTS_FETCH_ERROR.getErrorMessage();
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-		}
-		responseWrapper.setId(getAuthPartnerApiKeysId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
