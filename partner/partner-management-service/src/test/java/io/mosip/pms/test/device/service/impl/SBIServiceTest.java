@@ -1155,7 +1155,7 @@ public class SBIServiceTest {
 		field.set(partnerHelper, mockMap);
 
 		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by(Sort.Order.asc("crDtimes")));
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> response = secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 
 		Assert.assertNotNull(response);
@@ -1175,41 +1175,8 @@ public class SBIServiceTest {
 		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<SbiSummaryEntity> page = null;
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, null);
-	}
-
-	@Test
-	public void getSbiDetailsTest() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("Device_Provider");
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		List<SecureBiometricInterface> secureBiometricInterfaceList = new ArrayList<>();
-		SecureBiometricInterface secureBiometricInterface = new SecureBiometricInterface();
-		secureBiometricInterface.setSwCreateDateTime(LocalDateTime.now());
-		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now());
-		secureBiometricInterface.setApprovalStatus("approved");
-		secureBiometricInterface.setActive(true);
-		secureBiometricInterface.setCrDtimes(LocalDateTime.now());
-		secureBiometricInterfaceList.add(secureBiometricInterface);
-		secureBiometricInterface.setSwVersion("1.0");
-		when(sbiRepository.findByProviderId(anyString())).thenReturn(secureBiometricInterfaceList);
-		List<DeviceDetailSBI> deviceDetailSBIList = new ArrayList<>();
-		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
-		deviceDetailSBIList.add(deviceDetailSBI);
-		when(partnerHelper.checkIfPartnerIsDevicePartner(any())).thenReturn(true);
-		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(anyString(), anyString())).thenReturn(deviceDetailSBIList);
-
-		secureBiometricInterfaceService.getSbiDetails();
 	}
 
 	@Test
@@ -1331,13 +1298,13 @@ public class SBIServiceTest {
 	@Test
 	public void testGetSbiDetails() throws NoSuchFieldException, IllegalAccessException {
 		Page<SbiSummaryEntity> page = null;
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(sbiSummaryRepository.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any())).thenReturn(page);
 
 		// Create and set the mock map
 		Map<String, String> mockMap = new HashMap<>();
@@ -1366,7 +1333,8 @@ public class SBIServiceTest {
 		String sortType = "asc";
 		Integer pageNo = 0;
 		Integer pageSize = 10;
-		SbiFilterDto filterDto = new SbiFilterDto(); // Add appropriate setup
+		SbiFilterDto filterDto = new SbiFilterDto();
+		List<String> partnerIdList = new ArrayList<>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 
 		// Test different cases
@@ -1388,57 +1356,43 @@ public class SBIServiceTest {
 			}
 
 			Page result = (Page) ReflectionTestUtils.invokeMethod(
-					secureBiometricInterfaceService, "getSbiDetails", sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+					secureBiometricInterfaceService, "getSbiDetails", sortFieldName, sortType, pageNo, pageSize, filterDto, pageable, partnerIdList, false);
 
 			// Verify repository calls based on sort key
 			switch (sortKey) {
 				case "status_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByStatusAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				case "status_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByStatusDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				case "sbiExpiryStatus_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByExpiryStatusAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				case "sbiExpiryStatus_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByExpiryStatusDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				case "countOfAssociatedDevices_asc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByDevicesCountAsc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				case "countOfAssociatedDevices_desc":
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetailsByDevicesCountDesc(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 				default:
 					verify(sbiSummaryRepository, times(1))
-							.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), any());
+							.getSummaryOfSbiDetails(any(), any(), any(), any(), any(), any(), anyList(), anyBoolean(), any());
 					break;
 			}
 
 			// Reset mocks for the next iteration
 			reset(sbiSummaryRepository);
 		}
-	}
-
-	@Test
-	public void getSbiDetailsExceptionTest() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-
-		secureBiometricInterfaceService.getSbiDetails();
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
