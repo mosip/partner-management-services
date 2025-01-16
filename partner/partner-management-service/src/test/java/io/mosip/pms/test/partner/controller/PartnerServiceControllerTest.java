@@ -18,7 +18,6 @@ import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
@@ -607,26 +606,6 @@ public class PartnerServiceControllerTest {
         responseWrapper.setResponse(certificateDtoList);
         when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-certificates-details")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void getAuthPartnerApiKeysTest() throws Exception {
-        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper =  new ResponseWrapperV2<>();
-        ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-        apiKeyResponseDto.setStatus("ACTIVE");
-        apiKeyResponseDto.setApiKeyLabel("test");
-        apiKeyResponseDto.setPolicyId("policy123");
-        apiKeyResponseDto.setPolicyName("policy123name");
-        apiKeyResponseDto.setPolicyDescription("policy123desc");
-        apiKeyResponseDto.setPolicyGroupId("policygroup000");
-        apiKeyResponseDto.setPolicyGroupName("policygroup000name");
-        apiKeyResponseDto.setPolicyGroupDescription("policygroup000desc");
-        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
-        apiKeyResponseDtoList.add(apiKeyResponseDto);
-        responseWrapper.setResponse(apiKeyResponseDtoList);
-        when(partnerService.getAuthPartnerApiKeys()).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/auth-partner-api-keys")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

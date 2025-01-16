@@ -388,7 +388,7 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
-	@GetMapping(value = "/partners/apikey/search/v2")
+	@GetMapping(value = "/partner-api-keys")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by all the Auth Partners.",
 	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
@@ -399,8 +399,8 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
+			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
 			@RequestParam(value = "orgName", required = false) String orgName,
