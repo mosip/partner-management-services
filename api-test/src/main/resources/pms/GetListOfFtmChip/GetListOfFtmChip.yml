@@ -1,6 +1,6 @@
 GetListOfFtmChip:
    Pms_GetListOfFtmChip_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/ftpchipdetail/search/v2
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
       description: Fetching all the ftpchipdetail
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

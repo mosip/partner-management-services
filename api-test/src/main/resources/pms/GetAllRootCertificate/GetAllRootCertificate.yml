@@ -1,6 +1,6 @@
 GetAllRootCertificate:
    Pms_GetAllRootCertificate_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/root-certificates
+      endPoint: /v1/partnermanager/trust-chain-certificates
       description: Fetching all the root certificates of the Logged in Partner
       role: partnerrevamp
       restMethod: get

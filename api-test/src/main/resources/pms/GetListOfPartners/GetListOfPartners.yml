@@ -1,6 +1,6 @@
 GetListOfPartners:
    Pms_GetListOfPartners_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/v3
+      endPoint: /v1/partnermanager/admin-partners/v3
       description: Fetching all the active List Of Partnered in the system
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -9,10 +9,10 @@ GetListOfPartners:
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
 }'
    Pms_GetListOfPartners_All_Valid_Smoke_admin_dashboard:
-      endPoint: /v1/partnermanager/partners/v3
+      endPoint: /v1/partnermanager/admin-partners/v3
       description: Fetching all the active List Of Partnered in the system
       role: admin
       checkErrorsOnlyInResponse: true
@@ -21,257 +21,379 @@ GetListOfPartners:
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
 }'
-   Pms_GetListOfPartners_with_invalid_sort:
-      endPoint: /v1/partnermanager/partners/v3?sortType=3@@#&pageNo=0&pageSize=8
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp
+   Pms_GetListOfPartners_with_invalid_sort_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?sortType=3@@#&pageNo=0&pageSize=8
+      description: Fetching all the active List Of Partner with invalid sort
+      role: admin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+	  "errors": [
+      {
+	   "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_empty_sort:
-      endPoint: /v1/partnermanager/partners/v3?sortType= &pageNo=0&pageSize=8
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp
+   Pms_GetListOfPartners_with_empty_sort_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?sortType=&pageNo=0&pageSize=8
+      description: Fetching all the active List Of Partner with invalid sort
+      role: admin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_without_token:
-      endPoint: /v1/partnermanager/partners/v3?sortType=3@@#&pageNo=0&pageSize=8
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_without_token_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_sortfield:
-      endPoint: /v1/partnermanager/partners/v3?sortFieldName=a2a33
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_sortfield_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?sortFieldName=a2a33
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_sorttype:
-      endPoint: /v1/partnermanager/partners/v3?sortFieldName=a2a33
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_sorttype_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?sortFieldName=a2a33
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_pageno:
-      endPoint: /v1/partnermanager/partners/v3?pageNo=22
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_pageno_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?pageNo=22
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_empty_pageno:
-      endPoint: /v1/partnermanager/partners/v3?pageNo=
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_empty_pageno_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?pageNo=111111
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_pagesize:
-      endPoint: /v1/partnermanager/partners/v3?pageSize=-12
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_pagesize_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?pageSize=-12
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_partnerid:
-      endPoint: /v1/partnermanager/partners/v3?partnerId=-dndn333
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_partnerid_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?partnerId=-dndn333
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_empty_partnerid:
-      endPoint: /v1/partnermanager/partners/v3?partnerId= 
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_empty_partnerid_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?partnerId=bcbcb
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_invalid_partnertype:
-      endPoint: /v1/partnermanager/partners/v3?partnerType=2233ddd
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_empty_partnerid_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?partnerId=bcbcb
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_empty_partnertype:
-      endPoint: /v1/partnermanager/partners/v3?partnerType= 
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_invalid_partnertype_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?partnerType=2233ddd
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_deactivated_partner:
-      endPoint: /v1/partnermanager/partners/v3?isActive=false
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_empty_partnertype_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?partnerType=dfdgd
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_invalid_organization_name:
-      endPoint: /v1/partnermanager/partners/v3?orgName=123@1sse
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_deactivated_partner_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?isActive=false
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_empty_organization_name:
-      endPoint: /v1/partnermanager/partners/v3?orgName= 
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_invalid_organization_name_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?orgName=123@1sse
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_empty_emailAddress:
-      endPoint: /v1/partnermanager/partners/v3?emailAddress= 
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_empty_organization_name_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?orgName=123@1sse
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_invalid_email:
-      endPoint: /v1/partnermanager/partners/v3?emailAddress=2t63t@@@
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_empty_emailAddress_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?emailAddress=454646
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_not_uploaded_email:
-      endPoint: /v1/partnermanager/partners/v3?certificateUploadStatus=not_uploaded
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_invalid_email_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?emailAddress=2t63t@@@
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_invalid_policyGroup_Name:
-      endPoint: /v1/partnermanager/partners/v3?policyGroupName=-12
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_not_uploaded_email_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?certificateUploadStatus=not_uploaded
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_empty_policyGroup_Name:
-      endPoint: /v1/partnermanager/partners/v3?policyGroupName= 
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?policyGroupName=-12
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'
-   Pms_GetListOfPartners_with_invalid_policyGroup_Name:
-      endPoint: /v1/partnermanager/partners/v3?policyGroupName=@374b
-      description: Fetching all the active List Of Partnered in the system
-      role: partnerrevamp 
+   Pms_GetListOfPartners_with_empty_policyGroup_Name_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?policyGroupName=
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
-      output: ' {
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
+}'
+   Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v3?policyGroupName=@374b
+      description: Fetching all the active List Of Partner with invalid sort
+      role: invalid
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+}'
+      output: '{
+     "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+      }
+      ]
 }'

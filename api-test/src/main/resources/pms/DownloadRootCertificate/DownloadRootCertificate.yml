@@ -1,6 +1,6 @@
 DownloadRootCertificate:
    Pms_DownloadRootCertificate_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/download-root-certificate/
+      endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
       description: Fetching all the root certificates of the Logged in Partner
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

@@ -94,7 +94,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		
 		
 		
-		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/partners/root-certificates",
+		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
 				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
 		String responseBody = response.getBody().asString();
@@ -114,7 +114,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		if (certId != null) {
 		    System.out.println("Using certId in another place: " + certId);
 		}
-		String url="/v1/partnermanager/partners/download-root-certificate/"+certId;
+		String url="/v1/partnermanager/partners/trust-chain-certificates/"+certId+"/certificateFile";
 		
 		response = getWithPathParamAndCookie(ApplnURI + url,
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,

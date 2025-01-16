@@ -1,6 +1,6 @@
 GetListOfAllDevice:
    Pms_GetListOfAllDevice_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/devicedetail/search/v2
+      endPoint: /v1/partnermanager/devicedetail
       description: Fetching all the active SBI
       role: partnerrevamp
       checkErrorsOnlyInResponse: true

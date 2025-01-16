@@ -1,6 +1,6 @@
 GetListOfAllSBI:
    Pms_GetListOfAllSBI_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2
+      endPoint: /v1/partnermanager/securebiometricinterface
       description: Fetching all the active SBI
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
