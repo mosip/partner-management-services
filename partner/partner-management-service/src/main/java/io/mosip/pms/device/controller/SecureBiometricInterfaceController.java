@@ -291,17 +291,6 @@ public class SecureBiometricInterfaceController {
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
-	@GetMapping
-	@Operation(summary = "This endpoint retrieves a list of all SBIs created by all the Device Providers associated with the logged in user."
-	, description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
-	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails() {
-		return secureBiometricInterface.getSbiDetails();
-	}
-
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatesbi())")
 	@PatchMapping(value = "/{sbiId}")
 	@Operation(summary = "This endpoint deactivates an SBI along with associated Devices.",
@@ -321,9 +310,9 @@ public class SecureBiometricInterfaceController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
-	@GetMapping(value = "/search/v2")
-	@Operation(summary = "This endpoint retrieves a list of all SBIs created by all the Device Providers.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@GetMapping
+	@Operation(summary = "This endpoint retrieves a list of all SBIs created by the Device Providers.",
+	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all SBIs created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the SBIs created by all the partners.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -332,8 +321,8 @@ public class SecureBiometricInterfaceController {
 	ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "sbiId", required = false) String sbiId,
