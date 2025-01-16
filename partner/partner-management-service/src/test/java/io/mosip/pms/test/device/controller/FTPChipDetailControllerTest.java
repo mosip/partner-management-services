@@ -419,7 +419,7 @@ public class FTPChipDetailControllerTest {
 
 		Mockito.when(ftpChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/v2")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
