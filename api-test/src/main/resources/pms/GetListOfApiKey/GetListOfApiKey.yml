@@ -12,7 +12,7 @@ GetListOfApiKey:
 }'
       output: ' {
 }'
-   Pms_GetListOfApiKey_without_authentication_Neg_Smoke:
+   Pms_GetListOfApiKey_without_authentication_Neg:
       endPoint: /v1/partnermanager/partners/apikey/search/v2
       uniqueIdentifier: TC_PMS_GetListOfApiKey_02
       description: Fetching the API Keys without authentication
@@ -30,7 +30,7 @@ GetListOfApiKey:
     }
   ]
 }'
-   Pms_GetListOfApiKey_with_individual_partner_Neg_Smoke:
+   Pms_GetListOfApiKey_with_individual_partner_Neg:
       endPoint: /v1/partnermanager/partners/apikey/search/v2
       uniqueIdentifier: TC_PMS_GetListOfApiKey_03
       description: Fetching the API Keys with individual partner
