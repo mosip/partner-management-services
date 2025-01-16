@@ -217,7 +217,7 @@
 		</classes>
 	</test>
 
-	!--<test name="GetAllApprovedAuthPartnerPolicy">
+	<test name="GetAllApprovedAuthPartnerPolicy">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedAuthPartnerPolicy/GetAllApprovedAuthPartnerPolicy.yml" />
 		<classes>
@@ -231,7 +231,7 @@
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>-->
+	</test>
 
 	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
 		<parameter name="ymlFile"
