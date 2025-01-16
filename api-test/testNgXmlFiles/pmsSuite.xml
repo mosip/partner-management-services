@@ -691,4 +691,11 @@
 		</classes>
 	</test>
 	
+	<test name="GetListOfApiKey">
+		<parameter name="ymlFile" value="pms/GetListOfApiKey/GetListOfApiKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 </suite>

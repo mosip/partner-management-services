@@ -45,8 +45,6 @@ public interface SecureBiometricInterfaceService {
 	
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto);
 
-	public ResponseWrapperV2<List<SbiDetailsDto>> getSbiDetails();
-
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(DeviceDetailDto deviceDetailDto, String sbiId);
 
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId);
