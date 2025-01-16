@@ -1,6 +1,6 @@
 GetListOfAllDevice:
    Pms_GetListOfAllDevice_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/devicedetail/search/v2
+      endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_devicedetails_01      
       description: Fetching list of all the devices
       role: partnerrevamp

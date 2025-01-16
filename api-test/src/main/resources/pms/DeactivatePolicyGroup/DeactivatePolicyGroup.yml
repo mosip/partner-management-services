@@ -4,10 +4,12 @@ DeactivatePolicyGroup:
       description: Deactivate Policy Groups
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
-      restMethod: get
+      restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroupResult
       input: '{
+    "status": "De-Activate",
+    "requestTime": "$TIMESTAMP$",
 	"policyGroupId": "$ID:DefinePolicyGroup_create_then_deactivate_sid_id$"
 }'
       output: ' {
