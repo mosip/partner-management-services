@@ -286,12 +286,12 @@ GetListOfAllDevice:
       input: '{
       "sortType": "$REMOVE$",
       "status": "$REMOVE$",
+      "orgName": "1",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "make": "$REMOVE$",
-      "orgName": "1",
       "model": "$REMOVE$",
       "deviceType": "$REMOVE$",
       "deviceSubType": "$REMOVE$",

@@ -237,7 +237,7 @@ public class FTPChipDetailController {
 
 	/*
 	 * This endpoint has been deprecated since the release-1.3.x
-	 * It has been replaced by the new GET /ftpchipdetail/search/v2 endpoint.
+	 * It has been replaced by the new GET /ftpchipdetail/v2 endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
@@ -246,7 +246,7 @@ public class FTPChipDetailController {
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailsearch())")
 	@Operation(summary = "Service to search ftp chip details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /ftpchipdetail/search/v2 endpoint.")
+			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /ftpchipdetail/v2 endpoint.")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -285,7 +285,7 @@ public class FTPChipDetailController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
-	@GetMapping(value = "/search/v2")
+	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers.",
 	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role FTM_PROVIDER.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {

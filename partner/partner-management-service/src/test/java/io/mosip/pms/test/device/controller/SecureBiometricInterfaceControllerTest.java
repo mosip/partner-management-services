@@ -409,7 +409,7 @@ public class SecureBiometricInterfaceControllerTest {
 		SbiFilterDto filterDto = new SbiFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Mockito.when(secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto)).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
@@ -421,19 +421,6 @@ public class SecureBiometricInterfaceControllerTest {
 						.param("status", "approved")
 						.param("sbiExpiryStatus", "expired"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-
-	@Test
-	@WithMockUser(roles = {"DEVICE_PROVIDER"})
-	public void getSbiDetailsTest() throws Exception {
-		ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
-		List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
-		SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
-		sbiDetailsDtoList.add(sbiDetailsDto);
-		responseWrapper.setResponse(sbiDetailsDtoList);
-		Mockito.when(secureBiometricInterfaceService.getSbiDetails()).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
 	}
 
 	@Test

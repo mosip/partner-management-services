@@ -322,16 +322,16 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
+      "pageNo": "6",
+      "status": "$REMOVE$",
+      "sortType": "$REMOVE$"
       "partnerId": "$REMOVE$",
-      "sortType": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
-      "pageNo": "6",
       "pageSize": "$REMOVE$",
       "requestDetails": "$REMOVE$",
       "policyId": "$REMOVE$",
       "policyName": "$REMOVE$",
-      "status": "$REMOVE$",      
       "policyGroupName": "$REMOVE$",
       "partnerType": "$REMOVE$"      
 }'
@@ -375,6 +375,7 @@ GetAllPartnerPolicyRequest:
       "partnerId": "1",
       "requestDetails": "2",
       "sortType": "$REMOVE$",
+      "sortType": "$REMOVE$"
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "pageNo": "$REMOVE$",
