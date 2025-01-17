@@ -7,7 +7,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -------------------------------------------------------------------------------------------------
-
+\c mosip_pms
 --Dropping unique index from pms.device_detail table
 DROP INDEX IF EXISTS pms.uk_devdtl_make_model_approval_status;
 
