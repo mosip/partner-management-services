@@ -45,12 +45,13 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/error
       input: '{
-      "sortFieldName": "$%$^&&",
+      "sortFieldName": "ghffytf",
       "partnerId": "$REMOVE$",
       "model": "$REMOVE$",
       "make": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "status": "$REMOVE$",      
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$"      
 }'
@@ -71,11 +72,12 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/error
       input: '{
-      "sortType": "$%$^&&",
+      "sortType": "yyttgt",
       "sortFieldName": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "model": "$REMOVE$",
       "make": "$REMOVE$",
+      "status": "$REMOVE$",      
       "pageSize": "$REMOVE$",
       "orgName": "$REMOVE$",
       "pageNo": "$REMOVE$"      
@@ -103,6 +105,7 @@ GetListOfFtmChip:
       "partnerId": "$REMOVE$",
       "model": "$REMOVE$",
       "make": "$REMOVE$",
+      "status": "$REMOVE$",      
       "orgName": "$REMOVE$",
       "pageNo": "$REMOVE$"      
 }'
@@ -126,6 +129,7 @@ GetListOfFtmChip:
       "pageNo": "-6",
       "pageSize": "$REMOVE$",
       "sortType": "$REMOVE$",
+      "status": "$REMOVE$",      
       "sortFieldName": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "model": "$REMOVE$",

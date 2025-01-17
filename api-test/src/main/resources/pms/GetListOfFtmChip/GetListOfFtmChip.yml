@@ -286,10 +286,11 @@ GetListOfFtmChip:
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
       outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
       input: '{
-      "partnerId": "%^$#!!@",
+      "partnerId": "$$1234$$$",
       "model": "$REMOVE$",
       "make": "$REMOVE$",
       "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",      
       "orgName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -309,11 +310,12 @@ GetListOfFtmChip:
       input: '{
       "make": "1",
       "model": "2",
-      "partnerId": "%^$#!!@",
+      "partnerId": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",      
       "pageNo": "$REMOVE$"                 
 }'
       output: ' {

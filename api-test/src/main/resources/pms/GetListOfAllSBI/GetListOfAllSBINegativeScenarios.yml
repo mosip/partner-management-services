@@ -45,7 +45,7 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "sortFieldName": "$%$^&&",
+      "sortFieldName": "hghghfg",
       "status": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "sortType": "$REMOVE$",
@@ -73,7 +73,7 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
       input: '{
-      "sortType": "$%$^&&",
+      "sortType": "ghfgfg",
       "sortFieldName": "$REMOVE$",
       "status": "$REMOVE$",
       "partnerId": "$REMOVE$",

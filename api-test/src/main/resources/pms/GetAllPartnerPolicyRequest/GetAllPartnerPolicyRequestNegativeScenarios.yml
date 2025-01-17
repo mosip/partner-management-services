@@ -47,6 +47,7 @@ GetAllPartnerPolicyRequest:
       input: '{
       "sortType": "hdjfdfhg",
       "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",      
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "pageNo": "$REMOVE$",
@@ -84,7 +85,8 @@ GetAllPartnerPolicyRequest:
       "policyId": "$REMOVE$",
       "policyName": "$REMOVE$",
       "policyGroupName": "$REMOVE$",
-      "partnerType": "$REMOVE$"      
+      "partnerType": "$REMOVE$",
+      "status": "$REMOVE$"            
 }'
       output: ' {
       "errors": [
@@ -112,6 +114,7 @@ GetAllPartnerPolicyRequest:
       "requestDetails": "$REMOVE$",
       "policyId": "$REMOVE$",
       "policyName": "$REMOVE$",
+      "status": "$REMOVE$",      
       "policyGroupName": "$REMOVE$",
       "partnerType": "$REMOVE$"      
 }'
@@ -132,18 +135,18 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/error
       input: '{
-      "sortFieldName": "$%^%^&&^",
+      "sortFieldName": "hdjfdfhg",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortType": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
-      "pageSize": "$REMOVE$",
       "requestDetails": "$REMOVE$",
       "policyId": "$REMOVE$",
       "policyName": "$REMOVE$",
       "policyGroupName": "$REMOVE$",
-      "partnerType": "$REMOVE$"      
+      "partnerType": "$REMOVE$",
+      "status": "$REMOVE$"            
 }'
       output: ' {
       "errors": [

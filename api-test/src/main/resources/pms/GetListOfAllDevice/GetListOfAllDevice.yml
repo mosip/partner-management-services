@@ -79,7 +79,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail/search/v2?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_devicedetails_05 
       description: Fetching list of all the devices with negative pageno
-      role: invalidtoken
+      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -111,7 +111,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail/search/v2?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_devicedetails_06 
       description: Fetching list of all the devices with negative pageSize
-      role: invalidtoken
+      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -284,20 +284,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "orgName": "1",
-      "status": "$REMOVE",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
-      "sortType": "$REMOVE$",
       "make": "$REMOVE$",
+      "orgName": "1",
       "model": "$REMOVE$",
       "deviceType": "$REMOVE$",
       "deviceSubType": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "sbiId": "$REMOVE$",
-      "deviceId": "$REMOVE$"            
+      "deviceId": "$REMOVE$"      
 }'
       output: ' {
 }'
@@ -311,7 +311,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortType": "$$$$$$",
+      "sortType": "hgghf",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
@@ -424,7 +424,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "sortFieldName": "$$$$$$",
+      "sortFieldName": "ghgfgfg",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
@@ -537,20 +537,20 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "model": "4"
+      "make": "$REMOVE$",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$",
-      "make": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "model": "4",
       "deviceType": "$REMOVE$",
       "deviceSubType": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "sbiId": "$REMOVE$",
-      "deviceId": "$REMOVE$"           
+      "deviceId": "$REMOVE$"      
 }'
       output: '{
 }'
@@ -645,7 +645,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "deviceId": "*****&%",
+      "deviceId": "$***$",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",

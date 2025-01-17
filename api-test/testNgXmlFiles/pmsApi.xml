@@ -658,7 +658,7 @@
 		</classes>
 	</test>
 	<test name="GetListOfFtmChipNegativeScenarios">
-		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChipNegtiveScenarios.yml" />
+		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChipNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
