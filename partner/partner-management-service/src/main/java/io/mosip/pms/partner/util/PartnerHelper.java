@@ -307,7 +307,29 @@ public class PartnerHelper {
         return false;
     }
 
-    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, int pageNo, int pageSize) {
+    public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
+        // Validate sortFieldName and sortType
+        if ((Objects.nonNull(sortFieldName) && Objects.isNull(sortType)) || (Objects.isNull(sortFieldName) && Objects.nonNull(sortType))) {
+            LOGGER.error("Both sortFieldName and sortType must be provided together.");
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_PARAMETERS.getErrorCode(),
+                    ErrorCode.INVALID_SORT_PARAMETERS.getErrorMessage());
+        }
+
+        // Validate pageNo and pageSize
+        if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
+            LOGGER.error("Both pageNo and pageSize must be provided together.");
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
+        }
+
+        if (isSortingRequestedWithoutPagination(sortFieldName, sortType, pageNo, pageSize)) {
+            LOGGER.error("Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data.");
+            throw new PartnerServiceException(
+                    ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorCode(),
+                    ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorMessage()
+            );
+        }
+
         // Validate sortFieldName
         if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
             LOGGER.error("Invalid sort field name: " + sortFieldName);
@@ -325,18 +347,23 @@ public class PartnerHelper {
         }
 
         // Validate pageNo
-        if (pageNo < 0) {
+        if (Objects.nonNull(pageNo) && pageNo < 0) {
             LOGGER.error("Invalid page no: " + pageNo);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
                     ErrorCode.INVALID_PAGE_NO.getErrorMessage());
         }
 
         // Validate pageSize
-        if (pageSize <= 0) {
+        if (Objects.nonNull(pageSize) && pageSize <= 0) {
             LOGGER.error("Invalid page size: " + pageSize);
             throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
                     ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
         }
+    }
+
+    private boolean isSortingRequestedWithoutPagination(String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
+        return Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)
+                && Objects.isNull(pageNo) && Objects.isNull(pageSize);
     }
 
     public void checkIfPartnerIsNotActive(Partner partner) {

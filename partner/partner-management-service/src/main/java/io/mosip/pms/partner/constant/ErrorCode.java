@@ -147,7 +147,10 @@ public enum ErrorCode {
 	PARTNER_DOES_NOT_EXIST_ERROR("PMS_PS_ERROR_002", "Partner does not exists"),
 	PARTNER_POLICIES_FETCH_ERROR("PMS_PS_ERROR_003", "Error while fetching partner policies"),
 	PARTNER_NOT_APPROVED_ERROR("PMS_PS_ERROR_004", "The Given partner is not approved"),
-	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_004", "The specified partner is not of type Authentication Partner");;
+	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_005", "The specified partner is not of type Authentication Partner"),
+	INVALID_PAGE_PARAMETERS("PMS_PS_ERROR_006", "Invalid pagination request: 'pageNo' and 'pageSize' must be specified together." ),
+	INVALID_SORT_PARAMETERS("PMS_PS_ERROR_007", "Invalid Sorting request: 'sortType' and 'sortFieldName' must be specified together." ),
+	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data.");
 	/**
 	 * The error code.
 	 */
