@@ -748,18 +748,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 								// Get certificate data if available
 								if (ftpChipDetail.getCertificateAlias() != null) {
 									ftmChipDetailsDto.setIsCertificateAvailable(true);
-									FtpChipCertDownloadRequestDto requestDto = new FtpChipCertDownloadRequestDto();
-									requestDto.setFtpChipDetailId(ftpChipDetail.getFtpChipDetailId());
-									FtpCertDownloadResponeDto ftpCertDownloadResponeDto = getCertificate(requestDto);
-									X509Certificate cert = MultiPartnerUtil.decodeCertificateData(ftpCertDownloadResponeDto.getCertificateData());
-
-									ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore());
-									ftmChipDetailsDto.setCertificateExpiryDateTime(cert.getNotAfter());
-
-									// Check the certificate expiration status
-									LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
-									LocalDateTime certExpiryDate = cert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
-									ftmChipDetailsDto.setIsCertificateExpired(certExpiryDate.isBefore(currentDateTime));
+									FtmCertificateDownloadResponseDto responseObject = partnerHelper.getCertificate(ftpChipDetail.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
+									partnerHelper.populateFtmCertificateExpiryState(responseObject);
+									ftmChipDetailsDto.setCertificateUploadDateTime(responseObject.getMosipSignedCertUploadDateTime());
+									ftmChipDetailsDto.setCertificateExpiryDateTime(responseObject.getCaSignedCertExpiryDateTime());
+									ftmChipDetailsDto.setIsCertificateExpired(responseObject.getIsCaSignedCertificateExpired());
 								} else {
 									ftmChipDetailsDto.setIsCertificateAvailable(false);
 									ftmChipDetailsDto.setIsCertificateExpired(false);
