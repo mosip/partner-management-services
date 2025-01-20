@@ -271,8 +271,8 @@ public class PartnerHelper {
         }
 
         X509Certificate decodedCaSignedCert = MultiPartnerUtil.decodeCertificateData(ftmCertificateDownloadResponseDto.getCaSignedCertificateData());
-        ftmCertificateDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedMosipSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
-        ftmCertificateDownloadResponseDto.setCaSignedCertUploadDateTime(decodedMosipSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setCaSignedCertExpiryDateTime(decodedCaSignedCert.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        ftmCertificateDownloadResponseDto.setCaSignedCertUploadDateTime(decodedCaSignedCert.getNotBefore().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         // Check ca signed partner certificate expiry date
         if (isCertificateExpired(decodedCaSignedCert)) {
             ftmCertificateDownloadResponseDto.setCaSignedCertificateData("");
