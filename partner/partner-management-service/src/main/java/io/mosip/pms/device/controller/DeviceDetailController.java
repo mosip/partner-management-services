@@ -333,7 +333,7 @@ public class DeviceDetailController {
 			filterDto.setMake(make.toLowerCase());
 		}
 		if (model != null) {
-			filterDto.setMake(model.toLowerCase());
+			filterDto.setModel(model.toLowerCase());
 		}
 		if (sbiId != null) {
 			filterDto.setSbiId(sbiId.toLowerCase());
