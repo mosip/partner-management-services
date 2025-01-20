@@ -113,7 +113,7 @@ createPublishPolicy:
        ] 
     }'                 
                           
-   Pms_PublishPolicy_All_Valid_Smoke:
+   Pms_PublishPolicy_ForDeactive_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy
       role: partnerrevamp

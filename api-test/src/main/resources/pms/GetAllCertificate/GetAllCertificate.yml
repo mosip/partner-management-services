@@ -24,7 +24,7 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111998",
+      "partnerId": "pms-111998",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'

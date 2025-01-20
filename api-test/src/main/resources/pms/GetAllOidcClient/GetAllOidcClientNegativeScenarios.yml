@@ -6,7 +6,7 @@ GetAllOidcClient:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
-      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -23,7 +23,7 @@ GetAllOidcClient:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
-      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{

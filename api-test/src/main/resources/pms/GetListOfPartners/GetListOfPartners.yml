@@ -33,7 +33,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -52,7 +52,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -70,7 +70,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -88,7 +88,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -106,7 +106,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -124,7 +124,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -142,7 +142,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -160,7 +160,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -177,7 +177,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -194,7 +194,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -211,7 +211,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -228,7 +228,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -245,7 +245,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -262,7 +262,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -279,7 +279,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -296,7 +296,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -313,7 +313,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -330,7 +330,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -347,7 +347,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -364,7 +364,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -381,7 +381,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -398,7 +398,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{

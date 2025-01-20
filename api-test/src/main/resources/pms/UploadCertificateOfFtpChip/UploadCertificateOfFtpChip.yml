@@ -1,5 +1,5 @@
 UploadCertificateOfFtpChip:
-   Pms_UploadCertificate_AllValid_ftpProviderId:
+   Pms_UploadCertificate_AllValid_smoke_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
       role: partnerrevampftm
       restMethod: post

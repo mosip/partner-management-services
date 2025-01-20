@@ -9,5 +9,6 @@ GetAllApprovedAuthPartnerId:
       input: '{
 }'
       output: '{
+      "partnerId": "pms-111999"
 
 }'
