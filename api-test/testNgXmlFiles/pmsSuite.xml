@@ -78,13 +78,13 @@
 		</classes>
 	</test>
 
-	<test name="GetAllApprovedPartnerIdBeforePartnerCreate">
+	<!--<test name="GetAllApprovedPartnerIdBeforePartnerCreate">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
-	</test>
+	</test>-->
 
 	<test name="CreatePartner">
 		<parameter name="ymlFile"

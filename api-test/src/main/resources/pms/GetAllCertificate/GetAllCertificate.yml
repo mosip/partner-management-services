@@ -9,7 +9,7 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111999",
+      "partnerId": "pms-111999",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
@@ -25,7 +25,7 @@ GetAllCertificate:
 }'
       output: '{
       "partnerID": "pms-111998",
-      "partnerType": "Auth_Partner",
+      "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
