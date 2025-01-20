@@ -1,6 +1,6 @@
 GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_without_Authentication_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests
+      endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_02      
       description: Fetching all the partner policy requests without authentication
       role: invalidtoken
@@ -19,7 +19,7 @@ GetAllPartnerPolicyRequest:
 }'
 
    Pms_GetAllPartnerPolicyRequest_Invalid_Token_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests
+      endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_03      
       description: Fetching all the partner policy requests with invalid token
       role: invalidtoken
@@ -36,7 +36,7 @@ GetAllPartnerPolicyRequest:
        ]     
 }'
    Pms_GetAllPartnerPolicyRequest_invalid_sortType_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-policy-requests?sortType={sortType}
       uniqueIdentifier: TC_PMS_partner-policy-requests_13   
       description: Fetching all the partner policy requests by invalid sort type
       role: partnerrevamp
@@ -65,7 +65,7 @@ GetAllPartnerPolicyRequest:
        ]      
 }'
    Pms_GetAllPartnerPolicyRequest_invalid_pageSize_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?pageSize={pageSize}
+      endPoint: /v1/partnermanager/partner-policy-requests?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_partner-policy-requests_17  
       description: Fetching all the partner policy requests by giving negative pagesize value
       role: partnerrevamp
@@ -94,7 +94,7 @@ GetAllPartnerPolicyRequest:
        ]      
 }'
    Pms_GetAllPartnerPolicyRequest_invalid_pageNo_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?pageNo={pageNo}
+      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_partner-policy-requests_18  
       description: Fetching all the partner policy requests by giving negative pageNo value
       role: partnerrevamp
@@ -123,7 +123,7 @@ GetAllPartnerPolicyRequest:
        ]      
 }'
    Pms_GetAllPartnerPolicyRequest_invalid_sortFieldName_Neg:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?sortFieldName={sortFieldName}
+      endPoint: /v1/partnermanager/partner-policy-requests?sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_partner-policy-requests_20  
       description: Fetching all the partner policy requests with invalid sortfieldname
       role: partnerrevamp

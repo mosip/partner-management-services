@@ -1,6 +1,6 @@
 GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests
+      endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_01      
       description: Fetching all the partner policy requests
       role: partnerrevamp
@@ -13,7 +13,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_partnerId_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?partnerId={partnerId}
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_partner-policy-requests_04      
       description: Fetching all the partner policy requests for PartnerId which contains 'a'
       role: partnerrevamp
@@ -38,7 +38,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_orgname_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?orgName={orgName}
+      endPoint: /v1/partnermanager/partner-policy-requests?orgName={orgName}
       uniqueIdentifier: TC_PMS_partner-policy-requests_05      
       description: Fetching all the partner policy requests for orgName which contains '1'
       role: partnerrevamp
@@ -63,7 +63,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_requestDetails_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?requestDetails={requestDetails}
+      endPoint: /v1/partnermanager/partner-policy-requests?requestDetails={requestDetails}
       uniqueIdentifier: TC_PMS_partner-policy-requests_06      
       description: Fetching all the partner policy requests for requestDetails which contains 'ab'
       role: partnerrevamp
@@ -88,7 +88,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_With_policyId_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?policyId={policyId}
+      endPoint: /v1/partnermanager/partner-policy-requests?policyId={policyId}
       uniqueIdentifier: TC_PMS_partner-policy-requests_07      
       description: Fetching all the partner policy requests for policyId which contains '2'
       role: partnerrevamp
@@ -113,7 +113,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_policyname_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?policyName={policyName}
+      endPoint: /v1/partnermanager/partner-policy-requests?policyName={policyName}
       uniqueIdentifier: TC_PMS_partner-policy-requests_08      
       description: Fetching all the partner policy requests for policyName which contains 'policy'
       role: partnerrevamp
@@ -138,7 +138,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_policygroupname_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?policyGroupName={policyGroupName}
+      endPoint: /v1/partnermanager/partner-policy-requests?policyGroupName={policyGroupName}
       uniqueIdentifier: TC_PMS_partner-policy-requests_09      
       description: Fetching all the partner policy requests for policyGroupName which contains 'Group'
       role: partnerrevamp
@@ -163,7 +163,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_partnerType_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?partnerType={partnerType}
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerType={partnerType}
       uniqueIdentifier: TC_PMS_partner-policy-requests_10      
       description: Fetching all the partner policy requests for partnerType which contains 'a'
       role: partnerrevamp
@@ -188,7 +188,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_sortType_DESC:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-policy-requests?sortType={sortType}
       uniqueIdentifier: TC_PMS_partner-policy-requests_11   
       description: Fetching all the partner policy requests by sort type DESC for the given sort field
       role: partnerrevamp
@@ -213,7 +213,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_sortType_ASC:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-policy-requests?sortType={sortType}
       uniqueIdentifier: TC_PMS_partner-policy-requests_12   
       description: Fetching all the partner policy requests by sort type ASC for the given sort field
       role: partnerrevamp
@@ -238,7 +238,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_status_Inprogress:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?status={status}
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
       uniqueIdentifier: TC_PMS_partner-policy-requests_14  
       description: Fetching all the partner policy requests for which status as Inprogress
       role: partnerrevamp
@@ -263,7 +263,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_status_approved:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?status={status}
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
       uniqueIdentifier: TC_PMS_partner-policy-requests_15  
       description: Fetching all the partner policy requests for which status as approved
       role: partnerrevamp
@@ -288,7 +288,7 @@ GetAllPartnerPolicyRequest:
       output: ' {
 }'
    Pms_GetAllPartnerPolicyRequest_with_status_rejected:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?status={status}
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
       uniqueIdentifier: TC_PMS_partner-policy-requests_16  
       description: Fetching all the partner policy requests for which status as rejected
       role: partnerrevamp
@@ -313,7 +313,7 @@ GetAllPartnerPolicyRequest:
       output: '{
 }'
    Pms_GetAllPartnerPolicyRequest_with_pageNo_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?pageNo={pageNo}
+      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_partner-policy-requests_19  
       description: Fetching all the partner policy requests by giving valid page number given
       role: partnerrevamp
@@ -338,7 +338,7 @@ GetAllPartnerPolicyRequest:
       output: '{    
 }'
    Pms_GetAllPartnerPolicyRequest_with_random_value_given:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?partnerId={partnerId}
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_partner-policy-requests_21  
       description: Fetching all the partner policy requests by giving random value for partnerid
       role: partnerrevamp
@@ -362,7 +362,7 @@ GetAllPartnerPolicyRequest:
       output: '{    
 }'
    Pms_GetAllPartnerPolicyRequest_with_combination_search_twofields:
-      endPoint: /v1/partnermanager/partners/partner-policy-requests?partnerId={partnerId}&requestDetails={requestDetails}
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}&requestDetails={requestDetails}
       uniqueIdentifier: TC_PMS_partner-policy-requests_22  
       description: Fetching all the partner policy requests by giving value for partnerId and requestDetails
       role: partnerrevamp

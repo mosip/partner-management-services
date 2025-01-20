@@ -1,6 +1,7 @@
 GetListOfAllDevice:
    Pms_GetListOfAllDevice_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
+      description: Fetching all the active SBI
       uniqueIdentifier: TC_PMS_devicedetails_01      
       description: Fetching list of all the devices
       role: partnerrevamp
