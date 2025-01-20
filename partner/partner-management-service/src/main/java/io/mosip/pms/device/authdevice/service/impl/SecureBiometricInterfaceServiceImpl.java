@@ -336,6 +336,45 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(),
 							secureBiometricInterfaceDto.getId()));
 		}
+		if (entity.getApprovalStatus().equals(DeviceConstant.APPROVED) && entity.isActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorMessage(),
+									secureBiometricInterfaceDto.getId())),
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorMessage(),
+							secureBiometricInterfaceDto.getId()));
+		}
+		if (entity.getApprovalStatus().equals(DeviceConstant.APPROVED) && entity.isActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorCode(),
+							String.format(ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorMessage(),
+									secureBiometricInterfaceDto.getId())),
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
+			throw new RequestException(ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorCode(),
+					String.format(ErrorCode.SBI_ALREADY_DEACTIVATED.getErrorMessage(),
+							secureBiometricInterfaceDto.getId()));
+		}
+		if (entity.getApprovalStatus().equals(DeviceConstant.REJECTED)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorMessage(),
+									secureBiometricInterfaceDto.getId())),
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorMessage(),
+							secureBiometricInterfaceDto.getId()));
+		}
 
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
