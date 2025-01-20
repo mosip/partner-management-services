@@ -1,6 +1,6 @@
 GetListOfApiKey:
    Pms_GetListOfApiKey_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partner-api-keys
       description: Fetching all the API Keys
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
