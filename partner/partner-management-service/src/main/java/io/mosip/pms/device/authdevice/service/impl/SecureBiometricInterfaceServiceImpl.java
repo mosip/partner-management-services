@@ -701,24 +701,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
 						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
-			try {
-				IdDto dto = createDeviceDetails(deviceDetailDto);
-				deviceId = dto.getId();
-				addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
-			} catch (PartnerServiceException ex) {
-				if ("PMS_AUT_003".equals(ex.getErrorCode())) {
-					DeviceDetail deviceDetail = deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
-							deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
-							deviceDetailDto.getDeviceTypeCode());
-					deviceId = deviceDetail.getId();
-					addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
-				} else {
-					throw new PartnerServiceException(ex.getErrorCode(), ex.getErrorText());
-				}
-			}
-			IdDto responseDto = new IdDto();
-			responseDto.setId(deviceId);
-			responseWrapper.setResponse(responseDto);
+			IdDto dto = createDeviceDetails(deviceDetailDto);
+			deviceId = dto.getId();
+			addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
