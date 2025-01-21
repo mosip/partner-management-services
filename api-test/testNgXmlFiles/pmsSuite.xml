@@ -46,13 +46,7 @@
 		</classes>
 	</test>
 	
-		<test name="DeactivatePolicy">
-		<parameter name="ymlFile" value="pms/DeactivatePolicy/DeactivatePolicy.yml" />
-		<parameter name="pathParams" value="policyId" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
+
 
 	<test name="GetAllActivePolicyGroups">
 		<parameter name="ymlFile"
@@ -290,6 +284,7 @@
 	
 	<test name="GetAllPartnerPolicyRequest">
 		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequest.yml" />
+		<parameter name="pathParams" value="requestDetails,pageNo,partnerId,sortType,pageSize" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -623,6 +618,7 @@
 	<test name="GetOriginalFtmCertifacte">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
+			<parameter name="pathParams" value="ftmId" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -630,6 +626,7 @@
 	<test name="GetOriginalFtmCertifacteNegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteNegativeScenarios.yml" />
+			<parameter name="pathParams" value="ftmId" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -676,6 +673,7 @@
 	
 	<test name="GetListOfAllSBI">
 		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
+		<parameter name="pathParams" value="orgName,pageSize,partnerId,sbiExpiryStatus,sbiVersion,sortType" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -719,6 +717,13 @@
 		<parameter name="ymlFile" value="pms/DownloadRootCertificate/DownloadRootCertificate.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.DownloadRootCertificate" />
+		</classes>
+	</test>
+			<test name="DeactivatePolicy">
+		<parameter name="ymlFile" value="pms/DeactivatePolicy/DeactivatePolicy.yml" />
+		<parameter name="pathParams" value="policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
 	
