@@ -971,6 +971,11 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
 		}
 		AuthPolicy validPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(), policyName);
+		if (isPartnerAlreadyMapped(partnerId, credentialType)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, policyName, "policyName");
+			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_MAPPING.getErrorCode(),
+					ErrorCode.DUPLICATE_CREDENTIAL_MAPPING.getErrorMessage());
+		}
 		PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType(credentialType);
@@ -984,6 +989,11 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerCredentialTypePolicyRepo.save(entity);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_SUCCESS);
 		return "Partner, policy and credentialType mapping done successfully.";
+	}
+
+	private boolean isPartnerAlreadyMapped(String partnerId, String credentialType) {
+		Optional<PartnerPolicyCredentialType> existingMapping = Optional.ofNullable(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType));
+		return existingMapping.isPresent();
 	}
 
 	private void validateCredentialTypes(String credentialType) {
