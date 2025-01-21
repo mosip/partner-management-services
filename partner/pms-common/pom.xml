@@ -6,10 +6,10 @@
   <parent>
     <groupId>io.mosip.pms</groupId>
     <artifactId>pms-parent</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.3.0-beta1</version>
   </parent>   
   <artifactId>pms-common</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
+  <version>1.3.0-beta1</version>
   <name>pms-common</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
