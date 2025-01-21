@@ -20,13 +20,6 @@
 		</classes>
 	</test>
 	
-	<test name="DeactivatePolicyGroup">
-		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
-		<parameter name="pathParams" value="policyGroupId" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
 	<test name="DefinePolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefinePolicy.yml" />
@@ -280,8 +273,6 @@
 		</classes>
 	</test>
 	
-	
-	
 	<test name="GetAllPartnerPolicyRequest">
 		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequest.yml" />
 		<parameter name="pathParams" value="requestDetails,pageNo,partnerId,sortType,pageSize" />
@@ -309,8 +300,6 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	
-	
 	
 	<test name="GetListOfPolicies">
 		<parameter name="ymlFile" value="pms/GetListOfPolicies/GetListOfPolicies.yml" />
@@ -377,16 +366,6 @@
 		</classes>
 	</test>
 
-	<test name="DeactivateOIDCClient">
-		<parameter name="ymlFile"
-			value="pms/DeactivateOIDCClient/DeactivateOIDCClient.yml" />
-		<parameter name="pathParams" value="client_id" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
-		</classes>
-	</test>
-
 	<test name="GetAllOidcClientAfterDeactivateOfOIDC">
 		<parameter name="ymlFile"
 			value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
@@ -402,7 +381,7 @@
 		</classes>
 	</test>
 
-	<test name="saveUserConsent">
+	<test name="SaveUserConsent">
 		<parameter name="ymlFile"
 			value="pms/SaveUserConsent/SaveUserConsent.yml" />
 		<classes>
@@ -525,42 +504,6 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>		
-	<test name="DeactivateDevice">
-		<parameter name="ymlFile"
-			value="pms/DeactivateDevice/DeactivateDevice.yml" />
-			<parameter name="pathParams" value="deviceId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="DeactivateDeviceNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/DeactivateDevice/DeactivateDeviceNegativeScenarios.yml" />
-			<parameter name="pathParams" value="deviceId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>		
-	<test name="DeactivateSBIWithAssociatedDevices">
-		<parameter name="ymlFile"
-			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices.yml" />
-			<parameter name="pathParams" value="sbiId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="DeactivateSBIWithAssociatedDevicesNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios.yml" />
-			<parameter name="pathParams" value="sbiId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
 	<test name="GetAllApprovedFtmProvider">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml"
@@ -603,14 +546,14 @@
 	</test>
 	<test name="GetListAllFTMChip">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChip.yml" />
+			value="pms/GetListAllFtmChip/GetListAllFtmChip.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
 	<test name="GetListAllFTMChipNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
+			value="pms/GetListAllFtmChip/GetListAllFtmChipNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -631,24 +574,7 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>	
-	<test name="DeactivateFtm">
-		<parameter name="ymlFile"
-			value="pms/DeactivateFtm/DeactivateFtm.yml" />
-			<parameter name="pathParams" value="ftmId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="DeactivateFtmNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/DeactivateFtm/DeactivateFtmNegativeScenarios.yml" />
-			<parameter name="pathParams" value="ftmId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>	
+	
 	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />
@@ -719,12 +645,87 @@
 			<class name="io.mosip.testrig.apirig.testscripts.DownloadRootCertificate" />
 		</classes>
 	</test>
-			<test name="DeactivatePolicy">
+	
+	<test name="DeactivatePolicyGroup">
+		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
+		<parameter name="pathParams" value="policyGroupId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="DeactivatePolicy">
 		<parameter name="ymlFile" value="pms/DeactivatePolicy/DeactivatePolicy.yml" />
 		<parameter name="pathParams" value="policyId" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	
+	<test name="DeactivateOIDCClient">
+		<parameter name="ymlFile"
+			value="pms/DeactivateOIDCClient/DeactivateOIDCClient.yml" />
+		<parameter name="pathParams" value="client_id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="DeactivateDevice">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDevice.yml" />
+			<parameter name="pathParams" value="deviceId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateDeviceNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDeviceNegativeScenarios.yml" />
+			<parameter name="pathParams" value="deviceId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>		
+	<test name="DeactivateSBIWithAssociatedDevices">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateSBIWithAssociatedDevicesNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
+	<test name="DeactivateFtm">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtm.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateFtmNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtmNegativeScenarios.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>	
 	
 </suite>
