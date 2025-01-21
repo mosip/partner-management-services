@@ -9,4 +9,5 @@ GetAllRootCertificate:
       input: '{
 }'
       output: '{
+      "caCertificateType": "ROOT"
 }'
