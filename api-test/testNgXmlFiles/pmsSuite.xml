@@ -10,7 +10,7 @@
 		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport" />
 	</listeners>
 
-<test name="CreatePolicyGroup">
+	<test name="CreatePolicyGroup">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
 		<parameter name="idKeyName" value="id" />
@@ -74,7 +74,7 @@
 
 	<test name="GetAllApprovedPartnerIdBeforePartnerCreate">
 		<parameter name="ymlFile"
-			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
+			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerIdBeforePartnerCreate.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>

@@ -1,8 +1,7 @@
 GetOriginalFtmCertifacteAfterDeactiveFtm:
-   Pms_GetOriginalFtmCertifacteAfterDeactiveFtm_allValid_smoke:
+   Pms_GetOriginalFtmCertifacte_AfterDeactiveFtm_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       role: partnerrevampftm
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm
       outputTemplate: pms/error
