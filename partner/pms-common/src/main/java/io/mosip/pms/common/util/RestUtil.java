@@ -241,6 +241,37 @@ public class RestUtil {
 
 	/**
 	 *
+	 * @param <T>
+	 * @param apiUrl
+	 * @param pathsegments
+	 * @param responseType
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getApiWithContentType(String apiUrl, Map<String, String> pathsegments, Class<?> responseType, MediaType mediaType) {
+		T result = null;
+		UriComponentsBuilder builder = null;
+		if (apiUrl != null) {
+			builder = UriComponentsBuilder.fromUriString(apiUrl);
+			URI urlWithPath = builder.build(pathsegments);
+			RestTemplate restTemplate;
+			try {
+				restTemplate = getRestTemplate();
+				result = (T) restTemplate
+						.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, mediaType), responseType).getBody();
+			} catch (Exception e) {
+				logger.error("Error occurred while calling {}", urlWithPath, e.getStackTrace());
+				throw new ApiAccessibleException(
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+			}
+
+		}
+		return result;
+	}
+
+	/**
+	 *
 	 * @return
 	 * @throws KeyManagementException
 	 * @throws NoSuchAlgorithmException

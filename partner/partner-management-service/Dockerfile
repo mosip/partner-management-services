@@ -35,9 +35,6 @@ ENV spring_config_label_env=${spring_config_label}
 
 ENV spring_config_url_env=${spring_config_url}
 
-# environment variable to pass iam_adapter url, at docker runtime
-ENV iam_adapter_url_env=${iam_adapter_url}
-
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip
 
@@ -68,5 +65,8 @@ RUN chown -R ${container_user}:${container_user} /home/${container_user}
 USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 9109
-CMD wget -q --show-progress "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-	java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" partner-management-service.jar ; \
+CMD java -jar \
+    -Dspring.cloud.config.label="${spring_config_label_env}" \
+    -Dspring.profiles.active="${active_profile_env}" \
+    -Dspring.cloud.config.uri="${spring_config_url_env}" \
+    partner-management-service.jar
