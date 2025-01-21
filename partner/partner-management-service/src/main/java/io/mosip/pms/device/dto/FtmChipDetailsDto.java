@@ -15,6 +15,9 @@ public class FtmChipDetailsDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
+    @Schema(description = "Current status of the partner. Possible values are approved, deactivated and InProgress", example = "approved")
+    private String partnerStatus;
+
     @Schema(description = "Make of the FTM chip", example = "make-123")
     private String make;
 
@@ -31,10 +34,10 @@ public class FtmChipDetailsDto {
     private Boolean isCertificateAvailable;
 
     @Schema(description = "Date and time in ISO format indicating when the FTM Chip certificate was uploaded", example = "2024-07-15T10:00:00Z")
-    private Date certificateUploadDateTime;
+    private LocalDateTime certificateUploadDateTime;
 
     @Schema(description = "Date and time in ISO format indicating when the FTM Chip certificate will expire", example = "2025-07-15T10:00:00Z")
-    private Date certificateExpiryDateTime;
+    private LocalDateTime certificateExpiryDateTime;
 
     @Schema(description = "Indicates whether the FTM certificate is expired (true if expired, false otherwise)", example = "false")
     private Boolean isCertificateExpired;

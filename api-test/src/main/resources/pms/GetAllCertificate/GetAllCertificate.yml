@@ -1,6 +1,6 @@
 GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Logged in Partner
       role: partnerrevamp
       restMethod: get
@@ -9,13 +9,13 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111999",
+      "partnerId": "pms-111999",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
 
    Pms_GetAllCertificate_Device_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Loggedin Partner
       role: partnerrevampdevice
       restMethod: get
@@ -24,12 +24,12 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111998",
-      "partnerType": "Auth_Partner",
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the partner without login
       role: invalidtoken
       restMethod: get
@@ -45,7 +45,7 @@ GetAllCertificate:
        ]
 }'
    Pms_GetAllCertificate_invalid_auth:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the partner invalid partner
       role: invalidtoken
       restMethod: get

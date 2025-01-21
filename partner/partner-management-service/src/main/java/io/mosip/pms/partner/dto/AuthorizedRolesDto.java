@@ -135,7 +135,7 @@ public class AuthorizedRolesDto {
 	
 	private List<String> patchpartnerspolicyapikeystatus;
 
-	private List<String> getallpartners;
+	private List<String> getadminpartners;
 	
 	//MISP License controller
 	
@@ -154,8 +154,6 @@ public class AuthorizedRolesDto {
 	//Multi Partner Service Controller
 
 	private List<String> getpartnercertificates;
-
-	private List<String> getpolicyrequests;
 
 	private List<String> getapikeysforauthpartners;
 
@@ -189,10 +187,10 @@ public class AuthorizedRolesDto {
 
 	private List<String> getalldevicedetails;
 
-	private List<String> getallcacertificates;
+	private List<String> gettrustcertificates;
 
-	private List<String> getdownloadrootcertificate;
+	private List<String> getdownloadtrustcertificates;
 
-	private List<String> getpartnersv4;
+	private List<String> getpartnersv3;
 		
 }

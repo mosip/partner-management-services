@@ -21,14 +21,9 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
-import io.mosip.pms.partner.manager.dto.CaCertificateFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.dto.*;
-import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
-import io.mosip.pms.partner.manager.dto.CaCertTypeListRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.manager.dto.CaCertTypeListResponseDto;
-import io.mosip.pms.partner.manager.dto.CaCertificateSummaryDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -82,8 +77,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final String APPROVED = "approved";
 	public static final String BLANK_STRING = "";
 
-	@Value("${mosip.pms.api.id.all.partners.get}")
-	private String getAllPartnersId;
+	@Value("${mosip.pms.api.id.admin.partners.get}")
+	private String getAdminPartnersId;
 
 	@Value("${mosip.pms.api.id.all.partner.policy.mapping.requests.get}")
 	private String getAllPartnerPolicyMappingRequestsId;
@@ -91,11 +86,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.all.api.key.requests.get}")
 	private String getAllApiKeyRequestsId;
 
-	@Value("${mosip.pms.api.id.all.ca.certificates.get}")
-	private String getCaCertificatesId;
+	@Value("${mosip.pms.api.id.trust.certificates.get}")
+	private String getTrustCertificatesId;
 
-	@Value("${mosip.pms.api.id.download.ca.certificate.get}")
-	private String getDownloadCaCertificateId;
+	@Value("${mosip.pms.api.id.download.trust.certificates.get}")
+	private String getDownloadTrustCertificateId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -856,7 +851,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerFilterDto partnerFilterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
@@ -886,44 +881,71 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+					"In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAllPartnersId);
+		responseWrapper.setId(getAdminPartnersId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerPolicyRequestFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerPolicyRequestFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					if (!partnerHelper.skipDeviceOrFtmPartner(partner)) {
+						partnerHelper.validatePartnerId(partner, userId);
+						partnerHelper.validatePolicyGroupId(partner, userId);
+						partnerHelper.validatePolicyGroup(partner);
+						partnerIdList.add(partner.getId());
+					}
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
 
 			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
 			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
-					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerTypeCode(),
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
 							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
-							filterDto.getStatus(), filterDto.getRequestDetails(),
-							filterDto.getPolicyGroupName(), pageable);
+							filterDto.getStatus(), filterDto.getPartnerComment(),
+							filterDto.getPolicyGroupName(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerPolicyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerPolicyRequestSummaryDto.class);
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
 			}
@@ -945,15 +967,39 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, ApiKeyFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+						partnerHelper.validatePartnerId(partner, userId);
+						partnerHelper.validatePolicyGroupId(partner, userId);
+						partnerHelper.validatePolicyGroup(partner);
+						partnerIdList.add(partner.getId());
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
 			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
 
 			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				if (sortFieldName.equalsIgnoreCase("status")) {
 					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
 				}
@@ -964,11 +1010,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
 					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyLabel(),
 							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
-							filterDto.getStatus(), pageable);
+							filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
 			}
@@ -990,38 +1036,38 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> getCaCertificates(String sortFieldName, String sortType, int pageNo, int pageSize, CaCertificateFilterDto filterDto) {
-		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, TrustCertificateFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			PageResponseV2Dto<CaCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
-			CaCertTypeListRequestDto caCertTypeListRequestDto = new CaCertTypeListRequestDto();
-			caCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
-			caCertTypeListRequestDto.setExcludeMosipCA(true);
-			caCertTypeListRequestDto.setPartnerDomain(filterDto.getPartnerDomain());
-			caCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
-			caCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
-			caCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
-			caCertTypeListRequestDto.setPageNumber(pageNo + 1);
-			caCertTypeListRequestDto.setPageSize(pageSize);
+			PageResponseV2Dto<TrustCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			TrustCertTypeListRequestDto trustCertTypeListRequestDto = new TrustCertTypeListRequestDto();
+			trustCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
+			trustCertTypeListRequestDto.setExcludeMosipCA(true);
+			trustCertTypeListRequestDto.setPartnerDomain(filterDto.getPartnerDomain());
+			trustCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
+			trustCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
+			trustCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
+			trustCertTypeListRequestDto.setPageNumber(pageNo + 1);
+			trustCertTypeListRequestDto.setPageSize(pageSize);
 			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				caCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.caCertificateAliasToColumnMap, sortFieldName));
-				caCertTypeListRequestDto.setSortOrder(sortType);
+				trustCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName));
+				trustCertTypeListRequestDto.setSortOrder(sortType);
 			}
-			RequestWrapper<CaCertTypeListRequestDto> request = new RequestWrapper<>();
-			request.setRequest(caCertTypeListRequestDto);
-			CaCertTypeListResponseDto responseObject = null;
-			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.ca.certificates.post.rest.uri"), null, "", "",
+			RequestWrapper<TrustCertTypeListRequestDto> request = new RequestWrapper<>();
+			request.setRequest(trustCertTypeListRequestDto);
+			TrustCertTypeListResponseDto responseObject = null;
+			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.trust.certificates.post.rest.uri"), null, "", "",
 					MediaType.APPLICATION_JSON, request, Map.class);
 
 			if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
 				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
 						.get(PartnerConstants.ERRORS);
 				if (!certServiceErrorList.isEmpty()) {
-					LOGGER.error("Error occurred while getting the CA certificates list from keymanager");
+					LOGGER.error("Error occurred while getting the trust certificates list from keymanager");
 					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 				} else {
-					LOGGER.error("Error occurred while getting the CA certificates list from keymanager {}", apiResponse);
+					LOGGER.error("Error occurred while getting the trust certificates list from keymanager {}", apiResponse);
 					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 				}
@@ -1030,33 +1076,33 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 			}
-			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CaCertTypeListResponseDto.class);
-			pageResponseV2Dto.setPageNo(responseObject.getPageNumber() - 1);
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertTypeListResponseDto.class);
+			pageResponseV2Dto.setPageNo((responseObject.getPageNumber() - 1));
 			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
 			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (ApiAccessibleException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getCaCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
-			String errorCode = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorCode();
-			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.CA_CERTIFICATES_FETCH_ERROR.getErrorMessage();
+					"In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.TRUST_CERTIFICATES_FETCH_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.TRUST_CERTIFICATES_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getCaCertificatesId);
+		responseWrapper.setId(getTrustCertificatesId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
 
-	public ResponseWrapperV2<CACertificateResponseDto> downloadRootCertificate(String certificateId) {
-		ResponseWrapperV2<CACertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId) {
+		ResponseWrapperV2<TrustCertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(certificateId) || certificateId.equals(BLANK_STRING)) {
 				LOGGER.info("sessionId", "idType", "id", "Certificate Id is null or empty -" + certificateId);
@@ -1064,19 +1110,19 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						io.mosip.pms.partner.constant.ErrorCode.INVALID_CERTIFICATE_ID.getErrorMessage()
 				);
 			}
-			CACertificateResponseDto responseObject = null;
+			TrustCertificateResponseDto responseObject = null;
 			Map<String, String> pathsegments = new HashMap<>();
 			pathsegments.put("caCertId", certificateId);
-			Map<String, Object> apiResponse = restUtil.getApi(environment.getProperty("pmp.download.ca.certificate.get.rest.uri"), pathsegments, Map.class);
+			Map<String, Object> apiResponse = restUtil.getApi(environment.getProperty("pmp.download.trust.certificates.get.rest.uri"), pathsegments, Map.class);
 			if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
 				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
 						.get(PartnerConstants.ERRORS);
 				if (!certServiceErrorList.isEmpty()) {
-					LOGGER.error("Error occurred while downloading the CA certificate from keymanager");
+					LOGGER.error("Error occurred while downloading the trust certificates from keymanager");
 					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 				} else {
-					LOGGER.error("Error occurred while downloading the CA certificate from keymanager {}", apiResponse);
+					LOGGER.error("Error occurred while downloading the trust certificates from keymanager {}", apiResponse);
 					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 				}
@@ -1085,23 +1131,23 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 			}
-			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), CACertificateResponseDto.class);
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertificateResponseDto.class);
 			responseWrapper.setResponse(responseObject);
 		} catch (ApiAccessibleException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In downloadRootCertificate method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In downloadRootCertificate method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In downloadRootCertificate method of PartnerManagementServiceImpl - " + ex.getMessage());
-			String errorCode = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_CA_CERTIFICATE_ERROR.getErrorCode();
-			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_CA_CERTIFICATE_ERROR.getErrorMessage();
+					"In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_TRUST_CERTIFICATE_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_TRUST_CERTIFICATE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getDownloadCaCertificateId);
+		responseWrapper.setId(getDownloadTrustCertificateId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

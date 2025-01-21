@@ -53,7 +53,7 @@ UploadCACertificate:
   }'
       output: ' {
 }'
-   Pms_UploadCACertificate_UploadAgain_All_Valid_Smoke:
+   Pms_UploadCACertificate_UploadAgain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       description: Upload CA Cert which is already uploaded      
       role: partnerrevamp

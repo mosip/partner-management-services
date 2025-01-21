@@ -1,6 +1,6 @@
 GetAllDevicesForSbi:
    Pms_GetAllDevicesForSbi_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get

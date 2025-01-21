@@ -518,8 +518,8 @@ public class DeviceDetailServiceTest {
 	public void getAllDeviceDetailsStatusAscSorting() {
 		String sortFieldName = "status";
 		String sortType = "ASC";
-		int pageNo = 0;
-		int pageSize = 10;
+		Integer pageNo = 0;
+		Integer pageSize = 10;
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -541,8 +541,8 @@ public class DeviceDetailServiceTest {
 	public void testGetAllDeviceDetails_withStatusDescSorting() {
 		String sortFieldName = "status";
 		String sortType = "DESC";
-		int pageNo = 0;
-		int pageSize = 10;
+		Integer pageNo = 0;
+		Integer pageSize = 10;
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -564,8 +564,8 @@ public class DeviceDetailServiceTest {
 	public void testGetAllDeviceDetails_withOtherFieldSorting() {
 		String sortFieldName = "deviceId";
 		String sortType = "ASC";
-		int pageNo = 0;
-		int pageSize = 10;
+		Integer pageNo = 0;
+		Integer pageSize = 10;
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);

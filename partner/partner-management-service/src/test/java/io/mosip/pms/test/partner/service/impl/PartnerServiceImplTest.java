@@ -18,6 +18,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
+import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -1472,161 +1473,6 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
-	public void getAllPoliciesTest() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("AUTH");
-		partner.setPolicyGroupId("abc");
-		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setPolicyId("xyz");
-		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setStatusCode("approved");
-		partnerPolicyRequestList.add(partnerPolicyRequest);
-		partner.setPartnerPolicyRequests(partnerPolicyRequestList);
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setId("abc");
-		policyGroup.setName("group1");
-		policyGroup.setDesc("dgvhsd");
-		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
-
-		String policyGroupName = "test";
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setName("policy123");
-		when(policyGroupRepository.findPolicyGroupNameById(anyString())).thenReturn(policyGroupName);
-		when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
-		pserviceImpl.getPolicyRequests();
-
-		when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(null);
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTest1() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("AUTH");
-		partner.setPolicyGroupId("abc");
-		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
-		partner.setPartnerPolicyRequests(partnerPolicyRequestList);
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setId("abc");
-		policyGroup.setName("group1");
-		policyGroup.setDesc("dgvhsd");
-		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setName("policy123");
-		when(authPolicyRepository.findByPolicyGroupAndId(anyString(), anyString())).thenReturn(authPolicy);
-
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTest2() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("");
-		partner.setPolicyGroupId("abc");
-		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
-		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
-		partnerPolicyRequest.setPolicyId("xyz");
-		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setStatusCode("approved");
-		partnerPolicyRequestList.add(partnerPolicyRequest);
-		partner.setPartnerPolicyRequests(partnerPolicyRequestList);
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTest3() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("abc");
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTest4() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("ddd");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("");
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTestException() throws Exception {
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
-	public void getAllPoliciesTestException1() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPolicyRequests();
-	}
-
-	@Test
 	public void getPartnerCertificatesDetailsTest() throws Exception {
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -1723,7 +1569,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
-	public void getAuthPartnerApiKeysTest() throws Exception{
+	public void getPartnersV3Test() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1738,34 +1584,38 @@ public class PartnerServiceImplTest {
 		partner.setApprovalStatus("approved");
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
 
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey("apikey123");
-		partnerPolicy.setLabel("request");
-		partnerPolicy.setIsActive(true);
-		partnerPolicy.setPartner(partner);
-		partnerPolicy.setPolicyId("test");
-		List<PartnerPolicy> partnerPolicies = new ArrayList<>();
-		partnerPolicies.add(partnerPolicy);
-		when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("test");
-		authPolicy.setName("hjfvhd");
-		authPolicy.setDescr("tttt");
 		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setId("abc");
-		policyGroup.setName("group1");
-		policyGroup.setDesc("group1d");
-		authPolicy.setPolicyGroup(policyGroup);
-		Optional<AuthPolicy> authPolicyDetails = Optional.of(authPolicy);
-		when(authPolicyRepository.findById(anyString())).thenReturn(authPolicyDetails);
-		pserviceImpl.getAuthPartnerApiKeys();
+		policyGroup.setName("abc");
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
 	}
 
 	@Test
-	public void getAuthPartnerApiKeysTest1() throws Exception {
+	public void getPartnersV3Test1() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", null, "FTM_Provider");
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getPartnersV3TestException() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1780,86 +1630,12 @@ public class PartnerServiceImplTest {
 		partner.setApprovalStatus("approved");
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
 
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey("apikey123");
-		partnerPolicy.setLabel("request");
-		partnerPolicy.setIsActive(false);
-		partnerPolicy.setPartner(partner);
-		partnerPolicy.setPolicyId("test");
-		List<PartnerPolicy> partnerPolicies = new ArrayList<>();
-		partnerPolicies.add(partnerPolicy);
-		when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("test");
-		authPolicy.setName("hjfvhd");
-		authPolicy.setDescr("tttt");
 		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setId("abc");
-		policyGroup.setName("group1");
-		policyGroup.setDesc("group1d");
-		authPolicy.setPolicyGroup(policyGroup);
-		Optional<AuthPolicy> authPolicyDetails = Optional.of(authPolicy);
-		when(authPolicyRepository.findById(anyString())).thenReturn(authPolicyDetails);
-		pserviceImpl.getAuthPartnerApiKeys();
-	}
-
-	@Test
-	public void getAuthPartnerApiKeysTest2() throws Exception{
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		partner.setId("123");
-		partner.setPartnerTypeCode("Auth_Partner");
-		partner.setPolicyGroupId("abc");
-		partner.setApprovalStatus("approved");
-		partnerList.add(partner);
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-
-		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey("apikey123");
-		partnerPolicy.setLabel("request");
-		partnerPolicy.setIsActive(true);
-		partnerPolicy.setPartner(partner);
-		partnerPolicy.setPolicyId("test");
-		List<PartnerPolicy> partnerPolicies = new ArrayList<>();
-		partnerPolicies.add(partnerPolicy);
-		when(partnerPolicyRepository.findAPIKeysByPartnerId(anyString())).thenReturn(partnerPolicies);
-		pserviceImpl.getAuthPartnerApiKeys();
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		PolicyGroup policyGroup = new PolicyGroup();
-		authPolicy.setPolicyGroup(policyGroup);
-		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
-		pserviceImpl.getAuthPartnerApiKeys();
-	}
-
-	@Test
-	public void getAuthPartnerApiKeysTestException() throws Exception {
-		pserviceImpl.getAuthPartnerApiKeys();
-	}
-
-	@Test
-	public void getAuthPartnerApiKeysTestException1() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		List<Partner> partnerList = new ArrayList<>();
-		Partner partner = new Partner();
-		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getAuthPartnerApiKeys();
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
 	}
 
 }

@@ -95,7 +95,7 @@ public interface DeviceDetailService {
 
 	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId, DeactivateDeviceRequestDto requestDto);
 
-    ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, int pageNo, int pageSize, DeviceDetailFilterDto filterDto);
+    ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, DeviceDetailFilterDto filterDto);
 
 	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(String deviceId, SbiAndDeviceMappingRequestDto requestDto);
 }

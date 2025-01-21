@@ -33,6 +33,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -128,6 +129,9 @@ public class PartnerManagementServiceImplTest {
 
 	@Mock
 	PartnerPolicyMappingRequestRepository partnerPolicyMappingRequestRepository;
+
+	@Mock
+	Environment environment;
 	
 	@Before
 	public void setUp() {
@@ -1233,7 +1237,7 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
-	public void getAllPartnersTest() throws Exception {
+	public void getAdminPartnersTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1242,8 +1246,8 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
 		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
@@ -1255,11 +1259,11 @@ public class PartnerManagementServiceImplTest {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
-		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
 
 	@Test
-	public void getAllPartnersTestException() throws Exception {
+	public void getAdminPartnersTestException() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1268,12 +1272,12 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
-		partnerManagementImpl.getAllPartners(sortFieldName, sortType, pageNo, pageSize, null);
+		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	@Test
@@ -1286,15 +1290,15 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
 		apiKeyFilterDto.setPartnerId("abc");
 		apiKeyFilterDto.setPolicyName("policy");
 		apiKeyFilterDto.setOrgName("ABC");
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<ApiKeyRequestsSummaryEntity> page = null;
-		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		partnerManagementImpl.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto);
 	}
 
@@ -1308,11 +1312,11 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<ApiKeyRequestsSummaryEntity> page = null;
-		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		partnerManagementImpl.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
@@ -1326,15 +1330,15 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		PartnerPolicyRequestFilterDto partnerPolicyRequestFilterDto = new PartnerPolicyRequestFilterDto();
 		partnerPolicyRequestFilterDto.setPartnerId("abc");
 		partnerPolicyRequestFilterDto.setPolicyName("policy");
 		partnerPolicyRequestFilterDto.setOrganizationName("ABC");
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerPolicyRequestSummaryEntity> page = null;
-		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		partnerManagementImpl.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto);
 	}
 
@@ -1348,16 +1352,16 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerPolicyRequestSummaryEntity> page = null;
-		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(null);
 		partnerManagementImpl.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	@Test
-	public void getCaCertificatesTest() throws Exception {
+	public void getTrustCertificatesTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1366,41 +1370,41 @@ public class PartnerManagementServiceImplTest {
 
 		String sortFieldName = "partnerDomain";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
-		CaCertificateFilterDto filterDto = new CaCertificateFilterDto();
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		filterDto.setCertificateId("abc");
 		filterDto.setCaCertificateType("root");
 		filterDto.setPartnerDomain("Auth");
 
-		CaCertificateSummaryDto caCertificateSummaryDto = new CaCertificateSummaryDto();
-		caCertificateSummaryDto.setCaCertificateType("ROOT");
-		caCertificateSummaryDto.setCertId("abc");
-		caCertificateSummaryDto.setPartnerDomain("AUTH");
-		List<CaCertificateSummaryDto> caCertificateSummaryDtoList = new ArrayList<>();
-		caCertificateSummaryDtoList.add(caCertificateSummaryDto);
+		TrustCertificateSummaryDto trustCertificateSummaryDto = new TrustCertificateSummaryDto();
+		trustCertificateSummaryDto.setCaCertificateType("ROOT");
+		trustCertificateSummaryDto.setCertId("abc");
+		trustCertificateSummaryDto.setPartnerDomain("AUTH");
+		List<TrustCertificateSummaryDto> trustCertificateSummaryDtoList = new ArrayList<>();
+		trustCertificateSummaryDtoList.add(trustCertificateSummaryDto);
 
-		CaCertTypeListResponseDto caCertTypeListResponseDto = new CaCertTypeListResponseDto();
-		caCertTypeListResponseDto.setPageNumber(1);
-		caCertTypeListResponseDto.setPageSize(8);
-		caCertTypeListResponseDto.setTotalRecords(10);
-		caCertTypeListResponseDto.setAllPartnerCertificates(caCertificateSummaryDtoList);
+		TrustCertTypeListResponseDto trustCertTypeListResponseDto = new TrustCertTypeListResponseDto();
+		trustCertTypeListResponseDto.setPageNumber(1);
+		trustCertTypeListResponseDto.setPageSize(8);
+		trustCertTypeListResponseDto.setTotalRecords(10);
+		trustCertTypeListResponseDto.setAllPartnerCertificates(trustCertificateSummaryDtoList);
 
 		Map<String, Object> apiResponse = new HashMap<>();
-		apiResponse.put("response", caCertTypeListResponseDto);
+		apiResponse.put("response", trustCertTypeListResponseDto);
 
 		when(restUtil.postApi(eq("https://localhost/v1/keymanager/getCaCertificates"), any(), eq(""), eq(""),
 				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
 
-		when(mapper.writeValueAsString(any())).thenReturn(new ObjectMapper().writeValueAsString(caCertTypeListResponseDto));
-		when(mapper.readValue(anyString(), eq(CaCertTypeListResponseDto.class))).thenReturn(caCertTypeListResponseDto);
+		when(mapper.writeValueAsString(any())).thenReturn(new ObjectMapper().writeValueAsString(trustCertTypeListResponseDto));
+		when(mapper.readValue(anyString(), eq(TrustCertTypeListResponseDto.class))).thenReturn(trustCertTypeListResponseDto);
 
-		ResponseWrapperV2<PageResponseV2Dto<CaCertificateSummaryDto>> responseWrapper =
-				partnerManagementImpl.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper =
+				partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	@Test
-	public void getCaCertificatesExceptionTest() throws Exception {
+	public void getTrustCertificatesExceptionTest() throws Exception {
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -1410,10 +1414,142 @@ public class PartnerManagementServiceImplTest {
 		String sortFieldName = "partnerDomain";
 		String sortType = "desc";
 		int pageNo = 0;
-		int pageSize = 8;
-		partnerManagementImpl.getCaCertificates(sortFieldName, sortType, pageNo, pageSize, null);
+		Integer pageSize = 8;
+		partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
+	@Test
+	public void downloadTrustCertificatesTest() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Map<String, Object> apiResponse = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
+		response.put("p7bFile", "-----BEGIN CERTIFICATE-----\n" +
+				"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\n" +
+				"m0UA3Sxxre0vVWYO4GmmZUY=\n" +
+				"-----END CERTIFICATE-----");
+		apiResponse.put("response", response);
+
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		partnerManagementImpl.downloadTrustCertificates("123");
+	}
+
+	@Test
+	public void downloadTrustCertificatesExceptionTest1() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		partnerManagementImpl.downloadTrustCertificates("");
+	}
+
+	@Test
+	public void downloadTrustCertificatesExceptionTest2() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		List<Map<String, Object>> errorList = new ArrayList<>();
+		Map<String, Object> error = new HashMap<>();
+		error.put("errorCode", "001");
+		error.put("message", "error occured");
+		errorList.add(error);
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		apiResponse.put("errors", errorList);
+
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		partnerManagementImpl.downloadTrustCertificates("123");
+	}
+
+	@Test
+	public void downloadTrustCertificatesExceptionTes3() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		List<Map<String, Object>> errorList = new ArrayList<>();
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		apiResponse.put("errors", errorList);
+
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		partnerManagementImpl.downloadTrustCertificates("123");
+	}
+
+	@Test
+	public void downloadTrustCertificatesExceptionTest5() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		List<Map<String, Object>> errorList = new ArrayList<>();
+		Map<String, Object> error = new HashMap<>();
+		error.put("errorCodes", "001");
+		error.put("messages", "error occured");
+		errorList.add(error);
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		apiResponse.put("errors", errorList);
+
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		partnerManagementImpl.downloadTrustCertificates("123");
+	}
+
+	@Test
+	public void downloadTrustCertificatesExceptionTes4() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+
+		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		partnerManagementImpl.downloadTrustCertificates("123");
+	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();

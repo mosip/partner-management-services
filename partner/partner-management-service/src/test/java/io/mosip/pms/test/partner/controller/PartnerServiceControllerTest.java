@@ -1,5 +1,8 @@
 package io.mosip.pms.test.partner.controller;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,19 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
-import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.partner.dto.ApiKeyResponseDto;
+import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PolicyDto;
+import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,10 +33,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +50,7 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.dto.ApiKeyResponseDto;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
@@ -64,6 +65,7 @@ import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -78,39 +80,38 @@ import io.mosip.pms.partner.service.PartnerService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@EnableWebMvc
 public class PartnerServiceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private PartnerService partnerService;
-    
-    @Mock
-    PartnerManagerService partnerManagerService;
-   
+
+    @MockBean
+    private PartnerManagerService partnerManagerService;
+
+    @MockBean
+    private AuditUtil auditUtil;
+
+    @Autowired
+    private PartnerServiceController partnerServiceController;
+
     @Autowired
     private ObjectMapper objectMapper;
-    
-	@Autowired
-	@Qualifier("selfTokenRestTemplate")
-	private RestTemplate restTemplate;
-    
-    @MockBean
-	AuditUtil auditUtil;
-	
-	@Before
-	public void setup() {
-		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));	
-	}
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        doNothing().when(auditUtil).setAuditRequestDto(any(PartnerServiceAuditEnum.class), anyString(), anyString());
+    }
     
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void partnerSelfRegistrationTest() throws Exception {
         PartnerResponse response = new PartnerResponse();
-        Mockito.when(partnerService.savePartner(Mockito.any())).thenReturn(response);
+        when(partnerService.savePartner(any())).thenReturn(response);
         RequestWrapper<PartnerRequest> request = createRequest();
 
         mockMvc.perform(post("/partners").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -120,7 +121,7 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void addContactsTest() throws Exception {
-        Mockito.when(partnerService.createAndUpdateContactDetails(Mockito.any(),Mockito.any())).thenReturn(new String());
+        when(partnerService.createAndUpdateContactDetails(any(), any())).thenReturn(new String());
         mockMvc.perform(post("/partners/12345/contact/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(addContactRequestWrapper()))).andExpect(status().isOk());
     }
@@ -129,7 +130,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNERMANAGER"})
     public void uploadCACertificateTest() throws Exception{
     	CACertificateResponseDto response = new CACertificateResponseDto();
-        Mockito.when(partnerService.uploadCACertificate(cACertificateRequest())).thenReturn(response);
+        when(partnerService.uploadCACertificate(cACertificateRequest())).thenReturn(response);
         mockMvc.perform(post("/partners/certificate/ca/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createCACertificateRequest()))).andExpect(status().isOk());
     }
@@ -138,7 +139,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void uploadPartnerCertificateTest() throws Exception{
     	PartnerCertificateResponseDto response = new PartnerCertificateResponseDto();
-        Mockito.when(partnerService.uploadPartnerCertificate(Mockito.any())).thenReturn(response);
+        when(partnerService.uploadPartnerCertificate(any())).thenReturn(response);
         mockMvc.perform(post("/partners/certificate/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(partnerCertificateRequest()))).andExpect(status().isOk());
     }
@@ -146,7 +147,7 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void addBiometricExtractorsTest() throws JsonProcessingException, Exception {
-    	Mockito.when(partnerService.addBiometricExtractors("123456", "12345", getExtractorsInput())).thenReturn(new String());
+    	when(partnerService.addBiometricExtractors("123456", "12345", getExtractorsInput())).thenReturn(new String());
     	mockMvc.perform(post("/partners/123456/bioextractors/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
@@ -155,21 +156,21 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void getCredentialTypePolicyTest() throws Exception{
     	PartnerCredentialTypePolicyDto response = new PartnerCredentialTypePolicyDto();
-        Mockito.when(partnerService.getPartnerCredentialTypePolicy(Mockito.anyString(),Mockito.anyString())).thenReturn(response);
+        when(partnerService.getPartnerCredentialTypePolicy(anyString(), anyString())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtype/12345/policies")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void mapPolicyToCredentialTypeTest() throws Exception{
-        Mockito.when(partnerService.mapPartnerPolicyCredentialType(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(new String());
+        when(partnerService.mapPartnerPolicyCredentialType(anyString(), anyString(), anyString())).thenReturn(new String());
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/12345/credentialtype/12345/policies/12345")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getBiometricExtractorsTest() throws JsonProcessingException, Exception {
-    	Mockito.when(partnerService.getBiometricExtractors("123456", "12345")).thenReturn(new ExtractorsDto());
+    	when(partnerService.getBiometricExtractors("123456", "12345")).thenReturn(new ExtractorsDto());
     	mockMvc.perform(MockMvcRequestBuilders.get("/partners/123456/bioextractors/12345")).andExpect(status().isOk());
     }
 
@@ -177,7 +178,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerCertificateTest() throws Exception {
         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = new PartnerCertDownloadResponeDto();
-        Mockito.when(partnerService.getPartnerCertificate(Mockito.any())).thenReturn(partnerCertDownloadResponeDto);
+        when(partnerService.getPartnerCertificate(any())).thenReturn(partnerCertDownloadResponeDto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/certificate")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -186,7 +187,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerDetailsTest() throws Exception {
         RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
-        Mockito.when(partnerService.getPartnerDetails("12345")).thenReturn(response);
+        when(partnerService.getPartnerDetails("12345")).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -198,7 +199,7 @@ public class PartnerServiceControllerTest {
     	response.setPartnerId(partnerId);
     	response.setStatus("true");
     	
-    	Mockito.when(partnerService.updatePartnerDetail(Mockito.any(), Mockito.any())).thenReturn(response);
+    	when(partnerService.updatePartnerDetail(any(), any())).thenReturn(response);
     	RequestWrapper<PartnerUpdateRequest> request = updateRequest();
     	
     	mockMvc.perform(put("/partners/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -221,7 +222,7 @@ public class PartnerServiceControllerTest {
     	List<APIkeyRequests> list_aPIkeyRequests = new ArrayList<>();
     	list_aPIkeyRequests.add(aPIkeyRequests);
 		
-       Mockito.when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(list_aPIkeyRequests);
+       when(partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId)).thenReturn(list_aPIkeyRequests);
        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/apikey/request")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -276,7 +277,7 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void updatePolicyGroup() throws Exception{    
-    	Mockito.when(partnerService.updatePolicyGroup(Mockito.any(),Mockito.any())).thenReturn("Success");
+    	when(partnerService.updatePolicyGroup(any(), any())).thenReturn("Success");
     	mockMvc.perform(put("/partners/1234/policygroup/5678")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -287,32 +288,43 @@ public class PartnerServiceControllerTest {
     	RequestWrapper<EmailVerificationRequestDto> request = new RequestWrapper<>();
     	EmailVerificationRequestDto requestDto = new EmailVerificationRequestDto();
     	request.setRequest(requestDto);
-    	Mockito.when(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId())).thenReturn(response);
+    	when(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId())).thenReturn(response);
     	mockMvc.perform(put("/partners/email/verify").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test    
-    @WithMockUser(roles = {"PARTNER"})
-    public void mapPolicyToPartner() throws Exception{ 
-    	PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
-    	RequestWrapper<PartnerPolicyMappingRequest> request = new RequestWrapper<>();
-    	PartnerPolicyMappingRequest requestDto = new PartnerPolicyMappingRequest();
-    	request.setRequest(requestDto);
-    	Mockito.when(partnerService.requestForPolicyMapping(request.getRequest(),"1234")).thenReturn(response);
-    	mockMvc.perform(post("/partners/1234/policy/map").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void mapPolicyToPartner() throws Exception {
+        PartnerPolicyMappingResponseDto response = new PartnerPolicyMappingResponseDto();
+        RequestWrapper<PartnerPolicyMappingRequest> request = new RequestWrapper<>();
+        PartnerPolicyMappingRequest requestDto = new PartnerPolicyMappingRequest();
+        requestDto.setPolicyName("abc");
+        requestDto.setUseCaseDescription("abc");
+        request.setRequest(requestDto);
+
+        when(partnerService.requestForPolicyMapping(any(PartnerPolicyMappingRequest.class), eq("1234")))
+                .thenReturn(response);
+
+        MvcResult result = mockMvc.perform(post("/partners/1234/policy/map")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
     }
     
-    @Test    
-
-    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
     public void generateAPIKey() throws Exception{ 
     	APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
     	RequestWrapper<APIKeyGenerateRequestDto> request = new RequestWrapper<>();
     	APIKeyGenerateRequestDto requestDto = new APIKeyGenerateRequestDto();
+        requestDto.setPolicyName("abc");
+        requestDto.setLabel("123");
     	request.setRequest(requestDto);
-    	Mockito.when(partnerManagerService.generateAPIKey("1234",requestDto)).thenReturn(response);
+    	when(partnerManagerService.generateAPIKey("1234",requestDto)).thenReturn(response);
     	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -324,7 +336,7 @@ public class PartnerServiceControllerTest {
         RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
         requestWrapper.setRequest(requestDto);
-        Mockito.when(partnerService.getPartnerCertificate(requestDto)).thenReturn(certDownloadResponeDto);
+        when(partnerService.getPartnerCertificate(requestDto)).thenReturn(certDownloadResponeDto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/certificate")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -337,7 +349,7 @@ public class PartnerServiceControllerTest {
         PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
         requestWrapper.setRequest(requestDto);
         responseWrapper.setResponse(originalCertDownloadResponseDto);
-        Mockito.when(partnerService.getPartnerCertificateData(requestDto)).thenReturn(responseWrapper);
+        when(partnerService.getPartnerCertificateData(requestDto)).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/certificate-data")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -579,22 +591,7 @@ public class PartnerServiceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void getPolicyRequestsTest() throws Exception {
-        ResponseWrapperV2<List<PolicyDto>> responseWrapper = new ResponseWrapperV2<>();
-        PolicyDto policyDto = new PolicyDto();
-        policyDto.setPartnerId("abc");
-        policyDto.setPartnerType("Auth_Partner");
-        policyDto.setPolicyGroupName("123");
-        policyDto.setPolicyName("test");
-        List<PolicyDto> policyDtoList = new ArrayList<>();
-        policyDtoList.add(policyDto);
-        responseWrapper.setResponse(policyDtoList);
-        Mockito.when(partnerService.getPolicyRequests()).thenReturn(responseWrapper);
-    }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
+    @WithMockUser(roles = {"AUTH_PARTNER"})
     public void getPartnerCertificatesDetailsTest() throws Exception {
         ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 
@@ -607,29 +604,88 @@ public class PartnerServiceControllerTest {
         certificateDtoList.add(certificateDto);
 
         responseWrapper.setResponse(certificateDtoList);
-        Mockito.when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
+        when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-certificates-details")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void getAuthPartnerApiKeysTest() throws Exception {
-        ResponseWrapperV2<List<ApiKeyResponseDto>> responseWrapper =  new ResponseWrapperV2<>();
-        ApiKeyResponseDto apiKeyResponseDto = new ApiKeyResponseDto();
-        apiKeyResponseDto.setStatus("ACTIVE");
-        apiKeyResponseDto.setApiKeyLabel("test");
-        apiKeyResponseDto.setPolicyId("policy123");
-        apiKeyResponseDto.setPolicyName("policy123name");
-        apiKeyResponseDto.setPolicyDescription("policy123desc");
-        apiKeyResponseDto.setPolicyGroupId("policygroup000");
-        apiKeyResponseDto.setPolicyGroupName("policygroup000name");
-        apiKeyResponseDto.setPolicyGroupDescription("policygroup000desc");
-        List<ApiKeyResponseDto> apiKeyResponseDtoList = new ArrayList<>();
-        apiKeyResponseDtoList.add(apiKeyResponseDto);
-        responseWrapper.setResponse(apiKeyResponseDtoList);
-        Mockito.when(partnerService.getAuthPartnerApiKeys()).thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/auth-partner-api-keys")).andExpect(MockMvcResultMatchers.status().isOk());
+    public void getPartnersV3Test() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
+
+        List<PartnerDtoV3> partnerDtoList = new ArrayList<>();
+        partnerDtoList.add(partnerDto);
+        responseWrapper.setResponse(partnerDtoList);
+
+        Mockito.when(partnerService.getPartnersV3(Mockito.anyString(), Mockito.any(), Mockito.any()))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3")
+                        .param("status", "approved")
+                        .param("policyGroupAvailable", "true")
+                        .param("partnerType", "Auth_Partner"))
+                .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void getPartnersV3Test2() throws Exception {
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
+
+        List<PartnerDtoV3> partnerDtoList = new ArrayList<>();
+        partnerDtoList.add(partnerDto);
+        responseWrapper.setResponse(partnerDtoList);
+
+        Mockito.when(partnerService.getPartnersV3(Mockito.anyString(), Mockito.any(), Mockito.any()))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3")
+                        .param("status", "approved")
+                        .param("partnerType", "Device_Provider"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testPartnerRegistration() throws Exception {
+        PartnerRequestDto partnerRequestDto = new PartnerRequestDto();
+        partnerRequestDto.setPartnerId("12345");
+        partnerRequestDto.setOrganizationName("abc");
+        partnerRequestDto.setAddress("abc");
+        partnerRequestDto.setContactNumber("283282822");
+        partnerRequestDto.setEmailId("abc@email.com");
+        partnerRequestDto.setPartnerType("AUTH_PARTNER");
+
+        RequestWrapper<PartnerRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequest(partnerRequestDto);
+
+        PartnerResponse partnerResponse = new PartnerResponse();
+        partnerResponse.setPartnerId("12345");
+
+        Mockito.when(partnerService.registerPartner(partnerRequestDto)).thenReturn(partnerResponse);
+
+        mockMvc.perform(post("/partners/v2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(requestWrapper)))
+                .andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testGetPartnersV3() throws Exception {
+        List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
+        PartnerDtoV3 partnerDto = new PartnerDtoV3();
+        partnerDto.setPartnerId("123");
+        partnerDtoV3List.add(partnerDto);
+
+        ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(partnerDtoV3List);
+
+        Mockito.when(partnerService.getPartnersV3("approved", true, "typeA")).thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3?status=approved")).andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 
 }

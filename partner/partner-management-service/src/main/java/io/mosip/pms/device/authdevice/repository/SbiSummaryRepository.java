@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository("SbiSummaryRepository")
 public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, String> {
 
@@ -31,6 +33,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "LEFT JOIN DeviceDetail d ON d.id = dd.id.deviceDetailId " +
             "WHERE (:partnerId IS NULL OR lower(s.providerId) LIKE %:partnerId%) " +
             "AND (:orgName IS NULL OR lower(s.partnerOrgName) LIKE %:orgName%) " +
+            "AND (:sbiId IS NULL OR lower(s.id) LIKE %:sbiId%) " +
             "AND (:sbiVersion IS NULL OR lower(s.swVersion) LIKE %:sbiVersion%) " +
             "AND (:status IS NULL OR " +
             "(:status = 'deactivated' AND s.approvalStatus = 'approved' AND s.isActive = false) " +
@@ -39,7 +42,8 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "OR (:status = 'pending_approval' AND s.approvalStatus = 'pending_approval')) " +
             "AND (:sbiExpiryStatus IS NULL OR " +
             "(:sbiExpiryStatus = 'expired' AND s.swExpiryDateTime < CURRENT_DATE) " +
-            "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE))" +
+            "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE)) " +
+            "AND (:isPartnerAdmin = true OR (s.providerId IN :partnerIdList)) " +
             "GROUP BY s.providerId, s.partnerOrgName, s.id, s.swVersion, s.approvalStatus, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes";
 
@@ -47,9 +51,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetails(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -57,9 +64,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByStatusAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -67,9 +77,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByStatusDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -77,9 +90,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -87,9 +103,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -97,9 +116,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 
@@ -107,9 +129,12 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
+            @Param("sbiId") String sbiId,
             @Param("sbiVersion") String sbiVersion,
             @Param("status") String status,
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
+            @Param("partnerIdList") List<String> partnerIdList,
+            @Param("isPartnerAdmin") boolean isPartnerAdmin,
             Pageable pageable
     );
 }

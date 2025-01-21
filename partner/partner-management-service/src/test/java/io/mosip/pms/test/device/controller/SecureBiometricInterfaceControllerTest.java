@@ -1,6 +1,7 @@
 package io.mosip.pms.test.device.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,6 +57,7 @@ import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
 import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
@@ -402,18 +404,19 @@ public class SecureBiometricInterfaceControllerTest {
 	public void getAllSbiDetailsTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		int pageNo = 0;
-		int pageSize = 8;
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		SbiFilterDto filterDto = new SbiFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Mockito.when(secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto)).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface/search/v2")
+		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface")
 						.param("sortFieldName", sortFieldName)
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
 						.param("pageSize", String.valueOf(pageSize))
 						.param("partnerId", "123")
 						.param("orgName", "ABC")
+						.param("sbiId", "sbi123")
 						.param("sbiVersion", "test")
 						.param("status", "approved")
 						.param("sbiExpiryStatus", "expired"))
@@ -422,14 +425,26 @@ public class SecureBiometricInterfaceControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"DEVICE_PROVIDER"})
-	public void getSbiDetailsTest() throws Exception {
-		ResponseWrapperV2<List<SbiDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
-		List<SbiDetailsDto> sbiDetailsDtoList = new ArrayList<>();
-		SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
-		sbiDetailsDtoList.add(sbiDetailsDto);
-		responseWrapper.setResponse(sbiDetailsDtoList);
-		Mockito.when(secureBiometricInterfaceService.getSbiDetails()).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(responseWrapper))).andExpect(status().isOk());
+	public void addDeviceToSbiTest() throws Exception {
+		RequestWrapperV2<DeviceDetailDto> requestWrapper = new RequestWrapperV2<>();
+		requestWrapper.setId("mosip.pms.add.device.to.sbi.id.post");
+		requestWrapper.setVersion("1.0");
+		DeviceDetailDto requestDto = new DeviceDetailDto();
+		requestDto.setId(null);
+		requestDto.setDeviceTypeCode("Finger");
+		requestDto.setDeviceSubTypeCode("Slap");
+		requestDto.setMake("make");
+		requestDto.setModel("model");
+		requestDto.setDeviceProviderId("mosip123");
+		requestWrapper.setRequest(requestDto);
+		ResponseWrapperV2<IdDto> responseWrapper = new ResponseWrapperV2<>();
+		responseWrapper.setId("mosip.pms.add.device.to.sbi.id.post");
+		requestWrapper.setVersion("1.0");
+		IdDto dto = new IdDto();
+		dto.setId("12345");
+		responseWrapper.setResponse(dto);
+		Mockito.when(secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123")).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/sbi123/devices").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 }
