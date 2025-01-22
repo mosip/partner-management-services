@@ -5,7 +5,7 @@
 	<groupId>io.mosip.pms</groupId>
 	<artifactId>pms-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.3.0-dp.1</version>
+	<version>1.3.0-beta1</version>
 	
 	<name>partner-management-services</name>
 	<description>Parent project of MOSIP partner-management-services</description>
@@ -71,6 +71,7 @@
 		<kernel-dataaccess-hibernate.version>1.2.0.1</kernel-dataaccess-hibernate.version>
 		<kernel-websubclient-api.version>1.2.0.1</kernel-websubclient-api.version>
 		<kernel.templatemanager.velocity.version>1.2.0.1</kernel.templatemanager.velocity.version>
+		<kernel.authadapter.version>1.2.0.1</kernel.authadapter.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -183,6 +184,9 @@
 					<argLine>
 						${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --illegal-access=permit
 					</argLine>
+					<classpathDependencyExcludes>
+						<classpathDependencyExclude>io.mosip.kernel:kernel-auth-adapter</classpathDependencyExclude>
+					</classpathDependencyExcludes>
 				</configuration>
 			</plugin>
 			<plugin>

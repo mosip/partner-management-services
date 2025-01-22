@@ -1,20 +1,29 @@
 package io.mosip.pms.oauth.client.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.security.PublicKey;
 import java.util.*;
 
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetKeyPair;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
-import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,6 +42,7 @@ import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
@@ -43,16 +53,13 @@ import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
-import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.stream.Collectors;
 
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.lang.JoseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -75,12 +82,24 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
 	public static final String BLANK_STRING = "";
+	public static final String VERSION = "1.0";
+	public static final String NONE_LANG_KEY = "@none";
+	public static final String ENG_KEY = "eng";
+
+	@Value("${mosip.pms.api.id.oauth.clients.get}")
+	private String getClientsId;
+
+	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
+	private String getPartnersClientsId;
 
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@Autowired
 	ClientDetailRepository clientDetailRepository;
+
+	@Autowired
+	ClientSummaryRepository clientSummaryRepository;
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
@@ -109,6 +128,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Autowired
 	private AuthenticationContextRefUtil authenticationContextClassRefUtil;
 
+	@Autowired
+	PartnerHelper partnerHelper;
+
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
@@ -121,24 +143,52 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setStatus(clientDetail.getStatus());		
 		return response;
 	}
-	
+
+	private List<Partner> validateUserId() {
+		String userId = getUserId();
+		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+		return partnerList;
+	}
+
+	private boolean validatePartnerIdBelongsToUser(List<Partner> partnerList, String partnerId) {
+		boolean isPartnerBelongsToUser = false;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(partnerId)) {
+				isPartnerBelongsToUser = true;
+				break;
+			}
+		}
+		return isPartnerBelongsToUser;
+	}
+
 	@Override
 	public ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
 		ClientDetail clientDetail = processedClientDetail.getClientDetail();
 		callEsignetService(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-create-url"), true, createRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				createRequest.getClientNameLangMap(),
+				createRequest.getName()
+		);
+		clientDetail.setName(clientName);
 		publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
 		clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
-		response.setStatus(clientDetail.getStatus());		
+		response.setStatus(clientDetail.getStatus());
 		return response;
-		
+
 	}
 	
-	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws NoSuchAlgorithmException {
-		String publicKey = getJWKString(createRequest.getPublicKey());
-		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(publicKey.getBytes()));
+	public ProcessedClientDetail processCreateOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
+		//get the JWK from request
+		Map<String, Object> jwkKeyFromRequest = createRequest.getPublicKey();
+		//get String form of JWK
+		String jwkKeyString = getJWKString(jwkKeyFromRequest);
+		//Generate a new public key using the key's most significant fields from the JWK
+		String generatedPublicKey = createPublicKeyFromJWK(jwkKeyFromRequest);
+		//Create a Base64-encoded hash of the newly generated public key to check for duplicate keys
+		String clientId = CryptoUtil.encodeToURLSafeBase64(HMACUtils2.generateHash(generatedPublicKey.getBytes()));
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (result.isPresent()) {
 			LOGGER.error("createOIDCClient::Client with name {} already exists", createRequest.getName());
@@ -146,6 +196,28 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					clientId);
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
+		}
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+						clientId);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, createRequest.getAuthPartnerId());
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+						clientId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorMessage());
+			}
 		}
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
@@ -206,7 +278,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setPublicKey(publicKey);
+		clientDetail.setPublicKey(jwkKeyString);
 		clientDetail.setId(clientId);
 		clientDetail.setName(createRequest.getName());
 		clientDetail.setRpId(createRequest.getAuthPartnerId());
@@ -446,22 +518,27 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setStatus(clientDetail.getStatus());
 		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
 		return response;
-	}	
-	
-	
+	}
+
+
 	@Override
 	public ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
 			throws Exception {
-		
+
 		ClientDetail clientDetail = processUpdateOIDCClient(clientId,updateRequest);
 		makeUpdateEsignetServiceCall(clientDetail, environment.getProperty("mosip.pms.esignet.oauth-client-update-url"), true, updateRequest.getClientNameLangMap());
+		String clientName=getClientNameLanguageMapAsJsonString(
+				updateRequest.getClientNameLangMap(),
+				updateRequest.getClientName()
+		);
+		clientDetail.setName(clientName);
 		clientDetail = clientDetailRepository.save(clientDetail);
 		var response = new ClientDetailResponse();
 		response.setClientId(clientDetail.getId());
 		response.setStatus(clientDetail.getStatus());
 		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
 		return response;
-	}	
+	}
 	
 	
 	
@@ -489,20 +566,48 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
-		//check if Partner is Active or not
-		if (!partner.get().getIsActive()) {
-			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, partnerId);
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
+			}
+		}
+		if ( !isAdmin || (isAdmin && result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
+			//check if Partner is Active or not
+			if (!partner.get().getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
 		}
 		ClientDetail clientDetail = result.get();
+		if (!result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			return clientDetail;
+		}
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		return clientDetail;
@@ -516,9 +621,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 */
 	private String getJWKString(Map<String, Object> jwk) {
 		try {
-			RsaJsonWebKey jsonWebKey = new RsaJsonWebKey(jwk);
-			return jsonWebKey.toJson();
-		} catch (JoseException e) {
+			JWK jsonWebKey = JWK.parse(jwk);
+			return objectMapper.writeValueAsString(jsonWebKey.toJSONObject());
+		} catch (Exception e) {
 			LOGGER.error("createOIDCClient::Failed to process Client Public Key");
 			throw new PartnerServiceException(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode(),
 					ErrorCode.FAILED_TO_PROCESS_JWK.getErrorMessage());
@@ -594,7 +699,26 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
-
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, result.get().getRpId());
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorMessage());
+			}
+		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
@@ -613,65 +737,81 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return dto;
 	}
 
+	private String getClientNameLanguageMapAsJsonString(Map<String, String> clientNameMap, String clientName) {
+		clientNameMap.put(NONE_LANG_KEY, clientName);
+		JSONObject clientNameObject = new JSONObject(clientNameMap);
+		return clientNameObject.toString();
+	}
+
 	@Override
-	public List<OidcClientDto> getAllOidcClients() {
-		List<OidcClientDto> oidcClientDtoList = new ArrayList<>();
+	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			for (Partner partner : partnerList) {
-				String partnerId = partner.getId();
-				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
-					LOGGER.info("Partner Id is null or empty for user id : " + userId);
-					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
-				List<ClientDetail> clientDetailList = new ArrayList<>();
-				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
-				for (ClientDetail clientDetail : clientDetailList){
-					Optional <AuthPolicy> authPolicy = authPolicyRepository.findById(clientDetail.getPolicyId());
-					if (!authPolicy.isPresent()) {
-						LOGGER.info("Policy does not exists.");
-						throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-								ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-					}
-					PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-					if (Objects.isNull(policyGroup)) {
-						LOGGER.info("Policy Group is null or empty");
-						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-					}
-					OidcClientDto oidcClientDto = new OidcClientDto();
-					oidcClientDto.setPartnerId(partnerId);
-					oidcClientDto.setUserId(userId);
-					oidcClientDto.setOidcClientId(clientDetail.getId());
-					oidcClientDto.setOidcClientName(clientDetail.getName());
-					oidcClientDto.setPolicyGroupId(policyGroup.getId());
-					oidcClientDto.setPolicyGroupName(policyGroup.getName());
-					oidcClientDto.setPolicyGroupDescription(policyGroup.getDesc());
-					oidcClientDto.setPolicyId(authPolicy.get().getId());
-					oidcClientDto.setPolicyName(authPolicy.get().getName());
-					oidcClientDto.setPolicyNameDescription(authPolicy.get().getDescr());
-					oidcClientDto.setRelyingPartyId(clientDetail.getRpId());
-					oidcClientDto.setLogoUri(clientDetail.getLogoUri());
-					oidcClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
-					oidcClientDto.setPublicKey(clientDetail.getPublicKey());
-					oidcClientDto.setStatus(clientDetail.getStatus());
-					oidcClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oidcClientDto.setCrDtimes(clientDetail.getCreatedDateTime());
-					oidcClientDto.setUpdDtimes(clientDetail.getUpdatedDateTime());
-					oidcClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
-					oidcClientDtoList.add(oidcClientDto);
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerHelper.validatePolicyGroupId(partner, userId);
+					partnerHelper.validatePolicyGroup(partner);
+					partnerIdList.add(partner.getId());
 				}
 			}
+
+			Pageable pageable = Pageable.unpaged();
+
+			// Pagination
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			//Sorting
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<ClientSummaryEntity> page = clientSummaryRepository.
+					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
+							filterDto.getClientName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(clientSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllOidcClients method of ClientManagementServiceImpl - " + ex.getMessage());
-			throw new PartnerServiceException(ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode(),
-					ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage());
+					"In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		return oidcClientDtoList;
+		responseWrapper.setId(getPartnersClientsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private String getUserId() {
@@ -682,6 +822,69 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+
+	/**
+	 * Creates a public key from the provided JWK (JSON Web Key).
+
+	 * Supported JWK types:
+	 * - RSA: Represented by "RSA" key type.
+	 * - EC: Represented by "EC" key type (Elliptic Curve).
+	 * - OKP: Represented by "OKP" key type (Octet Key Pair, typically used for EdDSA).
+	 *
+	 * @param jwk A map representing the JSON Web Key.
+	 * @return A Base64 encoded string representation of the public key.
+	 * @throws Exception If the JWK is invalid or an unsupported key type is provided.
+	 */
+	public String createPublicKeyFromJWK(Map<String, Object> jwk) throws Exception {
+		// Parse the JWK
+		JWK parsedJwk = JWK.parse(jwk);
+		byte[] publicKeyBytes;
+
+		// Determine the key type and create the corresponding public key
+		switch (parsedJwk.getKeyType().getValue()) {
+			case "RSA":
+				publicKeyBytes = createRSAPublicKey((RSAKey) parsedJwk).getEncoded();
+				break;
+
+			case "EC":
+				publicKeyBytes = createECCPublicKey((ECKey) parsedJwk).getEncoded();
+				break;
+
+			case "OKP":
+				publicKeyBytes = createEdDSAPublicKey((OctetKeyPair) parsedJwk);
+				break;
+
+			default:
+				// Throw an exception if the key type is unsupported
+				throw new UnsupportedOperationException("Unsupported key type: " + parsedJwk.getKeyType());
+		}
+		// Return the public key as a Base64 encoded string
+		return Base64.getEncoder().encodeToString(publicKeyBytes);
+	}
+
+	// Method to create an RSA PublicKey from an RSAKey JWK
+	private PublicKey createRSAPublicKey(RSAKey rsaJwk) throws Exception {
+		return rsaJwk.toPublicKey();
+	}
+
+	// Method to create an EC PublicKey from an ECKey JWK
+	private PublicKey createECCPublicKey(ECKey ecJwk) throws Exception {
+		return ecJwk.toPublicKey();
+	}
+
+	/*
+	 * Note: The Nimbus library does not provide built-in support for creating
+	 * PublicKey instances from "OKP" key type JWKs (EdDSA). As a workaround,
+	 * the public key bytes are directly extracted from the JWK by retrieving
+	 * the x-coordinate and decoding it from Base64 URL format.
+	 */
+	// Method to create an EdDSA PublicKey from an OctetKeyPair JWK
+	public byte[] createEdDSAPublicKey(OctetKeyPair octetJwk) throws Exception {
+		// Retrieve the x-coordinate from the EdDSA key and decode it from Base64 URL
+		String xValue = octetJwk.getX().toString();
+		return Base64.getUrlDecoder().decode(xValue);
+	}
+
 	/**
 	 * 
 	 * @param commaSeparatedString
