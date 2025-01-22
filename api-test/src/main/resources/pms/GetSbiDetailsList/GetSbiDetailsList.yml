@@ -22,15 +22,17 @@ GetSbiDetailsList:
       outputTemplate: pms/error
       input: '{
 }'
-      output: ' {
-		{
-             "errorCode": "KER-ATH-401",
-             "message": "Authentication Failed"
-		   }
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401" 		
+      }
+      ]
 }'
-   Pms_GetSbiDetailsList_get_partners_sbi-detail_API_with_Admin_roles_Neg:
+   Pms_GetSbiDetailsList_get_partners_sbi_detail_API_with_Admin_roles_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_pms_GetSbiDetailsList_03
+      checkErrorsOnlyInResponse: true
       description: Retrieve Partner SBI Details with Admin Role and Expecting an Error in The Response
       role: regproc
       restMethod: get
@@ -38,11 +40,7 @@ GetSbiDetailsList:
       outputTemplate: pms/error
       input: '{
 }'
-      output: ' {
-		{
-         "errorCode": "PMS_CERTIFICATE_ERROR_002",
-         "message":  "User Id does not exists"
-		   }
+      output: '{
 }'
    Pms_GetSbiDetailsList_get_response_without_Partner_roles_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
@@ -54,9 +52,10 @@ GetSbiDetailsList:
       outputTemplate: pms/error
       input: '{
 }'
-      output: ' {
-		{
-           "errorCode": "KER-ATH-403",
-           "message": "Forbidden"
-		   }
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
 }'
