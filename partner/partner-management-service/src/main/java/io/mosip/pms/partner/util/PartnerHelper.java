@@ -44,6 +44,7 @@ public class PartnerHelper {
     private static final Logger LOGGER = PMSLogger.getLogger(PartnerHelper.class);
     public static final String APPROVED = "approved";
     public static final String PENDING_APPROVAL = "pending_approval";
+    public static final String REJECTED = "rejected";
     public static final String DEVICE_PROVIDER = "Device_Provider";
     public static final String FTM_PROVIDER = "FTM_Provider";
     public static final String AUTH_PARTNER = "Auth_Partner";
@@ -182,10 +183,18 @@ public class PartnerHelper {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
             throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
                     ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
-        } else if (!(secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && secureBiometricInterface.get().isActive())) {
+        } else if (secureBiometricInterface.get().getApprovalStatus().equals(PENDING_APPROVAL)) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorCode(),
-                    ErrorCode.SBI_NOT_APPROVED_OR_INACTIVE.getErrorMessage());
+            throw new PartnerServiceException(ErrorCode.PENDING_APPROVAL_SBI.getErrorCode(),
+                    ErrorCode.PENDING_APPROVAL_SBI.getErrorMessage());
+        } else if (secureBiometricInterface.get().getApprovalStatus().equals(REJECTED)) {
+            LOGGER.info("sessionId", "idType", "id", "Sbi is already rejected.");
+            throw new PartnerServiceException(ErrorCode.REJECTED_SBI.getErrorCode(),
+                    ErrorCode.REJECTED_SBI.getErrorMessage());
+        } else if (secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && !secureBiometricInterface.get().isActive()) {
+            LOGGER.info("sessionId", "idType", "id", "Sbi is already deactivated.");
+            throw new PartnerServiceException(ErrorCode.DEACTIVATED_SBI.getErrorCode(),
+                    ErrorCode.DEACTIVATED_SBI.getErrorMessage());
         } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
             LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
             throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
