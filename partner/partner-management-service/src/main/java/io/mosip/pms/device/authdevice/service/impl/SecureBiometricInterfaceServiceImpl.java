@@ -4,27 +4,38 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
+import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
+import io.mosip.pms.device.dto.SbiFilterDto;
+import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.dto.DeviceDetailDto;
+import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.dto.DeviceDto;
+import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.device.response.dto.SbiDetailsResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -37,6 +48,7 @@ import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.SearchFilter;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
 import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.common.entity.Partner;
@@ -50,9 +62,11 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterfaceHistory;
+import io.mosip.pms.device.authdevice.entity.RegistrationDeviceSubType;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistoryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.device.authdevice.repository.RegistrationDeviceSubTypeRepository;
 import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.constant.DeviceDetailExceptionsConstant;
@@ -62,11 +76,14 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceStatusUpdateDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceUpdateDto;
+import io.mosip.pms.device.request.dto.DeviceDetailDto;
+import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.response.dto.MappedDeviceDetailsReponse;
 import io.mosip.pms.device.response.dto.SbiSearchResponseDto;
+import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.device.util.AuditUtil;
 
 @Component
@@ -79,15 +96,28 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	public static final String DEVICE_PROVIDER = "Device_Provider";
 	public static final String APPROVED = "approved";
 	public static final String REJECTED = "rejected";
+	public static final String PENDING_APPROVAL = "pending_approval";
 
 	@Value("${mosip.pms.api.id.sbi.devices.get}")
 	private  String getSbiDevicesId;
 
-	@Value("${mosip.pms.api.id.deactivate.sbi.post}")
-	private  String postDeactivateSbi;
+	@Value("${mosip.pms.api.id.deactivate.sbi.patch}")
+	private  String patchDeactivateSbi;
+
+	@Value("${mosip.pms.api.id.all.sbi.details.get}")
+	private  String getAllSbiDetails;
+
+	@Value("${mosip.pms.api.id.sbi.details.get}")
+	private  String getSbiDetailsId;
+
+	@Value("${mosip.pms.api.id.add.device.to.sbi.id.post}")
+	private  String postAddDeviceToSbi;
 
 	@Autowired
 	DeviceDetailRepository deviceDetailRepository;
+
+	@Autowired
+	RegistrationDeviceSubTypeRepository registrationDeviceSubTypeRepository;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -111,10 +141,16 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
 
 	@Autowired
+	SbiSummaryRepository sbiSummaryRepository;
+
+	@Autowired
 	FilterColumnValidator filterColumnValidator;
 
 	@Autowired
 	FilterHelper filterHelper;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Value("${mosip.pms.expiry.date.max.year}")
 	private int maxAllowedExpiryYear;
@@ -637,8 +673,171 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<List<DeviceDetailDto>> getAllDevicesForSbi(String sbiId) {
-		ResponseWrapperV2<List<DeviceDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<IdDto> addDeviceToSbi(DeviceDetailDto deviceDetailDto, String sbiId) {
+		ResponseWrapperV2<IdDto> responseWrapper = new ResponseWrapperV2<>();
+		String deviceId = null;
+		try {
+			String partnerId = deviceDetailDto.getDeviceProviderId();
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// check if partnerId is associated with user
+			boolean partnerIdExists = false;
+			String partnerOrgname = BLANK_STRING;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerIdExists = true;
+					partnerOrgname = partner.getName();
+					break;
+				}
+			}
+			if (!partnerIdExists) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is not associated with user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+			}
+			try {
+				IdDto dto = createDeviceDetails(deviceDetailDto);
+				deviceId = dto.getId();
+				addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+			} catch (PartnerServiceException ex) {
+				if ("PMS_AUT_003".equals(ex.getErrorCode())) {
+					DeviceDetail deviceDetail = deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
+							deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
+							deviceDetailDto.getDeviceTypeCode());
+					deviceId = deviceDetail.getId();
+					addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+				} else {
+					throw new PartnerServiceException(ex.getErrorCode(), ex.getErrorText());
+				}
+			}
+			IdDto responseDto = new IdDto();
+			responseDto.setId(deviceId);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
+				deleteDeviceDetail(deviceId);
+			}
+			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postAddDeviceToSbi);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
+		DeviceDetail entity = new DeviceDetail();
+		DeviceDetail deviceDetail = null;
+		IdDto dto = new IdDto();
+		RegistrationDeviceSubType registrationDeviceSubType = registrationDeviceSubTypeRepository
+				.findByCodeAndTypeCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+						deviceDetailDto.getDeviceSubTypeCode(), deviceDetailDto.getDeviceTypeCode());
+		if (registrationDeviceSubType == null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
+					DeviceDetailExceptionsConstant.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
+		} else {
+			entity.setDeviceSubTypeCode(registrationDeviceSubType.getCode());
+			entity.setDeviceTypeCode(registrationDeviceSubType.getDeviceTypeCode());
+		}
+		Partner partner = partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				deviceDetailDto.getDeviceProviderId());
+		if (partner == null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
+					DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
+		}
+		entity.setPartnerOrganizationName(partner.getName());
+		if (deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
+				deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
+				deviceDetailDto.getDeviceTypeCode()) != null) {
+			throw new PartnerServiceException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
+					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
+		}
+		entity = getCreateMapping(entity, deviceDetailDto);
+		deviceDetail = deviceDetailRepository.save(entity);
+		dto.setId(deviceDetail.getId());
+		return dto;
+	}
+
+	public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
+		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
+		deviceDetail.setIsActive(false);
+		deviceDetail.setIsDeleted(false);
+		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		if (!EmptyCheckUtils.isNullEmpty(authN)) {
+			deviceDetail.setCrBy(authN.getName());
+		}
+		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
+		deviceDetail.setMake(deviceDetailDto.getMake());
+		deviceDetail.setModel(deviceDetailDto.getModel());
+		return deviceDetail;
+
+	}
+
+	private void addInactiveMappingDeviceToSbi(String sbiId, String deviceId, String partnerId, String orgName, String userId) {
+		DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
+		if (Objects.nonNull(deviceDetailSBI)){
+			LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+			throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorCode(),
+					ErrorCode.SBI_DEVICE_MAPPING_ALREADY_EXIST.getErrorMessage());
+		}
+
+		// validate sbi and device mapping
+		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
+
+		DeviceDetailSBI entity = new DeviceDetailSBI();
+
+		DeviceDetailSBIPK pk = new DeviceDetailSBIPK();
+		pk.setSbiId(sbiId);
+		pk.setDeviceDetailId(deviceId);
+
+		entity.setId(pk);
+		entity.setProviderId(partnerId);
+		entity.setPartnerName(orgName);
+		entity.setIsActive(false);
+		entity.setIsDeleted(false);
+		entity.setCrBy(userId);
+		entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+
+		DeviceDetailSBI savedEntity = deviceDetailSbiRepository.save(entity);
+		LOGGER.info("sessionId", "idType", "id", "saved inactive device mapping to sbi successfully in Db.");
+	}
+
+	private void deleteDeviceDetail(String deviceDetailId) {
+		try {
+			Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);
+			if (deviceDetail.isPresent()) {
+				List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceDetailId(deviceDetailId);
+				if (deviceDetailSBIList.isEmpty()) {
+					deviceDetailRepository.deleteById(deviceDetailId);
+					LOGGER.info("sessionId", "idType", "id", "Device detail with id " + deviceDetailId + " deleted successfully.");
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error("sessionId", "idType", "id", "Error while deleting device detail with id " + deviceDetailId + ": " + e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(String sbiId) {
+		ResponseWrapperV2<List<DeviceDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
@@ -662,7 +861,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			boolean partnerIdExists = false;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(sbi.getProviderId())) {
-					validatePartnerId(partner, userId);
+					partnerHelper.validatePartnerId(partner, userId);
 					validateDevicePartnerType(partner, userId);
 					partnerIdExists = true;
 					break;
@@ -676,27 +875,27 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			// fetch devices list
 			List<DeviceDetailSBI> deviceDetailSBIList = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiId(sbi.getProviderId(), sbiId);
 			if (!deviceDetailSBIList.isEmpty()) {
-				List<DeviceDetailDto> deviceDetailDtoList = new ArrayList<>();
+				List<DeviceDto> deviceDtoList = new ArrayList<>();
 				for (DeviceDetailSBI deviceDetailSBI : deviceDetailSBIList) {
 					Optional<DeviceDetail> optionalDeviceDetail = deviceDetailRepository.
 							findByIdAndDeviceProviderId(deviceDetailSBI.getId().getDeviceDetailId(), deviceDetailSBI.getProviderId());
 					if (optionalDeviceDetail.isPresent()) {
 						DeviceDetail deviceDetail = optionalDeviceDetail.get();
-						DeviceDetailDto deviceDetailDto = new DeviceDetailDto();
-						deviceDetailDto.setId(deviceDetail.getId());
-						deviceDetailDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
-						deviceDetailDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
-						deviceDetailDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
-						deviceDetailDto.setMake(deviceDetail.getMake());
-						deviceDetailDto.setModel(deviceDetail.getModel());
-						deviceDetailDto.setStatus(deviceDetail.getApprovalStatus());
-						deviceDetailDto.setActive(deviceDetail.getIsActive());
-						deviceDetailDto.setCreatedDateTime(deviceDetail.getCrDtimes());
+						DeviceDto deviceDto = new DeviceDto();
+						deviceDto.setDeviceId(deviceDetail.getId());
+						deviceDto.setDeviceTypeCode(deviceDetail.getDeviceTypeCode());
+						deviceDto.setDeviceSubTypeCode(deviceDetail.getDeviceSubTypeCode());
+						deviceDto.setDeviceProviderId(deviceDetail.getDeviceProviderId());
+						deviceDto.setMake(deviceDetail.getMake());
+						deviceDto.setModel(deviceDetail.getModel());
+						deviceDto.setStatus(deviceDetail.getApprovalStatus());
+						deviceDto.setActive(deviceDetail.getIsActive());
+						deviceDto.setCreatedDateTime(deviceDetail.getCrDtimes());
 
-						deviceDetailDtoList.add(deviceDetailDto);
+						deviceDtoList.add(deviceDto);
 					}
 				}
-				responseWrapper.setResponse(deviceDetailDtoList);
+				responseWrapper.setResponse(deviceDtoList);
 			}
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getAllDevicesForSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
@@ -714,14 +913,6 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return responseWrapper;
 	}
 
-	public static void validatePartnerId(Partner partner, String userId) {
-		if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-			LOGGER.info("Partner Id is null or empty for user id : " + userId);
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
-		}
-	}
-
 	private void validateDevicePartnerType(Partner partner, String userId) {
 		if (!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER)) {
 			LOGGER.info("Invalid Partner type for partner id : " + partner.getId());
@@ -731,9 +922,15 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	@Override
-	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId) {
+	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(String sbiId, DeactivateSbiRequestDto requestDto) {
 		ResponseWrapperV2<SbiDetailsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.equals(BLANK_STRING) || !status.equals(PartnerConstants.DEACTIVATE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
@@ -754,28 +951,11 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 						ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
 			}
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
-			// check if the SBI is associated with user.
-			String sbiProviderId = sbi.getProviderId();
-			boolean sbiProviderExist = false;
-			Partner partnerDetails = new Partner();
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(sbiProviderId)) {
-					validatePartnerId(partner, userId);
-					sbiProviderExist = true;
-					partnerDetails = partner;
-					break;
-				}
-			}
-			if (!sbiProviderExist) {
-				LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
-				throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
-						ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
-			}
-			//check if Partner is Active or not
-			if (!partnerDetails.getIsActive()) {
-				LOGGER.error("Partner is not Active with id {}", sbiProviderId);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				Partner partnerDetails = getAssociatedPartner(partnerList, sbi.getProviderId(), userId);
+				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 			if (!sbi.getApprovalStatus().equals(APPROVED)) {
 				LOGGER.error("Unable to deactivate sbi with id {}", sbi.getId());
@@ -792,6 +972,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!approvedDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : approvedDevices) {
 					deviceDetail.setIsActive(false);
+					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
 			}
@@ -800,6 +982,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!pendingApprovalDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : pendingApprovalDevices) {
 					deviceDetail.setApprovalStatus(REJECTED);
+					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
 			}
@@ -826,9 +1010,142 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(postDeactivateSbi);
+		responseWrapper.setId(patchDeactivateSbi);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public Partner getAssociatedPartner (List<Partner> partnerList, String sbiProviderId, String userId) {
+		boolean sbiProviderExist = false;
+		Partner partnerDetails = null;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(sbiProviderId)) {
+				partnerHelper.validatePartnerId(partner, userId);
+				sbiProviderExist = true;
+				partnerDetails = partner;
+				break;
+			}
+		}
+		if (!sbiProviderExist) {
+			LOGGER.info("sessionId", "idType", "id", "SBI is not associated with user.");
+			throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
+					ErrorCode.SBI_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
+		}
+		return partnerDetails;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<SbiSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerIdList.add(partner.getId());
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
+			// Pagination
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			// Fetch the SBI details
+			Page<SbiSummaryEntity> page = getSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable, partnerIdList, isPartnerAdmin);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<SbiSummaryDto> sbiSummaryDtoList = MapperUtils.mapAll(page.getContent(), SbiSummaryDto.class);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(sbiSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllSbiDetails method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.SBI_DETAILS_LIST_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllSbiDetails);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto, Pageable pageable, List<String> partnerIdList, boolean isPartnerAdmin) {
+		// Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
+			switch (sortKey) {
+				case "status_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				case "status_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				case "sbiExpiryStatus_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				case "sbiExpiryStatus_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				case "countOfAssociatedDevices_asc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				case "countOfAssociatedDevices_desc":
+					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
+							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+							filterDto.getSbiVersion(), filterDto.getStatus(),
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+
+				default:
+					// generic sorting logic for other fields
+					Sort sort = partnerHelper.getSortingRequest(
+							getSortColumn(partnerHelper.sbiAliasToColumnMap, sortFieldName), sortType);
+					pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+		}
+		return sbiSummaryRepository.getSummaryOfSbiDetails(
+				filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
+				filterDto.getSbiVersion(), filterDto.getStatus(),
+				filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private AuthUserDetails authUserDetails() {

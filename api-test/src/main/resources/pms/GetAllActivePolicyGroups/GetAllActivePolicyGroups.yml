@@ -16,7 +16,7 @@ GetAllActivePolicyGroups:
       endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups without token
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_02
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups
@@ -34,7 +34,7 @@ GetAllActivePolicyGroups:
       endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups with invalid token
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_03
-      role: regproc
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups

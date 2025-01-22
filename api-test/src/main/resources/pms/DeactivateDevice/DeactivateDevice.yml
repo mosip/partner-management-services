@@ -1,16 +1,17 @@
 DeactivateDevice:
    Pms_DeactivateDevice_all_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/devicedetail/deactivate-device
-      description: Deactivate Device
-      uniqueIdentifier: TC_PMS_DeactivateDevice_01
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+	  description: Deactivate Device
+	  uniqueIdentifier: TC_PMS_DeactivateDevice_01
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
-      restMethod: post
+      restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
       outputTemplate: pms/DeactivateDevice/DeactivateDeviceResult
       input: '{
       "requesttime": "$TIMESTAMP$",
-      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$",
+      "status": "De-Activate"
 }'
       output: '{
       

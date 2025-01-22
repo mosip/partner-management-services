@@ -85,7 +85,6 @@ public class SimplePut extends AdminTestUtil implements ITest {
 		}
 
 
-		testCaseName = isTestCaseValidForExecution(testCaseDTO);
 		String[] templateFields = testCaseDTO.getTemplateFields();
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {

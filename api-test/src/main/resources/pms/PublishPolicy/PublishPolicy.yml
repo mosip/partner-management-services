@@ -99,8 +99,8 @@ createPublishPolicy:
    Pms_PublishPolicy_invalid_auth:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_createPublishPolicy_05
-      description: Publish The Policy without access token
-      role: regproc
+      description: Publish The Policy without access token      
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -113,10 +113,37 @@ createPublishPolicy:
       output: '{
         "errors": [
         { 
-          "errorCode": "KER-ATH-403"
+          "errorCode": "KER-ATH-401"
         }
        ] 
     }'                 
                           
-    
+   Pms_PublishPolicy_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+		"mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'    
     

@@ -255,7 +255,7 @@ definePolicy:
     "is_Active": false
 }'
 
-   Pms_DefinePolicy_DEMOAUTH_with_SAME_POLICYNAME_NEG:
+   Pms_DefinePolicy_DemoAuth_With_Same_Policy_Neg:
       endPoint: /v1/policymanager/policies
       description: Define Policy with same policyname
       uniqueIdentifier: TC_PMS_definePolicy_10
@@ -285,7 +285,7 @@ definePolicy:
   ]
 }'
 
-   Pms_DefinePolicy_REMOVE_demo_Neg:
+   Pms_DefinePolicy_Remove_Demo_Neg:
       endPoint: /v1/policymanager/policies
       description: Define Policy without demo
       uniqueIdentifier: TC_PMS_definePolicy_11
@@ -731,6 +731,30 @@ definePolicy:
     "policyGroupName": "mosip policy group",
     "name": "mosip policy9 Neg",
     "desc": "desc mosip policy9",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid:
+      endPoint: /v1/policymanager/policies
+      description: Creating a Policy using PolicyGroup
+      role: partnerrevamp
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc deactive mosip policy 19234",
+	"name": "mosip deactive policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "mosip policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
     "is_Active": false
 }'
 

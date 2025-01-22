@@ -50,7 +50,7 @@ VerifyPartnersEmail:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
       description: Verify Partners Email
-      role: batch
+      role: invalidtoken
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error

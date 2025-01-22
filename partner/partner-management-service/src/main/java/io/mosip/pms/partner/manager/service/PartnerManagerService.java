@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.manager.dto.TrustCertificateSummaryDto;
 
 public interface PartnerManagerService {
 
@@ -92,7 +94,13 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAllPartners(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerFilterDto partnerFilterDto);
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto);
 
-	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, int pageNo, int pageSize, PartnerPolicyRequestFilterDto filterDto);
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerPolicyRequestFilterDto filterDto);
+
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto);
+
+	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, TrustCertificateFilterDto filterDto);
+
+	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId);
 }

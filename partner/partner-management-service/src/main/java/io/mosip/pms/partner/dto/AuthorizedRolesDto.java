@@ -52,6 +52,10 @@ public class AuthorizedRolesDto {
 	
 	private List<String> postftpchipdetailsearch;
 
+	private List<String> getpartnersftmchipdetails;
+
+	private List<String> getallsbidetails;
+
 	//Secure Biometric Interface controller
 	
 	private List<String> postsecurebiometricinterface;
@@ -131,7 +135,7 @@ public class AuthorizedRolesDto {
 	
 	private List<String> patchpartnerspolicyapikeystatus;
 
-	private List<String> getallpartners;
+	private List<String> getadminpartners;
 	
 	//MISP License controller
 	
@@ -151,12 +155,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> getpartnercertificates;
 
-	private List<String> getpolicyrequests;
-
-	private List<String> getauthpartnerspolicies;
-
-	private List<String> getapprovedpartneridswithpolicygroups;
-
 	private List<String> getapikeysforauthpartners;
 
 	private List<String> getoauthclients;
@@ -165,26 +163,34 @@ public class AuthorizedRolesDto {
 
 	private List<String> getsbidetails;
 
-	private List<String> getapproveddeviceproviderids;
+	private List<String> postadddevicetosbi;
 
-	private List<String> postinactivemappingdevicetosbi;
+	private List<String> postdevicewithsbimapping;
 
-	private List<String> postapproveorrejectdevicewithsbimapping;
+	private List<String> patchdeactivatedevice;
 
-	private List<String> postdeactivatedevice;
-
-	private List<String> postdeactivatesbi;
+	private List<String> patchdeactivatesbi;
 
 	private List<String> getftmchipdetails;
 
-	private List<String> getapprovedftmproviderids;
-
-	private List<String> postdeactivateftm;
+	private List<String> patchdeactivateftm;
 
 	private List<String> getoriginalftmcertificate;
 
 	private List<String> getpartnerdetails;
 
 	private List<String> getallpartnerpolicymappingrequests;
+
+	private List<String> getoauthpartnersclients;
+
+	private List<String> getpartnersapikeyrequests;
+
+	private List<String> getalldevicedetails;
+
+	private List<String> gettrustcertificates;
+
+	private List<String> getdownloadtrustcertificates;
+
+	private List<String> getpartnersv3;
 		
 }

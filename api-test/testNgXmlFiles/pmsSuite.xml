@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+
+<suite name="Partner Management Service API Test">
+
+	<!-- Passing Group as parmeter unsing "testType" Possible Groups are: smoke 
+		regression smokeAndRegression -->
+	<listeners>
+		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport" />
+	</listeners>
+
+	<test name="CreatePolicyGroup">
+		<parameter name="ymlFile"
+			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="DeactivatePolicyGroup">
+		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
+		<parameter name="pathParams" value="policyGroupId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DefinePolicy">
+		<parameter name="ymlFile"
+			value="pms/DefinePolicy/DefinePolicy.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+
+	<test name="PublishPolicy">
+		<parameter name="ymlFile"
+			value="pms/PublishPolicy/PublishPolicy.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithOnlyPathParam" />
+		</classes>
+	</test>
+	
+		<test name="DeactivatePolicy">
+		<parameter name="ymlFile" value="pms/DeactivatePolicy/DeactivatePolicy.yml" />
+		<parameter name="pathParams" value="policyId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+
+	<test name="GetAllActivePolicyGroups">
+		<parameter name="ymlFile"
+			value="pms/GetAllActivePolicyGroups/GetAllActivePolicyGroups.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerRegister">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllCertificateBeforePartnerCreate">
+		<parameter name="ymlFile"
+			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedPartnerIdBeforePartnerCreate">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="CreatePartner">
+		<parameter name="ymlFile"
+			value="pms/CreatePartner/CreatePartner.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerCertifcates">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="VerifyPartnersEmail">
+		<parameter name="ymlFile"
+			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
+		</classes>
+	</test>
+
+	<test name="GetAllCertificateBeforeCACertificateUpload">
+		<parameter name="ymlFile"
+			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="UploadCACertificate">
+		<parameter name="ymlFile"
+			value="pms/UploadCACertificate/UploadCACertificate.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+
+	<test name="GetAllCertificateBeforePartnerCertificateUpload">
+		<parameter name="ymlFile"
+			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="UploadPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/UploadPartnerCert/UploadPartnerCert.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+
+	<test name="GetPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/GetCertificate/GetCert.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllCertificate">
+		<parameter name="ymlFile"
+			value="pms/GetAllCertificate/GetAllCertificate.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedPartnerId">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerId.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedPartnerIdWithoutAuthentication">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerIdNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartnerBeforePolicyMapping">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllRequestedPolicyBeforeMapping">
+		<parameter name="ymlFile"
+			value="pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="partnerPolicyMapping">
+		<parameter name="ymlFile"
+			value="pms/partnerPolicyMapping/partnerPolicyMapping.yml" />
+		<parameter name="idKeyName" value="mappingkey" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+
+	<test name="ApproveMappingKey">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingKey/ApproveMappingKey.yml" />
+		<parameter name="pathParams" value="mappingkey" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+
+	<test name="GetAllRequestedPolicy">
+		<parameter name="ymlFile"
+			value="pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllRequestedPolicyAuthvalidations">
+		<parameter name="ymlFile"
+			value="pms/GetAllRequestedPolicy/GetAllRequestedPolicyNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedAuthPartnerPolicy">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedAuthPartnerPolicy/GetAllApprovedAuthPartnerPolicy.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedAuthPartnerPolicyAuthValidations">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedAuthPartnerPolicy/GetAllApprovedAuthPartnerPolicyNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GenerateApiKey">
+		<parameter name="ymlFile"
+			value="pms/GenerateApiKey/GenerateApiKey.yml" />
+		<parameter name="idKeyName" value="apiKey" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePatchForAutoGenId" />
+		</classes>
+	</test>
+
+	<test name="ActivateDeactivatePartnerApiKey">
+		<parameter name="ymlFile"
+			value="pms/ActivateDeactivatePartnerApiKey/ActivatePartnerApiKey.yml" />
+		<parameter name="pathParams" value="partnerId,policyId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartner">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApiKeyForAuthPartnerAfterDeactive">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
+	
+	<test name="GetAllPartnerPolicyRequest">
+		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetAllPartnerPolicyRequestNegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetAllPartnerPolicyRequest/GetAllPartnerPolicyRequestNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	
+	<test name="GetListOfPartners">
+		<parameter name="ymlFile" value="pms/GetListOfPartners/GetListOfPartners.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetDetailsOfPartner">
+		<parameter name="ymlFile" value="pms/GetDetailsOfPartner/GetDetailsOfPartner.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	
+	
+	<test name="GetListOfPolicies">
+		<parameter name="ymlFile" value="pms/GetListOfPolicies/GetListOfPolicies.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfPoliciesRequest">
+		<parameter name="ymlFile" value="pms/GetListOfPoliciesRequest/GetListOfPoliciesRequest.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetAllOidcClientBeforeOIDCCreation">
+		<parameter name="ymlFile"
+			value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="OAuthClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClient/OIDCClient.yml" />
+		<parameter name="idKeyName" value="clientId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	
+	<test name="GetAllOauthClient">
+		<parameter name="ymlFile" value="pms/GetAllOauthClient/GetAllOauthClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="UpdateOAuthClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClient/UpdateOIDCClient.yml" />
+		<parameter name="pathParams" value="client_id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+
+	<test name="GetAllOidcClient">
+		<parameter name="ymlFile"
+			value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllOidcClientWithoutAuthentication">
+		<parameter name="ymlFile"
+			value="pms/GetAllOidcClient/GetAllOidcClientNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="DeactivateOIDCClient">
+		<parameter name="ymlFile"
+			value="pms/DeactivateOIDCClient/DeactivateOIDCClient.yml" />
+		<parameter name="pathParams" value="client_id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+
+	<test name="GetAllOidcClientAfterDeactivateOfOIDC">
+		<parameter name="ymlFile"
+			value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetConfiguration">
+		<parameter name="ymlFile"
+			value="pms/GetConfiguration/GetConfiguration.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="saveUserConsent">
+		<parameter name="ymlFile"
+			value="pms/SaveUserConsent/SaveUserConsent.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostWithoutBody" />
+		</classes>
+	</test>
+
+	<test name="GetUserConsent">
+		<parameter name="ymlFile"
+			value="pms/GetUserConsent/GetUserConsent.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetOriginalPartnerCertificates">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetAllApprovedDeviceProviderIds">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetAllApprovedDeviceProviderIdsNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsNegativeScenarios.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+
+	<test name="SaveSecureBiometricInterfaceCreateDto">
+		<parameter name="ymlFile"
+			value="pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+
+	<test name="UpdateSecureBiometricInterface">
+		<parameter name="ymlFile"
+			value="pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="GetSbiDetailsList">
+		<parameter name="ymlFile"
+			value="pms/GetSbiDetailsList/GetSbiDetailsList.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="DeviceTypeFilter">
+		<parameter name="ymlFile"
+			value="pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="DeviceSubTypeFilter">
+		<parameter name="ymlFile"
+			value="pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+
+	<test name="SaveDeviceDetails">
+		<parameter name="ymlFile"
+			value="pms/SaveDeviceDetails/SaveDeviceDetails.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
+		</classes>
+	</test>
+	<test name="ApproveMappingDeviceToSbi">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="RejectMappingDeviceToSbi">
+		<parameter name="ymlFile"
+			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="GetAllDeviceListMappedWithSbi">
+		<parameter name="ymlFile"
+			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetAllDeviceListMappedWithSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>		
+	<test name="DeactivateDevice">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDevice.yml" />
+			<parameter name="pathParams" value="deviceId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateDeviceNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateDevice/DeactivateDeviceNegativeScenarios.yml" />
+			<parameter name="pathParams" value="deviceId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>		
+	<test name="DeactivateSBIWithAssociatedDevices">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateSBIWithAssociatedDevicesNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetAllApprovedFtmProvider">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetAllApprovedFtmProviderNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderNegativeScenarios.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	<test name="CreateFtmChipDetails">
+		<parameter name="ymlFile"
+			value="pms/CreateFtmChipDetails/CreateFtmChipDetails.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateOfFtpChip">
+		<parameter name="ymlFile"
+			value="pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="ApproveFTMChipDetail">
+		<parameter name="ymlFile"
+			value="pms/ApproveFTMChipDetail/ApproveFTMChipDetail.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.SimplePatch" />
+		</classes>
+	</test>
+	<test name="GetListAllFTMChip">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFtmChip.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetListAllFTMChipNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	<test name="GetOriginalFtmCertifacte">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetOriginalFtmCertifacteNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	<test name="DeactivateFtm">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtm.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+<<<<<<< HEAD:api-test/testNgXmlFiles/pmsApi.xml
+=======
+	<test name="DeactivateFtmNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtmNegativeScenarios.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>	
+>>>>>>> 00407df4f35653aefee5b740b68600a79e8c3f3b:api-test/testNgXmlFiles/pmsSuite.xml
+	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfFtmChip">
+		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChip.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetListOfFtmChipNegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetListOfFtmChip/GetListOfFtmChipNegtiveScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	
+	<test name="GetListOfAllSBI">
+		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetListOfAllSBINegativeScenarios">
+		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBINegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	
+	<test name="GetListOfAllDevice">
+		<parameter name="ymlFile" value="pms/GetListOfAllDevice/GetListOfAllDevice.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetCountOfFtm">
+		<parameter name="ymlFile" value="pms/GetCountOfFtm/GetCountOfFtm.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="GetListOfApiKey">
+		<parameter name="ymlFile" value="pms/GetListOfApiKey/GetListOfApiKey.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+</suite>

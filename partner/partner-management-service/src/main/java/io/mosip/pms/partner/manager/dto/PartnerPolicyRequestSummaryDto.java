@@ -14,17 +14,23 @@ public class PartnerPolicyRequestSummaryDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
+    @Schema(description = "Status of the partner (e.g., approved, InProgress, deactivated)", example = "approved")
+    private String partnerStatus;
+
     @Schema(description = "Name of the partner organisation", example = "abc")
     private String orgName;
 
     @Schema(description = "Name of the policy", example = "Compliance Policy")
     private String policyName;
 
+    @Schema(description = "Unique Id for policy group", example = "Compliance Policy group")
+    private String policyGroupId;
+
     @Schema(description = "Name of the policy group", example = "Compliance Policy group")
     private String policyGroupName;
 
     @Schema(description = "Request details about partner-policy mapping", example = "Requesting for compliance policies")
-    private String requestDetail;
+    private String partnerComment;
 
     @Schema(description = "Status of the partner policy mapping request (e.g., approved, InProgress)", example = "approved")
     private String status;
@@ -42,7 +48,7 @@ public class PartnerPolicyRequestSummaryDto {
     private Date updatedDateTime;
 
     @Schema(description = "A description of the policy", example = "policy for compliance")
-    private String policyNameDescription;
+    private String policyDescription;
 
     @Schema(description = "A description of policy group", example = "contains all compliance policies")
     private String policyGroupDescription;

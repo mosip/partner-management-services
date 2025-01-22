@@ -3,7 +3,7 @@ GetAllOidcClient:
       endPoint: /v1/partnermanager/oauth/clients
       description: Fetching all OIDC Clients of the loggedin Partner
       uniqueIdentifier: TC_PMS_GetAllOidcClient_01
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
@@ -21,7 +21,7 @@ GetAllOidcClient:
       endPoint: /v1/partnermanager/oauth/clients
       description: Fetching all OIDC Clients of the loggedin Partner
       uniqueIdentifier: TC_PMS_GetAllOidcClient_02
-      role: regproc
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient

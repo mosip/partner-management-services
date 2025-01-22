@@ -1,6 +1,6 @@
 GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Logged in Partner
       uniqueIdentifier: TC_PMS_GetAllCertificate_01
       role: partnerrevamp
@@ -16,7 +16,7 @@ GetAllCertificate:
 }'
 
    Pms_GetAllCertificate_Device_allValid_smoke:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Loggedin Partner
       uniqueIdentifier: TC_PMS_GetAllCertificate_02
       role: partnerrevampdevice
@@ -31,10 +31,10 @@ GetAllCertificate:
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the partner without login
       uniqueIdentifier: TC_PMS_GetAllCertificate_03
-      role: batch
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error
@@ -48,10 +48,10 @@ GetAllCertificate:
        ]
 }'
    Pms_GetAllCertificate_invalid_auth:
-      endPoint: /v1/partnermanager/partners/partner-certificates
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the partner invalid partner
       uniqueIdentifier: TC_PMS_GetAllCertificate_04
-      role: regproc
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/error

@@ -16,6 +16,12 @@ public class PartnerDetailsV3Dto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
+    @Schema(description = "First name of the partner", example = "John")
+    private String firstName;
+
+    @Schema(description = "Last name of the partner", example = "Doe")
+    private String lastName;
+
     @Schema(description = "Status of the partner", example = "approved")
     private String approvalStatus;
 
@@ -33,6 +39,9 @@ public class PartnerDetailsV3Dto {
 
     @Schema(description = "Name of the policy group name the partner has selected", example = "Policy123")
     private String policyGroupName;
+
+    @Schema(description = "Description of the policy group the partner has selected", example = "PolicyGroup123")
+    private String policyGroupDescription;
 
     @Schema(description = "Email address of the partner", example = "partner@email.com")
     private String emailId;

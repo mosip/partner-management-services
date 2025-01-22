@@ -1,9 +1,9 @@
 GetAllDeviceListMappedWithSbiNegativeScenarios:
    Pms_GetAllDeviceListMappedWithSbi_without_authentication_Neg:
-      endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_01
       description: Retrieve all Device list which are mapped with SBI without Authentication
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
@@ -19,7 +19,7 @@ GetAllDeviceListMappedWithSbiNegativeScenarios:
        ]
 }'
    Pms_GetAllDeviceListMappedWithSbi_Invalid_SBI_ID_Neg:
-      endPoint: /v1/partnermanager/securebiometricinterface/sbi-devices/{sbiId}
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_02
       description: Retrieve all Device list which are mapped with SBI by provinding invalid SBI id in request
       role: partnerrevampdevice

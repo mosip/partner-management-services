@@ -3,7 +3,7 @@ GetAllRequestedPolicies:
       endPoint: /v1/partnermanager/partners/policy-requests
       description: Fetching all the Requested Policies without login token
       uniqueIdentifier: TC_PMS_GetAllRequestedPolicies_01
-      role: batch
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
@@ -21,7 +21,7 @@ GetAllRequestedPolicies:
       endPoint: /v1/partnermanager/partners/policy-requests
       description: Fetching all the Requested Policies with invalid role
       uniqueIdentifier: TC_PMS_GetAllRequestedPolicies_02
-      role: regproc
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy

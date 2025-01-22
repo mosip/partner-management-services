@@ -1,4 +1,4 @@
-saveUserConsent:
+SaveUserConsent:
    Pms_saveUserConsent_AllValid_Smoke:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_PMS_saveUserConsent_01
@@ -6,8 +6,8 @@ saveUserConsent:
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/saveUserConsent/SaveUserConsent
-      outputTemplate: pms/saveUserConsent/SaveUserConsentResult
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/SaveUserConsent/SaveUserConsentResult
       input: '{
 }'
       output: '{

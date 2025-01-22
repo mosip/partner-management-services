@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class DeactivateDeviceRequestDto {
 
-    @Schema(description = "Unique identifier for the device details", example = "device789")
-    private String deviceId;
+    @Schema(description = "Status for deactivate device", example = "De-Activate")
+    private String status;
 }

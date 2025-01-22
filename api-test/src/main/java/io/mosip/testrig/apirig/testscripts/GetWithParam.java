@@ -26,7 +26,6 @@ import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
-import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
@@ -79,7 +78,6 @@ public class GetWithParam extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
-		testCaseName = isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
@@ -107,22 +105,19 @@ public class GetWithParam extends AdminTestUtil implements ITest {
 		}
 
 		else {
-				response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-						getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = null;
-			if (testCaseName.contains("_StatusCode")) {
-
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
-
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+			response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
+		Map<String, List<OutputValidationDto>> ouputValid = null;
+
+		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+				getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+				response.getStatusCode());
+
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+		if (!OutputValidationUtil.publishOutputResult(ouputValid))
+			throw new AdminTestException("Failed at output validation");
 	}
 
 	/**

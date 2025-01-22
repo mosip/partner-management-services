@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/users")
 public class UserController {
 
 	@Value("${mosip.pms.oidc.clients.grantTypes:authorization_code}")
@@ -58,7 +57,7 @@ public class UserController {
 	@Autowired
 	UserManagementService userManagementService;
 
-	@PostMapping
+	@PostMapping(value = "/users")
 	@PreAuthorize("hasAnyRole('MISP_PARTNER','PARTNER_ADMIN','AUTH_PARTNER','CREDENTIAL_PARTNER','ONLINE_VERIFICATION_PARTNER','DEVICE_PROVIDER','FTM_PROVIDER','ABIS_PARTNER','MANUAL_ADJUDICATION','SDK_PARTNER')")
 	public ResponseWrapper<MosipUserDto> registerUser(
 			@RequestBody @Valid RequestWrapper<UserRegistrationRequestDto> request) {
@@ -69,8 +68,9 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-	@PostMapping(value = "/user-consent")
-	@Operation(summary = "save user consent", description = "Store the user consent in the database.")
+	@PostMapping(value = "users/user-consent")
+	@Operation(summary = "Added in release-1.3.0, This endpoint saves the user's consent related to data captured by the PMS portal",
+			description = "This endpoint saves the user's consent related to data captured by the PMS portal, which is requested only once after the user's first login. Once provided, the consent will not be asked again. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -79,8 +79,9 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
-	@GetMapping(value = "/user-consent")
-	@Operation(summary = "Retrieve the user consent status.", description = "Retrieve the user consent status.")
+	@GetMapping(value = "users/user-consent")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the user's consent related to the data captured by PMS",
+			description = "This endpoint fetches the user's consent related to the data captured by PMS. The consent is requested only once after the user's first login, and won't be asked again if already given. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -88,12 +89,12 @@ public class UserController {
 		return userManagementService.isUserConsentGiven();
 	}
 
-	@GetMapping(value = "/configs")
-	@Operation(summary = "Get config", description = "Get configuration values")
+	@GetMapping(value = "/system-config")
+	@Operation(summary = "Added in release-1.3.0, This endpoint fetches the configurations for PMS", description = "This endpoint fetches the configurations for PMS and sends them to the UI. No roles are required for access.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<Map<String, String>> getConfigValues() {
+	public ResponseWrapperV2<Map<String, String>> getSystemConfig() {
 		ResponseWrapperV2<Map<String, String>> responseWrapper = new ResponseWrapperV2<>();
 		responseWrapper.setId(getConfigsId);
 		responseWrapper.setVersion(VERSION);

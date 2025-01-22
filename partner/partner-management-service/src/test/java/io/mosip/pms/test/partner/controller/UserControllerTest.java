@@ -68,7 +68,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = {"PARTNER"})
+	@WithMockUser(roles = {"AUTH_PARTNER"})
 	public void saveUserConsent() throws Exception {
 		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
@@ -79,7 +79,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = {"PARTNER"})
+	@WithMockUser(roles = {"AUTH_PARTNER"})
 	public void isUserConsentGiven() throws Exception {
 		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
@@ -90,9 +90,9 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = {"PARTNER"})
+	@WithMockUser(roles = {"AUTH_PARTNER"})
 	public void getConfigValuesTest() throws Exception {
-		mockMvc.perform(get("/users/configs").contentType(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get("/system-config").contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
 	}
 }

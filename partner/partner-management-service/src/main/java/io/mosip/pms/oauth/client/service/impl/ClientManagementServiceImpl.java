@@ -3,7 +3,6 @@ package io.mosip.pms.oauth.client.service.impl;
 import java.security.PublicKey;
 import java.util.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetKeyPair;
@@ -17,9 +16,14 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,7 @@ import io.mosip.pms.common.dto.ClientPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
@@ -53,6 +58,7 @@ import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -83,11 +89,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
 
+	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
+	private String getPartnersClientsId;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@Autowired
 	ClientDetailRepository clientDetailRepository;
+
+	@Autowired
+	ClientSummaryRepository clientSummaryRepository;
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
@@ -116,6 +128,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Autowired
 	private AuthenticationContextRefUtil authenticationContextClassRefUtil;
 
+	@Autowired
+	PartnerHelper partnerHelper;
+
 	@Override
 	public ClientDetailResponse createOIDCClient(ClientDetailCreateRequest createRequest) throws Exception {
 		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
@@ -127,6 +142,23 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		response.setClientId(clientDetail.getId());
 		response.setStatus(clientDetail.getStatus());		
 		return response;
+	}
+
+	private List<Partner> validateUserId() {
+		String userId = getUserId();
+		List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+		return partnerList;
+	}
+
+	private boolean validatePartnerIdBelongsToUser(List<Partner> partnerList, String partnerId) {
+		boolean isPartnerBelongsToUser = false;
+		for (Partner partner : partnerList) {
+			if (partner.getId().equals(partnerId)) {
+				isPartnerBelongsToUser = true;
+				break;
+			}
+		}
+		return isPartnerBelongsToUser;
 	}
 
 	@Override
@@ -164,6 +196,28 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					clientId);
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CLIENT.getErrorCode(),
 					ErrorCode.DUPLICATE_CLIENT.getErrorMessage());
+		}
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+						clientId);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, createRequest.getAuthPartnerId());
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, createRequest.getName(),
+						clientId);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC.getErrorMessage());
+			}
 		}
 		Optional<Partner> partner = partnerRepository.findById(createRequest.getAuthPartnerId());
 		if(partner.isEmpty()) {
@@ -512,20 +566,48 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
-		//check if Partner is Active or not
-		if (!partner.get().getIsActive()) {
-			LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, partnerId);
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
+			}
+		}
+		if ( !isAdmin || (isAdmin && result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
+			//check if Partner is Active or not
+			if (!partner.get().getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
 		}
 		ClientDetail clientDetail = result.get();
+		if (!result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			return clientDetail;
+		}
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
 		clientDetail.setGrantTypes(String.join(",", updateRequest.getGrantTypes()));
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
-		clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
 		return clientDetail;
@@ -617,7 +699,26 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
-
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// Skip the below checks if the user is logged in as a partner_admin
+		if (!isAdmin) {
+			// Validate the logged-in user ID and fetch the list of partners associated to it
+			List<Partner> partnerList = validateUserId();
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			// Check if the partner ID belongs to the user.
+			boolean isValidPartner = validatePartnerIdBelongsToUser(partnerList, result.get().getRpId());
+			if (!isValidPartner) {
+				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.GET_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorMessage());
+			}
+		}
 		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
 		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
 		dto.setId(result.get().getId());
@@ -643,74 +744,74 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<OauthClientDto>> getClients() {
-		ResponseWrapperV2<List<OauthClientDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			List<OauthClientDto> oauthClientDtoList = new ArrayList<>();
-			for (Partner partner : partnerList) {
-				String partnerId = partner.getId();
-				if (Objects.isNull(partnerId) || partnerId.equals(BLANK_STRING)) {
-					LOGGER.info("Partner Id is null or empty for user id : " + userId);
-					throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
-				List<ClientDetail> clientDetailList = new ArrayList<>();
-				clientDetailList = clientDetailRepository.findAllByPartnerId(partnerId);
-				for (ClientDetail clientDetail : clientDetailList){
-					Optional <AuthPolicy> authPolicy = authPolicyRepository.findById(clientDetail.getPolicyId());
-					if (!authPolicy.isPresent()) {
-						LOGGER.info("Policy does not exists.");
-						throw new PartnerServiceException(ErrorCode.POLICY_NOT_EXIST.getErrorCode(),
-								ErrorCode.POLICY_NOT_EXIST.getErrorMessage());
-					}
-					PolicyGroup policyGroup = authPolicy.get().getPolicyGroup();
-					if (Objects.isNull(policyGroup)) {
-						LOGGER.info("Policy Group is null or empty");
-						throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-								ErrorCode.POLICY_GROUP_NOT_EXISTS.getErrorMessage());
-					}
-					OauthClientDto oauthClientDto = new OauthClientDto();
-					oauthClientDto.setPartnerId(partnerId);
-					oauthClientDto.setUserId(userId);
-					oauthClientDto.setClientId(clientDetail.getId());
-					oauthClientDto.setClientName(getClientName(clientDetail.getName()));
-					oauthClientDto.setPolicyGroupId(policyGroup.getId());
-					oauthClientDto.setPolicyGroupName(policyGroup.getName());
-					oauthClientDto.setPolicyGroupDescription(policyGroup.getDesc());
-					oauthClientDto.setPolicyId(authPolicy.get().getId());
-					oauthClientDto.setPolicyName(authPolicy.get().getName());
-					oauthClientDto.setPolicyDescription(authPolicy.get().getDescr());
-					oauthClientDto.setRelyingPartyId(clientDetail.getRpId());
-					oauthClientDto.setLogoUri(clientDetail.getLogoUri());
-					oauthClientDto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
-					oauthClientDto.setPublicKey(clientDetail.getPublicKey());
-					oauthClientDto.setStatus(clientDetail.getStatus());
-					oauthClientDto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
-					oauthClientDto.setCreatedDateTime(clientDetail.getCreatedDateTime());
-					oauthClientDto.setUpdatedDateTime(clientDetail.getUpdatedDateTime());
-					oauthClientDto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
-					oauthClientDtoList.add(oauthClientDto);
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerHelper.validatePolicyGroupId(partner, userId);
+					partnerHelper.validatePolicyGroup(partner);
+					partnerIdList.add(partner.getId());
 				}
 			}
-			responseWrapper.setResponse(oauthClientDtoList);
+
+			Pageable pageable = Pageable.unpaged();
+
+			// Pagination
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			//Sorting
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<ClientSummaryEntity> page = clientSummaryRepository.
+					getSummaryOfAllPartnerClients(filterDto.getPartnerId(), filterDto.getOrgName(),
+							filterDto.getPolicyGroupName(), filterDto.getPolicyName(),
+							filterDto.getClientName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<ClientSummaryDto> clientSummaryDtoList = MapperUtils.mapAll(page.getContent(), ClientSummaryDto.class);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(clientSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+
 		} catch (PartnerServiceException ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getClientsId);
+		responseWrapper.setId(getPartnersClientsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
 	private String getUserId() {
@@ -720,28 +821,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private String getClientName(String jsonString) {
-		try {
-			JsonNode jsonNode = objectMapper.readTree(jsonString);
-
-			JsonNode engNode = jsonNode.get(ENG_KEY);
-			if (engNode != null && engNode.isTextual()) {
-				return engNode.asText();
-			}
-
-			JsonNode noneNode = jsonNode.get(NONE_LANG_KEY);
-			if (noneNode != null && noneNode.isTextual()) {
-				return noneNode.asText();
-			}
-
-			// If neither "eng" nor "@none" is present, return the original string
-			return jsonString;
-		} catch (JsonProcessingException e) {
-			// If the string is not a valid JSON, return it as is
-			return jsonString;
-		}
 	}
 
 	/**
