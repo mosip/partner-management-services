@@ -8,4 +8,5 @@ GetAllApprovedDeviceProviderIds:
       input: '{
 }'
       output: '{
+      "partnerId": "pms-111998"
 }'
