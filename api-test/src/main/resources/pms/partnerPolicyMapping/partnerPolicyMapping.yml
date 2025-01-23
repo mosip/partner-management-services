@@ -1,7 +1,6 @@
 partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
-      uniqueIdentifier: TC_PMS_partnerPolicyMapping_01
       description: Mapping Partner & Policy
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -11,14 +10,13 @@ partnerPolicyMapping:
       input: '{
         "policyName": "mosip policy 19234",
         "useCaseDescription": "Need to submit the payment",
-        "requesttime": "$TIMESTAMP$"
+		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
     }'
     
    Pms_partnerPolicyMapping_invalid_policyName:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
-      uniqueIdentifier: TC_PMS_partnerPolicyMapping_02
       description: Mapping Partner & Policy when invalid policyname is given      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -28,7 +26,7 @@ partnerPolicyMapping:
       input: '{
         "policyName": "%^776hfgsdf",
         "useCaseDescription": "Need to submit the payment",
-        "requesttime": "$TIMESTAMP$"
+		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
         "errors": [
@@ -39,7 +37,6 @@ partnerPolicyMapping:
     }'
    Pms_partnerPolicyMapping_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
-      uniqueIdentifier: TC_PMS_partnerPolicyMapping_03
       description: Mapping Partner & Policy when invalid partnerId is given      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -49,7 +46,7 @@ partnerPolicyMapping:
       input: '{
         "policyName": "mosip policy 19234",
         "useCaseDescription": "Need to submit the payment",
-        "requesttime": "$TIMESTAMP$"
+		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
         "errors": [
@@ -60,7 +57,6 @@ partnerPolicyMapping:
     }'
    Pms_partnerPolicyMapping_missing_policyName:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
-      uniqueIdentifier: TC_PMS_partnerPolicyMapping_04
       description: Mapping Partner & Policy when policyname is removed from request      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -70,7 +66,7 @@ partnerPolicyMapping:
       input: '{
         "policyName": "$REMOVE$",
         "useCaseDescription": "Need to submit the payment",
-        "requesttime": "$TIMESTAMP$"
+		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
         "errors": [
@@ -82,7 +78,6 @@ partnerPolicyMapping:
     
    Pms_partnerPolicyMapping_missing_useCaseDescription:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
-      uniqueIdentifier: TC_PMS_partnerPolicyMapping_05
       description: Mapping Partner & Policy when usecaseDescription is removed from request      
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
@@ -92,7 +87,7 @@ partnerPolicyMapping:
       input: '{
         "policyName": "mosip policy 19234",
         "useCaseDescription":"$REMOVE$",
-        "requesttime": "$TIMESTAMP$"
+		"requesttime": "$TIMESTAMP$"
     }'
       output: '{
         "errors": [

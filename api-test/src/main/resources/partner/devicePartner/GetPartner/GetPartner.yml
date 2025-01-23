@@ -6,10 +6,10 @@ GetPartnerDetails:
       inputTemplate: partner/devicePartner/GetPartner/getPartner
       outputTemplate: partner/devicePartner/GetPartner/getPartnerResult
       input: '{
-      "partnerId": "DPP"
+		"partnerId": "DPP"
 }'
       output: '  {
-      "partnerID": "DPP"
+ 	"partnerID": "DPP"
   }'
    Partner_GetPartner_invalid_partner:
       endPoint: /v1/partnermanager/partners/{partnerId}
