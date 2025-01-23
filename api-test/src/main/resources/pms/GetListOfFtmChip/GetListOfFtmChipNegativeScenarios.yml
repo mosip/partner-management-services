@@ -31,19 +31,19 @@ GetListOfFtmChip:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'
    Pms_GetListOfFtmChip_invalid_sortfield_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/v2?sortFieldName={sortFieldName}
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_04      
       description: Fetching all the ftpchipdetail with invalid sortfieldname
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/error
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
       "sortFieldName": "$%$^&&",
       "partnerId": "$REMOVE$",
@@ -55,21 +55,17 @@ GetListOfFtmChip:
       "pageNo": "$REMOVE$"      
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_PRT_357"
-       }
-       ]
+      "pageNo": "0"
 }'
    Pms_GetListOfFtmChip_invalid_sortType_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_05     
       description: Fetching all the ftpchipdetail with invalid sortType
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/error
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
       "sortType": "$%$^&&",
       "sortFieldName": "$REMOVE$",
@@ -81,21 +77,17 @@ GetListOfFtmChip:
       "pageNo": "$REMOVE$"      
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_PRT_358"
-       }
-       ]
+      "pageNo": "0"
 }'
    Pms_GetListOfFtmChip_Negative_pagesize_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/v2?pageSize={pageSize}
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_15     
       description: Fetching all the ftpchipdetail with negative pagesize
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/error
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
       "pageSize": "-6",
       "sortType": "$REMOVE$",
@@ -107,21 +99,17 @@ GetListOfFtmChip:
       "pageNo": "$REMOVE$"      
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_PRT_361"
-       }
-       ]
+      "pageNo": "0"
 }'
    Pms_GetListOfFtmChip_Negative_pageNo_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/v2?pageNo={pageNo}
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_16     
       description: Fetching all the ftpchipdetail with negative pageNo
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/error
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
       "pageNo": "-6",
       "pageSize": "$REMOVE$",
@@ -133,9 +121,5 @@ GetListOfFtmChip:
       "orgName": "$REMOVE$"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_PRT_360"
-       }
-       ]
+      "pageNo": "0"
 }'

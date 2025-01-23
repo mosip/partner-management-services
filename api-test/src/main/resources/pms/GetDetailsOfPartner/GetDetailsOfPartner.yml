@@ -26,7 +26,7 @@ GetDetailsOfPartner:
       output: '{
 	  "errors": [
       {
-	   "errorCode": "PMS_CERTIFICATE_ERROR_002"
+	   "errorCode": "KER-ATH-403"
 	  }
       ]	  	
 }'
@@ -134,7 +134,7 @@ GetDetailsOfPartner:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"		
+       "errorCode": "KER-ATH-403"		
       }
       ]	  	
 }'

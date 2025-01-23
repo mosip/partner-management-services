@@ -48,7 +48,7 @@ GetListOfApiKey:
     }
   ]
 }'
-   Pms_GetListOfApiKey_with_pageSize:
+   Pms_GetListOfApiKey_with_invalid_pageSize:
       endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_04
       description: Fetching the API Keys with pageSize
@@ -56,9 +56,9 @@ GetListOfApiKey:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
-      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      outputTemplate: pms/error
       input: '{
-      "pageSize": "5",
+      "pageSize": "-5",
       "partnerId": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "status": "$REMOVE$",
@@ -68,7 +68,12 @@ GetListOfApiKey:
       "policyName" : "$REMOVE$",
       "apiKeyLabel" : "$REMOVE$"
 }'
-      output: ' {
+      output: '{
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_006"
+    }
+  ]
 }'
    Pms_GetListOfApiKey_with_negative_pageNo_Neg:
       endPoint: /v1/partnermanager/partner-api-keys?pageNo={pageNo}
@@ -93,7 +98,7 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_360"
+      "errorCode": "PMS_PS_ERROR_006"
     }
   ]
 }'
@@ -120,7 +125,7 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_361"
+      "errorCode": "PMS_PS_ERROR_006"
     }
   ]
 }'
@@ -236,7 +241,7 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_358"
+      "errorCode": "PMS_PS_ERROR_007"
     }
   ]
 }'

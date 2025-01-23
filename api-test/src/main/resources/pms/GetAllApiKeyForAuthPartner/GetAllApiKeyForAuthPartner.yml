@@ -32,7 +32,6 @@ GetAllApiKeyForAuthPartner:
       endPoint: /v1/partnermanager/partner-api-keys
       description: Fetching all the API Key available for Auth Partner with invalid token
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
       outputTemplate: pms/error
@@ -41,7 +40,7 @@ GetAllApiKeyForAuthPartner:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'

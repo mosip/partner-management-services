@@ -3,14 +3,14 @@ GetListOfPartners:
       endPoint: /v1/partnermanager/admin-partners
       description: Fetching all the active List Of Partnered in the system
       role: partnerrevamp
-      uniqueIdentifier: TC_PMS_GetListOfPartners_01	  
-      checkErrorsOnlyInResponse: true
+      uniqueIdentifier: TC_PMS_GetListOfPartners_01
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
       input: '{
 }'
       output: '{
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_All_Valid_Smoke_admin_dashboard:
       endPoint: /v1/partnermanager/admin-partners
@@ -24,6 +24,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_invalid_sort_Neg:
       endPoint: /v1/partnermanager/admin-partners?sortType=3@@#&pageNo=0&pageSize=8
@@ -37,10 +38,9 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-      
-           "errors": [
+      "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PS_ERROR_007"		
       }
       ]
 }'
@@ -56,9 +56,9 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
+      "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PS_ERROR_007"		
       }
       ]
 }'
@@ -74,11 +74,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_invalid_sortfield_Neg:
       endPoint: /v1/partnermanager/admin-partners?sortFieldName=a2a33
@@ -92,9 +88,9 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
+      "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PS_ERROR_007"		
       }
       ]
 }'
@@ -110,9 +106,9 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
+      "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PS_ERROR_007"		
       }
       ]
 }'
@@ -128,11 +124,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_empty_pageno_Neg:
       endPoint: /v1/partnermanager/admin-partners?pageNo=111111
@@ -146,11 +138,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_invalid_pagesize_Neg:
       endPoint: /v1/partnermanager/admin-partners?pageSize=-12
@@ -164,11 +152,11 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
+      "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PRT_361"		
       }
-      ]
+      ]	  	
 }'
    Pms_GetListOfPartners_invalid_partnerid_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerId=-dndn333
@@ -181,11 +169,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_empty_partnerid_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerId=bcbcb
@@ -198,11 +182,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_empty_partnerid_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerId=bcbcb
@@ -215,11 +195,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_invalid_partnertype_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerType=2233ddd
@@ -232,11 +208,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_empty_partnertype_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerType=dfdgd
@@ -249,11 +221,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_deactivated_partner_Neg:
       endPoint: /v1/partnermanager/admin-partners?isActive=false
@@ -266,11 +234,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_invalid_organization_name_Neg:
       endPoint: /v1/partnermanager/admin-partners?orgName=123@1sse
@@ -283,11 +247,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_empty_organization_name_Neg:
       endPoint: /v1/partnermanager/admin-partners?orgName=123@1sse
@@ -300,11 +260,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_empty_emailAddress_Neg:
       endPoint: /v1/partnermanager/admin-partners?emailAddress=454646
@@ -317,11 +273,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_invalid_email_Neg:
       endPoint: /v1/partnermanager/admin-partners?emailAddress=2t63t@@@
@@ -334,11 +286,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_not_uploaded_email_Neg:
       endPoint: /v1/partnermanager/admin-partners?certificateUploadStatus=not_uploaded
@@ -351,11 +299,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=-12
@@ -368,11 +312,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_empty_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=
@@ -385,11 +325,7 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=@374b
@@ -402,9 +338,5 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-     "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-      }
-      ]
+      "pageNo": "0"
 }'

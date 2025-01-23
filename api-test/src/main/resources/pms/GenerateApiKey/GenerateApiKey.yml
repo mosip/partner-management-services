@@ -71,7 +71,7 @@ GenerateApiKey:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PRT_110"
     }
   ]
 }'

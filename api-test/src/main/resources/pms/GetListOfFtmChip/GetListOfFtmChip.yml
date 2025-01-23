@@ -17,10 +17,9 @@ GetListOfFtmChip:
       uniqueIdentifier: TC_PMS_FTM_chip_06     
       description: Fetching all the ftpchipdetail by sort type ASC for the given sort field
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      outputTemplate: pms/error
       input: '{
       "sortType": "ASC",
       "partnerId": "$REMOVE$",
@@ -32,7 +31,12 @@ GetListOfFtmChip:
       "status": "$REMOVE$",
       "model": "$REMOVE$"            
 }'
-      output: ' {
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
 }'
    Pms_GetListOfFtmChip_with_sortType_DESC:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
@@ -42,7 +46,7 @@ GetListOfFtmChip:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      outputTemplate: pms/error
       input: '{
       "sortType": "DESC",
       "partnerId": "$REMOVE$",
@@ -54,7 +58,12 @@ GetListOfFtmChip:
       "status": "$REMOVE$",
       "model": "$REMOVE$"           
 }'
-      output: ' {
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
 }'
    Pms_GetListOfFtmChip_with_orgName_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?orgName={orgName}
@@ -284,18 +293,20 @@ GetListOfFtmChip:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      outputTemplate: pms/GetListOfFtmChip/getAllPartnerPolicyRequestResultWithArray
       input: '{
-      "partnerId": "%^$#!!@",
+      "partnerId": "16263gdvddgdv",
       "model": "$REMOVE$",
       "make": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
       "pageNo": "$REMOVE$"           
 }'
-      output: ' {
+      output: '{
+      "pageNo": "0"
 }'
    Pms_GetListOfFtmChip_with_with_combination_search_twofields:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?make={make}&model={model}
@@ -305,16 +316,22 @@ GetListOfFtmChip:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
-      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      outputTemplate: pms/GetListOfFtmChip/getAllPartnerPolicyRequestResultWithArray
       input: '{
       "make": "1",
       "model": "2",
-      "partnerId": "%^$#!!@",
+      "partnerId": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortType": "$REMOVE$",
+      "status": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "pageNo": "$REMOVE$"                 
 }'
-      output: ' {
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
 }'
