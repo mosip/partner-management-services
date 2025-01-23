@@ -303,9 +303,9 @@ GetListOfAllDevice:
       output: ' {
 }'
    Pms_GetListOfAllDevice_invalid_sorttype:
-      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_12      
-      description: Fetching list of all the devices with invalid sorttype
+      description: Fetching list of all the devices with invalid sorttype and valid sortfield
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -316,7 +316,7 @@ GetListOfAllDevice:
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
+      "sortFieldName": "make",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
@@ -329,7 +329,7 @@ GetListOfAllDevice:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_PRT_358"
        }
        ]
 }'
@@ -366,9 +366,9 @@ GetListOfAllDevice:
        ]
 }'
    Pms_GetListOfAllDevice_sorttype_desc:
-      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_14     
-      description: Fetching list of all the devices with sorttype as 'desc'
+      description: Fetching list of all the devices with sorttype as 'desc' and sortfield given
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -380,7 +380,7 @@ GetListOfAllDevice:
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
+      "sortFieldName": "status",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
@@ -420,9 +420,9 @@ GetListOfAllDevice:
       output: '{
 }'
    Pms_GetListOfAllDevice_invalid_sortfield:
-      endPoint: /v1/partnermanager/devicedetail?sortFieldName={sortFieldName}
+      endPoint: /v1/partnermanager/devicedetail?sortFieldName={sortFieldName}&sortType={sortType}
       uniqueIdentifier: TC_PMS_devicedetails_16      
-      description: Fetching list of all the devices with invalid sortFieldName
+      description: Fetching list of all the devices with invalid sortFieldName and valid sorttype
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -433,7 +433,7 @@ GetListOfAllDevice:
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortType": "$REMOVE$",
+      "sortType": "asc",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
@@ -446,7 +446,7 @@ GetListOfAllDevice:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_PRT_357"
        }
        ]
 }'
@@ -541,7 +541,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "model": "4"
+      "model": "4",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
