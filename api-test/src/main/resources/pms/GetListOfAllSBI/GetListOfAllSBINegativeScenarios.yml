@@ -4,7 +4,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_01      
       description: Fetching all the active SBI without Authentication
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -22,7 +21,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_02      
       description: Fetching all the active SBI with invalid token
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -31,7 +29,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'
@@ -40,7 +38,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_04      
       description: Fetching all the active SBI with invalid sortfield
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -59,7 +56,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_357"
+       "errorCode": "PMS_PS_ERROR_007"
        }
        ]
 }'
@@ -68,7 +65,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_05      
       description: Fetching all the active SBI with invalid sortType
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -87,7 +83,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_358"
+       "errorCode": "PMS_PS_ERROR_007"
        }
        ]
 }'
@@ -96,7 +92,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_06      
       description: Fetching all the active SBI with negative pagesize value
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -115,7 +110,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_361"
+       "errorCode": "PMS_PS_ERROR_006"
        }
        ]
 }'
@@ -124,7 +119,6 @@ GetListOfAllSBI:
       uniqueIdentifier: TC_PMS_SBI_List_07      
       description: Fetching all the active SBI with negative pageNo value
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -143,7 +137,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_360"
+       "errorCode": "PMS_PS_ERROR_006"
        }
        ]
 }'

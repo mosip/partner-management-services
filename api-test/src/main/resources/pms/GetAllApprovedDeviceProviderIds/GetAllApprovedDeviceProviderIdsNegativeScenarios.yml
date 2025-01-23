@@ -29,7 +29,7 @@ GetAllApprovedDeviceProviderIdsNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'

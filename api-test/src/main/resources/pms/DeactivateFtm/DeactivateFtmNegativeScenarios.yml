@@ -359,7 +359,7 @@ DeactivateFtmNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_004"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'

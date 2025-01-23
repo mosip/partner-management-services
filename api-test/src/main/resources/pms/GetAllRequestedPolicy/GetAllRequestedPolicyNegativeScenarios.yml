@@ -3,10 +3,9 @@ GetAllRequestedPolicies:
       endPoint: /v1/partnermanager/partner-policy-requests
       description: Fetching all the Requested Policies without login token
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
-      outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
@@ -20,16 +19,15 @@ GetAllRequestedPolicies:
       endPoint: /v1/partnermanager/partner-policy-requests
       description: Fetching all the Requested Policies with invalid role
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy
-      outputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicyResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'

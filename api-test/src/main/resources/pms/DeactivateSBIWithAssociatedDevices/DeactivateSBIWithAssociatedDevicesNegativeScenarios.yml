@@ -314,7 +314,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       "id": "mosip.pms.deactivate.sbi.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "sbiId": "$REMOVE$"
+      "sbiId": "$dgdbdy2"
 }'
       output: '{
       "errors": [
@@ -383,7 +383,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_DEVICE_ERROR_005"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
