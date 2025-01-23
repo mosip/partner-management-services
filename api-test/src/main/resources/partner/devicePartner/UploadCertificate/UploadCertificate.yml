@@ -7,7 +7,7 @@ uploadCert:
       inputTemplate: partner/devicePartner/UploadCertificate/uploadCertificate
       outputTemplate: partner/devicePartner/UploadCertificate/uploadCertificateResult
       input: '{
-      "requesttime": "$TIMESTAMP$"
+ 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
 }'  
@@ -19,7 +19,7 @@ uploadCert:
       inputTemplate: partner/devicePartner/UploadCertificate/uploadSUBCACertificate
       outputTemplate: partner/devicePartner/UploadCertificate/uploadCertificateResult
       input: '{
-      "requesttime": "$TIMESTAMP$"
+ 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
 }'  

@@ -1,13 +1,12 @@
 getPartnerCert:
    Partner_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
-      description: get partner certificate
       role: partner
       restMethod: get
       inputTemplate: partner/credentialPartner/GetPartner/getPartner
       outputTemplate: partner/credentialPartner/GetPartner/getPartnerResult
       input: '{
-      "partnerId": "MOVP"
+	"partnerId": "MOVP"
 }'
       output: '  {
     "partnerID": "MOVP",
@@ -16,7 +15,6 @@ getPartnerCert:
   
    Partner_GetPartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
-      description: get partner certificate
       role: partner
       restMethod: get
       inputTemplate: partner/credentialPartner/GetPartner/getPartner

@@ -2,7 +2,6 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      uniqueIdentifier: TC_PMS_ApproveMappingKey_01
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -11,7 +10,7 @@ ApproveMappingKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-      "requesttime": "$TIMESTAMP$"
+	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
         "response": "Policy mapping approved successfully"
@@ -20,7 +19,6 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      uniqueIdentifier: TC_PMS_ApproveMappingKey_02
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
@@ -28,7 +26,7 @@ ApproveMappingKey:
       input: '{
       "status": "Approved",
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-      "requesttime": "1111-07-22T08:21:17.665Z"
+	  "requesttime": "1111-07-22T08:21:17.665Z"
   }'
       output: '{
    "errors": [
@@ -41,7 +39,6 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      uniqueIdentifier: TC_PMS_ApproveMappingKey_03
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
@@ -61,14 +58,13 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_mapping_key_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      uniqueIdentifier: TC_PMS_ApproveMappingKey_04
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error
       input: '{
       "status": "Approved",
-      "requesttime": "$TIMESTAMP$"
+	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
@@ -81,14 +77,13 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_status_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      uniqueIdentifier: TC_PMS_ApproveMappingKey_05
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error
       input: '{
       "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-      "requesttime": "$TIMESTAMP$"
+	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

@@ -1,8 +1,6 @@
 CreateBioExtractors:
    Partner_CreateBioExtractors_InValid_partnerId:
-      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}  
-      uniqueIdentifier: TC_Partner_CreateBioExtractors_01
-      description: Create BioExtractors for InValid partnerId
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -12,10 +10,10 @@ CreateBioExtractors:
     "partnerId": "asvgasfbkasdm",
     "policyId": "mpolicy-default-auth",
     "attributeName": "iris",
-    "biometric": "iris",
-    "provider": "mock",
-    "version": "1.1",
-    "requesttime": "$TIMESTAMP$"
+	"biometric": "iris",     
+	"provider": "mock",
+	"version": "1.1",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -27,8 +25,6 @@ CreateBioExtractors:
 
    Partner_CreateBioExtractors_InValid_PolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-      uniqueIdentifier: TC_Partner_CreateBioExtractors_02
-      description: Partner CreateBioExtractors InValid policyId
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -38,10 +34,10 @@ CreateBioExtractors:
     "partnerId": "mpartner-default-auth",
     "policyId": "vdsfhfx",
     "attributeName": "iris",
-    "biometric": "iris",
-    "provider": "mock",
-    "version": "1.1",
-    "requesttime": "$TIMESTAMP$"
+	"biometric": "iris",     
+	"provider": "mock",
+	"version": "1.1",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

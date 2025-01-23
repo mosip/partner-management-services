@@ -52,12 +52,12 @@ PartnerApiKeyRequestFilter:
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "id",
-      "type": "",
-      "text": "mpartner_policy_auth_req"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "id",
+		"type": "",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -73,12 +73,12 @@ PartnerApiKeyRequestFilter:
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "",
-      "type": "unique",
-      "text": "mpartner_policy_auth_req"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "",
+		"type": "unique",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -94,12 +94,12 @@ PartnerApiKeyRequestFilter:
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "asdf",
-      "type": "unique",
-      "text": "mpartner_policy_auth_req"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "asdf",
+		"type": "unique",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -115,12 +115,12 @@ PartnerApiKeyRequestFilter:
       inputTemplate: partner/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "id",
-      "type": "sfga",
-      "text": "mpartner_policy_auth_req"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "id",
+		"type": "sfga",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

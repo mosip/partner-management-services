@@ -2,15 +2,12 @@ GetAllApprovedFtmProvider:
    Pms_All_Approved_Ftm_Provider_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/v4?status=approved&partnerType=FTM_Provider
       description: Fetching all the certificate for the Partner Id
-      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProvider_01
       role: partnerrevampftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
       outputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderResult
       input: '{
-      "partnerId": "pms-111888"
-=======
 }'
       output: ' {
 }'

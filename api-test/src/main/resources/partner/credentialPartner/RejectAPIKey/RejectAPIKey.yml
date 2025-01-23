@@ -1,7 +1,6 @@
 RejectAPIKey:
    Partner_ApproveRejectPartnerAPIKeyReq_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-      description: Reject API key
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -10,14 +9,13 @@ RejectAPIKey:
       input: '{
       "status": "rejected",
       "mappingkey": "$ID:CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-      "requesttime": "$TIMESTAMP$"
+	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     }'
 
    Partner_ApproveRejectPartnerAPIKeyReq_Missing_InputParameter_status:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-      description: Reject partner API key without passing status
       role: partner
       restMethod: patch
       inputTemplate: partner/credentialPartner/RejectAPIKey/rejectAPIKey
@@ -25,7 +23,7 @@ RejectAPIKey:
       input: '{
       "status": "$REMOVE$",
       "mappingkey": "$ID:CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-      "requesttime": "$TIMESTAMP$"
+	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [

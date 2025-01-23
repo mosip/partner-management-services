@@ -3,7 +3,6 @@ ActivateDeactivatePartnerApiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
       role: partnerrevamp
       description: Activating Partner API Key
-      uniqueIdentifier: TC_PMS_ActivatePartnerApiKey_01
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey

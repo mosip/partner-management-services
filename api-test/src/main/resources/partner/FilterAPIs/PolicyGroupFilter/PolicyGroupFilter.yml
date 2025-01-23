@@ -75,12 +75,12 @@ PolicyGroupFilter:
       inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "name",
-      "type": "",
-      "text": "mpolicygroup-default-auth"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "name",
+		"type": "",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -118,12 +118,12 @@ PolicyGroupFilter:
       inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "sfg",
-      "type": "all",
-      "text": "mpolicygroup-default-auth"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "sfg",
+		"type": "all",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -139,12 +139,12 @@ PolicyGroupFilter:
       inputTemplate: partner/FilterAPIs/PolicyGroupFilter/policyGroupFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "name",
-      "type": "sfgar",
-      "text": "mpolicygroup-default-auth"
-      }],
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "name",
+		"type": "sfgar",
+		"text": "mpolicygroup-default-auth"
+	}],
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

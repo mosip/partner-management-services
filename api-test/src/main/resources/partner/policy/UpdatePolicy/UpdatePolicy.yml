@@ -6,18 +6,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/policy/UpdatePolicy/updatePolicyResult
       input: '{
-      "desc": "desc mosip policy updated",
-      "name": "mosip policy",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy updated",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
         "policyGroupName": "mosip policy group",
@@ -32,18 +32,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
-      "policyId": "asfgref",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "asfgref",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -60,18 +60,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "asfgrrw",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "asfgrrw",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -88,18 +88,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "$REMOVE$",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "$REMOVE$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -116,18 +116,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "$REMOVE$",
-      "name": "mosip policy",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "$REMOVE$",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -144,18 +144,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
-      "policyId": "1234abcxz",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "1234abcxz",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -172,18 +172,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "$REMOVE$",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "$REMOVE$",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -200,18 +200,18 @@ createUpdatePolicy:
       inputTemplate: partner/policy/UpdatePolicy/updatePolicy
       outputTemplate: partner/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "$REMOVE$",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "$REMOVE$",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

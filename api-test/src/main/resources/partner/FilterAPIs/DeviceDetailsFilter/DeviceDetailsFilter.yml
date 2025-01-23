@@ -63,13 +63,13 @@ DeviceDetailsFilter:
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "id",
-      "type": "",
-      "text": "device-id-123"
-      }],
-      "purpose": "REGISTRATION",
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "id",
+		"type": "",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -85,13 +85,13 @@ DeviceDetailsFilter:
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "",
-      "type": "all",
-      "text": "device-id-123"
-      }],
-      "purpose": "REGISTRATION",
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "",
+		"type": "all",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -107,13 +107,13 @@ DeviceDetailsFilter:
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "asff",
-      "type": "all",
-      "text": "device-id-123"
-      }],
-      "purpose": "REGISTRATION",
-      "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "asff",
+		"type": "all",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -129,13 +129,13 @@ DeviceDetailsFilter:
       inputTemplate: partner/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: partner/error
       input: '{
-      "filters": [{
-      "columnName": "id",
-      "type": "asdf",
-      "text": "device-id-123"
-      }],
-    "purpose": "REGISTRATION",
-    "requesttime": "$TIMESTAMP$"
+	"filters": [{
+		"columnName": "id",
+		"type": "asdf",
+		"text": "device-id-123"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [

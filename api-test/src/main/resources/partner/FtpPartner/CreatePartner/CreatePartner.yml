@@ -12,7 +12,7 @@ createPartnerSelfRegistration:
     "organizationName": "ftp",
     "partnerId": "FTP",
     "partnerType": "FTM_Provider",
-    "requesttime": "$TIMESTAMP$"
+	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
      "partnerId": "FTP",

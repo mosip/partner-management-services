@@ -1,17 +1,16 @@
 UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Active_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_01
       description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
-      input: '{
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"Active",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"Active",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
        "message": "status updated successfully"
@@ -19,17 +18,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_02
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
-      input: '{      
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"De-Active",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
        "message": "status updated successfully"
@@ -37,17 +34,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_03
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
-      input: '{      
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"De-Active",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
@@ -60,17 +55,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_04
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
-      input: '{      
-      "policyId": "asfgv",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"De-Active",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "asfgv",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
@@ -83,17 +76,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_05
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
-      input: '{      
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"asfg",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"asfg",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
@@ -105,17 +96,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_06
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
-      input: '{      
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"asfbvef",
-      "status":"Active",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"asfbvef",
+		"status":"Active",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
@@ -127,17 +116,15 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_07
-      description: Update Policy Status
       role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
-      input: '{      
-      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      "policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-      "status":"$REMOVE$",
-      "requesttime": "$TIMESTAMP$"
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"$REMOVE$",
+		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
       "errors": [
