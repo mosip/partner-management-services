@@ -2,11 +2,15 @@ package io.mosip.testrig.apirig.testscripts;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
@@ -23,18 +27,21 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
+import io.mosip.testrig.apirig.testrunner.JsonPrecondtion;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
+import io.mosip.testrig.apirig.utils.KernelAuthentication;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.utils.ReportUtil;
+import io.mosip.testrig.apirig.utils.RestClient;
 import io.restassured.response.Response;
 
-public class GetWithParam extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(GetWithParam.class);
+public class DownloadRootCertificate extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(DownloadRootCertificate.class);
 	protected String testCaseName = "";
 	public Response response = null;
 	public boolean auditLogCheck = false;
@@ -84,41 +91,62 @@ public class GetWithParam extends AdminTestUtil implements ITest {
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 		auditLogCheck = testCaseDTO.isAuditLogCheck();
-		String[] templateFields = testCaseDTO.getTemplateFields();
+		
+		
+		
+		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+		String responseBody = response.getBody().asString();
+		JSONObject jsonObject = new JSONObject(responseBody);
+		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
 
-		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
-			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
-			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);
-			for (int i = 0; i < languageList.size(); i++) {
-				response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-						getJsonFromTemplate(inputtestCases.get(i).toString(), testCaseDTO.getInputTemplate()),
-						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+		String certId = ""; 
 
-				Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
-						response.asString(),
-						getJsonFromTemplate(outputtestcase.get(i).toString(), testCaseDTO.getOutputTemplate()),
-						testCaseDTO, response.getStatusCode());
-				Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-				if (!OutputValidationUtil.publishOutputResult(ouputValid))
-					throw new AdminTestException("Failed at output validation");
-			}
+		if (dataArray.length() > 0) {
+		    JSONObject firstDataObject = dataArray.getJSONObject(0);
+		    certId = firstDataObject.getString("certId");
+		    System.out.println("First certId: " + certId);
+		} else {
+		    System.out.println("No data available.");
 		}
 
-		else {
-			response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+		if (certId != null) {
+		    System.out.println("Using certId in another place: " + certId);
+		}
+		String url="/v1/partnermanager/trust-chain-certificates/"+certId+"/certificateFile";
+		
+		response = getWithPathParamAndCookie(ApplnURI + url,
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+		
+		
+		
+		Map<String, List<OutputValidationDto>> ouputValid = null;
+		if (testCaseName.contains("_StatusCode")) {
 
-			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
-					response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
-					testCaseDTO, response.getStatusCode());
+			OutputValidationDto customResponse = customStatusCodeResponse(String.valueOf(response.getStatusCode()),
+					testCaseDTO.getOutput());
 
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+			ouputValid = new HashMap<>();
+			ouputValid.put(GlobalConstants.EXPECTED_VS_ACTUAL, List.of(customResponse));
+		} else {
+			ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+					getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+					response.getStatusCode());
+		}
+
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+
+		if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
+			if (response.asString().contains("IDA-OTA-001"))
+				throw new AdminTestException(
+						"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
+			else
+				throw new AdminTestException("Failed at otp output validation");
 		}
 	}
+		
 
 	/**
 	 * The method ser current test name to result

@@ -1,10 +1,9 @@
 ActivateDeactivatePartnerApiKey:
    Pms_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      description: Deactivate Partner API key 
+	  uniqueIdentifier: TC_PMS_DeactivatePartnerApiKey_01
+	  description: Deactivating Partner API Key
       role: partnerrevamp
-      description: Deactivating Partner API Key
-      uniqueIdentifier: TC_PMS_DeactivatePartnerApiKey_01
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey

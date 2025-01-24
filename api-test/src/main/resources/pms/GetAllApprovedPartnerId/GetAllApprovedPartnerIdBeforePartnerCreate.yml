@@ -1,15 +1,17 @@
 GetAllApprovedAuthPartnerId:
-   Pms_GetAllApprovedAuthPartnerId_allValid_smoke:
+   Pms_GetAllApprovedAuthPartnerId_BeforePartnerCreate_Neg:
       endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
       description: Fetching all approved Partner Id
-      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerId_01
       role: partnerrevamp
       restMethod: get
       inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
-      outputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerIdResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111999"
-
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
 }'

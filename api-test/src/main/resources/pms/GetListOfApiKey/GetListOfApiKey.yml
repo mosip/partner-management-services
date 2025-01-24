@@ -1,6 +1,6 @@
 GetListOfApiKey:
    Pms_GetListOfApiKey_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_01
       description: Fetching all the API Keys
       role: partnerrevamp
@@ -13,7 +13,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_without_authentication_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_02
       description: Fetching the API Keys without authentication
       role: invalidtoken
@@ -31,7 +31,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_individual_partner_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2
+      endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_03
       description: Fetching the API Keys with individual partner
       role: deviceprovider
@@ -48,17 +48,17 @@ GetListOfApiKey:
     }
   ]
 }'
-   Pms_GetListOfApiKey_with_pageSize:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageSize={pageSize}
+   Pms_GetListOfApiKey_with_invalid_pageSize:
+      endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_04
       description: Fetching the API Keys with pageSize
       role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
-      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      outputTemplate: pms/error
       input: '{
-      "pageSize": "5",
+      "pageSize": "-5",
       "partnerId": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "status": "$REMOVE$",
@@ -68,10 +68,15 @@ GetListOfApiKey:
       "policyName" : "$REMOVE$",
       "apiKeyLabel" : "$REMOVE$"
 }'
-      output: ' {
+      output: '{
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_006"
+    }
+  ]
 }'
    Pms_GetListOfApiKey_with_negative_pageNo_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageNo={pageNo}
+      endPoint: /v1/partnermanager/partner-api-keys?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_05
       description: Fetching the API Keys with negative pageNo
       role: partnerrevamp
@@ -93,12 +98,12 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_360"
+      "errorCode": "PMS_PS_ERROR_006"
     }
   ]
 }'
    Pms_GetListOfApiKey_with_negative_pageSize_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?pageSize={pageSize}
+      endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_06
       description: Fetching the API Keys with negative pageSize
       role: partnerrevamp
@@ -120,12 +125,12 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_361"
+      "errorCode": "PMS_PS_ERROR_006"
     }
   ]
 }'
    Pms_GetListOfApiKey_with_status_activated:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?status={status}
+      endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_07
       description: Fetching the API Keys with status activated
       role: partnerrevamp
@@ -147,7 +152,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_status_deactivated:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?status={status}
+      endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_08
       description: Fetching the API Keys with status deactivated
       role: partnerrevamp
@@ -169,7 +174,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_partnerId_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?partnerId={partnerId}
+      endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_09
       description: Fetching the API Keys on passing partial partnerId value
       role: partnerrevamp
@@ -192,7 +197,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_policyGroupName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?policyGroupName={policyGroupName}
+      endPoint: /v1/partnermanager/partner-api-keys?policyGroupName={policyGroupName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_10
       description: Fetching the API Keys on passing partial policyGroupName value
       role: partnerrevamp
@@ -214,7 +219,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_invalid_sortType_Neg:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_11
       description: Fetching the API Keys with invalid sortType
       role: partnerrevamp
@@ -236,12 +241,12 @@ GetListOfApiKey:
       output: ' {
          "errors": [
     {
-      "errorCode": "PMS_PRT_358"
+      "errorCode": "PMS_PS_ERROR_007"
     }
   ]
 }'
    Pms_GetListOfApiKey_with_valid_ascending_sortType:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_12
       description: Fetching the API Keys with ascending sortType
       role: partnerrevamp
@@ -263,7 +268,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_valid_descending_sortType:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_13
       description: Fetching the API Keys with ascending sortType
       role: partnerrevamp
@@ -285,7 +290,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_orgName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?orgName={orgName}
+      endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_14
       description: Fetching the API Keys with partial orgName value
       role: partnerrevamp
@@ -307,7 +312,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_policyName_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?policyName={policyName}
+      endPoint: /v1/partnermanager/partner-api-keys?policyName={policyName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_15
       description: Fetching the API Keys with partial policyName values
       role: partnerrevamp
@@ -329,7 +334,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_partial_apiKeyLabel_value:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?apiKeyLabel={apiKeyLabel}
+      endPoint: /v1/partnermanager/partner-api-keys?apiKeyLabel={apiKeyLabel}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_16
       description: Fetching the API Keys with partial apiKeyLabel values
       role: partnerrevamp
@@ -351,7 +356,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_random_data:
-      endPoint: /v1/partnermanager/partners/apikey/search/v2?orgName={orgName}
+      endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_17
       description: Fetching the API Keys with random values given to a valid parameter
       role: partnerrevamp

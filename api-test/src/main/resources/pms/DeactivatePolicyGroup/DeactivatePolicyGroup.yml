@@ -10,7 +10,7 @@ DeactivatePolicyGroup:
       input: '{
     "status": "De-Activate",
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_create_then_deactivate_sid_id$"
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
 }'
       output: ' {
 }'

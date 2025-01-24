@@ -47,7 +47,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_POL_014"
+            "errorCode": "PMS_ESI_008"
         }
   ]
 }'
@@ -74,7 +74,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_COR_001"
+            "errorCode": "PMS_ESI_008"
         }
   ]
 }'
@@ -236,7 +236,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_COR_001"
+            "errorCode": "PMS_ESI_008"
         }
   ]
 }'
@@ -273,7 +273,6 @@ DeactivateOIDCClient:
       description: Deactivating The Oidc Client
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_11
       role: partnerrevamp
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
@@ -290,7 +289,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_COR_001"
+            "errorCode": "PMS_ESI_008"
         }
   ]
 }'

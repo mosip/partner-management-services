@@ -4,7 +4,6 @@ GetAllApprovedAuthPartnerPolicy:
       description: Fetching all Approved Auth Partner Policies without token
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_01
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
       outputTemplate: pms/error
@@ -22,7 +21,6 @@ GetAllApprovedAuthPartnerPolicy:
       description: Fetching all Approved Auth Partner Policies with invalid token
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_02
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
       outputTemplate: pms/error
@@ -31,7 +29,7 @@ GetAllApprovedAuthPartnerPolicy:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'

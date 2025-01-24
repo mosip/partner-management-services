@@ -17,7 +17,7 @@ definePolicyGroup:
         "desc": "$IGNORE$",
         "is_Active": true
     }'
-   Pms_DefinePolicyGroup_create_then_deactivate_sid:
+   Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partnerrevamp
@@ -34,7 +34,7 @@ definePolicyGroup:
         "desc": "$IGNORE$",
         "is_Active": true
     }'
-   Pms_DefinePolicyGroup_create_then_deactivate_sid:
+   Pms_DefinePolicyGroup_create_then_deactivateAll_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partnerrevamp

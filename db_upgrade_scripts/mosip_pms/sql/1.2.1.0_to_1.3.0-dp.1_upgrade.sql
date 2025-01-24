@@ -1,3 +1,4 @@
+\c mosip_pms
 -- This table has consents of users.
 CREATE TABLE pms.user_details(
     id character varying(36) NOT NULL,

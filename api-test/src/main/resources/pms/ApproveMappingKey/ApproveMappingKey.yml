@@ -31,7 +31,7 @@ ApproveMappingKey:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PM_034"
     }
   ]
 }'
@@ -50,7 +50,7 @@ ApproveMappingKey:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_PM_034"
     }
   ]
 }'

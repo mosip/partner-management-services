@@ -1,5 +1,5 @@
 UploadCertificateOfFtpChip:
-   Pms_UploadCertificate_AllValid_ftpProviderId:
+   Pms_UploadCertificate_AllValid_smoke_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
       uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_01
       description: Upload FTP chip Certificate

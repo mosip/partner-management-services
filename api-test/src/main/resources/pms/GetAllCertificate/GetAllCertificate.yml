@@ -10,7 +10,7 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111999",
+      "partnerId": "pms-111999",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
@@ -26,8 +26,8 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerID": "pms-111998",
-      "partnerType": "Auth_Partner",
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
@@ -60,7 +60,7 @@ GetAllCertificate:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'
