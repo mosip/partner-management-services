@@ -1,6 +1,8 @@
 DeactivateDevice:
    Pms_DeactivateDevice_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
+	  description: Deactivate Device
+	  uniqueIdentifier: TC_PMS_DeactivateDevice_01
       role: partnerrevampdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch

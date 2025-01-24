@@ -1,6 +1,8 @@
 InactiveMappingDeviceToSbi:
    Pms_InactiveMappingDeviceToSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
+      uniqueIdentifier: TC_PMS_InactiveMappingDeviceToSbi_01
+      description: Inactive Mapping Device To Sbi 
       role: partnerrevampdevice
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -18,6 +20,8 @@ InactiveMappingDeviceToSbi:
     
    Pms_InactiveMappingDeviceToSbi_Reject_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
+      uniqueIdentifier: TC_PMS_InactiveMappingDeviceToSbi_02
+      description: Reject Mapping Device To Sbi
       role: partnerrevampdevice
       restMethod: post
       checkErrorsOnlyInResponse: true
