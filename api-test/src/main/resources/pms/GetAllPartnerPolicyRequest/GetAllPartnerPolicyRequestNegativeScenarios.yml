@@ -39,7 +39,7 @@ GetAllPartnerPolicyRequest:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_13   
       description: Fetching all the partner policy requests by invalid sort type
-      role: partnerrevamp
+      role: partnerauth
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResultWithArray
@@ -63,7 +63,7 @@ GetAllPartnerPolicyRequest:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_17  
       description: Fetching all the partner policy requests by giving negative pagesize value
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
@@ -88,7 +88,7 @@ GetAllPartnerPolicyRequest:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_18  
       description: Fetching all the partner policy requests by giving negative pageNo value
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
@@ -113,7 +113,7 @@ GetAllPartnerPolicyRequest:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_20  
       description: Fetching all the partner policy requests with invalid sortfieldname
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest

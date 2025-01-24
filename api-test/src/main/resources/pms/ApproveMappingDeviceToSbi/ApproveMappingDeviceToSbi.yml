@@ -1,7 +1,7 @@
 ApproveMappingDeviceToSbi:
    Pms_ApproveMappingDeviceToSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
-      role: partnerrevampdevice
+      role: partneradmin
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi

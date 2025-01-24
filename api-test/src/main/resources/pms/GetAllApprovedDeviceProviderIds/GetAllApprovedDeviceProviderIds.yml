@@ -1,7 +1,7 @@
 GetAllApprovedDeviceProviderIds:
    Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
-      role: partnerrevampdevice
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
       outputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsResult

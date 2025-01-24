@@ -2,7 +2,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Logged in Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/GetAllCertificate/getAllCertificateResult
@@ -17,7 +17,7 @@ GetAllCertificate:
    Pms_GetAllCertificate_Device_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Loggedin Partner
-      role: partnerrevampdevice
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/GetAllCertificate/getAllCertificateResult

@@ -2,7 +2,7 @@ GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys
       description: Fetching all the API Key available for Auth Partner
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner

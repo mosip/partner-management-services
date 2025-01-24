@@ -1,7 +1,7 @@
 DeactivatePolicy:
    Pms_DeactivatePolicy_After_Publish_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy

@@ -33,4 +33,15 @@ public class PMSRevampUtil extends AdminTestUtil {
 				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getIdaDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
 	}
+	
+public static String inputstringKeyWordHandeler(String jsonString, String testCaseName) {
+		
+		if (jsonString.contains("$IDPREDIRECTURI$")) {
+			jsonString = replaceKeywordWithValue(jsonString, "$IDPREDIRECTURI$",
+					ApplnURI.replace(GlobalConstants.API_INTERNAL, "healthservices") + "/userprofile");
+		}
+		
+		return jsonString;
+		
+	}
 }

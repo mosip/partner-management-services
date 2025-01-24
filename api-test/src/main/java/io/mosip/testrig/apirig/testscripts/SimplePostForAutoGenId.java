@@ -32,11 +32,13 @@ import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
 public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(SimplePostForAutoGenId.class);
+	private PMSRevampUtil pmsRevampUtil =new PMSRevampUtil();
 	protected String testCaseName = "";
 	public String idKeyName = null;
 	public Response response = null;
@@ -93,6 +95,8 @@ public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
+		
+		inputJson = pmsRevampUtil.inputJsonKeyWordHandeler(inputJson, testCaseName);
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);

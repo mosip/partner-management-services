@@ -2,7 +2,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -17,7 +17,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevampdevice
+      role: partnerdevice
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -32,7 +32,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -62,7 +62,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_missing_email:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -79,7 +79,7 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_invalid_email:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -98,7 +98,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       description: Verify Partners Email
-      role: partnerrevampftm
+      role: partnerftm
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult

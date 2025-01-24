@@ -3,7 +3,7 @@ GetListAllFTMChip:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChip_01
       description: Retrieve all FTM chip details with valid details
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip

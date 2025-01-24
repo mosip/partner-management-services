@@ -2,7 +2,7 @@ GetAllDeviceTypes:
    Pms_GetAllDeviceTypes_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/GetAllDeviceTypes/GetAllDeviceTypes
       outputTemplate: pms/GetAllDeviceTypes/GetAllDeviceTypesResult

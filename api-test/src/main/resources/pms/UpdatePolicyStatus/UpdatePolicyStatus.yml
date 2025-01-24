@@ -2,7 +2,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Active_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       description: Update Policy Status
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
@@ -18,7 +18,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
@@ -34,7 +34,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -55,7 +55,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -76,7 +76,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -96,7 +96,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -116,7 +116,7 @@ UpdatePolicyStatus:
     
    Pms_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      role: partnerrevamp
+      role: partnerauth
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error

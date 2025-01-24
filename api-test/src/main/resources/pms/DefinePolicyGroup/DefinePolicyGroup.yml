@@ -2,7 +2,7 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -19,7 +19,7 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -36,7 +36,7 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_create_then_deactivateAll_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -55,7 +55,7 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_AlreadyExists_InValid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -77,7 +77,7 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_Invalid_Request_Time_Neg:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup with invalid request time
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -97,7 +97,7 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies/group/new
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -116,7 +116,7 @@ definePolicyGroup:
 }'
    Pms_DefinePolicyGroup_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies/group/new
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -136,7 +136,7 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Missing_InputParameter_requesttime:
       endPoint: /v1/policymanager/policies/group/new
-      role: partnerrevamp
+      role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error

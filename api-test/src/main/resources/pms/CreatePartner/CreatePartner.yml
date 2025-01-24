@@ -2,7 +2,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -24,7 +24,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -49,7 +49,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Missing_Email_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -73,7 +73,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -97,7 +97,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -122,7 +122,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevampdevice
+      role: partnerdevice
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -144,7 +144,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevampftm
+      role: partnerftm
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult

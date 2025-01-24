@@ -3,7 +3,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_01
       description: Fetching all the API Keys
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -52,7 +52,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_04
       description: Fetching the API Keys with pageSize
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -79,7 +79,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_05
       description: Fetching the API Keys with negative pageNo
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -106,7 +106,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_06
       description: Fetching the API Keys with negative pageSize
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -133,7 +133,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_07
       description: Fetching the API Keys with status activated
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -155,7 +155,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_08
       description: Fetching the API Keys with status deactivated
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -177,7 +177,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_09
       description: Fetching the API Keys on passing partial partnerId value
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -200,7 +200,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?policyGroupName={policyGroupName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_10
       description: Fetching the API Keys on passing partial policyGroupName value
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -222,7 +222,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_11
       description: Fetching the API Keys with invalid sortType
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -249,13 +249,13 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_12
       description: Fetching the API Keys with ascending sortType
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "sortType": "asc",
+      "sortType": "ASE",
       "policyGroupName": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "pageSize": "$REMOVE$",
@@ -271,13 +271,13 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_13
       description: Fetching the API Keys with ascending sortType
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "sortType": "desc",
+      "sortType": "DESC",
       "policyGroupName": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "pageSize": "$REMOVE$",
@@ -293,7 +293,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_14
       description: Fetching the API Keys with partial orgName value
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -315,7 +315,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?policyName={policyName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_15
       description: Fetching the API Keys with partial policyName values
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -337,7 +337,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?apiKeyLabel={apiKeyLabel}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_16
       description: Fetching the API Keys with partial apiKeyLabel values
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
@@ -359,7 +359,7 @@ GetListOfApiKey:
       endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_17
       description: Fetching the API Keys with random values given to a valid parameter
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey

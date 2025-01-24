@@ -39,7 +39,7 @@ GetListOfFtmChip:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_04      
       description: Fetching all the ftpchipdetail with invalid sortfieldname
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
@@ -61,7 +61,7 @@ GetListOfFtmChip:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_05     
       description: Fetching all the ftpchipdetail with invalid sortType
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
@@ -83,7 +83,7 @@ GetListOfFtmChip:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_15     
       description: Fetching all the ftpchipdetail with negative pagesize
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
@@ -105,7 +105,7 @@ GetListOfFtmChip:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_16     
       description: Fetching all the ftpchipdetail with negative pageNo
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip

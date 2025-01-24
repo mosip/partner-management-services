@@ -2,7 +2,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -18,7 +18,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_invalid_policyName:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when invalid policyname is given      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -38,7 +38,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
       description: Mapping Partner & Policy when invalid partnerId is given      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -58,7 +58,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_missing_policyName:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when policyname is removed from request      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -79,7 +79,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_missing_useCaseDescription:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when usecaseDescription is removed from request      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping

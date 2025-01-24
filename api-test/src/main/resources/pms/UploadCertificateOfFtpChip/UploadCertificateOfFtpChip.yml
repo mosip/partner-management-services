@@ -1,7 +1,7 @@
 UploadCertificateOfFtpChip:
    Pms_UploadCertificate_AllValid_smoke_ftpProviderId:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
-      role: partnerrevampftm
+      role: partnerftm
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip

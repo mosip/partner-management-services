@@ -4,7 +4,7 @@ GetListOfAllDevice:
       description: Fetching all the active SBI
       uniqueIdentifier: TC_PMS_devicedetails_01      
       description: Fetching list of all the devices
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -53,7 +53,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_devicedetails_04      
       description: Fetching list of all the devices with pagesize specified
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -80,7 +80,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_devicedetails_05 
       description: Fetching list of all the devices with negative pageno
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -112,7 +112,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_devicedetails_06 
       description: Fetching list of all the devices with negative pageSize
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -144,7 +144,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_07      
       description: Fetching list of all the devices with status as rejected
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -171,7 +171,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_08      
       description: Fetching list of all the devices with status as approved
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -198,7 +198,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_09      
       description: Fetching list of all the devices with status as deactivated
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -225,7 +225,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_10      
       description: Fetching list of all the devices with status as pending_approval
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -252,7 +252,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_devicedetails_11      
       description: Fetching list of all the devices with partnerid value given as 'a'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -279,7 +279,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?orgName={orgName}
       uniqueIdentifier: TC_PMS_devicedetails_11      
       description: Fetching list of all the devices with orgName value given as '1'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -306,10 +306,10 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
       uniqueIdentifier: TC_PMS_devicedetails_12      
       description: Fetching list of all the devices with invalid sorttype
-      role: partnerrevamp
+      role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
-      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      outputTemplate: pms/error
       input: '{
       "sortType": "$$$$$$",
       "status": "$REMOVE$",
@@ -337,7 +337,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
       uniqueIdentifier: TC_PMS_devicedetails_13      
       description: Fetching list of all the devices with sorttype as 'asc'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -369,7 +369,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
       uniqueIdentifier: TC_PMS_devicedetails_14     
       description: Fetching list of all the devices with sorttype as 'desc'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -396,7 +396,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?sbiVersion={sbiVersion}
       uniqueIdentifier: TC_PMS_devicedetails_15     
       description: Fetching list of all the devices with sbiVersion given as 'abcd'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -419,21 +419,21 @@ GetListOfAllDevice:
 }'
       output: '{
 }'
-   Pms_GetListOfAllDevice_invalid_sortfield:
-      endPoint: /v1/partnermanager/devicedetail?sortFieldName={sortFieldName}
+   Pms_GetListOfAllDevice_invalid_sortfield_Neg:
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_16      
       description: Fetching list of all the devices with invalid sortFieldName
-      role: partnerrevamp
+      role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
-      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      outputTemplate: pms/error
       input: '{
       "sortFieldName": "$$$$$$",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortType": "$REMOVE$",
+      "sortType": "DESC",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
@@ -446,7 +446,7 @@ GetListOfAllDevice:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_PRT_357"
        }
        ]
 }'
@@ -454,7 +454,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?deviceType={deviceType}
       uniqueIdentifier: TC_PMS_devicedetails_17     
       description: Fetching list of all the devices with deviceType given as 'i'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -481,7 +481,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?deviceSubType={deviceSubType}
       uniqueIdentifier: TC_PMS_devicedetails_18     
       description: Fetching list of all the devices with deviceSubType given as 'i'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -508,7 +508,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?make={make}
       uniqueIdentifier: TC_PMS_devicedetails_19     
       description: Fetching list of all the devices with make given as '3'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -535,7 +535,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?model={model}
       uniqueIdentifier: TC_PMS_devicedetails_20     
       description: Fetching list of all the devices with model given as '4'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -562,7 +562,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?sbiId={sbiId}
       uniqueIdentifier: TC_PMS_devicedetails_21     
       description: Fetching list of all the devices with sbiId given as 'q'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -589,7 +589,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
       uniqueIdentifier: TC_PMS_devicedetails_22     
       description: Fetching list of all the devices with deviceId given as '9'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -616,7 +616,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?make={make}&model={model}
       uniqueIdentifier: TC_PMS_devicedetails_23    
       description: Fetching list of all the devices with make and model is given
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -643,7 +643,7 @@ GetListOfAllDevice:
       endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
       uniqueIdentifier: TC_PMS_devicedetails_24     
       description: Fetching list of all the devices with random value given for deviceid
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
