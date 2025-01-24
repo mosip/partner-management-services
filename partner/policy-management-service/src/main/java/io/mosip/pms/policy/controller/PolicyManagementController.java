@@ -326,7 +326,7 @@ public class PolicyManagementController {
 		return policyManagementService.getPolicyGroups();
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
+	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves the list of all Policies",
 	description = "Available since release-1.3.x. It is configured for both the POLICYMANAGER and PARTNER_ADMIN roles.")
