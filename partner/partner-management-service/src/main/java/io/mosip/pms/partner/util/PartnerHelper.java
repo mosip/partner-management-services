@@ -104,6 +104,7 @@ public class PartnerHelper {
     {
         ftmAliasToColumnMap.put("partnerId", "ftpProviderId");
         ftmAliasToColumnMap.put("orgName", "partnerOrganizationName");
+        ftmAliasToColumnMap.put("ftmId", "ftpChipDetailId");
         ftmAliasToColumnMap.put("make", "make");
         ftmAliasToColumnMap.put("model", "model");
         ftmAliasToColumnMap.put("status", "approvalStatus");
