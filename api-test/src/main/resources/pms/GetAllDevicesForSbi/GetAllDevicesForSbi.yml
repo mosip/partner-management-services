@@ -1,7 +1,7 @@
 GetAllDevicesForSbi:
    Pms_GetAllDevicesForSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
-      role: partnerauth
+      role: partnerdevice
       description: Get All Devices For Sbi
       uniqueIdentifier: TC_PMS_GetAllDeviceForSbi_01
       checkErrorsOnlyInResponse: true

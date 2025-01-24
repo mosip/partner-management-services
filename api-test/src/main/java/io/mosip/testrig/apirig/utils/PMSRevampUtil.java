@@ -34,14 +34,24 @@ public class PMSRevampUtil extends AdminTestUtil {
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
 	}
 	
-public static String inputstringKeyWordHandeler(String jsonString, String testCaseName) {
-		
+	public static String inputstringKeyWordHandeler(String jsonString, String testCaseName) {
 		if (jsonString.contains("$IDPREDIRECTURI$")) {
-			jsonString = replaceKeywordWithValue(jsonString, "$IDPREDIRECTURI$",
+			jsonString = replaceKeywordValue(jsonString, "$IDPREDIRECTURI$",
 					ApplnURI.replace(GlobalConstants.API_INTERNAL, "healthservices") + "/userprofile");
 		}
-		
 		return jsonString;
-		
+	}
+	
+	public static String replaceKeywordValue(String jsonString, String keyword, String value) {
+		if (value != null && !value.isEmpty())
+			return jsonString.replace(keyword, value);
+		else {
+			if (keyword.contains("$ID:"))
+				throw new SkipException("Marking testcase as skipped as required field is empty " + keyword
+						+ " please check the results of testcase: " + getTestCaseIDFromKeyword(keyword));
+			else
+				throw new SkipException("Marking testcase as skipped as required field is empty " + keyword);
+		}
+
 	}
 }

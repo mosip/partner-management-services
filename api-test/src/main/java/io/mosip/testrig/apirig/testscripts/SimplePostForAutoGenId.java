@@ -38,7 +38,6 @@ import io.restassured.response.Response;
 
 public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(SimplePostForAutoGenId.class);
-	private PMSRevampUtil pmsRevampUtil =new PMSRevampUtil();
 	protected String testCaseName = "";
 	public String idKeyName = null;
 	public Response response = null;
@@ -92,11 +91,10 @@ public class SimplePostForAutoGenId extends AdminTestUtil implements ITest {
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 		
-		inputJson = pmsRevampUtil.inputJsonKeyWordHandeler(inputJson, testCaseName);
+		inputJson = PMSRevampUtil.inputstringKeyWordHandeler(inputJson,testCaseName);
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
