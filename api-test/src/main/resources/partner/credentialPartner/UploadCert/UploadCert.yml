@@ -1,6 +1,7 @@
 uploadPartnerCert:
    Partner_UploadCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      description: upload partner certificate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
