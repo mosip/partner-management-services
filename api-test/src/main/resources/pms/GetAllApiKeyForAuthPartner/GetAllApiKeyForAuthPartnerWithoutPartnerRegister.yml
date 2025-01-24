@@ -6,10 +6,15 @@ GetAllApiKeyForAuthPartnerWithoutPartnerRegister:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
-      outputTemplate: pms//GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartnerResultNegative
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_CERTIFICATE_ERROR_002"
+    }
+  ]
      
 }'
 

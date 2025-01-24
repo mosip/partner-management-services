@@ -710,6 +710,7 @@
 	
 	<test name="GetListOfApiKey">
 		<parameter name="ymlFile" value="pms/GetListOfApiKey/GetListOfApiKey.yml" />
+		<parameter name="pathParams" value="sortType,sortFieldName,orgName" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>

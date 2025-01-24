@@ -2,7 +2,6 @@ GetAllApprovedDeviceProviderIds:
    Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
       role: partnerdevice
-      endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
       description: Get All Approved Device ProviderId
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviders_01
       restMethod: get

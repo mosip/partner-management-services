@@ -314,7 +314,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       "id": "mosip.pms.deactivate.sbi.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "sbiId": "$dgdbdy2"
+      "sbiId": " "
 }'
       output: '{
       "errors": [

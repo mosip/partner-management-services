@@ -246,7 +246,7 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_valid_ascending_sortType:
-      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=partnerId&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_12
       description: Fetching the API Keys with ascending sortType
       role: partnerauth
@@ -255,11 +255,11 @@ GetListOfApiKey:
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
       outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
       input: '{
-      "sortType": "ASE",
+      "sortType": "ASC",
       "policyGroupName": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "pageSize": "$REMOVE$",
-      "pageNo": "$REMOVE$",
+      "pageSize": "10",
+      "pageNo": "0",
       "status": "$REMOVE$",
       "orgName" : "$REMOVE$",
       "policyName" : "$REMOVE$",
@@ -268,7 +268,7 @@ GetListOfApiKey:
       output: ' {
 }'
    Pms_GetListOfApiKey_with_valid_descending_sortType:
-      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=orgName&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_13
       description: Fetching the API Keys with ascending sortType
       role: partnerauth
@@ -280,8 +280,8 @@ GetListOfApiKey:
       "sortType": "DESC",
       "policyGroupName": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "pageSize": "$REMOVE$",
-      "pageNo": "$REMOVE$",
+      "pageSize": "10",
+      "pageNo": "0",
       "status": "$REMOVE$",
       "orgName" : "$REMOVE$",
       "policyName" : "$REMOVE$",

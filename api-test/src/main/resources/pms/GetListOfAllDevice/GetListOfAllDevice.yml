@@ -303,7 +303,7 @@ GetListOfAllDevice:
       output: ' {
 }'
    Pms_GetListOfAllDevice_invalid_sorttype:
-      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_12      
       description: Fetching list of all the devices with invalid sorttype
       role: partneradmin
@@ -316,7 +316,7 @@ GetListOfAllDevice:
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
+      "sortFieldName": "make",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
@@ -366,7 +366,7 @@ GetListOfAllDevice:
        ]
 }'
    Pms_GetListOfAllDevice_sorttype_desc:
-      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_14     
       description: Fetching list of all the devices with sorttype as 'desc'
       role: partneradmin
@@ -380,7 +380,7 @@ GetListOfAllDevice:
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "partnerId": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
+      "sortFieldName": "status",
       "make": "$REMOVE$",
       "orgName": "$REMOVE$",
       "model": "$REMOVE$",
