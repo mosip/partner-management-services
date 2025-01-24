@@ -3,6 +3,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_01
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
@@ -20,6 +21,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_02
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -40,6 +42,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_03
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -59,6 +62,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_04
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -80,6 +84,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_05
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -99,6 +104,7 @@ GenerateApiKey:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_06
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error

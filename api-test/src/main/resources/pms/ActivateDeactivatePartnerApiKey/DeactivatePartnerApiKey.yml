@@ -3,6 +3,8 @@ ActivateDeactivatePartnerApiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
       role: partnerauth
       description: Deactivating Partner API Key
+      uniqueIdentifier: TC_PMS_DeactivatePartnerApiKey_01
+      description: Deactivating Partner API Key
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey

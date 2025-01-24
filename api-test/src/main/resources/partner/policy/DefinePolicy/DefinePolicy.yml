@@ -6,17 +6,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/policy/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -32,17 +32,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/policy/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
@@ -58,17 +58,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "null",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "null",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -85,17 +85,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "Policy",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "Policy",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -112,17 +112,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "kjh54",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "kjh54",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
    "errors": [
@@ -139,17 +139,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
    "errors": [
@@ -165,17 +165,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "$IGNORE$",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "$IGNORE$",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
    "errors": [
@@ -192,17 +192,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy group AuthTypeToken",
-	"name": "mosip policy AuthTypeToken",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": " ",
-	"policyGroupName": "mosip policy group for AuthTypeToken",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy group AuthTypeToken",
+      "name": "mosip policy AuthTypeToken",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": " ",
+      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -219,17 +219,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/policy/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc mosip policy2",
-	"name": "mosip policy2",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": false,
-	"attributeName": "string",
-	"authTokenType": "random",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy2",
+      "name": "mosip policy2",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": false,
+      "attributeName": "string",
+      "authTokenType": "random",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",
@@ -245,17 +245,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "demo",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "demo",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -273,17 +273,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy5",
-	"name": "mosip policy5",
-	"authSubType": "FINGER",
-	"authType": "$REMOVE$",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy5",
+      "name": "mosip policy5",
+      "authSubType": "FINGER",
+      "authType": "$REMOVE$",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
      "errors": [
@@ -299,17 +299,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -325,17 +325,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "asbgdfg",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "asbgdfg",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -351,17 +351,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy",
-	"name": "mosip policy",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group2",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group2",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "errors": [
@@ -377,17 +377,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "$REMOVE$",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "$REMOVE$",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -403,17 +403,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "$REMOVE$",
-		"name": "mosip policy",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "$REMOVE$",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -429,17 +429,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "mosip policy test",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": $REMOVE$,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy test",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": $REMOVE$,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -455,17 +455,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "mosip policy test",
-		"authSubType": "FINGER",
-		"authType": "$REMOVE$",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy test",
+      "authSubType": "FINGER",
+      "authType": "$REMOVE$",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -481,17 +481,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "mosip policy test",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "$REMOVE$",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy test",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "$REMOVE$",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -508,16 +508,16 @@ definePolicy:
       outputTemplate: partner/error
       input: '{
         "attributeName": "$REMOVE$",
-		"desc": "desc mosip policy",
-		"name": "mosip policy test",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy test",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -533,17 +533,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "mosip policy",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "$REMOVE$",
-		"policyType": "Auth",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "$REMOVE$",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -559,17 +559,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-		"desc": "desc mosip policy",
-		"name": "mosip policy",
-		"authSubType": "FINGER",
-		"authType": "bio",
-		"mandatory": true,
-		"attributeName": "string",
-		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
-		"policyType": "$REMOVE$",
-		"version": "1.0",
-		"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy",
+      "name": "mosip policy",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "$REMOVE$",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -585,17 +585,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy9",
+      "name": "mosip policy9",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -611,17 +611,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "162g@fsgs",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy9",
+      "name": "mosip policy9",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "162g@fsgs",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -637,17 +637,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/error
       input: '{
-	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
-	"authSubType": "FINGER",
-	"authType": "bio",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "$REMOVE$",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy9",
+      "name": "mosip policy9",
+      "authSubType": "FINGER",
+      "authType": "bio",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "$REMOVE$",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "errors": [
@@ -664,17 +664,17 @@ definePolicy:
       inputTemplate: partner/policy/DefinePolicy/definePolicy
       outputTemplate: partner/policy/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc mosip policy9",
-	"name": "mosip policy9",
-	"authSubType": "FINGER",
-	"authType": "demo",
-	"mandatory": true,
-	"attributeName": "string",
-	"authTokenType": "partner",
-	"policyGroupName": "mosip policy group",
-	"policyType": "Auth",
-	"version": "1.0",
-	"requesttime": "$TIMESTAMP$"
+      "desc": "desc mosip policy9",
+      "name": "mosip policy9",
+      "authSubType": "FINGER",
+      "authType": "demo",
+      "mandatory": true,
+      "attributeName": "string",
+      "authTokenType": "partner",
+      "policyGroupName": "mosip policy group",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
     "policyGroupName": "mosip policy group",

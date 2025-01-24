@@ -3,6 +3,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_01
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -27,6 +28,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_02
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -54,6 +56,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_03
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -80,6 +83,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_04
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -106,6 +110,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_05
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -132,6 +137,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_06
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -158,6 +164,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_07
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -184,6 +191,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_08
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -210,6 +218,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_09
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -236,6 +245,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_10
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -262,6 +272,7 @@ DeactivateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
+      uniqueIdentifier: TC_PMS_DeactivateOIDCClient_11
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error

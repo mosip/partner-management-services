@@ -3,6 +3,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_01
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -56,6 +57,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_02
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -78,6 +80,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup with invalid request time
       role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_03
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -98,6 +101,8 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_Missing_InputParameter_desc:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_04
+      description: Creating a Policy Group
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -117,6 +122,8 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_Missing_InputParameter_name:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
+      description: Creating a Policy Group
+      uniqueIdentifier: TC_PMS_definePolicyGroup_05
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -137,6 +144,8 @@ definePolicyGroup:
    Pms_DefinePolicyGroup_Missing_InputParameter_requesttime:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
+      description: Creating a policy group
+      uniqueIdentifier: TC_PMS_definePolicyGroup_06
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
@@ -156,6 +165,8 @@ definePolicyGroup:
 
    Pms_DefinePolicyGroup_Without_Auth:
       endPoint: /v1/policymanager/policies/group/new
+      description: Creating a policy group
+      uniqueIdentifier: TC_PMS_definePolicyGroup_07
       role: temp
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup

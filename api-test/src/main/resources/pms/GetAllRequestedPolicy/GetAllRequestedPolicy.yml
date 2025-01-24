@@ -3,6 +3,7 @@ GetAllRequestedPolicies:
       endPoint: /v1/partnermanager/partner-policy-requests
       description: Fetching all the Requested Policies
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllRequestedPolicies_01
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllRequestedPolicy/getAllRequestedPolicy

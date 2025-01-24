@@ -3,6 +3,7 @@ GetAllCertificate:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       description: Fetching all the API certificates of the Logged in Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllCertificate_01
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
       outputTemplate: pms/GetAllCertificate/getAllCertificateResult

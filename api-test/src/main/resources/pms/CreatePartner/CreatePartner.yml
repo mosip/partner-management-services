@@ -3,6 +3,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -25,6 +26,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -50,6 +52,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -74,6 +77,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -98,6 +102,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -123,6 +128,8 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerdevice
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
+
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -145,6 +152,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerftm
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_07
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
