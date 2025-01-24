@@ -1,6 +1,8 @@
 uploadPartnerCert:
    Partner_UploadPartnerCert_missing_PartnerDomain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_01
+      description: upload Partner certificate without partner domain
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCert/uploadCert2
@@ -17,6 +19,8 @@ uploadPartnerCert:
 }'
    Partner_UploadPartnerCert_invalid_certificate:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_02
+      description: upload Invalid Partner certificate 
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCert/uploadCert3
@@ -34,6 +38,8 @@ uploadPartnerCert:
 
    Partner_UploadPartnerCert_invalid_Domain:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_03
+      description: upload invalid domain partner certificate
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/UploadCert/uploadCert4
@@ -50,6 +56,8 @@ uploadPartnerCert:
 }'
    Partner_UploadPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_04
+      description: upload valid partner certificate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -62,6 +70,8 @@ uploadPartnerCert:
 }' 
    Partner_UploadPartnerCert_UploadAgain_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_05
+      description: upload partner certificate again
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
