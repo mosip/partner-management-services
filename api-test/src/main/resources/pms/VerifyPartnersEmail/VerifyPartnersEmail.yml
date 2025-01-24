@@ -1,6 +1,7 @@
 VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_01
       description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
@@ -16,6 +17,7 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_02
       description: Verify Partners Email
       role: partnerrevampdevice
       restMethod: put
@@ -31,6 +33,7 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_03
       description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
@@ -45,6 +48,8 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_auth:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
+      description: Verify Partners Email
       role: invalidtoken
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -62,6 +67,8 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_missing_email:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_05
+      description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -79,6 +86,8 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_invalid_email:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_06
+      description: Verify Partners Email
       role: partnerrevamp
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -97,6 +106,7 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_07
       description: Verify Partners Email
       role: partnerrevampftm
       restMethod: put
