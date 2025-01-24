@@ -323,7 +323,7 @@ GetAllPartnerPolicyRequest:
       output: '{
 }'
    Pms_GetAllPartnerPolicyRequest_with_pageNo_given:
-      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
+      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_partner-policy-requests_19  
       description: Fetching all the partner policy requests by giving valid page number given
       role: partnerrevamp
@@ -332,8 +332,8 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "pageNo": "$REMOVE$",
-      "status": "approved",
+      "pageNo": "8",
+      "status": "$REMOVE$",
       "sortType": "$REMOVE$"
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
@@ -348,7 +348,7 @@ GetAllPartnerPolicyRequest:
       output: '{    
 }'
    Pms_GetAllPartnerPolicyRequest_with_random_value_given:
-      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_partner-policy-requests_21  
       description: Fetching all the partner policy requests by giving random value for partnerid
       role: partnerrevamp
@@ -357,8 +357,8 @@ GetAllPartnerPolicyRequest:
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
-      "status": "rejected",
-      "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "&&&abcdf",
       "sortType": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -383,9 +383,9 @@ GetAllPartnerPolicyRequest:
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
       "partnerId": "1",
-      "requestDetails": "2"
-      "sortType": "$REMOVE$"
-      "partnerId": "$REMOVE$",
+      "requestDetails": "2",
+      "status": "$REMOVE$",      
+      "sortType": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "pageNo": "$REMOVE$",
