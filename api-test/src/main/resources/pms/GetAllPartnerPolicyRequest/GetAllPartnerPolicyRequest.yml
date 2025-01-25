@@ -323,7 +323,7 @@ GetAllPartnerPolicyRequest:
       output: '{
 }'
    Pms_GetAllPartnerPolicyRequest_with_pageNo_given:
-      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}
+      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_partner-policy-requests_19  
       description: Fetching all the partner policy requests by giving valid page number given
       role: partnerauth
@@ -334,11 +334,11 @@ GetAllPartnerPolicyRequest:
       input: '{
       "pageNo": "8",
       "status": "$REMOVE$",
-      "sortType": "$REMOVE$"
+      "sortType": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
-      "pageSize": "$REMOVE$",
+      "pageSize": "5",
       "requestDetails": "$REMOVE$",
       "policyId": "$REMOVE$",
       "policyName": "$REMOVE$",

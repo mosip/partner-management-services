@@ -11,7 +11,11 @@ GetOriginalFtmCertifacteAfterDeactiveFtm:
       "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
 }'
       output: '{
-      "errorCode": "PMS_FTM_ERROR_008",
-      "message": "The selected FTM must be pending_approval or approved"
+     "errors": [
+    {
+      "errorCode": "PMS_FTM_ERROR_009",
+      "message": "Cannot download the certificate for a deactivated FTM"
+    }
+  ]
 }'
 

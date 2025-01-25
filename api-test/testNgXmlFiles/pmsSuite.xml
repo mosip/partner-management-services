@@ -91,7 +91,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerCertifcates">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutPartnerRegister.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutUploadCer.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -171,7 +171,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerBeforePolicyMapping">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutPartnerRegister.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerBeforePolicyMapping.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -238,7 +238,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutPartnerRegister.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerBeforeApikeyGenerated.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -305,6 +305,7 @@
 	
 	<test name="GetDetailsOfPartner">
 		<parameter name="ymlFile" value="pms/GetDetailsOfPartner/GetDetailsOfPartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>

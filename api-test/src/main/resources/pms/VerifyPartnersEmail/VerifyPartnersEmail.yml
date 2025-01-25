@@ -72,17 +72,13 @@ VerifyPartnersEmail:
       description: Verify Partners Email
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
-      outputTemplate: pms/error
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResultNegative
       input: '{
     "emailId": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "errors": [
-        { 
-          "errorCode": null
-        }
-       ]
+        
 }'
    Pms_VerifyPartnersEmail_invalid_email:
       endPoint: /v1/partnermanager/partners/email/verify

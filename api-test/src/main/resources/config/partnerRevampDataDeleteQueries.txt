@@ -5,7 +5,7 @@ delete  from pms.partner_policy where cr_by='pms-111999';
 delete  from pms.partner_policy_request where cr_by='pms-111999';
 delete  from pms.auth_policy where cr_by='pms-111777';
 delete  from pms.policy_group where cr_by='pms-111777';
-delete  from pms.partner where cr_by='pms-111999';
+delete  from pms.partner where name ='PMS_API_ABC_ORG';
 delete  FROM pms.user_details where cr_by='pms-111999';
 
 delete  from pms.device_detail_sbi where cr_by='pms-111998';
