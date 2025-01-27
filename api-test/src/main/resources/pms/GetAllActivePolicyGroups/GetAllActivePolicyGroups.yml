@@ -2,8 +2,8 @@ GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/policy-groups
       description: Fetching all the active PolicyGroups
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_01
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups

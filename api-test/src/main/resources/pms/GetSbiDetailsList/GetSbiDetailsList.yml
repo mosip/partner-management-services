@@ -3,7 +3,7 @@ GetSbiDetailsList:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_pms_GetSbiDetailsList_01
       description: Retrieve the PMS GetSbiDetails List for All Valid Inputs
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
