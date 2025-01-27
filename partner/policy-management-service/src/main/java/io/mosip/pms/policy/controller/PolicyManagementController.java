@@ -392,7 +392,7 @@ public class PolicyManagementController {
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
+	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
 	@PatchMapping(value = "/group/{policyGroupId}")
 	@Operation(summary = "This endpoint allows Partner Admin users to deactivate a Policy Group based on the Policy Group Id.",
 			description = "Available since release-1.3.x. It is configured for the POLICYMANAGER and PARTNER_ADMIN roles.")
