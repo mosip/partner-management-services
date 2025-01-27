@@ -326,10 +326,10 @@ public class PolicyManagementController {
 		return policyManagementService.getPolicyGroups();
 	}
 
-	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves the list of all Policies",
-	description = "Available since release-1.3.x. It is configured for both the POLICYMANAGER and PARTNER_ADMIN roles.")
+	description = "Available since release-1.3.x. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -375,9 +375,9 @@ public class PolicyManagementController {
 		return policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
-	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicy())")
 	@PatchMapping(value = "/{policyId}")
-	@Operation(summary = "Available since release-1.3.x. This endpoint deactivates a policy based on the Policy Id", description = "This endpoint deactivates a policy based on the Policy Id, accessible only by Partner Admin. It checks if any policy requests are associated with the policy: it can be deactivated if there are no requests or if there are rejected requests. It cannot be deactivated if there are approved or pending requests, returning error codes PMS_POL_063 or PMS_POL_064, respectively. This endpoint is configured for both POLICYMANAGER and PARTNER_ADMIN roles.")
+	@Operation(summary = "Available since release-1.3.x. This endpoint deactivates a policy based on the Policy Id", description = "This endpoint deactivates a policy based on the Policy Id, accessible only by Partner Admin. It checks if any policy requests are associated with the policy: it can be deactivated if there are no requests or if there are rejected requests. It cannot be deactivated if there are approved or pending requests, returning error codes PMS_POL_063 or PMS_POL_064, respectively. This endpoint is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -392,10 +392,10 @@ public class PolicyManagementController {
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
-	@PreAuthorize("hasRole(@authorizedRoles.getPartneradmin()) and hasRole(@authorizedRoles.getPolicymanager())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatepolicygroup())")
 	@PatchMapping(value = "/group/{policyGroupId}")
 	@Operation(summary = "This endpoint allows Partner Admin users to deactivate a Policy Group based on the Policy Group Id.",
-			description = "Available since release-1.3.x. It is configured for the POLICYMANAGER and PARTNER_ADMIN roles.")
+			description = "Available since release-1.3.x. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
