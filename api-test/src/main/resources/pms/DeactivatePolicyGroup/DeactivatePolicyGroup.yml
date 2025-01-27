@@ -3,7 +3,7 @@ DeactivatePolicyGroup:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_01      
       description: Deactivate Policy Group
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup

@@ -3,7 +3,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_01      
       description: Deactivate policy      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
