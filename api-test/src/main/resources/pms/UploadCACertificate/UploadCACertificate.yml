@@ -3,7 +3,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_01
       description: Upload CA Cert
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateAuthCa
@@ -17,7 +17,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_02
       description: Upload Sub-CA Cert
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateAuthSubCa
@@ -32,7 +32,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_03
       description: Upload CA Cert
-      role: partnerrevampdevice
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceCa
@@ -47,7 +47,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_04
       description: Upload Sub-CA Cert
-      role: partnerrevampdevice
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceSubCa
@@ -61,7 +61,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_05
       description: Upload CA Cert which is already uploaded      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificate2
@@ -80,7 +80,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_06
       description: Upload CA Cert with invalid data      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificate3
@@ -99,7 +99,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_07
       description: Upload CA Cert with blank data      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificate4
@@ -119,7 +119,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_08
       description: Upload CA Cert
-      role: partnerrevampftm
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateFtmCa
@@ -134,7 +134,7 @@ UploadCACertificate:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_09
       description: Upload Sub-CA Cert
-      role: partnerrevampftm
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadCACertificate/uploadCertificateFtmSubCa

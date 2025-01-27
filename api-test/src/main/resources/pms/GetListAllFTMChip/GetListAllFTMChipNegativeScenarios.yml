@@ -39,7 +39,7 @@ GetListAllFTMChipNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_03
       description: Retrieve all FTM chip details when FTM Chips are not added for Partner
-      role: partnerrevampftm
+      role: partnerftm
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
       outputTemplate: pms/error

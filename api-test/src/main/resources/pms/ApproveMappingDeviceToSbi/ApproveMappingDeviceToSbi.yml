@@ -1,9 +1,9 @@
 ApproveMappingDeviceToSbi:
    Pms_ApproveMappingDeviceToSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
-	  description: Approve Mapping Device To Sbi
-	  uniqueIdentifier: TC_PMS_ApproveMappingDevice_01
-      role: partnerrevampdevice
+      role: partneradmin
+      description: Approve Mapping Device To Sbi
+      uniqueIdentifier: TC_PMS_ApproveMappingDevice_01
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi

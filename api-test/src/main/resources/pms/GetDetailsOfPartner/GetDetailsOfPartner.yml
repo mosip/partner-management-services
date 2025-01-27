@@ -2,26 +2,26 @@ GetDetailsOfPartner:
    Pms_GetDetailsOfPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartnerResult
       input: '{
-	"partnerId": "pms-111999"
+	"partnerId": "pms-111777"
 }'
       output: ' {
 }'
    Pms_GetDetailsOfPartner_with_admin_role_Neg:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
-      role: admin
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/error
       input: '{
-	"partnerId": "111999"
+	"partnerId": "111777"
 }'
       output: '{
 	  "errors": [
@@ -34,12 +34,11 @@ GetDetailsOfPartner:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
       role: invalid
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/error
       input: '{
-	"partnerId": "111999"
+	"partnerId": "111777"
 }'
       output: '{
       "errors": [
@@ -51,8 +50,7 @@ GetDetailsOfPartner:
    Pms_GetDetailsOfPartner_with_invalid_partner_Neg:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
-      role: invalid
-      checkErrorsOnlyInResponse: true
+      role: partneradmin
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/error
@@ -66,29 +64,11 @@ GetDetailsOfPartner:
       }
       ]	  	
 }'
-   Pms_GetDetailsOfPartner_with_invalid_partner_Neg:
-      endPoint: /v1/partnermanager/admin-partners/{partnerId}
-      description: Fetching all the details of the Partner Id
-      role: invalid
-      checkErrorsOnlyInResponse: true
-      restMethod: get
-      inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
-      outputTemplate: pms/error
-      input: '{
-	"partnerId": " "
-}'
-      output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"		
-      }
-      ]	  	
-}'
+
    Pms_GetDetailsOfPartner_with_unauthorized_token_Neg:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
       role: resident
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
       outputTemplate: pms/error

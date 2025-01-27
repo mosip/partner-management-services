@@ -2,8 +2,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_AllValid_smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_01
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
@@ -20,8 +20,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_02
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -41,8 +41,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_Missing_Request_time_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_03
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -61,8 +61,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_Invalid_Request_time_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_04
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -83,8 +83,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_Missing_label_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_05
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
@@ -103,8 +103,8 @@ GenerateApiKey:
    Pms_GenerateApiKey_Missing_policyName_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
       description: Generating an API Key
+      role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_06
-      role: partnerrevamp
       restMethod: patch
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error

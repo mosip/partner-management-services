@@ -37,7 +37,7 @@ GetListOfAllSBI:
       endPoint: /v1/partnermanager/securebiometricinterface?sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_SBI_List_04      
       description: Fetching all the active SBI with invalid sortfield
-      role: partnerrevamp
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -64,7 +64,7 @@ GetListOfAllSBI:
       endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}
       uniqueIdentifier: TC_PMS_SBI_List_05      
       description: Fetching all the active SBI with invalid sortType
-      role: partnerrevamp
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -91,7 +91,7 @@ GetListOfAllSBI:
       endPoint: /v1/partnermanager/securebiometricinterface?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_06      
       description: Fetching all the active SBI with negative pagesize value
-      role: partnerrevamp
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
@@ -118,7 +118,7 @@ GetListOfAllSBI:
       endPoint: /v1/partnermanager/securebiometricinterface?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_SBI_List_07      
       description: Fetching all the active SBI with negative pageNo value
-      role: partnerrevamp
+      role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/error
