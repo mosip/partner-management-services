@@ -14,7 +14,7 @@ public class PartnerPolicyRequestSummaryDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
-    @Schema(description = "Status of the partner (e.g., approved, InProgress, deactivated)", example = "approved")
+    @Schema(description = "Status of the partner (e.g., activated, InProgress, deactivated)", example = "activated")
     private String partnerStatus;
 
     @Schema(description = "Name of the partner organisation", example = "abc")
