@@ -62,10 +62,10 @@ GetListOfPartners:
       }
       ]
 }'
-   Pms_GetListOfPartners_without_token_Neg:
+   Pms_GetListOfPartners_Invalid_token_Neg:
       endPoint: /v1/partnermanager/admin-partners
       description: Fetching all the active List Of Partner with invalid sort
-      role: invalid
+      role: invalidtoken
       uniqueIdentifier: TC_PMS_GetListOfPartners_05	  
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -74,7 +74,11 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
 }'
    Pms_GetListOfPartners_invalid_sortfield_Neg:
       endPoint: /v1/partnermanager/admin-partners?sortFieldName=a2a33

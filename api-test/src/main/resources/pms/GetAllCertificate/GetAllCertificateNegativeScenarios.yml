@@ -6,13 +6,11 @@ GetAllCertificate:
       uniqueIdentifier: TC_PMS_GetAllCertificate_01
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
-      outputTemplate: pms/error
+      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
       input: '{
 }'
       output: '{
-"errors": [
-    {
-      "errorCode": "PMS_CERTIFICATE_ERROR_002"
-    }
-  ]
+         "partnerId": "pms-111999",
+         "partnerType": "Auth_Partner",
+         "isCertificateAvailable": false
 }'

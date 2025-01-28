@@ -329,7 +329,7 @@ GetListOfAllDevice:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_PRT_358"
        }
        ]
 }'

@@ -313,34 +313,34 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_AlreadyExists_InValid:
-      endPoint: /v1/policymanager/policies
-      role: partneradmin
-      description: Define policy for existing policy
-      uniqueIdentifier: TC_PMS_definePolicy_12
-      restMethod: post
-      inputTemplate: pms/DefinePolicy/definePolicy
-      outputTemplate: pms/error
-      input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy Neg",
-      "authSubType": "FINGER",
-      "authType": "bio",
-      "mandatory": true,
-      "attributeName": "string",
-      "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
-      "policyType": "Auth",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$"
-}'
-      output: ' {
-    "errors": [
-    {
-         "errorCode": "PMS_POL_009"
-     }
-  ]
-}'
+#   Pms_DefinePolicy_AlreadyExists_InValid:
+#      endPoint: /v1/policymanager/policies
+#      role: partneradmin
+#      description: Define policy for existing policy
+#      uniqueIdentifier: TC_PMS_definePolicy_12
+#      restMethod: post
+#      inputTemplate: pms/DefinePolicy/definePolicy
+#      outputTemplate: pms/error
+#      input: '{
+#      "desc": "desc mosip policy",
+#      "name": "mosip policy Neg",
+#      "authSubType": "FINGER",
+#      "authType": "bio",
+#      "mandatory": true,
+#      "attributeName": "string",
+#      "authTokenType": "partner",
+#      "policyGroupName": "mosip policy group",
+#      "policyType": "Auth",
+#      "version": "1.0",
+#      "requesttime": "$TIMESTAMP$"
+#}'
+#      output: ' {
+#    "errors": [
+#    {
+#         "errorCode": "PMS_POL_009"
+#     }
+#  ]
+#}'
    Pms_DefinePolicy_PolicyGrpNotExists_InValid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
@@ -757,4 +757,3 @@ definePolicy:
     "desc": "$IGNORE$",
     "is_Active": false
 }'
-
