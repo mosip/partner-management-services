@@ -196,22 +196,23 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_sortType_ASC:
-      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}
-      uniqueIdentifier: TC_PMS_SBI_List_16      
-      description: Fetching all the active SBI with sortType as ASC
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}
+      uniqueIdentifier: TC_PMS_SBI_List_15      
+      description: Fetching all the active SBI with partnerId contains 'a'
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sortType": "ASC",
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
+      "sortFieldName": "rejected",
+      "sortType": "ASC",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
@@ -219,8 +220,9 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_sortType_DESC:
-      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={status}
       uniqueIdentifier: TC_PMS_SBI_List_17      
       description: Fetching all the active SBI with sortType as desc
       role: partneradmin
@@ -233,7 +235,7 @@ GetListOfAllSBI:
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
-      "status": "$REMOVE$",
+      "status": "rejected",
       "sortFieldName": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",

@@ -116,7 +116,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_06
       description: Deactivate FTM while keeping Version parameter as Null in request and expecting an error in the response
-      role: partneftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -336,7 +336,7 @@ DeactivateFtmNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_004"
+       "errorCode": "KER-ATH-404"
        }
        ]
 }'

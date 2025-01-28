@@ -64,14 +64,6 @@
 		</classes>
 	</test>
 
-	<test name="GetAllCertificateBeforePartnerCreate">
-		<parameter name="ymlFile"
-			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>
-
 	<test name="GetAllApprovedPartnerIdBeforePartnerCreate">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedPartnerId/GetAllApprovedPartnerIdBeforePartnerCreate.yml" />
@@ -104,15 +96,6 @@
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
 		</classes>
 	</test>
-
-	<test name="GetAllCertificateBeforeCACertificateUpload">
-		<parameter name="ymlFile"
-			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>
-
 	<test name="UploadCACertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadCACertificate/UploadCACertificate.yml" />
@@ -578,6 +561,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>	
+		<test name="GetListAllFTMChipNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="CreateFtmChipDetails">
 		<parameter name="ymlFile"
 			value="pms/CreateFtmChipDetails/CreateFtmChipDetails.yml" />
@@ -587,6 +577,15 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+		<test name="GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	
 	<test name="UploadCertificateOfFtpChip">
 		<parameter name="ymlFile"
 			value="pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip.yml" />
@@ -609,13 +608,7 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<test name="GetListAllFTMChipNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>	
+
 	<test name="GetOriginalFtmCertifacte">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
@@ -674,7 +667,7 @@
 	
 	<test name="GetListOfAllSBI">
 		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
-		<parameter name="pathParams" value="orgName,pageSize,partnerId,sbiExpiryStatus,sbiVersion,sortType" />
+		<parameter name="pathParams" value="sortFieldName,sortType,status" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
