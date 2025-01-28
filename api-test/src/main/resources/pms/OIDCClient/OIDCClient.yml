@@ -241,7 +241,7 @@ CreateOIDCClient:
       	"requestTime": "$TIMESTAMP$",
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      	"publicKey": "dhghfgfyt",
+      	"publicKey": {},
       	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",

@@ -85,10 +85,11 @@ DeactivateOIDCClient:
       role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_04
       checkErrorsOnlyInResponse: true
-      restMethod: post
+      restMethod: put
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
+      "client_id": "",
       "requesttime": "$TIMESTAMP$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
