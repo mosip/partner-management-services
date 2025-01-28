@@ -118,6 +118,9 @@ public class ClientManagementServiceImplTest {
 	@MockBean
 	PartnerServiceRepository partnerServiceRepository;
 
+	@MockBean
+	PolicyGroupRepository policyGroupRepository;
+
 	Map<String, Object> public_key;
 	
 	@Before
@@ -1328,9 +1331,30 @@ public class ClientManagementServiceImplTest {
 	public void getPartnersClientsTest() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPolicyGroupId("policyGroup123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("policyGroup123");
+		policyGroup.setName("policyGrp");
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
@@ -1368,6 +1392,34 @@ public class ClientManagementServiceImplTest {
 		Page<ClientSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
 		when(clientSummaryRepository.getSummaryOfAllPartnerClients(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, null);
+	}
+
+	@Test
+	public void getPartnersClientsTestException1() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		ClientFilterDto filterDto = new ClientFilterDto();
+		filterDto.setPartnerId("abc");
+		filterDto.setStatus("ACTIVE");
+		filterDto.setOrgName("ABC");
+		serviceImpl.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
