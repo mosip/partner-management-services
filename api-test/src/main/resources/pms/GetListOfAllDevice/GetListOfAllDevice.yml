@@ -277,7 +277,7 @@ GetListOfAllDevice:
 }'
    Pms_GetListOfAllDevice_with_orgName:
       endPoint: /v1/partnermanager/devicedetail?orgName={orgName}
-      uniqueIdentifier: TC_PMS_devicedetails_11      
+      uniqueIdentifier: TC_PMS_devicedetails_25     
       description: Fetching list of all the devices with orgName value given as '1'
       role: partneradmin
       checkErrorsOnlyInResponse: true

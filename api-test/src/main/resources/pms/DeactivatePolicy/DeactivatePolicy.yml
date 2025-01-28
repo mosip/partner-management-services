@@ -70,7 +70,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_04      
       description: Deactivate policy with invalid policyid   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
@@ -94,7 +94,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_05      
       description: Deactivate policy with only spaces as policyid   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
@@ -118,7 +118,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_06      
       description: Deactivate policy which is already deactiavted   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
@@ -142,7 +142,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_07      
       description: Deactivate policy without id   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
@@ -166,7 +166,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_08      
       description: Deactivate policy without version   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
@@ -190,14 +190,14 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_09      
       description: Deactivate policy without requesttime   
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
       outputTemplate: pms/error
       input: '{
 		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
-		  "requestTime": "$TIMESTAMP$",
+		  "requestTime": "$REMOVE$",
 		  "status": "De-Activate",
 		  "id": "mosip.pms.deactivate.policy.patch",
 		  "version": "1.0"		  		  
@@ -206,6 +206,30 @@ DeactivatePolicy:
       "errors": [
       {
        "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_with_approved_policyrequests:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_10      
+      description: Deactivate policy with approved policy requests   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_063"
        }
        ]
   
