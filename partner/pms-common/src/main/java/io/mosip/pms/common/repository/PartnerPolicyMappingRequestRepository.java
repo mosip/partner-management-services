@@ -16,7 +16,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
     @Query(value = "SELECT new PartnerPolicyRequestSummaryEntity(" +
             "ppr.id, ppr.partnerId, " +
             "CASE " +
-            "WHEN p.approvalStatus = 'approved' AND p.isActive = true THEN 'approved' " +
+            "WHEN p.approvalStatus = 'approved' AND p.isActive = true THEN 'activated' " +
             "WHEN p.approvalStatus = 'approved' AND p.isActive = false THEN 'deactivated' " +
             "WHEN p.approvalStatus = 'InProgress' THEN 'InProgress' " +
             "WHEN p.approvalStatus = 'rejected' THEN 'rejected' " +
