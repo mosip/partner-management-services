@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name    : mosip_pms
--- Release Version 	: 1.4.0
+-- Release Version 	: 1.3.0-beta.1
 -- Purpose    		: Database Alter scripts for the release for PMS DB.       
 -- Create By   		: Swetha K
 -- Created Date		: Aug-2024
