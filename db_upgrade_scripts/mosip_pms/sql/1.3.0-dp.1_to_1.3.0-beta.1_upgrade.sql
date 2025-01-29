@@ -10,60 +10,24 @@
 \c mosip_pms
 
 -- Dropping unique constraint from pms.device_detail table if it exists
-DO $$
-BEGIN
-    IF EXISTS (
-        SELECT 1 
-        FROM pg_constraint 
-        WHERE conname = 'uk_devdtl_id' 
-        AND conrelid = 'pms.device_detail'::regclass
-    ) THEN
-        ALTER TABLE pms.device_detail DROP CONSTRAINT uk_devdtl_id;
-    END IF;
-END $$;
+ALTER TABLE pms.device_detail
+    DROP CONSTRAINT IF EXISTS uk_devdtl_id;
 
 -- Creating unique index for make, model, and approval status if it does not exist
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 
-        FROM pg_indexes 
-        WHERE indexname = 'uk_devdtl_make_model_approval_status' 
-        AND schemaname = 'pms'
-    ) THEN
-        CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
-        ON pms.device_detail (dprovider_id, dtype_code, dstype_code, make, model)
-        WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is_active = false);
-    END IF;
-END $$;
+CREATE UNIQUE INDEX IF NOT EXISTS uk_devdtl_make_model_approval_status
+    ON pms.device_detail (dprovider_id, dtype_code, dstype_code, make, model)
+    WHERE approval_status != 'rejected' 
+    AND NOT (approval_status = 'approved' AND is_active = false);
 
 -- Dropping unique constraint from pms.ftp_chip_detail table if it exists
-DO $$
-BEGIN
-    IF EXISTS (
-        SELECT 1 
-        FROM pg_constraint 
-        WHERE conname = 'uk_fcdtl_id' 
-        AND conrelid = 'pms.ftp_chip_detail'::regclass
-    ) THEN
-        ALTER TABLE pms.ftp_chip_detail DROP CONSTRAINT uk_fcdtl_id;
-    END IF;
-END $$;
+ALTER TABLE pms.ftp_chip_detail
+    DROP CONSTRAINT IF EXISTS uk_fcdtl_id;
 
 -- Creating unique index for make, model, and approval status if it does not exist
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 
-        FROM pg_indexes 
-        WHERE indexname = 'uk_fcdtl_make_model_approval_status' 
-        AND schemaname = 'pms'
-    ) THEN
-        CREATE UNIQUE INDEX uk_fcdtl_make_model_approval_status
-        ON pms.ftp_chip_detail (foundational_trust_provider_id, make, model)
-        WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is_active = false);
-    END IF;
-END $$;
+CREATE UNIQUE INDEX IF NOT EXISTS uk_fcdtl_make_model_approval_status
+    ON pms.ftp_chip_detail (foundational_trust_provider_id, make, model)
+    WHERE approval_status != 'rejected' 
+    AND NOT (approval_status = 'approved' AND is_active = false);
 
 -- Updating policy_file_id in pms.auth_policy for specific IDs
 UPDATE pms.auth_policy
