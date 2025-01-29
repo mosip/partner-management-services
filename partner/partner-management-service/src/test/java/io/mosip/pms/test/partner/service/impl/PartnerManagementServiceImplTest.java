@@ -1295,6 +1295,9 @@ public class PartnerManagementServiceImplTest {
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse1);
 		partnerManagementImpl.getPartnerDetails("123");
 
+		when(partnerServiceRepository.findById(any())).thenReturn(Optional.empty());
+		partnerManagementImpl.getPartnerDetails("123");
+
 		partner.setCertificateAlias(null);
 		when(partnerServiceRepository.findById(any())).thenReturn(Optional.of(partner));
 		partnerManagementImpl.getPartnerDetails("123");
