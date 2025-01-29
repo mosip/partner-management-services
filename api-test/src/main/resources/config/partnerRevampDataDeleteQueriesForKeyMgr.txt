@@ -1,0 +1,8 @@
+#####  DB queries to be executed to tear down the data used and generated during the test rig run for partnerRevamp APIs
+
+delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_CA,OU=PMS_API_CA,O=PMS_API_CA,L=PN,ST=MH,C=IN';
+delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_SUB_CA,OU=PMS_API_SUB_CA,O=PMS_API_SUB_CA,L=PN,ST=MH,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_ABC_ORG,OU=PMS_API_ABC_ORG,O=PMS_API_ABC_ORG,L=PN,ST=MH,C=IN';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111999';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111998';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111888';

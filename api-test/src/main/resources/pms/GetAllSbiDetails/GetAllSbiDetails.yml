@@ -1,0 +1,14 @@
+GetAllSbiDetails:
+   Pms_GetAllSbiDetails_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/getAllSBIDetails
+      role: partnerauth
+      description: Get All SBI Details
+      uniqueIdentifier: TC_PMS_GetAllSbiDetails_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllSbiDetails/GetAllSbiDetails
+      outputTemplate: pms/GetAllSbiDetails/GetAllSbiDetailsResult
+      input: '{
+}'
+      output: ' {
+}'

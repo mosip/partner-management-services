@@ -24,13 +24,13 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
-import io.mosip.testrig.apirig.partner.utils.PMSUtil;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
+import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.restassured.response.Response;
@@ -50,7 +50,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 	
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSRevampConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -72,14 +72,13 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
-		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		List<String> queryProp = Arrays.asList(templateFields);
 		logger.info(queryProp);
-		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+PMSConfigManger.getproperty("partner_userName")+"'";
+		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+props.getProperty("partner_userName")+"'";
 		
 		
 		logger.info(query);
@@ -113,7 +112,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 	@AfterMethod(alwaysRun = true)
 	public void setResultTestName(ITestResult result) {
 		
-		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+PMSConfigManger.getproperty("partner_userName")+"'";
+		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+props.getProperty("partner_userName")+"'";
 		logger.info(deleteQuery);
 		AuditDBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {

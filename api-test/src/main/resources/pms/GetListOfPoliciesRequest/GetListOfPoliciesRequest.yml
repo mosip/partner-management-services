@@ -1,0 +1,13 @@
+GetListOfPoliciesRequest:
+   Pms_GetListOfPolicies_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      description: Fetching all the active List Of Policies Request in the system
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPoliciesRequest/getListOfPoliciesRequest
+      outputTemplate: pms/GetListOfPoliciesRequest/getListOfPoliciesRequestResult
+      input: '{
+}'
+      output: ' {
+}'

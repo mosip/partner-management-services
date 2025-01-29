@@ -1,0 +1,21 @@
+UploadCertificateOfFtpChip:
+   Pms_UploadCertificate_AllValid_smoke_ftpProviderId:
+      endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
+      role: partnerftm
+      uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_01
+      description: Upload FTP chip Certificate
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip
+      outputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChipResult
+      input: '{
+      "requesttime":"$TIMESTAMP$",
+     "ftpProviderId": "pms-111888",
+     "ftpChipDeatilId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
+     "isItForRegistrationDevice": true,
+     "organizationName": "PMS_API_ABC_ORG",
+     "partnerDomain": "DEVICE"
+  }'
+      output: ' {
+
+}' 

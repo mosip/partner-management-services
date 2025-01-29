@@ -1,0 +1,77 @@
+GetAllApprovedFtmProviderNegativeScenarios:
+   Pms_Get_All_Approved_Ftm_Provider_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/partners/v4?status=approved&partnerType=FTM_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_01
+      description: Retrieve all approved FTM Providers without Partner authentication 
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "pms-111888"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_Get_All_Approved_Ftm_Provider_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/partners/v4?status=approved&partnerType=FTM_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_02
+      description: Retrieve all approved FTM Providers with Invalid access token 
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "pms-111888"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_Get_All_Approved_Ftm_Provider_Before_Uploading_CA_Cert_Neg:
+      endPoint: /v1/partnermanager/partners/v4?status=approved&partnerType=FTM_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_03
+      description: Retrieve all approved FTM Providers before uploading CA certificates
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderBeforeUploadingCertificates
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "pms-111888"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_Get_All_Approved_Ftm_Provider_Before_Uploading_Partner_Cert_Neg:
+      endPoint: /v1/partnermanager/partners/v4?status=approved&partnerType=FTM_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_04
+      description: Retrieve all approved FTM Providers before uploading Partner certificate
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderBeforeUploadingCertificates
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "pms-111888"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

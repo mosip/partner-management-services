@@ -1,8 +1,6 @@
 createSearchPartner:
    Partner_SearchPartner_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_01
-      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -32,8 +30,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type__Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_02
-      description: Create Partner search while keeping Type parameter as Contains and filter the data in Ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -63,8 +59,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_contains_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_03
-      description: Create Partner search while keeping Type parameter as Contains and filter the data in Descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -94,8 +88,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_equals_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_04
-      description: Create Partner search while keeping Type parameter as Equals and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -129,8 +121,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_equals_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_05
-      description: Create Partner search while keeping Type parameter as Equals and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -164,8 +154,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_startswith_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_06
-      description: Create Partner search while keeping Type parameter as Starts with and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -199,8 +187,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_type_startswith_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_07
-      description: Create Partner search while keeping Type parameter as Starts with and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -234,8 +220,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_id_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_08
-      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -271,8 +255,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_id_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_09
-      description: Create Partner search while keeping ColumnName parameter as ID and filter the data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -307,8 +289,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_address_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_10
-      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -344,8 +324,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_columnname_address_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_11
-      description: Create Partner search while keeping ColumnName parameter as Address and filter the data in descending order
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -381,8 +359,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_containts:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_12
-      description: Create Partner search while keeping Type parameter contains invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -416,8 +392,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_equals:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_13
-      description: Create Partner search while keeping Type parameter as invalid value equals
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -451,8 +425,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_value_startswith:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_14
-      description: Create Partner search while keeping Type parameter as invalid value Starts with
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -486,8 +458,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_columnName:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_15
-      description: Create Partner search while keeping ColumnName parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -521,8 +491,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_columnName:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_16
-      description: Create Partner search while keeping ColumnName parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -556,8 +524,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_17
-      description: Create Partner search while keeping Type parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -591,8 +557,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_sort_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_18
-      description: Create Partner search while keeping SortType parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -626,8 +590,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_sort_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_19
-      description: Create Partner search while keeping SortType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -661,8 +623,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_invalid_sort_field:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_20
-      description: Create Partner search while keeping SortField parameter as invalid value
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner
@@ -696,8 +656,6 @@ createSearchPartner:
 }'
    Partner_SearchPartner_with_missing_sort_field:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_21
-      description: Create Partner search while keeping SortField parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/search/searchPartner

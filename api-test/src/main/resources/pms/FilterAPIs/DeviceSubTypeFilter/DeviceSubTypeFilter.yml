@@ -1,0 +1,29 @@
+DeviceSubTypeFilter:
+   Pms_DeviceSubTypeFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      role: partnerdevice
+      description: Device SubType Filter
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_01
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
+      outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilterResult
+      input: '{
+    "filters": [{
+    "columnName": "deviceType",
+    "type": "unique",
+    "text": "Finger"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+      "filters": [
+      {
+        "fieldID": "deviceType",
+        "fieldValue": "Finger",
+        "fieldCode": "Single"
+      }
+    ]
+  }'
+    
+

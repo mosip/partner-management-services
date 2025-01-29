@@ -1,0 +1,18 @@
+GetConfiguration:
+   Partner_GetConfiguration_allValid_smoke:
+      endPoint: /v1/partnermanager/system-config
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetConfiguration/GetConfiguration
+      outputTemplate: pms/GetConfiguration/GetConfigurationResult
+      input: '{
+}'
+      output: '{
+    "grantTypes": "authorization_code",
+    "axiosTimeout": "3",
+    "inActivityTimer": "25",
+    "inActivityPromptTimer": "5",
+    "clientAuthMethods": "private_key_jwt"
+}'
+

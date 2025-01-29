@@ -1,0 +1,125 @@
+GetListOfFtmChip:
+   Pms_GetListOfFtmChip_without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_01      
+      description: Fetching all the ftpchipdetail without authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListOfFtmChip_invalid_token_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_02      
+      description: Fetching all the ftpchipdetail with invalid token
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListOfFtmChip_invalid_sortfield_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_04      
+      description: Fetching all the ftpchipdetail with invalid sortfieldname
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+      "sortFieldName": "$%$^&&",
+      "partnerId": "$REMOVE$",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfFtmChip_invalid_sortType_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_05     
+      description: Fetching all the ftpchipdetail with invalid sortType
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+      "sortType": "$%$^&&",
+      "sortFieldName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfFtmChip_Negative_pagesize_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_15     
+      description: Fetching all the ftpchipdetail with negative pagesize
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+      "pageSize": "-6",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfFtmChip_Negative_pageNo_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_16     
+      description: Fetching all the ftpchipdetail with negative pageNo
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      input: '{
+      "pageNo": "-6",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$"
+}'
+      output: '{
+      "pageNo": "0"
+}'

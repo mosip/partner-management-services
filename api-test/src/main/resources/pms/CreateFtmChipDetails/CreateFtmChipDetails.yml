@@ -1,0 +1,20 @@
+CreateFtmChipDetails:
+   Pms_CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partnerftm
+      description: Create Ftm Chip Details
+      uniqueIdentifier: TC_PMS_createFtmChipDetails_01
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
+      outputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetailsResult
+      input: '{
+       "ftpProviderId": "pms-111888",
+       "make": "AcmeCorpFtm",
+       "model": "mode2"
+
+}'
+      output: '{
+          
+}'
+

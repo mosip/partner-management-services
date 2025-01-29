@@ -1,8 +1,6 @@
 UpdatePolicyGroupForPartner:
    Partner_UpdatePolicyGroupForPartner_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
-      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_01
-      description: Update Policy Group For Partner with valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -17,14 +15,12 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_ApprovedPartner:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
-      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_02
-      description: Update Policy Group For Partner with invalid Approved Partner
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: partner/error
       input: '{
-    "partnerId": "MOVP-AUTOMATION",
+    "partnerId": "MOVP",
     "policygroupName": "mosip policy group updated"
 }'
       output: '{
@@ -36,8 +32,6 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
-      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_03
-      description: Update Policy Group For Partner with invalid PartnerId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
@@ -55,8 +49,6 @@ UpdatePolicyGroupForPartner:
 }'
    Partner_UpdatePolicyGroupForPartner_InValid_PolicyGroup:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
-      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_04
-      description: Update Policy Group For Partner with invalid Policy GroupId
       role: partner
       restMethod: put
       inputTemplate: partner/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner

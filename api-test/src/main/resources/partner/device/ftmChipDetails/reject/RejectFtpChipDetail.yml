@@ -1,8 +1,6 @@
 rejectFtpChipDetail:
    Partner_rejectFtpChipDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail
-      uniqueIdentifier: TC_PMS_rejectFtpChipDetail_01
-      description: Reject FTP Chip detail for Partner
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -18,8 +16,6 @@ rejectFtpChipDetail:
 
    Partner_rejectFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
       endPoint: /v1/partnermanager/ftpchipdetail
-      uniqueIdentifier: TC_PMS_rejectFtpChipDetail_02
-      description: Reject FTP Chip detail for Partner while keeping ftpChipDetailId paramter as missing
       role: partner
       restMethod: patch
       inputTemplate: partner/device/ftmChipDetails/reject/rejectFtpChipDetail

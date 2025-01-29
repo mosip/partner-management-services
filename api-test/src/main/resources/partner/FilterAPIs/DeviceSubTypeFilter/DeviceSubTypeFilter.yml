@@ -1,8 +1,6 @@
 DeviceSubTypeFilter:
    partner_DeviceSubTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_01
-      description: Create DeviceSubType Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -21,8 +19,6 @@ DeviceSubTypeFilter:
 }'
    partner_DeviceSubTypeFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_02
-      description: Create DeviceSubType Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -41,8 +37,6 @@ DeviceSubTypeFilter:
 }'
    partner_DeviceSubTypeFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_03
-      description: Create DeviceSubType Filter while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
@@ -65,8 +59,6 @@ DeviceSubTypeFilter:
 }'
    partner_DeviceSubTypeFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_04
-      description: Create DeviceSubType Filter while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
@@ -89,8 +81,6 @@ DeviceSubTypeFilter:
 }'
    partner_DeviceSubTypeFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_05
-      description: Create DeviceSubType Filter while keeping invalid values in Type parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
@@ -113,8 +103,6 @@ DeviceSubTypeFilter:
 }'
    partner_DeviceSubTypeFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
-      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_06
-      description: Create DeviceSubType Filter while keeping invalid values in Column parameter
       role: partner
       restMethod: post
       inputTemplate: partner/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter

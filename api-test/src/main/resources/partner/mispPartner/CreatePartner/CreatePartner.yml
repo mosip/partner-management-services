@@ -1,8 +1,6 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
-      description: Create MISP Partner Self Registration
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner
@@ -12,19 +10,17 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "misp@gmail.com",
     "organizationName": "misp",
-    "partnerId": "MISP-AUTOMATION",
+    "partnerId": "MISP",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP-AUTOMATION",
+        "partnerId": "MISP",
         "status": "InProgress"
     }'
    Partner_PartnerSelfRegistration_MispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
-      description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner
@@ -34,20 +30,18 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "mis2p@gmail.com",
     "organizationName": "misp2",
-    "partnerId": "MISP2-AUTOMATION",
+    "partnerId": "MISP2",
     "partnerType": "MISP_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP2-AUTOMATION",
+        "partnerId": "MISP2",
         "status": "InProgress"
     }'
     
    Partner_PartnerSelfRegistration_MispLicense_Msip:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
-      description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post
       inputTemplate: partner/mispPartner/CreatePartner/createPartner
