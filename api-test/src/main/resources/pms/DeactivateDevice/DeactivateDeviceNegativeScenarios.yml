@@ -1,0 +1,184 @@
+DeactivateDeviceNegativeScenarios:
+   Pms_DeactivateDevice_without_authentication_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_01
+      description: Deactivate Device without Partner authentication 
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_with_Invalid_Device_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_02
+      description: Deactivate Device by passing invalid Device ID
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "APPLE1111222"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_with_Invalid_requestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_03
+      description: Deactivate Device by passing invalid requestTime
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "1111-07-22T08:21:17.665Z",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_Missing_requestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_04
+      description: Deactivate Device while keeping requestTime paramter as Missing
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_Empty_requestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_05
+      description: Deactivate Device while keeping requestTime paramter as Empty 
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$REMOVE$",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_with_Invalid_RandomDevice_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_06
+      description: Deactivate Device by passwing invalid Random Device ID
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "00001111222"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_Already_deactivated_device_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_07
+      description: Deactivate Device which has been already Deactivated
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDevice
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_014"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_with_Invalid_Version_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_08
+      description: Deactivate Device by passing invalid Version
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.device.patch",
+      "version": "99",
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateDevice_with_Empty_Version_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceId}
+      uniqueIdentifier: TC_PMS_DeactivateDevice_09
+      description: Deactivate Device while keeping Version parameter as Empty
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.device.patch",
+      "version": "$REMOVE$",
+      "requesttime": "$TIMESTAMP$",
+      "deviceId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'

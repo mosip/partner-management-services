@@ -1,40 +1,34 @@
 GetMISPLicenseByMispID:
    Partner_GetMISPLicenseByMispID__Deactive_allValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
-      uniqueIdentifier: TC_PMS_GetMISPLicenseByMispID_01
-      description: Retreive MISPLicense for Deactivate MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
-      outputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispIDResult
+      outputTemplate: partner/error
       input: '{
-    "mispId": "MISP-AUTOMATION"
+    "mispId": "MISP"
 }'
       output: '{
-    "providerId": "MISP-AUTOMATION",
-    "licenseKeyStatus": "Active"
+    "errors": [
+    {
+      "errorCode": "PMS_MSP_413"
+    }
+  ]
     }'
-    
    Partner_GetMISPLicenseByMispID__Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
-      uniqueIdentifier: TC_PMS_GetMISPLicenseByMispID_02
-      description: Retreive MISPLicense for Activate MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID
       outputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispIDResult
       input: '{
-    "mispId": "MISP2-AUTOMATION"
+    "mispId": "MISP2"
 }'
       output: '{
-    "providerId": "MISP2-AUTOMATION",
-    "licenseKeyStatus": "Active"
+    "providerId": "MISP2"
     }'
-    
    Partner_GetMISPLicenseByMispID_inValid_smoke:
       endPoint: /v1/partnermanager/misps/{mispId}/licenseKey
-      uniqueIdentifier: TC_PMS_GetMISPLicenseByMispID_03
-      description: Retreive MISPLicense for invalid MispID
       role: partner
       restMethod: get
       inputTemplate: partner/MispLicense/GetMISPLicenseByMispID/getMISPLicenseByMispID

@@ -1,0 +1,22 @@
+#####  DB queries to be executed to tear down the data used and generated during the test rig run for partnerRevamp APIs
+
+delete from pms.auth_policy where cr_by='pms-111999';
+delete from pms.policy_group where cr_by='pms-111999';
+delete  from pms.oidc_client where cr_by='pms-111999';
+delete  from pms.partner_policy where cr_by='pms-111999';
+delete  from pms.partner_policy_request where cr_by='pms-111999';
+delete  from pms.auth_policy where cr_by='pms-111777';
+delete  from pms.policy_group where cr_by='pms-111777';
+delete  from pms.partner where name ='PMS_API_ABC_ORG';
+delete  FROM pms.user_details where cr_by='pms-111999';
+
+delete  from pms.device_detail_sbi where cr_by='pms-111998';
+delete  FROM pms.device_detail where dprovider_id='pms-111998';
+delete  FROM pms.secure_biometric_interface where cr_by='pms-111998';
+delete  FROM pms.secure_biometric_interface where cr_by='pms-111998';
+delete  from pms.partner where user_id='pms-111998';
+delete  FROM pms.user_details where cr_by='pms-111998';
+
+delete  from pms.ftp_chip_detail where foundational_trust_provider_id='pms-111888';
+delete  from pms.partner where user_id='pms-111888';
+delete  FROM pms.user_details where cr_by='pms-111888';

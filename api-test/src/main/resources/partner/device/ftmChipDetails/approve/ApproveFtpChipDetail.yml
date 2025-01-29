@@ -1,8 +1,6 @@
 ApproveFtpChipDetail:
    Partner_ApproveFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
       endPoint: /v1/partnermanager/ftpchipdetail
-      uniqueIdentifier: TC_PMS_ApproveFtpChipDetail_01
-      description: Update FTM Chip provider Partner while keeping ftpChipDetailID as missing
       role: partner
       restMethod: patch
       inputTemplate: partner/device/ftmChipDetails/approve/approveFtpChipDetail

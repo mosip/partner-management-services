@@ -1,8 +1,6 @@
 RequestAPIKeyCredentialPartner:
    Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_01
-      description: Create Partner API Key Request for Credential Partner with valid data
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -16,9 +14,7 @@ RequestAPIKeyCredentialPartner:
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_02
-      description: Create Partner API Key Request for Credential Partner with valid data
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -32,9 +28,7 @@ RequestAPIKeyCredentialPartner:
       output: ' {
     }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
-      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_03
-      description: Create Partner API Key Request for Credential Partner with invalid Policy Name
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -53,9 +47,7 @@ RequestAPIKeyCredentialPartner:
   ]
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
-      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_04
-      description: Create Partner API Key Request for Credential Partner with invalid use case description
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -74,9 +66,7 @@ RequestAPIKeyCredentialPartner:
   ]
 }'
    Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
-      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_05
-      description: Create Partner API Key Request for Credential Partner with invalid Policy Name use case description
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

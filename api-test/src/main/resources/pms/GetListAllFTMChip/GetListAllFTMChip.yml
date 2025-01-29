@@ -1,0 +1,17 @@
+GetListAllFTMChip:
+   Pms_GetListAllFTMChip_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChip_01
+      description: Retrieve all FTM chip details with valid details
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult
+      input: '{
+}'
+      output: ' {
+      "partnerId": "pms-111888",
+      "make": "AcmeCorpFtm",
+      "model": "mode2
+}'

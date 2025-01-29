@@ -1,0 +1,399 @@
+GetAllPartnerPolicyRequest:
+   Pms_GetAllPartnerPolicyRequest_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_01      
+      description: Fetching all the partner policy requests
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_partnerId_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_04      
+      description: Fetching all the partner policy requests for PartnerId which contains 'a'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_orgname_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?orgName={orgName}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_05      
+      description: Fetching all the partner policy requests for orgName which contains '1'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "1",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_requestDetails_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?requestDetails={requestDetails}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_06      
+      description: Fetching all the partner policy requests for requestDetails which contains 'ab'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "ab",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_With_policyId_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?policyId={policyId}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_07      
+      description: Fetching all the partner policy requests for policyId which contains '2'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "2",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_policyname_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?policyName={policyName}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_08      
+      description: Fetching all the partner policy requests for policyName which contains 'policy'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "policy",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_policygroupname_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?policyGroupName={policyGroupName}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_09      
+      description: Fetching all the partner policy requests for policyGroupName which contains 'Group'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "Group",
+      "partnerType": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_partnerType_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerType={partnerType}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_10      
+      description: Fetching all the partner policy requests for partnerType which contains 'a'
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "a"
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_sortType_DESC:
+      endPoint: /v1/partnermanager/partner-policy-requests?sortType={sortType}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_11   
+      description: Fetching all the partner policy requests by sort type DESC for the given sort field
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortType": "DESC",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllPartnerPolicyRequest_with_sortType_ASC:
+      endPoint: /v1/partnermanager/partner-policy-requests?sortType={sortType}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_12   
+      description: Fetching all the partner policy requests by sort type ASC for the given sort field
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "ASC",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllPartnerPolicyRequest_with_status_Inprogress:
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_14  
+      description: Fetching all the partner policy requests for which status as Inprogress
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "status": "InProgress",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_status_approved:
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_15  
+      description: Fetching all the partner policy requests for which status as approved
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "status": "approved",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: ' {
+}'
+   Pms_GetAllPartnerPolicyRequest_with_status_rejected:
+      endPoint: /v1/partnermanager/partner-policy-requests?status={status}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_16  
+      description: Fetching all the partner policy requests for which status as rejected
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "status": "rejected",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+}'
+   Pms_GetAllPartnerPolicyRequest_with_pageNo_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?pageNo={pageNo}&pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_19  
+      description: Fetching all the partner policy requests by giving valid page number given
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "pageNo": "8",
+      "status": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageSize": "5",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{    
+}'
+   Pms_GetAllPartnerPolicyRequest_with_random_value_given:
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_21  
+      description: Fetching all the partner policy requests by giving random value for partnerid
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "status": "$REMOVE$",
+      "partnerId": "&&&abcdf",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{    
+}'
+   Pms_GetAllPartnerPolicyRequest_with_combination_search_twofields:
+      endPoint: /v1/partnermanager/partner-policy-requests?partnerId={partnerId}&requestDetails={requestDetails}
+      uniqueIdentifier: TC_PMS_partner-policy-requests_22  
+      description: Fetching all the partner policy requests by giving value for partnerId and requestDetails
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
+      input: '{
+      "partnerId": "1",
+      "requestDetails": "2",
+      "status": "$REMOVE$",      
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"            
+}'
+      output: '{    
+}'

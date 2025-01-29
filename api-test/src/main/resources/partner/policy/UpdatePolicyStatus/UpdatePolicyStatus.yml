@@ -1,8 +1,6 @@
 UpdatePolicyStatus:
    Partner_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_01
-      description: Update Policy Status as DeActive
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -19,8 +17,6 @@ UpdatePolicyStatus:
 
    Partner_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_02
-      description: Update Policy Status as DeActive
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -38,8 +34,6 @@ UpdatePolicyStatus:
       
    Partner_UpdatePolicyStatus_DeActive_datashare_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_03
-      description: Update Policy Status as DeActive for datashare
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -55,8 +49,6 @@ UpdatePolicyStatus:
     }'
    Partner_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_04
-      description: Update Policy Status as Active with invalid data
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -77,8 +69,6 @@ UpdatePolicyStatus:
     }' 
    Partner_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_05
-      description: Update Policy Status as Active with invalid PolicyID
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -99,8 +89,6 @@ UpdatePolicyStatus:
     }' 
    Partner_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_06
-      description: Update Policy Status while keeping status parameter as invalid
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -121,8 +109,6 @@ UpdatePolicyStatus:
 }'
    Partner_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_07
-      description: Update Policy Status while keeping PolicyGroupId parameter as invalid
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -143,8 +129,6 @@ UpdatePolicyStatus:
     }'
    Partner_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_08
-      description: Update Policy Status while keeping status parameter as empty
       role: partner
       restMethod: patch
       inputTemplate: partner/policy/UpdatePolicyStatus/updatePolicyStatus
