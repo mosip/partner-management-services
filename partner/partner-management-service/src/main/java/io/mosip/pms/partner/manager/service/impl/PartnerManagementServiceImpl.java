@@ -880,9 +880,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageResponseV2Dto.setData(partnerSummaryDtoList);
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
@@ -1083,9 +1080,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (ApiAccessibleException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
