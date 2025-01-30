@@ -99,7 +99,7 @@ public class ClientManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
 	@GetMapping(value = "/oauth/client")
 	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by the Auth Partners.",
-			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles.")
+			description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})

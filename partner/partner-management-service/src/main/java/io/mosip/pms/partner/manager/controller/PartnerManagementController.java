@@ -124,16 +124,16 @@ public class PartnerManagementController {
 	 }
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /partners/v3 endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartners())")
 	@RequestMapping(value = "/partners", method = RequestMethod.GET)
-	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
+	@Operation(summary = "Service to get partner details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> getPartners(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<RetrievePartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -146,16 +146,16 @@ public class PartnerManagementController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /partners/v3 endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersnew())")
 	@RequestMapping(value = "/partners/v2", method = RequestMethod.GET)
-	@Operation(summary = "Service to get partner details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /admin-partners endpoint")
+	@Operation(summary = "Service to get partner details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /admin-partners endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerDetailsResponse>> getPartnersDeatils(
 			@RequestParam("partnerType") Optional<String> partnerType){
 		ResponseWrapper<PartnerDetailsResponse> response=new ResponseWrapper<>();
@@ -195,16 +195,16 @@ public class PartnerManagementController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /partner-policy-requests endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikey())")
 	@RequestMapping(value = "/partners/apikey" , method = RequestMethod.GET)
-	@Operation(summary = "Service to get API key requests - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /partner-policy-requests endpoint")
+	@Operation(summary = "Service to get API key requests - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /partner-policy-requests endpoint")
 	public ResponseEntity<ResponseWrapper<PartnerAPIKeyRequestsResponse>> getAPIKeyRequests(){
 		List<ApikeyRequests> apikeyRequests = null;
 		ResponseWrapper<PartnerAPIKeyRequestsResponse> response = new ResponseWrapper<>();
@@ -267,7 +267,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
 	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -280,7 +280,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
 	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -333,7 +333,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
 	@GetMapping(value = "/partner-policy-requests")
 	@Operation(summary = "This endpoint fetches list of all the policy requests made by the partners.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners associated with the logged in user only.If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners.")
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners associated with the logged in user only.If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the policy requests made by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -390,7 +390,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -439,7 +439,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGettrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates")
 	@Operation(summary = "This endpoint retrieves a list of all the Trust Certificates uploaded by the Partner Admin.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -489,7 +489,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadtrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates/{certificateId}/certificateFile")
 	@Operation(summary = "This endpoint will download p7b file for a CA / Intermediate CA certificate along with the trust chain based on Certificate Id.",
-			description = "Available since release-1.3.x. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
