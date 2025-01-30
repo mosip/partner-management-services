@@ -39,6 +39,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -287,15 +288,57 @@ public class SBIServiceTest {
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 
+	@Before
+	public void setUp() throws Exception {
+		setPrivateField(secureBiometricInterfaceService, "maxAllowedExpiryYear", 10);
+		setPrivateField(secureBiometricInterfaceService, "maxAllowedCreatedYear", 10);
+	}
+
+	private void setPrivateField(Object targetObject, String fieldName, Object value) throws Exception {
+		Field field = targetObject.getClass().getDeclaredField(fieldName);
+		field.setAccessible(true);
+		field.set(targetObject, value);
+	}
+
 	@Test
     public void createSBITest() throws Exception {
 		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Partner partner = new Partner();
+		partner.setId("1234");
+		partner.setName("abc");
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(anyString(), anyString())).thenReturn(sbiList);
+		secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+    }
+
+	@Test
+	public void createSBITest05() throws Exception {
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(null);
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
-		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode()));
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode()));
 		}
-    }
+	}
+
+	@Test
+	public void createSBITest06() throws Exception {
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Partner partner = new Partner();
+		partner.setId("1234");
+		partner.setName("abc");
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		sbiList.add(secureBiometricInterface);
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(anyString(), anyString())).thenReturn(sbiList);
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+		}
+	}
 
 	@Test
     public void createSBITest01() throws Exception {
@@ -342,7 +385,7 @@ public class SBIServiceTest {
 	}
 
 	@Test
-    public void updateDeviceDetailTest() throws Exception {
+    public void updateSecureBiometricInterfaceTest() throws Exception {
 		try {
 			secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
 		}catch (RequestException e) {
@@ -351,23 +394,35 @@ public class SBIServiceTest {
     }
 
 	@Test(expected=RequestException.class)
-    public void updateDeviceDetailNotFoundTest() throws Exception {
+    public void updateSecureBiometricInterfaceNotFoundTest() throws Exception {
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }
 
+	@Test(expected=RequestException.class)
+	public void updateSecureBiometricInterfaceExistTest() throws Exception {
+		secureBiometricInterface.setProviderId("12345");
+		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setId("090");
+		sbiList.add(sbi);
+		Mockito.doReturn(sbiList).when(sbiRepository).findByProviderIdAndSwVersion(Mockito.anyString(), Mockito.anyString());
+		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
+	}
+
 	@Test
-	public void updateDeviceDetailStatusTest_Approve() {
+	public void updateSecureBiometricInterfaceStatusTest_Approve() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("Activate"));
 	}
 
 	@Test
-	public void updateDeviceDetailStatusTest_Reject() {
+	public void updateSecureBiometricInterfaceStatusTest_Reject() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-activate"));
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_sbiAlreadyApprovedException() {
+	public void updateSecureBiometricInterfaceStatusTest_sbiAlreadyApprovedException() {
 		secureBiometricInterface.setApprovalStatus("approved");
 		secureBiometricInterface.setActive(true);
 		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(secureBiometricInterface);
@@ -375,7 +430,7 @@ public class SBIServiceTest {
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_sbiAlreadyRejectedException() {
+	public void updateSecureBiometricInterfaceStatusTest_sbiAlreadyRejectedException() {
 		secureBiometricInterface.setApprovalStatus("rejected");
 		secureBiometricInterface.setActive(false);
 		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(secureBiometricInterface);
@@ -383,12 +438,12 @@ public class SBIServiceTest {
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_Status_Exception() {
+	public void updateSecureBiometricInterfaceStatusTest_Status_Exception() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-Activate"));
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_DeviceDetail_Exception() {
+	public void updateSecureBiometricInterfaceStatusTest_DeviceDetail_Exception() {
 		SecureBiometricInterfaceStatusUpdateDto request = statusUpdateRequest("De-Activate");
 		request.setId("34567");
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
