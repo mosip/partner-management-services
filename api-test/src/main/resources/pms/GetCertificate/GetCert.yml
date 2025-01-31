@@ -12,6 +12,24 @@ GetPartnerCert:
 }'
       output: ' {
 }'
+   Pms_GetPartnerCert_with_unregistered_partner:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Fetching all the certificate for the Partner Id
+      role: partnerrevamp
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetCertificate/getCert
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "848484848"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_108"
+       }
+       ]
+}'
 
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
