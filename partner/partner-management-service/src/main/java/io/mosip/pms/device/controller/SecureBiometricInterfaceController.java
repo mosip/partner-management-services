@@ -111,14 +111,14 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterface())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update SecureBiometricInterface - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since release-1.3.x.")
+	@Operation(summary = "Service to update SecureBiometricInterface - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since release-1.2.2.0.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When SecureBiometricInterface successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating SecureBiometricInterface any error occured") })
@@ -168,17 +168,17 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /securebiometricinterface endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacesearch())")
-	@Operation(summary = "Service to search SecureBiometricInterface details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface endpoint.")
+	@Operation(summary = "Service to search SecureBiometricInterface details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /securebiometricinterface endpoint.")
 	public ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> searchSecureBiometric(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<SbiSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -188,17 +188,17 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new POST /securebiometricinterface/{sbiId}/devices endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PutMapping("/devicedetails/map")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmap())")
-	@Operation(summary = "Service to map device details with sbi - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the POST /securebiometricinterface/{sbiId}/devices endpoint.")
+	@Operation(summary = "Service to map device details with sbi - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the POST /securebiometricinterface/{sbiId}/devices endpoint.")
 	public ResponseWrapper<String> mapDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
@@ -207,14 +207,14 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PutMapping("/devicedetails/map/remove")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutsecurebiometricinterfacedevicedetailsmapremove())")
-	@Operation(summary = "Service to remove mapped device details with sbi - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since release-1.3.x.")
+	@Operation(summary = "Service to remove mapped device details with sbi - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since release-1.2.2.0.")
 	public ResponseWrapper<String> removeMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceDetailSBIMappingDto> request) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
@@ -223,17 +223,17 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /securebiometricinterface/{sbiId}/devices endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/devicedetails/map/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacedevicedetailsmapsearch())")
-	@Operation(summary = "Service to search mapped device details and SecureBiometricInterface details - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface/{sbiId}/devices endpoint.")
+	@Operation(summary = "Service to search mapped device details and SecureBiometricInterface details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /securebiometricinterface/{sbiId}/devices endpoint.")
 	public ResponseWrapper<PageResponseDto<MappedDeviceDetailsReponse>> searchMappedDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<MappedDeviceDetailsReponse>> responseWrapper = new ResponseWrapper<>();
@@ -243,17 +243,17 @@ public class SecureBiometricInterfaceController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /securebiometricinterface endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterfacefiltervalues())")
-	@Operation(summary = "Service to filter SBI's - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /securebiometricinterface endpoint.")
+	@Operation(summary = "Service to filter SBI's - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /securebiometricinterface endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -264,7 +264,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
 	@PostMapping(value = "/{sbiId}/devices")
 	@Operation(summary = "This endpoint adds a new Device and creates an inactive mapping between the device and the given SBI.", 
-	description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -281,7 +281,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetsbidetails())")
 	@GetMapping(value = "/{sbiId}/devices")
 	@Operation(summary = "This endpoint fetches the list of Devices associated with a given SBI Id", 
-	description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -294,7 +294,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatesbi())")
 	@PatchMapping(value = "/{sbiId}")
 	@Operation(summary = "This endpoint deactivates an SBI along with associated Devices.",
-			description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -312,7 +312,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallsbidetails())")
 	@GetMapping
 	@Operation(summary = "This endpoint retrieves a list of all SBIs created by the Device Providers.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all SBIs created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the SBIs created by all the partners.")
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all SBIs created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the SBIs created by all the partners.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
