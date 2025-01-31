@@ -1,6 +1,8 @@
 DeactivateSBIWithAssociatedDevices:
    Pms_DeactivateSBIWithAssociatedDevices_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
+      description: Deactivate SBI along with Associated Devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch

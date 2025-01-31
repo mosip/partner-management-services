@@ -486,6 +486,15 @@
 				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
+	<test name="ApproveMappingDeviceToSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>	
 	<test name="RejectMappingDeviceToSbi">
 		<parameter name="ymlFile"
 			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi.yml" />
@@ -495,6 +504,15 @@
 				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
+	<test name="RejectMappingDeviceToSbiNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>	
 	<test name="GetAllDeviceListMappedWithSbi">
 		<parameter name="ymlFile"
 			value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi.yml" />

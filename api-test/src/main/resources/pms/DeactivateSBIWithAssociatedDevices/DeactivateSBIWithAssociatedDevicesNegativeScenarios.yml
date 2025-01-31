@@ -213,7 +213,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
        }
        ]
 }'
-   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue_Neg:
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue1_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_11
       description: Deactivate SBI while keeping Version parameter as invalid value 1 in request
@@ -235,7 +235,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
        }
        ]
 }'
-   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue_Neg:
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue0_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_12
       description: Deactivate SBI while keeping Version parameter as invalid value 0 in request
@@ -304,7 +304,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
 
    Pms_DeactivateSBIWithAssociatedDevices_Already_deactivated_SBI_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_16
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_15
       description: Deactivate SBI which already Deactivated in request
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -324,7 +324,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
 }'
    Pms_DeactivateSBIWithAssociatedDevices_Null_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_16
       description: Deactivate SBI while keeping SBI ID parameter as Null in request
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -346,7 +346,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
 }'
    Pms_DeactivateSBIWithAssociatedDevices_Empty_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_18
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
       description: Deactivate SBI while keeping SBI ID parameter as Empty in request
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -368,7 +368,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
 }'
    Pms_DeactivateSBIWithAssociatedDevices_InvalidNumeric_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_19
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_18
       description: Deactivate SBI while keeping SBI ID parameter as Invalid Numeric values in request
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -390,7 +390,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
 }'
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_20
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_19
       description: Deactivate SBI while keeping SBI ID parameter as Invalid values in request
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -407,6 +407,28 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       "errors": [
       {
        "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_with_invalid_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_20
+      description: Deactivate SBI with invalid Partner roles
+      role: device
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
        }
        ]
 }'

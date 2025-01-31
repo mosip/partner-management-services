@@ -33,3 +33,20 @@ GetAllApprovedDeviceProviderIdsNegativeScenarios:
        }
        ]
 }'
+   Pms_GetAllApprovedDeviceProviderIds_without_partner_roles_Neg:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviderIds_03
+      description: Retrieve All Approved Device ProviderIds without_partner_roles
+      role: device
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
