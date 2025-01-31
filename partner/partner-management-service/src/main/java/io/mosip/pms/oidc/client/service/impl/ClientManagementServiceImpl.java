@@ -536,3 +536,4 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return UserDetailUtil.getLoggedInUserId();
 	}
 }
+

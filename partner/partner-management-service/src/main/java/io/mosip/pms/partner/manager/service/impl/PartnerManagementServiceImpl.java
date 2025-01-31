@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.manager.service.impl;
 
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,14 +11,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 import javax.transaction.Transactional;
 
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.KeycloakUserDto;
+import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,26 +47,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
-import io.mosip.pms.common.dto.APIKeyDataPublishDto;
-import io.mosip.pms.common.dto.PartnerDataPublishDto;
-import io.mosip.pms.common.dto.PolicyPublishDto;
-import io.mosip.pms.common.dto.Type;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.BiometricExtractorProvider;
-import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicy;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
-import io.mosip.pms.common.repository.MispLicenseRepository;
-import io.mosip.pms.common.repository.MispServiceRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
@@ -57,15 +59,6 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
-import io.mosip.pms.partner.manager.dto.StatusRequestDto;
-import io.mosip.pms.partner.manager.dto.ApikeyRequests;
-import io.mosip.pms.partner.manager.dto.PartnerAPIKeyToPolicyMappingsResponse;
-import io.mosip.pms.partner.manager.dto.PartnerDetailsDto;
-import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingRequest;
-import io.mosip.pms.partner.manager.dto.PartnersPolicyMappingResponse;
-import io.mosip.pms.partner.manager.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pms.partner.manager.dto.RetrievePartnersDetails;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -79,9 +72,37 @@ import io.mosip.pms.partner.util.PartnerUtil;
 public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	private static final Logger LOGGER = PMSLogger.getLogger(PartnerManagementServiceImpl.class);
+	public static final String DEVICE_PROVIDER = "Device_Provider";
+	public static final String FTM_PROVIDER = "FTM_Provider";
+	private static final String APPROVED = "approved";
+	public static final String BLANK_STRING = "";
+
+	@Value("${mosip.pms.api.id.admin.partners.get}")
+	private String getAdminPartnersId;
+
+	@Value("${mosip.pms.api.id.all.partner.policy.mapping.requests.get}")
+	private String getAllPartnerPolicyMappingRequestsId;
+
+	@Value("${mosip.pms.api.id.all.api.key.requests.get}")
+	private String getAllApiKeyRequestsId;
+
+	@Value("${mosip.pms.api.id.trust.certificates.get}")
+	private String getTrustCertificatesId;
+
+	@Value("${mosip.pms.api.id.download.trust.certificates.get}")
+	private String getDownloadTrustCertificateId;
+
+	@Autowired
+	PartnerSummaryRepository partnerSummaryRepository;
+
+	@Autowired
+	PartnerPolicyMappingRequestRepository partnerPolicyMappingRequestRepository;
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
+
+	@Autowired
+	ApiKeyRequestSummaryRepository apiKeyRequestSummaryRepository;
 
 	@Autowired
 	PartnerRepository partnerRepository;
@@ -122,11 +143,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Autowired
 	private ObjectMapper mapper;
 
+	@Autowired
+	PartnerHelper partnerHelper;
+
+	@Autowired
+	PartnerServiceRepository partnerServiceRepository;
+
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
 
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
 	private int partnerPolicyExpiryInDays;
+
+	@Value("${mosip.pms.api.id.partner.details.get}")
+	private String getPartnerDetailsId;
+
+	public static final String VERSION = "1.0";
 
 	@Override
 	public PartnersPolicyMappingResponse updatePolicyAgainstApikey(PartnersPolicyMappingRequest request,
@@ -190,6 +222,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 		Partner updatePartnerObject = partnerFromDb.get();
+		if (updatePartnerObject.getApprovalStatus().equals(APPROVED) && !updatePartnerObject.getIsActive()){
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_ALREADY_DEACTIVATED.getErrorCode(),
+					ErrorCode.PARTNER_ALREADY_DEACTIVATED.getErrorMessage());
+		}
 		updatePartnerObject.setUpdBy(getUser());
 		updatePartnerObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		PartnersPolicyMappingResponse response = new PartnersPolicyMappingResponse();		
@@ -609,7 +645,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}		
 		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-				partnerFromDb.get().getId(), validPolicy.getId(), requestDto.getLabel());
+				partnerFromDb.get().getId(), validPolicy.getId(), PartnerUtil.trimAndReplace(requestDto.getLabel()));
 		if(policyByLabel != null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),
@@ -675,6 +711,27 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorMessage());
 		}
+		//check if logged in user is admin
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin){
+			// check if Partner is Active or not.
+			if (policyByLabel.getPartner() != null && !policyByLabel.getPartner().getIsActive()) {
+				LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED, partnerId,
+						"partnerId");
+				throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+		}
+		// check if API key has been already deactivated
+		if (!policyByLabel.getIsActive() && request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
+			LOGGER.error(
+					"API key is already deactivated hence it cannot be deactivated again, for partner: " + partnerId);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED, partnerId,
+					"partnerId");
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
 		policyByLabel.setUpdBy(getUser());
 		policyByLabel.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));		
 		if (request.getStatus().equalsIgnoreCase(PartnerConstants.ACTIVE)) {
@@ -697,6 +754,409 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		LOGGER.info(request.getStatus() + " : is Invalid Input Parameter, it should be (Active/De-Active)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE_ACTIVE_DEACTIVE.getErrorMessage());
-	}	
+	}
+
+	@Override
+	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId) {
+		ResponseWrapperV2<PartnerDetailsV3Dto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage()
+				);
+			}
+			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
+			if (optionalPartner.isEmpty()) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
+				);
+			}
+			PartnerDetailsV3Dto partnerDetailsV3Dto = new PartnerDetailsV3Dto();
+			Partner partner = optionalPartner.get();
+			partnerDetailsV3Dto.setPartnerId(partner.getId());
+			partnerDetailsV3Dto.setApprovalStatus(partner.getApprovalStatus());
+			partnerDetailsV3Dto.setIsActive(partner.getIsActive());
+			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
+			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
+			partnerDetailsV3Dto.setOrganizationName(partner.getName());
+			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
+			partnerDetailsV3Dto.setContactNumber(partner.getContactNo());
+			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
+				LOGGER.info("sessionId", "idType", "id",
+						"Policy Group Id is empty for partner Id -" + partner.getId());
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
+				);
+			}
+			if (Objects.nonNull(partner.getPolicyGroupId())) {
+				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+				if (Objects.isNull(policyGroup)) {
+					throw new PartnerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+					);
+				}
+				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
+				partnerDetailsV3Dto.setPolicyGroupDescription(policyGroup.getDesc());
+			}
+			if (Objects.isNull(partner.getCertificateAlias())){
+				partnerDetailsV3Dto.setIsCertificateAvailable(false);
+			} else {
+				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+				requestDto.setPartnerId(partner.getId());
+
+				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
+						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
+				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
+				partnerDetailsV3Dto.setIsCertificateAvailable(true);
+			}
+			Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
+			if (keycloakUserDto.isPresent()){
+				partnerDetailsV3Dto.setFirstName(keycloakUserDto.get().getFirstName());
+				partnerDetailsV3Dto.setLastName(keycloakUserDto.get().getLastName());
+			}
+			responseWrapper.setResponse(partnerDetailsV3Dto);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"Error in getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnerDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			//Sorting
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
+					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
+							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(),
+							partnerFilterDto.getIsActive(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAdminPartnersId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerPolicyRequestFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+					if (!partnerHelper.skipDeviceOrFtmPartner(partner)) {
+						partnerHelper.validatePartnerId(partner, userId);
+						partnerHelper.validatePolicyGroupId(partner, userId);
+						partnerHelper.validatePolicyGroup(partner);
+						partnerIdList.add(partner.getId());
+					}
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
+			// Pagination
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			//Sorting
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
+							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
+							filterDto.getStatus(), filterDto.getPartnerComment(),
+							filterDto.getPolicyGroupName(), partnerIdList, isPartnerAdmin, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerPolicyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerPolicyRequestSummaryDto.class);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllPartnerPolicyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllPartnerPolicyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllPartnerPolicyMappingRequestsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<String> partnerIdList = null;
+			if (!isPartnerAdmin) {
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partnerIdList = new ArrayList<>();
+				for (Partner partner : partnerList) {
+						partnerHelper.validatePartnerId(partner, userId);
+						partnerHelper.validatePolicyGroupId(partner, userId);
+						partnerHelper.validatePolicyGroup(partner);
+						partnerIdList.add(partner.getId());
+				}
+			}
+
+			Pageable pageable = Pageable.unpaged();
+
+			// Pagination
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+
+			//Sorting
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				if (sortFieldName.equalsIgnoreCase("status")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.apiKeyAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
+					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyLabel(),
+							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
+							filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllApiKeyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllApiKeyRequests method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_API_KEY_REQUESTS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_API_KEY_REQUESTS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllApiKeyRequestsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, TrustCertificateFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<TrustCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			TrustCertTypeListRequestDto trustCertTypeListRequestDto = new TrustCertTypeListRequestDto();
+			trustCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
+			trustCertTypeListRequestDto.setExcludeMosipCA(true);
+			trustCertTypeListRequestDto.setPartnerDomain(filterDto.getPartnerDomain());
+			trustCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
+			trustCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
+			trustCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
+			trustCertTypeListRequestDto.setPageNumber(pageNo + 1);
+			trustCertTypeListRequestDto.setPageSize(pageSize);
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				trustCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName));
+				trustCertTypeListRequestDto.setSortOrder(sortType);
+			}
+			RequestWrapper<TrustCertTypeListRequestDto> request = new RequestWrapper<>();
+			request.setRequest(trustCertTypeListRequestDto);
+			TrustCertTypeListResponseDto responseObject = null;
+			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.trust.certificates.post.rest.uri"), null, "", "",
+					MediaType.APPLICATION_JSON, request, Map.class);
+
+			if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while getting the trust certificates list from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while getting the trust certificates list from keymanager {}", apiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+			if (apiResponse.get("response") == null) {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertTypeListResponseDto.class);
+			pageResponseV2Dto.setPageNo((responseObject.getPageNumber() - 1));
+			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
+			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());
+			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.TRUST_CERTIFICATES_FETCH_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.TRUST_CERTIFICATES_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getTrustCertificatesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId) {
+		ResponseWrapperV2<TrustCertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(certificateId) || certificateId.equals(BLANK_STRING)) {
+				LOGGER.info("sessionId", "idType", "id", "Certificate Id is null or empty -" + certificateId);
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_CERTIFICATE_ID.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_CERTIFICATE_ID.getErrorMessage()
+				);
+			}
+			TrustCertificateResponseDto responseObject = null;
+			Map<String, String> pathsegments = new HashMap<>();
+			pathsegments.put("caCertId", certificateId);
+			Map<String, Object> apiResponse = restUtil.getApi(environment.getProperty("pmp.download.trust.certificates.get.rest.uri"), pathsegments, Map.class);
+			if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
+				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
+						.get(PartnerConstants.ERRORS);
+				if (!certServiceErrorList.isEmpty()) {
+					LOGGER.error("Error occurred while downloading the trust certificates from keymanager");
+					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+				} else {
+					LOGGER.error("Error occurred while downloading the trust certificates from keymanager {}", apiResponse);
+					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+				}
+			}
+			if (apiResponse.get("response") == null) {
+				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+			}
+			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertificateResponseDto.class);
+			responseWrapper.setResponse(responseObject);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In downloadTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_TRUST_CERTIFICATE_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.DOWNLOAD_TRUST_CERTIFICATE_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getDownloadTrustCertificateId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	}
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserId() {
+		String userId = authUserDetails().getUserId();
+		return userId;
+	}
 }
 

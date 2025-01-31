@@ -18,6 +18,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -43,16 +46,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.Pagination;
-import io.mosip.pms.common.dto.PolicyFilterValueDto;
-import io.mosip.pms.common.dto.PolicySearchDto;
-import io.mosip.pms.common.dto.SearchAuthPolicy;
-import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.SearchFilter;
-import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.policy.dto.RequestWrapper;
 import io.mosip.pms.common.validator.FilterColumnValidator;
@@ -811,4 +804,58 @@ public class PolicyManagementControllerTest {
 		assertNotNull(response.getResponse());
 		assertEquals(mockedResponse, response.getResponse());
 	}
+
+	@Test
+	public void getAllPoliciesTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");
+	}
+
+	@Test
+	public void deactivatePolicyTest() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyResponseDto deactivatePolicyResponseDto = new DeactivatePolicyResponseDto();
+		responseWrapper.setResponse(deactivatePolicyResponseDto);
+
+		Mockito.when(policyManagementService.deactivatePolicy(anyString(), any()))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyGroupResponseDto deactivatePolicyGroupResponseDto = new DeactivatePolicyGroupResponseDto();
+		responseWrapper.setResponse(deactivatePolicyGroupResponseDto);
+
+		Mockito.when(policyManagementService.deactivatePolicyGroup(anyString(), any())).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+	}
+
 }

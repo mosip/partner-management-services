@@ -53,7 +53,7 @@ service:
 image:
   registry: docker.io
   repository: mosipid/policy-management-service
-  tag: 1.2.1.0
+  tag: 1.3.0-dp.1
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -89,7 +89,7 @@ livenessProbe:
     path: /v1/policymanager/actuator/health
     port: 9107
   initialDelaySeconds: 20
-  periodSeconds: 30
+  periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
@@ -247,7 +247,6 @@ extraEnvVars: []
 extraEnvVarsCM:
   - global
   - config-server-share
-  - artifactory-share
 
 ## Secret with extra environment variables
 ##
@@ -422,6 +421,7 @@ istio:
   corsPolicy:
     allowOrigins:
       - prefix: https://pmp.sandbox.xyz.net
+      - prefix: https://pmp-new.sandbox.xyz.net
     allowCredentials: true
     allowHeaders:
       - Accept
@@ -450,3 +450,7 @@ istio:
       - PATCH
       - PUT
       - DELETE
+
+# Set configuration
+# springConfigNameEnv:
+# activeProfileEnv:

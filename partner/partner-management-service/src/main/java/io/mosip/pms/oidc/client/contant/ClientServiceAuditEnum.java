@@ -21,6 +21,9 @@ public enum ClientServiceAuditEnum {
             "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
     UPDATE_CLIENT_FAILURE("PMS_PRT_305", AuditConstant.AUDIT_SYSTEM, "PUT UPDATE OIDC CLIENT",
             "Updating OIDC Client Failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+            "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+    GET_CLIENT_FAILURE("PMS_PRT_306", AuditConstant.AUDIT_SYSTEM, "GET OIDC CLIENT",
+            "Get OIDC Client", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
             "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
 
     private final String eventId;

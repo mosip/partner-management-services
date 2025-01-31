@@ -11,3 +11,4 @@ MISP_Partner,MISP_Partner,TRUE,superadmin,now(),FALSE
 Internal_Partner,Used internally to share certs,TRUE,superadmin,now(),TRUE
 SDK_Partner,SDK Partner,TRUE,superadmin,now(),FALSE
 Print_Partner,Print Partner,TRUE,superadmin,now(),TRUE
+Binding_Partner,Binding Partner,TRUE,superadmin,now(),TRUE

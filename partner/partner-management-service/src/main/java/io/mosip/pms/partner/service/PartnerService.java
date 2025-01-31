@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.service;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -13,8 +14,9 @@ import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
@@ -35,6 +37,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 
 public interface PartnerService {
 	
@@ -110,7 +113,19 @@ public interface PartnerService {
      * @throws JsonParseException 
     */
     public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException;
-    
+
+	/**
+	 * Function to Download Original Partner certificates
+	 *
+	 * @param PartnerCertDownloadRequestDto certDownloadRequestDto
+	 * @return {@link PartnerCertDownloadResponeDto} instance
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
+
     /**
      * Function to add biometric extractors 
      * @param partnerId
@@ -216,4 +231,9 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
+
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails();
+
+	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
+
 }
