@@ -3,7 +3,7 @@ DeactivateFtm:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtm_01
       description: Deactivate Device with valid Partner authentication
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtm

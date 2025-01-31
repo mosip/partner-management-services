@@ -3,7 +3,7 @@ uploadPartnerCert:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_01
       description: Upload Partner Cert
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
@@ -18,7 +18,7 @@ uploadPartnerCert:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_03
       description: Upload Partner Cert
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCertDeviceProvider
@@ -29,11 +29,11 @@ uploadPartnerCert:
       output: ' {
 }'
 
-   Pms_UploadPartnerCert_missing_PartnerDomain:
+   Pms_UploadPartnerCert_missing_PartnerDomain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_04
       description: Upload Partner Cert without partnerdomain      
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert2
       outputTemplate: pms/error
@@ -47,11 +47,11 @@ uploadPartnerCert:
         }
     ]
 }'
-   Pms_UploadPartnerCert_invalid_certificate:
+   Pms_UploadPartnerCert_invalid_certificate_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_05
       description: Upload Partner Cert by giving invalid cert data      
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert3
       outputTemplate: pms/error
@@ -65,11 +65,11 @@ uploadPartnerCert:
         }
     ]
 }'
-   Pms_UploadPartnerCert_invalid_Domain:
+   Pms_UploadPartnerCert_invalid_Domain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_06
       description: Upload Partner Cert by giving invalid domain      
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert4
       outputTemplate: pms/error
@@ -85,9 +85,9 @@ uploadPartnerCert:
 }'
    Pms_UploadPartnerCert_UploadAgain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerauth
       uniqueIdentifier: TC_PMS_uploadPartnerCert_07
       description: Upload partner certificate again
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
@@ -102,7 +102,7 @@ uploadPartnerCert:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_08
       description: Upload Partner Cert
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCertFtmProvider

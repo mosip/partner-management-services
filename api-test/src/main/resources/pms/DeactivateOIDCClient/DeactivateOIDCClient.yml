@@ -2,8 +2,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_01
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -27,8 +27,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Retry_with_same_policy_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_02
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -55,8 +55,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_Requesttime_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_03
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -82,13 +82,14 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_client_id_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_04
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
-      restMethod: post
+      restMethod: put
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
+      "client_id": "",
       "requesttime": "$TIMESTAMP$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
@@ -109,8 +110,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_clientName_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_05
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -136,8 +137,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_status_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_06
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -163,8 +164,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_logoUri_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_07
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -190,8 +191,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_redirectUris_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_08
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -217,8 +218,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_grantTypes_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_09
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -244,8 +245,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_clientNameLangMap_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_10
-      role: partnerrevamp
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
@@ -271,8 +272,8 @@ DeactivateOIDCClient:
    Pms_DeactivateOIDCClient_Missing_clientAuthMethods_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
+      role: partnerauth
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_11
-      role: partnerrevamp
       restMethod: post
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error

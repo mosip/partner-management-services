@@ -1,0 +1,19 @@
+GetAllApiKeyForAuthPartnerWithoutPartnerRegister:
+   Pms_GetAllApiKeyForAuthPartner_BeforePolicyMapping_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys
+      description: Fetching all the API Key Without Partner Register
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
+      outputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartnerResultNegative
+      input: '{
+}'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_CERTIFICATE_ERROR_002"
+    }
+  ]    
+}'
+

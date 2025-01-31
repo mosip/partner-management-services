@@ -2,7 +2,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -25,7 +25,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_policyID:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid policyid      
-      role: partnerrevamp
+      role: partnerauth
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -50,7 +50,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_logoUri:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid logoUri      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -61,7 +61,7 @@ CreateOIDCClient:
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
       	"publicKey": "$JWKKEY$",
       	"authPartnerId": "pms-111999",
-      	"logoUri": "https://",
+      	"logoUri": "https//",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
       	"clientAuthMethods": "private_key_jwt"
@@ -76,7 +76,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_RedirectUri:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid redirectUri      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -128,7 +128,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_without_publickey:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without publickkey      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -154,7 +154,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_granttypes:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid granttypes      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -180,7 +180,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_without_granttypes:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without granttypes      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -206,7 +206,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_without_name:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without name field      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -232,7 +232,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_invalid_publickey:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid publickkey      
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClient/oIDCClient
@@ -241,7 +241,7 @@ CreateOIDCClient:
       	"requestTime": "$TIMESTAMP$",
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      	"publicKey": "dhghfgfyt",
+      	"publicKey": {},
       	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",

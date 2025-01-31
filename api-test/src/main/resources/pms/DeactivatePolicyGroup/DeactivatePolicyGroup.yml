@@ -2,7 +2,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       description: Deactivate Policy Groups
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup

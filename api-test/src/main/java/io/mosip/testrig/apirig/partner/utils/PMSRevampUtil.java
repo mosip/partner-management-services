@@ -1,10 +1,13 @@
-package io.mosip.testrig.apirig.utils;
+package io.mosip.testrig.apirig.partner.utils;
 import org.apache.log4j.Logger;
 import org.testng.SkipException;
 
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
+import io.mosip.testrig.apirig.utils.AdminTestUtil;
+import io.mosip.testrig.apirig.utils.GlobalConstants;
+import io.mosip.testrig.apirig.utils.SkipTestCaseHandler;
 
 public class PMSRevampUtil extends AdminTestUtil {
 
@@ -52,5 +55,6 @@ public class PMSRevampUtil extends AdminTestUtil {
 			else
 				throw new SkipException("Marking testcase as skipped as required field is empty " + keyword);
 		}
+
 	}
 }

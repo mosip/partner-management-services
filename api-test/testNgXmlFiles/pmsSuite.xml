@@ -58,15 +58,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerRegister">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>
-
-	<test name="GetAllCertificateBeforePartnerCreate">
-		<parameter name="ymlFile"
-			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutPartnerRegister.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -91,7 +83,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerWithoutPartnerCertifcates">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerWithoutUploadCer.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -104,15 +96,6 @@
 			<class name="io.mosip.testrig.apirig.testscripts.SimplePut" />
 		</classes>
 	</test>
-
-	<test name="GetAllCertificateBeforeCACertificateUpload">
-		<parameter name="ymlFile"
-			value="pms/GetAllCertificate/GetAllCertificateNegativeScenarios.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>
-
 	<test name="UploadCACertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadCACertificate/UploadCACertificate.yml" />
@@ -171,7 +154,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerBeforePolicyMapping">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerBeforePolicyMapping.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -238,7 +221,7 @@
 
 	<test name="GetAllApiKeyForAuthPartnerBeforeApikeyGenerated">
 		<parameter name="ymlFile"
-			value="pms/GetAllApiKeyForAuthPartner2/GetAllApiKeyForAuthPartnernegativescenario.yml" />
+			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartnerBeforeApikeyGenerated.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -305,6 +288,7 @@
 	
 	<test name="GetDetailsOfPartner">
 		<parameter name="ymlFile" value="pms/GetDetailsOfPartner/GetDetailsOfPartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -577,6 +561,13 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>	
+		<test name="GetListAllFTMChipNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="CreateFtmChipDetails">
 		<parameter name="ymlFile"
 			value="pms/CreateFtmChipDetails/CreateFtmChipDetails.yml" />
@@ -586,6 +577,15 @@
 				name="io.mosip.testrig.apirig.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+		<test name="GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
+		</classes>
+	</test>	
+	
 	<test name="UploadCertificateOfFtpChip">
 		<parameter name="ymlFile"
 			value="pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip.yml" />
@@ -608,13 +608,7 @@
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<test name="GetListAllFTMChipNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
-		</classes>
-	</test>	
+
 	<test name="GetOriginalFtmCertifacte">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte.yml" />
@@ -673,7 +667,7 @@
 	
 	<test name="GetListOfAllSBI">
 		<parameter name="ymlFile" value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
-		<parameter name="pathParams" value="orgName,pageSize,partnerId,sbiExpiryStatus,sbiVersion,sortType" />
+		<parameter name="pathParams" value="sortFieldName,sortType,status" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -687,6 +681,7 @@
 	
 	<test name="GetListOfAllDevice">
 		<parameter name="ymlFile" value="pms/GetListOfAllDevice/GetListOfAllDevice.yml" />
+		<parameter name="pathParams" value="sortType,sortFieldName" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>
@@ -716,6 +711,7 @@
 	
 	<test name="GetListOfApiKey">
 		<parameter name="ymlFile" value="pms/GetListOfApiKey/GetListOfApiKey.yml" />
+		<parameter name="pathParams" value="sortType,sortFieldName,orgName" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.testscripts.GetWithParam" />
 		</classes>

@@ -3,7 +3,7 @@ GetUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_01
       description: Retrieve the PMS GetUserConsent for All Valid Smoke
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent

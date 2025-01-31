@@ -1,11 +1,16 @@
-package io.mosip.testrig.apirig.testscripts;
+package io.mosip.testrig.apirig.partner.testscripts;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -18,9 +23,10 @@ import org.testng.annotations.Test;
 import org.testng.internal.BaseTestMethod;
 import org.testng.internal.TestResult;
 
+import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.testrunner.BaseTestCase;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
@@ -28,16 +34,14 @@ import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
-import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
-import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(PatchWithPathParamsAndBody.class);
+public class DBValidator extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(DBValidator.class);
 	protected String testCaseName = "";
-	String pathParams = null;
+	public static List<String> templateFields = new ArrayList<>();
 	public Response response = null;
-
+	
 	@BeforeClass
 	public static void setLogLevel() {
 		if (PMSRevampConfigManger.IsDebugEnabled())
@@ -45,7 +49,7 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 		else
 			logger.setLevel(Level.ERROR);
 	}
-
+	
 	/**
 	 * get current testcaseName
 	 */
@@ -53,7 +57,7 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 	public String getTestName() {
 		return testCaseName;
 	}
-
+	
 	/**
 	 * Data provider class provides test case list
 	 * 
@@ -62,59 +66,65 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 	@DataProvider(name = "testcaselist")
 	public Object[] getTestCaseList(ITestContext context) {
 		String ymlFile = context.getCurrentXmlTest().getLocalParameters().get("ymlFile");
-		pathParams = context.getCurrentXmlTest().getLocalParameters().get("pathParams");
 		logger.info("Started executing yml: " + ymlFile);
 		return getYmlTestData(ymlFile);
 	}
-
-	/**
-	 * Test method for OTP Generation execution
-	 * 
-	 * @param objTestParameters
-	 * @param testScenario
-	 * @param testcaseName
-	 * @throws AuthenticationTestException
-	 * @throws AdminTestException
-	 */
+	
+	
+	
 	@Test(dataProvider = "testcaselist")
-	public void test(TestCaseDTO testCaseDTO) throws AdminTestException {
+	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
-
 		if (HealthChecker.signalTerminateExecution) {
-			throw new SkipException(
-					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
+			throw new SkipException(GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-
-
-		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
-		String inputJson = filterInputHbs(testCaseDTO);
-
-		response = patchWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-
-		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
-				response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
-				testCaseDTO, response.getStatusCode());
-		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-		if (!OutputValidationUtil.publishOutputResult(ouputValid))
-			throw new AdminTestException("Failed at output validation");
-
-	}
-
-	private String filterInputHbs(TestCaseDTO testCaseDTO) {
+		
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
+		String replaceId = inputJsonKeyWordHandeler(inputJson, testCaseName);
+		
+		
+		JSONObject jsonObject = new JSONObject(replaceId);
+		logger.info(jsonObject.keySet());
+		Set<String> set = new TreeSet<>();
+	    set.addAll(jsonObject.keySet());
+	    String filterId = "";
+	    
+	    if (set.stream().findFirst().isPresent())
+	    	filterId = set.stream().findFirst().get();
+	    
+	    logger.info(filterId);
+		String query = testCaseDTO.getEndPoint() +" " + filterId + " = " +"'"+jsonObject.getString(filterId)+"'";
+		
+		
+		logger.info(query);
+		Map<String, Object> response = AuditDBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
+		
+		
+		Map<String, List<OutputValidationDto>> objMap = new HashMap<>();
+		List<OutputValidationDto> objList = new ArrayList<>();
+		OutputValidationDto objOpDto = new OutputValidationDto();
+		if(response.size()>0) {
+			
+			objOpDto.setStatus("PASS");
+		}
+		else {
+			objOpDto.setStatus(GlobalConstants.FAIL_STRING);
+		}
+		
+		objList.add(objOpDto);
+		objMap.put(GlobalConstants.EXPECTED_VS_ACTUAL, objList);
 
-		if (inputJson.contains(GlobalConstants.$1STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$1STLANG$, BaseTestCase.languageList.get(0));
-		if (inputJson.contains(GlobalConstants.$2STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$2STLANG$, BaseTestCase.languageList.get(1));
-		if (inputJson.contains(GlobalConstants.$3STLANG$))
-			inputJson = inputJson.replace(GlobalConstants.$3STLANG$, BaseTestCase.languageList.get(2));
-
-		return inputJson;
+		if (!OutputValidationUtil.publishOutputResult(objMap))
+			throw new AdminTestException("Failed at output validation");
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * The method ser current test name to result
 	 * 

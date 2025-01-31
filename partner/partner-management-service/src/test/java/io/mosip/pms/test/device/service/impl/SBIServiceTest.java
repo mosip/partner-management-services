@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.authdevice.entity.SbiSummaryEntity;
 import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
@@ -37,6 +39,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -133,6 +136,9 @@ public class SBIServiceTest {
 
 	@Mock
 	PartnerServiceRepository partnerRepository;
+
+	@Mock
+	PolicyGroupRepository policyGroupRepository;
 
 	@Mock
 	DeviceDetailSbiRepository deviceDetailSbiRepository;
@@ -282,15 +288,57 @@ public class SBIServiceTest {
 		secureBiometricInterfaceService.searchSecureBiometricInterface(SecureBiometricInterface.class, deviceSearchDto);
 	}
 
+	@Before
+	public void setUp() throws Exception {
+		setPrivateField(secureBiometricInterfaceService, "maxAllowedExpiryYear", 10);
+		setPrivateField(secureBiometricInterfaceService, "maxAllowedCreatedYear", 10);
+	}
+
+	private void setPrivateField(Object targetObject, String fieldName, Object value) throws Exception {
+		Field field = targetObject.getClass().getDeclaredField(fieldName);
+		field.setAccessible(true);
+		field.set(targetObject, value);
+	}
+
 	@Test
     public void createSBITest() throws Exception {
 		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Partner partner = new Partner();
+		partner.setId("1234");
+		partner.setName("abc");
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(anyString(), anyString())).thenReturn(sbiList);
+		secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+    }
+
+	@Test
+	public void createSBITest05() throws Exception {
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(null);
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
-		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS.getErrorCode()));
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(DeviceDetailExceptionsConstant.DEVICE_PROVIDER_NOT_FOUND.getErrorCode()));
 		}
-    }
+	}
+
+	@Test
+	public void createSBITest06() throws Exception {
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(Mockito.any(),Mockito.any())).thenReturn(List.of(secureBiometricInterface));
+		Partner partner = new Partner();
+		partner.setId("1234");
+		partner.setName("abc");
+		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(anyString())).thenReturn(partner);
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		sbiList.add(secureBiometricInterface);
+		Mockito.when(sbiRepository.findByProviderIdAndSwVersion(anyString(), anyString())).thenReturn(sbiList);
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		} catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_RECORDS_EXISTS.getErrorCode()));
+		}
+	}
 
 	@Test
     public void createSBITest01() throws Exception {
@@ -305,18 +353,19 @@ public class SBIServiceTest {
 
 	@Test
     public void createSBITest02() throws Exception {
-		sbicreatedto.setSwCreateDateTime(LocalDateTime.now().minusDays(4));
-		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().minusDays(3));
+		sbicreatedto.setSwCreateDateTime(LocalDateTime.now().plusDays(4));
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().plusYears(3));
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
 		}catch (RequestException e) {
-			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.EXPIRYDATE_SHOULD_BE_GREATERTHAN_TODAYSDATE.getErrorCode()));
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY.getErrorCode()));
 		}
     }
 
 	@Test
     public void createSBITest03() throws Exception {
-		Mockito.when(partnerRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(null);
+		sbicreatedto.setSwCreateDateTime(LocalDateTime.now());
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().plusYears(20));
 		try {
 			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
 		}catch (RequestException e) {
@@ -325,7 +374,18 @@ public class SBIServiceTest {
     }
 
 	@Test
-    public void updateDeviceDetailTest() throws Exception {
+	public void createSBITest04() throws Exception {
+		sbicreatedto.setSwCreateDateTime(LocalDateTime.now().minusYears(20));
+		sbicreatedto.setSwExpiryDateTime(LocalDateTime.now().plusYears(3));
+		try {
+			secureBiometricInterfaceService.createSecureBiometricInterface(sbicreatedto);
+		}catch (RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS.getErrorCode()));
+		}
+	}
+
+	@Test
+    public void updateSecureBiometricInterfaceTest() throws Exception {
 		try {
 			secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
 		}catch (RequestException e) {
@@ -334,28 +394,56 @@ public class SBIServiceTest {
     }
 
 	@Test(expected=RequestException.class)
-    public void updateDeviceDetailNotFoundTest() throws Exception {
+    public void updateSecureBiometricInterfaceNotFoundTest() throws Exception {
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
 		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
     }
 
+	@Test(expected=RequestException.class)
+	public void updateSecureBiometricInterfaceExistTest() throws Exception {
+		secureBiometricInterface.setProviderId("12345");
+		Mockito.doReturn(secureBiometricInterface).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
+		List<SecureBiometricInterface> sbiList = new ArrayList<>();
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setId("090");
+		sbiList.add(sbi);
+		Mockito.doReturn(sbiList).when(sbiRepository).findByProviderIdAndSwVersion(Mockito.anyString(), Mockito.anyString());
+		secureBiometricInterfaceService.updateSecureBiometricInterface(sbidto);
+	}
+
 	@Test
-	public void updateDeviceDetailStatusTest_Approve() {
+	public void updateSecureBiometricInterfaceStatusTest_Approve() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("Activate"));
 	}
 
 	@Test
-	public void updateDeviceDetailStatusTest_Reject() {
+	public void updateSecureBiometricInterfaceStatusTest_Reject() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-activate"));
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_Status_Exception() {
+	public void updateSecureBiometricInterfaceStatusTest_sbiAlreadyApprovedException() {
+		secureBiometricInterface.setApprovalStatus("approved");
+		secureBiometricInterface.setActive(true);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(secureBiometricInterface);
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-activate"));
+	}
+
+	@Test(expected = RequestException.class)
+	public void updateSecureBiometricInterfaceStatusTest_sbiAlreadyRejectedException() {
+		secureBiometricInterface.setApprovalStatus("rejected");
+		secureBiometricInterface.setActive(false);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(anyString())).thenReturn(secureBiometricInterface);
+		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-activate"));
+	}
+
+	@Test(expected = RequestException.class)
+	public void updateSecureBiometricInterfaceStatusTest_Status_Exception() {
 		secureBiometricInterfaceService.updateSecureBiometricInterfaceStatus(statusUpdateRequest("De-Activate"));
 	}
 
 	@Test(expected = RequestException.class)
-	public void updateDeviceDetailStatusTest_DeviceDetail_Exception() {
+	public void updateSecureBiometricInterfaceStatusTest_DeviceDetail_Exception() {
 		SecureBiometricInterfaceStatusUpdateDto request = statusUpdateRequest("De-Activate");
 		request.setId("34567");
 		Mockito.doReturn(null).when(sbiRepository).findByIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString());
@@ -477,6 +565,24 @@ public class SBIServiceTest {
 			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
 		}catch(RequestException e) {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_NOT_APPROVED.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void mapDeviceDetailAndSbiTest07() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		deviceDetail.setDeviceProviderId("12345");
+		secureBiometricInterface.setProviderId("12345");
+		secureBiometricInterface.setSwExpiryDateTime(LocalDateTime.now().minusDays(10));
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(),request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
+		Mockito.when(sbiRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getSbiId())).thenReturn(secureBiometricInterface);
+		try {
+			secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+		}catch(RequestException e) {
+			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_EXPIRED.getErrorCode()));
 		}
 	}
 
@@ -639,6 +745,12 @@ public class SBIServiceTest {
 		deviceDetailSBI.setProviderId("123");
 		deviceDetailSBI.setIsActive(false);
 		when(deviceDetailSbiRepository.save(any())).thenReturn(deviceDetailSBI);
+		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
+
+		partnerList = new ArrayList<>();
+		Partner partner1 = new Partner();
+		partnerList.add(partner1);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123");
 	}
 
@@ -1108,12 +1220,72 @@ public class SBIServiceTest {
 	}
 
 	@Test
-	public void getAllSbiDetailsTest() throws Exception {
+	public void deactivateSbiTest_sbiProviderNotBelongsToUserException() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Device_Provider")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateSbiRequestDto requestDto = new DeactivateSbiRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setUserId("123");
+		partner.setId("123");
+		partner.setPartnerTypeCode("Device_Provider");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setId("12345");
+		sbi.setActive(true);
+		sbi.setApprovalStatus("approved");
+		sbi.setSwVersion("1.0.0");
+		sbi.setProviderId("987");
+		when(sbiRepository.findById(anyString())).thenReturn(Optional.of(sbi));
+		ResponseWrapperV2<SbiDetailsResponseDto> response = secureBiometricInterfaceService.deactivateSbi("12345", requestDto);
+
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void getAllSbiDetailsTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Device_Provider")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPolicyGroupId("policyGroup123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("policyGroup123");
+		policyGroup.setName("policyGrp");
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
 
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
@@ -1123,60 +1295,19 @@ public class SBIServiceTest {
 		filterDto.setPartnerId("mosip123");
 		filterDto.setOrgName("abc");
 		filterDto.setSbiVersion("1.0.0");
-		List<SbiSummaryEntity> sbiSummaryEntities = new ArrayList<>();
-		SbiSummaryEntity entity1 = new SbiSummaryEntity();
-		entity1.setSbiId("1");
-		sbiSummaryEntities.add(entity1);
 
-		SbiSummaryEntity entity2 = new SbiSummaryEntity();
-		entity2.setSbiId("2");
-		sbiSummaryEntities.add(entity2);
-
-		PageRequest pageRequest = PageRequest.of(0, 10);
-
-		Page<SbiSummaryEntity> page = new PageImpl<>(sbiSummaryEntities, pageRequest, sbiSummaryEntities.size());
-
-		// Create and set the mock map
-		Map<String, String> mockMap = new HashMap<>();
-		mockMap.put("partnerId", "providerId");
-		mockMap.put("orgName", "partnerOrgName");
-		mockMap.put("partnerType", "p.partnerTypeCode");
-		mockMap.put("sbiId", "id");
-		mockMap.put("sbiVersion", "swVersion");
-		mockMap.put("sbiCreatedDateTime", "swCreateDateTime");
-		mockMap.put("sbiExpiryDateTime", "swExpiryDateTime");
-		mockMap.put("status", "approvalStatus");
-		mockMap.put("createdDateTime", "crDtimes");
-		mockMap.put("sbiExpiryStatus", "sbiExpiryStatus");
-		mockMap.put("countOfAssociatedDevices", "countOfAssociatedDevices");
-
-		Field field = PartnerHelper.class.getDeclaredField("sbiAliasToColumnMap");
-		field.setAccessible(true);
-		field.set(partnerHelper, mockMap);
-
-		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by(Sort.Order.asc("crDtimes")));
+		SbiSummaryEntity entity = new SbiSummaryEntity();
+		entity.setSbiId("1");
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<SbiSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
 		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
-		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> response = secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 
-		Assert.assertNotNull(response);
-	}
-
-	@Test
-	public void getAllSbiDetailsExceptionTest() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		String sortFieldName = "createdDateTime";
-		String sortType = "desc";
-		Integer pageNo = 0;
-		Integer pageSize = 8;
-		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
-		Page<SbiSummaryEntity> page = null;
-		when(sbiSummaryRepository.getSummaryOfSbiDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, null);
+
+		partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		secureBiometricInterfaceService.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	@Test
@@ -1217,6 +1348,28 @@ public class SBIServiceTest {
 		deviceDetail.setCrDtimes(LocalDateTime.now());
 		when(deviceDetailRepository.findByIdAndDeviceProviderId(any(), any())).thenReturn(Optional.of(deviceDetail));
 
+		ResponseWrapperV2<List<DeviceDto>> responseWrapper = secureBiometricInterfaceService.getAllDevicesForSbi("123");
+
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getAllDevicesForSbiTest_InvalidPartnerType() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("providerId");
+		partner.setPartnerTypeCode("Auth_partner");
+		List<Partner> partnerList = Collections.singletonList(partner);
+		when(partnerRepository.findByUserId(any())).thenReturn(partnerList);
+
+		SecureBiometricInterface sbi = new SecureBiometricInterface();
+		sbi.setProviderId("providerId");
+		when(sbiRepository.findById(any())).thenReturn(Optional.of(sbi));
 		ResponseWrapperV2<List<DeviceDto>> responseWrapper = secureBiometricInterfaceService.getAllDevicesForSbi("123");
 
 		assertNotNull(responseWrapper);

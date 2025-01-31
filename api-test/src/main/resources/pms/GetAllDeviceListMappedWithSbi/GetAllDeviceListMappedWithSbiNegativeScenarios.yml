@@ -22,7 +22,7 @@ GetAllDeviceListMappedWithSbiNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_02
       description: Retrieve all Device list which are mapped with SBI by provinding invalid SBI id in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
