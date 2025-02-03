@@ -541,7 +541,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "model": "4"
+      "model": "4",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",

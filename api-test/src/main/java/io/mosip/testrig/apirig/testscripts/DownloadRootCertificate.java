@@ -96,7 +96,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		
 		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
 		String responseBody = response.getBody().asString();
 		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
@@ -118,7 +118,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		
 		response = getWithPathParamAndCookie(ApplnURI + url,
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partnerrevamp", testCaseDTO.getTestCaseName());
+				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
 		
 		
 		
