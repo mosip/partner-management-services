@@ -1,12 +1,16 @@
-package io.mosip.testrig.apirig.testscripts;
+package io.mosip.testrig.apirig.partner.testscripts;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
@@ -22,24 +26,25 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.testrunner.BaseTestCase;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
+import io.mosip.testrig.apirig.testrunner.JsonPrecondtion;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
+import io.mosip.testrig.apirig.utils.KernelAuthentication;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
-import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
 import io.mosip.testrig.apirig.utils.ReportUtil;
+import io.mosip.testrig.apirig.utils.RestClient;
 import io.restassured.response.Response;
 
-public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(PostWithBodyAndPathParams.class);
+public class DownloadRootCertificate extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(DownloadRootCertificate.class);
 	protected String testCaseName = "";
-	String pathParams = null;
-	String headers = null;
 	public Response response = null;
+	public boolean auditLogCheck = false;
 
 	@BeforeClass
 	public static void setLogLevel() {
@@ -65,8 +70,6 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 	@DataProvider(name = "testcaselist")
 	public Object[] getTestCaseList(ITestContext context) {
 		String ymlFile = context.getCurrentXmlTest().getLocalParameters().get("ymlFile");
-		pathParams = context.getCurrentXmlTest().getLocalParameters().get("pathParams");
-		headers = context.getCurrentXmlTest().getLocalParameters().get("headers");
 		logger.info("Started executing yml: " + ymlFile);
 		return getYmlTestData(ymlFile);
 	}
@@ -83,50 +86,67 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
-		String[] templateFields = testCaseDTO.getTemplateFields();
-
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
+		auditLogCheck = testCaseDTO.isAuditLogCheck();
+		
+		
+		
+		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
+		String responseBody = response.getBody().asString();
+		JSONObject jsonObject = new JSONObject(responseBody);
+		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
 
-		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
-		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
-		String outputJson = getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate());
+		String certId = ""; 
 
-		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
-			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
-			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);
-			for (int i = 0; i < languageList.size(); i++) {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-						getJsonFromTemplate(inputtestCases.get(i).toString(), testCaseDTO.getInputTemplate()),
-						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-
-				Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
-						response.asString(),
-						getJsonFromTemplate(outputtestcase.get(i).toString(), testCaseDTO.getOutputTemplate()),
-						testCaseDTO, response.getStatusCode());
-				Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-				if (!OutputValidationUtil.publishOutputResult(ouputValid))
-					throw new AdminTestException("Failed at output validation");
-			}
+		if (dataArray.length() > 0) {
+		    JSONObject firstDataObject = dataArray.getJSONObject(0);
+		    certId = firstDataObject.getString("certId");
+		    System.out.println("First certId: " + certId);
+		} else {
+		    System.out.println("No data available.");
 		}
 
-		 else {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
-					.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+		if (certId != null) {
+		    System.out.println("Using certId in another place: " + certId);
+		}
+		String url="/v1/partnermanager/trust-chain-certificates/"+certId+"/certificateFile";
+		
+		response = getWithPathParamAndCookie(ApplnURI + url,
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
+				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
+		
+		
+		
+		Map<String, List<OutputValidationDto>> ouputValid = null;
+		if (testCaseName.contains("_StatusCode")) {
 
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+			OutputValidationDto customResponse = customStatusCodeResponse(String.valueOf(response.getStatusCode()),
+					testCaseDTO.getOutput());
+
+			ouputValid = new HashMap<>();
+			ouputValid.put(GlobalConstants.EXPECTED_VS_ACTUAL, List.of(customResponse));
+		} else {
+			ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+					getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+					response.getStatusCode());
 		}
 
-	
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
+		if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
+			if (response.asString().contains("IDA-OTA-001"))
+				throw new AdminTestException(
+						"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
+			else
+				throw new AdminTestException("Failed at otp output validation");
+		}
+	}
+		
 
 	/**
 	 * The method ser current test name to result

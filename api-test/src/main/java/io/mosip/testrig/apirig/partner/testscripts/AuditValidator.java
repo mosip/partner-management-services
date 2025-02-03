@@ -1,16 +1,14 @@
-package io.mosip.testrig.apirig.testscripts;
+package io.mosip.testrig.apirig.partner.testscripts;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -26,6 +24,8 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
@@ -33,14 +33,20 @@ import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
-import io.mosip.testrig.apirig.utils.PMSRevampConfigManger;
 import io.restassured.response.Response;
 
-public class DBValidator extends AdminTestUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(DBValidator.class);
+public class AuditValidator extends AdminTestUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(AuditValidator.class);
 	protected String testCaseName = "";
 	public static List<String> templateFields = new ArrayList<>();
 	public Response response = null;
+	/**
+	 * get current testcaseName
+	 */
+	@Override
+	public String getTestName() { 
+		return testCaseName;
+	}
 	
 	@BeforeClass
 	public static void setLogLevel() {
@@ -48,14 +54,6 @@ public class DBValidator extends AdminTestUtil implements ITest {
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
-	}
-	
-	/**
-	 * get current testcaseName
-	 */
-	@Override
-	public String getTestName() {
-		return testCaseName;
 	}
 	
 	/**
@@ -71,29 +69,16 @@ public class DBValidator extends AdminTestUtil implements ITest {
 	}
 	
 	
-	
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-		
-		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
-		String replaceId = inputJsonKeyWordHandeler(inputJson, testCaseName);
-		
-		
-		JSONObject jsonObject = new JSONObject(replaceId);
-		logger.info(jsonObject.keySet());
-		Set<String> set = new TreeSet<>();
-	    set.addAll(jsonObject.keySet());
-	    String filterId = "";
-	    
-	    if (set.stream().findFirst().isPresent())
-	    	filterId = set.stream().findFirst().get();
-	    
-	    logger.info(filterId);
-		String query = testCaseDTO.getEndPoint() +" " + filterId + " = " +"'"+jsonObject.getString(filterId)+"'";
+		String[] templateFields = testCaseDTO.getTemplateFields();
+		List<String> queryProp = Arrays.asList(templateFields);
+		logger.info(queryProp);
+		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+props.getProperty("partner_userName")+"'";
 		
 		
 		logger.info(query);
@@ -119,12 +104,6 @@ public class DBValidator extends AdminTestUtil implements ITest {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
 	/**
 	 * The method ser current test name to result
 	 * 
@@ -132,6 +111,10 @@ public class DBValidator extends AdminTestUtil implements ITest {
 	 */
 	@AfterMethod(alwaysRun = true)
 	public void setResultTestName(ITestResult result) {
+		
+		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+props.getProperty("partner_userName")+"'";
+		logger.info(deleteQuery);
+		AuditDBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {
 			Field method = TestResult.class.getDeclaredField("m_method");
 			method.setAccessible(true);
