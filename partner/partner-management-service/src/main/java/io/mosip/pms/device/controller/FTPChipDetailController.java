@@ -1,11 +1,30 @@
 package io.mosip.pms.device.controller;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
+import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
+import io.mosip.pms.device.dto.FtmChipFilterDto;
+import io.mosip.pms.device.request.dto.*;
+import io.mosip.pms.device.response.dto.*;
+import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
+import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.common.util.RequestValidator;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,16 +49,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
 import io.mosip.pms.device.constant.DeviceConstant;
-import io.mosip.pms.device.request.dto.DeviceSearchDto;
-import io.mosip.pms.device.request.dto.FtpChipCertDownloadRequestDto;
-import io.mosip.pms.device.request.dto.FtpChipCertificateRequestDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailStatusDto;
-import io.mosip.pms.device.request.dto.FtpChipDetailUpdateDto;
-import io.mosip.pms.device.response.dto.FTPSearchResponseDto;
-import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
-import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
-import io.mosip.pms.device.response.dto.IdDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -56,7 +67,15 @@ public class FTPChipDetailController {
 	@Autowired	
 	FtpChipDetailService ftpChipDetaillService;
 
-	
+	@Autowired
+	PartnerHelper partnerHelper;
+
+	@Autowired
+	RequestValidator requestValidator;
+
+	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
+	private  String patchDeactivateFtm;
+
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
 	 * 
@@ -91,18 +110,14 @@ public class FTPChipDetailController {
 
 	}
 
-	/**
-	 * Put API to update a row of DeviceDetail data
-	 * 
-	 * @param deviceDetailRequestDto input parameter deviceRequestDto
-	 * 
-	 * @return ResponseEntity DeviceDetail which is updated successfully
-	 *         {@link ResponseEntity}
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutftpchipdetail())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update ftp chip detail", description =  "Updates ftp chip detail and returns success message")
+	@Operation(summary = "Service to update ftp chip detail - deprecated since release-1.2.2.0.", description =  "This endpoint has been deprecated since release-1.2.2.0.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When ftp chip detail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating ftp chip detail any error occured") })
@@ -219,15 +234,113 @@ public class FTPChipDetailController {
 				"AUT-007", ftpChipDetailId, "ftpChipDetailId");
 		return response;
     }
-	
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new GET /ftpchipdetail/v2 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostftpchipdetailsearch())")
-	@Operation(summary = "Service to serach ftp chip details", description = "Service to serach ftp chip details")
+	@Operation(summary = "Service to search ftp chip details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /ftpchipdetail/v2 endpoint.")
 	public ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> searchFtpChipDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<FTPSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(ftpChipDetaillService.searchFTPChipDetails(FTPChipDetail.class, request.getRequest()));
 		return responseWrapper;
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivateftm())")
+	@PatchMapping(value = "/{ftmId}")
+	@Operation(summary = "This endpoint deactivates the FTM chip details based on the FTM chip details Id.",
+	description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(@PathVariable("ftmId") @NotBlank String ftmId, @RequestBody @Valid RequestWrapperV2<DeactivateFtmRequestDto>
+			requestWrapper) {
+		Optional<ResponseWrapperV2<FtmDetailResponseDto>> validationResponse = requestValidator.validate(patchDeactivateFtm, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoriginalftmcertificate())")
+	@RequestMapping(value = "/{ftmId}/certificate-data", method = RequestMethod.GET)
+	@Operation(summary = "This endpoint fetches both the CA signed certificate uploaded by the FTM Chip Provider and the MOSIP signed certificate generated by PMS",
+			description = "Available since release-1.2.2.0. The endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
+			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+		return ftpChipDetaillService.getFtmCertificateData(ftmId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
+	@GetMapping(value = "/v2")
+	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers.",
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "ftmId", required = false) String ftmId,
+			@RequestParam(value = "make", required = false) String make,
+			@RequestParam(value = "model", required = false) String model,
+			@Parameter(
+					description = "Status of FTM",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"approved", "rejected", "pending_cert_upload", "pending_approval", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status
+	) {
+		partnerHelper.validateRequestParameters(partnerHelper.ftmAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		if (partnerId != null) {
+			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
+		}
+		if (ftmId != null) {
+			filterDto.setFtmId(ftmId.toLowerCase());
+		}
+		if (make != null) {
+			filterDto.setMake(make.toLowerCase());
+		}
+		if (model != null) {
+			filterDto.setModel(model.toLowerCase());
+		}
+		if (status != null) {
+			filterDto.setStatus(status);
+		}
+		return ftpChipDetaillService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
+	@GetMapping
+	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers associated with the logged in user."
+	, description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN.")
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail() {
+		return ftpChipDetaillService.ftmChipDetail();
 	}
 }

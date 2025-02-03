@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.util;
 
 import java.security.SecureRandom;
+import java.util.UUID;
 
 /**
  * @author sanjeev.shrivastava
@@ -8,6 +9,8 @@ import java.security.SecureRandom;
  */
 
 public class PartnerUtil {
+
+	public static final String BLANK_STRING = "";
 	
 	/**
 	 * @return partnerId.
@@ -57,5 +60,32 @@ public class PartnerUtil {
 	private static String getSecureRandomId(int length) {
 		SecureRandom random = new SecureRandom();
 		return random.nextInt(length) + "";
+	}
+	/**
+	 * Will generate random uuid
+	 */
+	public static String generateUUID(String prefix, String replaceHypen, int length)
+	{
+		String uniqueId = prefix + UUID.randomUUID().toString().replace("-", replaceHypen);
+		if (uniqueId.length() <= length)
+			return uniqueId;
+		return uniqueId.substring(0, length);
+	}
+
+	public static String trimAndReplace(String str) {
+		if (str == null) {
+			return null;
+		}
+		return str.trim().replaceAll("\\s+", " ");
+	}
+
+	public static String getCertificateName(String subjectDN) {
+		String[] parts = subjectDN.split(",");
+		for (String part : parts) {
+			if (part.trim().startsWith("CN=")) {
+				return part.trim().substring(3);
+			}
+		}
+		return BLANK_STRING;
 	}
 }

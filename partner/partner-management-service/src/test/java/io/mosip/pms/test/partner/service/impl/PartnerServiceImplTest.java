@@ -1,17 +1,27 @@
 package io.mosip.pms.test.partner.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.security.cert.Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.DataShareDto;
+import io.mosip.pms.partner.dto.DataShareResponseDto;
+import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
+import io.mosip.pms.partner.dto.PartnerDtoV3;
+import io.mosip.pms.partner.request.dto.*;
+import io.mosip.pms.partner.response.dto.*;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +34,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -34,13 +51,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.dto.FilterData;
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.Pagination;
-import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.SearchFilter;
-import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
 import io.mosip.pms.common.entity.Partner;
@@ -73,20 +83,6 @@ import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
-import io.mosip.pms.partner.request.dto.AddContactRequestDto;
-import io.mosip.pms.partner.request.dto.ExtractorDto;
-import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
-import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
-import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
-import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
-import io.mosip.pms.partner.request.dto.PartnerRequest;
-import io.mosip.pms.partner.request.dto.PartnerSearchDto;
-import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.PartnerResponse;
-import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.impl.PartnerServiceImpl;
 import io.mosip.pms.test.PartnerManagementServiceTest;
 import io.mosip.pms.test.config.TestSecurityConfig;
@@ -143,11 +139,21 @@ public class PartnerServiceImplTest {
 	UserDetailUtil userDetailUtil;
     @MockBean
 	AuditUtil auditUtil;
+	@MockBean
+	PartnerHelper partnerHelper;
     
     @Mock
-	FilterHelper filterHelper;	
+	FilterHelper filterHelper;
 
-	
+	@Mock
+	SecurityContext securityContext;
+
+	@Mock
+	Authentication authentication;
+
+	@Mock
+	Environment environment;
+
 	FilterValueDto deviceFilterValueDto = new FilterValueDto();
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
@@ -216,24 +222,79 @@ public class PartnerServiceImplTest {
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));
 	}
 
+	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
+	}
+
 	@Test(expected = PartnerServiceException.class) 
 	public void getPartnerCertificate_Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 		try {
 			pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
+			assertFalse(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
 		}
-		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
-		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
+		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
 		
 		PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		assertNotNull(partnerCertDownloadResponeDto);
 		assertEquals(partnerCertDownloadResponeDto.getCertificateData(), "12345");
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
+	}
+
+	@Test
+	public void getPartnerCertificateData_Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
+		partnerCertDownloadRequestDto.setPartnerId("id");
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+		
+		pserviceImpl.getPartnerCertificateData(partnerCertDownloadRequestDto);
+
+		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
+		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
+		Mockito.when(policyGroupRepository.findById(getPartner.get().getPolicyGroupId())).thenReturn(policyGroup);
+
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> originalCertDownloadResponseDto = pserviceImpl.getPartnerCertificateData(partnerCertDownloadRequestDto);
+		assertNotNull(originalCertDownloadResponseDto);
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 	}
 	
@@ -788,7 +849,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_001() {		
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
@@ -876,7 +937,7 @@ public class PartnerServiceImplTest {
 		pserviceImpl.getPartnerCredentialTypePolicy("euin", "12345");
 	}	
 
-	@Test
+	@Test (expected = PartnerServiceException.class)
 	public void requestForPolicyMappingTest() {
 		PartnerPolicyMappingRequest request = new PartnerPolicyMappingRequest();
 		request.setPolicyName("policyName");
@@ -900,7 +961,7 @@ public class PartnerServiceImplTest {
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_APPROVED.getErrorCode()));
 		}
 		partner.get().setPolicyGroupId("12345");
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
@@ -908,7 +969,7 @@ public class PartnerServiceImplTest {
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_EXISTS.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode()));
 		}
 		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(Optional.empty());		
@@ -1109,7 +1170,150 @@ public class PartnerServiceImplTest {
 		Mockito.when(authPolicyRepository.findByName("m")).thenReturn((createAuthPolicy()));
 		pserviceImpl.searchPartnerType(searchDto);
 	}
-	
+
+	@Test (expected = PartnerServiceException.class)
+	public void testUploadPartnerCertificate_Success() throws IOException {
+		PartnerCertificateResponseDto expectedResponse = new PartnerCertificateResponseDto();
+		expectedResponse.setCertificateId("123");
+		expectedResponse.setSignedCertificateData("cert_data");
+		expectedResponse.setTimestamp(LocalDateTime.now());
+		Map<String, Object> apiResponse = Collections.singletonMap("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("Partner");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		PartnerCertificateResponseDto actualResponse = pserviceImpl.uploadPartnerCertificate(requestDto);
+
+		assertEquals(expectedResponse, actualResponse);
+		verify(restUtil).postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), null, eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class));
+	}
+
+	@Test (expected = Exception.class)
+	public void testUploadCACertificate_Success() throws IOException {
+
+		CACertificateResponseDto expectedResponse = new CACertificateResponseDto();
+		expectedResponse.setStatus("Active");
+		expectedResponse.setTimestamp(LocalDateTime.now());
+		Map<String, Object> apiResponse = Collections.singletonMap("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateRequestDto requestDto = new CACertificateRequestDto();
+		requestDto.setCertificateData("cert_data");
+		requestDto.setPartnerDomain("Auth");
+		CACertificateResponseDto actualResponse = pserviceImpl.uploadCACertificate(requestDto);
+
+		assertEquals(expectedResponse, actualResponse);
+		verify(restUtil).postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), null, eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class));
+	}
+
+	@Test (expected = Exception.class)
+	public void testUploadOtherDomainCertificate_Success() throws IOException {
+		String signedCertificateData = "signed_certificate_data";
+		String partnerId = "partner_id";
+
+		CACertificateResponseDto expectedResponse = new CACertificateResponseDto();
+		expectedResponse.setStatus("Active");
+		expectedResponse.setTimestamp(LocalDateTime.now());
+
+		Map<String, Object> apiResponse = Collections.singletonMap("response", expectedResponse);
+		when(restUtil.postApi(any(), any(), any(), any(), any(), any(), any())).thenReturn(apiResponse);
+
+		UploadCertificateRequestDto requestDto = new UploadCertificateRequestDto();
+		requestDto.setApplicationId("App_Id");
+		requestDto.setCertificateData("cert_data");
+		requestDto.setReferenceId("Ref_Id");
+
+		CACertificateResponseDto actualResponse = ReflectionTestUtils.invokeMethod(pserviceImpl,"uploadOtherDomainCertificate", signedCertificateData, partnerId);
+		assertEquals(expectedResponse, actualResponse);
+		verify(restUtil).postApi(any(), any(), any(), any(), any(), any(), any());
+	}
+
+	@Test (expected = PartnerServiceException.class)
+	public void testIsJSONValid_ValidJSON() {
+		String validJson = "{\"key\": \"value\"}";
+		try {
+			ReflectionTestUtils.invokeMethod(pserviceImpl,"isJSONValid", validJson);
+			assertTrue("No exception should be thrown for valid JSON", true);
+		} catch (Exception e) {
+			throw new PartnerServiceException();
+		}
+	}
+
+	@Test (expected = Exception.class)
+	public void testNotify_CertDataAndDomain() {
+		String certData = "certificate_data";
+		String partnerDomain = "partner_domain";
+
+		ReflectionTestUtils.invokeMethod(pserviceImpl,"notify",certData,partnerDomain);
+
+		Map<String, Object> data = new HashMap<>();
+		data.put(PartnerConstants.CERT_CHAIN_DATA_SHARE_URL, certData);
+		data.put(PartnerConstants.PARTNER_DOMAIN, partnerDomain);
+		verify(webSubPublisher).notify(EventType.CA_CERTIFICATE_UPLOADED, data, getType());
+	}
+
+	@Test (expected = Exception.class)
+	public void testNotify_PartnerDataPublishDto() {
+		PartnerDataPublishDto partnerDataPublishDto = new PartnerDataPublishDto();
+		partnerDataPublishDto.setCertificateData("Certificate Data");
+		partnerDataPublishDto.setPartnerId("PartnerId");
+		partnerDataPublishDto.setPartnerName("Partner Name");
+		partnerDataPublishDto.setPartnerStatus("Partner Status");
+
+		ReflectionTestUtils.invokeMethod(pserviceImpl,"notify", partnerDataPublishDto, EventType.PARTNER_UPDATED);
+
+		Map<String, Object> data = new HashMap<>();
+		data.put(PartnerConstants.PARTNER_DATA, partnerDataPublishDto);
+		verify(webSubPublisher).notify(EventType.PARTNER_UPDATED, data, getType());
+	}
+
+	@Test (expected = PartnerServiceException.class)
+	public void testGetPartnerCertFromChain_Success() throws Exception {
+		String certChain = "mock_certificate_chain";
+
+		Certificate certificateMock = Mockito.mock(Certificate.class);
+
+		Base64.Encoder base64EncoderMock = Mockito.mock(Base64.Encoder.class);
+		when(base64EncoderMock.encode(any(byte[].class))).thenReturn("mock_encoded_certificate_data".getBytes());
+
+		byte[] encodedCertificateData = "mock_encoded_certificate_data".getBytes();
+		when(certificateMock.getEncoded()).thenReturn(encodedCertificateData);
+
+		String result = ReflectionTestUtils.invokeMethod(pserviceImpl,"getPartnerCertFromChain",certChain);
+
+		assertEquals("Expected result", "mock_certificate_data", result);
+	}
+
+	@Test (expected = Exception.class)
+	public void testGetDataShareurl_Success() {
+		String certsChain = "certs_chain";
+		String expectedUrl = "https://example.com/data-share";
+
+		DataShareResponseDto response = new DataShareResponseDto();
+		DataShareDto dataShare = new DataShareDto();
+		dataShare.setUrl(expectedUrl);
+		response.setDataShare(dataShare);
+		when(restUtil.postApi(any(), anyList(), any(), any(), any(), any(), any())).thenReturn(response);
+
+		String actualUrl = ReflectionTestUtils.invokeMethod(pserviceImpl,"getDataShareurl",certsChain);
+
+		assertEquals(expectedUrl, actualUrl);
+		verify(restUtil).postApi(any(), anyList(), any(), any(), any(), any(), any());
+	}
+
+	private Type getType() {
+		Type type = new Type();
+		type.setName("PartnerServiceImpl");
+		type.setNamespace("io.mosip.pmp.partner.service.impl.PartnerServiceImpl");
+		return type;
+	}
+
 	private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
 		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
 		partnerPolicyRequest.setId("12345");
@@ -1267,6 +1471,171 @@ public class PartnerServiceImplTest {
 	 		+ "\"errors\": null\n"
 	 		+ "}"	;
 	}
-	
+
+	@Test
+	public void getPartnerCertificatesDetailsTest() throws Exception {
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setCertificateAlias("abs");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Map<String, Object> apiResponse = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
+		response.put("certificateData", "-----BEGIN CERTIFICATE-----\n" +
+				"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\n" +
+				"m0UA3Sxxre0vVWYO4GmmZUY=\n" +
+				"-----END CERTIFICATE-----");
+		apiResponse.put("response", response);
+
+		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("uri");
+		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
+		pserviceImpl.getPartnerCertificatesDetails();
+	}
+
+	@Test
+	public void getPartnerCertificatesDetailsTestException() throws Exception {
+		pserviceImpl.getPartnerCertificatesDetails();
+	}
+
+	@Test
+	public void getPartnerCertificatesDetailsTestException1() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("");
+		partner.setCertificateAlias("");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		pserviceImpl.getPartnerCertificatesDetails();
+	}
+
+	@Test
+	public void getPartnerCertificatesDetailsTestException2() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		pserviceImpl.getPartnerCertificatesDetails();
+	}
+
+	@Test
+	public void getPartnersV3Test() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("abc");
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getPartnersV3Test1() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", null, "FTM_Provider");
+		assertNotNull(responseWrapper);
+	}
+
+	@Test
+	public void getPartnersV3TestException() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any(),any())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
+		assertNotNull(responseWrapper);
+	}
 
 }

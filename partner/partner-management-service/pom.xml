@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.1.0</version>
+		<version>1.2.2.0-SNAPSHOT</version>
 	</parent>
 		
-	<version>1.2.1.0</version>
+	<version>1.2.2.0-SNAPSHOT</version>
 	<artifactId>partner-management-service</artifactId>
 	<name>partner-management-service</name>
 	
@@ -16,14 +16,19 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-openid-bridge-api</artifactId>
-			<version>${kernel-openid-bridge.version}</version>
+			<version>1.2.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.version}</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-auth-adapter</artifactId>
+			<version>${kernel.authadapter.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>
@@ -32,7 +37,7 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.1.0</version>
+			<version>1.2.2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,7 +89,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
-			<version>${kernel.version}</version>
+			<version>1.2.0.1-B1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>9.40</version>
 		</dependency>
 	</dependencies>
 	<build>

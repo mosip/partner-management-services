@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.constant.CommonConstant;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +45,7 @@ import io.mosip.pms.common.dto.FilterData;
 import io.mosip.pms.common.dto.FilterDto;
 import io.mosip.pms.common.dto.FilterValueDto;
 import io.mosip.pms.common.dto.PageResponseDto;
+import io.mosip.pms.common.dto.PolicyCountDto;
 import io.mosip.pms.common.dto.PolicyFilterValueDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.PolicySearchDto;
@@ -47,10 +53,13 @@ import io.mosip.pms.common.dto.SearchAuthPolicy;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
 import io.mosip.pms.common.entity.AuthPolicyH;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.entity.PolicyGroup;
+import io.mosip.pms.common.entity.PolicySummaryEntity;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
@@ -58,6 +67,8 @@ import io.mosip.pms.common.repository.AuthPolicyHRepository;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.repository.PolicySummaryRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.PageUtils;
@@ -80,6 +91,12 @@ import io.mosip.pms.policy.dto.PolicyStatusUpdateResponseDto;
 import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.dto.PolicyWithAuthPolicyDto;
 import io.mosip.pms.policy.dto.ResponseWrapper;
+import io.mosip.pms.policy.dto.PolicyGroupDto;
+import io.mosip.pms.policy.dto.PolicySummaryDto;
+import io.mosip.pms.policy.dto.PolicyFilterDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyResponseDto;
+import io.mosip.pms.policy.dto.DeactivatePolicyGroupResponseDto;
+import io.mosip.pms.policy.dto.DeactivateRequestDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.util.AuditUtil;
@@ -110,6 +127,8 @@ public class PolicyManagementService {
 
 	private static final Logger logger = PMSLogger.getLogger(PolicyManagementService.class);
 
+	private static final String DEACTIVATE = "De-Activate";
+
 	@Autowired
 	private AuthPolicyRepository authPolicyRepository;
 
@@ -120,6 +139,9 @@ public class PolicyManagementService {
 	private AuthPolicyHRepository authPolicyHRepository;
 
 	@Autowired
+	private PolicySummaryRepository policySummaryRepository;
+
+	@Autowired
 	PolicyValidator policyValidator;
 
 	@Autowired
@@ -127,12 +149,27 @@ public class PolicyManagementService {
 
 	@Autowired
 	PartnerPolicyRepository partnerPolicyRepository;
+
+	@Autowired
+	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 	
 	@Value("${pmp.policy.schema.url}")
 	private String policySchemaUrl;
 
 	@Value("${pmp.allowed.policy.types}")
 	private String supportedPolicyTypes;
+
+	@Value("${mosip.pms.api.id.policy.groups.get}")
+	private String getPolicyGroupsId;
+
+	@Value("${mosip.pms.api.id.policies.get}")
+	private String getPoliciesId;
+
+	@Value("${mosip.pms.api.id.deactivate.policy.patch}")
+	private String patchDeactivatePolicyId;
+
+	@Value("${mosip.pms.api.id.deactivate.policy.group.patch}")
+	private String patchDeactivatePolicyGroupId;
 
 	@Autowired
 	SearchHelper searchHelper;
@@ -151,7 +188,10 @@ public class PolicyManagementService {
 
 	public static final String ACTIVE_STATUS = "active";
 	public static final String NOTACTIVE_STATUS = "de-active";
-	public static final String ALL = "all";	
+	public static final String ALL = "all";
+	public static final String VERSION = "1.0";
+	public static final String APPROVED = "approved";
+	public static final String IN_PROGRESS = "InProgress";
 
 	/** The mapper. */
 	@Autowired
@@ -386,7 +426,7 @@ public class PolicyManagementService {
 		authPolicy.setUpdDtimes(LocalDateTime.now());
 		authPolicyRepository.save(authPolicy);
 		insertIntoAuthPolicyH(authPolicy);
-		notify(authPolicy.getId());		
+		notify(MapperUtils.mapPolicyToPublishDto(authPolicy,getPolicyObject(authPolicy.getPolicyFileId())));		
 		auditUtil.setAuditRequestDto(PolicyManageEnum.PUBLISH_POLICY_SUCCESS, policyName, "policyId");
 		return mapPolicyAndPolicyGroup(authPolicy);
 	}
@@ -1048,5 +1088,240 @@ public class PolicyManagementService {
 		});
 		return policiesByGroupName;
 
+	}
+
+	public ResponseWrapperV2<List<PolicyGroupDto>> getPolicyGroups() {
+		ResponseWrapperV2<List<PolicyGroupDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			List<PolicyGroup> policyGroupsList;
+			policyGroupsList = policyGroupRepository.findAllActivePolicyGroups();
+			if (policyGroupsList.isEmpty()) {
+				logger.error("There are no active policy groups");
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(),
+						ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorMessage());
+			}
+			List<PolicyGroupDto> policyGroupDtoList = new ArrayList<>();
+			for (PolicyGroup policyGroup : policyGroupsList) {
+				PolicyGroupDto policyGroupDto = new PolicyGroupDto();
+				policyGroupDto.setId(policyGroup.getId());
+				policyGroupDto.setDescription(policyGroup.getDesc());
+				policyGroupDto.setName(policyGroup.getName());
+
+				policyGroupDtoList.add(policyGroupDto);
+			}
+			responseWrapper.setResponse(policyGroupDtoList);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In getPolicyGroups method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_GROUPS_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPolicyGroupsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> getAllPolicies(String sortFieldName, String sortType, int pageNo, int pageSize, PolicyFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PolicySummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			Page<PolicySummaryEntity> page = getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PolicySummaryDto> policySummaryDtoList = MapperUtils.mapAll(page.getContent(), PolicySummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(policySummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In getAllPolicies method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICIES_FETCH_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICIES_FETCH_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPoliciesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private Page<PolicySummaryEntity> getAllPolicies(String sortFieldName, String sortType, int pageNo, int pageSize, PolicyFilterDto filterDto, Pageable pageable) {
+		//Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			//sorting handling for the 'status' field
+			if (sortFieldName.equalsIgnoreCase("status") && sortType.equalsIgnoreCase(CommonConstant.ASC)) {
+				return policySummaryRepository.
+						getSummaryOfAllPoliciesByStatusAsc(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+								filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+			} else if (sortFieldName.equalsIgnoreCase("status") && sortType.equalsIgnoreCase(CommonConstant.DESC)) {
+				return policySummaryRepository.
+						getSummaryOfAllPoliciesByStatusDesc(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+								filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+			}
+			//Sorting for other fields
+			Sort sort = PolicyUtil.getSortingRequest(getSortColumn(sortFieldName), sortType);
+			pageable = PageRequest.of(pageNo, pageSize, sort);
+		}
+		return policySummaryRepository.
+				getSummaryOfAllPolicies(filterDto.getPolicyId(), filterDto.getPolicyType(), filterDto.getPolicyName(),
+						filterDto.getPolicyDescription(), filterDto.getPolicyGroupName(), filterDto.getStatus(), pageable);
+	}
+
+	public String getSortColumn(String alias) {
+		return PolicyUtil.aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	}
+
+	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(String policyId, DeactivateRequestDto requestDto) {
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(policyId) || policyId.isBlank()){
+				logger.error("The policy id is null or empty");
+				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.isBlank() || !status.equals(DEACTIVATE)) {
+				logger.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PolicyManagementServiceException(ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
+			Optional<AuthPolicy> policy = authPolicyRepository.findById(policyId);
+			if (policy.isEmpty()){
+				logger.error("The policy does not exits for policy Id:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_DOES_NOT_EXIST.getErrorCode(),
+						ErrorMessages.POLICY_DOES_NOT_EXIST.getErrorMessage());
+			}
+			if (!policy.get().getIsActive()){
+				if (policy.get().getPolicySchema() == null) {
+					logger.error("The selected policy is not in an activated status:", policyId);
+					throw new PolicyManagementServiceException(ErrorMessages.POLICY_NOT_APPROVED.getErrorCode(),
+							ErrorMessages.POLICY_NOT_APPROVED.getErrorMessage());
+				} else {
+					logger.error("The policy is already deactivated for policy Id:", policyId);
+					throw new PolicyManagementServiceException(ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorCode(),
+							ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorMessage());
+				}
+			}
+			List<PartnerPolicyRequest> approvedPartnerPolicyRequest = partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(policyId, APPROVED);
+			if (!approvedPartnerPolicyRequest.isEmpty()){
+				logger.error("An approved partner policy request is associated with the policy having ID:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+						ErrorMessages.POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR.getErrorMessage());
+			}
+			List<PartnerPolicyRequest> pendingPartnerPolicyRequest = partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(policyId, IN_PROGRESS);
+			if (!pendingPartnerPolicyRequest.isEmpty()){
+				logger.error("A pending partner policy request is associated with the policy having ID:", policyId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+						ErrorMessages.POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR.getErrorMessage());
+			}
+			//deactivate policy
+			AuthPolicy authPolicy = policy.get();
+			authPolicy.setIsActive(false);
+			authPolicy.setUpdDtimes(LocalDateTime.now());
+			authPolicy.setUpdBy(getUser());
+			AuthPolicy updatedAuthPolicy = authPolicyRepository.save(authPolicy);
+			logger.error("policy has been deactivated successfully having Id:", policyId);
+
+			DeactivatePolicyResponseDto deactivatePolicyResponseDto = new DeactivatePolicyResponseDto();
+			deactivatePolicyResponseDto.setPolicyId(updatedAuthPolicy.getId());
+			deactivatePolicyResponseDto.setIsActive(updatedAuthPolicy.getIsActive());
+			responseWrapper.setResponse(deactivatePolicyResponseDto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In deactivatePolicy method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In deactivatePolicy method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_DEACTIVATION_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_DEACTIVATION_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivatePolicyId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(String policyGroupId, DeactivateRequestDto requestDto) {
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(policyGroupId) || policyGroupId.isBlank()){
+				logger.error("The policy group id is null or empty");
+				throw new PolicyManagementServiceException(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+						ErrorMessages.INVALID_INPUT_PARAMETER.getErrorMessage());
+			}
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || status.isBlank() || !status.equals(DEACTIVATE)) {
+				logger.info(status + " : is Invalid Input Parameter, it should be (De-Activate)");
+				throw new PolicyManagementServiceException(ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						ErrorMessages.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
+			Optional<PolicyGroup> policyGroupFromDb = policyGroupRepository.findById(policyGroupId);
+			if (policyGroupFromDb.isEmpty()){
+				logger.error("The policy group does not exits for policy group Id:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage());
+			}
+			if (!policyGroupFromDb.get().getIsActive()){
+				logger.error("The policy group is already deactivated for policy group Id:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorCode(),
+						ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+			PolicyCountDto policyCountDto = authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId);
+
+			if (policyCountDto.getActivePoliciesCount() > 0 && policyCountDto.getDraftPoliciesCount() > 0) {
+				logger.error("Active and draft policies are associated with the policy group. PolicyGroupId: {}", policyGroupId);
+				throw new PolicyManagementServiceException(
+						ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorMessage()
+				);
+			} else if (policyCountDto.getActivePoliciesCount() > 0) {
+				logger.error("Active policies are associated with the policy group having ID:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());
+			} else if (policyCountDto.getDraftPoliciesCount() > 0) {
+				logger.error("Draft policies are associated with the policy group having ID:", policyGroupId);
+				throw new PolicyManagementServiceException(ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+						ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorMessage());
+			}
+			//deactivate policy group
+			PolicyGroup policyGroup = policyGroupFromDb.get();
+			policyGroup.setIsActive(false);
+			policyGroup.setUpdDtimes(LocalDateTime.now());
+			policyGroup.setUpdBy(getUser());
+			PolicyGroup deactivatedPolicyGroup = policyGroupRepository.save(policyGroup);
+			logger.error("policy group has been deactivated successfully having Id:", policyGroupId);
+
+			DeactivatePolicyGroupResponseDto deactivatePolicyGroupResponseDto = new DeactivatePolicyGroupResponseDto();
+			deactivatePolicyGroupResponseDto.setPolicyGroupId(deactivatedPolicyGroup.getId());
+			deactivatePolicyGroupResponseDto.setIsActive(deactivatedPolicyGroup.getIsActive());
+			responseWrapper.setResponse(deactivatePolicyGroupResponseDto);
+		} catch (PolicyManagementServiceException ex) {
+			logger.info("sessionId", "idType", "id", "In deactivatePolicyGroup method of PolicyManagementService - " + ex.getMessage());
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			logger.debug("sessionId", "idType", "id", ex.getStackTrace());
+			logger.error("sessionId", "idType", "id",
+					"In deactivatePolicyGroup method of PolicyManagementService - " + ex.getMessage());
+			String errorCode = ErrorMessages.POLICY_GROUP_DEACTIVATION_ERROR.getErrorCode();
+			String errorMessage = ErrorMessages.POLICY_GROUP_DEACTIVATION_ERROR.getErrorMessage();
+			responseWrapper.setErrors(PolicyUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivatePolicyGroupId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 }

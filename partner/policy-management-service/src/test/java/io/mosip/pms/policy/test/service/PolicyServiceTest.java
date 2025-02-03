@@ -1,6 +1,10 @@
 package io.mosip.pms.policy.test.service;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +16,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.kernel.openid.bridge.model.MosipUserDto;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.repository.*;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.policy.dto.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,7 +35,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -33,34 +46,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.dto.FilterData;
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.Pagination;
-import io.mosip.pms.common.dto.PolicyFilterValueDto;
-import io.mosip.pms.common.dto.PolicySearchDto;
-import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.SearchFilter;
-import io.mosip.pms.common.dto.SearchSort;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicy;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyHRepository;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.validator.FilterColumnValidator;
-import io.mosip.pms.policy.dto.PolicyAttributesDto;
-import io.mosip.pms.policy.dto.PolicyCreateRequestDto;
-import io.mosip.pms.policy.dto.PolicyGroupCreateRequestDto;
-import io.mosip.pms.policy.dto.PolicyGroupUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyStatusUpdateRequestDto;
-import io.mosip.pms.policy.dto.PolicyUpdateRequestDto;
 import io.mosip.pms.policy.errorMessages.ErrorMessages;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.service.PolicyManagementService;
@@ -83,7 +73,13 @@ public class PolicyServiceTest {
 	private AuthPolicyHRepository authPolicyHRepository;
 	
 	@Mock
-	PartnerPolicyRepository partnerPolicyRepository;	
+	PartnerPolicyRepository partnerPolicyRepository;
+
+	@Mock
+	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
+
+	@Mock
+	PolicySummaryRepository policySummaryRepository;
 	
 	@Mock
 	private WebSubPublisher webSubPublisher;	
@@ -1249,4 +1245,268 @@ public class PolicyServiceTest {
 		}		
 		return json;
 	}
+
+	@Test
+	public void getAllPoliciesTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<PolicySummaryEntity> page = null;
+		when(policySummaryRepository.getSummaryOfAllPolicies(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		service.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getAllPoliciesTestException() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		Page<PolicySummaryEntity> page = null;
+		when(policySummaryRepository.getSummaryOfAllPolicies(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		service.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, null);
+	}
+
+	@Test
+	public void deactivatePolicyTest() throws Exception {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(new ArrayList<>());
+		authPolicy.setIsActive(false);
+		when(authPolicyRepository.save(any())).thenReturn(authPolicy);
+
+		service.deactivatePolicy("policy123", requestDto);
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest0() throws Exception {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
+		service.deactivatePolicy("policy123", requestDto);
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest1() throws Exception {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		service.deactivatePolicy("", requestDto);
+	}
+
+	@Test
+	public void deactivatePolicyExceptionTest2() throws Exception {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(partnerPolicyRequestList);
+
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode(anyString(), anyString())).thenReturn(new ArrayList<>());
+		authPolicy.setIsActive(false);
+		when(authPolicyRepository.save(any())).thenReturn(authPolicy);
+
+		service.deactivatePolicy("policy123", requestDto);
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestSuccess() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(0L);
+		mockPolicyCountDto.setDraftPoliciesCount(0L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+		when(policyGroupRepository.save(any(PolicyGroup.class))).thenReturn(mockPolicyGroup);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertFalse(response.getResponse().getIsActive());
+		assertEquals(policyGroupId, response.getResponse().getPolicyGroupId());
+
+		verify(policyGroupRepository).save(any(PolicyGroup.class));
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestNullPolicyGroupId() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(null, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestEmptyPolicyGroupId() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup("", requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.INVALID_INPUT_PARAMETER.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestInvalidPolicyGroup() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		String policyGroupId = "group123";
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_AlreadyDeactivated() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(false);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_GROUP_ALREADY_DEACTIVATED.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_ActivePoliciesExist() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(2L);
+		mockPolicyCountDto.setDraftPoliciesCount(0L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.ACTIVE_POLICY_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_DraftPoliciesExist() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		// Arrange
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(0L);
+		mockPolicyCountDto.setDraftPoliciesCount(3L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest_ActiveAndDraftPoliciesExist() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+
+		String policyGroupId = "group123";
+		PolicyGroup mockPolicyGroup = new PolicyGroup();
+		mockPolicyGroup.setId(policyGroupId);
+		mockPolicyGroup.setIsActive(true);
+
+		PolicyCountDto mockPolicyCountDto = new PolicyCountDto();
+		mockPolicyCountDto.setActivePoliciesCount(2L);
+		mockPolicyCountDto.setDraftPoliciesCount(1L);
+
+		when(policyGroupRepository.findById(policyGroupId)).thenReturn(Optional.of(mockPolicyGroup));
+		when(authPolicyRepository.findPolicyCountsByPolicyGroupId(policyGroupId)).thenReturn(mockPolicyCountDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> response =
+				service.deactivatePolicyGroup(policyGroupId, requestDto);
+
+		// Assert
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
 }

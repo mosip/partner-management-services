@@ -1,0 +1,59 @@
+package io.mosip.pms.oauth.client.service;
+
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.oauth.client.dto.*;
+
+import java.util.List;
+
+public interface ClientManagementService {
+	
+    /**
+     * API to register Relying party client
+     * @param clientDetailCreateRequest
+     * @return
+     * @throws Exception 
+     * @throws IdPException
+     */
+    ClientDetailResponse createOIDCClient(ClientDetailCreateRequest clientDetailCreateRequest) throws Exception;
+
+    /**
+     * API to update registered Relying party client
+     * @param clientId
+     * @param clientDetailCreateRequest
+     * @return
+     * @throws Exception 
+     * @throws IdPException
+     */
+    ClientDetailResponse updateOIDCClient(String clientId, ClientDetailUpdateRequest clientDetailCreateRequest) throws Exception;
+    
+    
+    /**
+     * Api to get the active client detail with the provided client name.
+     * @param clientId
+     * @return
+     */
+    ClientDetail getClientDetails(String clientId);
+
+    /**
+     * API to create OIDC Client with new Client Name Lang Map 
+     * based on V2 OIDC Client Create API of Esignet
+     * @param createRequest
+     * @return
+     * @throws Exception
+     */
+	ClientDetailResponse createOAuthClient(ClientDetailCreateRequestV2 createRequest) throws Exception;
+
+	/**
+	 * API to update OIDC Client with new Client Name Lang Map 
+     * based on V2 OIDC Client Update API of Esignet
+	 * @param clientId
+	 * @param updateRequest
+	 * @return
+	 * @throws Exception
+	 */
+	ClientDetailResponse updateOAuthClient(String clientId, ClientDetailUpdateRequestV2 updateRequest)
+			throws Exception;
+
+	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto);
+}

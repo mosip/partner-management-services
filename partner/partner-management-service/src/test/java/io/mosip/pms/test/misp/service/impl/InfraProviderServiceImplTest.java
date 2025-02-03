@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.util.PageUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,13 +15,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.mosip.pms.common.dto.FilterData;
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
@@ -36,6 +37,9 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class InfraProviderServiceImplTest {
@@ -48,6 +52,9 @@ public class InfraProviderServiceImplTest {
 
 	@Mock
 	PartnerServiceRepository partnerRepository;
+
+	@Mock
+	PageUtils pageUtils;
 	
 	@Mock
 	private PartnerPolicyRequestRepository partnerPolicyRequestRepository; 
@@ -356,4 +363,35 @@ public class InfraProviderServiceImplTest {
 		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
+
+	@Test
+	public void testSearchWithSearchDto_thenSuccess() {
+		SearchDto dto = new SearchDto();
+		dto.setFilters(new ArrayList<>());
+		dto.setPagination(new Pagination(0,10));
+		dto.setSort(new ArrayList<>());
+
+		List<MISPLicenseEntity> entities = new ArrayList<>();
+		MISPLicenseEntity entity1 = new MISPLicenseEntity();
+		entity1.setIsActive(true);
+		entity1.setValidToDate(LocalDateTime.now().plusYears(1));
+		entity1.setMispId("misp");
+
+		MISPLicenseEntity entity2 = new MISPLicenseEntity();
+		entity2.setIsActive(true);
+		entity2.setValidToDate(LocalDateTime.now().plusYears(1));
+		entity2.setMispId("mispId2");
+
+		entities.add(entity1);
+		entities.add(entity2);
+
+		Page<MISPLicenseEntity> page = new PageImpl<>(entities);
+
+		when(searchHelper.search(MISPLicenseEntity.class, dto, "mispId")).thenReturn(page);
+
+		PageResponseDto<MISPLicenseEntity> result = infraProviderServiceImpl.search(dto);
+
+		assertEquals(entities.size(), result.getData().size());
+	}
+
 }

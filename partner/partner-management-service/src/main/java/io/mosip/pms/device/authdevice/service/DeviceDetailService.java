@@ -1,5 +1,11 @@
 package io.mosip.pms.device.authdevice.service;
 
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.dto.DeviceDetailFilterDto;
+import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
+import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
+import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import org.springframework.stereotype.Service;
 
 import io.mosip.pms.common.dto.DeviceFilterValueDto;
@@ -9,6 +15,7 @@ import io.mosip.pms.device.request.dto.DeviceDetailDto;
 import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.response.dto.DeviceDetailSearchResponseDto;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.response.dto.IdDto;
@@ -85,4 +92,10 @@ public interface DeviceDetailService {
 	 * @return
 	 */
 	public FilterResponseCodeDto deviceTypeFilterValues(DeviceFilterValueDto deviceFilterValueDto);
+
+	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(String deviceDetailId, DeactivateDeviceRequestDto requestDto);
+
+    ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, DeviceDetailFilterDto filterDto);
+
+	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(String deviceId, SbiAndDeviceMappingRequestDto requestDto);
 }
