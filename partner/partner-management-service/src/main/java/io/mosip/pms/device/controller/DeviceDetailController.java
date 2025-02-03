@@ -80,16 +80,16 @@ public class DeviceDetailController {
 	RequestValidator requestValidator;
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new POST /securebiometricinterface/{sbiId}/devices endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetail())")
 	@ResponseFilter
 	@PostMapping
-	@Operation(summary = "Service to save DeviceDetail - deprecated since release-1.3.x.", description = "This endpoint has been deprecated since the release-1.3.x and replaced by the POST /securebiometricinterface/{sbiId}/devices endpoint.")
+	@Operation(summary = "Service to save DeviceDetail - deprecated since release-1.2.2.0.", description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the POST /securebiometricinterface/{sbiId}/devices endpoint.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating DeviceDetail any error occured") })
@@ -113,13 +113,13 @@ public class DeviceDetailController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutdevicedetail())")
 	@ResponseFilter
 	@PutMapping
-	@Operation(summary = "Service to update DeviceDetails - deprecated since release-1.3.x.", description = "This endpoint has been deprecated since release-1.3.x.")
+	@Operation(summary = "Service to update DeviceDetails - deprecated since release-1.2.2.0.", description = "This endpoint has been deprecated since release-1.2.2.0.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While updating DeviceDetail any error occured") })
@@ -142,17 +142,17 @@ public class DeviceDetailController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new PATCH devicedetail/{id}/approval endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdevicedetail())")
 	@ResponseFilter
 	@PatchMapping
-	@Operation(summary = "Service to approve/reject DeviceDetail - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the PATCH /devicedetail/{id}/approval endpoint.")
+	@Operation(summary = "Service to approve/reject DeviceDetail - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the PATCH /devicedetail/{id}/approval endpoint.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting DeviceDetail any error occured") })
@@ -176,17 +176,17 @@ public class DeviceDetailController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /devicedetail/search/v2 endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailsearch())")
-	@Operation(summary = "Service to search DeviceDetails - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail endpoint.")
+	@Operation(summary = "Service to search DeviceDetails - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /devicedetail endpoint.")
 	public ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> searchDeviceDetails(
 			@RequestBody @Valid RequestWrapper<DeviceSearchDto> request) {
 		ResponseWrapper<PageResponseDto<DeviceDetailSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -206,17 +206,17 @@ public class DeviceDetailController {
 	}
 
 	/*
-	 * This endpoint has been deprecated since the release-1.3.x
+	 * This endpoint has been deprecated since the release-1.2.2.0
 	 * It has been replaced by the new GET /devicedetail/search/v2 endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.x")
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicedetailfiltervalues())")
-	@Operation(summary = "Service to filter DeviceDetails - deprecated since release-1.3.x.",
-			description = "This endpoint has been deprecated since the release-1.3.x and replaced by the GET /devicedetail endpoint.")
+	@Operation(summary = "Service to filter DeviceDetails - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /devicedetail endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<DeviceFilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -250,7 +250,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatedevice())")
 	@PatchMapping(value = "/{deviceId}")
 	@Operation(summary = "This endpoint deactivates a Device based on the Device Id.",
-	description = "Available since release-1.3.x. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -268,7 +268,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdevicewithsbimapping())")
 	@PostMapping(value = "/{id}/approval")
 	@Operation(summary = "This endpoint is for the Partner Admin user to approve or reject a Device and activate the mapping between the Device and the SBI.",
-			description = "Available since release-1.3.x.  It is configured for the role PARTNER_ADMIN")
+			description = "Available since release-1.2.2.0.  It is configured for the role PARTNER_ADMIN")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -285,7 +285,7 @@ public class DeviceDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
 	@GetMapping
 	@Operation(summary = "This endpoint retrieves a list of all the Devices.",
-	description = "Available since release-1.3.x. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
