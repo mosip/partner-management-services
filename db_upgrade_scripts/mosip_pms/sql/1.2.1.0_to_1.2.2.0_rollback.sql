@@ -9,6 +9,9 @@
 -- -------------------------------------------------------------------------------------------------
 \c mosip_pms
 
+-- user_details
+DROP TABLE IF EXISTS pms.user_details;
+
 -- Dropping unique index from pms.device_detail table if it exists
 DROP INDEX IF EXISTS pms.uk_devdtl_make_model_approval_status;
 
