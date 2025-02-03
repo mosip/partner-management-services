@@ -31,15 +31,24 @@ GetListOfApiKey:
   ]
 }'
    Pms_GetListOfApiKey_with_individual_partner_Neg:
-      endPoint: /v1/partnermanager/partner-api-keys
+      endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_03
       description: Fetching the API Keys with individual partner
-      role: deviceprovider
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfApiKey/getListOfApiKey
-      outputTemplate: pms/error
+      outputTemplate: pms/GetListOfApiKey/getListOfAllDeviceResultNegative
       input: '{
+      "pageSize": "$REMOVE$",
+      "partnerId": "pms-111998",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
 }'
       output: ' {
          "errors": [

@@ -1,6 +1,6 @@
 GetAllCertificate:
    Pms_GetAllCertificate_beforecertifiactes_upload:
-      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      endPoint: /v1/partnermanager/partners/trust-chain-certificates?pageNo=0&pageSize=8&issuedTo=PMS_API_CA&issuedBy=PMS_API_CA
       description: Fetching all the API certificates of the Logged in Partner
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllCertificate_01
