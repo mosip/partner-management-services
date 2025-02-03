@@ -15,4 +15,3 @@ DROP TABLE IF EXISTS pms.secure_biometric_interface_h;
 ALTER TABLE pms.partner_policy DROP COLUMN label;
 ALTER TABLE pms.partner DROP COLUMN lang_code;
 ALTER TABLE pms.partner_h DROP COLUMN lang_code;
-
