@@ -525,4 +525,3 @@ INSERT INTO pms.partner_type (code,partner_description,is_policy_required,is_act
 	 ('SDK_Partner','SDK Partner',true,true,'superadmin',now(),NULL,NULL,false,NULL) ON CONFLICT (code) DO NOTHING;
 
 -- ddl-end --
-
