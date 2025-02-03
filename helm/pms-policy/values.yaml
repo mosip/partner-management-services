@@ -52,8 +52,8 @@ service:
 
 image:
   registry: docker.io
-  repository: mosipid/policy-management-service
-  tag: 1.3.0-dp.1
+  repository: mosipdev/policy-management-service
+  tag: release-1.2.2.x
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
