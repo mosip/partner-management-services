@@ -20,13 +20,6 @@
 		</classes>
 	</test>
 	
-	<test name="DeactivatePolicyGroup">
-		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
-		<parameter name="pathParams" value="policyGroupId" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
 	<test name="DefinePolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefinePolicy.yml" />
@@ -722,5 +715,14 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	
+	<test name="DeactivatePolicyGroup">
+		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
+		<parameter name="pathParams" value="policyGroupId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>	
+	
 	
 </suite>
