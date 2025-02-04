@@ -47,7 +47,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_ESI_008"
+            "errorCode": "PMS_POL_014"
         }
   ]
 }'
@@ -74,7 +74,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_ESI_008"
+            "errorCode": "PMS_COR_001"
         }
   ]
 }'
@@ -89,7 +89,7 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      "client_id": "",
+      "client_id": " ",
       "requesttime": "$TIMESTAMP$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
@@ -102,7 +102,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_COR_001"
+            "errorCode": "PMS_ESI_004"
         }
   ]
 }'
@@ -237,7 +237,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_ESI_008"
+            "errorCode": "PMS_COR_001"
         }
   ]
 }'
@@ -290,7 +290,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_ESI_008"
+            "errorCode": "PMS_COR_001"
         }
   ]
 }'
