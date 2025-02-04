@@ -1,0 +1,645 @@
+createSearchPolicy:
+   Partner_SearchPolicy_AllValid_Smoke:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+  "policyType": "DataShare",
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+  "policyType": "DataShare",
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_Only_FilterCriteria_Smoke:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+      "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "Data Share2"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPolicy_Only_SortaCriteria_Smoke:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_Only_PaginationCriteria_Smoke:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+  "policyType": "DataShare",
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_contains_Smoke_asc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "data share"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "version": "1.0",
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_contains_Smoke_desc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "data share"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "version": "1.0",
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_equals_Smoke_desc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "mosip data share policy"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_equals_Smoke_asc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "mosip data share policy"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_startswith_Smoke_asc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "mosip"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_type_startswith_Smoke_desc:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "mosip"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "version": "1.0",
+        "policyType": "DataShare",
+        "schema": "$IGNORE$"
+      }
+    ]
+}'
+   Partner_SearchPolicy_with_invalid_value_contains:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": ")()()****$$$$$$$$$$)))"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPolicy_with_invalid_value_equals:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "Da@@3344"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPolicy_with_invalid_value_startswith:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/policy/Search/searchPolicyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "Da@@3344"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPolicy_with_invalid_columnName:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "n@@@@@343e",
+        "type": "startswith",
+        "value": "Data Share2"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_missing_columnName:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "$REMOVE$",
+        "type": "startswith",
+        "value": "mosip"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+      
+      "errors": [
+    {
+      "errorCode": "PMS_COR_003"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_missing_type:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "$REMOVE$",
+        "value": "Data Share2"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-312"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_invalid_sort_type:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "Data Share2"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "dc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_missing_sort_type:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "mosip"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "$REMOVE$"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_invalid_sort_field:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "mosip"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "n@@@@3334$$$e",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-357"
+    }
+  ]
+}'
+   Partner_SearchPolicy_with_missing_sort_field:
+      endPoint: /v1/policymanager/policies/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/policy/Search/searchPolicy
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "startswith",
+        "value": "Data Share2"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "$REMOVE$",
+        "sortType": "desc"
+      }
+    ],
+  "policyType": "DataShare",
+  "pageFetch": "5",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'

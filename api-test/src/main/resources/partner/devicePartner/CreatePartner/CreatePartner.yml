@@ -1,0 +1,45 @@
+createPartnerSelfRegistration:
+   Partner_PartnerSelfRegistration_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      role: partner
+      restMethod: post
+      inputTemplate: partner/devicePartner/CreatePartner/createPartner
+      outputTemplate: partner/devicePartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "deviceprovider@gmail.com",
+    "organizationName": "deviceprovider",
+    "partnerId": "DPP",
+    "partnerType": "Device_Provider",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "DPP",
+        "status": "InProgress"
+    }' 
+    
+   Partner_PartnerSelfRegistration_Remove_PartnerId_Neg:
+      endPoint: /v1/partnermanager/partners
+      role: partner
+      restMethod: post
+      inputTemplate: partner/devicePartner/CreatePartner/createPartner
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "deviceprovider@gmail.com",
+    "organizationName": "deviceprovider",
+    "partnerId": "$REMOVE$",
+    "partnerType": "Device_Provider",
+    "policyGroup": "mosip policy group",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+    }'

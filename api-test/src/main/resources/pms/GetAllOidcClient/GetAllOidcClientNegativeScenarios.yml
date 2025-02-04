@@ -1,0 +1,37 @@
+GetAllOidcClient:
+   Pms_GetAllOidcClient_without_Auth:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients of the loggedin Partner
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_01
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_Invalid_Auth:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients of the loggedin Partner
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_02
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

@@ -1,0 +1,17 @@
+GetOriginalFtmCertifacte:
+   Pms_GetOriginalPartnerCertificates_allValid_smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacte_01
+      description: Retrieve Original FTM Certifacte with valid Partner ID
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalPartnerCertificatesResult
+      input: '{
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+     
+}'
+

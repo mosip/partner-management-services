@@ -1,0 +1,411 @@
+DeactivateFtmNegativeScenarios:
+   Pms_DeactivateFtm_without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_01
+      description: Deactivate FTM without Partner authentication and expecting an error in the response 
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtm
+      outputTemplate: pms/error
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Missing_Req_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_02
+      description: Deactivate FTM with the requestID parameter missing in the request and expecting an error in the response 
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "$REMOVE$",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Keeping_Req_IDas_Null_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_03
+      description: Deactivate FTM while keeping requestID parameter as Null in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "Null",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Empty_Req_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_04
+      description: Deactivate FTM keeping ID parameter as Empty in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Missing_Version_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_05
+      description: Deactivate FTM while keeping Version parameter as Missing in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "$REMOVE$",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Null_Version_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_06
+      description: Deactivate FTM while keeping Version parameter as Null in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "Null",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Empty_Version_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_07
+      description: Deactivate FTM while keeping Version parameter as Empty in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Invalid_VersionValue1_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_08
+      description: Deactivate FTM while keeping Version parameter as invalid value 1 in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Invalid_VersionValue0_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_09
+      description: Deactivate FTM while keeping Version parameter as invalid value 0 in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Invalid_Version_Num_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_10
+      description: Deactivate FTM while keeping Version parameter as invalid values in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "9977",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Missing_requestTime_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_11
+      description: Deactivate FTM while keeping requestTime parameter as Missing in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$REMOVE$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Empty_requestTime_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_12
+      description: Deactivate FTM while keeping requestTime parameter as Empty in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Invalid_requestTime_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_13
+      description: Deactivate FTM while keeping Request Time parameter as invalid in request and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "1111-07-22T08:21:17.665Z",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Already_Deactivate_FTM_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_14
+      description: Deactivating the FTM which is already Deactivated and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtm
+      outputTemplate: pms/error
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_007"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_with_SpaceValue_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_15
+      description: Deactivate the FTM while keeping FTM ID parameter as Missing and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": " "
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Empty_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_16
+      description: Deactivate the FTM while keeping FTM ID parameter as Empty and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": ""
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Invalid_Values_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_17
+      description: Deactivate the FTM while keeping FTM ID parameter as Invalid values and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "Apple0192938838"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_Null_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_18
+      description: Deactivate the FTM while keeping FTM ID parameter as Null and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "Null"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'

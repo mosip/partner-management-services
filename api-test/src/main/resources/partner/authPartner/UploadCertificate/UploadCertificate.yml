@@ -1,0 +1,83 @@
+uploadCACert:
+   Partner_UploadCACertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_01
+      description: upload CA certificate 
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/authPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}' 
+   Partner_UploadCACertificate__with_FTM_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_02
+      description: upload CA certificate for FTM provider
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/authPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+}' 
+   Partner_UploadCACertificate_UploadAgain_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_03
+      description: upload CA certificate again
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate
+      outputTemplate: partner/error
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "KER-PCM-003"
+    }
+  ]
+}'
+   Partner_UploadCACertificate_with_invalid_data:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_04
+      description: upload invalid CA certificate
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate3
+      outputTemplate: partner/error
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "KER-CRY-003"
+    }
+  ]
+}'
+   Partner_UploadCACertificate_with_blank_data:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_Partner_uploadPartnerCert_05
+      description: upload CA certificate with blank data
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/UploadCertificate/uploadCertificate4
+      outputTemplate: partner/error
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+    "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

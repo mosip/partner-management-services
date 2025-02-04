@@ -1,0 +1,105 @@
+ActivateDeactivatePartner:
+   Partner_ActivateDeactivatePartner_deactivate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_Activatepartner_01
+      description : Deactivate all partners
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
+      input: '{
+   "partnerId": "FTP",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+}'
+
+   Partner_ActivateDeactivatePartner_deactivate_MISP3:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_ActivateDeactivatePartner_02
+      description: Deactivate partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
+      input: '{
+   "partnerId": "MISP3",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+}'
+
+   Partner_ActivateDeactivatePartner_deactivate_Tech-1233:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_ActivateDeactivatePartner_03
+      description: Deactivate Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
+      input: '{
+   "partnerId": "Tech-1233",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+}'
+
+
+   Partner_ActivateDeactivatePartner_deactivate_Tech_321:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_ActivateDeactivatePartner_04
+      description: Deactivate partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
+      input: '{
+   "partnerId": "Tech-321",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+}'
+   Partner_ActivateDeactivatePartner_activate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_ActivateDeactivatePartner_05
+      description: Activate All partners
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartnerResult
+      input: '{
+   "partnerId": "MISP",
+   "requesttime": "$TIMESTAMP$",
+   "status": "Active"
+}'
+      output: '{
+}'
+   Partner_ActivateDeactivatePartner_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_ActivateDeactivatePartner_06
+      description: Deactivate invalid partner ID
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartner/activateDeactivatePartner
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "asdfgrwg",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_005"
+    }
+  ]
+}'

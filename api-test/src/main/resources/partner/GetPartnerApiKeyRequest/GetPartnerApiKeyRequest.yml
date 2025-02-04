@@ -1,0 +1,17 @@
+GetPartnerApiKeyRequest:
+   Partner_GetPartnerApiKeyRequest_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/request
+      role: partner
+      restMethod: get
+      inputTemplate: partner/GetPartnerApiKeyRequest/getPartnerApiKeyRequest
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "fqgfg"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_006"
+    }
+  ]      
+}'

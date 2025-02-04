@@ -1,0 +1,36 @@
+{
+  "id": "string",
+  "metadata": {},
+  "request": {
+    "filters": [
+    {{#each filters}}
+      {
+        "columnName": "{{columnName}}",
+        "text": "{{text}}",
+        "type": "{{type}}"
+      }
+      {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+        "optionalFilters": [
+    {{#each optionalFilters}}
+      {
+         "value": "{{value}}",
+        "values": [
+          "string"
+        ],
+        "fromValue": "{{fromValue}}",
+        "toValue": "{{toValue}}",
+        "columnName": "{{columnName}}",
+        "type": "{{type}}"
+      }
+      }
+      {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+    
+     "purpose": "{{purpose}}"
+  },
+  "requesttime": "2018-12-10T06:12:52.994Z",
+  "version": "string"
+}

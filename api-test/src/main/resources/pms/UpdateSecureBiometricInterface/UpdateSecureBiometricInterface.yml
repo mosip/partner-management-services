@@ -1,0 +1,18 @@
+UpdateSecureBiometricInterface:
+   Pms_UpdateSecureBiometricInterface_DeviceProvider_AllValid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
+      outputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterfaceResult
+      input: '{
+          "id": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+          "approvalStatus": "Activate"
+
+}'
+      output: '{
+          "response": "Secure biometric details approved successfully."
+}'
+
+

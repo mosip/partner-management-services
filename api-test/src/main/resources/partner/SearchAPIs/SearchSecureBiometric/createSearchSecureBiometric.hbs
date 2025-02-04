@@ -1,0 +1,32 @@
+{
+  "id": "string",
+  "version": "string",
+  "requesttime": "{{requesttime}}",
+  "metadata": {},
+  "request": {
+    "filters": [
+    {{#each filters}}
+      {
+        "value": "{{value}}",
+        "columnName": "{{columnName}}",
+        "type": "{{type}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+    "sort": [
+    	{{#each sort}}
+      {
+        "sortField": "{{sortField}}",
+        "sortType": "{{sortType}}"
+      }
+       {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+    "pagination": {
+      "pageStart": {{pageStart}},
+      "pageFetch": {{pageFetch}}
+    },
+    "purpose": "string"
+  }
+}

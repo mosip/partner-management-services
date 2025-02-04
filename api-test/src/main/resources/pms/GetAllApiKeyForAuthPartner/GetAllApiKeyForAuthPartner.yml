@@ -1,0 +1,49 @@
+GetAllApiKeyForAuthPartner:
+   Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partner-api-keys
+      description: Fetching all the API Key available for Auth Partner
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
+      outputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartnerResult
+      input: '{
+}'
+      output: '{
+}'
+   Pms_GetAllApiKeyForAuthPartner_without_auth:
+      endPoint: /v1/partnermanager/partner-api-keys
+      description: Fetching all the API Key available for Auth Partner without token
+      uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_02
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
+      outputTemplate: pms/error
+      input: '{
+}'      
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_invalid_auth:
+      endPoint: /v1/partnermanager/partner-api-keys
+      description: Fetching all the API Key available for Auth Partner with invalid token
+      uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_03
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner
+      outputTemplate: pms/error
+      input: '{
+}'      
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

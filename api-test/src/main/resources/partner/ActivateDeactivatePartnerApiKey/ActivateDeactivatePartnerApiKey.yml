@@ -1,0 +1,175 @@
+ActivateDeactivatePartnerApiKey:
+   Partner_ActivateDeactivatePartnerApiKey_deactivate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_01
+      description: Deactivate all partner API key
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "MDSP",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+}'
+
+   Partner_ActivateDeactivatePartnerApiKey_deactivate_InValid_APIKey_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_02
+      description: Deactivate Invalid API key
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "Tech-1233",
+   "policyId": "policyid",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_PRT_111"
+    }
+  ]
+      
+}'
+   Partner_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_03
+      description: Activate Partner API key
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "MDSP",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "Active"
+}'
+      output: '{
+    "response": "Partner apikey activated successfully."
+}'
+   Partner_ActivateDeactivatePartnerApiKey_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifiertifier: TC_Partner_ActivateDeactivatePartnerApiKey_04
+      description: ActivateDeactivatePartnerApiKey for invalid partnerId
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "asdfgrwg",
+   "policyId": "MDSP",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_111"
+    }
+  ]
+}'
+   Partner_ActivateDeactivatePartnerApiKey_invalid_policyId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_05
+      description: ActivateDeactivatePartnerApiKey for invalid policyId
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "asfv",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_111"
+    }
+  ]
+}'
+   Partner_ActivateDeactivatePartnerApiKey_invalid_label:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_06
+      description : ActivateDeactivatePartnerApiKey for invalid label
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "MDSP",
+   "label": "asdfsad",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_111"
+    }
+  ]
+}'
+
+   Partner_ActivateDeactivatePartnerApiKey_activate_Dublicate_Lable_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_07
+      description: Activate PartnerApiKey for duplicate label
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "MDSPK",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "Active"
+}'
+      output: '{
+    "errors": [
+    {
+      "errorCode": "PMS_PRT_111"
+    }
+  ]
+}'
+
+   Partner_ActivateDeactivatePartnerApiKey_Lable_Removed_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_08   
+      description: ActivateDeactivatePartnerApiKey without label
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: partner/error
+      input: '{
+   "partnerId": "partner-111997",
+   "policyId": "MDSP",
+   "label": "$REMOVE$",
+   "requesttime": "$TIMESTAMP$",
+   "status": "Active"
+}'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

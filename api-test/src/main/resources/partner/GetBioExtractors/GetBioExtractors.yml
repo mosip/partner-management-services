@@ -1,0 +1,32 @@
+GetBioExtractors:
+   Partner_GetBioExtractors_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetBioExtractors/getBioExtractors
+      outputTemplate: partner/GetBioExtractors/getBioExtractorsResult
+      input: '{
+    "partnerId": "mpartner-default-auth",
+    "policyId": "mpolicy-default-auth"
+}'
+      output: '{
+}'
+   Partner_GetBioExtractors_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      role: partner
+      restMethod: get
+      inputTemplate: partner/GetBioExtractors/getBioExtractors
+      outputTemplate: partner/error
+      input: '{
+    "partnerId": "afgebv",
+    "policyId": "mpolicy-default-auth"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_064",
+      "message": "No details found"
+    }
+  ]  
+}'
