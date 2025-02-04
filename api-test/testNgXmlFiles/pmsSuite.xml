@@ -720,7 +720,7 @@
 		<parameter name="ymlFile" value="pms/DeactivatePolicyGroup/DeactivatePolicyGroup.yml" />
 		<parameter name="pathParams" value="policyGroupId" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.testscripts.PatchWithPathParamsAndBody" />
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>	
 	
