@@ -25,6 +25,7 @@ import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
+import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.FtmDetailResponseDto;
 import io.mosip.pms.device.response.dto.FtmDetailSummaryDto;
@@ -76,8 +77,6 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
-import io.mosip.pms.device.authdevice.service.FtpChipDetailService;
-import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.constant.FoundationalTrustProviderErrorMessages;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.DeactivateFtmRequestDto;
@@ -92,22 +91,22 @@ import io.mosip.pms.test.PartnerManagementServiceTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { PartnerManagementServiceTest.class })
 public class FTPChipDetailServiceTest {
-	
+
 	@InjectMocks
-	private FtpChipDetailService ftpChipDetailService = new FTPChipDetailServiceImpl();
+	private FTPChipDetailServiceImpl ftpChipDetailService;
 
 	@Mock
 	SearchHelper searchHelper;
 
 	@Mock
 	PartnerHelper partnerHelper;
-	
+
 	@Mock
 	PartnerServiceRepository partnerServiceRepository;
-	
+
 	@Mock
 	RestUtil restUtil;
-	
+
 	@Mock
 	FTPChipDetailRepository ftpChipDetailRepository;
 
@@ -119,23 +118,20 @@ public class FTPChipDetailServiceTest {
 
 	@Mock
 	private Environment environment;
-	
+
 	@Mock
 	private ObjectMapper objectMapper;
-
-	@Autowired
-	private FTPChipDetailServiceImpl fTPChipDetailServiceImpl;
 
 	@MockBean
 	private WebSubPublisher webSubPublisher;
 
 	@MockBean
 	private AuditUtil auditUtil;
-	
+
 	@Autowired
 	@Qualifier("selfTokenRestTemplate")
 	private RestTemplate restTemplate;
-	
+
 	@Mock
 	private AuditUtil audit;
 
@@ -144,15 +140,15 @@ public class FTPChipDetailServiceTest {
 
 	@Mock
 	SecurityContext securityContext;
-	
+
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 	Partner partner=new Partner();
 	FtpChipDetailDto ftpChipDetailDto = new FtpChipDetailDto();
 	DeviceSearchDto deviceSearchDto = new DeviceSearchDto();
 	SearchFilter searchDto = new SearchFilter();
 	Pagination pagination = new Pagination();
-	SearchSort searchSort = new SearchSort();	
-	
+	SearchSort searchSort = new SearchSort();
+
 	@Before
 	public void setup() {
 		ReflectionTestUtils.setField(ftpChipDetailService, "partnerServiceRepository", partnerServiceRepository);
@@ -163,7 +159,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetailDto.setFtpProviderId("1234");
 		ftpChipDetailDto.setMake("make");
 		ftpChipDetailDto.setModel("model");
-		
+
 		searchDto.setColumnName("model");
     	searchDto.setFromValue("");
     	searchDto.setToValue("");
@@ -185,18 +181,18 @@ public class FTPChipDetailServiceTest {
 
 
 	}
-	
+
 	@Test
 	public void createFTPChipDetailtest() {
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);		
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
 	}
-	
+
 	@Test(expected = RequestException.class)
-	public void createFTPChipDetailtest01() {	
+	public void createFTPChipDetailtest01() {
 		ftpChipDetailService.createFtpChipDetails(ftpChipDetailDto);
 	}
-	
+
 	@Test
 	public void createFTPChipDetailTest02() {
 		FTPChipDetail uniqueChipDetail = new FTPChipDetail();
@@ -209,47 +205,47 @@ public class FTPChipDetailServiceTest {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode()));
 		}
 	}
-	
-	@Test 
+
+	@Test
 	public void updateFtpChipDetailsTest() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
-		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);	
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);
 	}
-	
+
 	@Test (expected = RequestException.class)
 	public void updateFtpChipDetailsTest02() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
-		ftpChipDetail.setFtpChipDetailId("12345");	
+		ftpChipDetail.setFtpChipDetailId("12345");
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(ftpChipDetail);
 		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		ftpChipDetailService.updateFtpChipDetails(chipDetails);
 	}
-	
-	@Test 
+
+	@Test
 	public void updateFtpChipDetailsTest03() {
 		FtpChipDetailUpdateDto chipDetails = createUpdateRequest();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("3456");
-		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);	
+		Optional<FTPChipDetail> opt_ftp = Optional.of(ftpChipDetail);
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		FTPChipDetail ftpChipDetail1 = new FTPChipDetail();
-		ftpChipDetail1.setFtpChipDetailId("12345");		
+		ftpChipDetail1.setFtpChipDetailId("12345");
 		Mockito.when(ftpChipDetailRepository.findByUniqueKey(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(ftpChipDetail1);
-		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);		
+		Mockito.when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.anyString())).thenReturn(partner);
 		try {
 			ftpChipDetailService.updateFtpChipDetails(chipDetails);
 		}catch (RequestException e) {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_MAKE_MODEL_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void updateFtpChipDetailStatusTest() {
 		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
@@ -263,7 +259,7 @@ public class FTPChipDetailServiceTest {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode()));
 		}
 	}
-	
+
 	@Test(expected = RequestException.class)
 	public void updateFtpChipDetailStatusTest01() {
 		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
@@ -271,7 +267,7 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpChipDetailId("12345");
 		ftpChipDetailService.updateFtpChipDetailStatus(request);
 	}
-	
+
 	@Test
 	public void updateFtpChipDetailStatusTest02() {
 		FtpChipDetailStatusDto request = createUpdateStatusRequest(true);
@@ -282,7 +278,7 @@ public class FTPChipDetailServiceTest {
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		ftpChipDetailService.updateFtpChipDetailStatus(request);
 	}
-	
+
 	@Test
 	public void getFTPChipDetailsTest() {
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
@@ -291,14 +287,14 @@ public class FTPChipDetailServiceTest {
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(opt_ftp);
 		ftpChipDetailService.getFtpChipDeatils("1234");
 	}
-	
+
 	@Test
 	public void getFTPChipDetailsTest_01() {
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("1234");
 		ftpChipDetailService.getFtpChipDeatils("1234");
 	}
-	
+
 	@Test
 	public void searchFTPChipDetailsTest() throws Exception {
 		objectMapper.writeValueAsString(deviceRequestDto);
@@ -306,9 +302,9 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setFtpChipDetailId("1234");
 		ftpChipDetail.setFtpProviderId("1234");
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(ftpChipDetail))).when(searchHelper).search(Mockito.any(),Mockito.any(), Mockito.anyString());
-		ftpChipDetailService.searchFTPChipDetails(FTPChipDetail.class, deviceSearchDto);	
-	}	
-	
+		ftpChipDetailService.searchFTPChipDetails(FTPChipDetail.class, deviceSearchDto);
+	}
+
 	@Test
 	public void uploadPartnerCertificateTest() throws Exception {
 		FtpChipCertificateRequestDto request = createUploadrequest(true);
@@ -328,13 +324,13 @@ public class FTPChipDetailServiceTest {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_PROVIDER_NOT_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void uploadPartnerCertificateTest01() throws Exception {
 		FtpChipCertificateRequestDto request = createUploadrequest(true);
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
-		ftpChipDetail.setFtpProviderId("12345");		
+		ftpChipDetail.setFtpProviderId("12345");
 		Map<String, Object> uploadApiResponse = new HashMap<String, Object>();
 		uploadApiResponse.put("response", 0);
 		Mockito.when(restUtil.postApi(environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
@@ -347,7 +343,7 @@ public class FTPChipDetailServiceTest {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void uploadPartnerCertificateTest02() throws Exception {
 		FtpChipCertificateRequestDto request = createUploadrequest(true);
@@ -367,11 +363,11 @@ public class FTPChipDetailServiceTest {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void getChipCertificate() throws Exception {
 		FtpChipCertDownloadRequestDto request = new FtpChipCertDownloadRequestDto();
-		request.setFtpChipDetailId("12345");		
+		request.setFtpChipDetailId("12345");
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
 		ftpChipDetail.setFtpProviderId("122345");
@@ -389,11 +385,11 @@ public class FTPChipDetailServiceTest {
 					.equals(FoundationalTrustProviderErrorMessages.FTP_CERT_NOT_UPLOADED.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void getChipCertificate01() throws Exception {
 		FtpChipCertDownloadRequestDto request = new FtpChipCertDownloadRequestDto();
-		request.setFtpChipDetailId("12345");		
+		request.setFtpChipDetailId("12345");
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
 		ftpChipDetail.setFtpChipDetailId("12345");
 		ftpChipDetail.setFtpProviderId("122345");
@@ -410,7 +406,7 @@ public class FTPChipDetailServiceTest {
 					.equals(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	private FtpChipDetailUpdateDto createUpdateRequest() {
 		FtpChipDetailUpdateDto ChipDetailUpdateDto = new FtpChipDetailUpdateDto();
 		ChipDetailUpdateDto.setFtpChipDetailId("12345");
@@ -418,14 +414,14 @@ public class FTPChipDetailServiceTest {
 		ChipDetailUpdateDto.setModel("model");
 		return ChipDetailUpdateDto;
 	}
-	
+
 	private FtpChipDetailStatusDto createUpdateStatusRequest(Boolean isItForRegistrationDevice) {
 		FtpChipDetailStatusDto ftpChipDetailStatusDto = new FtpChipDetailStatusDto();
 		ftpChipDetailStatusDto.setApprovalStatus(true);
 		ftpChipDetailStatusDto.setFtpChipDetailId("12345");
 		return ftpChipDetailStatusDto;
 	}
-	
+
 	private FtpChipCertificateRequestDto createUploadrequest(Boolean isItForRegistrationDevice) {
 		FtpChipCertificateRequestDto FtpChipCertificateRequestDto = new FtpChipCertificateRequestDto();
 		FtpChipCertificateRequestDto.setCertificateData("abcd");
@@ -1267,7 +1263,7 @@ public class FTPChipDetailServiceTest {
 	@Test (expected = Exception.class)
 	public void testNotify() {
 		doNothing().when(webSubPublisher).notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
-		ReflectionTestUtils.invokeMethod(fTPChipDetailServiceImpl,"notify","Cert Data", "Partner Domain");
+		ReflectionTestUtils.invokeMethod(ftpChipDetailService,"notify","Cert Data", "Partner Domain");
 		verify(webSubPublisher).notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
 	}
 
@@ -1275,7 +1271,7 @@ public class FTPChipDetailServiceTest {
 	public void testNotify2() {
 		doThrow(new RequestException("An error occurred", "An error occurred")).when(webSubPublisher)
 				.notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
-		ReflectionTestUtils.invokeMethod(fTPChipDetailServiceImpl,"notify","Cert Data", "Partner Domain");
+		ReflectionTestUtils.invokeMethod(ftpChipDetailService,"notify","Cert Data", "Partner Domain");
 		verify(webSubPublisher).notify((EventType) any(), (Map<String, Object>) any(), (Type) any());
 	}
 
@@ -1691,7 +1687,7 @@ public class FTPChipDetailServiceTest {
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<FtmDetailSummaryEntity> page = null;
 		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
-		fTPChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		ftpChipDetailService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	@Test
@@ -1709,7 +1705,7 @@ public class FTPChipDetailServiceTest {
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<FtmDetailSummaryEntity> page = null;
 		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
-		fTPChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, null);
+		ftpChipDetailService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 
 	@Test
@@ -1728,8 +1724,9 @@ public class FTPChipDetailServiceTest {
 		partner.setIsActive(true);
 		partner.setCertificateAlias("abs");
 		partnerList.add(partner);
-		when(partnerRepository.findByUserId(any())).thenReturn(partnerList);
-		when(partnerRepository.findById(any())).thenReturn(Optional.of(partner));
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
 
 		List<FTPChipDetail> ftpChipDetailList = new ArrayList<>();
 		FTPChipDetail ftpChipDetail = new FTPChipDetail();
@@ -1740,14 +1737,71 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setApprovalStatus("approved");
 		ftpChipDetail.setActive(true);
 		ftpChipDetail.setCrDtimes(LocalDateTime.now());
-		ftpChipDetail.setCertificateAlias("");
+		ftpChipDetail.setCertificateAlias("dff");
 		ftpChipDetailList.add(ftpChipDetail);
 		when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
-		fTPChipDetailServiceImpl.ftmChipDetail();
+		FtmCertificateDownloadResponseDto certificateDownloadResponseDto = new FtmCertificateDownloadResponseDto();
+		String certificate = "-----BEGIN CERTIFICATE-----\n" +
+				"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\n" +
+				"m0UA3Sxxre0vVWYO4GmmZUY=\n" +
+				"-----END CERTIFICATE-----";
+		certificateDownloadResponseDto.setCaSignedCertificateData(certificate);
+		certificateDownloadResponseDto.setMosipSignedCertificateData(certificate);
+		certificateDownloadResponseDto.setIsCaSignedCertificateExpired(false);
+		certificateDownloadResponseDto.setCaSignedCertUploadDateTime(LocalDateTime.now());
+		certificateDownloadResponseDto.setCaSignedCertExpiryDateTime(LocalDateTime.now().plusYears(3));
+		certificateDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
+		certificateDownloadResponseDto.setMosipSignedCertUploadDateTime(LocalDateTime.now());
+		certificateDownloadResponseDto.setMosipSignedCertExpiryDateTime(LocalDateTime.now().plusYears(1));
+		when(partnerHelper.getCertificate(anyString(), anyString(), any())).thenReturn(certificateDownloadResponseDto);
+		doNothing().when(partnerHelper).populateFtmCertificateExpiryState(certificateDownloadResponseDto);
+		ftpChipDetailService.ftmChipDetail();
+
+		ftpChipDetailList = new ArrayList<>();
+		ftpChipDetail.setCertificateAlias(null);
+		ftpChipDetailList.add(ftpChipDetail);
+		when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
+		ftpChipDetailService.ftmChipDetail();
+
+		partnerList = new ArrayList<>();
+		partner.setId(null);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+		ftpChipDetailService.ftmChipDetail();
 	}
 
 	@Test
 	public void ftmChipDetailExceptionTest() throws Exception {
-		fTPChipDetailServiceImpl.ftmChipDetail();
+		ftpChipDetailService.ftmChipDetail();
 	}
 }
