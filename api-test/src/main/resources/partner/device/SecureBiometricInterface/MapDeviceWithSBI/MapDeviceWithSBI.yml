@@ -1,0 +1,64 @@
+MapDeviceWithSBI:
+   Partner_MapDeviceWithSBI_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+    }'
+   Partner_MapDeviceWithSBI_Multiple_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+    }'
+    
+   Partner_MapDeviceWithSBI_Multiple_map:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/error
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_TO_Map_sid_id$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_511"
+    }
+  ]
+    }'
+    
+   Partner_MapDeviceWithSBI_Multiple_MapDeviceWith_Diff_Provider:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
+      outputTemplate: partner/error
+      input: '{
+    "deviceDetailId": "MOSIP.PROXY.SBI",
+    "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_AUT_005"
+    }
+  ]
+    }'

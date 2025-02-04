@@ -1,0 +1,562 @@
+createSearchPartnerType:
+   Partner_SearchPartnerType_type_contains_Smoke_asc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_Only_FilterCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "Device_Provider"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_Only_SortCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_Only_PaginationCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_type_contains_Smoke_desc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "contains",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_type_equals_Smoke_desc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_type_equals_Smoke_asc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_type_startswith_Smoke_asc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_type_startswith_Smoke_desc:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerTypeResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "data": [
+     {
+        "isActive": true
+      }
+    ]
+}'
+   Partner_SearchPartnerType_with_invalid_value_equals:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate:  partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "equals",
+        "value": "a@@@334455667788s"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerType_with_invalid_value_startswith:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      checkErrorsOnlyInResponse: true
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate:  partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "a@@@334455667788s"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerType_with_invalid_columnName:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "co@@@@@343455666###4$$%%de",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_missing_columnName:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "$REMOVE$",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-310"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_missing_type:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "$REMOVE$",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-312"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_invalid_sort_type:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "dc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_missing_sort_type:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "$REMOVE$"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_invalid_sort_field:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "code",
+        "sortType": "mo@@@del"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-358"
+    }
+  ]
+}'
+   Partner_SearchPartnerType_with_missing_sort_field:
+      endPoint: /v1/partnermanager/partners/partnertype/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerType/createSearchPartnerType
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "code",
+        "type": "startswith",
+        "value": "Device_Provider"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "$REMOVE$",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-314"
+    }
+  ]
+}'

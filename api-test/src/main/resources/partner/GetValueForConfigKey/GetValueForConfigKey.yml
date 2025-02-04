@@ -1,0 +1,30 @@
+GetValueForConfigKey:
+   partner_GetValueForConfigKey_allValid_smoke:
+      endPoint: /v1/policymanager/policies/config/{key}
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetValueForConfigKey/getValueForConfigKey
+      outputTemplate: partner/GetValueForConfigKey/getValueForConfigKeyResult
+      input: '{
+      "key": "pmp.datashare.policy.schema",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "key": "pmp.datashare.policy.schema",
+  } '
+  
+   partner_GetValueForConfigKey_allValid_smoke:
+      endPoint: /v1/policymanager/policies/config/{key}
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/GetValueForConfigKey/getValueForConfigKey
+      outputTemplate: partner/GetValueForConfigKey/getValueForConfigKeyResult
+      input: '{
+      "key": "abcd",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "key": "abcd",
+  } '

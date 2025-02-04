@@ -1,0 +1,19 @@
+GetAllOidcClient:
+   Pms_GetAllOidcClient_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients of the loggedin Partner
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
+}'

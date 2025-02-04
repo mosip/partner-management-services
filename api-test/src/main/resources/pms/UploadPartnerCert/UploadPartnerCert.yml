@@ -1,0 +1,114 @@
+uploadPartnerCert:
+   Pms_UploadPartnerCert_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_01
+      description: Upload Partner Cert
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'          
+
+   Pms_UploadPartnerCert_uploadCertificateDeviceProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_03
+      description: Upload Partner Cert
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCertDeviceProvider
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+
+   Pms_UploadPartnerCert_missing_PartnerDomain_Neg:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_04
+      description: Upload Partner Cert without partnerdomain      
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert2
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_invalid_certificate_Neg:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_05
+      description: Upload Partner Cert by giving invalid cert data      
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert3
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "KER-KMS-013"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_invalid_Domain_Neg:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_06
+      description: Upload Partner Cert by giving invalid domain      
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert4
+      outputTemplate: pms/error
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+        {
+            "errorCode": "KER-PCM-011"
+        }
+    ]
+}'
+   Pms_UploadPartnerCert_UploadAgain_Neg:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_07
+      description: Upload partner certificate again
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}' 
+
+   Pms_UploadPartnerCert_uploadCertificateFtmProvider_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_08
+      description: Upload Partner Cert
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCertFtmProvider
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'

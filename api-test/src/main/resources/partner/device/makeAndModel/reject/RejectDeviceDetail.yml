@@ -1,0 +1,71 @@
+rejectDeviceDetail:
+   Partner_rejectDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_rejectDeviceDetail_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "De-activate",
+    "id": "device-id-124",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_rejectDeviceDetail_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+
+   Partner_rejectDeviceDetail_Missing_InputParameter_deviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      role: partner
+      restMethod: patch
+      inputTemplate: partner/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: partner/error
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

@@ -1,0 +1,18 @@
+ApproveFTMChipDetail:
+   Pms_ApproveFTMChipDetail_allValid_smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partneradmin
+      description: Approve FTM Chip Detail
+      uniqueIdentifier: TC_PMS_ApproveFTMchipDetail_01
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail
+      outputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetailResult
+      input: '{
+   "ftpChipDetailId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
+    "approvalStatus": true
+}'
+      output: '{
+   
+}'
+

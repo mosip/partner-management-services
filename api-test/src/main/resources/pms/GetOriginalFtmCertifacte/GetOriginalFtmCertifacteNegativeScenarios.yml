@@ -1,0 +1,97 @@
+GetOriginalFtmCertifacteNegativeScenarios:
+   Pms_GetOriginalPartnerCertificates_without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_01
+      description: Retrieve Original FTM Certifacte without partner Authentication and expecting an error in the response
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetOriginalPartnerCertificates_with_Invalid_AccessToken_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_02
+      description: Retrieve Original FTM Certifacte with invalid partner access token and expecting an error in the response
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+
+   Pms_GetOriginalPartnerCertificates_SpaceVla_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_04
+      description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Missing and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": " "
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'
+   Pms_GetOriginalPartnerCertificates_Invalid_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_05
+      description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": "0191230330"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'
+   Pms_GetOriginalPartnerCertificates_Invalid_Value_FTM_ID_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_06
+      description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": "fsadf"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_005"
+       }
+       ]
+}'

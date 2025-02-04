@@ -1,0 +1,13 @@
+{
+  "response": {
+    "filters": [
+     {{#each filters}}
+      {
+        "fieldID": "{{fieldID}}",
+        "fieldValue": "{{fieldValue}}"
+      }
+      {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ]
+  }
+}

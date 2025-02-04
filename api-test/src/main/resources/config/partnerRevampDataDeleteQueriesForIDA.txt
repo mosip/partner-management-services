@@ -1,0 +1,8 @@
+#####  DB queries to be executed to tear down the data used and generated during the test rig run for partnerRevamp APIs
+
+delete from ida.ca_cert_store where cert_subject ='CN=ABC,O=ABC,L=PN,ST=MH,C=IN';
+delete FROM ida.oidc_client_data where partner_id='pms-111777';
+
+
+
+

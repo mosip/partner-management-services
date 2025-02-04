@@ -1,0 +1,13 @@
+GetCountOfFtm:
+   Pms_GetCountOfFtm_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      description: Fetching all active FTM
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetCountOfFtm/getCountOfFtm
+      outputTemplate: pms/GetCountOfFtm/getCountOfFtmResult
+      input: '{
+}'
+      output: ' {
+}'

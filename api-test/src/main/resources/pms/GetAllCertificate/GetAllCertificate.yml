@@ -1,0 +1,66 @@
+GetAllCertificate:
+   Pms_GetAllCertificate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      description: Fetching all the API certificates of the Logged in Partner
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllCertificate_01
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
+      input: '{
+}'
+      output: '{
+      "partnerId": "pms-111999",
+      "partnerType": "Auth_Partner",
+      "isCertificateAvailable": true
+}'
+
+   Pms_GetAllCertificate_Device_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      description: Fetching all the API certificates of the Loggedin Partner
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_GetAllCertificate_02
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
+      input: '{
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
+   Pms_GetAllCertificate_without_auth:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      description: Fetching all the API certificates of the partner without login
+      uniqueIdentifier: TC_PMS_GetAllCertificate_03
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllCertificate_invalid_auth:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      description: Fetching all the API certificates of the partner invalid partner
+      uniqueIdentifier: TC_PMS_GetAllCertificate_04
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

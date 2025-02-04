@@ -1,0 +1,139 @@
+FilterMispLicense:
+   Partner_FilterMispLicense_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
+      input: '{
+	"filters": [{
+	   "columnName": "isActive",
+        "type": "all",
+        "text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "filters": [
+      {
+        "fieldID": "isActive",
+        "fieldValue": "true"
+      },
+      {
+        "fieldID": "isActive",
+        "fieldValue": "false"
+      }
+    ],
+    "errors": null
+}'
+   Partner_FilterMispLicense_Valid_Smoke:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicenseResult
+      input: '{
+	"filters": [{
+	   "columnName": "isActive",
+        "type": "unique",
+        "text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "filters": [
+      {
+        "fieldID": "isActive",
+        "fieldValue": "true"
+      },
+      {
+        "fieldID": "isActive",
+        "fieldValue": "false"
+      }
+    ],
+    "errors": null
+}'
+   Partner_FilterMispLicense_InValid_FilterType:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "iSActive",
+		"type": "between",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_Blank_FilterType:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "isActive",
+		"type": "",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_InValid_columnName:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "lang_code",
+		"type": "unique",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'
+   Partner_FilterMispLicense_InValid_Empty_columnName:
+      endPoint: /v1/partnermanager/misps/filtervalues
+      role: partner
+      restMethod: post
+      inputTemplate: partner/MispLicense/FilterMispLicense/filterMispLicense
+      outputTemplate: partner/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "unique",
+		"text": ""
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

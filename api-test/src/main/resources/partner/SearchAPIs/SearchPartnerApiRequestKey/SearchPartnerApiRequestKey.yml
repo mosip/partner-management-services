@@ -1,0 +1,125 @@
+SearchPartnerApiRequestKey:
+   Partner_SearchPartnerApiRequestKey_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKeyResult
+      input: '{
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiRequestKey_Only_FilterCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKeyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "unique",
+        "value": "mpartner_policy_auth_req"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiRequestKey_Only_SortCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKeyResult
+      input: '{
+  "sort": [
+      {
+        "sortField": "id",
+        "sortType": "desc"
+      }
+    ],
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiRequestKey_Only_PaginationCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKeyResult
+      input: '{
+  "pageFetch": "10",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Partner_SearchPartnerApiRequestKey_type_contains_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKeyResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "unique",
+        "value": "mpartner_policy_auth_req"
+      }
+    ],
+  "sort": "$IGNORE$",
+  "pageFetch": "1",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+
+   Partner_SearchPartnerApiRequestKey_type_contains_invalid_pagination:
+      endPoint: /v1/partnermanager/partners/apikey/request/search
+      role: partner
+      restMethod: post
+      inputTemplate: partner/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
+      outputTemplate: partner/error
+      input: '{
+    "filters": [
+      {
+        "columnName": "id",
+        "type": "unique",
+        "value": "mpartner_policy_auth_req"
+      }
+    ],
+  "sort": "$IGNORE$",
+  "pageFetch": "0",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-313"
+    }
+  ]
+}'

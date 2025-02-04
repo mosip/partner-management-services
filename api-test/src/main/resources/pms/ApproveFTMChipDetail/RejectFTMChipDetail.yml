@@ -1,0 +1,20 @@
+ApproveFTMChipDetail:
+   Pms_ApproveFTMChipDetail_allValid_smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partneradmin
+      description: Reject FTM Chip Detail
+      uniqueIdentifier: TC_PMS_RejectFTMchip_01
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail
+      outputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetailResult
+      input: '{
+   "partnerId": "pms-111777",
+   "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+    "response": "Partner apikey de-activated successfully."
+}'

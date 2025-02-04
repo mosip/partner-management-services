@@ -1,0 +1,14 @@
+RemoveMapDeviceWithSBI:
+   Partner_RemoveMapDeviceWithSBI_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map/remove
+      role: partner
+      restMethod: put
+      inputTemplate: partner/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBI
+      outputTemplate: partner/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBIResult
+      input: '{
+    "deviceDetailId": "device-id-123",
+    "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
+  }'
+      output: '{
+        "response": "Success"
+    }'

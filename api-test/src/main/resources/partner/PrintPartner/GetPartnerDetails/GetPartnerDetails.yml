@@ -1,0 +1,13 @@
+GetPartnerDetails:
+   Partner_GetPartnerDetails_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/v2
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: partner/PrintPartner/GetPartnerDetails/GetPartnerDetails
+      outputTemplate: partner/PrintPartner/GetPartnerDetails/GetPartnerDetailsResult
+      input: '{
+		"partnerType":"Print_Partner"
+}'
+      output: '{
+}'

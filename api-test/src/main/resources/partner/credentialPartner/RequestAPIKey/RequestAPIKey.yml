@@ -1,0 +1,86 @@
+RequestAPIKeyCredentialPartner:
+   Partner_CredPartnerApiKeyRequest_Approval_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/credentialPartner/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip data share policy",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: ' {
+    }'
+   Partner_CredPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/credentialPartner/RequestAPIKey/requestAPIKeyResult
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "mosip policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: ' {
+    }'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_PolicyName:
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription:
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+   Partner_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription:
+      endPoint: /v1/partnermanager/partners/MOVP/policy/map
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/credentialPartner/RequestAPIKey/requestApiKey
+      outputTemplate: partner/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosi182736@636",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'

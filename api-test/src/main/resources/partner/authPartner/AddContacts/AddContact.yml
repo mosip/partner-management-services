@@ -1,0 +1,87 @@
+addContact:
+   Partner_AddContact_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      uniqueIdentifier: TC_Partner_addContact_01
+      description : Add COntact for all
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: partner/authPartner/AddContacts/addContact
+      outputTemplate: partner/authPartner/AddContacts/addContactResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9903255448",
+    "emailId": "print@email.com",
+    "is_Active": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+   Partner_AddContact_Missing_InputParameter_address:
+      endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      uniqueIdentifier: TC_Partner_addContact_02
+      description: Add contact without address
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/AddContacts/addContact
+      outputTemplate: partner/error
+      input: '{
+    "address": "$REMOVE$",
+    "contactNumber": "9903255448",
+    "emailId": "print@email.com",
+    "is_Active": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.address"
+    }
+  ]
+}'
+   
+   Partner_AddContact_Missing_InputParameter_contactNumber:
+      endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      uniqueIdentifier: TC_Partner_addContact_03
+      description: Add contact without contact number
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/AddContacts/addContact
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "$REMOVE$",
+    "emailId": "print@email.com",
+    "is_Active": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Partner_AddContact_Missing_InputParameter_emailId:
+      endPoint: /v1/partnermanager/partners/Tech-123/contact/add
+      uniqueIdentifier: TC_Partner_addContact_04
+      description: Add contact without emailId
+      role: partner
+      restMethod: post
+      inputTemplate: partner/authPartner/AddContacts/addContact
+      outputTemplate: partner/error
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9903255448",
+    "emailId": "$REMOVE$",
+    "is_Active": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

@@ -1,0 +1,44 @@
+SaveDeviceDetails:
+   Pms_SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_01
+      description: Save Device Details
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "pms-111998",
+    "make": "AcmeCorp",
+    "model": "X1000",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+          
+}'
+
+   Pms_SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_02
+      description: Save Device Details
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "pms-111998",
+    "make": "AcmeCorpReject",
+    "model": "X1000Reject",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+          
+}'

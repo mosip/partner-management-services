@@ -1,0 +1,22 @@
+createPartnerSelfRegistration:
+   Pms_PartnerSelfRegistration_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/CreateDeviceDetail/CreateDeviceDetail
+      outputTemplate: pms/CreateDeviceDetail/CreateDeviceDetailResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip98763@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "pms-111777",
+    "partnerType": "Auth_Partner",
+    "policyGroup": "mosip policy group 19234",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "pms-111777",
+        "status": "InProgress"
+    }'
