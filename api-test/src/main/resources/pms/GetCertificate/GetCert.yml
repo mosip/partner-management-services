@@ -15,7 +15,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_with_unregistered_partner:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
