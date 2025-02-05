@@ -15,7 +15,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_with_unregistered_partner_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-      uniqueIdentifier: TC_PMS_GetListAllFTMChip_01
+      uniqueIdentifier: TC_PMS_GetPartnerCert_03
       role: partnerauth
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
