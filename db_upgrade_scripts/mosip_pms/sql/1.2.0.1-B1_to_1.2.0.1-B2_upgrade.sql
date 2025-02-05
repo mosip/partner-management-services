@@ -1,20 +1,17 @@
--- This Source Code Form is subject to the terms of the Mozilla Public
--- License, v. 2.0. If a copy of the MPL was not distributed with this
--- file, You can obtain one at https://mozilla.org/MPL/2.0/.
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_pms
--- Table Name : oidc_client
--- Purpose    : oicd client: Table to store all registered OIDC client details.
---           
--- Create By   	: Nagarjuna K
--- Created Date	: Sep-2022
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- ------------------------------------------------------------------------------------------
+\c mosip_pms
 
--- object: oidc_client.oidc_client | type: TABLE --
--- DROP TABLE IF EXISTS oidc_client.oidc_client CASCADE;
+ALTER TABLE pms.partner ADD COLUMN logo_url character varying(256);
+
+ALTER TABLE pms.partner_h ADD COLUMN logo_url character varying(256);
+
+ALTER TABLE pms.partner ADD COLUMN addl_info character varying;
+
+ALTER TABLE pms.partner_h ADD COLUMN addl_info character varying;
+
+ALTER TABLE pms.misp_license ADD COLUMN policy_id character varying(36);
+
+-- object: pms.oidc_client | type: TABLE --
+-- DROP TABLE IF EXISTS pms.oidc_client CASCADE;
 CREATE TABLE pms.oidc_client(
 	id character varying(100) NOT NULL,
 	name character varying(256) NOT NULL,
@@ -38,7 +35,7 @@ CREATE TABLE pms.oidc_client(
 	CONSTRAINT uq_oidc_client_public_key UNIQUE (public_key)
 );
 -- ddl-end --
-COMMENT ON TABLE oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';
+COMMENT ON COLUMN oidc_client.id IS 'Client ID: Unique id assigned to registered OIDC client.';
 -- ddl-end --
 COMMENT ON COLUMN oidc_client.name IS 'Client Name: Registered name of OIDC client.';
 -- ddl-end --
@@ -63,3 +60,6 @@ COMMENT ON COLUMN oidc_client.claims IS 'Requested Claims: claims json as per po
 COMMENT ON COLUMN oidc_client.acr_values IS 'Allowed Authentication context References(acr) json';
 -- ddl-end --
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.oidc_client TO pmsuser;
+
+GRANT ALL ON TABLE pms.oidc_client TO postgres;
