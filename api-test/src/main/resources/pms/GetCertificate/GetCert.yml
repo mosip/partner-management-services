@@ -12,11 +12,10 @@ GetPartnerCert:
 }'
       output: ' {
 }'
-   Pms_GetPartnerCert_with_unregistered_partner:
+   Pms_GetPartnerCert_with_unregistered_partner_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/error
