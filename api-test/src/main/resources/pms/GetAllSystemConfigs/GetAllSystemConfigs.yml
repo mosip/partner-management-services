@@ -1,0 +1,14 @@
+GetAllSystemConfigs:
+   Pms_GetAllSystemConfigs_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/system-config
+      description: Fetching all the configuration for PMS
+      uniqueIdentifier: TC_PMS_GetAllSystemConfigs_01
+      role: patneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllSystemConfigs/getAllApiKeyForAuthPartner
+      outputTemplate: pms/GetAllSystemConfigs/getAllApiKeyForAuthPartnerResult
+      input: '{
+}'
+      output: '{
+}'
