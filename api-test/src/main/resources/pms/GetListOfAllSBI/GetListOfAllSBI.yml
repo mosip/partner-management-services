@@ -128,9 +128,9 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_sbiExpiryStatus_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiExpiryStatus={sbiExpiryStatus}
       uniqueIdentifier: TC_PMS_SBI_List_13      
-      description: Fetching all the active SBI with sbiExpiryStatus as valid
+      description: Fetching all the active SBI with sbiExpiryStatus as vaild
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -146,7 +146,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -198,52 +198,53 @@ GetListOfAllSBI:
 }'
 
    Pms_GetListOfAllSBI_sortType_ASC:
-      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_15      
-      description: Fetching all the active SBI with partnerId contains 'a'
+      description: Fetching all the active SBI with ASC
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
-      "sortFieldName": "rejected",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "status",
       "sortType": "ASC",
-      "pageNo": "$REMOVE$",
-      "pageSize": "$REMOVE$",
+      "pageNo": "0",
+      "pageSize": "5",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
 
    Pms_GetListOfAllSBI_sortType_DESC:
-      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={status}
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_17      
-      description: Fetching all the active SBI with sortType as desc
+      description: Fetching all the active SBI with sbiVersion
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sortType": "DESC",
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
-      "status": "rejected",
-      "sortFieldName": "$REMOVE$",
-      "pageNo": "$REMOVE$",
-      "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "status",
+      "sortType": "DESC",
+      "pageNo": "0",
+      "pageSize": "5",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_random_value_given:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_18      
@@ -269,24 +270,24 @@ GetListOfAllSBI:
 }'
    Pms_GetListOfAllSBI_sbiVersion_given:
       endPoint: /v1/partnermanager/securebiometricinterface?sbiVersion={sbiVersion}
-      uniqueIdentifier: TC_PMS_SBI_List_19      
-      description: Fetching all the active SBI with sbiVersion contains 'abcd'
+      uniqueIdentifier: TC_PMS_SBI_List_12      
+      description: Fetching all the active SBI with sbiVersion
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sbiVersion": "abcd",
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "sbiVersion": "abcd",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'

@@ -6,7 +6,7 @@ GetListOfPartners:
       uniqueIdentifier: TC_PMS_GetListOfPartners_01
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
 }'
       output: '{
@@ -20,7 +20,7 @@ GetListOfPartners:
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/getListOfPartnersResult
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
 }'
       output: '{

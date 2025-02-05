@@ -277,7 +277,7 @@ GetListOfAllDevice:
 }'
    Pms_GetListOfAllDevice_with_orgName:
       endPoint: /v1/partnermanager/devicedetail?orgName={orgName}
-      uniqueIdentifier: TC_PMS_devicedetails_11      
+      uniqueIdentifier: TC_PMS_devicedetails_25     
       description: Fetching list of all the devices with orgName value given as '1'
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -541,7 +541,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
       input: '{
-      "model": "4"
+      "model": "4",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
