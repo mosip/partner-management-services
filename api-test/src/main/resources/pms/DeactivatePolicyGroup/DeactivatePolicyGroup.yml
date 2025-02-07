@@ -329,7 +329,7 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "$TIMESTAMP$",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid$"
 }'
       output: '{
@@ -347,7 +347,7 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "$TIMESTAMP$",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{
@@ -370,7 +370,7 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "$TIMESTAMP$",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{
