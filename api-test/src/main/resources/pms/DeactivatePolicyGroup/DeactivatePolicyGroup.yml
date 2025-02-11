@@ -1,16 +1,382 @@
 DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
-      description: Deactivate Policy Groups
-      role: partnerrevamp
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_01      
+      description: Deactivate Policy Group
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroupResult
       input: '{
     "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_create_then_deactivate_sid_id$"
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
 }'
       output: ' {
+}'
+   Pms_DeactivatePolicyGroup_without_authentication:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_02      
+      description: Deactivate Policy Group without authentication
+      role: invalid
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_invalid_roles:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_03      
+      description: Deactivate Policy Group authenticated using invalid roles
+      role: POLICYMANAGER
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_without_id:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_04      
+      description: Deactivate Policy Group without id value
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "$REMOVE$",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_invalid_id:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_05      
+      description: Deactivate Policy Group with invalid id value
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.deactiavte",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_without_version:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_06      
+      description: Deactivate Policy Group without version
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "$REMOVE$",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_invalid_version:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_07      
+      description: Deactivate Policy Group invalid version
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "2.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_without_status:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_08      
+      description: Deactivate Policy Group without status
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "$REMOVE$",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_073"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_invalid_status:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_09      
+      description: Deactivate Policy Group with invalid status
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_073"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_spacevalue_policygroupid:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_10      
+      description: Deactivate Policy Group without policygroupid
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "   "
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_002"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_invalid_policygroupid:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_11      
+      description: Deactivate Policy Group invalid policygroupid
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "6776654"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_068"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_future_date:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_12      
+      description: Deactivate Policy Group with future date given as requesttime
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "2026-01-24T07:47:57.206Z",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_past_date:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_13      
+      description: Deactivate Policy Group with past date given as requesttime
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "2024-01-24T07:47:57.206Z",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_without_requesttime:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_14      
+      description: Deactivate Policy Group without requesttime
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$REMOVE$",
+	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_with_deactivated_policies:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_15     
+      description: Deactivate Policy Group with deactivated policies
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroupResult
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$REMOVE$",
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid$"
+}'
+      output: '{
+}'
+   Pms_DeactivatePolicyGroup_with_publishpolicy:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_16      
+      description: Deactivate Policy Group with published policy
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$REMOVE$",
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_056"
+       }
+       ]
+}'
+   Pms_DeactivatePolicyGroup_with_Draftpolicy:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_group_17      
+      description: Deactivate Policy Group with draft policy
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$REMOVE$",
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_056"
+       }
+       ]
 }'

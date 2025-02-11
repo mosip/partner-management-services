@@ -1,7 +1,9 @@
 ApproveFTMChipDetail:
    Pms_ApproveFTMChipDetail_allValid_smoke:
       endPoint: /v1/partnermanager/ftpchipdetail
-      role: partnerrevampftm
+      role: partneradmin
+      description: Approve FTM Chip Detail
+      uniqueIdentifier: TC_PMS_ApproveFTMchipDetail_01
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail

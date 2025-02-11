@@ -1,7 +1,7 @@
 GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
@@ -15,7 +15,7 @@ GetOriginalPartnerCertificates:
 
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
@@ -29,7 +29,7 @@ GetOriginalPartnerCertificates:
 
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates

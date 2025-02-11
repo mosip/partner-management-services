@@ -23,7 +23,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_02
       description: Deactivate Device by passing invalid Device ID
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -43,7 +43,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_03
       description: Deactivate Device by passing invalid requestTime
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -63,6 +63,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_04
       description: Deactivate Device while keeping requestTime paramter as Missing
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -81,7 +82,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_05
       description: Deactivate Device while keeping requestTime paramter as Empty 
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -101,7 +102,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_06
       description: Deactivate Device by passwing invalid Random Device ID
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -121,7 +122,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_07
       description: Deactivate Device which has been already Deactivated
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDevice
@@ -141,7 +142,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_08
       description: Deactivate Device by passing invalid Version
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios
@@ -163,7 +164,7 @@ DeactivateDeviceNegativeScenarios:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       uniqueIdentifier: TC_PMS_DeactivateDevice_09
       description: Deactivate Device while keeping Version parameter as Empty
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateDevice/DeactivateDeviceNegativeScenarios

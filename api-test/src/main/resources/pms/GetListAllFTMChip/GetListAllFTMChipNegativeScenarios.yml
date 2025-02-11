@@ -31,7 +31,7 @@ GetListAllFTMChipNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'
@@ -39,17 +39,13 @@ GetListAllFTMChipNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_03
       description: Retrieve all FTM chip details when FTM Chips are not added for Partner
-      role: partnerrevampftm
       checkErrorsOnlyInResponse: true
+      role: partnerftm
       restMethod: get
-      inputTemplate: pms/GetListAllFTMChip/GetListAllFTM
-      outputTemplate: pms/error
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResultNegative
       input: '{
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-       }
-       ]
+      
 }'

@@ -15,7 +15,9 @@ public enum SecureBiometricInterfaceConstant {
 	SBI_EXPIRED("PMS_AUT_513", "SBI for which device is being mapped is expired"),
 	SWCREATEDDATE_SHOULD_BE_PAST_OR_TODAY("PMS_AUT_514","The created date should be less than or equal to the current date."),
 	EXPIRYDATE_SHOULD_NOT_BE_GREATER_THAN_TEN_YEARS("PMS_AUT_515", "Expiry date should not be greater than %s years from today"),
-	CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS("PMS_AUT_516", "Created date should not be less than %s years from today");
+	CREATEDDATE_SHOULD_NOT_BE_LESS_THAN_TEN_YEARS("PMS_AUT_516", "Created date should not be less than %s years from today"),
+	SBI_ALREADY_APPROVED("PMS_AUT_517", "The selected SBI has been already approved"),
+	SBI_ALREADY_REJECTED("PMS_AUT_518", "The selected SBI has been already rejected");
 	
 	/**
 	 * The error code.

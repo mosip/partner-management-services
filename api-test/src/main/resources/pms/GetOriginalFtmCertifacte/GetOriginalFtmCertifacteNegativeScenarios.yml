@@ -33,45 +33,27 @@ GetOriginalFtmCertifacteNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-ATH-403"
+       "errorCode": "KER-ATH-401"
        }
        ]
 }'
-   Pms_GetOriginalPartnerCertificates_Before_Uploading_Partner_Cert_Neg:
-      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
-      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_03
-      description: Retrieve Original FTM Certifacte before uploading Partner certificates and expecting an error in the response
-      role: partnerrevampftm
-      checkErrorsOnlyInResponse: true
-      restMethod: get
-      inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteBeforeUploadingCertificates
-      outputTemplate: pms/error
-      input: '{
-      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
-}'
-      output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-       }
-       ]
-}'
-   Pms_GetOriginalPartnerCertificates_Missing_FTM_ID_Neg:
+
+   Pms_GetOriginalPartnerCertificates_SpaceVla_FTM_ID_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_04
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Missing and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
       outputTemplate: pms/error
       input: '{
-      "ftmId": "$REMOVE$"
+      "ftmId": " "
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_FTM_ERROR_005"
        }
        ]
 }'
@@ -79,7 +61,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_05
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
@@ -98,13 +80,13 @@ GetOriginalFtmCertifacteNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_06
       description: Retrieve Original FTM Certifacte while keeping FTM ID parameter as Invalid and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
       outputTemplate: pms/error
       input: '{
-      "ftmId": "#^RHRW%"
+      "ftmId": "fsadf"
 }'
       output: '{
       "errors": [

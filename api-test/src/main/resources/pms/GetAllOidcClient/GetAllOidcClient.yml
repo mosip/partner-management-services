@@ -1,8 +1,9 @@
 GetAllOidcClient:
    Pms_GetAllOidcClient_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/oauth/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Fetching all OIDC Clients of the loggedin Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_01
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient

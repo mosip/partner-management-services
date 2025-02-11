@@ -1,9 +1,9 @@
 GetListOfAllSBI:
    Pms_GetListOfAllSBI_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2
+      endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_03      
       description: Fetching all the active SBI
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -13,10 +13,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_status_rejected:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?status={status}
+      endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_08      
       description: Fetching all the active SBI with status as rejected
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -36,10 +36,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_status_approved:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?status={status}
+      endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_09      
       description: Fetching all the active SBI with status as approved
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -59,10 +59,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_status_deactivated:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?status={status}
+      endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_10      
       description: Fetching all the active SBI with status as deactivated
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -82,10 +82,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_status_pending_approval:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?status={status}
+      endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_11      
       description: Fetching all the active SBI with status as pending_approval
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -105,10 +105,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_sbiExpiryStatus_expired:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?sbiExpiryStatus={sbiExpiryStatus}
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiExpiryStatus={sbiExpiryStatus}
       uniqueIdentifier: TC_PMS_SBI_List_12      
       description: Fetching all the active SBI with sbiExpiryStatus as expired
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -128,10 +128,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_sbiExpiryStatus_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?sbiExpiryStatus={sbiExpiryStatus}
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiExpiryStatus={sbiExpiryStatus}
       uniqueIdentifier: TC_PMS_SBI_List_13      
-      description: Fetching all the active SBI with sbiExpiryStatus as valid
-      role: partnerrevamp
+      description: Fetching all the active SBI with sbiExpiryStatus as vaild
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -146,15 +146,15 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfAllSBI_orgName_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?orgName={orgName}
+      endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_14      
       description: Fetching all the active SBI with orgName contains '1'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -174,10 +174,10 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_partnerId_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?partnerId={partnerId}
+      endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_15      
       description: Fetching all the active SBI with partnerId contains 'a'
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -196,57 +196,60 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_sortType_ASC:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?sortType={sortType}
-      uniqueIdentifier: TC_PMS_SBI_List_16      
-      description: Fetching all the active SBI with sortType as ASC
-      role: partnerrevamp
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_SBI_List_15      
+      description: Fetching all the active SBI with ASC
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "status",
       "sortType": "ASC",
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$",
-      "status": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
-      "pageNo": "$REMOVE$",
-      "pageSize": "$REMOVE$",
+      "pageNo": "0",
+      "pageSize": "5",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_sortType_DESC:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?sortType={sortType}
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_17      
-      description: Fetching all the active SBI with sortType as desc
-      role: partnerrevamp
+      description: Fetching all the active SBI with sbiVersion
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sortType": "DESC",
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
-      "sortFieldName": "$REMOVE$",
-      "pageNo": "$REMOVE$",
-      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "status",
+      "sortType": "DESC",
+      "pageNo": "0",
+      "pageSize": "5",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
+
    Pms_GetListOfAllSBI_random_value_given:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?partnerId={partnerId}
+      endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_18      
       description: Fetching all the active SBI with random value for partnerId
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
@@ -266,33 +269,33 @@ GetListOfAllSBI:
       output: ' {
 }'
    Pms_GetListOfAllSBI_sbiVersion_given:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?sbiVersion={sbiVersion}
-      uniqueIdentifier: TC_PMS_SBI_List_19      
-      description: Fetching all the active SBI with sbiVersion contains 'abcd'
-      role: partnerrevamp
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiVersion={sbiVersion}
+      uniqueIdentifier: TC_PMS_SBI_List_12      
+      description: Fetching all the active SBI with sbiVersion
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
-      "sbiVersion": "abcd",
-      "partnerId": "$REMOVE$",
-      "orgName": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "sbiVersion": "abcd",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
    Pms_GetListOfAllSBI_pagesize_given_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface/search/v2?pageSize={pageSize}
+      endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_20      
       description: Fetching all the active SBI with pageSize specified
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI

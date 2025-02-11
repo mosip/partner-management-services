@@ -336,6 +336,32 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					String.format(SecureBiometricInterfaceConstant.SBI_NOT_FOUND.getErrorMessage(),
 							secureBiometricInterfaceDto.getId()));
 		}
+		if (entity.getApprovalStatus().equals(DeviceConstant.APPROVED) && entity.isActive()) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorMessage(),
+									secureBiometricInterfaceDto.getId())),
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_APPROVED.getErrorMessage(),
+							secureBiometricInterfaceDto.getId()));
+		}
+		if (entity.getApprovalStatus().equals(DeviceConstant.REJECTED)) {
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.FAILURE_DESC,
+							SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorCode(),
+							String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorMessage(),
+									secureBiometricInterfaceDto.getId())),
+					"AUT-016", secureBiometricInterfaceDto.getId(), "sbiId");
+			throw new RequestException(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorCode(),
+					String.format(SecureBiometricInterfaceConstant.SBI_ALREADY_REJECTED.getErrorMessage(),
+							secureBiometricInterfaceDto.getId()));
+		}
 
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -701,24 +727,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorCode(),
 						ErrorCode.PARTNER_ID_NOT_ASSOCIATED_WITH_USER.getErrorMessage());
 			}
-			try {
-				IdDto dto = createDeviceDetails(deviceDetailDto);
-				deviceId = dto.getId();
-				addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
-			} catch (PartnerServiceException ex) {
-				if ("PMS_AUT_003".equals(ex.getErrorCode())) {
-					DeviceDetail deviceDetail = deviceDetailRepository.findUniqueDeviceDetail(PartnerUtil.trimAndReplace(deviceDetailDto.getMake()), PartnerUtil.trimAndReplace(deviceDetailDto.getModel()),
-							deviceDetailDto.getDeviceProviderId(), deviceDetailDto.getDeviceSubTypeCode(),
-							deviceDetailDto.getDeviceTypeCode());
-					deviceId = deviceDetail.getId();
-					addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
-				} else {
-					throw new PartnerServiceException(ex.getErrorCode(), ex.getErrorText());
-				}
-			}
-			IdDto responseDto = new IdDto();
-			responseDto.setId(deviceId);
-			responseWrapper.setResponse(responseDto);
+			IdDto dto = createDeviceDetails(deviceDetailDto);
+			deviceId = dto.getId();
+			addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
+			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {

@@ -3,7 +3,7 @@ GetUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_01
       description: Retrieve the PMS GetUserConsent for All Valid Smoke
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent
@@ -24,8 +24,11 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-        "errorCode": "KER-ATH-401",
-        "message": "Authentication Failed"
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401" 		
+      }
+      ]
 }'
    Pms_GetUserConsent_Get_consent_status_admin_user_neg:
       endPoint: /v1/partnermanager/users/user-consent
@@ -38,8 +41,11 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-        "errorCode": "PMS_CERTIFICATE_ERROR_002",
-        "message":  "User Id does not exists"
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002" 		
+      }
+      ]
 }'
    Pms_GetUserConsent_Get_consent_status_invalid_auth_token_neg:
       endPoint: /v1/partnermanager/users/user-consent
@@ -52,7 +58,10 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-        "errorCode": "KER-ATH-403",
-        "message": "Forbidden"
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
 }' 
 

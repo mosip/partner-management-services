@@ -2,7 +2,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -32,7 +32,7 @@ createPublishPolicy:
    Pms_PublishPolicy_InValid_AlreadyPublished:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy which is already published      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -53,7 +53,7 @@ createPublishPolicy:
    Pms_PublishPolicy_InValid_policygroupId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy with invalid policygroupid      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -74,7 +74,7 @@ createPublishPolicy:
    Pms_PublishPolicy_InValid_policyId:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy with invalid policyid      
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -113,10 +113,10 @@ createPublishPolicy:
        ] 
     }'                 
                           
-   Pms_PublishPolicy_All_Valid_Smoke:
+   Pms_PublishPolicy_ForDeactive_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy

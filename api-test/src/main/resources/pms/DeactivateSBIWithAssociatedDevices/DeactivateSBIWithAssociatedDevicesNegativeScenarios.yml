@@ -23,7 +23,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_02
       description: Deactivate SBI while keeping requestTime parameter as Missing in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
@@ -43,7 +43,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_03
       description: Deactivate SBI while keeping requestTime parameter as Empty in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
@@ -63,7 +63,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_04
       description: Deactivate SBI by passing Invalid ID parameter in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -85,7 +85,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_05
       description: Deactivate SBI while keeping ID parameter as Missing in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -107,7 +107,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_06
       description: Deactivate SBI while keeping ID parameter as Null in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -129,7 +129,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_07
       description: Deactivate SBI while keeping ID parameter as Empty in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -151,7 +151,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_08
       description: Deactivate SBI without Version parameter in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -173,7 +173,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_09
       description: Deactivate SBI while keeping Version parameter as Null in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -195,7 +195,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_10
       description: Deactivate SBI while keeping Version parameter as Empty in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -217,7 +217,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_11
       description: Deactivate SBI while keeping Version parameter as invalid value 1 in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -239,7 +239,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_12
       description: Deactivate SBI while keeping Version parameter as invalid value 0 in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -261,7 +261,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_13
       description: Deactivate SBI while keeping Version parameter as invalid values in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -283,7 +283,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_14
       description: Deactivate SBI while keeping Request Time parameter as invalid in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -301,33 +301,12 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
        }
        ]
 }'
-   Pms_DeactivateSBIWithAssociatedDevices_Missing_ObjectParameter_Neg:
-      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_15
-      description: Deactivate SBI while keeping Object parameter as Missing in request
-      role: partnerrevampdevice
-      checkErrorsOnlyInResponse: true
-      restMethod: patch
-      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
-      outputTemplate: pms/error
-      input: '{
-      "id": "mosip.pms.deactivate.sbi.patch",
-      "version": "1.0",
-      "requesttime": "$TIMESTAMP$",
-      "sbiId": "$REMOVE$"
-}'
-      output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_DEVICE_ERROR_017"
-       }
-       ]
-}'
+
    Pms_DeactivateSBIWithAssociatedDevices_Already_deactivated_SBI_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_16
       description: Deactivate SBI which already Deactivated in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
@@ -347,7 +326,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
       description: Deactivate SBI while keeping SBI ID parameter as Null in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -369,7 +348,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_18
       description: Deactivate SBI while keeping SBI ID parameter as Empty in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -383,7 +362,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_DEVICE_ERROR_005"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
@@ -391,7 +370,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_19
       description: Deactivate SBI while keeping SBI ID parameter as Invalid Numeric values in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
@@ -413,7 +392,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_20
       description: Deactivate SBI while keeping SBI ID parameter as Invalid values in request
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios

@@ -2,7 +2,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -24,7 +25,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -49,7 +51,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Missing_Email_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -73,7 +76,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -97,7 +101,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error
@@ -122,7 +127,9 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevampdevice
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
+
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -144,7 +151,8 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
-      role: partnerrevampftm
+      role: partnerftm
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_07
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -160,5 +168,28 @@ createPartnerSelfRegistration:
   }'
       output: ' {
         "partnerId": "pms-111888",
+        "status": "InProgress"
+    }'
+    
+   Pms_PartnerSelfRegistrationFor_PartnerAdmin_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "mosip98763admin@gmail.com",
+    "organizationName": "PMS_API_ABC_ORG",
+    "partnerId": "pms-111777",
+    "partnerType": "FTM_Provider",
+    "policyGroup": "$REMOVE$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "pms-111777",
         "status": "InProgress"
     }'

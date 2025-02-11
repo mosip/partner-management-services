@@ -24,7 +24,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_02
       description: Deactivate FTM with the requestID parameter missing in the request and expecting an error in the response 
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -47,7 +47,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_03
       description: Deactivate FTM while keeping requestID parameter as Null in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -70,7 +70,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_04
       description: Deactivate FTM keeping ID parameter as Empty in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -93,7 +93,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_05
       description: Deactivate FTM while keeping Version parameter as Missing in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -116,7 +116,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_06
       description: Deactivate FTM while keeping Version parameter as Null in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -139,7 +139,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_07
       description: Deactivate FTM while keeping Version parameter as Empty in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -162,7 +162,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_08
       description: Deactivate FTM while keeping Version parameter as invalid value 1 in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -185,7 +185,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_09
       description: Deactivate FTM while keeping Version parameter as invalid value 0 in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -208,7 +208,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_10
       description: Deactivate FTM while keeping Version parameter as invalid values in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -231,7 +231,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_11
       description: Deactivate FTM while keeping requestTime parameter as Missing in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -254,7 +254,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_12
       description: Deactivate FTM while keeping requestTime parameter as Empty in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -277,7 +277,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_13
       description: Deactivate FTM while keeping Request Time parameter as invalid in request and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -300,7 +300,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_14
       description: Deactivating the FTM which is already Deactivated and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtm
@@ -317,11 +317,11 @@ DeactivateFtmNegativeScenarios:
        }
        ]
 }'
-   Pms_DeactivateFtm_Missing_FTM_ID_Neg:
+   Pms_DeactivateFtm_with_SpaceValue_FTM_ID_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_15
       description: Deactivate the FTM while keeping FTM ID parameter as Missing and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -330,13 +330,13 @@ DeactivateFtmNegativeScenarios:
       "id": "mosip.pms.deactivate.ftm.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "ftmId": "$REMOVE$"
+      "ftmId": " "
      
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_004"
+       "errorCode": "PMS_FTM_ERROR_005"
        }
        ]
 }'
@@ -344,7 +344,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_16
       description: Deactivate the FTM while keeping FTM ID parameter as Empty and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -359,7 +359,7 @@ DeactivateFtmNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_004"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
@@ -367,7 +367,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_17
       description: Deactivate the FTM while keeping FTM ID parameter as Invalid values and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
@@ -390,7 +390,7 @@ DeactivateFtmNegativeScenarios:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_18
       description: Deactivate the FTM while keeping FTM ID parameter as Null and expecting an error in the response
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios

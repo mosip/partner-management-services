@@ -1,8 +1,8 @@
 GetAllOauthClient:
    Pms_GetAllOauthClient_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/oauth/partners/clients
+      endPoint: /v1/partnermanager/oauth/client
       description: Fetching all OIDC Clients of the loggedin Partner
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOauthClient/getAllOauthClient

@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository("DeviceDetailSummaryRepository")
+@Repository
 public interface DeviceDetailSummaryRepository extends BaseRepository<DeviceDetailEntity, String> {
 
-    String DEVICE_DETAILS_SUMMARY_QUERY = "SELECT new io.mosip.pms.device.authdevice.entity.DeviceDetailEntity(" +
+    String DEVICE_DETAILS_SUMMARY_QUERY = "SELECT new DeviceDetailEntity(" +
             "d.id, d.deviceProviderId, d.partnerOrganizationName, d.deviceTypeCode, d.deviceSubTypeCode, " +
             "CASE " +
             "WHEN (d.approvalStatus = 'approved' AND d.isActive = true) THEN 'approved' " +

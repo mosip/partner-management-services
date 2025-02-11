@@ -1,8 +1,9 @@
 GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner:
-      endPoint: /v1/partnermanager/partners/auth-partner-api-keys
+      endPoint: /v1/partnermanager/partner-api-keys
       description: Fetching all the API Key available for Auth Partner
-      role: partnerrevamp
+      uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_01
+      role: partneauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllApiKeyForAuthPartner/getAllApiKeyForAuthPartner

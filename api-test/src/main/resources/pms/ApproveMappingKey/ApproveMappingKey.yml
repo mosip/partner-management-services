@@ -2,7 +2,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      role: partnerrevamp
+      role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
@@ -19,7 +19,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      role: partnerrevamp
+      role: partneradmin
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error
@@ -39,7 +39,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      role: partnerrevamp
+      role: partneradmin
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error
@@ -58,7 +58,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_mapping_key_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      role: partnerrevamp
+      role: partneradmin
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error
@@ -77,7 +77,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Missing_status_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       description: Approve the Mapping Key
-      role: partnerrevamp
+      role: partneradmin
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/error

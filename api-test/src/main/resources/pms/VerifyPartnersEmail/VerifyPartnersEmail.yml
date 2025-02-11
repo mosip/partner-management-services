@@ -1,8 +1,9 @@
 VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_01
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -16,8 +17,9 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_02
       description: Verify Partners Email
-      role: partnerrevampdevice
+      role: partnerdevice
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -31,8 +33,9 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_03
       description: Verify Partners Email
-      role: partnerrevamp
+      role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
@@ -45,6 +48,8 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_without_auth:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
+      description: Verify Partners Email
       role: invalidtoken
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -62,24 +67,24 @@ VerifyPartnersEmail:
 }'
    Pms_VerifyPartnersEmail_missing_email:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_05
+      description: Verify Partners Email
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
-      outputTemplate: pms/error
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResultNegative
       input: '{
     "emailId": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "errors": [
-        { 
-          "errorCode": null
-        }
-       ]
+        
 }'
    Pms_VerifyPartnersEmail_invalid_email:
       endPoint: /v1/partnermanager/partners/email/verify
-      role: partnerrevamp
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_06
+      description: Verify Partners Email
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -97,8 +102,9 @@ VerifyPartnersEmail:
 
    Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_07
       description: Verify Partners Email
-      role: partnerrevampftm
+      role: partnerftm
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult

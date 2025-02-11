@@ -2,7 +2,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-      role: partnerrevamp
+      role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
@@ -12,11 +12,29 @@ GetPartnerCert:
 }'
       output: ' {
 }'
+   Pms_GetPartnerCert_with_unregistered_partner_neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Fetching all the certificate for the Partner Id
+      uniqueIdentifier: TC_PMS_GetPartnerCert_03
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetCertificate/getCert
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "848484848"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_007"
+       }
+       ]
+}'
 
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-      role: partnerrevampdevice
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
@@ -30,7 +48,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-      role: partnerrevampftm
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
