@@ -17,11 +17,11 @@ DeactivatePolicyGroup:
 }'
       output: ' {
 }'
-   Pms_DeactivatePolicyGroup_without_authentication:
+   Pms_DeactivatePolicyGroup_without_authentication_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_02      
       description: Deactivate Policy Group without authentication
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -40,7 +40,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_roles:
+   Pms_DeactivatePolicyGroup_invalid_roles_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_03      
       description: Deactivate Policy Group authenticated using invalid roles
@@ -63,7 +63,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_id:
+   Pms_DeactivatePolicyGroup_without_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_04      
       description: Deactivate Policy Group without id value
@@ -86,7 +86,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_id:
+   Pms_DeactivatePolicyGroup_invalid_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_05      
       description: Deactivate Policy Group with invalid id value
@@ -109,7 +109,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_version:
+   Pms_DeactivatePolicyGroup_without_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_06      
       description: Deactivate Policy Group without version
@@ -132,7 +132,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_version:
+   Pms_DeactivatePolicyGroup_invalid_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_07      
       description: Deactivate Policy Group invalid version
@@ -155,7 +155,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_status:
+   Pms_DeactivatePolicyGroup_without_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_08      
       description: Deactivate Policy Group without status
@@ -178,7 +178,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_status:
+   Pms_DeactivatePolicyGroup_invalid_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_09      
       description: Deactivate Policy Group with invalid status
@@ -201,7 +201,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_spacevalue_policygroupid:
+   Pms_DeactivatePolicyGroup_spacevalue_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_10      
       description: Deactivate Policy Group without policygroupid
@@ -224,7 +224,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_policygroupid:
+   Pms_DeactivatePolicyGroup_invalid_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_11      
       description: Deactivate Policy Group invalid policygroupid
@@ -247,7 +247,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_future_date:
+   Pms_DeactivatePolicyGroup_future_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_12      
       description: Deactivate Policy Group with future date given as requesttime
@@ -270,7 +270,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_past_date:
+   Pms_DeactivatePolicyGroup_past_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_13      
       description: Deactivate Policy Group with past date given as requesttime
@@ -293,7 +293,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_requesttime:
+   Pms_DeactivatePolicyGroup_without_requesttime_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_14      
       description: Deactivate Policy Group without requesttime
@@ -316,7 +316,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_with_deactivated_policies:
+   Pms_DeactivatePolicyGroup_with_deactivated_policies_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_15     
       description: Deactivate Policy Group with deactivated policies
@@ -329,12 +329,12 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "2024-01-24T07:47:57.206Z",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid$"
 }'
       output: '{
 }'
-   Pms_DeactivatePolicyGroup_with_publishpolicy:
+   Pms_DeactivatePolicyGroup_with_publishpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_16      
       description: Deactivate Policy Group with published policy
@@ -347,7 +347,7 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "2024-01-24T07:47:57.206Z",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{
@@ -357,7 +357,7 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_with_Draftpolicy:
+   Pms_DeactivatePolicyGroup_with_Draftpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_17      
       description: Deactivate Policy Group with draft policy
@@ -370,7 +370,7 @@ DeactivatePolicyGroup:
     "status": "De-Activate",
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
-    "requestTime": "$REMOVE$",
+    "requestTime": "2024-01-24T07:47:57.206Z",
 	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{

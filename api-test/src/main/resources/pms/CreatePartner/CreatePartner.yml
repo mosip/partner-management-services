@@ -75,7 +75,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Creating a Partner with missing request time
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
       restMethod: post
@@ -100,7 +100,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Creating a Partner with invalid request time
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
       restMethod: post

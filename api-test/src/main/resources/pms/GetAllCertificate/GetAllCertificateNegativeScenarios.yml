@@ -1,16 +1,18 @@
-GetAllCertificate:
-   Pms_GetAllCertificate_beforecertifiactes_upload:
+GetAllCertificateBeforeCACertificateUpload:
+   Pms_GetAllCertificate_BeforeCACertificates_upload_neg:
       endPoint: /v1/partnermanager/partners/trust-chain-certificates?pageNo=0&pageSize=8&issuedTo=PMS_API_CA&issuedBy=PMS_API_CA
       description: Fetching all the API certificates of the Logged in Partner
-      role: partnerauth
-      uniqueIdentifier: TC_PMS_GetAllCertificate_01
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllCertificateBeforeCACertificateUpload_01
       restMethod: get
       inputTemplate: pms/GetAllCertificate/getAllCertificate
-      outputTemplate: pms/GetAllCertificate/getAllCertificateResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
-         "partnerId": "pms-111999",
-         "partnerType": "Auth_Partner",
-         "isCertificateAvailable": false
+       "errors": [
+      {
+       "errorCode": "PMS_PRT_005"
+       }
+       ]
 }'
