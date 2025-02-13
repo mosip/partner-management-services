@@ -705,6 +705,13 @@
 		</classes>
 	</test>
 	
+	<test name="GetAllSystemConfigs">
+		<parameter name="ymlFile" value="pms/GetAllSystemConfigs/GetAllSystemConfigs.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
 	
 	<test name="GetAllRootCertificate">
 		<parameter name="ymlFile" value="pms/GetAllRootCertificate/GetAllRootCertificate.yml" />
