@@ -104,7 +104,6 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-
 	<test name="UploadPartnerCertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadPartnerCert/UploadPartnerCert.yml" />
@@ -430,7 +429,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
-
+	<test name="DeactivateSBIWithAssociatedDeviceswhichisPendingforApproval">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDeviceswhichisPendingforApproval.yml" />
+			<parameter name="pathParams" value="sbiId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
 	<test name="UpdateSecureBiometricInterface">
 		<parameter name="ymlFile"
 			value="pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface.yml" />
@@ -485,7 +492,7 @@
 			<parameter name="pathParams" value="deviceDetailId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>	
 	<test name="RejectMappingDeviceToSbi">
@@ -497,13 +504,31 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
+	<test name="RejectMappingDeviceToSbiwhichisRejected">
+		<parameter name="ymlFile"
+			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiwhichisRejected.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>	
 	<test name="RejectMappingDeviceToSbiNegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios.yml" />
 			<parameter name="pathParams" value="deviceDetailId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.testscripts.PostWithBodyAndPathParams" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>	
+	<test name="ApproveMappingDeviceToSbiwhichisRejected">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiwhichisRejected.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>	
 	<test name="GetAllDeviceListMappedWithSbi">
@@ -556,6 +581,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="ApproveMappingDeviceToSbiwhenSBIisDeactivated">
+		<parameter name="ymlFile"
+			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiwhenSBIisDeactivated.yml" />
+			<parameter name="pathParams" value="deviceDetailId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>		
 	<test name="GetAllApprovedFtmProvider">
 		<parameter name="ymlFile"
 			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml"
@@ -596,7 +630,23 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>	
-	
+	<test name="DeactivateFtmwhichisPendingforCertUpload">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtmwhichisPendingforCertUpload.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetOriginalFtmCertifacteforPendingforCertUpload">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteforPendingforCertUpload.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>					
 	<test name="UploadCertificateOfFtpChip">
 		<parameter name="ymlFile"
 			value="pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip.yml" />
@@ -605,6 +655,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="DeactivateFtmwhichisPendingforApproval">
+		<parameter name="ymlFile"
+			value="pms/DeactivateFtm/DeactivateFtmwhichisPendingforApproval.yml" />
+			<parameter name="pathParams" value="ftmId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>		
 	<test name="ApproveFTMChipDetail">
 		<parameter name="ymlFile"
 			value="pms/ApproveFTMChipDetail/ApproveFTMChipDetail.yml" />

@@ -5,7 +5,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi with different deviceDetails
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -29,7 +28,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without without sbiId value
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi
       outputTemplate: pms/error
       input: '{
@@ -51,7 +49,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without Request ID
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -75,7 +72,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without Version value
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -99,7 +95,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without Device provider Id
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -123,7 +118,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi with randome Device provider Id
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -147,7 +141,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without requestTime
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -171,7 +164,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi while keeping SBI ID parameter as missing
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -195,7 +187,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi by providing parameters which are already approved
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -219,7 +210,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi by providing invalid Device ID
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -243,7 +233,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi by providing invalid SBI ID
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -267,7 +256,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi without Partner Authentication
       role: invalidtoken
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
@@ -291,7 +279,6 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       description: Approve mapping device to sbi with Invalid Partner Authentication
       role: invalidtoken
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
       outputTemplate: pms/error
       input: '{
