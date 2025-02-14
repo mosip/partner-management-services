@@ -1,12 +1,3 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name    : mosip_pms
--- Release Version 	: 1.2.2.0
--- Purpose    		: Database Alter scripts for the release for PMS DB.
--- Create By   		: Swetha K
--- Created Date		: Aug-2024
---
--- Modified Date        Modified By         Comments / Remarks
--- -------------------------------------------------------------------------------------------------
 \c mosip_pms
 
 -- This table has consents of users.
@@ -31,26 +22,6 @@ COMMENT ON COLUMN pms.user_details.cr_by IS 'Created By : ID or name of the user
 COMMENT ON COLUMN pms.user_details.consent_given IS 'Consent Given : Indicates whether consent has been given by the user.';
 COMMENT ON COLUMN pms.user_details.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.user_details.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
-
--- Dropping unique constraint from pms.device_detail table if it exists
-ALTER TABLE pms.device_detail
-    DROP CONSTRAINT IF EXISTS uk_devdtl_id;
-
--- Creating unique index for make, model, and approval status if it does not exist
-CREATE UNIQUE INDEX IF NOT EXISTS uk_devdtl_make_model_approval_status
-    ON pms.device_detail (dprovider_id, dtype_code, dstype_code, make, model)
-    WHERE approval_status != 'rejected'
-    AND NOT (approval_status = 'approved' AND is_active = false);
-
--- Dropping unique constraint from pms.ftp_chip_detail table if it exists
-ALTER TABLE pms.ftp_chip_detail
-    DROP CONSTRAINT IF EXISTS uk_fcdtl_id;
-
--- Creating unique index for make, model, and approval status if it does not exist
-CREATE UNIQUE INDEX IF NOT EXISTS uk_fcdtl_make_model_approval_status
-    ON pms.ftp_chip_detail (foundational_trust_provider_id, make, model)
-    WHERE approval_status != 'rejected'
-    AND NOT (approval_status = 'approved' AND is_active = false);
 
 -- Updating policy_file_id in pms.auth_policy for specific IDs
 UPDATE pms.auth_policy
