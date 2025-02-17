@@ -1,0 +1,22 @@
+ApproveMappingDeviceToSbiwhichisRejected:
+   Pms_ApproveMappingDeviceToSbi_whichisRejected_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      role: partneradmin
+      description: Approve Mapping Device To Sbi when SBI is Rejected
+      uniqueIdentifier: TC_PMS_ApproveMappingDevice_14
+      restMethod: post
+      inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi
+      outputTemplate: pms/error
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
+ }'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_010"
+        }
+        ]
+}'
