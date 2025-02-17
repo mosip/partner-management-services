@@ -1,0 +1,21 @@
+DeactivatePolicyGroupBeforePolicyCreation:
+   Pms_DeactivatePolicyGroupBeforePolicyCreation_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/group/{policyGroupId}
+      uniqueIdentifier: TC_PMS_DeactivatePolicyGroupBeforePolicyCreation_01      
+      description: Deactivate Policy Group before policy is created
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicyGroupBeforePolicyCreation/deactivatePolicyGroup
+      outputTemplate: pms/DeactivatePolicyGroupBeforePolicyCreation/deactivatePolicyGroupResult
+      input: '{
+    "status": "De-Activate",
+    "id": "mosip.pms.deactivate.policy.group.patch",
+    "version": "1.0",        
+    "requestTime": "$TIMESTAMP$",
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid_id$"
+}'
+      output: ' {
+      "policyGroupId": "$ID:DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid_id$",
+      "isActive": false
+}'

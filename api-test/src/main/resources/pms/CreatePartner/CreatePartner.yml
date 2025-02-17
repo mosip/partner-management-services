@@ -21,6 +21,29 @@ createPartnerSelfRegistration:
         "partnerId": "pms-111999",
         "status": "InProgress"
     }'
+    
+#   Pms_PartnerSelfRegistration_ForDeactivateOIDCNeg_All_Valid_Smoke:
+#      endPoint: /v1/partnermanager/partners
+#      description: Creating a Partner
+#      role: partnerauth
+#      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_09
+#      restMethod: post
+#      inputTemplate: pms/CreatePartner/createPartner
+#      outputTemplate: pms/CreatePartner/createPartnerResult
+#      input: '{
+#    "address": "Bangalore",
+#    "contactNumber": "8553967172",
+#    "emailId": "mosipNeg98763@gmail.com",
+#    "organizationName": "PMS_API_ABC_ORG",
+#    "partnerId": "pms-111999",
+#    "partnerType": "AUTH_PARTNER",
+#    "policyGroup": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+#    "requesttime": "$TIMESTAMP$"
+#  }'
+#      output: ' {
+#        "partnerId": "pms-111999",
+#        "status": "InProgress"
+#    }'
 
    Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
       endPoint: /v1/partnermanager/partners
@@ -175,7 +198,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partneradmin
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_08
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult

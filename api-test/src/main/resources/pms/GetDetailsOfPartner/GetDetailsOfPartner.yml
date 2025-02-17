@@ -43,7 +43,7 @@ GetDetailsOfPartner:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"		
+       "errorCode": "KER-ATH-401"		
       }
       ]	  	
 }'

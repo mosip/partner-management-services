@@ -17,7 +17,7 @@ GetUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_02
       description: Retrieve the PMS GetUserConsent Status Without an Access Token and Expecting an Error in The Response
-      role: batch
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent
       outputTemplate: pms/error

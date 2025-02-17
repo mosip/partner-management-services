@@ -15,6 +15,23 @@ ApproveMappingKey:
       output: '{
         "response": "Policy mapping approved successfully"
     }'
+    
+   Pms_ApproveMappingKey_ForDeactivateOIDCNeg_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping approved successfully"
+    }'
 
    Pms_ApproveMappingKey_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}

@@ -20,6 +20,14 @@
 		</classes>
 	</test>
 	
+	<test name="DeactivatePolicyGroupBeforePolicyCreation">
+		<parameter name="ymlFile" value="pms/DeactivatePolicyGroupBeforePolicyCreation/DeactivatePolicyGroup.yml" />
+		<parameter name="pathParams" value="policyGroupId" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	
 	<test name="DefinePolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefinePolicy.yml" />
@@ -39,8 +47,6 @@
 		</classes>
 	</test>
 	
-
-
 	<test name="GetAllActivePolicyGroups">
 		<parameter name="ymlFile"
 			value="pms/GetAllActivePolicyGroups/GetAllActivePolicyGroups.yml" />
@@ -694,7 +700,6 @@
 		</classes>
 	</test>
 	
-	
 	<test name="GetAllRootCertificate">
 		<parameter name="ymlFile" value="pms/GetAllRootCertificate/GetAllRootCertificate.yml" />
 		<classes>
@@ -729,7 +734,7 @@
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
-	</test>	
+	</test>
 	
 	
 </suite>
