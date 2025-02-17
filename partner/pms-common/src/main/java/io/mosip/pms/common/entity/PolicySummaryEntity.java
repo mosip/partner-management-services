@@ -17,6 +17,7 @@ import java.util.Date;
                 targetClass = PolicySummaryEntity.class,
                 columns = {
                         @ColumnResult(name = "policyId", type = String.class),
+                        @ColumnResult(name = "policyType", type = String.class),
                         @ColumnResult(name = "policyName", type = String.class),
                         @ColumnResult(name = "policyDescription", type = String.class),
                         @ColumnResult(name = "policyGroupId", type = String.class),
@@ -28,9 +29,10 @@ import java.util.Date;
 )
 public class PolicySummaryEntity {
 
-    public PolicySummaryEntity(String policyId, String policyName, String policyDescription,
+    public PolicySummaryEntity(String policyId, String policyType, String policyName, String policyDescription,
                                String policyGroupId, String policyGroupName, String status, Date createdDateTime) {
         this.policyId = policyId;
+        this.policyType = policyType;
         this.policyName = policyName;
         this.policyDescription = policyDescription;
         this.policyGroupId = policyGroupId;
@@ -45,6 +47,8 @@ public class PolicySummaryEntity {
 
     @Id
     private String policyId;
+
+    private String policyType;
 
     private String policyName;
 
