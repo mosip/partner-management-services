@@ -1,17 +1,20 @@
-DeactivateSBIWithAssociatedDevices:
+DeactivateSBIWithAssociatedDeviceswhichisPendingforApproval:
    Pms_DeactivateSBIWithAssociatedDevices_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
-      description: Deactivate SBI along with Associated Devices
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_21
+      description: Deactivate SBI which is pending for approval
       role: partnerdevice
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
-      outputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesResult
+      outputTemplate: pms/error
       input: '{
       "requesttime": "$TIMESTAMP$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
       output: '{
-      
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_022"
+       }
+       ]
 }'
