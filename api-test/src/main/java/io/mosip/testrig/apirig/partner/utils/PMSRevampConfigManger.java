@@ -3,6 +3,8 @@ package io.mosip.testrig.apirig.partner.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import io.mosip.testrig.apirig.partner.testrunner.MosipTestRunner;
@@ -11,6 +13,9 @@ public class PMSRevampConfigManger extends ConfigManager{
 	private static final Logger LOGGER = Logger.getLogger(PMSRevampConfigManger.class);
 	
 	public static void init() {
+		Logger configManagerLogger = Logger.getLogger(ConfigManager.class);
+		configManagerLogger.setLevel(Level.WARN);
+		
 		Map<String, Object> moduleSpecificPropertiesMap = new HashMap<>();
 		// Load scope specific properties
 		try {
