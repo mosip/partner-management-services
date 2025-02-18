@@ -11,6 +11,9 @@ public class PolicySummaryDto {
     @Schema(description = "Unique identifier for the policy", example = "12345")
     private String policyId;
 
+    @Schema(description = "Type of the policy", example = "auth")
+    private String policyType;
+
     @Schema(description = "Name of the policy", example = "abc")
     private String policyName;
 
