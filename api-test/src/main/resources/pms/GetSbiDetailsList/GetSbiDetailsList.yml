@@ -16,7 +16,7 @@ GetSbiDetailsList:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_pms_GetSbiDetailsList_02
       description: Retrieve responce without authorization taken and Expecting an Error in The Response
-      role: batch
+      role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
       outputTemplate: pms/error

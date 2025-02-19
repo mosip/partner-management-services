@@ -46,7 +46,7 @@ VerifyPartnersEmail:
       output: '{
    "emailExists": true
 }'
-   Pms_VerifyPartnersEmail_without_auth:
+   Pms_VerifyPartnersEmail_without_auth_neg:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
       description: Verify Partners Email
@@ -65,22 +65,27 @@ VerifyPartnersEmail:
         }
        ]
 }'
-   Pms_VerifyPartnersEmail_missing_email:
+   Pms_VerifyPartnersEmail_missing_email_neg:
       endPoint: /v1/partnermanager/partners/email/verify
       role: partnerauth
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_05
       description: Verify Partners Email
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
-      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResultNegative
+      outputTemplate: pms/error
       input: '{
-    "emailId": "$REMOVE$",
+    "emailId": "",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+              "errors": [
+        { 
+          "errorCode": "PMS_PRT_012"
+        }
+       ]
         
 }'
-   Pms_VerifyPartnersEmail_invalid_email:
+   Pms_VerifyPartnersEmail_invalid_email_neg:
       endPoint: /v1/partnermanager/partners/email/verify
       role: partnerauth
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_06

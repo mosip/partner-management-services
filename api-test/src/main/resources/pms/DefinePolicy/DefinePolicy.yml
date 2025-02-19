@@ -41,13 +41,13 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+      "policyGroupName": "mosip policy group 19234",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "policyGroupName": "mosip policy group 19234",
     "name": "mosip policy",
     "desc": "desc mosip policy",
     "is_Active": false
@@ -69,7 +69,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "null",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -98,7 +98,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "Policy",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -127,7 +127,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "kjh54",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -156,7 +156,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -184,7 +184,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "$IGNORE$",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -213,7 +213,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": " ",
-      "policyGroupName": "mosip policy group for AuthTypeToken",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -243,7 +243,7 @@ definePolicy:
       "mandatory": false,
       "attributeName": "string",
       "authTokenType": "random",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -265,13 +265,13 @@ definePolicy:
       outputTemplate: pms/error
       input: '{
       "desc": "desc mosip policy",
-      "name": "mosip policy Neg",
+      "name": "mosip policy 19234",
       "authSubType": "FINGER",
       "authType": "demo",
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group 19234",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -291,7 +291,7 @@ definePolicy:
       description: Define Policy without demo
       uniqueIdentifier: TC_PMS_definePolicy_11
       restMethod: post
-      inputTemplate: pms/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicyNeg
       outputTemplate: pms/error
       input: '{
       "desc": "desc mosip policy5",
@@ -301,7 +301,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -385,7 +385,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group 19234",
+      "policyGroupName": "mosip delete before policy creation policy group 19234",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -459,7 +459,7 @@ definePolicy:
       description: Define policy
       uniqueIdentifier: TC_PMS_definePolicy_17
       restMethod: post
-      inputTemplate: pms/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicyNeg
       outputTemplate: pms/error
       input: '{
             "desc": "desc mosip policy",
@@ -469,9 +469,10 @@ definePolicy:
             "mandatory": $REMOVE$,
             "attributeName": "string",
             "authTokenType": "partner",
-            "policyGroupName": "mosip policy group",
+            "policyGroupName": "mosip policy group neg",
             "policyType": "Auth",
             "version": "1.0",
+            "allowedKycAttributes": "$REMOVE$",
             "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -487,7 +488,7 @@ definePolicy:
       description: Define policy without authtype
       uniqueIdentifier: TC_PMS_definePolicy_18
       restMethod: post
-      inputTemplate: pms/DefinePolicy/definePolicy
+      inputTemplate: pms/DefinePolicy/definePolicyNeg
       outputTemplate: pms/error
       input: '{
             "desc": "desc mosip policy",
@@ -497,7 +498,7 @@ definePolicy:
             "mandatory": true,
             "attributeName": "string",
             "authTokenType": "partner",
-            "policyGroupName": "mosip policy group",
+            "policyGroupName": "mosip policy group neg",
             "policyType": "Auth",
             "version": "1.0",
             "requesttime": "$TIMESTAMP$"
@@ -526,34 +527,6 @@ definePolicy:
             "attributeName": "string",
             "authTokenType": "$REMOVE$",
             "policyGroupName": "mosip policy group 19234",
-            "policyType": "Auth",
-            "version": "1.0",
-            "requesttime": "$TIMESTAMP$"
-}'
-      output: '{
-   "errors": [
-    {
-            "errorCode": "PMS_PV_006"
-        }
-  ]
-}'
-   Pms_DefinePolicy_Missing_InputParameter_attributeName:
-      endPoint: /v1/policymanager/policies
-      role: partneradmin
-      description: Define policy without attribute name
-      uniqueIdentifier: TC_PMS_definePolicy_20
-      restMethod: post
-      inputTemplate: pms/DefinePolicy/definePolicy
-      outputTemplate: pms/error
-      input: '{
-        "attributeName": "$REMOVE$",
-            "desc": "desc mosip policy",
-            "name": "mosip policy test Neg",
-            "authSubType": "FINGER",
-            "authType": "bio",
-            "mandatory": true,
-            "authTokenType": "partner",
-            "policyGroupName": "mosip policy group",
             "policyType": "Auth",
             "version": "1.0",
             "requesttime": "$TIMESTAMP$"
@@ -637,7 +610,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -665,7 +638,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "162g@fsgs",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -693,7 +666,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "$REMOVE$",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -722,13 +695,13 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group",
+      "policyGroupName": "mosip policy group neg",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
+    "policyGroupName": "mosip policy group neg",
     "name": "mosip policy9 Neg",
     "desc": "desc mosip policy9",
     "is_Active": false
@@ -736,6 +709,7 @@ definePolicy:
 
    Pms_DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid:
       endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_27
       description: Creating a Policy using PolicyGroup
       role: partneradmin
       restMethod: post
@@ -746,13 +720,63 @@ definePolicy:
 	"name": "mosip deactive policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip policy group 19234",
+	"policyGroupName": "mosip deactivate policy group 19234",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group 19234",
+    "policyGroupName": "mosip deactivate policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_Published_Policy_pms_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_28
+      description: Creating a Policy using PolicyGroup
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc published mosip policy 19234",
+	"name": "mosip published policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "mosip published policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip published policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_Draft_Policy_pms_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_29
+      description: Creating a Policy using PolicyGroup
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc draft mosip policy 19234",
+	"name": "mosip draft policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "mosip draft policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip draft policy group 19234",
     "name": "$IGNORE$",
     "desc": "$IGNORE$",
     "is_Active": false

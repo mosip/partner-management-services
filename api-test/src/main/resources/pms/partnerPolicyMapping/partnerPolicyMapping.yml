@@ -15,6 +15,22 @@ partnerPolicyMapping:
       output: '{
     }'
     
+   Pms_partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
    Pms_partnerPolicyMapping_invalid_policyName:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when invalid policyname is given      

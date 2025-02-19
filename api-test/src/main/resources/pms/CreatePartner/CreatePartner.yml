@@ -21,6 +21,7 @@ createPartnerSelfRegistration:
         "partnerId": "pms-111999",
         "status": "InProgress"
     }'
+    
 
    Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
       endPoint: /v1/partnermanager/partners
@@ -75,7 +76,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Creating a Partner with missing request time
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
       restMethod: post
@@ -100,7 +101,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Creating a Partner with invalid request time
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
       restMethod: post
@@ -175,7 +176,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partneradmin
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_08
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult

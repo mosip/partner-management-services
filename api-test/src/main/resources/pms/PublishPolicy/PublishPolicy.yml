@@ -29,11 +29,10 @@ createPublishPolicy:
     }'
     
    
-   Pms_PublishPolicy_InValid_AlreadyPublished:
+   Pms_PublishPolicy_InValid_AlreadyPublished_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy which is already published      
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
@@ -50,11 +49,10 @@ createPublishPolicy:
        ] 
     }'
     
-   Pms_PublishPolicy_InValid_policygroupId:
+   Pms_PublishPolicy_InValid_policygroupId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy with invalid policygroupid      
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
@@ -71,11 +69,10 @@ createPublishPolicy:
        ] 
     }'
     
-   Pms_PublishPolicy_InValid_policyId:
+   Pms_PublishPolicy_InValid_policyId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy with invalid policyid      
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
@@ -92,11 +89,10 @@ createPublishPolicy:
        ] 
     }'
     
-   Pms_PublishPolicy_invalid_auth:
+   Pms_PublishPolicy_invalid_auth_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy without access token      
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
@@ -122,7 +118,7 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid_id$",
 		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
 		"requesttime": "$TIMESTAMP$"
 }'
@@ -140,5 +136,63 @@ createPublishPolicy:
 		"mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
-    }'    
+    }'
+
+   Pms_PublishPolicy_All_Valid_ForNeg:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+		"mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'  
+    
+   Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish The Policy for deactivate policy group with published policy
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_For_Published_Policy_pms_sid_id$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+		"mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'  
     
