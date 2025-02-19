@@ -110,6 +110,16 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+
+	<test name="GetOriginalPartnerCertificatesBeforeCertificateUpload">
+		<parameter name="ymlFile"
+			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesBeforeCertificateUpload.yml"
+		/>
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
 	<test name="UploadPartnerCertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadPartnerCert/UploadPartnerCert.yml" />
@@ -379,6 +389,14 @@
 	<test name="GetConfiguration">
 		<parameter name="ymlFile"
 			value="pms/GetConfiguration/GetConfiguration.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="GetUserConsentBeforeConsentGiven">
+		<parameter name="ymlFile"
+			value="pms/GetUserConsent/GetUserConsentBeforeConsentGiven.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
