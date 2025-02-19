@@ -632,7 +632,7 @@
 	</test>	
 		<test name="GetListAllFTMChipNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChipNegativeScenarios.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFTMChipNegativeScenarios.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
@@ -697,7 +697,7 @@
 	</test>
 	<test name="GetListAllFTMChip">
 		<parameter name="ymlFile"
-			value="pms/GetListAllFTMChip/GetListAllFtmChip.yml" />
+			value="pms/GetListAllFTMChip/GetListAllFTMChip.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
