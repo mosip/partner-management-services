@@ -129,8 +129,6 @@ public class MosipTestRunner {
 		MispPartnerAndLicenseKeyGeneration.setLogLevel();
 		JWKKeyUtil.setLogLevel();
 		CertsUtil.setLogLevel();
-		KernelAuthentication.setLogLevel();
-		BaseTestCase.setLogLevel();
 		PMSRevampUtil.setLogLevel();
 	}
 
