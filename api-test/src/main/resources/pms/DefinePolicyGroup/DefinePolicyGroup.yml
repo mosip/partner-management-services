@@ -53,7 +53,7 @@ definePolicyGroup:
     }'  
 
 
-   Pms_DefinePolicyGroup_AlreadyExists_InValid:
+   Pms_DefinePolicyGroup_AlreadyExists_InValid_neg:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
@@ -98,7 +98,7 @@ definePolicyGroup:
   ]
 }'
 
-   Pms_DefinePolicyGroup_Missing_InputParameter_desc:
+   Pms_DefinePolicyGroup_Missing_InputParameter_desc_neg:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
       uniqueIdentifier: TC_PMS_definePolicyGroup_04
@@ -119,7 +119,7 @@ definePolicyGroup:
     }
   ]
 }'
-   Pms_DefinePolicyGroup_Missing_InputParameter_name:
+   Pms_DefinePolicyGroup_Missing_InputParameter_name_neg:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
       description: Creating a Policy Group
@@ -141,10 +141,10 @@ definePolicyGroup:
   ]
 }'
 
-   Pms_DefinePolicyGroup_Missing_InputParameter_requesttime:
+   Pms_DefinePolicyGroup_Missing_InputParameter_requesttime_neg:
       endPoint: /v1/policymanager/policies/group/new
       role: partneradmin
-      description: Creating a policy group
+      description: Creating a policy group with missing request time
       uniqueIdentifier: TC_PMS_definePolicyGroup_06
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
@@ -163,7 +163,7 @@ definePolicyGroup:
   ]
 }'
 
-   Pms_DefinePolicyGroup_Without_Auth:
+   Pms_DefinePolicyGroup_Without_Auth_neg:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a policy group
       uniqueIdentifier: TC_PMS_definePolicyGroup_07
@@ -184,4 +184,99 @@ definePolicyGroup:
     }
   ]
 }'
- 
+
+   Pms_DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      uniqueIdentifier: TC_PMS_definePolicyGroup_08
+      description: Creating a PolicyGroup
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip policy neg",
+    "name": "mosip policy group neg",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+}' 
+
+   Pms_DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup for deactivate policy
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_09
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc deactivate mosip policy group19234",
+    "name": "mosip deactivate policy group 19234",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+    }'
+    
+   Pms_DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup for published policy
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_10
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc published mosip policy group19234",
+    "name": "mosip published policy group 19234",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+    }'
+    
+   Pms_DefinePolicyGroup_All_Valid_ForDraftPolicy_pms_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup for draft policy
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_11
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip draft policy group19234",
+    "name": "mosip draft policy group 19234",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+    }'
+    
+   Pms_DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup for draft policy
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_11
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "desc mosip delete before policy creation policy group19234",
+    "name": "mosip delete before policy creation policy group 19234",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$IGNORE$",
+        "desc": "$IGNORE$",
+        "is_Active": true
+    }'
+

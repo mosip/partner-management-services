@@ -14,7 +14,7 @@ GetOriginalPartnerCertificates:
       output: '{
       "errors": [
       {
-       "errorCode": "KER-PCM-012"
+       "errorCode": "PMS_PRT_108"
        }
        ]
      

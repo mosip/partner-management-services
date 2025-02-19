@@ -74,7 +74,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
-      "partnerId": "$REMOVE$"
+      "partnerId": ""
 }'
       output: '{
       "errors": [

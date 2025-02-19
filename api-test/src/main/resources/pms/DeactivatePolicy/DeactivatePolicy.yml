@@ -22,7 +22,7 @@ DeactivatePolicy:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_02      
       description: Deactivate policy without authentication    
-      role: invalid
+      role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy

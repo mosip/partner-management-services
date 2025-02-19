@@ -22,7 +22,32 @@ CreateOIDCClient:
         "clientId": "$IGNORE$",
     	"status": "ACTIVE"
 }'
-   Pms_CreateOIDCClient_invalid_policyID:
+
+   Pms_CreateOIDCClient_ForNeg_all_Valid_sid:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Creating OAUTH Client
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/OIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClient/oIDCClientResult
+      input: '{
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "pms-111999",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+        "clientId": "$IGNORE$",
+    	"status": "ACTIVE"
+}'
+
+   Pms_CreateOIDCClient_invalid_policyID_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid policyid      
       role: partnerauth
@@ -47,7 +72,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_logoUri:
+   Pms_CreateOIDCClient_invalid_logoUri_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid logoUri      
       role: partnerauth
@@ -73,7 +98,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_RedirectUri:
+   Pms_CreateOIDCClient_invalid_RedirectUri_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid redirectUri      
       role: partnerauth
@@ -99,7 +124,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_auth:
+   Pms_CreateOIDCClient_invalid_auth_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without token      
       role: invalidtoken
@@ -125,7 +150,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_without_publickey:
+   Pms_CreateOIDCClient_without_publickey_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without publickkey      
       role: partnerauth
@@ -151,7 +176,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_granttypes:
+   Pms_CreateOIDCClient_invalid_granttypes_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid granttypes      
       role: partnerauth
@@ -177,7 +202,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_without_granttypes:
+   Pms_CreateOIDCClient_without_granttypes_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without granttypes      
       role: partnerauth
@@ -203,7 +228,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_without_name:
+   Pms_CreateOIDCClient_without_name_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client without name field      
       role: partnerauth
@@ -229,7 +254,7 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_invalid_publickey:
+   Pms_CreateOIDCClient_invalid_publickey_neg:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid publickkey      
       role: partnerauth

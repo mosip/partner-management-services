@@ -16,13 +16,14 @@ DeactivatePolicyGroup:
 	"policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$"
 }'
       output: ' {
+      "policyGroupId": "$ID:DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid_id$",
+      "isActive": false
 }'
-   Pms_DeactivatePolicyGroup_without_authentication:
+   Pms_DeactivatePolicyGroup_without_authentication_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_02      
       description: Deactivate Policy Group without authentication
-      role: invalid
-      checkErrorsOnlyInResponse: true
+      role: invalidtoken
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -40,12 +41,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_roles:
+   Pms_DeactivatePolicyGroup_invalid_roles_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_03      
       description: Deactivate Policy Group authenticated using invalid roles
       role: POLICYMANAGER
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -63,12 +63,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_id:
+   Pms_DeactivatePolicyGroup_without_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_04      
       description: Deactivate Policy Group without id value
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -86,12 +85,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_id:
+   Pms_DeactivatePolicyGroup_invalid_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_05      
       description: Deactivate Policy Group with invalid id value
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -109,12 +107,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_version:
+   Pms_DeactivatePolicyGroup_without_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_06      
       description: Deactivate Policy Group without version
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -132,12 +129,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_version:
+   Pms_DeactivatePolicyGroup_invalid_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_07      
       description: Deactivate Policy Group invalid version
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -155,12 +151,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_status:
+   Pms_DeactivatePolicyGroup_without_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_08      
       description: Deactivate Policy Group without status
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -178,12 +173,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_status:
+   Pms_DeactivatePolicyGroup_invalid_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_09      
       description: Deactivate Policy Group with invalid status
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -201,12 +195,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_spacevalue_policygroupid:
+   Pms_DeactivatePolicyGroup_spacevalue_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_10      
       description: Deactivate Policy Group without policygroupid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -224,12 +217,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_invalid_policygroupid:
+   Pms_DeactivatePolicyGroup_invalid_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_11      
       description: Deactivate Policy Group invalid policygroupid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -247,12 +239,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_future_date:
+   Pms_DeactivatePolicyGroup_future_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_12      
       description: Deactivate Policy Group with future date given as requesttime
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -270,12 +261,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_past_date:
+   Pms_DeactivatePolicyGroup_past_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_13      
       description: Deactivate Policy Group with past date given as requesttime
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -293,12 +283,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_without_requesttime:
+   Pms_DeactivatePolicyGroup_without_requesttime_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_14      
       description: Deactivate Policy Group without requesttime
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -321,7 +310,6 @@ DeactivatePolicyGroup:
       uniqueIdentifier: TC_PMS_deactivate_policy_group_15     
       description: Deactivate Policy Group with deactivated policies
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroupResult
@@ -330,16 +318,17 @@ DeactivatePolicyGroup:
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid$"
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid_id$"
 }'
       output: '{
+      "policyGroupId": "$ID:DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid_id$",
+      "isActive": false
 }'
-   Pms_DeactivatePolicyGroup_with_publishpolicy:
+   Pms_DeactivatePolicyGroup_with_publishpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_16      
       description: Deactivate Policy Group with published policy
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -348,7 +337,7 @@ DeactivatePolicyGroup:
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_id$"
 }'
       output: '{
       "errors": [
@@ -357,12 +346,11 @@ DeactivatePolicyGroup:
        }
        ]
 }'
-   Pms_DeactivatePolicyGroup_with_Draftpolicy:
+   Pms_DeactivatePolicyGroup_with_Draftpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_17      
       description: Deactivate Policy Group with draft policy
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
       outputTemplate: pms/error
@@ -371,12 +359,12 @@ DeactivatePolicyGroup:
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$"
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_ForDraftPolicy_pms_sid_id$"
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_POL_056"
+       "errorCode": "PMS_POL_070"
        }
        ]
 }'

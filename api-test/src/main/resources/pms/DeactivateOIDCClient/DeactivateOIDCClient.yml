@@ -24,7 +24,7 @@ DeactivateOIDCClient:
         "status": "INACTIVE"
 }'
 
-   Pms_DeactivateOIDCClient_Retry_with_same_policy_Neg:
+   Pms_DeactivateOIDCClient_Retry_with_Deactivated_ClientId_Neg:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       description: Deactivating The Oidc Client
       role: partnerauth
@@ -47,7 +47,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_POL_014"
+            "errorCode": "PMS_ESI_008"
         }
   ]
 }'
@@ -62,7 +62,7 @@ DeactivateOIDCClient:
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
-      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "client_id": "$ID:CreateOIDCClient_ForNeg_all_Valid_sid_clientId$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
       "logoUri": "https://health-services.com/logo.png",
@@ -226,7 +226,7 @@ DeactivateOIDCClient:
       outputTemplate: pms/error
       input: '{
       "requesttime": "$TIMESTAMP$",
-      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "client_id": "$ID:CreateOIDCClient_ForNeg_all_Valid_sid_clientId$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
       "logoUri": "https://health-services.com/logo.png",
@@ -279,7 +279,7 @@ DeactivateOIDCClient:
       outputTemplate: pms/error
       input: '{
       "requesttime": "$TIMESTAMP$",
-      "client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      "client_id": "$ID:CreateOIDCClient_ForNeg_all_Valid_sid_clientId$",
       "clientName": "OIDC TEST CLIENT 8976678",
       "status": "INACTIVE",
       "logoUri": "https://health-services.com/logo.png",
