@@ -1,0 +1,15 @@
+GetUserConsent:
+   Pms_GetUserConsent_before_consent_given:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_05
+      description: Retrieve the PMS GetUserConsent before consent is saved
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/GetUserConsent/GetUserConsentResultBeforeConsent
+      input: '{
+}'
+      output: '{
+       "userId": "pms-111999"
+}'

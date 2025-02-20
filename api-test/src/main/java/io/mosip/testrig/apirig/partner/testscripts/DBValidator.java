@@ -27,6 +27,7 @@ import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
@@ -75,6 +76,7 @@ public class DBValidator extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
+		testCaseName = PMSRevampUtil.isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}

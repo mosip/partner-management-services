@@ -1,0 +1,21 @@
+GetOriginalPartnerCertificates:
+   Pms_GetOriginalPartnerCertificates_before_certificate_upload:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_08      
+      description: Get original Auth partner certificates before certificate upload    
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": "pms-111999"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_108"
+       }
+       ]
+     
+}'

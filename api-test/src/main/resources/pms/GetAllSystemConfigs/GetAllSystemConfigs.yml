@@ -1,0 +1,31 @@
+GetAllSystemConfigs:
+   Pms_GetAllSystemConfigs_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/system-config
+      uniqueIdentifier: TC_PMS_GetAllSystemConfigs_01      
+      description: Fetching all the configuration for PMS
+      role: patneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllSystemConfigs/getAllApiKeyForAuthPartner
+      outputTemplate: pms/GetAllSystemConfigs/getAllApiKeyForAuthPartnerResult
+      input: '{
+}'
+      output: '{
+}'
+   Pms_GetAllSystemConfigs_without_authentication_Neg:
+      endPoint: /v1/partnermanager/system-config
+      uniqueIdentifier: TC_PMS_GetAllSystemConfigs_02      
+      description: Fetching all the configuration for PMS without authentication
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllSystemConfigs/getAllApiKeyForAuthPartner
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
