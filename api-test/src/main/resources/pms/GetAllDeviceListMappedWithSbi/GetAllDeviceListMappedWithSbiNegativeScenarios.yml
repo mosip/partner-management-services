@@ -47,12 +47,12 @@ GetAllDeviceListMappedWithSbiNegativeScenarios:
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
       outputTemplate: pms/error
       input: '{
-       "sbiId": "96e2d357-bba3-4341-ba45-543625a5bdfb"
+       "sbiId": "$ID:GetListOfAllSBI_All_Valid_Smoke_sid_sbiId$"
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_DEVICE_ERROR_005"
+       "errorCode": "PMS_DEVICE_ERROR_019"
        }
        ]
 }'

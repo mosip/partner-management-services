@@ -725,13 +725,13 @@ RejectMappingDeviceToSbiNegativeScenarios:
       "version": "1.0",	
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms-111998",
-      "sbiId": "96e2d357-bba3-4341-ba45-543625a5bdfb",
+      "sbiId": "$ID:GetListOfAllSBI_All_Valid_Smoke_sid_sbiId$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
 }'
       output: '{
 	  "errors": [
       {
-       "errorCode": "PMS_DEVICE_ERROR_005"
+       "errorCode": "PMS_DEVICE_ERROR_002"
        }
        ]
 }'
