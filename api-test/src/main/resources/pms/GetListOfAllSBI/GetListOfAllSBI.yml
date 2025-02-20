@@ -1,5 +1,5 @@
 GetListOfAllSBI:
-   Pms_GetListOfAllSBI_All_Valid_Smoke:
+   Pms_GetListOfAllSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_03      
       description: Fetching all the active SBI
