@@ -16,14 +16,212 @@
     }
   ],
   "paths": {
-    "/policies/getAllPolicyGroups": {
+    "/policies/group/{policyGroupId}": {
+      "patch": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "NEW: Endpoint used to deactivate a Policy Group.",
+        "description": "This endpoint will deactivate Policy Group based on the Policy Group Id sent as the Path Parameter. \r\n\r\nThis endpoint is for the Partner Admin or Policy Manager users only.\r\n\r\nFirst check should be made if there are any policies associated with this policy group:\r\n1. Policy Group can be deactivated if there are no policies associated with this policy group\r\n2. Policy Group can be deactivated if there are DEACTIVATED status policies associated with this policy group.\r\n3. Policy Group cannot be deactivated if there are ACTIVATED policies associated with this policy group. In this case error code `PMS_POL_056` will be sent.\r\n4. Policy Group cannot be deactivated if there are DRAFT policies associated with this policy group. In this case error code `PMS_POL_070` will be sent.\r\n\r\nThis endpoint should be configured for both the Roles: POLICYMANAGER,PARTNER_ADMIN",
+        "operationId": "patch-policies-group-policyGroupId",
+        "parameters": [
+          {
+            "name": "policyGroupId",
+            "in": "path",
+            "description": "Unique identifier of the Policy Group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.policy.group.patch`"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Version of this endpoint. \r\n`1.0`"
+                  },
+                  "requestTime": {
+                    "type": "string",
+                    "description": "Date time in ISO format, when request is being sent."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Optional metadata about the request"
+                  },
+                  "request": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "De-Activate"
+                        ],
+                        "description": "Status to Deactivate the Policy Group"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "requestTime",
+                  "request"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.policy.group.patch`"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of this endpoint. \r\n`1.0`"
+                    },
+                    "responseTime": {
+                      "type": "string",
+                      "description": "Date time in ISO format, when response is being sent."
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Optional metadata about the response"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "policyGroupId": {
+                          "type": "string",
+                          "description": "Unique identifier of the Policy Group"
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Flag indicating status of Policy Group"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "description": "Aray of error code and message indicating the error that has occured",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "errorCode": {
+                            "type": "string",
+                            "description": "Unique code of the error indicating the error that has occured"
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Message indicating the error that has occured"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "x-examples": {
+                    "Example 1": {
+                      "id": "string",
+                      "version": "string",
+                      "responseTime": "2024-12-06T08:19:50.287Z",
+                      "metadata": {},
+                      "response": {
+                        "policyGroupId": "12345",
+                        "isActive": true
+                      },
+                      "errors": [
+                        {
+                          "errorCode": "string",
+                          "message": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      },
       "get": {
         "tags": [
           "policy-management-controller"
         ],
-        "summary": "NEW: Service to get all active policy groups",
-        "description": "Service to get all policy groups",
-        "operationId": "getAllPolicyGroups",
+        "summary": "EXISTING: Endpoint used to get all associated policies with a Policy Group.",
+        "operationId": "get-policies-group-policyGroupId",
+        "parameters": [
+          {
+            "name": "policyGroupId",
+            "in": "path",
+            "description": "Unique identifier of the Policy Group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/policy-groups": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "NEW: Get all active policy groups",
+        "description": "This endpoint will get the details about all the Active Policy Groups in the PMS. \r\nPolicy groups are created by the Partner Admin or Policy Manager users only.\r\nThey can be deactivated by the Partner Admin or Policy Manager users only.\r\n\r\nThis endpoint should be setup for all the roles: AUTH_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,PARTNER_ADMIN,POLICYMANAGER",
+        "operationId": "policy-groups",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "Authorization={jwt_token}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -31,6 +229,50 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponseWrapperListPolicyGroup"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/group/search": {
+      "post": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to search policy group",
+        "description": "Endpoint to search policy group. This endpoint is for Policy Manager (Partner Admin).",
+        "operationId": "searchPolicyGroup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperSearchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPageResponseDtoPolicyGroup"
                 }
               }
             }
@@ -44,13 +286,97 @@
         ]
       }
     },
-    "/policies/active/group/{groupName}": {
+    "/policies/{policyId}/group/{policygroupId}/publish": {
+      "post": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to publish policy",
+        "description": "Endpoint to publish policy",
+        "operationId": "publishPolicy",
+        "parameters": [
+          {
+            "name": "policygroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPolicyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/group/new": {
+      "post": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to create a new policy group",
+        "description": "Endpoint to craete a new policy group. This Endpoint is for Policy Manager (Partner Admin).",
+        "operationId": "definePolicyGroup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPolicyGroupCreateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPolicyGroupCreateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/search/group/{groupName}": {
       "get": {
         "tags": [
           "policy-management-controller"
         ],
-        "summary": "EXISTING: Service to get active policy details for policy group name",
-        "description": "Service to get active policy details for policy group name",
+        "summary": "EXISTING: Endpoint to get active policy details for policy group name",
+        "description": "Endpoint to get active policy details for policy group name",
         "operationId": "getPoliciesByGroupName",
         "parameters": [
           {
@@ -81,6 +407,589 @@
           }
         ]
       }
+    },
+    "/policies": {
+      "post": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to create a new Auth/DataShare/Credential policy",
+        "description": "Endpoint to create a new Auth/DataShare/Credential policy. This Endpoint is for Policy Manager (Partner Admin).",
+        "operationId": "definePolicy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPolicyCreateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPolicyCreateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/{policyId}": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to get the policy details",
+        "description": "Endpoint to get the policy details. This Endpoint is for Policy Manager (Partner Admin).",
+        "operationId": "getPolicy",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "Authorization={jwt_token}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPolicyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to update policy details",
+        "description": "Endpoint to update policy details",
+        "operationId": "updatePolicyDetails",
+        "parameters": [
+          {
+            "name": "policyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWrapperPolicyUpdateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperPolicyCreateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "NEW: Endpoint to deactivate a Policy",
+        "description": "This endpoint will deactivate Policy based on the Policy Id sent as the Path Parameter\r\n\r\nThis endpoint is for the Partner Admin or Policy Manager users only.\r\n\r\nFirst check should be made if there are any policy requests associated with this policy:\r\n1. Policy can be deactivated if there are no policy requests associated with this policy\r\n2. Policy can be deactivated if there are REJECTED status policy requests associated with this policy.\r\n3. Policy cannot be deactivated if there are APPROVED policy requests associated with this policy. In this case error code `PMS_POL_063` will be sent.\r\n4. Policy cannot be deactivated if there are PENDING policy requests associated with this policy. In this case error code `PMS_POL_064` will be sent.\r\n\r\nThis endpoint should be configured for both the Roles: POLICYMANAGER,PARTNER_ADMIN",
+        "operationId": "patch-policies-policyId",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "Authorization={jwt_token}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyId",
+            "in": "path",
+            "description": "Unique identifier of the Policy",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.policy.patch`"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Version of this endpoint. \r\n`1.0`"
+                  },
+                  "requestTime": {
+                    "type": "string",
+                    "description": "Date time in ISO format, when request is being sent."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Optional metadata about the request"
+                  },
+                  "request": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "Activate",
+                          "De-Activate"
+                        ],
+                        "description": "Status to Activate or Deactivate the Policy"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "requestTime",
+                  "request"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.policy.patch`"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of this endpoint. \r\n`1.0`"
+                    },
+                    "responseTime": {
+                      "type": "string",
+                      "description": "Date time in ISO format, when response is being sent."
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Optional metadata about the response"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "policyId": {
+                          "type": "string",
+                          "description": "Unique identifier of the Policy"
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Flag to activate / deactivate the Policy"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "description": "Aray of error code and message indicating the error that has occured",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "errorCode": {
+                            "type": "string",
+                            "description": "Unique code of the error indicating the error that has occured"
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Message indicating the error that has occured"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "x-examples": {
+                    "Example 1": {
+                      "id": "string",
+                      "version": "string",
+                      "responseTime": "2024-11-22T12:59:04.105Z",
+                      "metadata": {},
+                      "response": {
+                        "policyId": "12345",
+                        "isActive": true
+                      },
+                      "errors": [
+                        {
+                          "errorCode": "string",
+                          "message": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/active/group/{groupName}": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "EXISTING: Endpoint to get active policy details for policy group name",
+        "description": "Endpoint to get active policy details for policy group name",
+        "operationId": "getActivePoliciesByGroupName",
+        "parameters": [
+          {
+            "name": "groupName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapperListPolicyDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
+    },
+    "/policies/v2": {
+      "get": {
+        "tags": [
+          "policy-management-controller"
+        ],
+        "summary": "NEW: Endpoint to get the list of all the policies in the system",
+        "description": "This endpoint is for the Partner Admin or Policy Manager users only.\r\n\r\nThis endpoint can be used to get the list of all Policies created in the PMS system.\r\n\r\nThis endpoint upgrades the earlier POST endpoint `/policies/search` by adding features like:\r\n1. Performance improvement\r\n2. Support sorting for policyGroupName\r\n\r\nThis endpoint should be configured for both the Roles: POLICYMANAGER, PARTNER_ADMIN",
+        "operationId": "get-policies-v2",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "Authorization={jwt_token}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortFieldName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to sort the response by the sortFieldName.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortType",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page Number for the pagination. Starts with 0.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page Size for the pagination. Default is 8.",
+            "schema": {
+              "type": "integer",
+              "default": 8
+            }
+          },
+          {
+            "name": "policyType",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given policyType.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given policyId.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given isActive status.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given policyName.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyDescription",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given policyDescription.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyGroupName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given policyGroupName.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique id that is required to access this endpoint.\r\n`mosip.pms.policies.get`"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of this endpoint. \r\n`1.0`"
+                    },
+                    "responseTime": {
+                      "type": "string",
+                      "description": "The date time of the response in ISO format",
+                      "format": "date-time"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Optional metadata about the response"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "pageNo": {
+                          "type": "integer",
+                          "description": "Page Number of the data in the response"
+                        },
+                        "pageSize": {
+                          "type": "integer",
+                          "description": "Page Size of the data in the response"
+                        },
+                        "totalResults": {
+                          "type": "integer",
+                          "description": "Total number of records across all the pages in the response"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "policyId": {
+                                "type": "string",
+                                "description": "Unique identifier of the Policy"
+                              },
+                              "policyName": {
+                                "type": "string",
+                                "description": "Name of the Policy"
+                              },
+                              "policyDescription": {
+                                "type": "string",
+                                "description": "Description of the Policy"
+                              },
+                              "policyGroupId": {
+                                "type": "string",
+                                "description": "Unique identifier of the Policy Group to which this Policy belongs"
+                              },
+                              "policyGroupName": {
+                                "type": "string",
+                                "description": "Name the Policy Group to which this Policy belongs"
+                              },
+                              "isActive": {
+                                "type": "boolean",
+                                "description": "Activation status of the Partner"
+                              },
+                              "createdDateTime": {
+                                "type": "string",
+                                "description": "Created date in ISO format of the Partner"
+                              },
+                              "policyType": {
+                                "type": "string",
+                                "description": "Type of the Policy"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Aray of error code and message indicating the error that has occured",
+                        "properties": {
+                          "errorCode": {
+                            "type": "string",
+                            "description": "Unique code of the error indicating the error that has occured"
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Message indicating the error that has occured"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "x-examples": {
+                    "Example 1": {
+                      "id": "mosip.pms.policies.get",
+                      "version": "1.0",
+                      "responseTime": "2024-11-05T11:58:33.472Z",
+                      "metadata": {},
+                      "response": {
+                        "pageNo": 0,
+                        "pageSize": 10,
+                        "totalResults": 1,
+                        "data": [
+                          {
+                            "policyId": "12345",
+                            "policyName": "abc",
+                            "policyDescription": "desc",
+                            "policyGroupId": "23456",
+                            "policyGroupName": "abc",
+                            "isActive": true,
+                            "createdDateTime": "2024-08-01T14:30:00Z"
+                          }
+                        ]
+                      },
+                      "errors": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/policymanager",
+            "description": "Policy Manager Service"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -89,14 +998,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier required to access this endpoint\r\n`mosip.pms.all.policy.groups.get`"
           },
           "version": {
-            "type": "string"
-          },
-          "responsetime": {
             "type": "string",
-            "format": "date-time"
+            "description": "Version of the endpoint\r\n`1.0`"
+          },
+          "responseTime": {
+            "type": "string",
+            "description": "Date time in ISO format, when response is being sent."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Optional metadata about the response"
           },
           "response": {
             "type": "array",
@@ -112,6 +1027,8 @@
           }
         },
         "required": [
+          "id",
+          "version",
           "response"
         ]
       },
@@ -119,51 +1036,394 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
-          },
-          "crBy": {
-            "type": "string"
-          },
-          "crDtimes": {
             "type": "string",
-            "format": "date-time"
-          },
-          "delDtimes": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "desc": {
-            "type": "string"
+            "description": "Unique identifier of the Policy Group"
           },
           "isActive": {
-            "type": "boolean"
-          },
-          "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Active status of the Policy Group"
           },
           "name": {
-            "type": "string"
-          },
-          "updBy": {
-            "type": "string"
-          },
-          "updDtimes": {
             "type": "string",
-            "format": "date-time"
+            "description": "Name of the Policy Group"
           },
-          "userId": {
-            "type": "string"
+          "description": {
+            "type": "string",
+            "description": "Description of the Policy Group"
           }
         }
       },
       "ServiceError": {
         "type": "object",
+        "description": "Optional array about the errors that occured while processing the request",
         "properties": {
           "errorCode": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier of the error"
           },
           "message": {
+            "type": "string",
+            "description": "Message with details about the error"
+          }
+        }
+      },
+      "RequestWrapperSearchDto": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/SearchDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "SearchDto": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchFilter"
+            }
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchSort"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "SearchFilter": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fromValue": {
+            "type": "string"
+          },
+          "toValue": {
+            "type": "string"
+          },
+          "columnName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchSort": {
+        "type": "object",
+        "properties": {
+          "sortField": {
+            "type": "string"
+          },
+          "sortType": {
+            "type": "string"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "pageStart": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageFetch": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ResponseWrapperPageResponseDtoPolicyGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PageResponseDtoPolicyGroup"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PageResponseDtoPolicyGroup": {
+        "type": "object",
+        "properties": {
+          "fromRecord": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "toRecord": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalRecord": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyGroup"
+            }
+          }
+        }
+      },
+      "ResponseWrapperPolicyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PolicyResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyResponseDto": {
+        "type": "object",
+        "properties": {
+          "policyGroupId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "policyGroupDesc": {
+            "type": "string"
+          },
+          "policyGroupStatus": {
+            "type": "boolean"
+          },
+          "policyGroup_cr_by": {
+            "type": "string"
+          },
+          "policyGroup_cr_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "policyGroup_up_by": {
+            "type": "string"
+          },
+          "policyGroup_upd_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "policyId": {
+            "type": "string"
+          },
+          "policyName": {
+            "type": "string"
+          },
+          "policyDesc": {
+            "type": "string"
+          },
+          "policyType": {
+            "type": "string"
+          },
+          "publishDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTill": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "is_Active": {
+            "type": "boolean"
+          },
+          "cr_by": {
+            "type": "string"
+          },
+          "cr_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "up_by": {
+            "type": "string"
+          },
+          "upd_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "policies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "properties": {
+              "empty": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "RequestWrapperPolicyGroupCreateRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PolicyGroupCreateRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PolicyGroupCreateRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "desc": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "name",
+          "desc"
+        ]
+      },
+      "ResponseWrapperPolicyGroupCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PolicyGroupCreateResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyGroupCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          },
+          "is_Active": {
+            "type": "boolean"
+          },
+          "cr_by": {
+            "type": "string"
+          },
+          "cr_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "up_by": {
+            "type": "string"
+          },
+          "upd_dtimes": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -219,6 +1479,204 @@
             "type": "string"
           }
         }
+      },
+      "RequestWrapperPolicyCreateRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PolicyCreateRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PolicyCreateRequestDto": {
+        "type": "object",
+        "properties": {
+          "policyId": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "policyType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "desc": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "version": {
+            "type": "string"
+          },
+          "policies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "properties": {
+              "empty": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "required": [
+          "policyGroupName",
+          "policyType",
+          "name",
+          "desc",
+          "version"
+        ]
+      },
+      "ResponseWrapperPolicyCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "responsetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PolicyCreateResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceError"
+            }
+          }
+        },
+        "required": [
+          "response"
+        ]
+      },
+      "PolicyCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "policyGroupName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          },
+          "is_Active": {
+            "type": "boolean"
+          },
+          "cr_by": {
+            "type": "string"
+          },
+          "cr_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "up_by": {
+            "type": "string"
+          },
+          "upd_dtimes": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RequestWrapperPolicyUpdateRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "requesttime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PolicyUpdateRequestDto"
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "PolicyUpdateRequestDto": {
+        "type": "object",
+        "properties": {
+          "policyGroupName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "desc": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "policies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "properties": {
+              "empty": {
+                "type": "boolean"
+              }
+            }
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "policyGroupName",
+          "name",
+          "desc",
+          "version"
+        ]
       }
     }
   }
