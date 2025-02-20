@@ -1,7 +1,7 @@
 ##### JIRA number;testcase 
 #MOSIP-12456------Mimoto_AddIdentity_Binding_smoke_Pos
 MOSIP-37970------Pms_DefinePolicyGroup_Invalid_Request_Time_Neg
-MOSIP-37970------Pms_DefinePolicyGroup_Missing_InputParameter_requesttime
+MOSIP-37970------Pms_DefinePolicyGroup_Missing_InputParameter_requesttime_neg
 MOSIP-37970------Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg
 MOSIP-37970------Pms_PartnerSelfRegistration_Missing_Request_Time_Neg
 MOSIP-37970------Pms_ApproveMappingKey_Invalid_Request_Time_Neg
@@ -11,4 +11,4 @@ MOSIP-37970------Pms_GenerateApiKey_Missing_Request_time_Neg
 MOSIP-37970------Pms_DeactivateOIDCClient_Missing_Requesttime_Neg
 MOSIP-37968------Pms_DeactivateOIDCClient_Missing_clientAuthMethods_Neg
 MOSIP-37968------Pms_DeactivateOIDCClient_Missing_grantTypes_Neg
-MOSIP-39940------Pms_DeactivateDevice_Missing_requestTime_Neg
+MOSIP-39940------Pms_GetUserConsent_before_consent_given

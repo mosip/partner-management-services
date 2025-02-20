@@ -23,6 +23,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
@@ -81,6 +82,7 @@ public class PutWithPathParamsAndBody extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
+		testCaseName = PMSRevampUtil.isTestCaseValidForExecution(testCaseDTO);
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(

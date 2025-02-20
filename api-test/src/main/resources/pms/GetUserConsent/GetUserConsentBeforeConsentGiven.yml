@@ -11,5 +11,5 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-       "userId": "pms-11199"
+       "userId": "pms-111999"
 }'
