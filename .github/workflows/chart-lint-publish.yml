@@ -40,7 +40,6 @@ on:
       - release*
     paths:
       - 'helm/**'
-      - MOSIP*
       - release*
 
 jobs:
