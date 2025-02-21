@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface PolicySummaryRepository extends BaseRepository<PolicySummaryEntity, String> {
 
     String POLICY_SUMMARY_QUERY = "SELECT new PolicySummaryEntity(" +
-            "p.id, p.name, p.descr, p.policyGroup.id, pg.name, " +
+            "p.id, p.policyType, p.name, p.descr, p.policyGroup.id, pg.name, " +
             "CASE " +
             "WHEN (p.schema IS NULL AND p.isActive = false) THEN 'draft' " +
             "WHEN (p.schema IS NOT NULL AND p.isActive = true) THEN 'activated' " +

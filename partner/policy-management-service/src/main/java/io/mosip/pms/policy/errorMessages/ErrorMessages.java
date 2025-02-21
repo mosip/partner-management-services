@@ -48,7 +48,7 @@ public enum ErrorMessages {
 	POLICY_GROUPS_NOT_AVAILABLE("PMS_POL_059", "There are no active policy groups."),
 	POLICY_GROUPS_FETCH_ERROR("PMS_POL_060", "Error while fetching policy groups."),
 	INVALID_SORT_TYPE("PMS_PRT_358", "Sort type %s is not supported"),
-	INVALID_SORT_FIELD("PMS_PRT_357", "Invalid sort field %s"),
+	INVALID_SORT_FIELD("PMS_PRT_357", "Sorting is not supported for %s field"),
 	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
 	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
 	POLICIES_FETCH_ERROR("PMS_POL_061", "Error while fetching policies"),
