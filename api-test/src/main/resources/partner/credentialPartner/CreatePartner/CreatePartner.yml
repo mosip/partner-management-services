@@ -1,6 +1,8 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create Partner self Registrartion with Valid data
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -10,18 +12,20 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
-    "partnerId": "MOVP",
-    "partnerType": "Online_Verification_Partner",
+    "partnerId": "MOVP-AUTOMATION",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MOVP",
+        "partnerId": "MOVP-AUTOMATION",
         "status": "InProgress"
     }'
     
    Partner_PartnerSelfRegistration_WithOut_Mandatory_Neg:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      description: Create Partner self Registrartion without PartnerID
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -32,7 +36,7 @@ createPartnerSelfRegistration:
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
     "partnerId": "$REMOVE$",
-    "partnerType": "Online_Verification_Partner",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'
@@ -46,6 +50,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_Same_Email:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      description: Create Partner self Registrartion with existing Email
       role: partner
       restMethod: post
       inputTemplate: partner/credentialPartner/CreatePartner/createPartner
@@ -55,8 +61,8 @@ createPartnerSelfRegistration:
     "contactNumber": "9553967572",
     "emailId": "movp@gmail.com",
     "organizationName": "movp",
-    "partnerId": "MOVP",
-    "partnerType": "Online_Verification_Partner",
+    "partnerId": "MOVP-AUTOMATION",
+    "partnerType": "Credential_Partner",
     "policyGroup": "mosip policy group",
 	"requesttime": "$TIMESTAMP$"
   }'

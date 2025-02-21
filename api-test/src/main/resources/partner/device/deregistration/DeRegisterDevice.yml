@@ -1,6 +1,8 @@
 createDeRegisterDevice:
    Partner_DeRegisterDevice_All_Valid_Smoke:
       endPoint: /v1/partnermanager/registereddevices/deregister
+      uniqueIdentifier: TC_PMS_createDeRegisterDevice_01
+      description: Create Device Partner Registration with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

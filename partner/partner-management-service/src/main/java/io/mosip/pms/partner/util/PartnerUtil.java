@@ -9,8 +9,6 @@ import java.util.UUID;
  */
 
 public class PartnerUtil {
-
-	public static final String BLANK_STRING = "";
 	
 	/**
 	 * @return partnerId.
@@ -70,22 +68,5 @@ public class PartnerUtil {
 		if (uniqueId.length() <= length)
 			return uniqueId;
 		return uniqueId.substring(0, length);
-	}
-
-	public static String trimAndReplace(String str) {
-		if (str == null) {
-			return null;
-		}
-		return str.trim().replaceAll("\\s+", " ");
-	}
-
-	public static String getCertificateName(String subjectDN) {
-		String[] parts = subjectDN.split(",");
-		for (String part : parts) {
-			if (part.trim().startsWith("CN=")) {
-				return part.trim().substring(3);
-			}
-		}
-		return BLANK_STRING;
 	}
 }

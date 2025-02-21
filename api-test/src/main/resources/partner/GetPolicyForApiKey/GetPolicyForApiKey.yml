@@ -1,6 +1,8 @@
 GetPolicyForApiKey:
    Partner_GetPolicyForApiKey_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_01
+      description: Retrieve Partner Policy API Key
       role: partner
       restMethod: get
       inputTemplate: partner/GetPolicyForApiKey/getPolicyForApiKey
@@ -14,6 +16,8 @@ GetPolicyForApiKey:
 }'
    Partner_GetPolicyForApiKey_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_02
+      description: Retrieve Partner Policy API Key while keeping invalid PartnerId
       role: partner
       restMethod: get
       inputTemplate: partner/GetPolicyForApiKey/getPolicyForApiKey
@@ -31,6 +35,8 @@ GetPolicyForApiKey:
 }'
    Partner_GetPolicyForApiKey_InValid_apiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_03
+      description: Retrieve Partner Policy API Key while keeping invalid APIKey
       role: partner
       restMethod: get
       inputTemplate: partner/GetPolicyForApiKey/getPolicyForApiKey

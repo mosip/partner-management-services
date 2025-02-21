@@ -1,8 +1,8 @@
 ActivateDeactivatePartnerApiKey:
    Partner_ActivateDeactivatePartnerApiKey_deactivate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_01
-      description: Deactivate all partner API key
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_01
+      description: Update the status for Deactivated PartnerAPIKey as Deactivate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -20,8 +20,8 @@ ActivateDeactivatePartnerApiKey:
 
    Partner_ActivateDeactivatePartnerApiKey_deactivate_InValid_APIKey_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_02
-      description: Deactivate Invalid API key
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_02
+      description: Update the status for Deactivated PartnerAPIKey as Deactivate by Providing Invalid APIKey
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -44,8 +44,8 @@ ActivateDeactivatePartnerApiKey:
 }'
    Partner_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_03
-      description: Activate Partner API key
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_03
+      description: Update the status for Activated PartnerAPIKey as Activate
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -63,8 +63,8 @@ ActivateDeactivatePartnerApiKey:
 }'
    Partner_ActivateDeactivatePartnerApiKey_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifiertifier: TC_Partner_ActivateDeactivatePartnerApiKey_04
-      description: ActivateDeactivatePartnerApiKey for invalid partnerId
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_04
+      description: Update the status for Deactivated PartnerAPIKey as Deactivate by Providing Invalid PartnerId
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
@@ -85,8 +85,8 @@ ActivateDeactivatePartnerApiKey:
 }'
    Partner_ActivateDeactivatePartnerApiKey_invalid_policyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_05
-      description: ActivateDeactivatePartnerApiKey for invalid policyId
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_05
+      description: Update the status for Deactivated PartnerAPIKey as Deactivate by Providing Invalid PolicyId
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
@@ -107,8 +107,8 @@ ActivateDeactivatePartnerApiKey:
 }'
    Partner_ActivateDeactivatePartnerApiKey_invalid_label:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_06
-      description : ActivateDeactivatePartnerApiKey for invalid label
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_06
+      description: Update the status for Deactivated PartnerAPIKey as Deactivate by Providing Invalid Label
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
@@ -130,8 +130,8 @@ ActivateDeactivatePartnerApiKey:
 
    Partner_ActivateDeactivatePartnerApiKey_activate_Dublicate_Lable_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_07
-      description: Activate PartnerApiKey for duplicate label
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_07
+      description: Update the status for Activated PartnerAPIKey as Activate by Providing Duplicate label
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
@@ -153,8 +153,8 @@ ActivateDeactivatePartnerApiKey:
 
    Partner_ActivateDeactivatePartnerApiKey_Lable_Removed_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
-      uniqueIdentifier: TC_Partner_ActivateDeactivatePartnerApiKey_08   
-      description: ActivateDeactivatePartnerApiKey without label
+      uniqueIdentifier: TC_PMS_ActivateDeactivatePartnerApiKey_08
+      description: Update the status for Activated PartnerAPIKey as Activate by Removing label
       role: partner
       restMethod: patch
       inputTemplate: partner/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey

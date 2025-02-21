@@ -1,6 +1,8 @@
 createSearchPolicy:
    Partner_SearchPolicy_AllValid_Smoke:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_01
+      description: Create SearchPolicy with all valid data
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -17,6 +19,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_Only_FilterCriteria_Smoke:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_02
+      description: Create SearchPolicy with Only FilterCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -47,6 +51,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_Only_SortaCriteria_Smoke:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_03
+      description: Create SearchPolicy with Only SortCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -75,6 +81,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_Only_PaginationCriteria_Smoke:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_04
+      description: Create SearchPolicy with Only PaginationCriteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -97,6 +105,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_contains_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_05
+      description: Create SearchPolicy while keeping Type parameter as contains and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -132,6 +142,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_contains_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_06
+      description: Create SearchPolicy while keeping Type parameter as contains and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -167,6 +179,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_equals_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_07
+      description: Create SearchPolicy while keeping Type parameter as equals and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -202,6 +216,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_equals_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_08
+      description: Create SearchPolicy while keeping Type parameter as equals and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -237,6 +253,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_startswith_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_09
+      description: Create SearchPolicy while keeping Type parameter as startswith and filter the data in ascending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -272,6 +290,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_type_startswith_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_10
+      description: Create SearchPolicy while keeping Type parameter as startswith and filter the data in descending order
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -307,6 +327,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_value_containts:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_11
+      description: Create SearchPolicy while keeping Type parameter as contains
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -335,6 +357,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_value_equals:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_12
+      description: Create SearchPolicy while keeping Type parameter as equals
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -363,6 +387,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_value_startswith:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_13
+      description: Create SearchPolicy while keeping Type parameter as startswith
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -392,6 +418,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_columnName:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_14
+      description: Create SearchPolicy while keeping columnName parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -425,6 +453,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_missing_columnName:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_15
+      description: Create SearchPolicy while keeping columnName parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -453,6 +483,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_missing_type:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_16
+      description: Create SearchPolicy while keeping Type parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -486,6 +518,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_sort_type:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_17
+      description: Create SearchPolicy while keeping sortType parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -519,6 +553,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_missing_sort_type:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_18
+      description: Create SearchPolicy while keeping sortType parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -552,6 +588,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_invalid_sort_field:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_19
+      description: Create SearchPolicy while keeping sortField parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
@@ -585,6 +623,8 @@ createSearchPolicy:
 }'
    Partner_SearchPolicy_with_missing_sort_field:
       endPoint: /partnermanagement/v1/policies/policy/search
+      uniqueIdentifier: TC_PMS_createSearchPolicy_20
+      description: Create SearchPolicy while keeping sortField parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/Search/SearchPolicy/createSearchPolicy
