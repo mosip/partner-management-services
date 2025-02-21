@@ -2,6 +2,8 @@ package io.mosip.pms.policy.test.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -18,7 +20,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -32,6 +36,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
@@ -44,22 +49,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.dto.FilterDto;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.Pagination;
-import io.mosip.pms.common.dto.PolicyFilterValueDto;
-import io.mosip.pms.common.dto.PolicySearchDto;
-import io.mosip.pms.common.dto.SearchAuthPolicy;
-import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.SearchFilter;
-import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.policy.errorMessages.PolicyManagementServiceException;
 import io.mosip.pms.policy.service.PolicyManagementService;
 import io.mosip.pms.policy.test.PolicyServiceTest;
 import io.mosip.pms.policy.util.AuditUtil;
+import org.mockito.Mockito;
 
 /**
  * @author Nagarjuna Kuchi
@@ -70,7 +66,6 @@ import io.mosip.pms.policy.util.AuditUtil;
 @SpringBootTest(classes = PolicyServiceTest.class)
 @AutoConfigureMockMvc
 @EnableWebMvc
-@TestPropertySource("classpath:application.properties")
 public class PolicyManagementControllerTest {
 	
 	@Autowired
@@ -89,9 +84,6 @@ public class PolicyManagementControllerTest {
 	private AuditUtil audit;
 	@InjectMocks
 	PolicyManagementController policyManagementController;
-
-	@Mock
-	AuthPolicyRepository authPolicyRepository;
 	
 	FilterDto filterDto = new FilterDto();
 	SearchFilter searchFilter = new SearchFilter();
@@ -814,4 +806,58 @@ public class PolicyManagementControllerTest {
 		assertNotNull(response.getResponse());
 		assertEquals(mockedResponse, response.getResponse());
 	}
+
+	@Test
+	public void getAllPoliciesTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");
+	}
+
+	@Test
+	public void deactivatePolicyTest() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyResponseDto deactivatePolicyResponseDto = new DeactivatePolicyResponseDto();
+		responseWrapper.setResponse(deactivatePolicyResponseDto);
+
+		Mockito.when(policyManagementService.deactivatePolicy(anyString(), any()))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+	}
+
+	@Test
+	public void deactivatePolicyGroupTest() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		DeactivatePolicyGroupResponseDto deactivatePolicyGroupResponseDto = new DeactivatePolicyGroupResponseDto();
+		responseWrapper.setResponse(deactivatePolicyGroupResponseDto);
+
+		Mockito.when(policyManagementService.deactivatePolicyGroup(anyString(), any())).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+	}
+
 }

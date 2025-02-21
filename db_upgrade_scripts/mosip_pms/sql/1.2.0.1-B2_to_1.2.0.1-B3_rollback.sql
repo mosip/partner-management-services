@@ -1,2 +1,1 @@
--- Rollback script for the INSERT statement
-DELETE FROM pms.partner_type WHERE code = 'Binding_Partner';
+\echo 'Upgrade Queries not required for transition from $CURRENT_VERSION to $UPGRADE_VERSION'

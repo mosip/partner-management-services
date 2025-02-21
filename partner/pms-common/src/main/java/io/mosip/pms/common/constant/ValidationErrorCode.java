@@ -12,7 +12,13 @@ public enum ValidationErrorCode {
 	FILTER_COLUMN_NOT_SUPPORTED("PMS-MSD-324", "Received Filter Type not supported"),
 	COLUMN_DOESNT_EXIST_FILTER("PMS-MSD-348", "Received column does not support filter"),
 	CONSTRAINT_VIOLATION("PMS-MSD-xxx", "Contraint Violation-"),
-	INVALID_COLUMN_NAME("PMS-MSD-325", "Invalid Column Name passed");
+	INVALID_COLUMN_NAME("PMS-MSD-325", "Invalid Column Name passed"),
+	INVALID_REQUEST_PARAM("PMS_REQUEST_ERROR_001", "Invalid request."),
+	INVALID_REQUEST_ID("PMS_REQUEST_ERROR_002", "Invalid Request Id"),
+	INVALID_REQUEST_VERSION("PMS_REQUEST_ERROR_003", "Request version is invalid"),
+	INVALID_REQUEST_DATETIME("PMS_REQUEST_ERROR_004", "Invalid request time"),
+	INVALID_REQUEST_BODY("PMS_REQUEST_ERROR_005", "Request body is invalid"),
+	INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE("PMS_REQUEST_ERROR_006", "Request date should be current date");
 
 	/**
 	 * Error Code
