@@ -24,4 +24,5 @@
 \ir ddl/pms-tspid_seq.sql
 \ir ddl/pms-oidc_client.sql
 \ir ddl/pms-user_details.sql
+\ir ddl/pms-templates.sql
 \ir ddl/pms-fk.sql
