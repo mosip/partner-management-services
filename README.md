@@ -1,6 +1,6 @@
 # Partner Management Services (PMS)
-[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.2.2.0)](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.2.2.0&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.2.2.0&id=mosip_partner-management-services)
+[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.2.2.x)](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.2.2.x&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.2.2.x&id=mosip_partner-management-services)
 
 ## Overview
 This repository contains the source code MOSIP Partner Management module. For an overview refer [here](https://docs.mosip.io/1.2.0/modules/partner-management-services).  The module exposes API endpoints. For a reference front-end UI implementation refer to [Partner-management UI GitHub repo](https://github.com/mosip/partner-management-portal/tree/release-1.2.2.x/pmp-revamp-ui)
@@ -34,15 +34,6 @@ To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](
 [application-default.properties](https://github.com/mosip/mosip-config/blob/master/application-default.properties) 
 
 defined here.
-
-### Add auth-adapter in a class-path to run a services
-   ```
-   <dependency>
-       <groupId>io.mosip.kernel</groupId>
-       <artifactId>kernel-auth-adapter</artifactId>
-       <version>${kernel.auth.adapter.version}</version>
-   </dependency>
-   ```
 
 ## Deployment in K8 cluster with other MOSIP services:
 ### Pre-requisites
