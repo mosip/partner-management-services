@@ -32,9 +32,9 @@ public interface DeviceDetailRepository extends JpaRepository<DeviceDetail, Stri
 	@Query("FROM DeviceDetail d where d.id=?1 AND d.deviceProviderId=?2 AND (d.isDeleted is null or d.isDeleted = false)")
 	Optional<DeviceDetail> findByIdAndDeviceProviderId(String id, String deviceProviderId);
 
-	@Query(value= " select * from device_detail dd join device_detail_sbi dds on dd.id = dds.device_detail_id where dds.sbi_id = ?1 AND dd.approval_status = 'approved' AND dd.is_active = true",nativeQuery = true)
+	@Query(value= " select dd.* from device_detail dd join device_detail_sbi dds on dd.id = dds.device_detail_id where dds.sbi_id = ?1 AND dd.approval_status = 'approved' AND dd.is_active = true",nativeQuery = true)
 	List<DeviceDetail> findApprovedDevicesBySbiId(String sbiId);
 
-	@Query(value= " select * from device_detail dd join device_detail_sbi dds on dd.id = dds.device_detail_id where dds.sbi_id = ?1 AND dd.approval_status = 'pending_approval'",nativeQuery = true)
+	@Query(value= " select dd.* from device_detail dd join device_detail_sbi dds on dd.id = dds.device_detail_id where dds.sbi_id = ?1 AND dd.approval_status = 'pending_approval'",nativeQuery = true)
 	List<DeviceDetail> findPendingApprovalDevicesBySbiId(String sbiId);
 }
