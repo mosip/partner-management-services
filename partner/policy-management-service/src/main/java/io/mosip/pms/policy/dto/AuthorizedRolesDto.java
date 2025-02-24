@@ -51,11 +51,5 @@ public class AuthorizedRolesDto {
 	
 	private List<String> getactivegroupgroupname;
 
-	private List<String> getpolicygroups;
-
-	private List<String> getallpolicies;
-
-	private List<String> patchdeactivatepolicy;
-
-	private List<String> patchdeactivatepolicygroup;
+	private List<String> getallpolicygroups;
 }

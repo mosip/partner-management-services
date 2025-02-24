@@ -11,13 +11,7 @@ public enum PolicyValidatorErrorConstant {
 	
 	INVALID_INPUT_PARAMETER("PMS_PV_005", "Invalid input parameter - %s in policy data"),
 
-	MISSING_INPUT_PARAMETER("PMS_PV_006", "Missing input parameter - %s in policy data"),
-
-	EXPECTED_INPUT_PARAMETER("PMS_PV_007", "Format Error: Expected format is %s."),
-
-	EMPTY_ARRAY_INPUT_PARAMETER("PMS_PV_008", "Empty array is not allowed in %s."),
-
-	EMPTY_STRING_INPUT_PARAMETER("PMS_PV_009", "Empty string is not allowed in %s.");
+	MISSING_INPUT_PARAMETER("PMS_PV_006", "Missing input parameter - %s in policy data");
 
 	private final String errorCode;
 

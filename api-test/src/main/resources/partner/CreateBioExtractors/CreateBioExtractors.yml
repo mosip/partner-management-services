@@ -1,6 +1,8 @@
 CreateBioExtractors:
    Partner_CreateBioExtractors_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_CreateBioExtractors_01
+      description: Create BioExtractors for Partner with invalid PartnerID
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -25,6 +27,8 @@ CreateBioExtractors:
 
    Partner_CreateBioExtractors_InValid_PolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_CreateBioExtractors_02
+      description: Create BioExtractors for Partner with invalid PolicyID
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -1,6 +1,8 @@
 createSearchDeviceType:
    Partner_SearchDeviceType_AllValid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_01
+      description: Create Search Device Type with all valid details
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -21,6 +23,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_02
+      description: Create Search Device Type with Only FilterCriteria
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -48,6 +52,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType__Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_03
+      description: Create Search Device Type with Only SortCriteria
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -74,6 +80,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_04
+      description: Create Search Device Type with Only PaginationCriteria
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -94,6 +102,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_05
+      description: Create Search Device Type
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -127,6 +137,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_missing_columnName:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_06
+      description: Create Search Device Type while keeping columnName parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -160,6 +172,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_missing_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_07
+      description: Create Search Device Type while keeping Type parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -193,6 +207,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_invalid_sort_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_08
+      description: Create Search Device Type while keeping sortType parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -226,6 +242,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_missing_sort_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_09
+      description: Create Search Device Type while keeping sortType parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -259,6 +277,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_invalid_sort_field:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_10
+      description: Create Search Device Type while keeping sortField parameter as invalid
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -292,6 +312,8 @@ createSearchDeviceType:
 }'
    Partner_SearchDeviceType_with_missing_sort_field:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
+      uniqueIdentifier: TC_PMS_createSearchDeviceType_11
+      description: Create Search Device Type while keeping sortField parameter as empty
       role: partner
       restMethod: post
       inputTemplate: partner/SearchAPIs/SearchDeviceType/createSearchDeviceType

@@ -22,12 +22,12 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
-import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
@@ -41,7 +41,7 @@ public class SimplePost extends AdminTestUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSRevampConfigManger.IsDebugEnabled())
+		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -79,6 +79,8 @@ public class SimplePost extends AdminTestUtil implements ITest {
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
+		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		testCaseName = isTestCaseValidForExecution(testCaseDTO);
 		auditLogCheck = testCaseDTO.isAuditLogCheck();
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		if (HealthChecker.signalTerminateExecution) {

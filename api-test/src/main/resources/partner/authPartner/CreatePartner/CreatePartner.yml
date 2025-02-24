@@ -1,6 +1,8 @@
 createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      description: Create Partner Self Registrartion with Valid data
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -22,6 +24,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      description: Create Partner Self Registrartion with Deactivated Partner ID
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -43,6 +47,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      description: Create Partner Self Registrartion with Deactivated Partner ID	  
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -64,6 +70,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_AlreadyExisting_Policy_Name:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
+      description: Create Partner Self Registrartion with Already Existing Policy Name	  
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -88,6 +96,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_SpaceVAl_PartnerId_Neg:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
+      description: Create Partner Self Registrartion with invalid PartnerID
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -112,6 +122,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_InActive_policyGroup:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
+      description: Create Partner Self Registrartion with Policy Group
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -136,6 +148,8 @@ createPartnerSelfRegistration:
     
    Partner_PartnerSelfRegistration_With_Existing_Email_Neg:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_07
+      description: Create Partner Self Registrartion with Existing Email
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -159,6 +173,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_AlreadyExists_invalid:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_08
+      description: Create Partner Self Registrartion with Already Existing Partner
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -182,6 +198,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_09
+      description: Create Partner Self Registrartion and update Policy Group for Partner with valid data
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -202,6 +220,8 @@ createPartnerSelfRegistration:
     }'
    Partner_PartnerSelfRegistration_Missing_InputParameter_PartnerId:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_10
+      description: Create Partner Self Registrartion while keeping the PartnerID parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -227,6 +247,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_address:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_11
+      description: Create Partner Self Registrartion while keeping the address parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -252,6 +274,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_12
+      description: Create Partner Self Registrartion while keeping the Contact Number parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -276,6 +300,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_emailId:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_13
+      description: Create Partner Self Registrartion while keeping the emailID parameter as missing	  
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner
@@ -300,6 +326,8 @@ createPartnerSelfRegistration:
 
    Partner_PartnerSelfRegistration_Missing_InputParameter_partnerType:
       endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_14
+      description: Create Partner Self Registrartion while keeping the PartnerType parameter as missing
       role: partner
       restMethod: post
       inputTemplate: partner/authPartner/CreatePartner/createPartner

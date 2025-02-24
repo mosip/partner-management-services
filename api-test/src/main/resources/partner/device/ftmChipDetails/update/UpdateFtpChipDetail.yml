@@ -1,6 +1,8 @@
 UpdateFtpChipDetail:
    Partner_UpdateFtpChipDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_01
+      description: Update FTP Chip detail for Partner with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -17,6 +19,8 @@ UpdateFtpChipDetail:
 
    Partner_UpdateFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
       endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_02
+      description: Update FTP Chip detail for Partner while keeping ftpChipDetailId parameter as missing
       role: partner
       restMethod: put
       inputTemplate: partner/device/ftmChipDetails/update/updateFtpChipDetail

@@ -1,6 +1,8 @@
 createUpdateSecureBiometricInterface:
    Partner_UpdateSecureBiometricInterface_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_01
+      description: Create UpdateSecureBiometricInterface with valid details
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -21,6 +23,8 @@ createUpdateSecureBiometricInterface:
     }'
    Partner_UpdateSecureBiometricInterface_AfterReject_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
+      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
       role: partner
       restMethod: put
       inputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterface
@@ -41,6 +45,8 @@ createUpdateSecureBiometricInterface:
     }'
    Partner_UpdateSecureBiometricInterface_Missing_InputParameter_Id:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_03
+      description: Create UpdateSecureBiometricInterface while keeping parameter ID as empty
       role: partner
       restMethod: put
       inputTemplate: partner/device/SecureBiometricInterface/update/updateSecureBiometricInterface
