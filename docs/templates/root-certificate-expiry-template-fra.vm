@@ -13,7 +13,7 @@
 			<div style=" padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Chère &lt;Utilisatrice&gt;,</strong></p>
-					<p>Nous vous informons que le certificat partenaire avec l'ID de certificat ${certificateId} doit expirer le ${expiryDateTime}. Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
+					<p>Ceci est pour vous informer que le CA racine Le certificat avec l'ID de certificat ${certificateId} doit expirer le ${expiryDateTime}. Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
@@ -22,14 +22,14 @@
 						<p style="padding: 5px 0px; font-weight: 600">Domaine partenaire<br><span style="font-weight: 400">${partnerDomain}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600">Délivré à<br><span style="font-weight: 400">${issuedTo}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600">Délivré par<br><span style="font-weight: 400">${issuedBy}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Action requise<br><span style="font-weight: 400">Téléchargez le certificat à renouveler dans « Certificat de partenaire ».</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Action requise<br><span style="font-weight: 400">Téléchargez le certificat à renouveler dans « Certificate Trust Store ».</span></P>
 					</div>
 					<p>Le non-renouvellement du certificat avant son expiration peut entraîner des perturbations.</p>
 					<p>Pour procéder au renouvellement, veuillez suivre ces étapes :</p>
 					<ol>
 						<li>Connectez-vous à votre compte sur le portail PMS.</li>
-						<li>Accédez à la section « Certificat de partenaire ».</li>
-						<li>Cliquez sur « Re-télécharger » pour télécharger le certificat requis pour le renouvellement et terminer le processus.</li>
+						<li>Accédez à « Certificate Trust Store » dans le tableau de bord d’administration des partenaires et sélectionnez l’option « Racine CA » onglet certificat.</li>
+						<li>Cliquez sur « Télécharger le certificat de confiance » pour télécharger le certificat à renouveler et terminer le processus.</li>
 					</ol>
 					<p>Nous vous remercions de votre prompte attention à cette question.</p>
 					<p>Cordialement,<br>MOSIP</p>
