@@ -13,14 +13,7 @@
 			<div style=" padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Dear &lt;User&gt;,</strong></p>
-					<p>This is to inform you that the 
-								#if($certificateType == 'root')
-                                    Root CA
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    Intermediate CA
-                                #end
-					certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime}. To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.</p>
+					<p>This is to inform you that the intermediate CA certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime}. To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Certificate Details</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
@@ -35,13 +28,7 @@
 					<p>To proceed with the renewal, please follow these steps:</p>
 					<ol>
 						<li>Log in to your account on the PMS Portal.</li>
-						<li>Navigate to ‘Certificate Trust Store’ in Partner Admin Dashboard and select the 
-								#if($certificateType == 'root')
-                                    'Root CA'
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    'Intermediate CA'
-                                #end certificate tab.</li>
+						<li>Navigate to ‘Certificate Trust Store’ in Partner Admin Dashboard and select the 'Intermediate CA' certificate tab.</li>
 						<li>Click on ‘Upload Trust Certificate’ to upload the certificate for renewal and complete the process.</li>
 					</ol>
 					<p>Thank you for your prompt attention to this matter.</p>

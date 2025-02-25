@@ -14,14 +14,7 @@
 			<div style=" padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>عزيزي &lt;مستخدم&gt;,</strong></p>
-					<p>هذا لإعلامك بأن
-								#if($certificateType == 'root')
-                                    CA جذر
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    CA متوسط
-                                #end
-					من المقرر أن تنتهي صلاحية الشهادة التي تحمل معرف الشهادة ${certificateId} في ${expiryDateTime}. ولضمان استمرارية الأداء والخدمات دون انقطاع، نطلب منك تحميل الشهادة للتجديد قبل تاريخ انتهاء الصلاحية.</p>
+					<p>هذا لإعلامك بأن شهادة CA الوسيطة ذات معرف الشهادة ${certificateId} من المقرر أن تنتهي صلاحيتها في ${expiryDateTime}. ولضمان استمرارية الأداء والخدمات دون انقطاع، نطلب منك تحميل الشهادة للتجديد قبل تاريخ انتهاء الصلاحية.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">تفاصيل الشهادة</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
@@ -36,13 +29,7 @@
 					<p>للمتابعة بعملية التجديد، يرجى اتباع الخطوات التالية:</p>
 					<ol>
 						<li>قم بتسجيل الدخول إلى حسابك على بوابة PMS.</li>
-						<li>انتقل إلى "مخزن شهادات الثقة" في لوحة معلومات إدارة الشريك وحدد 
-								#if($certificateType == 'root')
-                                    'الجذر CA'
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    'CA المتوسطة'
-                                #end علامة التبويب الشهادة.</li>
+						<li>انتقل إلى "مخزن شهادات الثقة" في لوحة معلومات إدارة الشريك وحدد علامة التبويب شهادة "CA المتوسطة".</li>
 						<li>انقر فوق "تحميل شهادة الثقة" لتحميل الشهادة للتجديد واستكمال العملية.</li>
 					</ol>
 					<p>شكرا لكم على اهتمامكم السريع بهذه المسألة.</p>

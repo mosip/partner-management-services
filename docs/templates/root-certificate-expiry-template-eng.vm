@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,45 +12,32 @@
 			</div>
 			<div style=" padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
-					<p><strong>Chère &lt;Utilisatrice&gt;,</strong></p>
-					<p>Ceci est pour vous informer que le 
-								#if($certificateType == 'root')
-                                    CA racine
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    CA intermédiaire
-                                #end
-					Le certificat avec l'ID de certificat ${certificateId} doit expirer le ${expiryDateTime}. Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
+					<p><strong>Dear &lt;User&gt;,</strong></p>
+					<p>This is to inform you that the Root CA certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime}. To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
-						<p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
+						<p style="font-size: 16px; font-weight: bold;">Certificate Details</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
-						<p style="padding: 5px 0px; font-weight: 600">ID du certificat<br><span style="font-weight: 400">${certificateId}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Date d'expiration<br><span style="font-weight: 400">${expiryDateTime}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Domaine partenaire<br><span style="font-weight: 400">${partnerDomain}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Délivré à<br><span style="font-weight: 400">${issuedTo}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Délivré par<br><span style="font-weight: 400">${issuedBy}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600">Action requise<br><span style="font-weight: 400">Téléchargez le certificat à renouveler dans « Certificate Trust Store ».</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Certificate ID<br><span style="font-weight: 400">${certificateId}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Expiration Date<br><span style="font-weight: 400">${expiryDateTime}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Partner Domain<br><span style="font-weight: 400">${partnerDomain}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Issued To<br><span style="font-weight: 400">${issuedTo}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Issued By<br><span style="font-weight: 400">${issuedBy}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600">Action Required<br><span style="font-weight: 400"> Upload the certificate for renewal in ‘Certificate Trust Store’.</span></P>
 					</div>
-					<p>Le non-renouvellement du certificat avant son expiration peut entraîner des perturbations dans la chaîne de confiance du certificat.</p>
-					<p>Pour procéder au renouvellement, veuillez suivre ces étapes :</p>
+					<p>Failure to renew the certificate before its expiration may result in disruptions.</p>
+					<p>To proceed with the renewal, please follow these steps:</p>
 					<ol>
-						<li>Connectez-vous à votre compte sur le portail PMS.</li>
-						<li>Accédez à « Certificate Trust Store » dans le tableau de bord d’administration des partenaires et sélectionnez l’option
-								#if($certificateType == 'root')
-                                    « Racine CA »
-                                #end
-                                #if($certificateType == 'intermediate')
-                                    « CA intermédiaire »
-                                #end onglet certificat.</li>
-						<li>Cliquez sur « Télécharger le certificat de confiance » pour télécharger le certificat à renouveler et terminer le processus.</li>
+						<li>Log in to your account on the PMS Portal.</li>
+						<li>Navigate to ‘Certificate Trust Store’ in Partner Admin Dashboard and select the 'Root CA' certificate tab.</li>
+						<li>Click on ‘Upload Trust Certificate’ to upload the certificate for renewal and complete the process.</li>
 					</ol>
-					<p>Nous vous remercions de votre prompte attention à cette question.</p>
-					<p>Cordialement,<br>MOSIP</p>
+					<p>Thank you for your prompt attention to this matter.</p>
+					<p>Best regards,<br>MOSIP</p>
 					<hr style="border-top: 1px solid #edeef0;"/>
-					<p>** Il s'agit d'un e-mail généré automatiquement. Veuillez ne pas y répondre. **</p>
-					<p>Site web: <a target="_blank" href="https://www.mosip.io" class="text-blue-600">www.mosip.io</a></p>
-					<p>Téléphone:: +91 80 4140 7777</p>
-					<p>© MOSIP, IIIT-B, 26/C, Cité électronique, Hosur Road, Bangalore - 560100.</p>
+					<p>** This is an auto-generated email. Please do not reply to this email. **</p>
+					<p>Website: <a target="_blank" href="https://www.mosip.io" class="text-blue-600">www.mosip.io</a></p>
+					<p>Phone: +91 80 4140 7777</p>
+					<p>© MOSIP, IIIT-B, 26/C, Electronic City, Hosur Road, Bangalore - 560100.</p>
 					<hr style="border-top: 1px solid #edeef0;"/>
 				</div>
 				<div style="font-size: 14px; margin-top: 1.5rem;">
@@ -62,8 +49,8 @@
 							<img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png" alt="youtube" style="width: 24px; height: 24px;"/>
 						</a>
 					</div>
-					<p>IMPORTANT : Les informations transmises par ce courriel sont destinées uniquement à la personne ou à l'entité à laquelle elles sont adressées. Si vous n'êtes pas le destinataire prévu de ce message, sachez que toute utilisation, révision, retransmission, distribution, reproduction ou toute action entreprise sur la base de ce message est strictement interdite. Veuillez nous en informer à 
-						<a style="color: #475467" href="mailto:postbox@mosip.io">postbox@mosip.io</a> si vous avez reçu ceci par erreur, veuillez supprimer le document de tous les appareils concernés.
+					<p>IMPORTANT: The information transmitted by this email is intended only for the person or entity to whom it is addressed. If you are not the intended recipient of this message, be aware that any use, review, retransmission, distribution, reproduction, or any action taken in reliance upon this message is strictly prohibited. Please notify us at 
+						<a style="color: #475467" href="mailto:postbox@mosip.io">postbox@mosip.io</a> if you have received this in error, and kindly delete the document from all relevant devices.
 					</p>
 				</div>
 			</div>
