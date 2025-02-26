@@ -91,6 +91,7 @@
         <module>pms-common</module>
         <module>policy-management-service</module>
         <module>partner-management-service</module>
+        <module>partner-batch-job</module>
     </modules>
 
     <dependencies>
