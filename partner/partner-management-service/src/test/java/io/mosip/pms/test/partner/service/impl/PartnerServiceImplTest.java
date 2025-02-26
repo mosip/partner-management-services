@@ -252,11 +252,8 @@ public class PartnerServiceImplTest {
 		PartnerCertDownloadRequestDto partnerCertDownloadRequestDto = new PartnerCertDownloadRequestDto();
 		partnerCertDownloadRequestDto.setPartnerId("id");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
-		try {
-			pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
-		}catch (PartnerServiceException e) {
-			assertFalse(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
-		}
+
+		pserviceImpl.getPartnerCertificate(partnerCertDownloadRequestDto);
 		Optional<Partner> getPartner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(getPartner);
