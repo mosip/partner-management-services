@@ -133,9 +133,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	public static final String APPROVED = "approved";
 
+	public static final String REJECTED = "rejected";
+
 	public static final String DEACTIVATED = "deactivated";
 
-	public static final String PENDING_APPROVAL = "pending_approval";
+	public static final String PENDING_CERT_UPLOAD = "pending_cert_upload";
 
 	public static final String BLANK_STRING = "";
 	@Value("${pms.certs.datashare.subscriberId}")
@@ -637,10 +639,15 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
 			}
 
-			if (!(ftm.getApprovalStatus().equals(PENDING_APPROVAL) || ftm.getApprovalStatus().equals(APPROVED))) {
+			if (ftm.getApprovalStatus().equals(REJECTED)) {
 				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
-				throw new PartnerServiceException(ErrorCode.DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS.getErrorCode(),
-						ErrorCode.DOWNLOAD_CERTIFICATE_FTM_INVALID_STATUS.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.DOWNLOAD_CERTIFICATE_FTM_REJECTED_ERROR.getErrorCode(),
+						ErrorCode.DOWNLOAD_CERTIFICATE_FTM_REJECTED_ERROR.getErrorMessage());
+			}
+			if (ftm.getApprovalStatus().equals(PENDING_CERT_UPLOAD) || Objects.isNull(ftm.getCertificateAlias())) {
+				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
+				throw new PartnerServiceException(ErrorCode.DOWNLOAD_CERTIFICATE_FTM_CERT_NOT_UPLOAD_ERROR.getErrorCode(),
+						ErrorCode.DOWNLOAD_CERTIFICATE_FTM_CERT_NOT_UPLOAD_ERROR.getErrorMessage());
 			}
 			if (ftm.getApprovalStatus().equals(APPROVED) && !ftm.isActive()) {
 				LOGGER.error("Unable to download original FTM certificate with id {}", ftm.getFtpChipDetailId());
