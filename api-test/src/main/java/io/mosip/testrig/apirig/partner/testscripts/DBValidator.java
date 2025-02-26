@@ -24,6 +24,7 @@ import org.testng.internal.BaseTestMethod;
 import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
+import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
@@ -98,7 +99,7 @@ public class DBValidator extends PMSUtil implements ITest {
 		
 		
 		logger.info(query);
-		Map<String, Object> response = AuditDBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
+		Map<String, Object> response = DBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
 		
 		
 		Map<String, List<OutputValidationDto>> objMap = new HashMap<>();
