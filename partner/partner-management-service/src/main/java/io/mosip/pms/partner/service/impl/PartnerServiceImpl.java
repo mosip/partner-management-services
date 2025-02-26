@@ -830,7 +830,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonProcessingException {
-		validateUser(certDownloadRequestDto);
 		// Fetch partner from DB
 		Optional<Partner> partnerFromDb = getPartner(certDownloadRequestDto);
 		Partner partner = partnerFromDb.get();
