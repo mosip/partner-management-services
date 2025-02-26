@@ -13,11 +13,6 @@
 	<version>1.3.0-beta.1-SNAPSHOT</version>
 	<name>partner-batch-job</name>
 
-	<properties>
-		<spring.batch.version>4.3.8</spring.batch.version>
-		<lombok.version>1.18.30</lombok.version>
-	</properties>
-
 	<dependencies>
 		<!-- Spring Boot Starters -->
 		<dependency>
