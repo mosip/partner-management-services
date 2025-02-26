@@ -82,6 +82,8 @@
             **io/mosip/pms/common/**,**io/mosip/pms/policy/validator/**,**/constant/**,**/config/**,**/dto/**,**/policy/errorMessages/**,**/policy/util/**,
             **io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
         </sonar.coverage.exclusions>
+        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+        <maven.jacoco.version>0.8.11</maven.jacoco.version>
     </properties>
 
     <modules>
@@ -179,20 +181,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
                     <skip>false</skip>
                     <argLine>
                         ${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --illegal-access=permit
                     </argLine>
-                    <classpathDependencyExcludes>
-                        <classpathDependencyExclude>io.mosip.kernel:kernel-auth-adapter</classpathDependencyExclude>
-                    </classpathDependencyExcludes>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
