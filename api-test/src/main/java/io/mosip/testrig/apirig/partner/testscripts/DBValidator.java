@@ -36,7 +36,7 @@ import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.restassured.response.Response;
 
-public class DBValidator extends AdminTestUtil implements ITest {
+public class DBValidator extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(DBValidator.class);
 	protected String testCaseName = "";
 	public static List<String> templateFields = new ArrayList<>();
