@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableBatchProcessing
 @EnableScheduling
-@ComponentScan(basePackages = { "io.mosip.pms.partner_batch_job", "${mosip.auth.adapter.impl.basepackage}"})
+@ComponentScan(basePackages = { "io.mosip.pms.partner.management.batchjob", "${mosip.auth.adapter.impl.basepackage}"})
 public class PartnerManagementBatchJobApplication {
 
 	public static void main(String[] args) {
