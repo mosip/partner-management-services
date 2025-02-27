@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batchjob;
+package io.mosip.pms.partner.management.batch.job;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;

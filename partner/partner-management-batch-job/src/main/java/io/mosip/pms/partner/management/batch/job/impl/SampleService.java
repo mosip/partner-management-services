@@ -1,7 +1,7 @@
-package io.mosip.pms.partner.management.batchjob.impl;
+package io.mosip.pms.partner.management.batch.job.impl;
 
-import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batchjob.util.KeyManagerHelper;
+import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
+import io.mosip.pms.partner.management.batch.job.util.KeyManagerHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,8 @@
-package io.mosip.pms.partner.management.batchjob.util;
+package io.mosip.pms.partner.management.batch.job.util;
 
-import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batchjob.constants.ErrorCodes;
-import io.mosip.pms.partner.management.batchjob.exceptions.PartnerBatchJobServiceException;
+import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
+import io.mosip.pms.partner.management.batch.job.constants.ErrorCodes;
+import io.mosip.pms.partner.management.batch.job.exceptions.PartnerBatchJobServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;

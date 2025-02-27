@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batchjob;
+package io.mosip.pms.partner.management.batch.job;
 
 import org.junit.Test;
 import org.junit.Ignore;
@@ -8,10 +8,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PartnerBatchJobApplicationTests {
+public class PartnerManagementBatchJobApplicationTests {
 
     @Test
-    @Ignore("No tests implemented yet")  // JUnit 4 equivalent of @Disabled
+    @Ignore("No tests implemented yet")
     public void contextLoads() {
         // This test will be ignored
     }

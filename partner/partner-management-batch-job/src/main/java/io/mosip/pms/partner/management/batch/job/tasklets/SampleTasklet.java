@@ -1,8 +1,8 @@
-package io.mosip.pms.partner.management.batchjob.tasklets;
+package io.mosip.pms.partner.management.batch.job.tasklets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batchjob.impl.SampleService;
+import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
+import io.mosip.pms.partner.management.batch.job.impl.SampleService;
 import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;

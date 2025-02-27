@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batchjob.constants;
+package io.mosip.pms.partner.management.batch.job.constants;
 
 import lombok.Getter;
 

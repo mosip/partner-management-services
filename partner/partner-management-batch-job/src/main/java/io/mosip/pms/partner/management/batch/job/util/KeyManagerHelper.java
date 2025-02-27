@@ -1,14 +1,14 @@
-package io.mosip.pms.partner.management.batchjob.util;
+package io.mosip.pms.partner.management.batch.job.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batchjob.constants.ErrorCodes;
-import io.mosip.pms.partner.management.batchjob.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.management.batchjob.exceptions.PartnerBatchJobServiceException;
+import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
+import io.mosip.pms.partner.management.batch.job.constants.ErrorCodes;
+import io.mosip.pms.partner.management.batch.job.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.partner.management.batch.job.exceptions.PartnerBatchJobServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 

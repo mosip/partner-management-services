@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batchjob.config;
+package io.mosip.pms.partner.management.batch.job.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
