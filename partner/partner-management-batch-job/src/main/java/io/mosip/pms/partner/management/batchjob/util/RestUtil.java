@@ -2,7 +2,7 @@ package io.mosip.pms.partner.management.batchjob.util;
 
 import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.partner.management.batchjob.constants.ErrorCodes;
-import io.mosip.pms.partner.management.batchjob.exceptions.PartnerServiceException;
+import io.mosip.pms.partner.management.batchjob.exceptions.PartnerBatchJobServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -40,10 +40,10 @@ public class RestUtil {
             return response.getBody();
         } catch (HttpStatusCodeException e) {
             LOGGER.error("HTTP error: Status Code {} - Response: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new PartnerServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
+            throw new PartnerBatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error("Unexpected error occurred while making HTTP request: ", e);
-            throw new PartnerServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
+            throw new PartnerBatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
         }
     }
 }

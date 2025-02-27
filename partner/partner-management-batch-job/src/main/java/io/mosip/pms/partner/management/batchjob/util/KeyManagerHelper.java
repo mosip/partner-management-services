@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.partner.management.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.partner.management.batchjob.constants.ErrorCodes;
 import io.mosip.pms.partner.management.batchjob.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.management.batchjob.exceptions.PartnerServiceException;
+import io.mosip.pms.partner.management.batchjob.exceptions.PartnerBatchJobServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,17 +45,17 @@ public class KeyManagerHelper {
             Map<String, Object> response = restUtil.sendRequest(urlWithPath, HttpMethod.GET, null, Map.class);
 
             if (response == null || response.isEmpty()) {
-                throw new PartnerServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(), ErrorCodes.API_NULL_RESPONSE.getMessage());
+                throw new PartnerBatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(), ErrorCodes.API_NULL_RESPONSE.getMessage());
             }
 
             return objectMapper.convertValue(response.get("response"), OriginalCertDownloadResponseDto.class);
 
-        } catch (PartnerServiceException e) {
+        } catch (PartnerBatchJobServiceException e) {
             LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
             LOGGER.error("Unexpected error occurred while fetching partner certificate", e);
-            throw new PartnerServiceException(ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(), ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage());
+            throw new PartnerBatchJobServiceException(ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(), ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage());
         }
     }
 
