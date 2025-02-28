@@ -1,9 +1,14 @@
 package io.mosip.pms.test.partner.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import io.mosip.pms.user.controller.UserController;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.UserDetailsDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -11,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,9 +42,6 @@ public class UserControllerTest {
     @MockBean
     UserManagementService userManagementService;    
 
-	@MockBean
-	UserController userController;
-    
 	@Autowired
 	private ObjectMapper objectMapper;	
     
@@ -48,7 +51,8 @@ public class UserControllerTest {
     	MosipUserDto response = new MosipUserDto();
 		Mockito.when(userManagementService.registerUser(Mockito.any())).thenReturn(response);
 		RequestWrapper<UserRegistrationRequestDto> request = createRequest();
-		userController.registerUser(request);
+		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
 	private RequestWrapper<UserRegistrationRequestDto> createRequest() {
@@ -57,9 +61,41 @@ public class UserControllerTest {
 		request.setMetadata("{}");
 		UserRegistrationRequestDto userRequest = new UserRegistrationRequestDto();
 		userRequest.setFirstName("Test");
+		userRequest.setUserName("ABC");
+		userRequest.setContactNo("121313131");
+		userRequest.setEmailID("test@email.com");
 		request.setRequest(userRequest);
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setVersion("1.0");
 		return request;
+	}
+
+	@Test
+	@WithMockUser(roles = {"AUTH_PARTNER"})
+	public void saveUserConsent() throws Exception {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
+		UserDetailsDto userDetailsDto = new UserDetailsDto();
+		responseWrapper.setResponse(userDetailsDto);
+		Mockito.when(userManagementService.saveUserConsent()).thenReturn(responseWrapper);
+		mockMvc.perform(post("/users/user-consent").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"AUTH_PARTNER"})
+	public void isUserConsentGiven() throws Exception {
+		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
+		UserDetailsDto userDetailsDto = new UserDetailsDto();
+		responseWrapper.setResponse(userDetailsDto);
+		Mockito.when(userManagementService.isUserConsentGiven()).thenReturn(responseWrapper);
+		mockMvc.perform(get("/users/user-consent").contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"AUTH_PARTNER"})
+	public void getConfigValuesTest() throws Exception {
+		mockMvc.perform(get("/system-config").contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
 	}
 }

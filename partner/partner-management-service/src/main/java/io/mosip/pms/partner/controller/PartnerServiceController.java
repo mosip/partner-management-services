@@ -8,9 +8,13 @@ import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.dto.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +36,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
@@ -76,18 +79,14 @@ public class PartnerServiceController {
 	PartnerManagerService partnerManagerService;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
-	String version = "1.0";
 	
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("${mosip.pms.api.id.original.partner.certificate.get}")
-	private String getOriginalPartnerCertificateId;
-
 	public static final String VERSION = "1.0";
-	
+
 	/**
-	 * This API would be used for self registration by partner to create Auth/E-KYC
+	 * This endpoint would be used for self registration by partner to create Auth/E-KYC
 	 * Partners. Partner Management module would be integrating with Kernel IAM
 	 * module for generation of user id and password for partners.
 	 * 
@@ -208,7 +207,7 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	/**
-	 * This API would be used to update Auth/E-KYC Partner's details.
+	 * This endpoint would be used to update Auth/E-KYC Partner's details.
 	 * 
 	 * @param request
 	 *            this class contains partner updated details
@@ -218,7 +217,7 @@ public class PartnerServiceController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartners())")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.PUT)
-	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
+	@Operation(summary = "Service to update details of partner", description = "Service to update details of partner")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerDetails(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateRequest> request, @PathVariable String partnerId) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
@@ -234,7 +233,7 @@ public class PartnerServiceController {
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutpartnersnew())")
 	@RequestMapping(value = "/v2/{partnerId}", method = RequestMethod.PUT)
-	@Operation(summary = "Service to update deatils of partner", description = "Service to update deatils of partner")
+	@Operation(summary = "Service to update details of partner", description = "Service to update details of partner")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> updatePartnerInfo(
 			@RequestBody @Valid RequestWrapper<PartnerUpdateDto> request, @PathVariable String partnerId) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
@@ -248,7 +247,7 @@ public class PartnerServiceController {
 	}
 	
 	/**
-	 * This API would be used to retrieve Auth/E-KYC Partner details
+	 * This endpoint would be used to retrieve Auth/E-KYC Partner details
 	 * 
 	 * @param partnerId
 	 *            this is unique id created after self registered by partner
@@ -256,17 +255,17 @@ public class PartnerServiceController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerspartnerid())")
 	@RequestMapping(value = "/{partnerId}", method = RequestMethod.GET)
-	@Operation(summary = "Service to get deatils of partner", description = "Service to get deatils of partner")
+	@Operation(summary = "Service to get details of partner", description = "Service to get details of partner")
 	public ResponseEntity<ResponseWrapper<RetrievePartnerDetailsResponse>> retrievePartnerDetails(
 			@PathVariable String partnerId) {
 		ResponseWrapper<RetrievePartnerDetailsResponse> response = new ResponseWrapper<>();
 		RetrievePartnerDetailsResponse retrievePartnerDetailsResponse = null;
 		retrievePartnerDetailsResponse = partnerService.getPartnerDetails(partnerId);
 		response.setId(msg);
-		response.setVersion(version);
+		response.setVersion(VERSION);
 		response.setResponse(retrievePartnerDetailsResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}			
+	}
 
 	/**
 	 * This API would be used to retrieve all API key requests submitted by partner
@@ -279,14 +278,14 @@ public class PartnerServiceController {
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequest())")
 	@RequestMapping(value = "/{partnerId}/apikey/request", method = RequestMethod.GET)
-	@Operation(summary = "Service to get api key requests of partner", description = "Service to get api key requests of partner")
+	@Operation(summary = "Service to get API key requests of partner")
 	public ResponseEntity<ResponseWrapper<List<APIkeyRequests>>> getAPIKeyRequestsOfPartner(
 			@PathVariable String partnerId) {
 		ResponseWrapper<List<APIkeyRequests>> response = new ResponseWrapper<>();
 		List<APIkeyRequests> apikeyRequestsList = null;		
 		apikeyRequestsList = partnerService.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 		response.setId(msg);
-		response.setVersion(version);
+		response.setVersion(VERSION);
 		response.setResponse(apikeyRequestsList);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -357,26 +356,57 @@ public class PartnerServiceController {
     }
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscertificate())")
-	@RequestMapping(value = "/{partnerId}/originalPartnerCertificate", method = RequestMethod.GET)
-	@Operation(summary = "Service to get original partner certificate", description = "Service to get original partner certificate")
-	public ResponseWrapper<OriginalCertDownloadResponseDto> getOriginalPartnerCertificate(
+	@GetMapping(value = "/{partnerId}/certificate-data")
+	@Operation(summary = "This endpoint retrieves both the CA signed certificate uploaded by the partner and the MOSIP-signed certificate generated by PMS.",
+			description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
-		ResponseWrapper<OriginalCertDownloadResponseDto> response = new ResponseWrapper<>();
-		response.setId(getOriginalPartnerCertificateId);
-		response.setVersion(VERSION);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
-		response.setId("mosip.pms.api.id.getOriginalPartnerCertificate");
-		response.setVersion("1.0");
-		response.setResponse(partnerService.getOriginalPartnerCertificate(requestDto));
-		response.setResponsetime(LocalDateTime.now());
-		return response;
+		return partnerService.getPartnerCertificateData(requestDto);
 	}
-	
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
+	@GetMapping(value = "/partner-certificates-details")
+	@Operation(summary = "This endpoint retrieves a list of all Partner Certicates uploaded by the logged in user",
+	description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
+			@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
+		return  partnerService.getPartnerCertificatesDetails();
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
+	@GetMapping(value = "/v3")
+	@Operation(summary = "This endpoint retrieves a list of Partners associated with the logged in user, based on the query parameters",
+			description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(
+			@RequestParam(name = "status") String status,
+			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
+			@RequestParam(name = "partnerType", required = false) String partnerType) {
+
+		return partnerService.getPartnersV3(status, policyGroupAvailable, partnerType);
+	}
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new GET /partners/v3 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerssearch())")
-	@Operation(summary = "Service to search partner details", description = "Service to search partner details")
+	@Operation(summary = "Service to search partner details - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /admin-partners endpoint")
 	public ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> searchPartner(
 			@RequestBody @Valid RequestWrapper<PartnerSearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -396,10 +426,16 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.searchPartnerType(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new GET /partners/v3 endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
-	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersfiltervalues())")
+	@PostMapping("/filtervalues")	
 	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
@@ -408,11 +444,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.filterValues(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/apikey/request/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestfiltervalues())")
-	@Operation(summary = "Service to filter api key requests", description = "Service to filter api key requests")
+	@Operation(summary = "Service to filter API key requests - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /partner-policy-requests endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> apikeyRequetsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -420,11 +464,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.apiKeyRequestFilter(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new GET /partner-policy-requests endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/apikey/request/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeyrequestsearch())")
-	@Operation(summary = "Service to search api key requests", description = "Service to search api key requests")
+	@Operation(summary = "Service to search API key requests - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /partner-policy-requests endpoint.")
 	public ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> searchApikeyRequest(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PolicyRequestSearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -432,11 +484,19 @@ public class PartnerServiceController {
 		responseWrapper.setResponse(partnerService.searchPartnerApiKeyRequests(request.getRequest()));
 		return responseWrapper;
 	}
-	
+
+	/*
+	 * This endpoint has been deprecated since the release-1.2.2.0
+	 * It has been replaced by the new  GET /partner-api-keys endpoint.
+	 * The functionality provided by this API is now available in the new endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/apikey/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersapikeysearch())")
-	@Operation(summary = "Service to search api key", description = "Service to search api key")
+	@Operation(summary = "Service to search API key - deprecated since release-1.2.2.0.",
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the  GET /partner-api-keys endpoint.")
 	public ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> searchApikey(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<PartnerPolicySearchResponseDto>> responseWrapper = new ResponseWrapper<>();
@@ -481,7 +541,7 @@ public class PartnerServiceController {
 	}
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersgenerateapikey())")
-	@Operation(summary = "To generate apiKeys for approved policies", description = "To generate apiKeys for approved policies")
+	@Operation(summary = "To generate API Key for approved policies", description = "To generate API Key for approved policies")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
