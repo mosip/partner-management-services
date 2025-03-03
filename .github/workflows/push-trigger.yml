@@ -62,6 +62,10 @@ jobs:
             SERVICE_NAME: 'policy-management-service'
             BUILD_ARTIFACT: 'partner'
             SQUASH_LAYERS: '6'
+          - SERVICE_LOCATION: 'partner/partner-management-batch-job'
+            SERVICE_NAME: 'partner-management-batch-job'
+            BUILD_ARTIFACT: 'partner'
+            SQUASH_LAYERS: '6'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
     uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
