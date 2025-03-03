@@ -26,7 +26,7 @@ GetPartnerCert:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_007"
+       "errorCode": "PMS_PRT_005"
        }
        ]
 }'
