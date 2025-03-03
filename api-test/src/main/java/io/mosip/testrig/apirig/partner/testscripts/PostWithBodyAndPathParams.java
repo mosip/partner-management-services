@@ -33,7 +33,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
+public class PostWithBodyAndPathParams extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(PostWithBodyAndPathParams.class);
 	protected String testCaseName = "";
 	String pathParams = null;
