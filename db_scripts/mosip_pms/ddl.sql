@@ -25,3 +25,9 @@
 \ir ddl/pms-oidc_client.sql
 \ir ddl/pms-user_details.sql
 \ir ddl/pms-fk.sql
+\ir ddl/pms-partner_batch_job_instance.sql
+\ir ddl/pms-partner_batch_job_execution.sql
+\ir ddl/pms-partner_batch_job_execution_params.sql
+\ir ddl/pms-partner_batch_step_execution.sql
+\ir ddl/pms-partner_batch_step_execution_context.sql
+\ir ddl/pms-partner_batch_job_execution_context.sql

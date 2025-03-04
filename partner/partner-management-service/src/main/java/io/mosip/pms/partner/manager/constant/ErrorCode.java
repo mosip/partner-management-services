@@ -41,7 +41,13 @@ public enum ErrorCode {
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
 	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
-	JSON_NOT_VALID("PMS_PRT_096","Json is not valid");
+	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
+	FETCH_PARTNER_DETAILS_ERROR("PMS_PM_059","Error while fetching partner details."),
+	CERTIFICATE_NOT_AVAILABLE_IN_KM("PMS_PM_060","The certificate for the specified partner is not available in the store"),
+	FETCH_ALL_PARTNER_DETAILS_ERROR("PMS_PM_061", "Error while fetching all partners details"),
+	FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR("PMS_PM_062", "Error while fetching all partner policy mapping requests"),
+	PARTNER_ALREADY_DEACTIVATED("PMS_PM_063", "The selected partner has already been deactivated."),
+	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests");
 	
 
 	/**
