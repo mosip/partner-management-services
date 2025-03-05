@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batch.job;
+package io.mosip.pms.batchjob;
 
 import org.junit.Test;
 import org.junit.Ignore;

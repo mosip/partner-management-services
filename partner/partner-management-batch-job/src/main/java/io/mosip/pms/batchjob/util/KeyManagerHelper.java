@@ -1,10 +1,10 @@
-package io.mosip.pms.partner.management.batch.job.util;
+package io.mosip.pms.batchjob.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batch.job.constants.ErrorCodes;
-import io.mosip.pms.partner.management.batch.job.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.partner.management.batch.job.exceptions.PartnerBatchJobServiceException;
+import io.mosip.pms.batchjob.config.LoggerConfiguration;
+import io.mosip.pms.batchjob.constants.ErrorCodes;
+import io.mosip.pms.batchjob.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,17 +45,17 @@ public class KeyManagerHelper {
             Map<String, Object> response = restUtil.sendRequest(urlWithPath, HttpMethod.GET, null, Map.class);
 
             if (response == null || response.isEmpty()) {
-                throw new PartnerBatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(), ErrorCodes.API_NULL_RESPONSE.getMessage());
+                throw new BatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(), ErrorCodes.API_NULL_RESPONSE.getMessage());
             }
 
             return objectMapper.convertValue(response.get("response"), OriginalCertDownloadResponseDto.class);
 
-        } catch (PartnerBatchJobServiceException e) {
+        } catch (BatchJobServiceException e) {
             LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
             LOGGER.error("Unexpected error occurred while fetching partner certificate", e);
-            throw new PartnerBatchJobServiceException(ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(), ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage());
+            throw new BatchJobServiceException(ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(), ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage());
         }
     }
 
