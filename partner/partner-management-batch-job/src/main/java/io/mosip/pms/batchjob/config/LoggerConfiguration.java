@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.management.batch.job.config;
+package io.mosip.pms.batchjob.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

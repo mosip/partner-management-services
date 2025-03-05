@@ -1,8 +1,8 @@
-package io.mosip.pms.partner.management.batch.job.util;
+package io.mosip.pms.batchjob.util;
 
-import io.mosip.pms.partner.management.batch.job.config.LoggerConfiguration;
-import io.mosip.pms.partner.management.batch.job.constants.ErrorCodes;
-import io.mosip.pms.partner.management.batch.job.exceptions.PartnerBatchJobServiceException;
+import io.mosip.pms.batchjob.config.LoggerConfiguration;
+import io.mosip.pms.batchjob.constants.ErrorCodes;
+import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -40,10 +40,10 @@ public class RestUtil {
             return response.getBody();
         } catch (HttpStatusCodeException e) {
             LOGGER.error("HTTP error: Status Code {} - Response: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new PartnerBatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
+            throw new BatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error("Unexpected error occurred while making HTTP request: ", e);
-            throw new PartnerBatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
+            throw new BatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(), ErrorCodes.API_NOT_ACCESSIBLE.getMessage(), e);
         }
     }
 }

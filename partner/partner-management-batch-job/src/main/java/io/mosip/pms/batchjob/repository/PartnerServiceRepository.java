@@ -1,6 +1,6 @@
-package io.mosip.pms.partner.management.batch.job.repository;
+package io.mosip.pms.batchjob.repository;
 
-import io.mosip.pms.partner.management.batch.job.entity.PartnerEntity;
+import io.mosip.pms.batchjob.entity.PartnerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
