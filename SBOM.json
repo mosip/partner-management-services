@@ -1,0 +1,1485 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "com.github.mosip/partner-management-services",
+  "documentNamespace": "https://spdx.org/spdxdocs/protobom/fcdd5d73-2c65-4b47-915a-9ebc718e4bb6",
+  "comment": "Exact versions could not be resolved for some packages. For more information: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph#dependencies-included.",
+  "creationInfo": {
+    "creators": [
+      "Tool: protobom-v0.0.0-20250304221340-13e9c5d7536a+dirty",
+      "Tool: GitHub.com-Dependency-Graph"
+    ],
+    "created": "2025-03-05T06:58:18Z"
+  },
+  "packages": [
+    {
+      "name": "org.apache.maven.plugins:maven-javadoc-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-javadoc-plugin-7b26ed",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-javadoc-plugin"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-shade-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-shade-plugin-3.2.4-d87ce5",
+      "versionInfo": "3.2.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-shade-plugin@3.2.4"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-jar-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-jar-plugin-3.0.2-41e328",
+      "versionInfo": "3.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-jar-plugin@3.0.2"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-javadoc-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-javadoc-plugin-3.2.0-613322",
+      "versionInfo": "3.2.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "copyrightText": "Copyright 2005, a http://www.mycompany.com MyCompany, Inc.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-javadoc-plugin@3.2.0"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-source-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-source-plugin-2.2.1-c8865b",
+      "versionInfo": "2.2.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "copyrightText": "Copyright 2002-2012 The Apache Software Foundation",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-source-plugin@2.2.1"
+        }
+      ]
+    },
+    {
+      "name": "pl.project13.maven:git-commit-id-plugin",
+      "SPDXID": "SPDXRef-maven-pl.project13.maven-git-commit-id-plugin-3.0.1-58cb0d",
+      "versionInfo": "3.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/pl.project13.maven/git-commit-id-plugin@3.0.1"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-antrun-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-antrun-plugin-3.0.0-447376",
+      "versionInfo": "3.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-antrun-plugin@3.0.0"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-gpg-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-gpg-plugin-1.5-91a7d4",
+      "versionInfo": "1.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-gpg-plugin@1.5"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-war-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-war-plugin-3.1.0-892651",
+      "versionInfo": "3.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-war-plugin@3.1.0"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.testrig.apitest.commons:apitest-commons",
+      "SPDXID": "SPDXRef-maven-io.mosip.testrig.apitest.commons-apitest-commons-1.3.1-fc0b53",
+      "versionInfo": "1.3.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.testrig.apitest.commons/apitest-commons@1.3.1"
+        }
+      ]
+    },
+    {
+      "name": "junit:junit",
+      "SPDXID": "SPDXRef-maven-junit-junit-4.12-6ce22e",
+      "versionInfo": "4.12",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "EPL-1.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/junit/junit@4.12"
+        }
+      ]
+    },
+    {
+      "name": "javax.xml.bind:jaxb-api",
+      "SPDXID": "SPDXRef-maven-javax.xml.bind-jaxb-api-2.3.1-d8263e",
+      "versionInfo": "2.3.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "CDDL-1.1 OR GPL-2.0-only WITH Classpath-exception-2.0",
+      "copyrightText": "Copyright (c) 1989, 1991 Free Software Foundation, Inc., Copyright (c) 2003-2017 Oracle and/or its affiliates, Copyright (c) 2004-2017 Oracle, Copyright (c) 2017-2018 Oracle and/or its affiliates, copyrighted by the Free Software Foundation",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/javax.xml.bind/jaxb-api@2.3.1"
+        }
+      ]
+    },
+    {
+      "name": "org.jacoco:jacoco-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.jacoco-jacoco-maven-plugin-0.8.5-665fca",
+      "versionInfo": "0.8.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "EPL-2.0",
+      "copyrightText": "Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.jacoco/jacoco-maven-plugin@0.8.5"
+        }
+      ]
+    },
+    {
+      "name": "org.mockito:mockito-core",
+      "SPDXID": "SPDXRef-maven-org.mockito-mockito-core-2.22.0-b58159",
+      "versionInfo": "2.22.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "copyrightText": "Copyright (c) 2007 Mockito",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.mockito/mockito-core@2.22.0"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-surefire-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-surefire-plugin-2.22.0-2e9f19",
+      "versionInfo": "2.22.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "copyrightText": "Copyright 2004-2018 The Apache Software Foundation",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-surefire-plugin@2.22.0"
+        }
+      ]
+    },
+    {
+      "name": "org.apache.maven.plugins:maven-compiler-plugin",
+      "SPDXID": "SPDXRef-maven-org.apache.maven.plugins-maven-compiler-plugin-3.8.0-575b3d",
+      "versionInfo": "3.8.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "copyrightText": "Copyright 2001-2018 The Apache Software Foundation",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache.maven.plugins/maven-compiler-plugin@3.8.0"
+        }
+      ]
+    },
+    {
+      "name": "javax.activation:activation",
+      "SPDXID": "SPDXRef-maven-javax.activation-activation-1.1-6455d5",
+      "versionInfo": "1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "CDDL-1.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/javax.activation/activation@1.1"
+        }
+      ]
+    },
+    {
+      "name": "org.javassist:javassist",
+      "SPDXID": "SPDXRef-maven-org.javassist-javassist-3.27.0-GA-8bbc92",
+      "versionInfo": "3.27.0-GA",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-1.1 OR LGPL-2.1-or-later OR Apache-2.0",
+      "copyrightText": "Copyright (c) 1999- Shigeru Chiba, Copyright (c) 1999-2020 Shigeru Chiba",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.javassist/javassist@3.27.0-GA"
+        }
+      ]
+    },
+    {
+      "name": "com.fasterxml.jackson.core:jackson-annotations",
+      "SPDXID": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-annotations-2.12.0-85c2b1",
+      "versionInfo": "2.12.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.12.0"
+        }
+      ]
+    },
+    {
+      "name": "com.fasterxml.jackson.core:jackson-core",
+      "SPDXID": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-core-2.12.0-f407c0",
+      "versionInfo": "2.12.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.12.0"
+        }
+      ]
+    },
+    {
+      "name": "com.fasterxml.jackson.core:jackson-databind",
+      "SPDXID": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-databind-2.12.0-6db1e3",
+      "versionInfo": "2.12.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.12.0"
+        }
+      ]
+    },
+    {
+      "name": "org.glassfish.jaxb:jaxb-runtime",
+      "SPDXID": "SPDXRef-maven-org.glassfish.jaxb-jaxb-runtime-2.3.1-437bcc",
+      "versionInfo": "2.3.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "CDDL-1.1 OR GPL-2.0-only WITH Classpath-exception-2.0",
+      "copyrightText": "Copyright (c) 1997-2017 Oracle and/or its affiliates, Copyright (c) 2013-2018 Oracle and/or its affiliates, Copyright (c) 2014-2017 Oracle and/or its affiliates",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.glassfish.jaxb/jaxb-runtime@2.3.1"
+        }
+      ]
+    },
+    {
+      "name": "org.sonarsource.scanner.maven:sonar-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.sonarsource.scanner.maven-sonar-maven-plugin-3.7.0.1746-ac682a",
+      "versionInfo": "3.7.0.1746",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "LGPL-3.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.sonarsource.scanner.maven/sonar-maven-plugin@3.7.0.1746"
+        }
+      ]
+    },
+    {
+      "name": "org.springdoc:springdoc-openapi-ui",
+      "SPDXID": "SPDXRef-maven-org.springdoc-springdoc-openapi-ui-1.5.10-f9b5e4",
+      "versionInfo": "1.5.10",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springdoc/springdoc-openapi-ui@1.5.10"
+        }
+      ]
+    },
+    {
+      "name": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
+      "SPDXID": "SPDXRef-maven-com.fasterxml.jackson.datatype-jackson-datatype-jsr310-2.12.0-922e5f",
+      "versionInfo": "2.12.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.12.0"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-configuration-processor",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-configuration-processor-2.0.2-cb791e",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-configuration-processor@2.0.2"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-dataaccess-hibernate",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-dataaccess-hibernate-1.2.0.1-315808",
+      "versionInfo": "1.2.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-dataaccess-hibernate@1.2.0.1"
+        }
+      ]
+    },
+    {
+      "name": "org.projectlombok:lombok",
+      "SPDXID": "SPDXRef-maven-org.projectlombok-lombok-910f8b",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.projectlombok/lombok"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-maven-plugin-8609de",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-maven-plugin"
+        }
+      ]
+    },
+    {
+      "name": "com.h2database:h2",
+      "SPDXID": "SPDXRef-maven-com.h2database-h2-1.4.200-02f500",
+      "versionInfo": "1.4.200",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-2.0 OR EPL-1.0",
+      "copyrightText": "Copyright 2004-2019 H2 Group.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.h2database/h2@1.4.200"
+        }
+      ]
+    },
+    {
+      "name": "org.sonatype.plugins:nexus-staging-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.sonatype.plugins-nexus-staging-maven-plugin-1.6.7-c3b888",
+      "versionInfo": "1.6.7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.sonatype.plugins/nexus-staging-maven-plugin@1.6.7"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-maven-plugin-2.6.3-d06413",
+      "versionInfo": "2.6.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-maven-plugin@2.6.3"
+        }
+      ]
+    },
+    {
+      "name": "org.springdoc:springdoc-openapi-maven-plugin",
+      "SPDXID": "SPDXRef-maven-org.springdoc-springdoc-openapi-maven-plugin-0.2-fc051c",
+      "versionInfo": "0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springdoc/springdoc-openapi-maven-plugin@0.2"
+        }
+      ]
+    },
+    {
+      "name": "org.postgresql:postgresql",
+      "SPDXID": "SPDXRef-maven-org.postgresql-postgresql-42.2.2-2802c5",
+      "versionInfo": "42.2.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-2-Clause",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.postgresql/postgresql@42.2.2"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-starter-web",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-web-2.0.2-122ff6",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.0.2"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-devtools",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-devtools-2.0.2-d35da5",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-devtools@2.0.2"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-starter-data-jpa",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-data-jpa-2.0.2-a317b5",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-starter-data-jpa@2.0.2"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.boot:spring-boot-starter-test",
+      "SPDXID": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-test-2.0.2-5acdab",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.boot/spring-boot-starter-test@2.0.2"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-core",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-core-861157",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-core"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-auth-adapter",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-auth-adapter-ff3525",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-auth-adapter"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-crypto-jce",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-crypto-jce-1.0.6-228f73",
+      "versionInfo": "1.0.6",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-crypto-jce@1.0.6"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.security:spring-security-test",
+      "SPDXID": "SPDXRef-maven-org.springframework.security-spring-security-test-5.3.3-d14904",
+      "versionInfo": "5.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.security/spring-security-test@5.3.3"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-authcodeflowproxy-api",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-authcodeflowproxy-api-1.2.0.1-B1-bc76c8",
+      "versionInfo": "1.2.0.1-B1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-authcodeflowproxy-api@1.2.0.1-B1"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-openid-bridge-api",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-openid-bridge-api-1.2.0.1-4f29ba",
+      "versionInfo": "1.2.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-openid-bridge-api@1.2.0.1"
+        }
+      ]
+    },
+    {
+      "name": "com.nimbusds:nimbus-jose-jwt",
+      "SPDXID": "SPDXRef-maven-com.nimbusds-nimbus-jose-jwt-9.40-153c12",
+      "versionInfo": "9.40",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "copyrightText": "Copyright 2008 Google LLC, Copyright 2013 Stephen Connolly",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.nimbusds/nimbus-jose-jwt@9.40"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.pms:pms-common",
+      "SPDXID": "SPDXRef-maven-io.mosip.pms-pms-common-1.2.2.0-RC-e28e87",
+      "versionInfo": "1.2.2.0-RC",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.pms/pms-common@1.2.2.0-RC"
+        }
+      ]
+    },
+    {
+      "name": "com.googlecode.json-simple:json-simple",
+      "SPDXID": "SPDXRef-maven-com.googlecode.json-simple-json-simple-1.1.1-3914c5",
+      "versionInfo": "1.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.googlecode.json-simple/json-simple@1.1.1"
+        }
+      ]
+    },
+    {
+      "name": "com.google.code.gson:gson",
+      "SPDXID": "SPDXRef-maven-com.google.code.gson-gson-2.8.5-c2f27a",
+      "versionInfo": "2.8.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.google.code.gson/gson@2.8.5"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-logger-logback",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-logger-logback-2572cc",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-logger-logback"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-templatemanager-velocity",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-templatemanager-velocity-c11881",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-templatemanager-velocity"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.kernel:kernel-websubclient-api",
+      "SPDXID": "SPDXRef-maven-io.mosip.kernel-kernel-websubclient-api-8e06fa",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.kernel/kernel-websubclient-api"
+        }
+      ]
+    },
+    {
+      "name": "io.swagger:swagger-annotations",
+      "SPDXID": "SPDXRef-maven-io.swagger-swagger-annotations-1.5.0-98d9d6",
+      "versionInfo": "1.5.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.swagger/swagger-annotations@1.5.0"
+        }
+      ]
+    },
+    {
+      "name": "io.micrometer:micrometer-core",
+      "SPDXID": "SPDXRef-maven-io.micrometer-micrometer-core-1.4.2-c3ec00",
+      "versionInfo": "1.4.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.micrometer/micrometer-core@1.4.2"
+        }
+      ]
+    },
+    {
+      "name": "org.springframework.security:spring-security-test",
+      "SPDXID": "SPDXRef-maven-org.springframework.security-spring-security-test-5.0.5-2ec2d4",
+      "versionInfo": "5.0.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.springframework.security/spring-security-test@5.0.5"
+        }
+      ]
+    },
+    {
+      "name": "io.micrometer:micrometer-registry-prometheus",
+      "SPDXID": "SPDXRef-maven-io.micrometer-micrometer-registry-prometheus-1.4.2-df064d",
+      "versionInfo": "1.4.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.micrometer/micrometer-registry-prometheus@1.4.2"
+        }
+      ]
+    },
+    {
+      "name": "io.mosip.pms:policy-validator",
+      "SPDXID": "SPDXRef-maven-io.mosip.pms-policy-validator-1.2.2.0-RC-895d2c",
+      "versionInfo": "1.2.2.0-RC",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.mosip.pms/policy-validator@1.2.2.0-RC"
+        }
+      ]
+    },
+    {
+      "name": "org.json:json",
+      "SPDXID": "SPDXRef-maven-org.json-json-20180813-9652f9",
+      "versionInfo": "20180813",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "JSON",
+      "copyrightText": "Copyright (c) 2002 JSON.org",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.json/json@20180813"
+        }
+      ]
+    },
+    {
+      "name": "com.github.java-json-tools:json-schema-validator",
+      "SPDXID": "SPDXRef-maven-com.github.java-json-tools-json-schema-validator-2.2.10-f7c250",
+      "versionInfo": "2.2.10",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "(Apache-2.0 AND LGPL-3.0 AND LGPL-3.0-only) OR (Apache-2.0 AND LGPL-3.0-only)",
+      "copyrightText": "Copyright (c) 2007 Free Software Foundation, Inc. <http://fsf.org/>, Copyright (c) 2014, Francis Galiegue (fgaliegue@gmail.com)",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/com.github.java-json-tools/json-schema-validator@2.2.10"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/chart-lint-publish.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-chart-lint-publish.yml-master-8973a0",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/chart-lint-publish.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/db-test.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-db-test.yml-master-5635c9",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/db-test.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/docker-build.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-docker-build.yml-master-81f4dd",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/docker-build.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-build.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-build.yml-master-ebf458",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-build.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-sonar-analysis.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-sonar-analysis.yml-master-4074d9",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-publish-to-nexus.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-publish-to-nexus.yml-master-4487ce",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "actions/upload-artifact",
+      "SPDXID": "SPDXRef-githubactions-actions-upload-artifact-4..-a514e0",
+      "versionInfo": "4.*.*",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/actions/upload-artifact@4.%2A.%2A"
+        }
+      ]
+    },
+    {
+      "name": "actions/checkout",
+      "SPDXID": "SPDXRef-githubactions-actions-checkout-3..-50cc3f",
+      "versionInfo": "3.*.*",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/actions/checkout@3.%2A.%2A"
+        }
+      ]
+    },
+    {
+      "name": "actions/setup-java",
+      "SPDXID": "SPDXRef-githubactions-actions-setup-java-3..-5186ea",
+      "versionInfo": "3.*.*",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/actions/setup-java@3.%2A.%2A"
+        }
+      ]
+    },
+    {
+      "name": "8398a7/action-slack",
+      "SPDXID": "SPDXRef-githubactions-8398a7-action-slack-3..-0316c3",
+      "versionInfo": "3.*.*",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/8398a7/action-slack@3.%2A.%2A"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-build.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-build.yml-master-java21-7c9539",
+      "versionInfo": "master-java21",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-build.yml@master-java21"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-publish-to-nexus.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-publish-to-nexus.yml-master-java21-9f0d91",
+      "versionInfo": "master-java21",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master-java21"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/maven-sonar-analysis.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-sonar-analysis.yml-master-java21-0110a3",
+      "versionInfo": "master-java21",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master-java21"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/docker-build.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-docker-build.yml-master-java21-5cab3a",
+      "versionInfo": "master-java21",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/docker-build.yml@master-java21"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/release-changes.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-release-changes.yml-master-7c0c30",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/release-changes.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "mosip/kattu/.github/workflows/tag.yml",
+      "SPDXID": "SPDXRef-githubactions-mosipkattu.githubworkflows-tag.yml-master-774e20",
+      "versionInfo": "master",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:githubactions/mosip/kattu/.github/workflows/tag.yml@master"
+        }
+      ]
+    },
+    {
+      "name": "com.github.mosip/partner-management-services",
+      "SPDXID": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "versionInfo": "release-1.2.2.x",
+      "downloadLocation": "git+https://github.com/mosip/partner-management-services",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MPL-2.0",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/mosip/partner-management-services@release-1.2.2.x"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-javadoc-plugin-7b26ed",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-shade-plugin-3.2.4-d87ce5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-jar-plugin-3.0.2-41e328",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-javadoc-plugin-3.2.0-613322",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-source-plugin-2.2.1-c8865b",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-pl.project13.maven-git-commit-id-plugin-3.0.1-58cb0d",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-antrun-plugin-3.0.0-447376",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-gpg-plugin-1.5-91a7d4",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-war-plugin-3.1.0-892651",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.testrig.apitest.commons-apitest-commons-1.3.1-fc0b53",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-junit-junit-4.12-6ce22e",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-javax.xml.bind-jaxb-api-2.3.1-d8263e",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.jacoco-jacoco-maven-plugin-0.8.5-665fca",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.mockito-mockito-core-2.22.0-b58159",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-surefire-plugin-2.22.0-2e9f19",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.apache.maven.plugins-maven-compiler-plugin-3.8.0-575b3d",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-javax.activation-activation-1.1-6455d5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.javassist-javassist-3.27.0-GA-8bbc92",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-annotations-2.12.0-85c2b1",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-core-2.12.0-f407c0",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.fasterxml.jackson.core-jackson-databind-2.12.0-6db1e3",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.glassfish.jaxb-jaxb-runtime-2.3.1-437bcc",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.sonarsource.scanner.maven-sonar-maven-plugin-3.7.0.1746-ac682a",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springdoc-springdoc-openapi-ui-1.5.10-f9b5e4",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.fasterxml.jackson.datatype-jackson-datatype-jsr310-2.12.0-922e5f",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-configuration-processor-2.0.2-cb791e",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-dataaccess-hibernate-1.2.0.1-315808",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.projectlombok-lombok-910f8b",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-maven-plugin-8609de",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.h2database-h2-1.4.200-02f500",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.sonatype.plugins-nexus-staging-maven-plugin-1.6.7-c3b888",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-maven-plugin-2.6.3-d06413",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springdoc-springdoc-openapi-maven-plugin-0.2-fc051c",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.postgresql-postgresql-42.2.2-2802c5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-web-2.0.2-122ff6",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-devtools-2.0.2-d35da5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-data-jpa-2.0.2-a317b5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.boot-spring-boot-starter-test-2.0.2-5acdab",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-core-861157",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-auth-adapter-ff3525",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-crypto-jce-1.0.6-228f73",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.security-spring-security-test-5.3.3-d14904",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-authcodeflowproxy-api-1.2.0.1-B1-bc76c8",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-openid-bridge-api-1.2.0.1-4f29ba",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.nimbusds-nimbus-jose-jwt-9.40-153c12",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.pms-pms-common-1.2.2.0-RC-e28e87",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.googlecode.json-simple-json-simple-1.1.1-3914c5",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.google.code.gson-gson-2.8.5-c2f27a",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-logger-logback-2572cc",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-templatemanager-velocity-c11881",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.kernel-kernel-websubclient-api-8e06fa",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.swagger-swagger-annotations-1.5.0-98d9d6",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.micrometer-micrometer-core-1.4.2-c3ec00",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.springframework.security-spring-security-test-5.0.5-2ec2d4",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.micrometer-micrometer-registry-prometheus-1.4.2-df064d",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-io.mosip.pms-policy-validator-1.2.2.0-RC-895d2c",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-org.json-json-20180813-9652f9",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-maven-com.github.java-json-tools-json-schema-validator-2.2.10-f7c250",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-chart-lint-publish.yml-master-8973a0",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-db-test.yml-master-5635c9",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-docker-build.yml-master-81f4dd",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-build.yml-master-ebf458",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-sonar-analysis.yml-master-4074d9",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-publish-to-nexus.yml-master-4487ce",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-actions-upload-artifact-4..-a514e0",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-actions-checkout-3..-50cc3f",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-actions-setup-java-3..-5186ea",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-8398a7-action-slack-3..-0316c3",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-build.yml-master-java21-7c9539",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-publish-to-nexus.yml-master-java21-9f0d91",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-maven-sonar-analysis.yml-master-java21-0110a3",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-docker-build.yml-master-java21-5cab3a",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-release-changes.yml-master-7c0c30",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relatedSpdxElement": "SPDXRef-githubactions-mosipkattu.githubworkflows-tag.yml-master-774e20",
+      "relationshipType": "DEPENDS_ON"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relatedSpdxElement": "SPDXRef-github-mosip-partner-management-services-release-1.2.2.x-7cbed6",
+      "relationshipType": "DESCRIBES"
+    }
+  ]
+}
