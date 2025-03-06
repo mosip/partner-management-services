@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 
 import javax.transaction.Transactional;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,6 +74,7 @@ public class EmailNotificationService {
 
             // update notification status
             notification.setEmailSent(true);
+            notification.setEmailSentDatetime(LocalDateTime.now());
             notificationServiceRepository.save(notification);
             LOGGER.info("Notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {
