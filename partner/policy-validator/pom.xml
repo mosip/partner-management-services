@@ -65,7 +65,7 @@
                 <executions>
                     <execution>
                         <id>default-deploy</id>
-                        <phase>none</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>deploy</goal>
                         </goals>
