@@ -421,7 +421,7 @@ istio:
   corsPolicy:
     allowOrigins:
       - prefix: https://pmp.sandbox.xyz.net
-      - prefix: https://pmp-new.sandbox.xyz.net
+      - prefix: https://pmp-revamp.sandbox.xyz.net
     allowCredentials: true
     allowHeaders:
       - Accept
