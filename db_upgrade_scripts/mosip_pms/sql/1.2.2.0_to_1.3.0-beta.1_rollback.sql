@@ -12,3 +12,5 @@ drop table if exists pms.batch_step_execution;
 drop table if exists pms.batch_job_execution_params;
 drop table if exists pms.batch_job_execution;
 drop table if exists pms.batch_job_instance;
+
+drop table if exists pms.notifications;
