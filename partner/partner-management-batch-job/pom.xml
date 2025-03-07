@@ -55,6 +55,12 @@
 			<artifactId>kernel-auth-adapter</artifactId>
 			<version>${kernel.authadapter.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

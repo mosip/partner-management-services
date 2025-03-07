@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,21 +36,12 @@ public class KeyManagerHelper {
         try {
             Map<String, String> pathSegments = new HashMap<>();
             pathSegments.put(PARTNER_CERT_ID, certificateAlias);
-
             // Build the URL
             String urlWithPath = UriComponentsBuilder.fromUriString(keyManagerPartnerCertificateUrl)
                     .buildAndExpand(pathSegments)
                     .toUriString();
 
-            // Call the API using RestUtil
-            Map<String, Object> response = restUtil.sendRequest(urlWithPath, HttpMethod.GET, null, Map.class);
-
-            if (response == null || response.isEmpty()) {
-                throw new BatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(), ErrorCodes.API_NULL_RESPONSE.getMessage());
-            }
-
-            return objectMapper.convertValue(response.get("response"), OriginalCertDownloadResponseDto.class);
-
+            return restUtil.sendRequest(urlWithPath, HttpMethod.GET, null, OriginalCertDownloadResponseDto.class, MediaType.APPLICATION_JSON);
         } catch (BatchJobServiceException e) {
             LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
             throw e;
