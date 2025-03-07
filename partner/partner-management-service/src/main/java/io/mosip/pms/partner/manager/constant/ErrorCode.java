@@ -49,7 +49,7 @@ public enum ErrorCode {
 	PARTNER_ALREADY_DEACTIVATED("PMS_PM_063", "The selected partner has already been deactivated."),
 	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests"),
 	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while fetching notifications"),
-	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only receive notifications for root/intermediate certificate expiry and the weekly summary.");
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary.");
 	
 
 	/**
