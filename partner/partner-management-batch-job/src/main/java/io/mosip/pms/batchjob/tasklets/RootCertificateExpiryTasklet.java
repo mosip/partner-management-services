@@ -69,8 +69,9 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 		try {
 			List<String> notificationIdsCreated = new ArrayList<String>();
 
-			// Step 1: TODO get the partner admin users
+			// Step 1: Fetch Partner Admin user IDs
 			List<String> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			log.info("Retrieved {} Partner Admin user(s).", partnerAdmins.size());
 
 			// Step 2: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 			// days and so on

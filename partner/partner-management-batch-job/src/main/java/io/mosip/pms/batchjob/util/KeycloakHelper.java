@@ -6,6 +6,8 @@ import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
+@EnableCaching
 public class KeycloakHelper {
     private static final Logger LOGGER = LoggerConfiguration.logConfig(KeycloakHelper.class);
 
@@ -31,6 +34,7 @@ public class KeycloakHelper {
     @Autowired
     RestUtil restUtil;
 
+    @Cacheable(value = "partnerAdminIdsCache", key = "'partnerAdminIds'", unless = "#result.isEmpty()")
     public List<String> getPartnerIdsWithPartnerAdminRole() {
         List<String> partnerIds = new ArrayList<>();
 
