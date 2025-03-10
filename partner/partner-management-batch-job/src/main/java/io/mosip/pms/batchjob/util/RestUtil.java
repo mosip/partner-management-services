@@ -1,5 +1,6 @@
 package io.mosip.pms.batchjob.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
@@ -35,11 +36,11 @@ public class RestUtil {
     @Autowired
     ObjectMapper objectMapper;
 
-    public <T> T sendRequest(
+	public <T> T sendRequest(
             String baseUrl,
             HttpMethod method,
             Object requestBody,
-            Class<T> responseType,
+            TypeReference<T> responseType,
             MediaType mediaType
     ) {
         try {
