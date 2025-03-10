@@ -2,7 +2,14 @@ package io.mosip.pms.batchjob.impl;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.batchjob.dto.TrustCertTypeListResponseDto;
+import io.mosip.pms.batchjob.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.batchjob.util.KeyManagerHelper;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,5 +26,10 @@ public class CertificateExpiryService {
 
     public OriginalCertDownloadResponseDto getPartnerCertificate() {
     	return keyManagerHelper.getPartnerCertificate(SAMPLE_PARTNER_CERT_ID);
+    }
+    
+	public TrustCertTypeListResponseDto getTrustCertificates(String certificateType,
+			LocalDateTime validTillDate) {
+    	return keyManagerHelper.getTrustCertificates(certificateType, validTillDate);
     }
 }

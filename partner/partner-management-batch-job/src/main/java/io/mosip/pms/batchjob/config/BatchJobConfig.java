@@ -32,8 +32,8 @@ public class BatchJobConfig {
 
 	@Bean
 	public Job rootCertificateExpiryJob(JobRepository jobRepository,
-			@Qualifier("rootCertificateExpiryStep") Step consumedStatusStep) {
+			@Qualifier("rootCertificateExpiryStep") Step rootCertificateExpiryStep) {
 		return new JobBuilder("rootCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
-				.start(consumedStatusStep).build();
+				.start(rootCertificateExpiryStep).build();
 	}
 }
