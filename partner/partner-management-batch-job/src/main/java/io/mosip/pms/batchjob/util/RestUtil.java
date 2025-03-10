@@ -2,12 +2,14 @@ package io.mosip.pms.batchjob.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.auth.defaultadapter.helper.TokenHelper;
 import io.mosip.kernel.auth.defaultadapter.model.TokenHolder;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,6 +32,15 @@ public class RestUtil {
     public static final String ERROR_CODE = "errorCode";
     public static final String ERROR_MESSAGE = "message";
 
+    @Value("${mosip.iam.adapter.clientid}")
+    private String clientId;
+
+    @Value("${mosip.iam.adapter.clientsecret}")
+    private String clientSecret;
+
+    @Value("${mosip.iam.adapter.appid}")
+    private String appId;
+
     @Qualifier("selfTokenRestTemplate")
     @Autowired
     private RestTemplate restTemplate;
@@ -40,7 +51,15 @@ public class RestUtil {
     @Autowired
     private TokenHolder<String> cachedToken;
 
-    public String getAccessToken() {
+    @Autowired
+    TokenHelper tokenHelper;
+
+    public synchronized String getAccessToken() {
+        if (cachedToken.getToken() == null) {
+            LOGGER.info("Cached token is null, fetching new token...");
+            String authToken = tokenHelper.getClientToken(clientId, clientSecret, appId, restTemplate);
+            cachedToken.setToken(authToken);
+        }
         return cachedToken.getToken();
     }
 
