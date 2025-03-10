@@ -39,6 +39,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     public static final String ROOT_CERT_EXPIRY = "root_cert_expiry";
     public static final String INTERMEDIATE_CERT_EXPIRY = "intermediate_cert_expiry";
     public static final String WEEKLY_SUMMARY = "weekly_summary";
+    public static final String BLANK_STRING = "";
 
 
     @Value("${mosip.pms.api.id.notifications.get}")
@@ -60,9 +61,11 @@ public class NotificationsServiceImpl implements NotificationsService {
             PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
             String notificationType = filterDto.getNotificationType();
-            if ((notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(WEEKLY_SUMMARY)) && !isPartnerAdmin) {
-                throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
-                       ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+            if (Objects.nonNull(notificationType) && !notificationType.equals(BLANK_STRING)) {
+                if ((notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(WEEKLY_SUMMARY)) && !isPartnerAdmin) {
+                    throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
+                            ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+                }
             }
             List<String> partnerIdList = null;
             if (!isPartnerAdmin) {
