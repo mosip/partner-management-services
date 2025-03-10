@@ -12,8 +12,9 @@ public enum ErrorCodes {
     EMAIL_SEND_FAILED("PMS-BJ-006", "Failed to send email"),
     ROOT_CERTIFICATE_FETCH_ERROR("PMS-BJ-004", "Error while fetching root certificate"),
 	TRUST_CERTIFICATES_FETCH_ERROR("PMS_CERTIFICATE_ERROR_010", "Error while fetching trust certificates."),
-	NOTIFICATION_CREATE_ERROR("PMS-BJ-007", "Error while creating the notification.");;
-	
+	NOTIFICATION_CREATE_ERROR("PMS-BJ-007", "Error while creating the notification."),
+    FETCH_PARTNER_ADMIN_USER_IDS_ERROR("PMS-BJ-008", "Unable to fetch Partner Admin user IDs");
+
     private final String code;
     private final String message;
 
