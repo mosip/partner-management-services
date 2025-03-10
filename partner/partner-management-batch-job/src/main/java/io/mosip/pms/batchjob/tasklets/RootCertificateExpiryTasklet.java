@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.mosip.pms.batchjob.util.KeycloakHelper;
 import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -58,6 +59,9 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	@Autowired
+	KeycloakHelper keycloakHelper;
+
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 			throws JsonProcessingException {
@@ -65,10 +69,10 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 		try {
 			List<String> notificationIdsCreated = new ArrayList<String>();
 
-			// Step 1: TODO get the partner admin users
-			List<String> partnerAdmins = new ArrayList<String>();
-			partnerAdmins.add("mayurad");
-			partnerAdmins.add("mayurad1111");
+			// Step 1: Fetch Partner Admin user IDs
+			List<String> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			log.info("Retrieved {} Partner Admin user(s).", partnerAdmins.size());
+
 			// Step 2: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 			// days and so on
 			rootExpiryPeriods.forEach(expiryPeriod -> {

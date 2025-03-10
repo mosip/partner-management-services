@@ -2,6 +2,7 @@ package io.mosip.pms.batchjob.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.auth.defaultadapter.model.TokenHolder;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
@@ -35,6 +36,13 @@ public class RestUtil {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    private TokenHolder<String> cachedToken;
+
+    public String getAccessToken() {
+        return cachedToken.getToken();
+    }
 
 	public <T> T sendRequest(
             String baseUrl,
@@ -80,7 +88,7 @@ public class RestUtil {
         }
     }
 
-    private <T> T executeApiCall(
+    protected  <T> T executeApiCall(
             String url,
             HttpMethod method,
             Object requestBody,
@@ -88,6 +96,7 @@ public class RestUtil {
             MediaType mediaType
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "Bearer " + getAccessToken());
         httpHeaders.setContentType(mediaType);
 
         HttpEntity<Object> entity = new HttpEntity<>(requestBody, httpHeaders);
