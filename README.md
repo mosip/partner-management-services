@@ -1,5 +1,5 @@
 # Partner Management Services (PMS)
-[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.2.2.x)](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml)
+[![Maven Package upon a push](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml/badge.svg?branch=release-1.2.2.x)](https://github.com/mosip/partner-management-services/actions/workflows/push-trigger.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.2.2.x&project=mosip_partner-management-services&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.2.2.x&id=mosip_partner-management-services)
 
 ## Overview
