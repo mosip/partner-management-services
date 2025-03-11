@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import io.mosip.pms.batchjob.tasklets.RootCertificateExpiryTasklet;
+import io.mosip.pms.batchjob.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 
 @Configuration
 public class BatchJobConfig {
 
 	@Autowired
-	private RootCertificateExpiryTasklet rootCertificateExpiryTasklet;
+	private RootAndIntermediateCertificateExpiryTasklet rootCertificateExpiryTasklet;
 
 	@Bean
 	public Step rootCertificateExpiryStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
