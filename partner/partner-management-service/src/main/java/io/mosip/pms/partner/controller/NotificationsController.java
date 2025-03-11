@@ -41,12 +41,12 @@ public class NotificationsController {
     })
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
             @RequestParam(value = "filterBy", required = false) String filterBy,
-            @RequestParam(value = "notificationStatus", required = false) String notificationStatus,
+            @RequestParam(value = "notificationStatus", defaultValue = "ACTIVE") String notificationStatus,
             @RequestParam(value = "notificationType", required = false) String notificationType,
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize
     ) {
-        validateRequestParameters(pageNo, pageSize);
+        validatePaginationParams(pageNo, pageSize);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (filterBy != null) {
             filterDto.setFilterBy(filterBy.toLowerCase());
@@ -60,7 +60,7 @@ public class NotificationsController {
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }
 
-    public void validateRequestParameters(Integer pageNo, Integer pageSize) {
+    public void validatePaginationParams(Integer pageNo, Integer pageSize) {
         // Validate pageNo and pageSize
         if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
             LOGGER.error("Both pageNo and pageSize must be provided together.");

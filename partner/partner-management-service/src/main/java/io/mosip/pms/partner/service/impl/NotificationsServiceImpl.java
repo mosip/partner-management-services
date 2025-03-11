@@ -61,8 +61,12 @@ public class NotificationsServiceImpl implements NotificationsService {
             PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
             String notificationType = filterDto.getNotificationType();
-            if (Objects.nonNull(notificationType) && !notificationType.equals(BLANK_STRING)) {
-                if ((notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(WEEKLY_SUMMARY)) && !isPartnerAdmin) {
+            if(!isPartnerAdmin) {
+                if(Objects.isNull(notificationType) || notificationType.equals(BLANK_STRING)) {
+                    throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+                            ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
+                }
+                if ((notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(WEEKLY_SUMMARY))) {
                     throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                             ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
                 }

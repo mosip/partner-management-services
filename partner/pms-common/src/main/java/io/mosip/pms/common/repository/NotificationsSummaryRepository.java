@@ -14,13 +14,14 @@ import java.util.List;
 public interface NotificationsSummaryRepository extends BaseRepository<NotificationsSummaryEntity, String> {
 
     @Query(value = "SELECT new NotificationsSummaryEntity(" +
-            "n.id, n.partnerId, n.notificationType, n.notificationStatus, n.createdDatetime, n.notificationDetailsJson) " +
+            "n.id, n.partnerId, n.notificationType, n.notificationStatus, n.createdDatetime as crDtimes, n.notificationDetailsJson) " +
             "FROM Notifications n " +
             "LEFT JOIN n.partner p " +
             "WHERE (:filterBy IS NULL OR lower(n.notificationDetailsJson) LIKE %:filterBy%) " +
             "AND (:notificationStatus IS NULL OR lower(n.notificationStatus) LIKE %:notificationStatus%) " +
             "AND (:notificationType IS NULL OR lower(n.notificationType) LIKE %:notificationType%) " +
-            "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList))"
+            "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList)) " +
+            "ORDER BY crDtimes DESC"
     )
     Page<NotificationsSummaryEntity> getSummaryOfAllNotifications(
             @Param("filterBy") String filterBy,
