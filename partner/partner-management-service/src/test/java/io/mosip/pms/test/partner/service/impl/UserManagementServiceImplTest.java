@@ -1,7 +1,7 @@
 package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
-import io.mosip.pms.common.dto.UserDetails;
+import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;

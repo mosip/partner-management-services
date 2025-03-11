@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class RestUtil {
+public class RestHelper {
 
-    private static final Logger LOGGER = LoggerConfiguration.logConfig(RestUtil.class);
+    private static final Logger LOGGER = LoggerConfiguration.logConfig(RestHelper.class);
     private static final String RESPONSE = "response";
     private static final String ERRORS = "errors";
     public static final String ERROR_CODE = "errorCode";

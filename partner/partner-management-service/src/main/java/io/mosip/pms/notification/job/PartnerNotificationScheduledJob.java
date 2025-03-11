@@ -19,7 +19,7 @@ import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.response.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 
 @Component
 public class PartnerNotificationScheduledJob {

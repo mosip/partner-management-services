@@ -22,7 +22,7 @@ import io.mosip.pms.device.authdevice.repository.SbiSummaryRepository;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.util.DeviceUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.DeviceDto;
 import io.mosip.pms.device.dto.SbiDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;

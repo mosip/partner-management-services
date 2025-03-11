@@ -1,5 +1,5 @@
 package io.mosip.pms.common.repository;
-import io.mosip.pms.common.dto.UserDetails;
+import io.mosip.pms.common.entity.UserDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

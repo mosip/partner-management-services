@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.batchjob.util.RestHelper;
+import io.mosip.pms.common.entity.Notification;
+import io.mosip.pms.common.repository.NotificationServiceRepository;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -24,12 +27,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.dto.CertificateDetailsDto;
-import io.mosip.pms.batchjob.dto.NotificationDetailsDto;
-import io.mosip.pms.batchjob.entity.Notification;
+import io.mosip.pms.common.dto.CertificateDetailsDto;
+import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
-import io.mosip.pms.batchjob.repository.NotificationServiceRepository;
-import io.mosip.pms.batchjob.util.RestUtil;
 import io.mosip.pms.batchjob.util.TemplateHelper;
 
 @Service
@@ -41,7 +41,7 @@ public class EmailNotificationService {
     private String sendEmailUrl;
 
     @Autowired
-    RestUtil restUtil;
+    RestHelper restHelper;
 
     @Autowired
     VelocityEngine velocityEngine;
@@ -120,7 +120,7 @@ public class EmailNotificationService {
             requestBody.add("mailContent", emailTemplate);
 
             // Send email request
-            restUtil.sendRequest(
+            restHelper.sendRequest(
                     sendEmailUrl,
                     HttpMethod.POST,
                     requestBody,

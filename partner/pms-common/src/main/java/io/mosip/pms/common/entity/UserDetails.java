@@ -1,5 +1,5 @@
 
-package io.mosip.pms.common.dto;
+package io.mosip.pms.common.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

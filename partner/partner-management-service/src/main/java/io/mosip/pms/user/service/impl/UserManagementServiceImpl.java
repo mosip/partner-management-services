@@ -2,7 +2,7 @@ package io.mosip.pms.user.service.impl;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.dto.UserDetails;
+import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;

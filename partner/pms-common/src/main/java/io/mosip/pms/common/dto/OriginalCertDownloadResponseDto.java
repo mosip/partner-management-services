@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.dto;
+package io.mosip.pms.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

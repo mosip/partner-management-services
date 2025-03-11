@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.entity;
+package io.mosip.pms.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
