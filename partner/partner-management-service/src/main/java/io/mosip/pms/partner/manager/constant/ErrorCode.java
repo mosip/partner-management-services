@@ -47,7 +47,10 @@ public enum ErrorCode {
 	FETCH_ALL_PARTNER_DETAILS_ERROR("PMS_PM_061", "Error while fetching all partners details"),
 	FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR("PMS_PM_062", "Error while fetching all partner policy mapping requests"),
 	PARTNER_ALREADY_DEACTIVATED("PMS_PM_063", "The selected partner has already been deactivated."),
-	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests");
+	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests"),
+	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while fetching notifications"),
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary."),
+	INVALID_NOTIFICATION_TYPE("PMS_NOTIFICATION_ERROR_003", "Invalid notification type");
 	
 
 	/**
