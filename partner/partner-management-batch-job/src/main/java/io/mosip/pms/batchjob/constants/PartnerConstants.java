@@ -59,4 +59,6 @@ public final class PartnerConstants {
 	public static final String SYSTEM_USER = "SYSTEM";
 
 	public static final String ROOT = "root";
+	
+	public static final String INTERMEDIATE = "intermediate";
 }

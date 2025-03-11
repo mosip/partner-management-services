@@ -36,13 +36,20 @@ import io.mosip.pms.batchjob.impl.EmailNotificationService;
 import io.mosip.pms.batchjob.repository.NotificationServiceRepository;
 import io.mosip.pms.batchjob.util.BatchJobHelper;
 
+/**
+ * This Batch Job will create notifications for the Root and Intermediate
+ * certificates expiring as per the configured period.
+ * 
+ * @author Mayura Deshmukh
+ * @since 1.3.x
+ */
 @Component
-public class RootCertificateExpiryTasklet implements Tasklet {
+public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
-	private Logger log = LoggerConfiguration.logConfig(RootCertificateExpiryTasklet.class);
+	private Logger log = LoggerConfiguration.logConfig(RootAndIntermediateCertificateExpiryTasklet.class);
 
-	@Value("#{'${mosip.pms.batch.job.root.cert.expiry.periods}'.split(',')}")
-	private List<Integer> rootExpiryPeriods;
+	@Value("#{'${mosip.pms.batch.job.root.intermediate.cert.expiry.periods}'.split(',')}")
+	private List<Integer> rootIntermediateExpiryPeriods;
 
 	@Autowired
 	CertificateExpiryService certificateExpiryService;
@@ -65,62 +72,83 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 			throws JsonProcessingException {
-		log.info("RootCertificateExpiryTasklet: START");
+		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
 		try {
 			List<String> notificationIdsCreated = new ArrayList<String>();
 
-			// Step 1: Fetch Partner Admin user IDs
-			List<String> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			log.info("Retrieved {} Partner Admin user(s).", partnerAdmins.size());
+			List<String> certificateTypes = new ArrayList<String>();
+			certificateTypes.add(PartnerConstants.ROOT);
+			certificateTypes.add(PartnerConstants.INTERMEDIATE);
 
-			// Step 2: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
+			// Step 1: Fetch Partner Admin user IDs from Keycloak
+			List<String> keycloakPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
+
+			// Step 2: Validate if each of these are valid Partner Admins in PMS
+			List<Partner> pmsPartnerAdmins = getValidPartnerAdmins(keycloakPartnerAdmins);
+			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdmins.size());
+
+			// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 			// days and so on
-			rootExpiryPeriods.forEach(expiryPeriod -> {
-				log.info("Starting notifications creation for expiry period, {}", expiryPeriod + " days");
-				notificationIdsCreated.clear();
+			rootIntermediateExpiryPeriods.forEach(expiryPeriod -> {
 				LocalDate validTillDate = LocalDate.now().plusDays(expiryPeriod);
 				LocalTime validTillTime = LocalTime.MAX;
 				LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
-				TrustCertTypeListResponseDto response = certificateExpiryService
-						.getTrustCertificates(PartnerConstants.ROOT, validTillDateTime);
-				log.debug("getCaCertificates response received, {}", response);
-				if (response.getAllPartnerCertificates().size() > 0) {
-					log.info("number of root certificates expiring after " + expiryPeriod + " days, {}",
-							response.getAllPartnerCertificates().size());
-					// Step 3: validate the partner ids are active or not
-
-					partnerAdmins.forEach(partnerAdminId -> {
-						Optional<Partner> partnerAdminDetails = batchJobHelper.getPartnerById(partnerAdminId);
-						if (batchJobHelper.validateActivePartnerId(partnerAdminDetails)) {
+				certificateTypes.forEach(certificateType -> {
+					notificationIdsCreated.clear();
+					log.info("Starting notifications creation for " + certificateType
+							+ " certificate for expiry period, {}", expiryPeriod + " days");
+					TrustCertTypeListResponseDto response = certificateExpiryService
+							.getTrustCertificates(certificateType, validTillDateTime);
+					log.debug("For " + certificateTypes + " certificates, response received, {}", response);
+					if (response.getAllPartnerCertificates().size() > 0) {
+						log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
+								+ " days, {}", response.getAllPartnerCertificates().size());
+						pmsPartnerAdmins.forEach(partnerAdminDetails -> {
 							// Step 4: add the notification
 							response.getAllPartnerCertificates().forEach(expiringCertificate -> {
-								Notification savedNotification = saveCertificateExpiryNotification(expiryPeriod,
-										partnerAdminDetails, expiringCertificate);
+								Notification savedNotification = saveCertificateExpiryNotification(certificateType,
+										expiryPeriod, partnerAdminDetails, expiringCertificate);
 								// Step 5: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification.getId());
 								notificationIdsCreated.add(savedNotification.getId());
 							});
-						} else {
-							log.info("this partner admin is not active or valid in PMS, {}", partnerAdminId);
-						}
 
-					});
-				} else {
-					log.info("there are no root certificates expiring after " + expiryPeriod + " days");
-				}
-				log.info("Completed notifications creation for expiry period, {}",
-						expiryPeriod + " days. Added " + notificationIdsCreated.size() + " notifications.");
-				log.info("Created notifications, {}", notificationIdsCreated);
+						});
+					} else {
+						log.info("There are no " + certificateType + " certificates expiring after " + expiryPeriod
+								+ " days");
+					}
+					log.info("Completed notifications creation for " + certificateType
+							+ " certificate, for expiry period, {}", expiryPeriod + " days");
+					log.info("Created notifications, {}", notificationIdsCreated.size());
+
+				});
 			});
 		} catch (Exception e) {
-			log.error("Error occurred while running RootCertificateExpiryTasklet: {}", e.getMessage(), e);
+			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
+					e);
 		}
-		log.info("RootCertificateExpiryTasklet: DONE");
+		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE");
 		return RepeatStatus.FINISHED;
 	}
 
-	private Notification saveCertificateExpiryNotification(int expiryPeriod, Optional<Partner> partnerAdminDetails,
-			TrustCertificateSummaryDto expiringCertificate) throws BatchJobServiceException {
+	private List<Partner> getValidPartnerAdmins(List<String> keycloakPartnerAdmins) {
+		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
+		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
+			Optional<Partner> partnerAdminDetails = batchJobHelper.getPartnerById(keycloakPartnerAdminId);
+			if (batchJobHelper.validateActivePartnerId(partnerAdminDetails)) {
+				pmsPartnerAdmins.add(partnerAdminDetails.get());
+			} else {
+				log.debug("this partner admin is not active or valid in PMS, {}", keycloakPartnerAdminId);
+			}
+		});
+		return pmsPartnerAdmins;
+	}
+
+	private Notification saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
+			Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
+			throws BatchJobServiceException {
 		try {
 			List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
 			CertificateDetailsDto certificateDetails = new CertificateDetailsDto();
@@ -131,7 +159,7 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 			// This is null, since Root/Intermediate Certificate is not associated with any
 			// partner
 			certificateDetails.setPartnerId(null);
-			certificateDetails.setCertificateType(PartnerConstants.ROOT);
+			certificateDetails.setCertificateType(certificateType);
 			certificateDetails.setExpiryDateTime(expiringCertificate.getValidTillDate().toString());
 			certificateDetails.setExpiryPeriod("" + expiryPeriod);
 			certificateDetails.setCertificateId(expiringCertificate.getCertId());
@@ -141,11 +169,13 @@ public class RootCertificateExpiryTasklet implements Tasklet {
 			String id = UUID.randomUUID().toString();
 			Notification notification = new Notification();
 			notification.setId(id);
-			notification.setPartnerId(partnerAdminDetails.get().getId());
-			notification.setNotificationType(PartnerConstants.ROOT_CERT_EXPIRY);
+			notification.setPartnerId(partnerAdminDetails.getId());
+			notification
+					.setNotificationType(certificateType == PartnerConstants.ROOT ? PartnerConstants.ROOT_CERT_EXPIRY
+							: PartnerConstants.INTERMEDIATE_CERT_EXPIRY);
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerAdminDetails.get().getEmailId());
-			notification.setEmailLangCode(partnerAdminDetails.get().getLangCode());
+			notification.setEmailId(partnerAdminDetails.getEmailId());
+			notification.setEmailLangCode(partnerAdminDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
 			notification.setCreatedDatetime(LocalDateTime.now());
