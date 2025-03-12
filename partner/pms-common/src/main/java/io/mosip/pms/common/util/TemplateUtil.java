@@ -22,8 +22,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.response.dto.NotificationDto;
-import io.mosip.pms.common.response.dto.TemplatesResponseDto;
+import io.mosip.pms.common.dto.NotificationDto;
+import io.mosip.pms.common.dto.TemplatesResponseDto;
 
 @Component
 public class TemplateUtil {

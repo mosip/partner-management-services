@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.mosip.pms.batchjob.util.KeycloakHelper;
+import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.constant.PartnerConstants;
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
-import io.mosip.pms.common.entity.Notification;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import io.mosip.pms.batchjob.impl.CertificateExpiryService;
 import io.mosip.pms.batchjob.impl.EmailNotificationService;
@@ -73,9 +73,9 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 			throws JsonProcessingException {
 		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
-		List<String> totalNotificationsCreated = new ArrayList<String>();
-		int pmsPartnerAdminsCount = 0;
 		try {
+			List<String> notificationIdsCreated = new ArrayList<String>();
+
 			List<String> certificateTypes = new ArrayList<String>();
 			certificateTypes.add(PartnerConstants.ROOT);
 			certificateTypes.add(PartnerConstants.INTERMEDIATE);
@@ -86,8 +86,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
 			// Step 2: Validate if each of these are valid Partner Admins in PMS
 			List<Partner> pmsPartnerAdmins = getValidPartnerAdmins(keycloakPartnerAdmins);
-			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
-			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdminsCount);
+			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdmins.size());
 
 			// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 			// days and so on
@@ -96,24 +95,23 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 				LocalTime validTillTime = LocalTime.MAX;
 				LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
 				certificateTypes.forEach(certificateType -> {
-					log.info("Starting execution for " + certificateType + " certificate, for expiry period, {}",
-							expiryPeriod + " days");
+					notificationIdsCreated.clear();
+					log.info("Starting notifications creation for " + certificateType
+							+ " certificate for expiry period, {}", expiryPeriod + " days");
 					TrustCertTypeListResponseDto response = certificateExpiryService
 							.getTrustCertificates(certificateType, validTillDateTime);
-					log.debug("Response received, {}", response);
-					List<String> countPerCertTypeExpiryPeriod = new ArrayList<String>();
+					log.debug("For " + certificateTypes + " certificates, response received, {}", response);
 					if (response.getAllPartnerCertificates().size() > 0) {
 						log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
 								+ " days, {}", response.getAllPartnerCertificates().size());
 						pmsPartnerAdmins.forEach(partnerAdminDetails -> {
 							// Step 4: add the notification
 							response.getAllPartnerCertificates().forEach(expiringCertificate -> {
-								Notification savedNotification = saveCertificateExpiryNotification(certificateType,
+								NotificationEntity savedNotificationEntity = saveCertificateExpiryNotification(certificateType,
 										expiryPeriod, partnerAdminDetails, expiringCertificate);
 								// Step 5: send email notification
-								emailNotificationService.sendEmailNotification(savedNotification.getId());
-								countPerCertTypeExpiryPeriod.add(savedNotification.getId());
-								totalNotificationsCreated.add(savedNotification.getId());
+								emailNotificationService.sendEmailNotification(savedNotificationEntity.getId());
+								notificationIdsCreated.add(savedNotificationEntity.getId());
 							});
 
 						});
@@ -121,10 +119,9 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 						log.info("There are no " + certificateType + " certificates expiring after " + expiryPeriod
 								+ " days");
 					}
-					log.info("Completed execution for " + certificateType + " certificate, for expiry period, {}",
-							expiryPeriod + " days");
-
-					log.info("Created {}", countPerCertTypeExpiryPeriod.size() + " notifications");
+					log.info("Completed notifications creation for " + certificateType
+							+ " certificate, for expiry period, {}", expiryPeriod + " days");
+					log.info("Created notifications, {}", notificationIdsCreated.size());
 
 				});
 			});
@@ -132,11 +129,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
 					e);
 		}
-		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE, created {}",
-				totalNotificationsCreated.size() + " notifications, for " + pmsPartnerAdminsCount + " partner admins.");
-		totalNotificationsCreated.forEach(notificationId -> {
-			log.info(notificationId);
-		});
+		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE");
 		return RepeatStatus.FINISHED;
 	}
 
@@ -153,8 +146,8 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		return pmsPartnerAdmins;
 	}
 
-	private Notification saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
-			Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
+	private NotificationEntity saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
+																 Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
 			throws BatchJobServiceException {
 		try {
 			List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
@@ -174,22 +167,22 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(expiringCertificates);
 			String id = UUID.randomUUID().toString();
-			Notification notification = new Notification();
-			notification.setId(id);
-			notification.setPartnerId(partnerAdminDetails.getId());
-			notification
+			NotificationEntity notificationEntity = new NotificationEntity();
+			notificationEntity.setId(id);
+			notificationEntity.setPartnerId(partnerAdminDetails.getId());
+			notificationEntity
 					.setNotificationType(certificateType == PartnerConstants.ROOT ? PartnerConstants.ROOT_CERT_EXPIRY
 							: PartnerConstants.INTERMEDIATE_CERT_EXPIRY);
-			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerAdminDetails.getEmailId());
-			notification.setEmailLangCode(partnerAdminDetails.getLangCode());
-			notification.setEmailSent(false);
-			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
-			notification.setCreatedDatetime(LocalDateTime.now());
-			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
-			log.info("saving notifications, {}", notification);
-			Notification savedNotification = notificationServiceRepository.save(notification);
-			return savedNotification;
+			notificationEntity.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
+			notificationEntity.setEmailId(partnerAdminDetails.getEmailId());
+			notificationEntity.setEmailLangCode(partnerAdminDetails.getLangCode());
+			notificationEntity.setEmailSent(false);
+			notificationEntity.setCreatedBy(PartnerConstants.SYSTEM_USER);
+			notificationEntity.setCreatedDatetime(LocalDateTime.now());
+			notificationEntity.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
+			log.info("saving notifications, {}", notificationEntity);
+			NotificationEntity savedNotificationEntity = notificationServiceRepository.save(notificationEntity);
+			return savedNotificationEntity;
 		} catch (JsonProcessingException jpe) {
 			log.error("Error creating the notification: {}", jpe.getMessage());
 			throw new BatchJobServiceException(ErrorCodes.NOTIFICATION_CREATE_ERROR.getCode(),

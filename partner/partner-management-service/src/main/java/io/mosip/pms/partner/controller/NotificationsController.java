@@ -7,7 +7,7 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.response.dto.NotificationsResponseDto;
+import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

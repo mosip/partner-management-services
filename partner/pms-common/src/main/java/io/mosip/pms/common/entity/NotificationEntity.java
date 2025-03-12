@@ -1,14 +1,16 @@
 package io.mosip.pms.common.entity;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Entity
 @Table(name = "notifications")
 @Data
-public class Notifications {
+public class NotificationEntity {
 
     @Id
     private String id;
@@ -21,9 +23,6 @@ public class Notifications {
 
     @Column(name = "notification_status")
     private String notificationStatus;
-
-    @Column(name = "notification_details_json")
-    private String notificationDetailsJson;
 
     @Column(name = "email_id")
     private String emailId;
@@ -49,8 +48,7 @@ public class Notifications {
     @Column(name = "upd_dtimes")
     private LocalDateTime updatedDatetime;
 
-    @ManyToOne
-    @JoinColumn(name="partner_id", insertable = false, updatable = false)
-    private PartnerV3 partner;
+    @Column(name = "notification_details_json")
+    private String notificationDetailsJson;
 
 }
