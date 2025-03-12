@@ -1,29 +1,24 @@
 package io.mosip.pms.test.device.service.impl;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
-import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
@@ -35,7 +30,6 @@ import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.junit.Assert;
 import org.junit.Before;

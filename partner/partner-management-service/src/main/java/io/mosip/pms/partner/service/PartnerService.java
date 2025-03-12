@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
@@ -37,7 +38,6 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 
 public interface PartnerService {
 	
