@@ -37,7 +37,7 @@ public class EmailNotificationService {
 
     private static final Logger LOGGER = LoggerConfiguration.logConfig(EmailNotificationService.class);
 
-    @Value("${pmp.partner.email.send.post.uri}")
+    @Value("${emailResourse.url}")
     private String sendEmailUrl;
 
     @Autowired

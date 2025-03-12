@@ -39,7 +39,7 @@ public class TemplateHelper {
 	@Value("${email.notification.intermediate.cert.expiry.template}")
 	private String intermediateCertExpiryTemplate;
 
-	@Value("${pmp.partner.email.template.get.rest.uri}")
+	@Value("${resource.template.url}")
 	private String getTemplateUrl;
 
 	@Autowired
