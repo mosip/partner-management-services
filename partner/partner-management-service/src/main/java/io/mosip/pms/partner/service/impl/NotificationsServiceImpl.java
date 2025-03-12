@@ -1,7 +1,11 @@
 package io.mosip.pms.partner.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.NotificationsSummaryEntity;
 import io.mosip.pms.common.entity.Partner;
@@ -14,6 +18,7 @@ import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.response.dto.NotificationsResponseDto;
+import io.mosip.pms.partner.response.dto.NotificationsSummaryDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -28,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
@@ -35,10 +41,6 @@ public class NotificationsServiceImpl implements NotificationsService {
     private static final Logger LOGGER = PMSLogger.getLogger(NotificationsServiceImpl.class);
 
     public static final String VERSION = "1.0";
-
-    public static final String ROOT_CERT_EXPIRY = "root_cert_expiry";
-    public static final String INTERMEDIATE_CERT_EXPIRY = "intermediate_cert_expiry";
-    public static final String WEEKLY_SUMMARY = "weekly_summary";
     public static final String BLANK_STRING = "";
 
 
@@ -54,6 +56,9 @@ public class NotificationsServiceImpl implements NotificationsService {
     @Autowired
     NotificationsSummaryRepository notificationsSummaryRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
         ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
@@ -62,13 +67,11 @@ public class NotificationsServiceImpl implements NotificationsService {
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
             String notificationType = filterDto.getNotificationType();
             if(!isPartnerAdmin) {
-                if(Objects.isNull(notificationType) || notificationType.equals(BLANK_STRING)) {
-                    throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
-                            ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
-                }
-                if ((notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(WEEKLY_SUMMARY))) {
-                    throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
-                            ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+                if(Objects.nonNull(notificationType) && !notificationType.equals(BLANK_STRING)) {
+                    if ((notificationType.equalsIgnoreCase(PartnerConstants.ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY_SUMMARY))) {
+                        throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
+                                ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+                    }
                 }
             }
             List<String> partnerIdList = null;
@@ -91,11 +94,14 @@ public class NotificationsServiceImpl implements NotificationsService {
             Page<NotificationsSummaryEntity> page = notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getFilterBy(), filterDto.getNotificationStatus(),
                     filterDto.getNotificationType(), partnerIdList, isPartnerAdmin, pageable);
             if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-                List<NotificationsResponseDto> notificationsResponseDtoList = MapperUtils.mapAll(page.getContent(), NotificationsResponseDto.class);
+                List<NotificationsSummaryDto> notificationsSummaryDtoList = MapperUtils.mapAll(page.getContent(), NotificationsSummaryDto.class);
+                List<NotificationsResponseDto> responseList = notificationsSummaryDtoList.stream()
+                        .map(this::mapToResponseDto)
+                        .collect(Collectors.toList());
                 pageResponseV2Dto.setPageNo(page.getNumber());
                 pageResponseV2Dto.setPageSize(page.getSize());
                 pageResponseV2Dto.setTotalResults(page.getTotalElements());
-                pageResponseV2Dto.setData(notificationsResponseDtoList);
+                pageResponseV2Dto.setData(responseList);
             }
             responseWrapper.setResponse(pageResponseV2Dto);
         } catch (PartnerServiceException ex) {
@@ -112,6 +118,29 @@ public class NotificationsServiceImpl implements NotificationsService {
         responseWrapper.setId(getNotificationsId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
+    }
+
+    public NotificationsResponseDto mapToResponseDto(NotificationsSummaryDto summaryDto) {
+        NotificationsResponseDto responseDto = new NotificationsResponseDto();
+        responseDto.setNotificationId(summaryDto.getNotificationId());
+        responseDto.setNotificationPartnerId(summaryDto.getNotificationPartnerId());
+        responseDto.setNotificationType(summaryDto.getNotificationType());
+        responseDto.setNotificationStatus(summaryDto.getNotificationStatus());
+        responseDto.setCreatedDateTime(summaryDto.getCreatedDateTime());
+
+        // Convert JSON string to NotificationDetailsDto
+        if (summaryDto.getNotificationDetails() != null) {
+            try {
+                NotificationDetailsDto detailsDto = objectMapper.readValue(
+                        summaryDto.getNotificationDetails(), NotificationDetailsDto.class);
+                responseDto.setNotificationDetails(detailsDto);
+            } catch (JsonProcessingException e) {
+                throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
+                        ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorMessage());
+            }
+        }
+
+        return responseDto;
     }
 
     private AuthUserDetails authUserDetails() {

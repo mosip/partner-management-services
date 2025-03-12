@@ -50,7 +50,7 @@ public enum ErrorCode {
 	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests"),
 	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while fetching notifications"),
 	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary."),
-	INVALID_NOTIFICATION_TYPE("PMS_NOTIFICATION_ERROR_003", "Invalid notification type");
+	NOTIFICATION_DETAILS_JSON_ERROR("PMS_NOTIFICATION_ERROR_003", "Error parsing notification details JSON");
 	
 
 	/**
