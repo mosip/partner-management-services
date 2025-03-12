@@ -73,9 +73,9 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 			throws JsonProcessingException {
 		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
+		List<String> totalNotificationsCreated = new ArrayList<String>();
+		int pmsPartnerAdminsCount = 0;
 		try {
-			List<String> notificationIdsCreated = new ArrayList<String>();
-
 			List<String> certificateTypes = new ArrayList<String>();
 			certificateTypes.add(PartnerConstants.ROOT);
 			certificateTypes.add(PartnerConstants.INTERMEDIATE);
@@ -86,7 +86,8 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
 			// Step 2: Validate if each of these are valid Partner Admins in PMS
 			List<Partner> pmsPartnerAdmins = getValidPartnerAdmins(keycloakPartnerAdmins);
-			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdmins.size());
+			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
+			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdminsCount);
 
 			// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 			// days and so on
@@ -95,12 +96,12 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 				LocalTime validTillTime = LocalTime.MAX;
 				LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
 				certificateTypes.forEach(certificateType -> {
-					notificationIdsCreated.clear();
-					log.info("Starting notifications creation for " + certificateType
-							+ " certificate for expiry period, {}", expiryPeriod + " days");
+					log.info("Starting execution for " + certificateType + " certificate, for expiry period, {}",
+							expiryPeriod + " days");
 					TrustCertTypeListResponseDto response = certificateExpiryService
 							.getTrustCertificates(certificateType, validTillDateTime);
-					log.debug("For " + certificateTypes + " certificates, response received, {}", response);
+					log.debug("Response received, {}", response);
+					List<String> countPerCertTypeExpiryPeriod = new ArrayList<String>();
 					if (response.getAllPartnerCertificates().size() > 0) {
 						log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
 								+ " days, {}", response.getAllPartnerCertificates().size());
@@ -111,7 +112,8 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 										expiryPeriod, partnerAdminDetails, expiringCertificate);
 								// Step 5: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification.getId());
-								notificationIdsCreated.add(savedNotification.getId());
+								countPerCertTypeExpiryPeriod.add(savedNotification.getId());
+								totalNotificationsCreated.add(savedNotification.getId());
 							});
 
 						});
@@ -119,9 +121,10 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 						log.info("There are no " + certificateType + " certificates expiring after " + expiryPeriod
 								+ " days");
 					}
-					log.info("Completed notifications creation for " + certificateType
-							+ " certificate, for expiry period, {}", expiryPeriod + " days");
-					log.info("Created notifications, {}", notificationIdsCreated.size());
+					log.info("Completed execution for " + certificateType + " certificate, for expiry period, {}",
+							expiryPeriod + " days");
+
+					log.info("Created {}", countPerCertTypeExpiryPeriod.size() + " notifications");
 
 				});
 			});
@@ -129,7 +132,11 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
 					e);
 		}
-		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE");
+		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE, created {}",
+				totalNotificationsCreated.size() + " notifications, for " + pmsPartnerAdminsCount + " partner admins.");
+		totalNotificationsCreated.forEach(notificationId -> {
+			log.info(notificationId);
+		});
 		return RepeatStatus.FINISHED;
 	}
 

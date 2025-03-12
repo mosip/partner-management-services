@@ -41,9 +41,9 @@ public class BatchJobScheduler {
 	@Autowired
 	private JobLauncher jobLauncher;
 
-	@Qualifier("rootCertificateExpiryJob")
+	@Qualifier("rootAndIntermediateCertificateExpiryJob")
 	@Autowired
-	private Job rootCertificateExpiryJob;
+	private Job rootAndIntermediateCertificateExpiryJob;
 
 	@Scheduled(cron = "${mosip.pms.batch.job.root.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
@@ -51,14 +51,14 @@ public class BatchJobScheduler {
 		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
 				.toJobParameters();
 		try {
-			JobExecution jobExecution = jobLauncher.run(rootCertificateExpiryJob, jobParam);
+			JobExecution jobExecution = jobLauncher.run(rootAndIntermediateCertificateExpiryJob, jobParam);
 
 			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
 
 		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
 				| JobParametersInvalidException e) {
 
-			log.error(LOGDISPLAY, "RootCertificateExpiryJob failed", e.getMessage(), null);
+			log.error(LOGDISPLAY, "RootAndIntermediateCertificateExpiryJob failed", e.getMessage(), null);
 		}
 	}
 

@@ -22,18 +22,18 @@ import io.mosip.pms.batchjob.tasklets.RootAndIntermediateCertificateExpiryTaskle
 public class BatchJobConfig {
 
 	@Autowired
-	private RootAndIntermediateCertificateExpiryTasklet rootCertificateExpiryTasklet;
+	private RootAndIntermediateCertificateExpiryTasklet rootAndIntermediateCertificateExpiryTasklet;
 
 	@Bean
-	public Step rootCertificateExpiryStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-		return new StepBuilder("rootCertificateExpiryStep", jobRepository)
-				.tasklet(rootCertificateExpiryTasklet, transactionManager).build();
+	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("rootAndIntermediateCertificateExpiryStep", jobRepository)
+				.tasklet(rootAndIntermediateCertificateExpiryTasklet, transactionManager).build();
 	}
 
 	@Bean
-	public Job rootCertificateExpiryJob(JobRepository jobRepository,
-			@Qualifier("rootCertificateExpiryStep") Step rootCertificateExpiryStep) {
-		return new JobBuilder("rootCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
-				.start(rootCertificateExpiryStep).build();
+	public Job rootAndIntermediateCertificateExpiryJob(JobRepository jobRepository,
+			@Qualifier("rootAndIntermediateCertificateExpiryStep") Step rootAndIntermediateCertificateExpiryStep) {
+		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
+				.start(rootAndIntermediateCertificateExpiryStep).build();
 	}
 }
