@@ -25,7 +25,6 @@ public class TemplateHelper {
 
 	private static final String LANG_CODE = "langcode";
 	private static final String TEMPLATE_TYPE_CODE = "templatetypecode";
-	private static final String ROOT_CERT_EXPIRY = "ROOT_CERT_EXPIRY";
 
 	@Value("${email.notification.partner.cert.expiry.template}")
 	private String partnerCertExpiryTemplate;
@@ -82,11 +81,15 @@ public class TemplateHelper {
 
 	private String getTemplateTypeCode(String notificationType) {
 		switch (notificationType) {
-		case ROOT_CERT_EXPIRY:
-			return rootCertExpiryTemplate;
-		default:
-			throw new BatchJobServiceException(ErrorCodes.INVALID_TEMPLATE_TYPE.getCode(),
-					ErrorCodes.INVALID_TEMPLATE_TYPE.getMessage());
+			case PartnerConstants.ROOT_CERT_EXPIRY:
+				return rootCertExpiryTemplate;
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+				return intermediateCertExpiryTemplate;
+			case PartnerConstants.PARTNER_CERT_EXPIRY:
+				return partnerCertExpiryTemplate;
+			default:
+				throw new BatchJobServiceException(ErrorCodes.INVALID_TEMPLATE_TYPE.getCode(),
+						ErrorCodes.INVALID_TEMPLATE_TYPE.getMessage());
 		}
 	}
 }
