@@ -12,13 +12,11 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationsSummaryRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
-import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.NotificationsSummaryDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -93,14 +91,13 @@ public class NotificationsServiceImpl implements NotificationsService {
             Page<NotificationsSummaryEntity> page = notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getFilterBy(), filterDto.getNotificationStatus(),
                     filterDto.getNotificationType(), partnerIdList, pageable);
             if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-                List<NotificationsSummaryDto> notificationsSummaryDtoList = MapperUtils.mapAll(page.getContent(), NotificationsSummaryDto.class);
-                List<NotificationsResponseDto> responseList = notificationsSummaryDtoList.stream()
+                List<NotificationsResponseDto> notificationsResponseDtoList = page.getContent().stream()
                         .map(this::mapToResponseDto)
                         .collect(Collectors.toList());
                 pageResponseV2Dto.setPageNo(page.getNumber());
                 pageResponseV2Dto.setPageSize(page.getSize());
                 pageResponseV2Dto.setTotalResults(page.getTotalElements());
-                pageResponseV2Dto.setData(responseList);
+                pageResponseV2Dto.setData(notificationsResponseDtoList);
             }
             responseWrapper.setResponse(pageResponseV2Dto);
         } catch (PartnerServiceException ex) {
@@ -119,19 +116,19 @@ public class NotificationsServiceImpl implements NotificationsService {
         return responseWrapper;
     }
 
-    public NotificationsResponseDto mapToResponseDto(NotificationsSummaryDto summaryDto) {
+    public NotificationsResponseDto mapToResponseDto(NotificationsSummaryEntity summaryEntity) {
         NotificationsResponseDto responseDto = new NotificationsResponseDto();
-        responseDto.setNotificationId(summaryDto.getNotificationId());
-        responseDto.setNotificationPartnerId(summaryDto.getNotificationPartnerId());
-        responseDto.setNotificationType(summaryDto.getNotificationType());
-        responseDto.setNotificationStatus(summaryDto.getNotificationStatus());
-        responseDto.setCreatedDateTime(summaryDto.getCreatedDateTime());
+        responseDto.setNotificationId(summaryEntity.getNotificationId());
+        responseDto.setNotificationPartnerId(summaryEntity.getNotificationPartnerId());
+        responseDto.setNotificationType(summaryEntity.getNotificationType());
+        responseDto.setNotificationStatus(summaryEntity.getNotificationStatus());
+        responseDto.setCreatedDateTime(summaryEntity.getCreatedDateTime());
 
         // Convert JSON string to NotificationDetailsDto
-        if (summaryDto.getNotificationDetails() != null) {
+        if (summaryEntity.getNotificationDetails() != null) {
             try {
                 NotificationDetailsDto detailsDto = objectMapper.readValue(
-                        summaryDto.getNotificationDetails(), NotificationDetailsDto.class);
+                        summaryEntity.getNotificationDetails(), NotificationDetailsDto.class);
                 responseDto.setNotificationDetails(detailsDto);
             } catch (JsonProcessingException e) {
                 throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
