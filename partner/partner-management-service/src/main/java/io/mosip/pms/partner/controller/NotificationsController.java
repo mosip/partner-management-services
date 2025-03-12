@@ -10,6 +10,8 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +43,17 @@ public class NotificationsController {
     })
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
             @RequestParam(value = "filterBy", required = false) String filterBy,
-            @RequestParam(value = "notificationStatus", defaultValue = "ACTIVE") String notificationStatus,
+            @Parameter(
+                    description = "Status of notifications",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"active", "dismissed"})
+            )
+            @RequestParam(value = "notificationStatus", required = false) String notificationStatus,
+            @Parameter(
+                    description = "Type of notifications",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey"})
+            )
             @RequestParam(value = "notificationType", required = false) String notificationType,
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize

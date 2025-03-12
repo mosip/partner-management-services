@@ -68,31 +68,30 @@ public class NotificationsServiceImpl implements NotificationsService {
             String notificationType = filterDto.getNotificationType();
             if(!isPartnerAdmin) {
                 if(Objects.nonNull(notificationType) && !notificationType.equals(BLANK_STRING)) {
-                    if ((notificationType.equalsIgnoreCase(PartnerConstants.ROOT_CERT_EXPIRY) || notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE_CERT_EXPIRY) || notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY_SUMMARY))) {
+                    if ((notificationType.equalsIgnoreCase(PartnerConstants.ROOT) || notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) || notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY))) {
                         throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                                 ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
                     }
                 }
             }
-            List<String> partnerIdList = null;
-            if (!isPartnerAdmin) {
-                String userId = getUserId();
-                List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-                if (partnerList.isEmpty()) {
-                    LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                    throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                            io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-                }
-                partnerIdList = new ArrayList<>();
-                for (Partner partner : partnerList) {
-                    partnerHelper.validatePartnerId(partner, userId);
+            List<String> partnerIdList = new ArrayList<>();
+            String userId = getUserId();
+            List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+            if (partnerList.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+                throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+            for (Partner partner : partnerList) {
+                partnerHelper.validatePartnerId(partner, userId);
+                if (partner.getIsActive()) {
                     partnerIdList.add(partner.getId());
                 }
             }
             Pageable pageable = PageRequest.of(pageNo, pageSize);
 
             Page<NotificationsSummaryEntity> page = notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getFilterBy(), filterDto.getNotificationStatus(),
-                    filterDto.getNotificationType(), partnerIdList, isPartnerAdmin, pageable);
+                    filterDto.getNotificationType(), partnerIdList, pageable);
             if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
                 List<NotificationsSummaryDto> notificationsSummaryDtoList = MapperUtils.mapAll(page.getContent(), NotificationsSummaryDto.class);
                 List<NotificationsResponseDto> responseList = notificationsSummaryDtoList.stream()

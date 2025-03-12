@@ -65,4 +65,6 @@ public final class PartnerConstants {
     public static final String INTERMEDIATE = "intermediate";
 
     public static final String RESPONSE = "response";
+
+    public static final String WEEKLY = "weekly";
 }
