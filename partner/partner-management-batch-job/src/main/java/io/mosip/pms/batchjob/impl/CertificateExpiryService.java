@@ -1,12 +1,9 @@
 package io.mosip.pms.batchjob.impl;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.batchjob.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.batchjob.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.batchjob.util.KeyManagerHelper;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
-import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 
 import java.time.LocalDateTime;
 

@@ -3,6 +3,7 @@ package io.mosip.pms.partner.manager.controller;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 

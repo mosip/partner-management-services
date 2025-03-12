@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.mosip.pms.batchjob.util.KeycloakHelper;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.constant.PartnerConstants;
 import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -23,17 +25,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.constants.PartnerConstants;
-import io.mosip.pms.batchjob.dto.CertificateDetailsDto;
-import io.mosip.pms.batchjob.dto.NotificationDetailsDto;
-import io.mosip.pms.batchjob.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.batchjob.dto.TrustCertificateSummaryDto;
-import io.mosip.pms.batchjob.entity.Notification;
-import io.mosip.pms.batchjob.entity.Partner;
+import io.mosip.pms.common.dto.CertificateDetailsDto;
+import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
+import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.entity.Notification;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import io.mosip.pms.batchjob.impl.CertificateExpiryService;
 import io.mosip.pms.batchjob.impl.EmailNotificationService;
-import io.mosip.pms.batchjob.repository.NotificationServiceRepository;
+import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.batchjob.util.BatchJobHelper;
 
 /**

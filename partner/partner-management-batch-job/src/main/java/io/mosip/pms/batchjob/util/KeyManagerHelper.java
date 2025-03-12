@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.batchjob.dto.TrustCertTypeListRequestDto;
-import io.mosip.pms.batchjob.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 
@@ -37,7 +37,7 @@ public class KeyManagerHelper {
 	private String keyManagerTrustCertificateUrl;
 
 	@Autowired
-	RestUtil restUtil;
+	RestHelper restHelper;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -50,7 +50,7 @@ public class KeyManagerHelper {
 			String urlWithPath = UriComponentsBuilder.fromUriString(keyManagerPartnerCertificateUrl)
 					.buildAndExpand(pathSegments).toUriString();
 
-			return restUtil.sendRequest(urlWithPath, HttpMethod.GET, null,
+			return restHelper.sendRequest(urlWithPath, HttpMethod.GET, null,
 					new TypeReference<OriginalCertDownloadResponseDto>() {
 					}, MediaType.APPLICATION_JSON);
 		} catch (BatchJobServiceException e) {
@@ -74,7 +74,7 @@ public class KeyManagerHelper {
 			request.setRequest(trustCertTypeListRequestDto);
 
 			LOGGER.info("request sent, {}", request);
-			return restUtil.sendRequest(keyManagerTrustCertificateUrl, HttpMethod.POST, request,
+			return restHelper.sendRequest(keyManagerTrustCertificateUrl, HttpMethod.POST, request,
 					new TypeReference<TrustCertTypeListResponseDto>() {
 					}, MediaType.APPLICATION_JSON);
 		} catch (BatchJobServiceException e) {

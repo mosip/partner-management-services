@@ -2,13 +2,13 @@ package io.mosip.pms.batchjob.util;
 
 import java.util.Optional;
 
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.entity.Partner;
-import io.mosip.pms.batchjob.repository.PartnerServiceRepository;
 
 @Component
 public class BatchJobHelper {

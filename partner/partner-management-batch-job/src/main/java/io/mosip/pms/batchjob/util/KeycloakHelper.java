@@ -32,7 +32,7 @@ public class KeycloakHelper {
     private String roleUsersUrl;
 
     @Autowired
-    RestUtil restUtil;
+    RestHelper restHelper;
 
     @Cacheable(value = "partnerAdminIdsCache", key = "'partnerAdminIds'", unless = "#result.isEmpty()")
     public List<String> getPartnerIdsWithPartnerAdminRole() {
@@ -49,7 +49,7 @@ public class KeycloakHelper {
             LOGGER.info("Fetching Partner Admin user IDs from URL: {}", urlWithPath);
 
             // Send API request
-            Object response = restUtil.executeApiCall(urlWithPath, HttpMethod.GET, null, Object.class, MediaType.APPLICATION_JSON);
+            Object response = restHelper.executeApiCall(urlWithPath, HttpMethod.GET, null, Object.class, MediaType.APPLICATION_JSON);
 
             if (response instanceof List<?> usersList) {
                 for (Object userObj : usersList) {

@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.manager.dto;
+package io.mosip.pms.common.dto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;

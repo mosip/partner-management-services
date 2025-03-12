@@ -1,6 +1,6 @@
-package io.mosip.pms.batchjob.repository;
+package io.mosip.pms.common.repository;
 
-import io.mosip.pms.batchjob.entity.Notification;
+import io.mosip.pms.common.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

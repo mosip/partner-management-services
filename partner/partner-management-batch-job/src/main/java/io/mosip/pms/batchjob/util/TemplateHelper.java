@@ -3,6 +3,7 @@ package io.mosip.pms.batchjob.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.mosip.pms.common.response.dto.TemplatesResponseDto;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.dto.TemplateResponseDto;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import io.mosip.pms.batchjob.impl.EmailNotificationService;
 
@@ -39,11 +39,11 @@ public class TemplateHelper {
 	@Value("${email.notification.intermediate.cert.expiry.template}")
 	private String intermediateCertExpiryTemplate;
 
-	@Value("${pmp.partner.email.template.get.rest.uri}")
+	@Value("${resource.template.url}")
 	private String getTemplateUrl;
 
 	@Autowired
-	RestUtil restUtil;
+    RestHelper restHelper;
 
 	@Cacheable(value = "emailTemplates", key = "#langCode + '_' + #notificationType")
 	public String fetchEmailTemplate(String langCode, String notificationType) {
@@ -56,8 +56,8 @@ public class TemplateHelper {
 		String urlWithPath = UriComponentsBuilder.fromUriString(getTemplateUrl).buildAndExpand(pathSegments)
 				.toUriString();
 
-		TemplateResponseDto response = restUtil.sendRequest(urlWithPath, HttpMethod.GET, null,
-				new TypeReference<TemplateResponseDto>() {
+		TemplatesResponseDto response = restHelper.sendRequest(urlWithPath, HttpMethod.GET, null,
+				new TypeReference<TemplatesResponseDto>() {
 				}, MediaType.APPLICATION_JSON);
 		return response.getTemplates().getFirst().getFileText();
 	}
