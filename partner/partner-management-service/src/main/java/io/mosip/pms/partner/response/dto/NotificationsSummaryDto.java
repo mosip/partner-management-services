@@ -1,11 +1,10 @@
 package io.mosip.pms.partner.response.dto;
 
-import io.mosip.pms.common.dto.NotificationDetailsDto;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class NotificationsResponseDto {
+public class NotificationsSummaryDto {
 
     private String notificationId;
 
@@ -17,6 +16,6 @@ public class NotificationsResponseDto {
 
     private LocalDateTime createdDateTime;
 
-    private NotificationDetailsDto notificationDetails;
+    private String notificationDetails;
 
 }
