@@ -59,14 +59,14 @@ public class EmailNotificationService {
             Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
 
             if (optionalNotification.isEmpty()) {
-                LOGGER.error("No notificationEntity found for ID: {}", notificationId);
+                LOGGER.error("No notification found for ID: {}", notificationId);
                 return;
             }
 
             NotificationEntity notificationEntity = optionalNotification.get();
 
             if (notificationEntity.getEmailSent()) {
-                LOGGER.warn("Email notificationEntity already sent for ID: {}", notificationId);
+                LOGGER.warn("Email notification already sent for ID: {}", notificationId);
                 return;
             }
 
@@ -78,11 +78,11 @@ public class EmailNotificationService {
             notificationEntity.setEmailSent(true);
             notificationEntity.setEmailSentDatetime(LocalDateTime.now());
             notificationServiceRepository.save(notificationEntity);
-            LOGGER.info("NotificationEntity status successfully updated for ID: {}", notificationId);
+            LOGGER.info("notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Failed to send email for NotificationEntity ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage(), e);
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for NotificationEntity ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {} - {}", notificationId, e.getMessage(), e);
         }
     }
 
@@ -114,17 +114,17 @@ public class EmailNotificationService {
 
             // Add email details
             requestBody.add("mailTo", notificationEntity.getEmailId());
-            requestBody.add("mailSubject", "Root Certificate Expiry NotificationEntity");
+            requestBody.add("mailSubject", "Root Certificate Expiry notification");
             requestBody.add("mailContent", emailTemplate);
 
             // Send email request
             restUtil.postApi(sendEmailUrl, null, "", "", MediaType.MULTIPART_FORM_DATA, requestBody, Map.class);
-            LOGGER.info("Email sent successfully for notificationEntity ID: {}", notificationEntity.getId());
+            LOGGER.info("Email sent successfully for notification ID: {}", notificationEntity.getId());
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Error while sending email for notificationEntity ID: {} - {}", notificationEntity.getId(), e.getMessage(), e);
+            LOGGER.error("Error while sending email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for notificationEntity ID: {}", notificationEntity.getId(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {}", notificationEntity.getId(), e);
             throw new BatchJobServiceException(
                     ErrorCodes.EMAIL_SEND_FAILED.getCode(),
                     ErrorCodes.EMAIL_SEND_FAILED.getMessage(),
