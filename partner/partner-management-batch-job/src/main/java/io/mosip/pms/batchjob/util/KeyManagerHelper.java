@@ -1,21 +1,19 @@
 package io.mosip.pms.batchjob.util;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
+import io.mosip.pms.common.util.RestUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
@@ -37,29 +35,30 @@ public class KeyManagerHelper {
 	private String keyManagerTrustCertificateUrl;
 
 	@Autowired
-	RestHelper restHelper;
+	RestUtil restUtil;
 
 	@Autowired
 	ObjectMapper objectMapper;
 
-	public OriginalCertDownloadResponseDto getPartnerCertificate(String certificateAlias) {
-		try {
-			Map<String, String> pathSegments = new HashMap<>();
-			pathSegments.put(PARTNER_CERT_ID, certificateAlias);
-			// Build the URL
-			String urlWithPath = UriComponentsBuilder.fromUriString(keyManagerPartnerCertificateUrl)
-					.buildAndExpand(pathSegments).toUriString();
+	@Autowired
+	BatchJobHelper batchJobHelper;
 
-			return restHelper.sendRequest(urlWithPath, HttpMethod.GET, null,
-					new TypeReference<OriginalCertDownloadResponseDto>() {
-					}, MediaType.APPLICATION_JSON);
+	public OriginalCertDownloadResponseDto getPartnerCertificate(String certificateAlias) {
+		Map<String, String> pathSegments = Map.of(PARTNER_CERT_ID, certificateAlias);
+
+		try {
+			Map<String, Object> response = restUtil.getApi(keyManagerPartnerCertificateUrl, pathSegments, Map.class);
+			batchJobHelper.validateApiResponse(response, keyManagerPartnerCertificateUrl);
+			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE), OriginalCertDownloadResponseDto.class);
 		} catch (BatchJobServiceException e) {
 			LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
 			throw e;
 		} catch (Exception e) {
 			LOGGER.error("Unexpected error occurred while fetching partner certificate", e);
-			throw new BatchJobServiceException(ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(),
-					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage());
+			throw new BatchJobServiceException(
+					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(),
+					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage()
+			);
 		}
 	}
 
@@ -74,9 +73,10 @@ public class KeyManagerHelper {
 			request.setRequest(trustCertTypeListRequestDto);
 
 			LOGGER.info("request sent, {}", request);
-			return restHelper.sendRequest(keyManagerTrustCertificateUrl, HttpMethod.POST, request,
-					new TypeReference<TrustCertTypeListResponseDto>() {
-					}, MediaType.APPLICATION_JSON);
+			Map<String, Object> response = restUtil
+					.postApi(keyManagerTrustCertificateUrl, null, "", "", MediaType.APPLICATION_JSON, request, Map.class);
+			batchJobHelper.validateApiResponse(response, keyManagerTrustCertificateUrl);
+			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE), TrustCertTypeListResponseDto.class);
 		} catch (BatchJobServiceException e) {
 			LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
 			throw e;
@@ -88,5 +88,4 @@ public class KeyManagerHelper {
 					ErrorCodes.TRUST_CERTIFICATES_FETCH_ERROR.getMessage());
 		}
 	}
-
 }

@@ -7,22 +7,20 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import io.mosip.pms.batchjob.util.RestHelper;
-import io.mosip.pms.common.entity.Notification;
+import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
+import io.mosip.pms.common.util.RestUtil;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
@@ -41,7 +39,7 @@ public class EmailNotificationService {
     private String sendEmailUrl;
 
     @Autowired
-    RestHelper restHelper;
+    RestUtil restUtil;
 
     @Autowired
     VelocityEngine velocityEngine;
@@ -58,39 +56,39 @@ public class EmailNotificationService {
     @Transactional
     public void sendEmailNotification(String notificationId) {
         try {
-            Optional<Notification> optionalNotification = notificationServiceRepository.findById(notificationId);
+            Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
 
             if (optionalNotification.isEmpty()) {
                 LOGGER.error("No notification found for ID: {}", notificationId);
                 return;
             }
 
-            Notification notification = optionalNotification.get();
+            NotificationEntity notificationEntity = optionalNotification.get();
 
-            if (notification.getEmailSent()) {
+            if (notificationEntity.getEmailSent()) {
                 LOGGER.warn("Email notification already sent for ID: {}", notificationId);
                 return;
             }
 
-            String template = templateHelper.fetchEmailTemplate(notification.getEmailLangCode(), notification.getNotificationType());
-            String populatedTemplate = populateTemplate(template, notification);
-            sendEmail(notification, populatedTemplate);
+            String template = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(), notificationEntity.getNotificationType());
+            String populatedTemplate = populateTemplate(template, notificationEntity);
+            sendEmail(notificationEntity, populatedTemplate);
 
-            // update notification status
-            notification.setEmailSent(true);
-            notification.setEmailSentDatetime(LocalDateTime.now());
-            notificationServiceRepository.save(notification);
-            LOGGER.info("Notification status successfully updated for ID: {}", notificationId);
+            // update notificationEntity status
+            notificationEntity.setEmailSent(true);
+            notificationEntity.setEmailSentDatetime(LocalDateTime.now());
+            notificationServiceRepository.save(notificationEntity);
+            LOGGER.info("notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Failed to send email for Notification ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage(), e);
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for Notification ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {} - {}", notificationId, e.getMessage(), e);
         }
     }
 
 
-    private String populateTemplate(String templateContent, Notification notification) throws JsonProcessingException {
-        NotificationDetailsDto notificationDetails = objectMapper.readValue(notification.getNotificationDetailsJson(), NotificationDetailsDto.class);
+    private String populateTemplate(String templateContent, NotificationEntity notificationEntity) throws JsonProcessingException {
+        NotificationDetailsDto notificationDetails = objectMapper.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
         VelocityContext context = getVelocityContext(notificationDetails);
         StringWriter writer = new StringWriter();
         velocityEngine.evaluate(context, writer, "logTag", templateContent);
@@ -110,29 +108,23 @@ public class EmailNotificationService {
         return context;
     }
 
-    private void sendEmail(Notification notification, String emailTemplate) {
+    private void sendEmail(NotificationEntity notificationEntity, String emailTemplate) {
         try {
             MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
             // Add email details
-            requestBody.add("mailTo", notification.getEmailId());
-            requestBody.add("mailSubject", "Root Certificate Expiry Notification");
+            requestBody.add("mailTo", notificationEntity.getEmailId());
+            requestBody.add("mailSubject", "Root Certificate Expiry notification");
             requestBody.add("mailContent", emailTemplate);
 
             // Send email request
-            restHelper.sendRequest(
-                    sendEmailUrl,
-                    HttpMethod.POST,
-                    requestBody,
-                    new TypeReference<Map>(){},
-                    MediaType.MULTIPART_FORM_DATA
-            );
-            LOGGER.info("Email sent successfully for notification ID: {}", notification.getId());
+            restUtil.postApi(sendEmailUrl, null, "", "", MediaType.MULTIPART_FORM_DATA, requestBody, Map.class);
+            LOGGER.info("Email sent successfully for notification ID: {}", notificationEntity.getId());
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Error while sending email for notification ID: {} - {}", notification.getId(), e.getMessage(), e);
+            LOGGER.error("Error while sending email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for notification ID: {}", notification.getId(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {}", notificationEntity.getId(), e);
             throw new BatchJobServiceException(
                     ErrorCodes.EMAIL_SEND_FAILED.getCode(),
                     ErrorCodes.EMAIL_SEND_FAILED.getMessage(),

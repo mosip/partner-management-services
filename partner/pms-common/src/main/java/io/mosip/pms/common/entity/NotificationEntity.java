@@ -8,7 +8,7 @@ import lombok.Data;
 @Entity
 @Table(name = "notifications")
 @Data
-public class Notifications {
+public class NotificationEntity {
 
     @Id
     private String id;

@@ -29,7 +29,7 @@ import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
-import io.mosip.pms.common.entity.Notification;
+import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
 import io.mosip.pms.batchjob.impl.CertificateExpiryService;
 import io.mosip.pms.batchjob.impl.EmailNotificationService;
@@ -39,7 +39,7 @@ import io.mosip.pms.batchjob.util.BatchJobHelper;
 /**
  * This Batch Job will create notifications for the Root and Intermediate
  * certificates expiring as per the configured period.
- * 
+ *
  * @author Mayura Deshmukh
  * @since 1.3.x
  */
@@ -108,7 +108,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 						pmsPartnerAdmins.forEach(partnerAdminDetails -> {
 							// Step 4: add the notification
 							response.getAllPartnerCertificates().forEach(expiringCertificate -> {
-								Notification savedNotification = saveCertificateExpiryNotification(certificateType,
+								NotificationEntity savedNotification = saveCertificateExpiryNotification(certificateType,
 										expiryPeriod, partnerAdminDetails, expiringCertificate);
 								// Step 5: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification.getId());
@@ -153,8 +153,8 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		return pmsPartnerAdmins;
 	}
 
-	private Notification saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
-			Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
+	private NotificationEntity saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
+														   Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
 			throws BatchJobServiceException {
 		try {
 			List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
@@ -174,7 +174,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(expiringCertificates);
 			String id = UUID.randomUUID().toString();
-			Notification notification = new Notification();
+			NotificationEntity notification = new NotificationEntity();
 			notification.setId(id);
 			notification.setPartnerId(partnerAdminDetails.getId());
 			notification
@@ -188,7 +188,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			notification.setCreatedDatetime(LocalDateTime.now());
 			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
 			log.info("saving notifications, {}", notification);
-			Notification savedNotification = notificationServiceRepository.save(notification);
+			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
 			return savedNotification;
 		} catch (JsonProcessingException jpe) {
 			log.error("Error creating the notification: {}", jpe.getMessage());

@@ -16,7 +16,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.dto.NotificationDto;
 import io.mosip.pms.common.util.NotificationUtil;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.TemplateUtil;

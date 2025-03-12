@@ -15,7 +15,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
 
     @Query(value = "SELECT new NotificationsSummaryEntity(" +
             "n.id, n.partnerId, n.notificationType, n.notificationStatus, n.createdDatetime as crDtimes, n.notificationDetailsJson) " +
-            "FROM Notifications n " +
+            "FROM NotificationEntity n " +
             "LEFT JOIN n.partner p " +
             "WHERE (:filterBy IS NULL OR lower(n.notificationDetailsJson) LIKE %:filterBy%) " +
             "AND (:notificationStatus IS NULL OR lower(n.notificationStatus) LIKE %:notificationStatus%) " +

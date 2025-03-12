@@ -1,4 +1,4 @@
-package io.mosip.pms.partner.response.dto;
+package io.mosip.pms.common.dto;
 
 import lombok.Data;
 import java.time.LocalDateTime;
