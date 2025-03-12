@@ -63,4 +63,6 @@ public final class PartnerConstants {
     public static final String ROOT = "root";
 
     public static final String INTERMEDIATE = "intermediate";
+
+    public static final String RESPONSE = "response";
 }

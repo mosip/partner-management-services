@@ -7,22 +7,20 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import io.mosip.pms.batchjob.util.RestHelper;
 import io.mosip.pms.common.entity.Notification;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
+import io.mosip.pms.common.util.RestUtil;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
@@ -41,7 +39,7 @@ public class EmailNotificationService {
     private String sendEmailUrl;
 
     @Autowired
-    RestHelper restHelper;
+    RestUtil restUtil;
 
     @Autowired
     VelocityEngine velocityEngine;
@@ -120,13 +118,7 @@ public class EmailNotificationService {
             requestBody.add("mailContent", emailTemplate);
 
             // Send email request
-            restHelper.sendRequest(
-                    sendEmailUrl,
-                    HttpMethod.POST,
-                    requestBody,
-                    new TypeReference<Map>(){},
-                    MediaType.MULTIPART_FORM_DATA
-            );
+            restUtil.postApi(sendEmailUrl, null, "", "", MediaType.MULTIPART_FORM_DATA, requestBody, Map.class);
             LOGGER.info("Email sent successfully for notification ID: {}", notification.getId());
         } catch (BatchJobServiceException e) {
             LOGGER.error("Error while sending email for notification ID: {} - {}", notification.getId(), e.getMessage(), e);

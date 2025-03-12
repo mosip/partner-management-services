@@ -3,12 +3,12 @@ package io.mosip.pms.batchjob.util;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
+import io.mosip.pms.common.util.RestUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -32,7 +32,7 @@ public class KeycloakHelper {
     private String roleUsersUrl;
 
     @Autowired
-    RestHelper restHelper;
+    RestUtil restUtil;
 
     @Cacheable(value = "partnerAdminIdsCache", key = "'partnerAdminIds'", unless = "#result.isEmpty()")
     public List<String> getPartnerIdsWithPartnerAdminRole() {
@@ -49,7 +49,7 @@ public class KeycloakHelper {
             LOGGER.info("Fetching Partner Admin user IDs from URL: {}", urlWithPath);
 
             // Send API request
-            Object response = restHelper.executeApiCall(urlWithPath, HttpMethod.GET, null, Object.class, MediaType.APPLICATION_JSON);
+            Object response = restUtil.getApiWithContentType(roleUsersUrl, pathSegments, Object.class, MediaType.APPLICATION_JSON);
 
             if (response instanceof List<?> usersList) {
                 for (Object userObj : usersList) {
