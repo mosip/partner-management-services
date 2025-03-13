@@ -2,6 +2,8 @@ package io.mosip.pms.user.service.impl;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.NotificationsSeenRequestDto;
+import io.mosip.pms.common.dto.NotificationsSeenResponseDto;
 import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
@@ -24,6 +26,7 @@ import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.user.service.UserManagementService;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +42,9 @@ public class UserManagementServiceImpl implements UserManagementService{
 
 	@Value("${mosip.pms.api.id.user.consent.get}")
 	private String getUserConsentGivenId;
+
+	@Value("${mosip.pms.api.id.users.notifications.seen.timestamp.put}")
+	private String putNotificationsSeenTimestampId;
 
 	@Autowired
 	KeycloakImpl keycloakService;
@@ -160,6 +166,52 @@ public class UserManagementServiceImpl implements UserManagementService{
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getUserConsentGivenId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(NotificationsSeenRequestDto requestDto) {
+		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			LOGGER.info("sessionId", "idType", "id", "updating notification seen timestamp for user :", userId);
+			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+			if (optionalEntity.isPresent()) {
+				UserDetails entity = optionalEntity.get();
+				if (requestDto.isNotificationsSeen()) {
+					entity.setNotificationsSeen(true);
+					entity.setNotificationsSeenDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+					UserDetails savedEntity = userDetailsRepository.save(entity);
+
+					NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
+					responseDto.setUserId(savedEntity.getUserId());
+					responseDto.setNotificationsSeen(savedEntity.getNotificationsSeen());
+					responseDto.setNotificationsSeenDtimes(savedEntity.getNotificationsSeenDtimes());
+					responseWrapper.setResponse(responseDto);
+				} else {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME.getErrorCode(),
+							ErrorCode.UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME.getErrorMessage());
+				}
+			}
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In updateNotificationsSeenTimestamp method of UserManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception e) {
+			LOGGER.debug("sessionId", "idType", "id", e.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id", "In updateNotificationsSeenTimestamp method of UserManagementServiceImpl - " + e.getMessage());
+			String errorCode = ErrorCode.UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(putNotificationsSeenTimestampId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

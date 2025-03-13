@@ -154,7 +154,10 @@ public enum ErrorCode {
 	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_005", "The specified partner is not of type Authentication Partner"),
 	INVALID_PAGE_PARAMETERS("PMS_PS_ERROR_006", "Invalid pagination request: 'pageNo' and 'pageSize' must be specified together." ),
 	INVALID_SORT_PARAMETERS("PMS_PS_ERROR_007", "Invalid Sorting request: 'sortType' and 'sortFieldName' must be specified together." ),
-	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data.");
+	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data."),
+	UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_004", "Error while updating notifications seen date time"),
+	UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME("PMS_NOTIFICATION_ERROR_005", "Notifications seen should be true, so unable to update notifications seen date time");
+
 	/**
 	 * The error code.
 	 */
