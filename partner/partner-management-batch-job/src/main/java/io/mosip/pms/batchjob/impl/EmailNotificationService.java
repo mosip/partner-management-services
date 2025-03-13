@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.RestUtil;
@@ -70,9 +71,9 @@ public class EmailNotificationService {
                 return;
             }
 
-            String template = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(), notificationEntity.getNotificationType());
-            String populatedTemplate = populateTemplate(template, notificationEntity);
-            sendEmail(notificationEntity, populatedTemplate);
+            EmailTemplateDto templateDto = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(), notificationEntity.getNotificationType());
+            String populatedTemplate = populateTemplate(templateDto.getBody(), notificationEntity);
+            sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject());
 
             // update notificationEntity status
             notificationEntity.setEmailSent(true);
@@ -108,13 +109,13 @@ public class EmailNotificationService {
         return context;
     }
 
-    private void sendEmail(NotificationEntity notificationEntity, String emailTemplate) {
+    private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject) {
         try {
             MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
             // Add email details
             requestBody.add("mailTo", notificationEntity.getEmailId());
-            requestBody.add("mailSubject", "Root Certificate Expiry notification");
+            requestBody.add("mailSubject", emailSubject);
             requestBody.add("mailContent", emailTemplate);
 
             // Send email request
@@ -132,7 +133,5 @@ public class EmailNotificationService {
             );
         }
     }
-
-
 
 }
