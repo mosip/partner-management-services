@@ -199,4 +199,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> getnotifications;
 
+	private List<String> patchdismissnotification;
+
 }

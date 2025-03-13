@@ -158,7 +158,15 @@ public enum ErrorCode {
 	UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_004", "Error while updating notifications seen date time"),
 	UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME("PMS_NOTIFICATION_ERROR_005", "Notifications seen should be true, so unable to update notifications seen date time"),
 	USER_DETAILS_NOT_EXIST("PMS_NOTIFICATION_ERROR_006", "User details does not exist for the user, so unable to get notifications seen date time"),
-	GET_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_007", "Error while fetching notifications seen date time");
+	GET_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_007", "Error while fetching notifications seen date time"),
+	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while fetching notifications"),
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary."),
+	NOTIFICATION_DETAILS_JSON_ERROR("PMS_NOTIFICATION_ERROR_003", "Error parsing notification details JSON"),
+	NOTIFICATION_NOT_EXISTS("PMS_NOTIFICATION_ERROR_004", "Notification does not exist."),
+	NOTIFICATION_ALREADY_DISMISSED("PMS_NOTIFICATION_ERROR_005", "Notification has already been dismissed."),
+	DISMISS_NOTIFICATION_ERROR("PMS_NOTIFICATION_ERROR_006", "Error while dismissing the notification."),
+	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_007", "The notification does not belong to the partner."),
+	INVALID_NOTIFICATION_STATUS("PMS_NOTIFICATION_ERROR_008", "Invalid notification status. Expected: DISMISSED.");
 
 	/**
 	 * The error code.
