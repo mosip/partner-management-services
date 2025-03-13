@@ -75,6 +75,12 @@ create table pms.batch_job_execution_context (
     references batch_job_execution(job_execution_id)
 );
 
+create sequence pms.batch_step_execution_seq maxvalue 9223372036854775807 no cycle;
+create sequence pms.batch_job_execution_seq maxvalue 9223372036854775807 no cycle;
+create sequence pms.batch_job_seq maxvalue 9223372036854775807 no cycle;
+
+grant usage, select on all sequences in schema pms to pms_user;
+
 -- This table stores notifications for root, intermediate, and partner certificate expiry, as well as SBI expiry and API key expiry.
 CREATE TABLE pms.notifications
 (
