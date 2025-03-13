@@ -14,3 +14,6 @@ drop table if exists pms.batch_job_execution;
 drop table if exists pms.batch_job_instance;
 
 drop table if exists pms.notifications;
+
+ALTER TABLE pms.user_details DROP COLUMN notifications_seen;
+ALTER TABLE pms.user_details DROP COLUMN notifications_seen_dtimes;
