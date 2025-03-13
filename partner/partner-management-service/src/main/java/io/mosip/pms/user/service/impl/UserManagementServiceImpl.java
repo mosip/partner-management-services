@@ -191,6 +191,8 @@ public class UserManagementServiceImpl implements UserManagementService{
 				if (requestDto.isNotificationsSeen()) {
 					entity.setNotificationsSeen(true);
 					entity.setNotificationsSeenDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+					entity.setUpdBy(userId);
+					entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					UserDetails savedEntity = userDetailsRepository.save(entity);
 
 					NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
