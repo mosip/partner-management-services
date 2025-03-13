@@ -4,8 +4,6 @@ import io.mosip.pms.common.dto.NotificationsSeenRequestDto;
 import io.mosip.pms.common.dto.NotificationsSeenResponseDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
-import io.mosip.pms.device.request.dto.DeactivateSbiRequestDto;
-import io.mosip.pms.device.response.dto.IdDto;
 import jakarta.validation.Valid;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -125,7 +123,7 @@ public class UserController {
 		return responseWrapper;
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getUserconsent())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutnotificationseentimestamp())")
 	@PutMapping(value = "users/notifications-seen-timestamp")
 	@Operation(summary = "Added in release-1.3.0-beta.1 This endpoint updates the user's notifications seen status and timestamp",
 			description = "This endpoint updates the user's notifications seen status and timestamp. It is configured for all Partner Type roles.")

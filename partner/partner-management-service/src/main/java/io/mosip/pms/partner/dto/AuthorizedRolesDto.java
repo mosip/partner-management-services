@@ -191,6 +191,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getpartnersv3;
 
+	private List<String> putnotificationseentimestamp;
+
 	//Notifications Controller
 
 	private List<String> getnotifications;
