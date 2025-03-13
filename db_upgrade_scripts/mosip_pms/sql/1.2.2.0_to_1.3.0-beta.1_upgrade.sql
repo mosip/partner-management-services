@@ -107,3 +107,9 @@ COMMENT ON COLUMN pms.notifications.cr_dtimes IS 'Created Timestamp: The date an
 COMMENT ON COLUMN pms.notifications.cr_by IS 'Created By: The ID or name of the user who created the record.';
 COMMENT ON COLUMN pms.notifications.upd_by IS 'Updated By: The ID or name of the user who last updated the record.';
 COMMENT ON COLUMN pms.notifications.upd_dtimes IS 'Updated Timestamp: The date and time when any field in the record was last updated.';
+
+-- add new columns in user_details table
+ALTER TABLE pms.user_details Add COLUMN notifications_seen boolean DEFAULT FALSE;
+ALTER TABLE pms.user_details Add COLUMN notifications_seen_dtimes timestamp;
+COMMENT ON COLUMN pms.user_details.notifications_seen IS 'Notifications seen: Indicates whether the notifications has been seen (TRUE) or not (FALSE).';
+COMMENT ON COLUMN pms.user_details.notifications_seen_dtimes IS 'Notifications Seen Timestamp: The date and time when the notifications was seen.';
