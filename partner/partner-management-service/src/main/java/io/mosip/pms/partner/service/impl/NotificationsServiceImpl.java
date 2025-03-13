@@ -8,6 +8,7 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.NotificationsSummaryEntity;
 import io.mosip.pms.common.entity.Partner;
@@ -33,7 +34,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
@@ -129,25 +129,21 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     @Override
-    public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId) {
+    public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId, DismissNotificationRequestDto dismissNotificationRequestDto) {
         ResponseWrapperV2<DismissNotificationResponseDto> responseWrapper = new ResponseWrapperV2<>();
         try {
-            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-            List<String> partnerIdList = Collections.emptyList();
-            if (!isPartnerAdmin) {
-                String userId = getUserId();
-                List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-                if (partnerList.isEmpty()) {
-                    LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                    throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                            ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-                }
-                partnerIdList = partnerList.stream()
-                        .peek(partner -> partnerHelper.validatePartnerId(partner, userId))
-                        .map(Partner::getId)
-                        .toList();
+            if (Objects.isNull(notificationId) || notificationId.isBlank()) {
+                LOGGER.info("Invalid request: Notification ID is null or empty");
+                throw new PartnerServiceException(
+                        ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+                        ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
-
+            if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)){
+                LOGGER.info("Invalid Notification status Notification Id: {}", notificationId);
+                throw new PartnerServiceException(
+                        ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorCode(),
+                        ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorMessage());
+            }
             Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
             if (optionalNotification.isEmpty()) {
                 LOGGER.info("Notification does not exist: {}", notificationId);
@@ -158,7 +154,31 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             NotificationEntity notificationEntity = optionalNotification.get();
 
-            if (!isPartnerAdmin && !partnerIdList.contains(notificationEntity.getPartnerId())) {
+            String userId = getUserId();
+            List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+
+            if (partnerList.isEmpty()) {
+                LOGGER.info("User ID does not exist: {}", userId);
+                throw new PartnerServiceException(
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+            }
+
+            String notificationPartnerId = notificationEntity.getPartnerId();
+            boolean partnerIdExists = false;
+
+            // check if partnerId is associated with user
+            for (Partner partner : partnerList) {
+                partnerHelper.validatePartnerId(partner, userId);
+                if (partner.getId().equals(notificationPartnerId)) {
+                    //check if partner is active or not
+                    partnerHelper.checkIfPartnerIsNotActive(partner);
+                    partnerIdExists = true;
+                    break;
+                }
+            }
+
+            if (!partnerIdExists) {
                 LOGGER.info("Notification does not belong to the partner: {}", notificationId);
                 throw new PartnerServiceException(
                         ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorCode(),

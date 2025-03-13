@@ -161,7 +161,8 @@ public enum ErrorCode {
 	NOTIFICATION_NOT_EXISTS("PMS_NOTIFICATION_ERROR_004", "Notification does not exist."),
 	NOTIFICATION_ALREADY_DISMISSED("PMS_NOTIFICATION_ERROR_005", "Notification has already been dismissed."),
 	DISMISS_NOTIFICATION_ERROR("PMS_NOTIFICATION_ERROR_006", "Error while dismissing the notification."),
-	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_007", "The notification does not belong to the partner.");
+	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_007", "The notification does not belong to the partner."),
+	INVALID_NOTIFICATION_STATUS("PMS_NOTIFICATION_ERROR_008", "Invalid notification status. Expected: DISMISSED.");
 	/**
 	 * The error code.
 	 */
