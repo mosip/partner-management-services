@@ -125,7 +125,7 @@ public class UserController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutnotificationseentimestamp())")
 	@PutMapping(value = "users/notifications-seen-timestamp")
-	@Operation(summary = "Added in release-1.3.0-beta.1 This endpoint updates the user's notifications seen status and timestamp",
+	@Operation(summary = "Added in release-1.3.x. This endpoint updates the user's notifications seen status and timestamp",
 			description = "This endpoint updates the user's notifications seen status and timestamp. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -136,5 +136,16 @@ public class UserController {
 			return validationResponse.get();
 		}
 		return userManagementService.updateNotificationsSeenTimestamp(requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotificationseentimestamp())")
+	@GetMapping(value = "users/notifications-seen-timestamp")
+	@Operation(summary = "Added in release-1.3.x. This endpoint fetches the user's notifications seen status and timestamp",
+			description = "This endpoint fetches the user's notifications seen status and timestamp. It is configured for all Partner Type roles.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp() {
+		return userManagementService.getNotificationsSeenTimestamp();
 	}
 }

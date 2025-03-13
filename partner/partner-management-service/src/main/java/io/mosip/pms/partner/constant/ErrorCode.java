@@ -156,7 +156,9 @@ public enum ErrorCode {
 	INVALID_SORT_PARAMETERS("PMS_PS_ERROR_007", "Invalid Sorting request: 'sortType' and 'sortFieldName' must be specified together." ),
 	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data."),
 	UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_004", "Error while updating notifications seen date time"),
-	UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME("PMS_NOTIFICATION_ERROR_005", "Notifications seen should be true, so unable to update notifications seen date time");
+	UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME("PMS_NOTIFICATION_ERROR_005", "Notifications seen should be true, so unable to update notifications seen date time"),
+	USER_DETAILS_NOT_EXIST("PMS_NOTIFICATION_ERROR_006", "User details does not exist for the user, so unable to get notifications seen date time"),
+	GET_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_007", "Error while fetching notifications seen date time");
 
 	/**
 	 * The error code.

@@ -193,6 +193,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> putnotificationseentimestamp;
 
+	private List<String> getnotificationseentimestamp;
+
 	//Notifications Controller
 
 	private List<String> getnotifications;
