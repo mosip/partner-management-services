@@ -15,13 +15,13 @@ ARG spring_config_label
 ARG active_profile
 ARG spring_config_url
 ARG is_glowroot
-
+ARG artifactory_url
 # Runtime environment variables
 ENV active_profile_env=${active_profile}
 ENV spring_config_label_env=${spring_config_label}
 ENV spring_config_url_env=${spring_config_url}
 ENV is_glowroot_env=${is_glowroot}
-
+ENV artifactory_url_env=${artifactory_url}
 # Container user configurations
 ARG container_user=mosip
 ARG container_user_group=mosip
@@ -56,14 +56,15 @@ RUN chown -R ${container_user}:${container_user} /home/${container_user}
 USER ${container_user_uid}:${container_user_gid}
 
 # Expose port
-EXPOSE 8099
+EXPOSE 9110
 
 # Entry point command
 CMD if [ "$is_glowroot_env" = "present" ]; then \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/partner-management-batch-job/g' glowroot/glowroot.properties ; \
-    java -Dloader.path="${loader_path_env}" -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" partner-management-batch-job.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" partner-management-batch-job.jar ; \
     else \
-    java -Dloader.path="${loader_path_env}" -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" partner-management-batch-job.jar ; \
+    java -jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" partner-management-batch-job.jar ; \
     fi
