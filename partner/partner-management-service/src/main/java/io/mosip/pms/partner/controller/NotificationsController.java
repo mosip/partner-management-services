@@ -86,7 +86,7 @@ public class NotificationsController {
     @PatchMapping("/notifications/{notificationId}")
     @Operation(
             summary = "This endpoint dismisses a notification.",
-            description = "This endpoint is available since release-1.3.0-beta.1 and is used to dismiss a notification."
+            description = "This endpoint is available since release-1.3.x and is used to dismiss a notification."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),

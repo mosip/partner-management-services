@@ -139,7 +139,7 @@ public class NotificationsServiceImpl implements NotificationsService {
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
             if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)){
-                LOGGER.info("Invalid Notification status Notification Id: {}", notificationId);
+                LOGGER.info("Invalid Notification status for Notification Id: {}", notificationId);
                 throw new PartnerServiceException(
                         ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorCode(),
                         ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorMessage());
