@@ -196,7 +196,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 					responseDto.setNotificationsSeenDtimes(savedEntity.getNotificationsSeenDtimes());
 					responseWrapper.setResponse(responseDto);
 				} else {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					LOGGER.info("sessionId", "idType", "id", "Unable to update notifications seen date time.");
 					throw new PartnerServiceException(ErrorCode.UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME.getErrorCode(),
 							ErrorCode.UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME.getErrorMessage());
 				}
