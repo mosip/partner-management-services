@@ -154,7 +154,14 @@ public enum ErrorCode {
 	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_005", "The specified partner is not of type Authentication Partner"),
 	INVALID_PAGE_PARAMETERS("PMS_PS_ERROR_006", "Invalid pagination request: 'pageNo' and 'pageSize' must be specified together." ),
 	INVALID_SORT_PARAMETERS("PMS_PS_ERROR_007", "Invalid Sorting request: 'sortType' and 'sortFieldName' must be specified together." ),
-	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data.");
+	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data."),
+	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while fetching notifications"),
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_002", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary."),
+	NOTIFICATION_DETAILS_JSON_ERROR("PMS_NOTIFICATION_ERROR_003", "Error parsing notification details JSON"),
+	NOTIFICATION_NOT_EXISTS("PMS_NOTIFICATION_ERROR_004", "Notification does not exist."),
+	NOTIFICATION_ALREADY_DISMISSED("PMS_NOTIFICATION_ERROR_005", "Notification has already been dismissed."),
+	DISMISS_NOTIFICATION_ERROR("PMS_NOTIFICATION_ERROR_006", "Error while dismissing the notification."),
+	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_007", "The notification does not belong to the partner.");
 	/**
 	 * The error code.
 	 */

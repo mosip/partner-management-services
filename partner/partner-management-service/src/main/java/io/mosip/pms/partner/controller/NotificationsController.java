@@ -1,6 +1,7 @@
 package io.mosip.pms.partner.controller;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
@@ -21,6 +22,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Objects;
 
@@ -70,6 +73,13 @@ public class NotificationsController {
             filterDto.setNotificationType(notificationType.toLowerCase());
         }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdismissnotification())")
+    @PatchMapping("/notifications/{notificationId}")
+    public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(
+            @PathVariable String notificationId) {
+        return notificationsService.dismissNotification(notificationId);
     }
 
     public void validatePaginationParams(Integer pageNo, Integer pageSize) {
