@@ -66,7 +66,7 @@ public class EmailNotificationService {
 
             NotificationEntity notificationEntity = optionalNotification.get();
 
-            if (notificationEntity.getEmailSent()) {
+            if (notificationEntity.getEmailSent() && notificationEntity.getEmailSentDatetime() != null) {
                 LOGGER.warn("Email notification already sent for ID: {}", notificationId);
                 return;
             }
