@@ -104,6 +104,8 @@ public class UserManagementServiceImpl implements UserManagementService{
 					userDetails.setCrBy(this.getUserBy());
 					userDetails.setCrDtimes(nowDate);
 					userDetails.setUserId(userId);
+					userDetails.setNotificationsSeen(false);
+					userDetails.setNotificationsSeenDtimes(null);
 				}
 				UserDetails respEntity = userDetailsRepository.save(userDetails);
 				LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
