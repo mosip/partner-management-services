@@ -23,8 +23,8 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "    CROSS JOIN LATERAL jsonb_each_text(nested_obj) AS fields " +
             "    WHERE LOWER(fields.value) LIKE LOWER(CONCAT('%', :filterBy, '%')) " +
             ") " +
-            "AND (:notificationStatus IS NULL OR LOWER(n.notification_status) LIKE LOWER(CONCAT('%', :notificationStatus, '%'))) " +
-            "AND (:notificationType IS NULL OR n.notification_type LIKE CONCAT('%', :notificationType, '%')) " +
+            "AND (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+            "AND (:notificationType IS NULL OR n.notification_type = :notificationType) " +
             "AND (COALESCE(:partnerIdList) IS NULL OR n.partner_id IN (:partnerIdList)) " +
             "ORDER BY n.cr_dtimes DESC",
             countQuery = "SELECT COUNT(*) " +
@@ -37,8 +37,8 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "    CROSS JOIN LATERAL jsonb_each_text(nested_obj) AS fields " +
                     "    WHERE LOWER(fields.value) LIKE LOWER(CONCAT('%', :filterBy, '%')) " +
                     ") " +
-                    "AND (:notificationStatus IS NULL OR LOWER(n.notification_status) LIKE LOWER(CONCAT('%', :notificationStatus, '%'))) " +
-                    "AND (:notificationType IS NULL OR n.notification_type LIKE CONCAT('%', :notificationType, '%')) " +
+                    "AND (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+                    "AND (:notificationType IS NULL OR n.notification_type = :notificationType) " +
                     "AND (COALESCE(:partnerIdList) IS NULL OR n.partner_id IN (:partnerIdList))",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllNotifications(
