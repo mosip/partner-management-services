@@ -156,7 +156,7 @@ public class NotificationsServiceImpl implements NotificationsService {
                 return ROOT_CERT_EXPIRY;
             case INTERMEDIATE:
                 return INTERMEDIATE_CERT_EXPIRY;
-            case PARTNER, FTM_CHIP, API_KEY, SBI:
+            case PARTNER:
                 return PARTNER_CERT_EXPIRY;
             case WEEKLY:
                 return WEEKLY_SUMMARY;
