@@ -10,7 +10,6 @@ import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.entity.NotificationEntity;
-import io.mosip.pms.common.entity.NotificationsSummaryEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.repository.NotificationsSummaryRepository;
@@ -38,6 +37,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static io.mosip.pms.common.constant.PartnerConstants.*;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
@@ -70,62 +71,98 @@ public class NotificationsServiceImpl implements NotificationsService {
     private ObjectMapper objectMapper;
 
     @Override
-    public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
+    public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
+            Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
         ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
+        PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+
         try {
-            PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-            String notificationType = filterDto.getNotificationType();
-            if(!isPartnerAdmin) {
-                if(Objects.nonNull(notificationType) && !notificationType.equals(BLANK_STRING)) {
-                    if ((notificationType.equalsIgnoreCase(PartnerConstants.ROOT) || notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) || notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY))) {
-                        throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
-                                ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
-                    }
+            String notificationType = null;
+
+            if (filterDto.getNotificationType() != null) {
+                String filterNotificationType = filterDto.getNotificationType();
+
+                // Validate notificationType access for non-admin users
+                if (!isPartnerAdmin && !filterNotificationType.isBlank() && isRestrictedNotificationType(filterNotificationType)) {
+                    throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
+                            ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
                 }
+
+                // Assign notificationType only after validation
+                notificationType = getNotificationType(filterNotificationType);
             }
-            List<String> partnerIdList = new ArrayList<>();
+
+            // Fetch and validate partner list
             String userId = getUserId();
             List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
             if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-                throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+                LOGGER.info("sessionId", "idType", "id", "User ID does not exist.");
+                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
             }
+
+            // Filter active partners
+            List<String> partnerIdList = new ArrayList<>();
             for (Partner partner : partnerList) {
                 partnerHelper.validatePartnerId(partner, userId);
                 if (partner.getIsActive()) {
                     partnerIdList.add(partner.getId());
                 }
             }
+
             Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-            Page<NotificationsSummaryEntity> page = notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getFilterBy(), filterDto.getNotificationStatus(),
-                    filterDto.getNotificationType(), partnerIdList, pageable);
-            if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-                List<NotificationsResponseDto> notificationsResponseDtoList = page.getContent().stream()
-                        .map(this::mapToResponseDto)
-                        .collect(Collectors.toList());
+            // Fetch notifications
+            Page<NotificationEntity> page = notificationsSummaryRepository.getSummaryOfAllNotifications(
+                    filterDto.getFilterBy(), filterDto.getNotificationStatus(),
+                    notificationType, partnerIdList, pageable);
+
+            if (page != null && !page.getContent().isEmpty()) {
                 pageResponseV2Dto.setPageNo(page.getNumber());
                 pageResponseV2Dto.setPageSize(page.getSize());
                 pageResponseV2Dto.setTotalResults(page.getTotalElements());
-                pageResponseV2Dto.setData(notificationsResponseDtoList);
+                pageResponseV2Dto.setData(page.getContent().stream()
+                        .map(this::mapToResponseDto)
+                        .collect(Collectors.toList()));
             }
+
             responseWrapper.setResponse(pageResponseV2Dto);
         } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getNotifications method of NotificationsServiceImpl - " + ex.getMessage());
+            LOGGER.info("sessionId", "idType", "id",
+                    "In getNotifications method of NotificationsServiceImpl - {}", ex.getMessage());
             responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
         } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
             LOGGER.error("sessionId", "idType", "id",
-                    "In getNotifications method of NotificationsServiceImpl - " + ex.getMessage());
-            String errorCode = ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode();
-            String errorMessage = ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+                    "Unexpected error in getNotifications method of NotificationsServiceImpl - {}", ex.getMessage(), ex);
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+                    ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode(),
+                    ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage()));
         }
         responseWrapper.setId(getNotificationsId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
+    }
+
+    private boolean isRestrictedNotificationType(String notificationType) {
+        return notificationType.equalsIgnoreCase(PartnerConstants.ROOT) ||
+                notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) ||
+                notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
+    }
+
+    private String getNotificationType(String notificationType) {
+        switch (notificationType) {
+            case ROOT:
+                return ROOT_CERT_EXPIRY;
+            case INTERMEDIATE:
+                return INTERMEDIATE_CERT_EXPIRY;
+            case PARTNER, FTM_CHIP, API_KEY, SBI:
+                return PARTNER_CERT_EXPIRY;
+            case WEEKLY:
+                return WEEKLY_SUMMARY;
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -221,19 +258,19 @@ public class NotificationsServiceImpl implements NotificationsService {
         return authUserDetails().getMail();
     }
 
-    public NotificationsResponseDto mapToResponseDto(NotificationsSummaryEntity summaryEntity) {
+    public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
         NotificationsResponseDto responseDto = new NotificationsResponseDto();
-        responseDto.setNotificationId(summaryEntity.getNotificationId());
-        responseDto.setNotificationPartnerId(summaryEntity.getNotificationPartnerId());
-        responseDto.setNotificationType(summaryEntity.getNotificationType());
-        responseDto.setNotificationStatus(summaryEntity.getNotificationStatus());
-        responseDto.setCreatedDateTime(summaryEntity.getCreatedDateTime());
+        responseDto.setNotificationId(notificationEntity.getId());
+        responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
+        responseDto.setNotificationType(notificationEntity.getNotificationType());
+        responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
+        responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());
 
         // Convert JSON string to NotificationDetailsDto
-        if (summaryEntity.getNotificationDetails() != null) {
+        if (notificationEntity.getNotificationDetailsJson() != null) {
             try {
                 NotificationDetailsDto detailsDto = objectMapper.readValue(
-                        summaryEntity.getNotificationDetails(), NotificationDetailsDto.class);
+                        notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
                 responseDto.setNotificationDetails(detailsDto);
             } catch (JsonProcessingException e) {
                 throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
