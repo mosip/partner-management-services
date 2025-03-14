@@ -29,6 +29,7 @@ function installing_pms() {
 
   PARTNER_MANAGER_SERVICE_NAME="pms-partner"
   POLICY_MANAGER_SERVICE_NAME="pms-policy"
+  PMS_BATCHJOB_NAME="pms-batchjob"
 
   echo Installing partner manager
   helm -n $NS install $PARTNER_MANAGER_SERVICE_NAME mosip/pms-partner \
@@ -41,6 +42,9 @@ function installing_pms() {
   --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$PMP_HOST \
   --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_REVAMP_UI_HOST \
   --version $CHART_VERSION
+
+  echo Installing pms-batchjob
+  helm -n $NS install $PMS_BATCHJOB_NAME mosip/pms-batchjob --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
