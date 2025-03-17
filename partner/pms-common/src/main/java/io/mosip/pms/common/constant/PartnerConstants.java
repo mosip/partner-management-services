@@ -67,4 +67,12 @@ public final class PartnerConstants {
     public static final String RESPONSE = "response";
 
     public static final String WEEKLY = "weekly";
+
+    public static final String API_KEY = "apikey";
+
+    public static final String FTM_CHIP = "ftm-chip";
+
+    public static final String PARTNER = "partner";
+
+    public static final String SBI = "sbi";
 }

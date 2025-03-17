@@ -53,7 +53,6 @@ public class NotificationsController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
-            @RequestParam(value = "filterBy", required = false) String filterBy,
             @Parameter(
                     description = "Status of notifications",
                     in = ParameterIn.QUERY,
@@ -67,12 +66,29 @@ public class NotificationsController {
             )
             @RequestParam(value = "notificationType", required = false) String notificationType,
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize
+            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+            @RequestParam(value = "certificateId", required = false) String certificateId,
+            @RequestParam(value = "expiryDate", required = false) String expiryDate,
+            @RequestParam(value = "issuedBy", required = false) String issuedBy,
+            @RequestParam(value = "issuedTo", required = false) String issuedTo,
+            @RequestParam(value = "partnerDomain", required = false) String partnerDomain
     ) {
         validatePaginationParams(pageNo, pageSize);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
-        if (filterBy != null) {
-            filterDto.setFilterBy(filterBy.toLowerCase());
+        if (certificateId != null) {
+            filterDto.setCertificateId(certificateId);
+        }
+        if (expiryDate != null) {
+            filterDto.setExpiryDate(expiryDate);
+        }
+        if (issuedBy != null) {
+            filterDto.setIssuedBy(issuedBy);
+        }
+        if (issuedTo != null) {
+            filterDto.setIssuedTo(issuedTo);
+        }
+        if (partnerDomain != null) {
+            filterDto.setPartnerDomain(partnerDomain);
         }
         if (notificationStatus != null) {
             filterDto.setNotificationStatus(notificationStatus.toLowerCase());
