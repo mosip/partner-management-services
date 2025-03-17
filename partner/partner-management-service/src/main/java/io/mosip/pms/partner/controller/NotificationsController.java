@@ -71,6 +71,11 @@ public class NotificationsController {
             @RequestParam(value = "expiryDate", required = false) String expiryDate,
             @RequestParam(value = "issuedBy", required = false) String issuedBy,
             @RequestParam(value = "issuedTo", required = false) String issuedTo,
+            @Parameter(
+                    description = "Type of partner domain",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"FTM", "DEVICE", "AUTH"})
+            )
             @RequestParam(value = "partnerDomain", required = false) String partnerDomain
     ) {
         validatePaginationParams(pageNo, pageSize);

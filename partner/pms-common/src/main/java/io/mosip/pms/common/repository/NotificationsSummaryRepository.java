@@ -17,14 +17,29 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "FROM notifications n " +
             "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
             "AND (n.partner_id IN (:partnerIdList)) " +
+            "AND (:certificateId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'certificateId') ILIKE CONCAT('%', :certificateId, '%')) " +
+            "AND (:issuedBy IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedBy') ILIKE CONCAT('%', :issuedBy, '%')) " +
+            "AND (:issuedTo IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedTo') ILIKE CONCAT('%', :issuedTo, '%')) " +
+            "AND (:partnerDomain IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') = LOWER(:partnerDomain)) " +
+            "AND (:expiryDateTime IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime') ILIKE CONCAT('%', :expiryDateTime, '%')) " +
             "ORDER BY n.cr_dtimes DESC",
 
             countQuery = "SELECT COUNT(*) " +
                     "FROM notifications n " +
                     "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
-                    "AND (n.partner_id IN (:partnerIdList)) ",
+                    "AND (n.partner_id IN (:partnerIdList)) " +
+                    "AND (:certificateId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'certificateId') ILIKE CONCAT('%', :certificateId, '%')) " +
+                    "AND (:issuedBy IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedBy') ILIKE CONCAT('%', :issuedBy, '%')) " +
+                    "AND (:issuedTo IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedTo') ILIKE CONCAT('%', :issuedTo, '%')) " +
+                    "AND (:partnerDomain IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') = LOWER(:partnerDomain)) " +
+                    "AND (:expiryDateTime IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime') ILIKE CONCAT('%', :expiryDateTime, '%')) ",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllNotifications(
+            @Param("certificateId") String certificateId,
+            @Param("issuedBy") String issuedBy,
+            @Param("issuedTo") String issuedTo,
+            @Param("partnerDomain") String partnerDomain,
+            @Param("expiryDateTime") String expiryDateTime,
             @Param("notificationStatus") String notificationStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             Pageable pageable);
@@ -37,7 +52,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "AND (:certificateId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'certificateId') ILIKE CONCAT('%', :certificateId, '%')) " +
             "AND (:issuedBy IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedBy') ILIKE CONCAT('%', :issuedBy, '%')) " +
             "AND (:issuedTo IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedTo') ILIKE CONCAT('%', :issuedTo, '%')) " +
-            "AND (:partnerDomain IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') ILIKE CONCAT('%', :partnerDomain, '%')) " +
+            "AND (:partnerDomain IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') = LOWER(:partnerDomain)) " +
             "AND (:expiryDateTime IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime') ILIKE CONCAT('%', :expiryDateTime, '%')) " +
             "ORDER BY n.cr_dtimes DESC",
 
@@ -49,7 +64,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "AND (:certificateId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'certificateId') ILIKE CONCAT('%', :certificateId, '%')) " +
                     "AND (:issuedBy IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedBy') ILIKE CONCAT('%', :issuedBy, '%')) " +
                     "AND (:issuedTo IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'issuedTo') ILIKE CONCAT('%', :issuedTo, '%')) " +
-                    "AND (:partnerDomain IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') ILIKE CONCAT('%', :partnerDomain, '%')) " +
+                    "AND (:partnerDomain IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') = LOWER(:partnerDomain)) " +
                     "AND (:expiryDateTime IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime') ILIKE CONCAT('%', :expiryDateTime, '%')) ",
                     nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllRootAndIntermediateNotifications(

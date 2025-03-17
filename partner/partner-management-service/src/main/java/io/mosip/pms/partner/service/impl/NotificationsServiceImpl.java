@@ -154,7 +154,9 @@ public class NotificationsServiceImpl implements NotificationsService {
         // Default case when notificationType is null
         if (Objects.isNull(notificationType)) {
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
-                    filterDto.getNotificationStatus(), partnerIdList, pageable);
+                    filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+                    filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                    partnerIdList, pageable);
         }
 
         switch (notificationType) {
