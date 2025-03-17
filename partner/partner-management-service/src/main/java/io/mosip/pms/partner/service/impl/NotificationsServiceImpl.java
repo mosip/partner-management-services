@@ -159,13 +159,13 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         switch (notificationType) {
             case ROOT:
-                return notificationsSummaryRepository.getSummaryOfAllNotificationsByCertType(
+                return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
             case INTERMEDIATE:
-                return notificationsSummaryRepository.getSummaryOfAllNotificationsByCertType(
+                return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
