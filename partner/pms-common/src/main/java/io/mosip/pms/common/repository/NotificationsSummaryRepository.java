@@ -52,7 +52,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "AND (:partnerDomain IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') ILIKE CONCAT('%', :partnerDomain, '%')) " +
                     "AND (:expiryDateTime IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime') ILIKE CONCAT('%', :expiryDateTime, '%')) ",
                     nativeQuery = true)
-    Page<NotificationEntity> getSummaryOfAllRootNotifications(
+    Page<NotificationEntity> getSummaryOfAllNotificationsByCertType(
             @Param("certificateId") String certificateId,
             @Param("issuedBy") String issuedBy,
             @Param("issuedTo") String issuedTo,
