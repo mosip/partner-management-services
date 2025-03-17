@@ -167,8 +167,8 @@ public enum ErrorCode {
 	DISMISS_NOTIFICATION_ERROR("PMS_NOTIFICATION_ERROR_010", "Error while dismissing the notification."),
 	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_011", "The notification does not belong to the partner."),
 	INVALID_NOTIFICATION_STATUS("PMS_NOTIFICATION_ERROR_012", "Invalid notification status. Expected: DISMISSED."),
-	EXPIRING_CERT_COUNT_FETCH_ERROR("PMS_NOTIFICATION_ERROR_013", "Error while fetching expiring certificates count"),
-	UNABLE_TO_GET_EXPIRING_CERTS_COUNT("PMS_NOTIFICATION_ERROR_014", "Partner Admin will only get expiring count of root/intermediate certificates.");
+	EXPIRING_CERT_COUNT_FETCH_ERROR("PMS_NOTIFICATION_ERROR_013", "Error encountered while retrieving the count of expiring certificates."),
+	UNABLE_TO_GET_EXPIRING_CERTS_COUNT("PMS_NOTIFICATION_ERROR_014", "Partner Admin will only get the count of expiring root and intermediate certificates.");
 
 	/**
 	 * The error code.
