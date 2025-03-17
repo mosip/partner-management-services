@@ -92,17 +92,9 @@ public class NotificationsServiceImpl implements NotificationsService {
                 String filterNotificationType = filterDto.getNotificationType();
 
                 // Validate notificationType access for non-admin users
-                if (!isPartnerAdmin && !filterNotificationType.isBlank() && isRestrictedNotificationType(filterNotificationType)) {
+                if (!isPartnerAdmin && !filterNotificationType.isBlank() && validateNotificationTypeForPartner(filterNotificationType)) {
                     throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                             ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
-                }
-
-                Set<String> allowedTypes = Set.of(SBI, API_KEY, PARTNER, WEEKLY, FTM_CHIP);
-                if (allowedTypes.contains(filterNotificationType)) {
-                    responseWrapper.setResponse(pageResponseV2Dto);
-                    responseWrapper.setId(getNotificationsId);
-                    responseWrapper.setVersion(VERSION);
-                    return responseWrapper;
                 }
             }
 
@@ -158,7 +150,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable, List<String> partnerIdList) {
 
         String notificationType = filterDto.getNotificationType();
-        
+
         // Default case when notificationType is null
         if (Objects.isNull(notificationType)) {
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
@@ -168,21 +160,37 @@ public class NotificationsServiceImpl implements NotificationsService {
         switch (notificationType) {
             case ROOT:
                 return notificationsSummaryRepository.getSummaryOfAllNotificationsByCertType(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
             case INTERMEDIATE:
                 return notificationsSummaryRepository.getSummaryOfAllNotificationsByCertType(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
 
+            // TODO: Logic for WEEKLY notifications to be implemented
+            case WEEKLY:
+
+            // TODO: Logic for PARTNER notifications to be implemented
+            case PARTNER:
+
+            // TODO: Logic for SBI notifications to be implemented
+            case SBI:
+
+            // TODO: Logic for FTM_CHIP notifications to be implemented
+            case FTM_CHIP:
+
+           // TODO: Logic for FTM_CHIP notifications to be implemented
+            case API_KEY:
+
             default:
-                return notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getNotificationStatus(), partnerIdList, pageable);
+                return Page.empty(pageable); // Return empty paginated response
         }
     }
 
-
-    private boolean isRestrictedNotificationType(String notificationType) {
+    private boolean validateNotificationTypeForPartner(String notificationType) {
         return notificationType.equalsIgnoreCase(PartnerConstants.ROOT) ||
                 notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) ||
                 notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
