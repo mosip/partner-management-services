@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static io.mosip.pms.common.constant.PartnerConstants.*;
@@ -94,6 +95,14 @@ public class NotificationsServiceImpl implements NotificationsService {
                 if (!isPartnerAdmin && !filterNotificationType.isBlank() && isRestrictedNotificationType(filterNotificationType)) {
                     throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                             ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+                }
+
+                Set<String> allowedTypes = Set.of(SBI, API_KEY, PARTNER, WEEKLY, FTM_CHIP);
+                if (allowedTypes.contains(filterNotificationType)) {
+                    responseWrapper.setResponse(pageResponseV2Dto);
+                    responseWrapper.setId(getNotificationsId);
+                    responseWrapper.setVersion(VERSION);
+                    return responseWrapper;
                 }
             }
 
@@ -149,10 +158,11 @@ public class NotificationsServiceImpl implements NotificationsService {
     public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable, List<String> partnerIdList) {
 
         String notificationType = filterDto.getNotificationType();
-
-        if (notificationType == null) {
-            // Default case when notificationType is null
-            return notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getNotificationStatus(), partnerIdList, pageable);
+        
+        // Default case when notificationType is null
+        if (Objects.isNull(notificationType)) {
+            return notificationsSummaryRepository.getSummaryOfAllNotifications(
+                    filterDto.getNotificationStatus(), partnerIdList, pageable);
         }
 
         switch (notificationType) {
@@ -165,31 +175,6 @@ public class NotificationsServiceImpl implements NotificationsService {
                 return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
-
-            case PARTNER:
-                return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        PARTNER_CERT_EXPIRY, partnerIdList, pageable);
-
-            case WEEKLY:
-                return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        WEEKLY_SUMMARY, partnerIdList, pageable);
-
-            case SBI:
-                return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        SBI, partnerIdList, pageable);
-
-            case API_KEY:
-                return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        API_KEY, partnerIdList, pageable);
-
-            case FTM_CHIP:
-                return notificationsSummaryRepository.getSummaryOfAllRootNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(), filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        FTM_CHIP, partnerIdList, pageable);
 
             default:
                 return notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getNotificationStatus(), partnerIdList, pageable);
