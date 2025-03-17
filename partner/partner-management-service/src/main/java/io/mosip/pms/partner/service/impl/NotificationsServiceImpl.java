@@ -21,6 +21,9 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
+import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -32,7 +35,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +58,9 @@ public class NotificationsServiceImpl implements NotificationsService {
 
     @Value("${mosip.pms.api.id.dismiss.notification.patch}")
     private String patchDismissNotificationId;
+
+    @Value("${mosip.pms.api.id.expiring.certificates.count.get}")
+    private String getExpiringCertCountId;
 
     @Autowired
     PartnerHelper partnerHelper;
@@ -242,6 +250,52 @@ public class NotificationsServiceImpl implements NotificationsService {
         }
 
         return responseDto;
+    }
+
+    @Override
+    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(Integer period, String type) {
+        ResponseWrapperV2<ExpiryCertCountResponseDto> responseWrapper = new ResponseWrapperV2<>();
+        try {
+            if (Objects.isNull(period) || Objects.isNull(type) || type.equals(BLANK_STRING)) {
+                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+                        ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+            }
+            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+            if ((type.equals(PartnerConstants.ROOT) || type.equals(PartnerConstants.INTERMEDIATE))) {
+                if (isPartnerAdmin) {
+                    TrustCertTypeListRequestDto trustCertTypeListRequestDto = new TrustCertTypeListRequestDto();
+                    trustCertTypeListRequestDto.setCaCertificateType(type);
+                    trustCertTypeListRequestDto.setExcludeMosipCA(true);
+
+                    LocalDate validTillDate = LocalDate.now().plusDays(period);
+                    LocalTime validTillTime = LocalTime.MAX;
+                    LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
+                    trustCertTypeListRequestDto.setValidTillDate(validTillDateTime);
+                    TrustCertTypeListResponseDto responseObject = partnerHelper.getTrustCertificatesList(trustCertTypeListRequestDto);
+                     ExpiryCertCountResponseDto responseDto = new ExpiryCertCountResponseDto();
+                     responseDto.setCertificateType(type);
+                     responseDto.setExpiryPeriod(period);
+                     responseDto.setCount(responseObject.getTotalRecords());
+                     responseWrapper.setResponse(responseDto);
+                } else {
+                    throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_EXPIRING_CERTS_COUNT.getErrorCode(),
+                            ErrorCode.UNABLE_TO_GET_EXPIRING_CERTS_COUNT.getErrorMessage());
+                }
+            }
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In getExpiringCertsCount method of NotificationsServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In getExpiringCertsCount method of NotificationsServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.EXPIRING_CERT_COUNT_FETCH_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.EXPIRING_CERT_COUNT_FETCH_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+        }
+        responseWrapper.setId(getExpiringCertCountId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
     }
 
     private AuthUserDetails authUserDetails() {

@@ -12,6 +12,7 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
+import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -101,6 +102,28 @@ public class NotificationsController {
             return validationResponse.get();
         }
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetexpiringcertificatescount())")
+    @GetMapping(value = "/expiring-certs-count")
+    @Operation(summary = "This endpoint retrieves a count of expiring certificates.",
+            description = "This endpoint is available since release-1.3.x and is used to get count of expiring certificates.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(
+            @RequestParam(value = "period", required = true) Integer period,
+            @Parameter(
+                    description = "Type of certificates",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"root", "intermediate", "partner"})
+            )
+            @RequestParam(value = "type", required = true) String type
+
+    ) {
+        return notificationsService.getExpiringCertsCount(period, type);
     }
 
     public void validatePaginationParams(Integer pageNo, Integer pageSize) {
