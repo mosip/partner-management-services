@@ -270,7 +270,7 @@ public class NotificationsServiceImpl implements NotificationsService {
                     LocalDate validTillDate = LocalDate.now().plusDays(period);
                     LocalTime validTillTime = LocalTime.MAX;
                     LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
-                    trustCertTypeListRequestDto.setValidTillDate(validTillDateTime);
+                    trustCertTypeListRequestDto.setExpiringWithinDate(validTillDateTime);
                     TrustCertTypeListResponseDto responseObject = partnerHelper.getTrustCertificatesList(trustCertTypeListRequestDto);
                      ExpiryCertCountResponseDto responseDto = new ExpiryCertCountResponseDto();
                      responseDto.setCertificateType(type);

@@ -66,6 +66,9 @@ public class TrustCertTypeListRequestDto {
     @ApiModelProperty(notes = "Upload Time", required = false)
     private LocalDateTime uploadTime;
 
+    @ApiModelProperty(notes = "expiring within Dates", required = false)
+    private LocalDateTime expiringWithinDate;
+
     /**
      * Sort By Field Name
      */
