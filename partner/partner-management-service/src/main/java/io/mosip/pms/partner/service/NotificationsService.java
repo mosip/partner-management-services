@@ -6,6 +6,7 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
+import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,4 +15,6 @@ public interface NotificationsService {
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto);
 
     public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId, DismissNotificationRequestDto dismissNotificationRequestDto);
+
+    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(Integer period, String type);
 }

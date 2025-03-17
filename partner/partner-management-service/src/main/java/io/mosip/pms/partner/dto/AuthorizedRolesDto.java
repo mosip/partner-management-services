@@ -201,4 +201,6 @@ public class AuthorizedRolesDto {
 
 	private List<String> patchdismissnotification;
 
+	private List<String> getexpiringcertificatescount;
+
 }
