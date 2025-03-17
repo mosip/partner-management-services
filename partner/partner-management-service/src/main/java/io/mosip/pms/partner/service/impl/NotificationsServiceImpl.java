@@ -182,7 +182,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             // TODO: Logic for FTM_CHIP notifications to be implemented
             case FTM_CHIP:
 
-           // TODO: Logic for FTM_CHIP notifications to be implemented
+           // TODO: Logic for API_KEY notifications to be implemented
             case API_KEY:
 
             default:
