@@ -87,7 +87,6 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 			throw new SkipException(GlobalConstants.SERVICE_NOT_DEPLOYED_MESSAGE);
 		}
 
-
 		String[] templateFields = testCaseDTO.getTemplateFields();
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
@@ -109,23 +108,21 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 			}
 		}
 
-		 else {
-				response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-						getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
-
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+		else {
+			response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
-	
+		Map<String, List<OutputValidationDto>> ouputValid = null;
+
+		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+				getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+				response.getStatusCode());
+
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+		if (!OutputValidationUtil.publishOutputResult(ouputValid))
+			throw new AdminTestException("Failed at output validation");
+	}
 
 	/**
 	 * The method ser current test name to result

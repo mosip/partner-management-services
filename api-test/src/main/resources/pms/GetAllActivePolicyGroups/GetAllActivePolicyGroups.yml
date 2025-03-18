@@ -1,0 +1,50 @@
+GetAllActivePolicyGroups:
+   Pms_GetAllActivePolicyGroups_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/policy-groups
+      description: Fetching all the active PolicyGroups
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups
+      outputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroupsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllActivePolicyGroups_without_auth:
+      endPoint: /v1/policymanager/policies/policy-groups
+      description: Fetching all the active PolicyGroups without token
+      uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_02
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllActivePolicyGroups_Invalid_auth:
+      endPoint: /v1/policymanager/policies/policy-groups
+      description: Fetching all the active PolicyGroups with invalid token
+      uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_03
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllActivePolicyGroups/getAllActivePolicyGroups
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

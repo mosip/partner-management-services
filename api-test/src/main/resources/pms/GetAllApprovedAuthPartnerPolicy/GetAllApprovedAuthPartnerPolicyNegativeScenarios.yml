@@ -1,0 +1,35 @@
+GetAllApprovedAuthPartnerPolicy:
+   Pms_GetAllApprovedAuthPartnerPolicy_without_auth:
+      endPoint: /v1/partnermanager/partners/auth-partners-policies
+      description: Fetching all Approved Auth Partner Policies without token
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_01
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllApprovedAuthPartnerPolicy_invalid_auth:
+      endPoint: /v1/partnermanager/partners/auth-partners-policies
+      description: Fetching all Approved Auth Partner Policies with invalid token
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_02
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

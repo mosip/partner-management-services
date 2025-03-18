@@ -1,0 +1,26 @@
+{
+	"id": "string",
+	"version": "string",
+	"requesttime": "{{requesttime}}",
+	"client_id": "{{client_id}}",
+	"request": {
+		"logoUri": "{{logoUri}}",
+		"redirectUris": [
+          "{{redirectUris}}"
+  ],
+		"status": "{{status}}",
+		"grantTypes": [
+            "{{grantTypes}}"
+        ],
+		"clientName": "{{clientName}}",
+		"clientAuthMethods": [
+            "{{clientAuthMethods}}"
+        ],
+        "clientNameLangMap": {
+            {{#each clientNameLangMap}}
+            "{{clientNameLang}}": "{{clientName}}"
+            {{#unless @last}},{{/unless}}
+            {{/each}}
+        }
+        }
+}

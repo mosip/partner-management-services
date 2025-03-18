@@ -1,0 +1,61 @@
+GetSbiDetailsList:
+   Pms_GetSbiDetailsList_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_01
+      description: Retrieve the PMS GetSbiDetails List for All Valid Inputs
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/GetSbiDetailsList/GetAllSbiDetailsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetSbiDetailsList_get_response_without_authorization_token_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_02
+      description: Retrieve responce without authorization taken and Expecting an Error in The Response
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401" 		
+      }
+      ]
+}'
+   Pms_GetSbiDetailsList_get_partners_sbi_detail_API_with_Admin_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_03
+      checkErrorsOnlyInResponse: true
+      description: Retrieve Partner SBI Details with Admin Role and Expecting an Error in The Response
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+}'
+   Pms_GetSbiDetailsList_get_response_without_Partner_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_04
+      description: Retrieve Response Without Partner Role and Expecting an Error in The Response
+      role: ftm
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
+}'

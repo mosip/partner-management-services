@@ -84,6 +84,7 @@ public class SimplePut extends PMSUtil implements ITest {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
+
 		String[] templateFields = testCaseDTO.getTemplateFields();
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
@@ -111,11 +112,10 @@ public class SimplePut extends PMSUtil implements ITest {
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
 			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
+
+			ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+					getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+					response.getStatusCode());
 
 			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
@@ -123,8 +123,6 @@ public class SimplePut extends PMSUtil implements ITest {
 				throw new AdminTestException("Failed at output validation");
 		}
 	}
-
-	
 
 	/**
 	 * The method ser current test name to result

@@ -1,0 +1,122 @@
+VerifyPartnersEmail:
+   Pms_VerifyPartnersEmail_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_01
+      description: Verify Partners Email
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "mosip98763@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'
+
+   Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_02
+      description: Verify Partners Email
+      role: partnerdevice
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "mosip98768@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'
+
+   Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_03
+      description: Verify Partners Email
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "mosip98763@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'
+   Pms_VerifyPartnersEmail_without_auth_neg:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
+      description: Verify Partners Email
+      role: invalidtoken
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "mosip98763@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "KER-ATH-401"
+        }
+       ]
+}'
+   Pms_VerifyPartnersEmail_missing_email_neg:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_05
+      description: Verify Partners Email
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+              "errors": [
+        { 
+          "errorCode": "PMS_PRT_012"
+        }
+       ]
+        
+}'
+   Pms_VerifyPartnersEmail_invalid_email_neg:
+      endPoint: /v1/partnermanager/partners/email/verify
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_06
+      description: Verify Partners Email
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/error
+      input: '{
+    "emailId": "gfhgytth",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_012"
+        }
+       ]
+}'
+
+   Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/email/verify
+      uniqueIdentifier: TC_PMS_VerifyPartnersEmail_07
+      description: Verify Partners Email
+      role: partnerftm
+      restMethod: put
+      inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
+      outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
+      input: '{
+    "emailId": "mosip98788@gmail.com",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "emailExists": true
+}'

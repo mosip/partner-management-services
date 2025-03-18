@@ -1,0 +1,668 @@
+GetListOfAllDevice:
+   Pms_GetListOfAllDevice_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      description: Fetching all the active SBI
+      uniqueIdentifier: TC_PMS_devicedetails_01      
+      description: Fetching list of all the devices
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_without_Authentication:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_devicedetails_02      
+      description: Fetching list of all the devices without authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_invalid_token:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_devicedetails_03 
+      description: Fetching list of all the devices with invalid token
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_with_pagesize_specified:
+      endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_devicedetails_04      
+      description: Fetching list of all the devices with pagesize specified
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "pageSize": "7",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"                                                                                          
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_negative_pageno:
+      endPoint: /v1/partnermanager/devicedetail?pageNo={pageNo}
+      uniqueIdentifier: TC_PMS_devicedetails_05 
+      description: Fetching list of all the devices with negative pageno
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "-5",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_negative_pagesize:
+      endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_devicedetails_06 
+      description: Fetching list of all the devices with negative pageSize
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+      "pageSize": "-5",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_361"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_with_status_rejected:
+      endPoint: /v1/partnermanager/devicedetail?status={status}
+      uniqueIdentifier: TC_PMS_devicedetails_07      
+      description: Fetching list of all the devices with status as rejected
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "status": "rejected",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_with_status_approved:
+      endPoint: /v1/partnermanager/devicedetail?status={status}
+      uniqueIdentifier: TC_PMS_devicedetails_08      
+      description: Fetching list of all the devices with status as approved
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "status": "approved",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_with_status_deactivated:
+      endPoint: /v1/partnermanager/devicedetail?status={status}
+      uniqueIdentifier: TC_PMS_devicedetails_09      
+      description: Fetching list of all the devices with status as deactivated
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "status": "deactivated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_with_status_pending_approval:
+      endPoint: /v1/partnermanager/devicedetail?status={status}
+      uniqueIdentifier: TC_PMS_devicedetails_10      
+      description: Fetching list of all the devices with status as pending_approval
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "status": "pending_approval",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_with_partnerid:
+      endPoint: /v1/partnermanager/devicedetail?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_devicedetails_11      
+      description: Fetching list of all the devices with partnerid value given as 'a'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "partnerId": "a",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_with_orgName:
+      endPoint: /v1/partnermanager/devicedetail?orgName={orgName}
+      uniqueIdentifier: TC_PMS_devicedetails_25     
+      description: Fetching list of all the devices with orgName value given as '1'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "orgName": "1",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllDevice_invalid_sorttype:
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
+      uniqueIdentifier: TC_PMS_devicedetails_12      
+      description: Fetching list of all the devices with invalid sorttype
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "$$$$$$",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "make",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_358"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_sorttype_asc:
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
+      uniqueIdentifier: TC_PMS_devicedetails_13      
+      description: Fetching list of all the devices with sorttype as 'asc'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "asc",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_sorttype_desc:
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
+      uniqueIdentifier: TC_PMS_devicedetails_14     
+      description: Fetching list of all the devices with sorttype as 'desc'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "sortType": "desc",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "status",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_sbiversion_given:
+      endPoint: /v1/partnermanager/devicedetail?sbiVersion={sbiVersion}
+      uniqueIdentifier: TC_PMS_devicedetails_15     
+      description: Fetching list of all the devices with sbiVersion given as 'abcd'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "sbiVersion": "abcd",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_invalid_sortfield_Neg:
+      endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
+      uniqueIdentifier: TC_PMS_devicedetails_16      
+      description: Fetching list of all the devices with invalid sortFieldName
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$$$$$$",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortType": "DESC",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_357"
+       }
+       ]
+}'
+   Pms_GetListOfAllDevice_deviceType_given:
+      endPoint: /v1/partnermanager/devicedetail?deviceType={deviceType}
+      uniqueIdentifier: TC_PMS_devicedetails_17     
+      description: Fetching list of all the devices with deviceType given as 'i'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "deviceType": "i",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_deviceSubType_given:
+      endPoint: /v1/partnermanager/devicedetail?deviceSubType={deviceSubType}
+      uniqueIdentifier: TC_PMS_devicedetails_18     
+      description: Fetching list of all the devices with deviceSubType given as 'i'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "deviceSubType": "f",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_make_given:
+      endPoint: /v1/partnermanager/devicedetail?make={make}
+      uniqueIdentifier: TC_PMS_devicedetails_19     
+      description: Fetching list of all the devices with make given as '3'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "make": "3",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_model_given:
+      endPoint: /v1/partnermanager/devicedetail?model={model}
+      uniqueIdentifier: TC_PMS_devicedetails_20     
+      description: Fetching list of all the devices with model given as '4'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "model": "4",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"           
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_sbiId_given:
+      endPoint: /v1/partnermanager/devicedetail?sbiId={sbiId}
+      uniqueIdentifier: TC_PMS_devicedetails_21     
+      description: Fetching list of all the devices with sbiId given as 'q'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "sbiId": "q",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "deviceId": "$REMOVE$"            
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_deviceId_given:
+      endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
+      uniqueIdentifier: TC_PMS_devicedetails_22     
+      description: Fetching list of all the devices with deviceId given as '9'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "deviceId": "9",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$"            
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_multiple_attribute_values_given:
+      endPoint: /v1/partnermanager/devicedetail?make={make}&model={model}
+      uniqueIdentifier: TC_PMS_devicedetails_23    
+      description: Fetching list of all the devices with make and model is given
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "make": "1",
+      "model": "1",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "deviceId": "$REMOVE$"                 
+}'
+      output: '{
+}'
+   Pms_GetListOfAllDevice_deviceId_random_value_given:
+      endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
+      uniqueIdentifier: TC_PMS_devicedetails_24     
+      description: Fetching list of all the devices with random value given for deviceid
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
+      outputTemplate: pms/GetListOfAllDevice/getListOfAllDeviceResult
+      input: '{
+      "deviceId": "*****&%",
+      "status": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "model": "$REMOVE$",
+      "deviceType": "$REMOVE$",
+      "deviceSubType": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "sbiId": "$REMOVE$"
+}'
+      output: '{
+}'

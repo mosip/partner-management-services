@@ -18,12 +18,20 @@ on:
       - release*
       - master
       - 1.*
+<<<<<<< HEAD
       - develop
+=======
+      - develop*
+>>>>>>> upstream/release-1.2.2.x
       - MOSIP*
 
 jobs:
   build-maven-partner:
+<<<<<<< HEAD
     uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
+=======
+    uses: mosip/kattu/.github/workflows/maven-build.yml@master
+>>>>>>> upstream/release-1.2.2.x
     with:
       SERVICE_LOCATION: ./partner
       BUILD_ARTIFACT: partner
@@ -38,7 +46,11 @@ jobs:
     if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' && github.event_name != 'release' && github.event_name != 'prerelease' && github.event_name != 'publish' }}"
 
     needs: build-maven-partner
+<<<<<<< HEAD
     uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master-java21
+=======
+    uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master
+>>>>>>> upstream/release-1.2.2.x
     with:
       SERVICE_LOCATION: ./partner
     secrets:
@@ -57,6 +69,7 @@ jobs:
           - SERVICE_LOCATION: 'partner/partner-management-service'
             SERVICE_NAME: 'partner-management-service'
             BUILD_ARTIFACT: 'partner'
+<<<<<<< HEAD
             SQUASH_LAYERS: '6'
           - SERVICE_LOCATION: 'partner/policy-management-service'
             SERVICE_NAME: 'policy-management-service'
@@ -69,11 +82,22 @@ jobs:
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
     uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
+=======
+          - SERVICE_LOCATION: 'partner/policy-management-service'
+            SERVICE_NAME: 'policy-management-service'
+            BUILD_ARTIFACT: 'partner'
+      fail-fast: false
+    name: ${{ matrix.SERVICE_NAME }}
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+>>>>>>> upstream/release-1.2.2.x
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
       BUILD_ARTIFACT: ${{ matrix.BUILD_ARTIFACT }}
+<<<<<<< HEAD
       SQUASH_LAYERS: ${{ matrix.SQUASH_LAYERS }}
+=======
+>>>>>>> upstream/release-1.2.2.x
     secrets:
       DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
@@ -83,7 +107,11 @@ jobs:
   sonar_analysis:
     needs: build-maven-partner
     if: "${{  github.event_name != 'pull_request' }}"
+<<<<<<< HEAD
     uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master-java21
+=======
+    uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master
+>>>>>>> upstream/release-1.2.2.x
     with:
       SERVICE_LOCATION: ./partner
     secrets:

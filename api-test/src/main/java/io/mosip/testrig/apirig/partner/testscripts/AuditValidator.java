@@ -21,7 +21,6 @@ import org.testng.annotations.Test;
 import org.testng.internal.BaseTestMethod;
 import org.testng.internal.TestResult;
 
-import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
@@ -30,7 +29,6 @@ import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
-import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
@@ -41,14 +39,15 @@ public class AuditValidator extends PMSUtil implements ITest {
 	protected String testCaseName = "";
 	public static List<String> templateFields = new ArrayList<>();
 	public Response response = null;
+
 	/**
 	 * get current testcaseName
 	 */
 	@Override
-	public String getTestName() { 
+	public String getTestName() {
 		return testCaseName;
 	}
-	
+
 	@BeforeClass
 	public static void setLogLevel() {
 		if (PMSConfigManger.IsDebugEnabled())
@@ -56,7 +55,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 		else
 			logger.setLevel(Level.ERROR);
 	}
-	
+
 	/**
 	 * Data provider class provides test case list
 	 * 
@@ -68,44 +67,41 @@ public class AuditValidator extends PMSUtil implements ITest {
 		logger.info("Started executing yml: " + ymlFile);
 		return getYmlTestData(ymlFile);
 	}
-	
-	
+
 	@Test(dataProvider = "testcaselist")
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {
-			throw new SkipException(GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
+			throw new SkipException(
+					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		List<String> queryProp = Arrays.asList(templateFields);
 		logger.info(queryProp);
-		String query = "select * from audit.app_audit_log where cr_by = '"+BaseTestCase.currentModule +"-"+PMSConfigManger.getproperty("partner_userName")+"'";
-		
-		
+		String query = "select * from audit.app_audit_log where cr_by = '" + BaseTestCase.currentModule + "-"
+				+ PMSConfigManger.getproperty("partner_userName") + "'";
+
 		logger.info(query);
 		Map<String, Object> response = DBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
-		
-		
+
 		Map<String, List<OutputValidationDto>> objMap = new HashMap<>();
 		List<OutputValidationDto> objList = new ArrayList<>();
 		OutputValidationDto objOpDto = new OutputValidationDto();
-		if(response.size()>0) {
-			
+		if (response.size() > 0) {
+
 			objOpDto.setStatus("PASS");
-		}
-		else {
+		} else {
 			objOpDto.setStatus(GlobalConstants.FAIL_STRING);
 		}
-		
+
 		objList.add(objOpDto);
 		objMap.put(GlobalConstants.EXPECTED_VS_ACTUAL, objList);
 
 		if (!OutputValidationUtil.publishOutputResult(objMap))
 			throw new AdminTestException("Failed at output validation");
 	}
-	
-	
+
 	/**
 	 * The method ser current test name to result
 	 * 
@@ -113,8 +109,9 @@ public class AuditValidator extends PMSUtil implements ITest {
 	 */
 	@AfterMethod(alwaysRun = true)
 	public void setResultTestName(ITestResult result) {
-		
-		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+PMSConfigManger.getproperty("partner_userName")+"'";
+
+		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"
+				+ PMSConfigManger.getproperty("partner_userName") + "'";
 		logger.info(deleteQuery);
 		DBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {

@@ -1,0 +1,74 @@
+UpdatePolicyGroupForPartner:
+   Pms_UpdatePolicyGroupForPartner_AllValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_01
+      description: Update Policy Group For Partner with valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartnerResult
+      input: '{
+    "partnerId": "updatepolicy",
+    "policygroupName": "mosip policy group"
+}'
+      output: '{
+   "response": "$IGNORE$"
+}'
+   Pms_UpdatePolicyGroupForPartner_InValid_ApprovedPartner:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_02
+      description: Update Policy Group For Partner with invalid Approved Partner
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "pms-111998",
+    "policygroupName": "mosip policy group 19234"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_050"
+    }
+  ]
+}'
+   Pms_UpdatePolicyGroupForPartner_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_03
+      description: Update Policy Group For Partner with invalid PartnerId
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "asfvgb",
+    "policygroupName": "mosip policy group updated"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_005"
+    }
+  ]      
+}'
+   Pms_UpdatePolicyGroupForPartner_InValid_PolicyGroup:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
+      uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_04
+      description: Update Policy Group For Partner with invalid Policy GroupId
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "updatepolicy",
+    "policygroupName": "dsfgeagb"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_002"
+    }
+  ]   
+}'

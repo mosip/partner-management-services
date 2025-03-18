@@ -1,0 +1,145 @@
+DeviceSubTypeFilter:
+   Pms_DeviceSubTypeFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      role: partnerdevice
+      description: Device SubType Filter
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_01
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
+      outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilterResult
+      input: '{
+    "filters": [{
+    "columnName": "deviceType",
+    "type": "unique",
+    "text": "Finger"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+      "filters": [
+      {
+        "fieldID": "deviceType",
+        "fieldValue": "Finger",
+        "fieldCode": "Single"
+      }
+    ]
+  }'
+  
+   Pms_DeviceSubTypeFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_02
+      description: Create DeviceSubType Filter with valid values
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "code",
+    "type": "all",
+    "text": "Single"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+}'
+
+   Pms_DeviceSubTypeFilter_Invalid_EmptyFilterType:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_03
+      description: Create DeviceSubType Filter while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "code",
+		"type": "",
+		"text": "Single"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   Pms_DeviceSubTypeFilter_Invalid_EmptyFilterColumn:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_04
+      description: Create DeviceSubType Filter while keeping FilterColumn parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "all",
+		"text": "Single"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_DeviceSubTypeFilter_Invalid_type_doesnt_exist:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_05
+      description: Create DeviceSubType Filter while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "code",
+		"type": "asfdg",
+		"text": "Single"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'
+   Pms_DeviceSubTypeFilter_Invalid_Column_doesnt_exist:
+      endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
+      uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_06
+      description: Create DeviceSubType Filter while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "asdf",
+		"type": "all",
+		"text": "Single"
+	}],
+	"purpose": "REGISTRATION",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'

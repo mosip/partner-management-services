@@ -1,0 +1,143 @@
+PartnerApiKeyRequestFilter:
+   Pms_PartnerApiKeyRequestFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_01
+      description: Create ApiKeyRequestFilter for Partner with valid values
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "id",
+    "type": "all",
+    "text": "mpartner_policy_auth_req"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "filters": [
+      {
+        "fieldID": "id",
+        "fieldValue": "mpartner_policy_auth_req",
+        "fieldCode": "mpartner_policy_auth_req"
+      }
+    ]
+}'
+   Pms_PartnerApiKeyRequestFilter_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_02
+      description: Create ApiKeyRequestFilter for Partner with valid values
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "id",
+    "type": "unique",
+    "text": "mpartner_policy_auth_req"
+  }],
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    "filters": [
+      {
+        "fieldID": "id",
+        "fieldValue": "mpartner_policy_auth_req",
+        "fieldCode": "mpartner_policy_auth_req"
+      }
+    ]
+}'
+   Pms_PartnerApiKeyRequestFilter_Invalid_EmptyFilterType:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_03
+      description: Create ApiKeyRequestFilter for Partner while keeping FilterType parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-322"
+    }
+  ]
+}'
+   Pms_PartnerApiKeyRequestFilter_Invalid_EmptyFilterColumn:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_04
+      description: Create ApiKeyRequestFilter for Partner while keeping FilterColumn parameter as Empty
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "",
+		"type": "unique",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_PartnerApiKeyRequestFilter_Invalid_Column_doesnt_exist:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_05
+      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Column parameter
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "asdf",
+		"type": "unique",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-317"
+    }
+  ]
+}'
+   Pms_PartnerApiKeyRequestFilter_Invalid_type_doesnt_exist:
+      endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
+      uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_06
+      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Type parameter
+      role: partner
+      restMethod: post
+      inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
+      outputTemplate: pms/error
+      input: '{
+	"filters": [{
+		"columnName": "id",
+		"type": "sfga",
+		"text": "mpartner_policy_auth_req"
+	}],
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS-MSD-324"
+    }
+  ]
+}'
