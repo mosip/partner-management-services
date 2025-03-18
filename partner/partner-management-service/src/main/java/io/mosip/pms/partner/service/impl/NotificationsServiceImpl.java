@@ -151,23 +151,27 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         String notificationType = filterDto.getNotificationType();
 
+        String expiryDate = Objects.isNull(filterDto.getExpiryDate()) ? null : filterDto.getExpiryDate().toString();
+
         // Default case when notificationType is null
         if (Objects.isNull(notificationType)) {
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
-                    filterDto.getNotificationStatus(), partnerIdList, pageable);
+                    filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+                    filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
+                    partnerIdList, pageable);
         }
 
         switch (notificationType) {
             case ROOT:
                 return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                        filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
                         ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
             case INTERMEDIATE:
                 return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                        filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
 
             // TODO: Logic for WEEKLY notifications to be implemented
