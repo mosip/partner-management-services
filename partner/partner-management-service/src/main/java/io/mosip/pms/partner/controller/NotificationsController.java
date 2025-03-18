@@ -23,9 +23,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -68,7 +70,9 @@ public class NotificationsController {
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
             @RequestParam(value = "certificateId", required = false) String certificateId,
-            @RequestParam(value = "expiryDate", required = false) String expiryDate,
+            @RequestParam(value = "expiryDate", required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            @Parameter(description = "Expiry date in 'yyyy-MM-dd' format") LocalDate expiryDate,
             @RequestParam(value = "issuedBy", required = false) String issuedBy,
             @RequestParam(value = "issuedTo", required = false) String issuedTo,
             @Parameter(

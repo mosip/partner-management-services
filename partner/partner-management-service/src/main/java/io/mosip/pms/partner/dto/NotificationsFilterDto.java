@@ -2,11 +2,13 @@ package io.mosip.pms.partner.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class NotificationsFilterDto {
 
     private String certificateId;
-    private String expiryDate;
+    private LocalDate expiryDate;
     private String issuedBy;
     private String issuedTo;
     private String notificationStatus;
