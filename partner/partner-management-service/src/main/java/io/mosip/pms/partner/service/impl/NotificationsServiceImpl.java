@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static io.mosip.pms.common.constant.PartnerConstants.*;
@@ -95,6 +94,12 @@ public class NotificationsServiceImpl implements NotificationsService {
                 if (!isPartnerAdmin && !filterNotificationType.isBlank() && validateNotificationTypeForPartner(filterNotificationType)) {
                     throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                             ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+                }
+            } else {
+                if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) ||
+                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain())) {
+                    throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
+                            ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
                 }
             }
 
@@ -151,27 +156,23 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         String notificationType = filterDto.getNotificationType();
 
-        String expiryDate = Objects.isNull(filterDto.getExpiryDate()) ? null : filterDto.getExpiryDate().toString();
-
         // Default case when notificationType is null
         if (Objects.isNull(notificationType)) {
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
-                    filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                    filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
-                    partnerIdList, pageable);
+                    filterDto.getNotificationStatus(), partnerIdList, pageable);
         }
 
         switch (notificationType) {
             case ROOT:
                 return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
+                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
             case INTERMEDIATE:
                 return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), expiryDate, filterDto.getNotificationStatus(),
+                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
 
             // TODO: Logic for WEEKLY notifications to be implemented
