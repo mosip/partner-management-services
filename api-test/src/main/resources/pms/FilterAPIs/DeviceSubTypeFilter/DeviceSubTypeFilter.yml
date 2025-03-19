@@ -26,15 +26,15 @@ DeviceSubTypeFilter:
     ]
   }'
   
-   Pms_DeviceSubTypeFilter_All_Valid_Smoke:
+   Pms_DeviceSubTypeFilter_ColumnCode_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_02
       description: Create DeviceSubType Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
-      outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilterResult
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
+      outputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilterResult
       input: '{
   "filters": [{
     "columnName": "code",
@@ -53,7 +53,7 @@ DeviceSubTypeFilter:
       description: Create DeviceSubType Filter while keeping FilterType parameter as Empty
       role: partner
       restMethod: post
-      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
       outputTemplate: pms/error
       input: '{
 	"filters": [{
@@ -77,7 +77,7 @@ DeviceSubTypeFilter:
       description: Create DeviceSubType Filter while keeping FilterColumn parameter as Empty
       role: partner
       restMethod: post
-      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
       outputTemplate: pms/error
       input: '{
 	"filters": [{
@@ -101,7 +101,7 @@ DeviceSubTypeFilter:
       description: Create DeviceSubType Filter while keeping invalid values in Type parameter
       role: partner
       restMethod: post
-      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
       outputTemplate: pms/error
       input: '{
 	"filters": [{
@@ -125,7 +125,7 @@ DeviceSubTypeFilter:
       description: Create DeviceSubType Filter while keeping invalid values in Column parameter
       role: partner
       restMethod: post
-      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/deviceSubTypeFilter
+      inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
       outputTemplate: pms/error
       input: '{
 	"filters": [{
