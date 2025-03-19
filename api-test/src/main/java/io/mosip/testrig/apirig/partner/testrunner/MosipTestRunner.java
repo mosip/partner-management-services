@@ -89,7 +89,7 @@ public class MosipTestRunner {
 			KeycloakUserManager.closeKeycloakInstance();
 
 			startTestRunner();
-			//PMSUtil.DbCleanRevamp();
+			PMSUtil.DbCleanRevamp();
 		} catch (Exception e) {
 			LOGGER.error("Exception " + e.getMessage());
 		}
