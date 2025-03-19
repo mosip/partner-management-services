@@ -169,7 +169,8 @@ public enum ErrorCode {
 	INVALID_NOTIFICATION_STATUS("PMS_NOTIFICATION_ERROR_012", "Invalid notification status. Expected: DISMISSED."),
 	EXPIRING_CERT_COUNT_FETCH_ERROR("PMS_NOTIFICATION_ERROR_013", "Error encountered while retrieving the count of expiring certificates."),
 	UNABLE_TO_GET_EXPIRING_CERTS_COUNT("PMS_NOTIFICATION_ERROR_014", "Partner Admin will only get the count of expiring root and intermediate certificates."),
-	NOTIFICATION_TYPE_NOT_SELECTED("PMS_NOTIFICATION_ERROR_015", "Notification type must be selected for filtering");
+	NOTIFICATION_TYPE_NOT_SELECTED("PMS_NOTIFICATION_ERROR_015", "Notification type must be selected for filtering"),
+	INVALID_EXPIRY_DATE("PMS_NOTIFICATION_ERROR_016", "Invalid expiry date");
 
 	/**
 	 * The error code.
