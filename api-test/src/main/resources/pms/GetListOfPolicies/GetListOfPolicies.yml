@@ -1,0 +1,492 @@
+GetListOfPolicies:
+   Pms_GetListOfPolicies_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/v2
+      description: Fetching all the active List Of Policies in the system
+      uniqueIdentifier: TC_PMS_listofPolicies_01      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_invalid_token_neg:
+      endPoint: /v1/policymanager/policies/v2
+      description: Fetching all the active List Of Policies invalid token
+      uniqueIdentifier: TC_PMS_listofPolicies_02      
+      role: POLICYMANAGER
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_without_Authentication_neg:
+      endPoint: /v1/policymanager/policies/v2
+      description: Fetching all the active List Of Policies without authentication
+      uniqueIdentifier: TC_PMS_listofPolicies_03      
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_with_status_activated:
+      endPoint: /v1/policymanager/policies/v2?status={status}
+      description: Fetching all the active List Of Policies with status as 'activated'
+      uniqueIdentifier: TC_PMS_listofPolicies_04      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "activated"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_status_deactivated:
+      endPoint: /v1/policymanager/policies/v2?status={status}
+      description: Fetching all the active List Of Policies with status as 'deactivated'
+      uniqueIdentifier: TC_PMS_listofPolicies_05      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "deactivated"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_status_draft:
+      endPoint: /v1/policymanager/policies/v2?status={status}
+      description: Fetching all the active List Of Policies with status as 'draft'
+      uniqueIdentifier: TC_PMS_listofPolicies_06      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "draft"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_pagesize_specified_valid:
+      endPoint: /v1/policymanager/policies/v2?pageSize={pageSize}
+      description: Fetching all the active List Of Policies with pageSize as '6'
+      uniqueIdentifier: TC_PMS_listofPolicies_07     
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "6",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_negative_pageNo_neg:
+      endPoint: /v1/policymanager/policies/v2?pageNo={pageNo}
+      description: Fetching all the active List Of Policies with pageNo as '-6'
+      uniqueIdentifier: TC_PMS_listofPolicies_08      
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "-6",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_with_negative_pageSize_neg:
+      endPoint: /v1/policymanager/policies/v2?pageSize={pageSize}
+      description: Fetching all the active List Of Policies with pageSize as '-6'
+      uniqueIdentifier: TC_PMS_listofPolicies_09      
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "-6",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_361"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_with_pageNo_specified_valid:
+      endPoint: /v1/policymanager/policies/v2?pageNo={pageNo}
+      description: Fetching all the active List Of Policies with pageNo as '6'
+      uniqueIdentifier: TC_PMS_listofPolicies_10      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "6",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_sortType_asc:
+      endPoint: /v1/policymanager/policies/v2?sortType={sortType}
+      description: Fetching all the active List Of Policies with sortType as 'asc'
+      uniqueIdentifier: TC_PMS_listofPolicies_11      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "asc",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_sortType_desc:
+      endPoint: /v1/policymanager/policies/v2?sortType={sortType}
+      description: Fetching all the active List Of Policies with sortType as 'desc'
+      uniqueIdentifier: TC_PMS_listofPolicies_12      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "desc",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_sortType_invalid_neg:
+      endPoint: /v1/policymanager/policies/v2?sortType={sortType}
+      description: Fetching all the active List Of Policies with sortType as 'abdcfegff'
+      uniqueIdentifier: TC_PMS_listofPolicies_13      
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "abdcfegff",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_358"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_with_policyId_valid:
+      endPoint: /v1/policymanager/policies/v2?policyId={policyId}
+      description: Fetching all the active List Of Policies with policyId as '1'
+      uniqueIdentifier: TC_PMS_listofPolicies_14      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "1",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_policyName_valid:
+      endPoint: /v1/policymanager/policies/v2?policyName={policyName}
+      description: Fetching all the active List Of Policies with policyName as 'a'
+      uniqueIdentifier: TC_PMS_listofPolicies_15      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "a",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_policyGroupName_valid:
+      endPoint: /v1/policymanager/policies/v2?policyGroupName={policyGroupName}
+      description: Fetching all the active List Of Policies with policyGroupName as 'ab'
+      uniqueIdentifier: TC_PMS_listofPolicies_16     
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "ab",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_policyDescription_valid:
+      endPoint: /v1/policymanager/policies/v2?policyDescription={policyDescription}
+      description: Fetching all the active List Of Policies with policyDescription as 'a'
+      uniqueIdentifier: TC_PMS_listofPolicies_17     
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "a",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_sortFieldName_valid:
+      endPoint: /v1/policymanager/policies/v2?sortFieldName={sortFieldName}&sortType={sortType}
+      description: Fetching all the active List Of Policies with sortFieldName as 'status' as per given sorttype
+      uniqueIdentifier: TC_PMS_listofPolicies_18     
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "status",
+      "sortType": "asc",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'
+   Pms_GetListOfPolicies_with_sortFieldName_invalid_neg:
+      endPoint: /v1/policymanager/policies/v2?sortFieldName={sortFieldName}&sortType={sortType}
+      description: Fetching all the active List Of Policies with sortFieldName as 'status' as per given sorttype
+      uniqueIdentifier: TC_PMS_listofPolicies_19     
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "hfghfgdhf",
+      "sortType": "asc",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_357"
+       }
+       ]
+}'
+   Pms_GetListOfPolicies_with_policyDescription_random_invalid_neg:
+      endPoint: /v1/policymanager/policies/v2?policyDescription={policyDescription}
+      description: Fetching all the active List Of Policies with policyDescription as '3fdfds'
+      uniqueIdentifier: TC_PMS_listofPolicies_20     
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyDescription": "3fdfds",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: ' {
+      "totalResults": "0"
+}'
+   Pms_GetListOfPolicies_with_combination_twoattributes_valid:
+      endPoint: /v1/policymanager/policies/v2?policyId={policyId}&policyName={policyName}
+      description: Fetching all the active List Of Policies with policyName and policyid given
+      uniqueIdentifier: TC_PMS_listofPolicies_21     
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPolicies/getListOfPolicies
+      outputTemplate: pms/GetListOfPolicies/getListOfPoliciesResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "policyType": "$REMOVE$",
+      "policyId": "1",
+      "policyName": "1",
+      "policyDescription": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "status": "$REMOVE$"
+}'
+      output: ' {
+      "totalResults": "$IGNORE$"
+}'

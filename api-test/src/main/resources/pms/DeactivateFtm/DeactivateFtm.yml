@@ -1,0 +1,19 @@
+DeactivateFtm:
+   Pms_DeactivateFtm_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtm_01
+      description: Deactivate Device with valid Partner authentication
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtm
+      outputTemplate: pms/DeactivateFtm/DeactivateFtmResult
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"     
+}'
+      output: '{
+          "status": "approved",
+          "isActive": true
+        
+}'

@@ -1,0 +1,152 @@
+ApproveMappingKey:
+   Pms_ApproveMappingKey_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping approved successfully"
+    }'
+    
+   Pms_ApproveMappingKey_ForDeactivateOIDCNeg_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_01
+      description: Approve the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping approved successfully"
+    }'
+
+   Pms_ApproveMappingKey_Invalid_Request_Time_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "1111-07-22T08:21:17.665Z"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_ApproveMappingKey_Missing_Request_Time_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_ApproveMappingKey_SpaceIn_mapping_key_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "requesttime": "$TIMESTAMP$",
+	  "mappingkey": " "
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_007"
+    }
+  ]
+}'
+
+   Pms_ApproveMappingKey_Missing_status_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
+      "status": "$REMOVE$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_ApproveMappingKey_Rejected_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping approved successfully"
+    }'
+    
+   Pms_ApproveMappingKey_Map_partner_toalready_mapped_policy_neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Approve the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PM_034"
+    }
+  ]
+    }'

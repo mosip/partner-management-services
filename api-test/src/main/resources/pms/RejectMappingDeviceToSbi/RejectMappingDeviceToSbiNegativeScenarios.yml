@@ -1,0 +1,737 @@
+RejectMappingDeviceToSbiNegativeScenarios:
+   Pms_RejectMappingDeviceToSbi_without_Partner_Auth_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_01
+      description: Reject mapping device to sbi without Partner Authentication and expecting an error in response
+      role: invalidtoken
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.reject.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Missing_Req_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_02
+      description: Reject mapping device to sbi while passing Invalid RequestID parameter in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "$REMOVE$",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSb_ReqID_Null_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_03
+      description: Reject mapping device to sbi while keeping ReqID parameter as Null in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "null",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_ReqID_Empty_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_04
+      description: Reject mapping device to sbi while keeping ReqID parameter as Empty in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_ReqID_Invalid_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_05
+      description: Reject mapping device to sbi while keeping ReqID parameter as Invalid in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "7472828",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Missing_Version_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_06
+      description: Reject mapping device to sbi while keeping Version parameter as Missing in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "$REMOVE$",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Null_Version_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_07
+      description: Reject mapping device to sbi while keeping Version parameter as Null in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "null",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_Version_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_08
+      description: Reject mapping device to sbi while keeping Version parameter as Empty in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": " ",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Invalid_VersionValue1_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_09
+      description: Reject mapping device to sbi while keeping Version parameter as invalid value 1 in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Invalid_VersionValue0_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_10
+      description: Reject mapping device to sbi while keeping Version parameter as invalid value 0 in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Invalid_VersionValues_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_11
+      description: Reject mapping device to sbi while keeping Version parameter as invalid values in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "7288283",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_without_RequestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_12
+      description: Reject mapping device to sbi without RequestTime parameter in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$REMOVE$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_RequestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_13
+      description: Reject mapping device to sbi while keeping RequestTime parameter as Empty in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_RequestTimeString_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_14
+      description: Reject mapping device to sbi while keeping RequestTime parameter as Empty string in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": " ",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_different_format_RequestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_15
+      description: Reject mapping device to sbi while keeping RequestTime value other than given format in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "1111-07-22T08:21:17.665Z",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_invalid_object_paramter_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_16
+      description: Reject mapping device to sbi with invalid object paramter in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "jadhav",
+      "sbiId": "9329",
+      "deviceDetailId": "93130"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_invalid_Partner_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_17
+      description: Reject mapping device to sbi while keeping invalid Partner ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "100223111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_null_Partner_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_18
+      description: Reject mapping device to sbi while keeping null Partner ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "null",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_Partner_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_19
+      description: Reject mapping device to sbi while keeping Empty Partner ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_002"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Invalid_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_20
+      description: Reject mapping device to sbi while keeping Invalid SBI ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "7281818",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_without_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_21
+      description: Reject mapping device to sbi while keeping without SBI ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_null_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_22
+      description: Reject mapping device to sbi while keeping null SBI ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "null",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_23
+      description: Reject mapping device to sbi while keeping Empty SBI ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_random_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_24
+      description: Reject mapping device to sbi while keeping random SBI ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "731811993",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_already_Rejected_mapped_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_25
+      description: Reject mapping device to sbi while providing already rejeceted device ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_010"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_invalid_Device_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_26
+      description: Reject mapping device to sbi while providing invalid device ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "812293"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_with_different_Device_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_27
+      description: Reject mapping device to sbi with different device ID in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "233313"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_null_Device_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_28
+      description: Reject mapping device to sbi while keeping device ID as null in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "null"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Empty_Device_ID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_29
+      description: Reject mapping device to sbi while keeping device ID as Empty in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": " "
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_invalid_Device_IDvalues_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_30
+      description: Reject mapping device to sbi while keeping device ID values in request and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "8228828"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_006"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_with_Partner_Roles_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_31
+      description: Reject mapping device to sbi with Parter roles and expecting an error in response
+      role: device
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_Provide_different_SBIID_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_33
+      description: Reject mapping device to sbi with different SBI ID and expecting an error in response
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "sbiId": "$ID:GetListOfAllSBI_All_Valid_Smoke_sid_sbiId$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_002"
+       }
+       ]
+}'

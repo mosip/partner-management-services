@@ -1,0 +1,13 @@
+GetAllApprovedFtmProvider:
+   Pms_All_Approved_Ftm_Provider_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=FTM_Provider
+      description: Fetching all the certificate for the Partner Id
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
+      outputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderResult
+      input: '{
+}'
+      output: ' {
+}'

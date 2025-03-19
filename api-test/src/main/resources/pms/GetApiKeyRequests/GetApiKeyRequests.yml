@@ -1,0 +1,14 @@
+GetApiKeyRequests:
+   Pms_GetApiKeyRequests_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/apikey
+      uniqueIdentifier: TC_PMS_GetApiKeyRequests_01
+      description: Retrieve ApiKeyRequests for Partner
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetApiKeyRequests/getApiKeyRequests
+      outputTemplate: pms/GetApiKeyRequests/getApiKeyRequestsResult
+      input: '{
+}'
+      output: '{
+}'

@@ -1,0 +1,146 @@
+UpdatePolicyStatus:
+   Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_01
+      description: Update Policy Status as DeActive
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatusResult
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+       "message": "status updated successfully"
+    }'
+
+   Pms_UpdatePolicyStatus_DeActive_datashare_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_03
+      description: Update Policy Status as DeActive for datashare
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatusResult
+      input: '{		
+		"policyId": "MDSP",
+		"policygroupId":"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+		"status":"De-Active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+       "message": "status updated successfully"
+    }'
+   Pms_UpdatePolicyStatus_Active_InValid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_04
+      description: Update Policy Status as Active with invalid data
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/error
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+    {
+      "errorCode": "PMS_POL_054",
+      "message": "Cannot activate unpublished policy."
+    }
+  ]
+    }' 
+   Pms_UpdatePolicyStatus_PolicyId_InValid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_05
+      description: Update Policy Status as Active with invalid PolicyID
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/error
+      input: '{		
+		"policyId": "asfgv",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"Active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+     {
+         "errorCode": "PMS_POL_008",
+         "message": "Policy ID does not exist"
+     }
+ ]
+    }' 
+   Pms_UpdatePolicyStatus_status_InValid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_06
+      description: Update Policy Status while keeping status parameter as invalid
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/error
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"asfg",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+     {
+         "errorCode": "PMS_POL_045",
+         "message": "Policy Status either Active or De-active."
+     }
+  ]
+}'
+   Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_07
+      description: Update Policy Status while keeping PolicyGroupId parameter as invalid
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/error
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"asfbvef",
+		"status":"Active",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+     {
+         "errorCode": "PMS_POL_016",
+            "message": "Policy Group ID does not exist"
+     }
+ ]
+    }'
+   Pms_UpdatePolicyStatus_Missing_status_InValid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
+      uniqueIdentifier: TC_PMS_UpdatePolicyStatus_08
+      description: Update Policy Status while keeping status parameter as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
+      outputTemplate: pms/error
+      input: '{		
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"policygroupId":"$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+		"status":"$REMOVE$",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+  "errors": [
+     {
+        "errorCode": "PMS_COR_003",
+            "message": "Could not process the request"
+     }
+ ]
+    }' 

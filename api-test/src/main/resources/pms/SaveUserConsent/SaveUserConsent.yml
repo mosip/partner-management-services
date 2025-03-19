@@ -1,0 +1,66 @@
+SaveUserConsent:
+   Pms_saveUserConsent_AllValid_Smoke:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_saveUserConsent_01
+      description: save User Consent 
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/SaveUserConsent/SaveUserConsentResult
+      input: '{
+}'
+      output: '{
+           "userId": "pms-111999"
+}'
+   Pms_saveUserConsent_invalid_roles_Neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: ftm
+      uniqueIdentifier: TC_PMS_saveUserConsent_02
+      description: save User Consent when authentication is done with invalid roles
+      restMethod: post
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
+}'
+   Pms_saveUserConsent_without_authentication_Neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: invalidtoken
+      uniqueIdentifier: TC_PMS_saveUserConsent_03
+      description: save User Consent without authentication
+      restMethod: post
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401" 		
+      }
+      ]
+}'
+   Pms_saveUserConsent_invalid_user_Neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: regproc
+      uniqueIdentifier: TC_PMS_saveUserConsent_04
+      description: save User Consent for invalid user
+      restMethod: post
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002" 		
+      }
+      ]
+}'

@@ -1,0 +1,124 @@
+GetOriginalPartnerCertificates:
+   Pms_GetOriginalPartnerCertificates_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_01      
+      description: Get original Auth partner certificates      
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111999"
+}'
+      output: '{
+     
+}'
+
+   Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_02      
+      description: Get original device partner certificates      
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111998"
+}'
+      output: '{
+     
+}'
+
+   Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_03      
+      description: Get original ftm partner certificates      
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
+      input: '{
+      "partnerId": "pms-111888"
+}'
+      output: '{
+     
+}'
+   Pms_GetOriginalPartnerCertificates_invalid_roles_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_04      
+      description: Get original Auth partner certificates when authenticated as device partner     
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": "pms-111999"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_007"
+       }
+       ]
+     
+}'
+   Pms_GetOriginalPartnerCertificates_without_partnerid_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_05      
+      description: Get original Auth partner certificates without partnerid     
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": ""
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_005"
+       }
+       ]
+     
+}'
+   Pms_GetOriginalPartnerCertificates_random_partnerid_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_06      
+      description: Get original Auth partner certificates random value for partnerid   
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": "xyz12345abcdef"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_005"
+       }
+       ]
+     
+}'
+   Pms_GetOriginalPartnerCertificates_without_authentication_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
+      uniqueIdentifier: TC_PMS_getPartner_certificate_07      
+      description: Get original Auth partner certificates without authentication   
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
+      outputTemplate: pms/error
+      input: '{
+      "partnerId": "pms-111999"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+     
+}'

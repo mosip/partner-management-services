@@ -1,0 +1,13 @@
+DownloadRootCertificate:
+   Pms_DownloadRootCertificate_allValid_smoke:
+      endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
+      description: Fetching all the root certificates of the Logged in Partner
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/DownloadRootCertificate/downloadRootCertificate
+      outputTemplate: pms/DownloadRootCertificate/downloadRootCertificateResult
+      input: '{
+}'
+      output: '{
+}'

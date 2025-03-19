@@ -1,0 +1,15 @@
+GetFTPChipDetail:
+   Pms_GetFtpChipDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail/getPartnerCertificate/{ftpChipDetailId}
+      uniqueIdentifier: TC_PMS_GetFTPChipDetail_01
+      description: Retreive FTP ChipDetails Partner with valid detail
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/GetFtpChipDetail/getFtpChipDetail
+      outputTemplate: pms/GetFtpChipDetail/getFtpChipDetailResult
+      input: '{
+    "ftpChipDetailId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+  }'
+      output: '{
+    }'

@@ -110,11 +110,11 @@ public class SimplePatch extends PMSUtil implements ITest {
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
 			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
+
+			ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+					getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+					response.getStatusCode());
+
 			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
 			if (!OutputValidationUtil.publishOutputResult(ouputValid))
