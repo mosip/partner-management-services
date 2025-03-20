@@ -178,13 +178,13 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         switch (notificationType) {
             case ROOT:
-                return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
+                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
             case INTERMEDIATE:
-                return notificationsSummaryRepository.getSummaryOfAllRootAndIntermediateNotifications(
+                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
@@ -194,8 +194,10 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             // TODO: Logic for PARTNER notifications to be implemented
             case PARTNER:
-
-            // TODO: Logic for SBI notifications to be implemented
+                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
+                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+                        PARTNER_CERT_EXPIRY, partnerIdList, pageable);
             case SBI:
 
             // TODO: Logic for FTM_CHIP notifications to be implemented

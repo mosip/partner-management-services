@@ -52,7 +52,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "AND (:partnerDomain IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'partnerDomain') = LOWER(:partnerDomain)) " +
                     "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
                     nativeQuery = true)
-    Page<NotificationEntity> getSummaryOfAllRootAndIntermediateNotifications(
+    Page<NotificationEntity> getSummaryOfAllRootIntermediatePartnerCertNotifications(
             @Param("certificateId") String certificateId,
             @Param("issuedBy") String issuedBy,
             @Param("issuedTo") String issuedTo,
