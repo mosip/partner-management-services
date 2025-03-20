@@ -12,13 +12,13 @@
 			</div>
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
-					<p><strong>Chère &lt;Utilisatrice&gt;,</strong></p>
-					<p>Ceci est pour vous informer que le CA racine Le certificat avec l'ID de certificat ${certificateId} doit expirer le ${expiryDateTime}. Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
+					<p><strong>Chère ${partnerId},</strong></p>
+					<p>Ceci est pour vous informer que le CA racine Le certificat avec l'ID de certificat ${certificateId} doit expirer le ${expiryDateTime}(UTC). Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
 						<p style="padding: 5px 0px; font-weight: 600;">ID du certificat<br><span style="font-weight: 400;">${certificateId}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600;">Date d'expiration<br><span style="font-weight: 400;">${expiryDateTime}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">Date d'expiration<br><span style="font-weight: 400;">${expiryDateTime}(UTC)</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Domaine partenaire<br><span style="font-weight: 400;">${partnerDomain}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Délivré à<br><span style="font-weight: 400;">${issuedTo}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Délivré par<br><span style="font-weight: 400;">${issuedBy}</span></P>
