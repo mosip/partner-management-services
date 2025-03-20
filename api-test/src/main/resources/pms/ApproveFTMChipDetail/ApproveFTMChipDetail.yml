@@ -1,0 +1,39 @@
+ApproveFTMChipDetail:
+   Pms_ApproveFTMChipDetail_allValid_smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partneradmin
+      description: Approve FTM Chip Detail
+      uniqueIdentifier: TC_PMS_ApproveFTMchipDetail_01
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail
+      outputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetailResult
+      input: '{
+   "ftpChipDetailId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
+    "approvalStatus": true
+}'
+      output: '{
+   
+}'
+
+   Pms_ApproveFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_ApproveFtpChipDetail_02
+      description: Update FTM Chip provider Partner while keeping ftpChipDetailID as missing
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/ApproveFTMChipDetail/ApproveFTMChipDetail
+      outputTemplate: pms/error
+      input: '{
+    "approvalStatus": true,
+    "ftpChipDetailId": "$REMOVE$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

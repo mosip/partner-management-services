@@ -4,11 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
@@ -16,11 +20,10 @@ import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
@@ -480,5 +483,33 @@ public class PartnerHelper {
             throw new PartnerServiceException(ErrorCode.PARTNER_NOT_APPROVED_ERROR.getErrorCode(),
                     ErrorCode.PARTNER_NOT_APPROVED_ERROR.getErrorMessage());
         }
+    }
+
+    public TrustCertTypeListResponseDto getTrustCertificatesList (TrustCertTypeListRequestDto requestDto) throws JsonProcessingException {
+        RequestWrapper<TrustCertTypeListRequestDto> request = new RequestWrapper<>();
+        request.setRequest(requestDto);
+        TrustCertTypeListResponseDto responseObject = null;
+        Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.trust.certificates.post.rest.uri"), null, "", "",
+                MediaType.APPLICATION_JSON, request, Map.class);
+
+        if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
+            List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
+                    .get(PartnerConstants.ERRORS);
+            if (!certServiceErrorList.isEmpty()) {
+                LOGGER.error("Error occurred while getting the trust certificates list from keymanager");
+                throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+                        certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
+            } else {
+                LOGGER.error("Error occurred while getting the trust certificates list from keymanager {}", apiResponse);
+                throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+                        ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
+            }
+        }
+        if (apiResponse.get("response") == null) {
+            throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+                    ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+        }
+        responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertTypeListResponseDto.class);
+        return responseObject;
     }
 }

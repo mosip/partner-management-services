@@ -14,6 +14,7 @@ function deleting_pms() {
         then
           helm -n $NS delete pms-partner
           helm -n $NS delete pms-policy
+          helm -n $NS delete pms-batchjob
           break
         else
           break

@@ -154,7 +154,23 @@ public enum ErrorCode {
 	NOT_AUTH_PARTNER_TYPE_ERROR("PMS_PS_ERROR_005", "The specified partner is not of type Authentication Partner"),
 	INVALID_PAGE_PARAMETERS("PMS_PS_ERROR_006", "Invalid pagination request: 'pageNo' and 'pageSize' must be specified together." ),
 	INVALID_SORT_PARAMETERS("PMS_PS_ERROR_007", "Invalid Sorting request: 'sortType' and 'sortFieldName' must be specified together." ),
-	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data.");
+	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data."),
+	UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_001", "Error while updating notifications seen date time"),
+	UNABLE_TO_UPDATE_NOTIFICATIONS_SEEN_TIME("PMS_NOTIFICATION_ERROR_002", "Invalid notification seen. Expected: true."),
+	USER_DETAILS_NOT_EXIST("PMS_NOTIFICATION_ERROR_003", "User details does not exist for the user."),
+	GET_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_004", "Error while fetching notifications seen date time"),
+	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_005", "Error while fetching notifications"),
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_006", "Partner Admin will only get notifications for root/intermediate certificate expiry and the weekly summary."),
+	NOTIFICATION_DETAILS_JSON_ERROR("PMS_NOTIFICATION_ERROR_007", "Error parsing notification details JSON"),
+	NOTIFICATION_NOT_EXISTS("PMS_NOTIFICATION_ERROR_008", "Notification does not exist."),
+	NOTIFICATION_ALREADY_DISMISSED("PMS_NOTIFICATION_ERROR_009", "Notification has already been dismissed."),
+	DISMISS_NOTIFICATION_ERROR("PMS_NOTIFICATION_ERROR_010", "Error while dismissing the notification."),
+	NOTIFICATION_NOT_BELONGS_TO_PARTNER("PMS_NOTIFICATION_ERROR_011", "The notification does not belong to the partner."),
+	INVALID_NOTIFICATION_STATUS("PMS_NOTIFICATION_ERROR_012", "Invalid notification status. Expected: DISMISSED."),
+	EXPIRING_CERT_COUNT_FETCH_ERROR("PMS_NOTIFICATION_ERROR_013", "Error encountered while retrieving the count of expiring certificates."),
+	UNABLE_TO_GET_EXPIRING_CERTS_COUNT("PMS_NOTIFICATION_ERROR_014", "Partner Admin will only get the count of expiring root and intermediate certificates."),
+	NOTIFICATION_TYPE_NOT_SELECTED("PMS_NOTIFICATION_ERROR_015", "Notification type must be selected for filtering");
+
 	/**
 	 * The error code.
 	 */

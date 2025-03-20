@@ -151,8 +151,6 @@ public class AuthorizedRolesDto {
 	
 	private List<String> postmispsearch;
 
-	//Multi Partner Service Controller
-
 	private List<String> getpartnercertificates;
 
 	private List<String> getapikeysforauthpartners;
@@ -192,5 +190,17 @@ public class AuthorizedRolesDto {
 	private List<String> getdownloadtrustcertificates;
 
 	private List<String> getpartnersv3;
+
+	private List<String> putnotificationseentimestamp;
+
+	private List<String> getnotificationseentimestamp;
+
+	//Notifications Controller
+
+	private List<String> getnotifications;
+
+	private List<String> patchdismissnotification;
+
+	private List<String> getexpiringcertificatescount;
 
 }

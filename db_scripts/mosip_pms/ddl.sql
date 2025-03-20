@@ -31,3 +31,5 @@
 \ir ddl/pms-partner_batch_step_execution.sql
 \ir ddl/pms-partner_batch_step_execution_context.sql
 \ir ddl/pms-partner_batch_job_execution_context.sql
+\ir ddl/pms-partner_batch_job_sequence.sql
+\ir ddl/pms-notifications.sql

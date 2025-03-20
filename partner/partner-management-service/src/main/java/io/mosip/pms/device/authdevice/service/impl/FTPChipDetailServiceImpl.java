@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -18,7 +16,7 @@ import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
 import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.*;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;

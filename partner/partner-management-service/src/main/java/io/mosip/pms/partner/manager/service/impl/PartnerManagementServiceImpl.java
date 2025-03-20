@@ -49,14 +49,14 @@ import io.mosip.pms.common.constant.ConfigKeyConstants;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
@@ -1050,30 +1050,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				trustCertTypeListRequestDto.setSortByFieldName(getSortColumn(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName));
 				trustCertTypeListRequestDto.setSortOrder(sortType);
 			}
-			RequestWrapper<TrustCertTypeListRequestDto> request = new RequestWrapper<>();
-			request.setRequest(trustCertTypeListRequestDto);
-			TrustCertTypeListResponseDto responseObject = null;
-			Map<String, Object> apiResponse = restUtil.postApi(environment.getProperty("pmp.trust.certificates.post.rest.uri"), null, "", "",
-					MediaType.APPLICATION_JSON, request, Map.class);
-
-			if (apiResponse.get("response") == null && apiResponse.containsKey(PartnerConstants.ERRORS)) {
-				List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) apiResponse
-						.get(PartnerConstants.ERRORS);
-				if (!certServiceErrorList.isEmpty()) {
-					LOGGER.error("Error occurred while getting the trust certificates list from keymanager");
-					throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
-							certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
-				} else {
-					LOGGER.error("Error occurred while getting the trust certificates list from keymanager {}", apiResponse);
-					throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-							ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
-				}
-			}
-			if (apiResponse.get("response") == null) {
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
-						ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
-			}
-			responseObject = mapper.readValue(mapper.writeValueAsString(apiResponse.get("response")), TrustCertTypeListResponseDto.class);
+			TrustCertTypeListResponseDto responseObject = partnerHelper.getTrustCertificatesList(trustCertTypeListRequestDto);
 			pageResponseV2Dto.setPageNo((responseObject.getPageNumber() - 1));
 			pageResponseV2Dto.setPageSize(responseObject.getPageSize());
 			pageResponseV2Dto.setTotalResults(responseObject.getTotalRecords());

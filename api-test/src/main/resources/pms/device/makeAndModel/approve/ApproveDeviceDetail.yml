@@ -1,0 +1,63 @@
+ApproveDeviceDetail:
+   Pms_ApproveRejectDeviceDetail_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_01
+      description: Create Device details for Approved Partner as Activate
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: pms/device/makeAndModel/approve/approveDeviceDetailResult
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+    }'
+
+   Pms_ApproveRejectDeviceDetail_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_02
+      description: Create Device details for Approved Partner while keeping approvalStatus as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: pms/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "device-id-123",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+
+   Pms_ApproveRejectDeviceDetail_Missing_InputParameter_deviceId:
+      endPoint: /v1/partnermanager/devicedetail
+      uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_03
+      description: Create Device details for Approved Partner as Activate while keeping deviceId as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
+      outputTemplate: pms/error
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$REMOVE$",
+    "isItForRegistrationDevice": "true",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

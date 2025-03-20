@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
-import io.mosip.pms.partner.manager.dto.TrustCertificateSummaryDto;
 
 public interface PartnerManagerService {
 

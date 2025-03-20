@@ -48,7 +48,7 @@ import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;

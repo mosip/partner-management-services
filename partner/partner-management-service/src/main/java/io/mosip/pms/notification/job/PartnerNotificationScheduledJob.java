@@ -16,10 +16,10 @@ import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 
 @Component
 public class PartnerNotificationScheduledJob {

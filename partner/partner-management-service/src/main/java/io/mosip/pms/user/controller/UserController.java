@@ -1,5 +1,9 @@
 package io.mosip.pms.user.controller;
 
+import io.mosip.pms.common.dto.NotificationsSeenRequestDto;
+import io.mosip.pms.common.dto.NotificationsSeenResponseDto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -21,6 +25,7 @@ import io.mosip.pms.user.service.UserManagementService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -52,7 +57,13 @@ public class UserController {
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
 
+	@Value("${mosip.pms.api.id.users.notifications.seen.timestamp.put}")
+	private String putNotificationsSeenTimestampId;
+
 	public static final String VERSION = "1.0";
+
+	@Autowired
+	RequestValidator requestValidator;
 
 	@Autowired
 	UserManagementService userManagementService;
@@ -110,5 +121,31 @@ public class UserController {
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutnotificationseentimestamp())")
+	@PutMapping(value = "users/notifications-seen-timestamp")
+	@Operation(summary = "Added in release-1.3.x. This endpoint updates the user's notifications seen status and timestamp",
+			description = "This endpoint updates the user's notifications seen status and timestamp. It is configured for all Partner Type roles.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(@RequestBody @Valid RequestWrapperV2<NotificationsSeenRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<NotificationsSeenResponseDto>> validationResponse = requestValidator.validate(putNotificationsSeenTimestampId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return userManagementService.updateNotificationsSeenTimestamp(requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotificationseentimestamp())")
+	@GetMapping(value = "users/notifications-seen-timestamp")
+	@Operation(summary = "Added in release-1.3.x. This endpoint fetches the user's notifications seen status and timestamp",
+			description = "This endpoint fetches the user's notifications seen status and timestamp. It is configured for all Partner Type roles.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp() {
+		return userManagementService.getNotificationsSeenTimestamp();
 	}
 }
