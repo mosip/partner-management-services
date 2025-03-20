@@ -1,0 +1,20 @@
+ActivateDeactivatePartnerApiKey:
+   Pms_ActivateDeactivatePartnerApiKey_activate_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/status
+      role: partnerauth
+      description: Deactivating Partner API Key
+      uniqueIdentifier: TC_PMS_DeactivatePartnerApiKey_01
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
+      outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
+      input: '{
+   "partnerId": "pms-111999",
+   "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+   "label": "string",
+   "requesttime": "$TIMESTAMP$",
+   "status": "De-Active"
+}'
+      output: '{
+    "response": "Partner apikey de-activated successfully."
+}'

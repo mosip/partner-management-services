@@ -1,0 +1,15 @@
+GetAllDevicesForSbi:
+   Pms_GetAllDevicesForSbi_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      description: Get All Devices For Sbi
+      uniqueIdentifier: TC_PMS_GetAllDeviceForSbi_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDevicesForSbi/GetAllDevicesForSbi
+      outputTemplate: pms/GetAllDevicesForSbi/GetAllDevicesForSbiResult
+      input: '{
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: ' {
+}'

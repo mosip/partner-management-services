@@ -87,7 +87,6 @@ public class SimplePost extends PMSUtil implements ITest {
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-		
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
@@ -110,26 +109,24 @@ public class SimplePost extends PMSUtil implements ITest {
 		}
 
 		else {
-				response = postWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, auditLogCheck,
-						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
+			response = postWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, auditLogCheck, COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+		}
+		Map<String, List<OutputValidationDto>> ouputValid = null;
 
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+				getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+				response.getStatusCode());
 
-			if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
-				if (response.asString().contains("IDA-OTA-001"))
-					throw new AdminTestException(
-							"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
-				else
-					throw new AdminTestException("Failed at otp output validation");
-			}
-		
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+
+		if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
+			if (response.asString().contains("IDA-OTA-001"))
+				throw new AdminTestException(
+						"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
+			else
+				throw new AdminTestException("Failed at otp output validation");
+		}
 
 	}
 

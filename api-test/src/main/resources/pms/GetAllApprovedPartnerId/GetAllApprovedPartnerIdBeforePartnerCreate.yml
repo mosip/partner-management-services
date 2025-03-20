@@ -1,0 +1,17 @@
+GetAllApprovedAuthPartnerId:
+   Pms_GetAllApprovedAuthPartnerId_BeforePartnerCreate_Neg:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
+      description: Fetching all approved Partner Id
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
+}'

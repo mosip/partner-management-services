@@ -1,0 +1,337 @@
+GetListOfFtmChip:
+   Pms_GetListOfFtmChip_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2
+      uniqueIdentifier: TC_PMS_FTM_chip_03      
+      description: Fetching all the ftpchipdetail
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_sortType_ASC:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
+      uniqueIdentifier: TC_PMS_FTM_chip_06     
+      description: Fetching all the ftpchipdetail by sort type ASC for the given sort field
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "ASC",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfFtmChip_with_sortType_DESC:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
+      uniqueIdentifier: TC_PMS_FTM_chip_07    
+      description: Fetching all the ftpchipdetail by sort type DESC for the given sort field
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "DESC",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"           
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfFtmChip_with_orgName_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?orgName={orgName}
+      uniqueIdentifier: TC_PMS_FTM_chip_08    
+      description: Fetching all the ftpchipdetail for orgName which contains '1'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "orgName": "1",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_partnerId_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_FTM_chip_09   
+      description: Fetching all the ftpchipdetail for partnerId which contains 'a'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "status": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_status_given_rejected:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
+      uniqueIdentifier: TC_PMS_FTM_chip_10   
+      description: Fetching all the ftpchipdetail for status as rejected
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "status": "rejected",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_status_given_approved:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
+      uniqueIdentifier: TC_PMS_FTM_chip_11   
+      description: Fetching all the ftpchipdetail for status as approved
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "status": "approved",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_status_given_deactivated:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
+      uniqueIdentifier: TC_PMS_FTM_chip_12   
+      description: Fetching all the ftpchipdetail for status as deactivated
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "status": "deactivated",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_status_given_pending_cert_upload:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
+      uniqueIdentifier: TC_PMS_FTM_chip_13  
+      description: Fetching all the ftpchipdetail for status as pending_cert_upload
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "status": "pending_cert_upload",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_status_given_pending_approval:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
+      uniqueIdentifier: TC_PMS_FTM_chip_14  
+      description: Fetching all the ftpchipdetail for status as pending_approval
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "status": "pending_approval",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_pagesize_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_FTM_chip_17  
+      description: Fetching all the ftpchipdetail for pageSize specified
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "pageSize": "5",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_make_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?make={make}
+      uniqueIdentifier: TC_PMS_FTM_chip_18  
+      description: Fetching all the ftpchipdetail for make value contains 'abcd'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "make": "abcd",
+      "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "model": "$REMOVE$"            
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_model_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?model={model}
+      uniqueIdentifier: TC_PMS_FTM_chip_19  
+      description: Fetching all the ftpchipdetail for model value contains 'xyz'
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getListOfFtmChipResult
+      input: '{
+      "model": "xyz",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfFtmChip_with_random_value_given:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_FTM_chip_20  
+      description: Fetching all the ftpchipdetail by giving random value for partnerId
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getAllPartnerPolicyRequestResultWithArray
+      input: '{
+      "partnerId": "16263gdvddgdv",
+      "model": "$REMOVE$",
+      "make": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "pageNo": "$REMOVE$"           
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfFtmChip_with_with_combination_search_twofields:
+      endPoint: /v1/partnermanager/ftpchipdetail/v2?make={make}&model={model}
+      uniqueIdentifier: TC_PMS_FTM_chip_21  
+      description: Fetching all the ftpchipdetail by giving value for both make and model
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
+      outputTemplate: pms/GetListOfFtmChip/getAllPartnerPolicyRequestResultWithArray
+      input: '{
+      "make": "1",
+      "model": "2",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$"                 
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

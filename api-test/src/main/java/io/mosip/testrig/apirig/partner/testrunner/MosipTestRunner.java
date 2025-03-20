@@ -11,7 +11,6 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Level;
@@ -65,7 +64,7 @@ public class MosipTestRunner {
 
 		try {
 			LOGGER.info("** ------------- API Test Rig Run Started --------------------------------------------- **");
-			
+
 			BaseTestCase.setRunContext(getRunType(), jarUrl);
 			ExtractResource.removeOldMosipTestTestResource();
 			if (getRunType().equalsIgnoreCase("JAR")) {
@@ -84,30 +83,22 @@ public class MosipTestRunner {
 			healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
 			Thread trigger = new Thread(healthcheck);
 			trigger.start();
-			
+
 			KeycloakUserManager.removeUser();
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
 
 			startTestRunner();
-
+			PMSUtil.DbCleanRevamp();
 		} catch (Exception e) {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
 		HealthChecker.bTerminate = true;
-
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-
 		System.exit(0);
 
 	}
-	
+
 	public static void suiteSetup(String runType) {
 		if (PMSConfigManger.IsDebugEnabled())
 			LOGGER.setLevel(Level.ALL);
@@ -119,17 +110,10 @@ public class MosipTestRunner {
 		if (!runType.equalsIgnoreCase("JAR")) {
 			AuthTestsUtil.removeOldMosipTempTestResource();
 		}
-		BaseTestCase.currentModule = "partner";
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
+		PMSUtil.DbCleanRevamp();
 
-		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-
-		BaseTestCase.currentModule = "partner";
-		AdminTestUtil.copyPartnerTestResource();
+		AdminTestUtil.copyPmsTestResource();
 	}
 
 	private static void setLogLevels() {
@@ -171,7 +155,7 @@ public class MosipTestRunner {
 				TestNG runner = new TestNG();
 				List<String> suitefiles = new ArrayList<>();
 				if (file.getName().toLowerCase().contains("mastertestsuite")) {
-					BaseTestCase.setReportName("partner");
+					BaseTestCase.setReportName(GlobalConstants.PARTNER_MANAGEMENT_SERVICE);
 					suitefiles.add(file.getAbsolutePath());
 					runner.setTestSuites(suitefiles);
 					System.getProperties().setProperty("testng.outpur.dir", "testng-report");

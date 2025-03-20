@@ -1,0 +1,67 @@
+GetUserConsent:
+   Pms_GetUserConsent_allValid_smoke:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_01
+      description: Retrieve the PMS GetUserConsent for All Valid Smoke
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/GetUserConsent/GetUserConsentResult
+      input: '{
+}'
+      output: '{
+       "userId": "pms-111999"
+}'
+   Pms_GetUserConsent_Get_consent_status_without_access_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_02
+      description: Retrieve the PMS GetUserConsent Status Without an Access Token and Expecting an Error in The Response
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401" 		
+      }
+      ]
+}'
+   Pms_GetUserConsent_Get_consent_status_invalid_user_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_03
+      description: Retrieve the PMS GetUserConsent Status for invalid User and Expecting an Error in The Response
+      role: regproc
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002" 		
+      }
+      ]
+}'
+   Pms_GetUserConsent_Get_consent_status_invalid_auth_token_neg:
+      endPoint: /v1/partnermanager/users/user-consent
+      uniqueIdentifier: TC_pms_GetUserConsent_04
+      description: Retrieve PMS GetUserConsent Status with an Invalid Auth Token
+      role: ftm
+      restMethod: get
+      inputTemplate: pms/GetUserConsent/GetUserConsent
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
+}' 
+

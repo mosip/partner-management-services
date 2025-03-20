@@ -1,0 +1,236 @@
+DeactivatePolicy:
+   Pms_DeactivatePolicy_After_Publish_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_01      
+      description: Deactivate policy      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/DeactivatePolicy/DeactivatePolicyResult
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  
+}'
+      output: ' {
+  
+}'
+   Pms_DeactivatePolicy_without_authentication:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_02      
+      description: Deactivate policy without authentication    
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_invalid_roles:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_03      
+      description: Deactivate policy authenticated with invalid roles   
+      role: POLICYMANAGER
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_invalid_policyId:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_04      
+      description: Deactivate policy with invalid policyid   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "hhggtt567",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_065"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_invalid_policyId_spaces:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_05      
+      description: Deactivate policy with only spaces as policyid   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "   ",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_002"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_already_deactivated:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_06      
+      description: Deactivate policy which is already deactiavted   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_062"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_without_id:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_07      
+      description: Deactivate policy without id   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "$REMOVE$",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_without_version:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_08      
+      description: Deactivate policy without version   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "$REMOVE$"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_without_requestime:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_09      
+      description: Deactivate policy without requesttime   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+		  "requestTime": "$REMOVE$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+  
+}'
+   Pms_DeactivatePolicy_with_approved_policyrequests:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_10      
+      description: Deactivate policy with approved policy requests   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_063"
+       }
+       ]
+  
+}'

@@ -1,0 +1,14 @@
+GetAllApprovedDeviceProviderIds:
+   Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
+      role: partnerdevice
+      description: Get All Approved Device ProviderId
+      uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviders_01
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds
+      outputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsResult
+      input: '{
+}'
+      output: '{
+      "partnerId": "pms-111998"
+}'

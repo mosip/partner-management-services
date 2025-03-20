@@ -1,0 +1,18 @@
+GetAllCertificateBeforeCACertificateUpload:
+   Pms_GetAllCertificate_BeforeCACertificates_upload_neg:
+      endPoint: /v1/partnermanager/partners/trust-chain-certificates?pageNo=0&pageSize=8&issuedTo=PMS_API_CA&issuedBy=PMS_API_CA
+      description: Fetching all the API certificates of the Logged in Partner
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllCertificateBeforeCACertificateUpload_01
+      restMethod: get
+      inputTemplate: pms/GetAllCertificate/getAllCertificate
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+       "errors": [
+      {
+       "errorCode": "PMS_PRT_005"
+       }
+       ]
+}'
