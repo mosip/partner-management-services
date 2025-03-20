@@ -70,7 +70,6 @@ public class NotificationsController {
             @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
             @RequestParam(value = "certificateId", required = false) String certificateId,
             @RequestParam(value = "expiryDate", required = false)
-            @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Expiry date must be in 'yyyy-MM-dd' format")
             @Parameter(description = "Expiry date in 'yyyy-MM-dd' format") String expiryDate,
             @RequestParam(value = "issuedBy", required = false) String issuedBy,
             @RequestParam(value = "issuedTo", required = false) String issuedTo,

@@ -36,9 +36,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +91,16 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         try {
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-
+            // Validate expiry date
+            if (Objects.nonNull(filterDto.getExpiryDate())) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                try {
+                    LocalDate.parse(filterDto.getExpiryDate(), formatter);
+                } catch (DateTimeParseException e) {
+                    throw new PartnerServiceException(ErrorCode.INVALID_EXPIRY_DATE.getErrorCode(),
+                            ErrorCode.INVALID_EXPIRY_DATE.getErrorMessage());
+                }
+            }
             if (filterDto.getNotificationType() != null) {
                 String filterNotificationType = filterDto.getNotificationType();
 
