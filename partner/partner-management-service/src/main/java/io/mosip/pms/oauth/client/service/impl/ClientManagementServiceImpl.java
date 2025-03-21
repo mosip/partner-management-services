@@ -50,7 +50,7 @@ import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

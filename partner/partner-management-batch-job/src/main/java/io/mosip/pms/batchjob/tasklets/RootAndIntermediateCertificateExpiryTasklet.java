@@ -3,14 +3,10 @@ package io.mosip.pms.batchjob.tasklets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
-import io.mosip.pms.batchjob.util.KeycloakHelper;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.constant.PartnerConstants;
 import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -20,21 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.constants.ErrorCodes;
+import io.mosip.pms.batchjob.impl.CertificateExpiryService;
+import io.mosip.pms.batchjob.impl.EmailNotificationService;
+import io.mosip.pms.batchjob.util.BatchJobHelper;
+import io.mosip.pms.batchjob.util.KeycloakHelper;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
-import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.entity.NotificationEntity;
-import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
-import io.mosip.pms.batchjob.impl.CertificateExpiryService;
-import io.mosip.pms.batchjob.impl.EmailNotificationService;
-import io.mosip.pms.common.repository.NotificationServiceRepository;
-import io.mosip.pms.batchjob.util.BatchJobHelper;
+import io.mosip.pms.common.entity.Partner;
 
 /**
  * This Batch Job will create notifications for the Root and Intermediate
@@ -55,23 +47,16 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 	CertificateExpiryService certificateExpiryService;
 
 	@Autowired
-	NotificationServiceRepository notificationServiceRepository;
-
-	@Autowired
 	BatchJobHelper batchJobHelper;
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
 
 	@Autowired
-	ObjectMapper objectMapper;
-
-	@Autowired
 	KeycloakHelper keycloakHelper;
 
 	@Override
-	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
-			throws JsonProcessingException {
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
 		List<String> totalNotificationsCreated = new ArrayList<String>();
 		int pmsPartnerAdminsCount = 0;
@@ -85,49 +70,63 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
 
 			// Step 2: Validate if each of these are valid Partner Admins in PMS
-			List<Partner> pmsPartnerAdmins = getValidPartnerAdmins(keycloakPartnerAdmins);
+			List<Partner> pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
 			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
 			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdminsCount);
+			pmsPartnerAdmins.forEach(admin -> {
+				log.info("PMS Active Partner Admin Id: {}", admin.getId());
+			});
 
-			// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
-			// days and so on
-			rootIntermediateExpiryPeriods.forEach(expiryPeriod -> {
-				LocalDate validTillDate = LocalDate.now().plusDays(expiryPeriod);
-				LocalTime validTillTime = LocalTime.MAX;
-				LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
-				certificateTypes.forEach(certificateType -> {
-					log.info("Starting execution for " + certificateType + " certificate, for expiry period, {}",
-							expiryPeriod + " days");
-					TrustCertTypeListResponseDto response = certificateExpiryService
-							.getTrustCertificates(certificateType, validTillDateTime);
-					log.debug("Response received, {}", response);
-					List<String> countPerCertTypeExpiryPeriod = new ArrayList<String>();
-					if (response.getAllPartnerCertificates().size() > 0) {
-						log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
-								+ " days, {}", response.getAllPartnerCertificates().size());
-						pmsPartnerAdmins.forEach(partnerAdminDetails -> {
-							// Step 4: add the notification
-							response.getAllPartnerCertificates().forEach(expiringCertificate -> {
-								NotificationEntity savedNotification = saveCertificateExpiryNotification(certificateType,
-										expiryPeriod, partnerAdminDetails, expiringCertificate);
-								// Step 5: send email notification
-								emailNotificationService.sendEmailNotification(savedNotification.getId());
-								countPerCertTypeExpiryPeriod.add(savedNotification.getId());
-								totalNotificationsCreated.add(savedNotification.getId());
+			if (pmsPartnerAdminsCount > 0) {
+				// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
+				// days and so on
+				rootIntermediateExpiryPeriods.forEach(expiryPeriod -> {
+					LocalDate validTillDate = LocalDate.now(ZoneId.of("UTC")).plusDays(expiryPeriod);
+					LocalTime validTillTime = LocalTime.MAX;
+					LocalDateTime validTillDateTime = LocalDateTime.of(validTillDate, validTillTime);
+					certificateTypes.forEach(certificateType -> {
+						log.info("Starting execution for " + certificateType + " certificate, for expiry period, {}",
+								expiryPeriod + " days");
+						TrustCertTypeListResponseDto response = certificateExpiryService
+								.getTrustCertificates(certificateType, validTillDateTime);
+						log.debug("Response received, {}", response);
+						List<String> countPerCertTypeExpiryPeriod = new ArrayList<String>();
+						if (response.getAllPartnerCertificates().size() > 0) {
+							log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
+									+ " days, {}", response.getAllPartnerCertificates().size());
+							pmsPartnerAdmins.forEach(partnerAdminDetails -> {
+								// Step 4: add the notification
+								response.getAllPartnerCertificates().forEach(expiringCertificate -> {
+									// certificatePartnerId is null, since Root/Intermediate Certificate is not
+									// associated with any partner
+									List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
+											certificateType, expiryPeriod, null, expiringCertificate);
+									NotificationEntity savedNotification = batchJobHelper
+											.saveCertificateExpiryNotification(certificateType, expiryPeriod,
+													partnerAdminDetails, certificateDetailsList);
+									// Step 5: send email notification
+									emailNotificationService.sendEmailNotification(savedNotification.getId());
+									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
+									totalNotificationsCreated.add(savedNotification.getId());
+								});
+
 							});
+						} else {
+							log.info("There are no " + certificateType + " certificates expiring after " + expiryPeriod
+									+ " days");
+						}
+						log.info("Completed execution for " + certificateType + " certificate, for expiry period, {}",
+								expiryPeriod + " days");
 
-						});
-					} else {
-						log.info("There are no " + certificateType + " certificates expiring after " + expiryPeriod
-								+ " days");
-					}
-					log.info("Completed execution for " + certificateType + " certificate, for expiry period, {}",
-							expiryPeriod + " days");
+						log.info("Created {}", countPerCertTypeExpiryPeriod.size() + " notifications");
 
-					log.info("Created {}", countPerCertTypeExpiryPeriod.size() + " notifications");
+					});
 
 				});
-			});
+			} else {
+				log.info("There are no " + pmsPartnerAdminsCount
+						+ " partner admin users in PMS. Hence skipping creation of notifications.");
+			}
 		} catch (Exception e) {
 			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
 					e);
@@ -140,61 +139,20 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		return RepeatStatus.FINISHED;
 	}
 
-	private List<Partner> getValidPartnerAdmins(List<String> keycloakPartnerAdmins) {
-		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
-		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
-			Optional<Partner> partnerAdminDetails = batchJobHelper.getPartnerById(keycloakPartnerAdminId);
-			if (batchJobHelper.validateActivePartnerId(partnerAdminDetails)) {
-				pmsPartnerAdmins.add(partnerAdminDetails.get());
-			} else {
-				log.debug("this partner admin is not active or valid in PMS, {}", keycloakPartnerAdminId);
-			}
-		});
-		return pmsPartnerAdmins;
-	}
-
-	private NotificationEntity saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
-														   Partner partnerAdminDetails, TrustCertificateSummaryDto expiringCertificate)
-			throws BatchJobServiceException {
-		try {
-			List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
-			CertificateDetailsDto certificateDetails = new CertificateDetailsDto();
-			certificateDetails.setCertificateId(expiringCertificate.getCertId());
-			certificateDetails.setIssuedBy(expiringCertificate.getIssuedBy());
-			certificateDetails.setIssuedTo(expiringCertificate.getIssuedTo());
-			certificateDetails.setPartnerDomain(expiringCertificate.getPartnerDomain());
-			// This is null, since Root/Intermediate Certificate is not associated with any
-			// partner
-			certificateDetails.setPartnerId(null);
-			certificateDetails.setCertificateType(certificateType);
-			certificateDetails.setExpiryDateTime(expiringCertificate.getValidTillDate().toString());
-			certificateDetails.setExpiryPeriod("" + expiryPeriod);
-			certificateDetails.setCertificateId(expiringCertificate.getCertId());
-			expiringCertificates.add(certificateDetails);
-			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
-			notificationDetailsDto.setCertificateDetails(expiringCertificates);
-			String id = UUID.randomUUID().toString();
-			NotificationEntity notification = new NotificationEntity();
-			notification.setId(id);
-			notification.setPartnerId(partnerAdminDetails.getId());
-			notification
-					.setNotificationType(certificateType == PartnerConstants.ROOT ? PartnerConstants.ROOT_CERT_EXPIRY
-							: PartnerConstants.INTERMEDIATE_CERT_EXPIRY);
-			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerAdminDetails.getEmailId());
-			notification.setEmailLangCode(partnerAdminDetails.getLangCode());
-			notification.setEmailSent(false);
-			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
-			notification.setCreatedDatetime(LocalDateTime.now());
-			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
-			log.info("saving notifications, {}", notification);
-			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
-			return savedNotification;
-		} catch (JsonProcessingException jpe) {
-			log.error("Error creating the notification: {}", jpe.getMessage());
-			throw new BatchJobServiceException(ErrorCodes.NOTIFICATION_CREATE_ERROR.getCode(),
-					ErrorCodes.NOTIFICATION_CREATE_ERROR.getMessage());
-		}
+	private List<CertificateDetailsDto> populateCertificateDetails(String certificateType, int expiryPeriod,
+			String certificatePartnerId, TrustCertificateSummaryDto expiringCertificate) {
+		List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
+		CertificateDetailsDto certificateDetails = new CertificateDetailsDto();
+		certificateDetails.setCertificateId(expiringCertificate.getCertId());
+		certificateDetails.setIssuedBy(expiringCertificate.getIssuedBy());
+		certificateDetails.setIssuedTo(expiringCertificate.getIssuedTo());
+		certificateDetails.setPartnerDomain(expiringCertificate.getPartnerDomain());
+		certificateDetails.setPartnerId(certificatePartnerId);
+		certificateDetails.setCertificateType(certificateType);
+		certificateDetails.setExpiryDateTime(expiringCertificate.getValidTillDate().toString());
+		certificateDetails.setExpiryPeriod("" + expiryPeriod);
+		expiringCertificates.add(certificateDetails);
+		return expiringCertificates;
 	}
 
 }

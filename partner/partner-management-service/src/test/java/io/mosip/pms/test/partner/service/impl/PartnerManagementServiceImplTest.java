@@ -20,7 +20,7 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.manager.dto.*;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.junit.Before;

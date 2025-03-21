@@ -2,6 +2,7 @@ package io.mosip.pms.batchjob.impl;
 
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Optional;
 
@@ -77,7 +78,7 @@ public class EmailNotificationService {
 
             // update notificationEntity status
             notificationEntity.setEmailSent(true);
-            notificationEntity.setEmailSentDatetime(LocalDateTime.now());
+            notificationEntity.setEmailSentDatetime(LocalDateTime.now(ZoneId.of("UTC")));
             notificationServiceRepository.save(notificationEntity);
             LOGGER.info("notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {

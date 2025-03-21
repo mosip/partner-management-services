@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import io.mosip.pms.batchjob.tasklets.RootAndIntermediateCertificateExpiryTasklet;
+import io.mosip.pms.batchjob.tasklets.PartnerCertificateExpiryTasklet;
 
 @Configuration
 public class BatchJobConfig {
@@ -24,16 +25,34 @@ public class BatchJobConfig {
 	@Autowired
 	private RootAndIntermediateCertificateExpiryTasklet rootAndIntermediateCertificateExpiryTasklet;
 
+	@Autowired
+	private PartnerCertificateExpiryTasklet partnerCertificateExpiryTasklet;
+
 	@Bean
-	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
 		return new StepBuilder("rootAndIntermediateCertificateExpiryStep", jobRepository)
 				.tasklet(rootAndIntermediateCertificateExpiryTasklet, transactionManager).build();
 	}
 
 	@Bean
+	public Step partnerCertificateExpiryStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("partnerCertificateExpiryStep", jobRepository)
+				.tasklet(partnerCertificateExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
 	public Job rootAndIntermediateCertificateExpiryJob(JobRepository jobRepository,
 			@Qualifier("rootAndIntermediateCertificateExpiryStep") Step rootAndIntermediateCertificateExpiryStep) {
-		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
-				.start(rootAndIntermediateCertificateExpiryStep).build();
+		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository)
+				.incrementer(new RunIdIncrementer()).start(rootAndIntermediateCertificateExpiryStep).build();
+	}
+
+	@Bean
+	public Job partnerCertificateExpiryJob(JobRepository jobRepository,
+			@Qualifier("partnerCertificateExpiryStep") Step partnerCertificateExpiryStep) {
+		return new JobBuilder("partnerCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
+				.start(partnerCertificateExpiryStep).build();
 	}
 }

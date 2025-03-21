@@ -3,11 +3,6 @@ package io.mosip.pms.batchjob.util;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import io.mosip.pms.common.constant.PartnerConstants;
-import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
-import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
-import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.common.util.RestUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
+import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.util.RestUtil;
 
 @Component
 public class KeyManagerHelper {
@@ -28,7 +28,7 @@ public class KeyManagerHelper {
 
 	private static final String PARTNER_CERT_ID = "partnerCertId";
 
-	@Value("${pmp.partner.original.certificate.get.rest.uri}")
+	@Value("${pmp.partner.certificaticate.get.rest.uri}")
 	private String keyManagerPartnerCertificateUrl;
 
 	@Value("${pmp.trust.certificates.post.rest.uri}")
@@ -43,18 +43,18 @@ public class KeyManagerHelper {
 	@Autowired
 	BatchJobHelper batchJobHelper;
 
-	public OriginalCertDownloadResponseDto getPartnerCertificate(String certificateAlias) {
+	public PartnerCertDownloadResponeDto getPartnerCertificate(String certificateAlias) {
 		Map<String, String> pathSegments = Map.of(PARTNER_CERT_ID, certificateAlias);
 
 		try {
 			Map<String, Object> response = restUtil.getApi(keyManagerPartnerCertificateUrl, pathSegments, Map.class);
 			batchJobHelper.validateApiResponse(response, keyManagerPartnerCertificateUrl);
-			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE), OriginalCertDownloadResponseDto.class);
+			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE), PartnerCertDownloadResponeDto.class);
 		} catch (BatchJobServiceException e) {
-			LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
 			throw e;
 		} catch (Exception e) {
-			LOGGER.error("Unexpected error occurred while fetching partner certificate : {}", e.getMessage());
+			LOGGER.debug("sessionId", "idType", "id",
+					"In getTrustCertificates method of KeyManagerHelper - " + e.getMessage());
 			throw new BatchJobServiceException(
 					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(),
 					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage()
@@ -78,11 +78,9 @@ public class KeyManagerHelper {
 			batchJobHelper.validateApiResponse(response, keyManagerTrustCertificateUrl);
 			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE), TrustCertTypeListResponseDto.class);
 		} catch (BatchJobServiceException e) {
-			LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
 			throw e;
 		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
+			LOGGER.debug("sessionId", "idType", "id",
 					"In getTrustCertificates method of KeyManagerHelper - " + ex.getMessage());
 			throw new BatchJobServiceException(ErrorCodes.TRUST_CERTIFICATES_FETCH_ERROR.getCode(),
 					ErrorCodes.TRUST_CERTIFICATES_FETCH_ERROR.getMessage());
