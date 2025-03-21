@@ -54,7 +54,7 @@ public class KeyManagerHelper {
 			LOGGER.error("Error fetching partner certificate: {}", e.getMessage());
 			throw e;
 		} catch (Exception e) {
-			LOGGER.error("Unexpected error occurred while fetching partner certificate", e);
+			LOGGER.error("Unexpected error occurred while fetching partner certificate : {}", e.getMessage());
 			throw new BatchJobServiceException(
 					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getCode(),
 					ErrorCodes.PARTNER_CERTIFICATE_FETCH_ERROR.getMessage()

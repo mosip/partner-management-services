@@ -81,9 +81,9 @@ public class EmailNotificationService {
             notificationServiceRepository.save(notificationEntity);
             LOGGER.info("notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for notification ID: {} - {}", notificationId, e.getMessage(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {} - {}", notificationId, e.getMessage());
         }
     }
 
@@ -100,7 +100,7 @@ public class EmailNotificationService {
         CertificateDetailsDto certificateDetails = notificationDetails.getCertificateDetails().getFirst();
 
         VelocityContext context = new VelocityContext();
-        context.put("userName", certificateDetails.getPartnerId());
+        context.put("partnerId", certificateDetails.getPartnerId());
         context.put("certificateId", certificateDetails.getCertificateId());
         context.put("expiryDateTime", certificateDetails.getExpiryDateTime());
         context.put("partnerDomain", certificateDetails.getPartnerDomain());
@@ -122,14 +122,13 @@ public class EmailNotificationService {
             restUtil.postApi(sendEmailUrl, null, "", "", MediaType.MULTIPART_FORM_DATA, requestBody, Map.class);
             LOGGER.info("Email sent successfully for notification ID: {}", notificationEntity.getId());
         } catch (BatchJobServiceException e) {
-            LOGGER.error("Error while sending email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage(), e);
+            LOGGER.error("Error while sending email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage());
             throw e;
         } catch (Exception e) {
-            LOGGER.error("Unexpected error while sending email for notification ID: {}", notificationEntity.getId(), e);
+            LOGGER.error("Unexpected error while sending email for notification ID: {}", notificationEntity.getId());
             throw new BatchJobServiceException(
                     ErrorCodes.EMAIL_SEND_FAILED.getCode(),
-                    ErrorCodes.EMAIL_SEND_FAILED.getMessage(),
-                    e
+                    ErrorCodes.EMAIL_SEND_FAILED.getMessage()
             );
         }
     }
