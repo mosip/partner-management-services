@@ -73,7 +73,7 @@ public class TemplateHelper {
 			emailTemplateDto.setBody(body);
 			return emailTemplateDto;
 		} catch (Exception e) {
-			LOGGER.error("Error fetching template: {}", e.getMessage(), e);
+			LOGGER.error("Error fetching template: {}", e.getMessage());
 			throw new BatchJobServiceException(
 					ErrorCodes.TEMPLATE_FETCH_ERROR.getCode(),
 					ErrorCodes.TEMPLATE_FETCH_ERROR.getMessage()
