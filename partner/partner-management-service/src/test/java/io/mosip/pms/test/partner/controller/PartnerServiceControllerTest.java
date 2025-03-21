@@ -75,6 +75,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
  
 
 @RunWith(SpringRunner.class)

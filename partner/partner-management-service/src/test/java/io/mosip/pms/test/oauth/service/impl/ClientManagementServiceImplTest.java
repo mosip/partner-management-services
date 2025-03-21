@@ -29,7 +29,7 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.oauth.client.dto.*;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import net.minidev.json.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

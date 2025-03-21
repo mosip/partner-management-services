@@ -23,7 +23,7 @@ import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
 import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;

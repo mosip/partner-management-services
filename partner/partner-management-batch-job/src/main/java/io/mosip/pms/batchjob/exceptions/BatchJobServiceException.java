@@ -6,7 +6,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class BatchJobServiceException extends BaseUncheckedException {
-    private final HttpStatus status;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8201268577451936423L;
+	private final HttpStatus status;
 
     /**
      * Constructor to initialize CustomException
