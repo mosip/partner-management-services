@@ -60,62 +60,81 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		log.info("PartnerCertificateExpiryTasklet: START");
 		List<String> totalNotificationsCreated = new ArrayList<String>();
 		int activePartnersCount = 0;
+		int countOfCertsExpiringInNext30Days = 0;
+		int countOfPartnersWithInvalidCerts = 0;
 		try {
 			// Step 1: Fetch Partner Admin user IDs from Keycloak
 			List<String> keycloakPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
 			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
-
 			// Step 2: Get all PMS partners which are ACTIVE and NOT partner admins
 			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(keycloakPartnerAdmins);
 			activePartnersCount = activePartnersList.size();
 			log.info("PMS has {} Active Partner (Non Admin) users.", activePartnersCount);
 			// Step 3: For each partner get the certificate and check if it is expiring
-			// TODO break this step into multiple threads
-			activePartnersList.forEach(pmsPartner -> {
+			Iterator<Partner> activePartnersListIterator = activePartnersList.iterator();
+			while (activePartnersListIterator.hasNext()) {
+				Partner pmsPartner = activePartnersListIterator.next();
 				log.info("Fetching certificate for partner id {}", pmsPartner.getId());
 				X509Certificate decodedPartnerCertificate = getDecodedCertificate(pmsPartner);
 				if (decodedPartnerCertificate != null) {
-					Iterator<Integer> expiryPeriodsIterator = partnerCertExpiryPeriods.iterator();
-					while (expiryPeriodsIterator.hasNext()) {
-						Integer expiryPeriod = expiryPeriodsIterator.next();
-						log.info("Checking for certificate expiry for partner id {}",
-								pmsPartner.getId() + " after " + expiryPeriod + " days.");
-						// Step 4: Check if the certificate is expiring after 30 days, 15 days, 10 days,
+					log.info("Checking if certificate is expiring for partner id {}",
+							pmsPartner.getId() + " within next 30 days.");
+					LocalDateTime partnerCertificateExpiryDate = decodedPartnerCertificate.getNotAfter().toInstant()
+							.atZone(ZoneId.of("UTC")).toLocalDateTime();
+					log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
+					boolean isCertificateExpiring = checkIfCertificateIsExpiring(pmsPartner,
+							partnerCertificateExpiryDate, 30, true);
+					if (isCertificateExpiring) {
+						countOfCertsExpiringInNext30Days++;
+						log.info("Certificate is expiring for partner id {}",
+								pmsPartner.getId() + " during the next 30 days.");
+						// Step 5: Check if the certificate is expiring after 30 days, 15 days, 10 days,
 						// 9 days and so on
-						boolean isCertificateExpiring = checkIfCertificateIsExpiring(pmsPartner,
-								decodedPartnerCertificate, expiryPeriod);
-						// Step 5: If yes, add the notification
-						if (isCertificateExpiring) {
-							log.info("Certificate is expiring for partner id {}",
-									pmsPartner.getId() + " after " + expiryPeriod + " days.");
-							List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
-									expiryPeriod, pmsPartner, decodedPartnerCertificate);
-							NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
-									PartnerConstants.PARTNER, expiryPeriod, pmsPartner, certificateDetailsList);
-							// Step 5: send email notification
-							emailNotificationService.sendEmailNotification(savedNotification.getId());
-							log.info("Created notification for partner id {}",
-									pmsPartner.getId() + " with notification id " + savedNotification.getId());
-							totalNotificationsCreated.add(savedNotification.getId());
-							break;
-						} else {
-							log.info("Certificate is NOT expiring for partner id {}",
-									pmsPartner.getId() + " after " + expiryPeriod + " days.");
-							//check for next time interval
+						Iterator<Integer> expiryPeriodsIterator = partnerCertExpiryPeriods.iterator();
+						while (expiryPeriodsIterator.hasNext()) {
+							Integer expiryPeriod = expiryPeriodsIterator.next();
+							log.info("Checking for certificate expiry after " + expiryPeriod + " days.");
+							boolean isCertExpiring = checkIfCertificateIsExpiring(pmsPartner, partnerCertificateExpiryDate,
+									expiryPeriod, false);
+							// Step 6: If yes, add the notification
+							if (isCertExpiring) {
+								List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
+										expiryPeriod, pmsPartner, decodedPartnerCertificate);
+								NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
+										PartnerConstants.PARTNER, expiryPeriod, pmsPartner, certificateDetailsList);
+								// Step 7: send email notification
+								emailNotificationService.sendEmailNotification(savedNotification.getId());
+								log.info("Created notification with notification id " + savedNotification.getId());
+								totalNotificationsCreated.add(savedNotification.getId());
+								break;
+							} else {
+								log.info("Certificate is NOT expiring  after " + expiryPeriod + " days.");
+								// check for next time interval
+							}
 						}
+					} else {
+						log.info("Certificate is NOT expiring for partner id {}",
+								pmsPartner.getId() + " during the next 30 days.");
 					}
 				} else {
+					countOfPartnersWithInvalidCerts++;
 					log.info("Valid certificate not found for partner id {}", pmsPartner.getId());
 				}
-			});
+			}
 		} catch (Exception e) {
 			log.error("Error occurred while running PartnerCertificateExpiryTasklet: {}", e.getMessage(), e);
 		}
-		log.info("PartnerCertificateExpiryTasklet: DONE, created {}",
-				totalNotificationsCreated.size() + " notifications. Checked certificate expiry for " + activePartnersCount + " partners.");
+		log.info("Found " + countOfCertsExpiringInNext30Days
+				+ " certificates which are expiring during the next 30 days. But notifications will only be created as per the configured expiry days.");
+		log.info("PartnerCertificateExpiryTasklet: DONE, created {}", totalNotificationsCreated.size()
+				+ " notifications." + " Checked certificate expiry for " + activePartnersCount + " partners.");
 		totalNotificationsCreated.forEach(notificationId -> {
 			log.info(notificationId);
 		});
+		if (countOfPartnersWithInvalidCerts > 0) {
+			log.info("Note: Valid partner certificate is not available for " + countOfPartnersWithInvalidCerts
+					+ " partners. ");
+		}
 		return RepeatStatus.FINISHED;
 	}
 
@@ -134,23 +153,25 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		return decodedPartnerCertificate;
 	}
 
-	private boolean checkIfCertificateIsExpiring(Partner pmsPartner, X509Certificate decodedPartnerCertificate,
-			Integer expiryPeriod) {
+	private boolean checkIfCertificateIsExpiring(Partner pmsPartner, LocalDateTime partnerCertificateExpiryDate,
+			Integer expiryPeriod, boolean withinExpiryPeriod) {
 		boolean isCertificateExpiring = false;
-		LocalDate validTillDate = LocalDate.now(ZoneId.of("UTC")).plusDays(expiryPeriod);
+		LocalDate todayDate = LocalDate.now(ZoneId.of("UTC"));
+		LocalDate validTillDate = todayDate.plusDays(expiryPeriod);
 		LocalTime validTillMinTime = LocalTime.MIN;
 		LocalDateTime validTillMinDateTime = LocalDateTime.of(validTillDate, validTillMinTime);
+		if (withinExpiryPeriod) {
+			validTillMinDateTime = LocalDateTime.of(todayDate, validTillMinTime);
+		}
 		LocalTime validTillMaxTime = LocalTime.MAX;
 		LocalDateTime validTillMaxDateTime = LocalDateTime.of(validTillDate, validTillMaxTime);
-
-		LocalDateTime partnerCertificateExpiryDate = decodedPartnerCertificate.getNotAfter().toInstant()
-				.atZone(ZoneId.of("UTC")).toLocalDateTime();
+		log.debug("validTillMinDateTime {}", validTillMinDateTime);
+		log.debug("validTillMaxDateTime {}", validTillMaxDateTime);
 
 		// Check if the certificate has expired
 		if (partnerCertificateExpiryDate.isAfter(validTillMinDateTime)
 				&& partnerCertificateExpiryDate.isBefore(validTillMaxDateTime)) {
-			log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
-			log.info("The certificate for partner id {}",
+			log.debug("The certificate for partner id {}",
 					pmsPartner.getId() + "" + " is expiring after " + expiryPeriod + " days.");
 			isCertificateExpiring = true;
 		}

@@ -80,7 +80,7 @@ public class EmailNotificationService {
             notificationEntity.setEmailSent(true);
             notificationEntity.setEmailSentDatetime(LocalDateTime.now(ZoneId.of("UTC")));
             notificationServiceRepository.save(notificationEntity);
-            LOGGER.info("notification status successfully updated for ID: {}", notificationId);
+            LOGGER.debug("notification status successfully updated for ID: {}", notificationId);
         } catch (BatchJobServiceException e) {
             LOGGER.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage());
         } catch (Exception e) {

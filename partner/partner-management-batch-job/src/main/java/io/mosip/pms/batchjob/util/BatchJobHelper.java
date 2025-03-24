@@ -77,7 +77,7 @@ public class BatchJobHelper {
 				}
 			});
 			if (foundList.size() == 0 && !skipPartnerIds.contains(partner.getId())) {
-			//if (foundList.size() == 0 && partner.getId().contains("mayura")) {
+			//if (foundList.size() == 0 && partner.getId().contains("mayurad")) {	
 				nonAdminPartnersList.add(partner);
 			}
 		});
@@ -85,11 +85,14 @@ public class BatchJobHelper {
 	}
 
 	public List<Partner> getValidPartnerAdminsInPms(List<String> keycloakPartnerAdmins) {
+		LOGGER.info("Skipping number of partners {}", skipPartnerIds.size());
 		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
 			Optional<Partner> partnerAdminDetails = getPartnerById(keycloakPartnerAdminId);
 			if (validateActivePartnerId(partnerAdminDetails)) {
-				pmsPartnerAdmins.add(partnerAdminDetails.get());
+				if (!skipPartnerIds.contains(partnerAdminDetails.get().getId())) {
+					pmsPartnerAdmins.add(partnerAdminDetails.get());
+				} 
 			} else {
 				LOGGER.debug("this partner admin is not active or valid in PMS, {}", keycloakPartnerAdminId);
 			}
