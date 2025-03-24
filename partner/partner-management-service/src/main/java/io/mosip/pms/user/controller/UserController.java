@@ -54,6 +54,9 @@ public class UserController {
 	@Value("${mosip.pms.pagination.items.per.page}")
 	private String itemsPerPage;
 
+	@Value("${mosip.pms.auto.refresh.notifications}")
+	private String refreshNotificationsTime;
+
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
 
@@ -118,6 +121,7 @@ public class UserController {
 		configMap.put("maxAllowedExpiryYear", maxAllowedExpiryYear);
 		configMap.put("maxAllowedCreatedYear", maxAllowedCreatedYear);
 		configMap.put("itemsPerPage", itemsPerPage);
+		configMap.put("refreshNotificationsTime", refreshNotificationsTime);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
