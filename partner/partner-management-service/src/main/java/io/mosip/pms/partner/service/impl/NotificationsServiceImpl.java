@@ -191,6 +191,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             // TODO: Logic for WEEKLY notifications to be implemented
             case WEEKLY:
+                return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(
+                        filterDto.getNotificationStatus(), WEEKLY_SUMMARY, partnerIdList, pageable);
 
             // TODO: Logic for PARTNER notifications to be implemented
             case PARTNER:
