@@ -36,6 +36,9 @@ public class TemplateHelper {
 	@Value("${email.notification.intermediate.cert.expiry.template}")
 	private String intermediateCertExpiryTemplate;
 
+	 @Value("${email.notification.weekly.summary.template}")
+	 private String weeklySummaryTemplate;
+
 	@Value("${email.notification.partner.cert.expiry.subject.template}")
 	private String partnerCertExpirySubjectTemplate;
 
@@ -44,6 +47,9 @@ public class TemplateHelper {
 
 	@Value("${email.notification.intermediate.cert.expiry.subject.template}")
 	private String intermediateCertExpirySubjectTemplate;
+
+	 @Value("${email.notification.weekly.summary.subject.template}")
+	 private String weeklySummarySubjectTemplate;
 
 	@Value("${resource.template.url}")
 	private String getTemplateUrl;
@@ -112,6 +118,8 @@ public class TemplateHelper {
 				return intermediateCertExpirySubjectTemplate;
 			case PartnerConstants.PARTNER_CERT_EXPIRY:
 				return partnerCertExpirySubjectTemplate;
+			 case PartnerConstants.WEEKLY_SUMMARY:
+			 	return weeklySummarySubjectTemplate;
 			default:
 				throw new BatchJobServiceException(
 						ErrorCodes.INVALID_TEMPLATE_TYPE.getCode(),
@@ -128,6 +136,8 @@ public class TemplateHelper {
 				return intermediateCertExpiryTemplate;
 			case PartnerConstants.PARTNER_CERT_EXPIRY:
 				return partnerCertExpiryTemplate;
+			 case PartnerConstants.WEEKLY_SUMMARY:
+			 	return weeklySummaryTemplate;
 			default:
 				throw new BatchJobServiceException(
 						ErrorCodes.INVALID_TEMPLATE_TYPE.getCode(),

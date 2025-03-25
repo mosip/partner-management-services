@@ -1,6 +1,7 @@
 package io.mosip.pms.batchjob.impl;
 
 import java.io.StringWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -90,23 +92,49 @@ public class EmailNotificationService {
 
 
     private String populateTemplate(String templateContent, NotificationEntity notificationEntity) throws JsonProcessingException {
-        NotificationDetailsDto notificationDetails = objectMapper.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
-        VelocityContext context = getVelocityContext(notificationDetails);
+        VelocityContext context = createVelocityContext(notificationEntity);
         StringWriter writer = new StringWriter();
         velocityEngine.evaluate(context, writer, "logTag", templateContent);
         return writer.toString();
     }
 
-    private VelocityContext getVelocityContext(NotificationDetailsDto notificationDetails) {
-        CertificateDetailsDto certificateDetails = notificationDetails.getCertificateDetails().getFirst();
-
+    private VelocityContext createVelocityContext(NotificationEntity notificationEntity) throws JsonProcessingException {
         VelocityContext context = new VelocityContext();
-        context.put("partnerId", certificateDetails.getPartnerId());
-        context.put("certificateId", certificateDetails.getCertificateId());
-        context.put("expiryDateTime", certificateDetails.getExpiryDateTime());
-        context.put("partnerDomain", certificateDetails.getPartnerDomain());
-        context.put("issuedTo", certificateDetails.getIssuedTo());
-        context.put("issuedBy", certificateDetails.getIssuedBy());
+        String notificationType = notificationEntity.getNotificationType();
+        NotificationDetailsDto notificationDetails = objectMapper.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+
+        switch (notificationType) {
+            case PartnerConstants.PARTNER_CERT_EXPIRY,
+                 PartnerConstants.ROOT_CERT_EXPIRY,
+                 PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+                CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
+                if (cert != null) {
+                    context.put("partnerId", cert.getPartnerId());
+                    context.put("certificateId", cert.getCertificateId());
+                    context.put("expiryDateTime", cert.getExpiryDateTime());
+                    context.put("partnerDomain", cert.getPartnerDomain());
+                    context.put("issuedTo", cert.getIssuedTo());
+                    context.put("issuedBy", cert.getIssuedBy());
+                }
+                break;
+
+            case PartnerConstants.WEEKLY_SUMMARY:
+                LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
+                context.put("partnerId", notificationEntity.getPartnerId());
+                context.put("fromDate", createdDate);
+                context.put("toDate", createdDate.plusDays(7));
+                context.put("partnerCertificateCount",
+                        notificationDetails.getCertificateDetails() != null ? notificationDetails.getCertificateDetails().size() : 0);
+                break;
+
+            default:
+                LOGGER.error("Invalid Notification Type: {}", notificationEntity.getNotificationType());
+                throw new BatchJobServiceException(
+                        ErrorCodes.INVALID_NOTIFICATION_TYPE.getCode(),
+                        ErrorCodes.INVALID_NOTIFICATION_TYPE.getMessage()
+                );
+        }
+
         return context;
     }
 
