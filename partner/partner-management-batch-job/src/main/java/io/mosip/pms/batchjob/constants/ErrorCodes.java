@@ -16,7 +16,8 @@ public enum ErrorCodes {
     FETCH_PARTNER_ADMIN_USER_IDS_ERROR("PMS-BJ-008", "Unable to fetch Partner Admin user IDs"),
     TEMPLATE_FETCH_ERROR("PMS-BJ-009", "Failed to fetch email template"),
     UNABLE_TO_DECODE_CERTIFICATE("PMS-BJ-010", "Unable to decode the certificate data"),
-    INVALID_CERTIFICATE_TYPE("PMS-BJ-011", "Invalid certificate type");
+    INVALID_CERTIFICATE_TYPE("PMS-BJ-011", "Invalid certificate type"),
+    INVALID_NOTIFICATION_TYPE("PMS-BJ-011", "Invalid notification type");
 
     private final String code;
     private final String message;
