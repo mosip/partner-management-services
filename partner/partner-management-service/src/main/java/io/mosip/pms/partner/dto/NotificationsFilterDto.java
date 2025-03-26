@@ -15,4 +15,6 @@ public class NotificationsFilterDto {
     private Integer pageNo;
     private Integer pageSize;
     private String partnerDomain;
+    private String createdFromDate;
+    private String createdToDate;
 }

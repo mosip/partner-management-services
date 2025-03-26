@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,7 +77,11 @@ public class NotificationsController {
                     in = ParameterIn.QUERY,
                     schema = @Schema(allowableValues = {"FTM", "DEVICE", "AUTH"})
             )
-            @RequestParam(value = "partnerDomain", required = false) String partnerDomain
+            @RequestParam(value = "partnerDomain", required = false) String partnerDomain,
+            @RequestParam(value = "createdFromDate", required = false)
+            @Parameter(description = "Created From Date in 'yyyy-MM-dd' format") String createdFromDate,
+            @RequestParam(value = "createdToDate", required = false)
+            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate
     ) {
         validatePaginationParams(pageNo, pageSize);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
@@ -102,6 +105,12 @@ public class NotificationsController {
         }
         if (notificationType != null) {
             filterDto.setNotificationType(notificationType.toLowerCase());
+        }
+        if (createdFromDate != null) {
+            filterDto.setCreatedFromDate(createdFromDate);
+        }
+        if (createdToDate != null) {
+            filterDto.setCreatedToDate(createdToDate);
         }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }

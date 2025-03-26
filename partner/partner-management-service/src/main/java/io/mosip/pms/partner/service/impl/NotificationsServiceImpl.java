@@ -93,13 +93,13 @@ public class NotificationsServiceImpl implements NotificationsService {
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
             // Validate expiry date
             if (Objects.nonNull(filterDto.getExpiryDate())) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                try {
-                    LocalDate.parse(filterDto.getExpiryDate(), formatter);
-                } catch (DateTimeParseException e) {
-                    throw new PartnerServiceException(ErrorCode.INVALID_EXPIRY_DATE.getErrorCode(),
-                            ErrorCode.INVALID_EXPIRY_DATE.getErrorMessage());
-                }
+                validateDate(filterDto.getExpiryDate(), "expiryDate");
+            }
+            if (Objects.nonNull(filterDto.getCreatedFromDate())) {
+                validateDate(filterDto.getCreatedFromDate(), "createdFromDate");
+            }
+            if (Objects.nonNull(filterDto.getCreatedToDate())) {
+                validateDate(filterDto.getCreatedToDate(), "createdToDate");
             }
             if (filterDto.getNotificationType() != null) {
                 String filterNotificationType = filterDto.getNotificationType();
@@ -109,9 +109,13 @@ public class NotificationsServiceImpl implements NotificationsService {
                     throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
                             ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
                 }
+                if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate())) && !filterNotificationType.equals(WEEKLY)) {
+                    throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
+                            ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
+                }
             } else {
                 if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) ||
-                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain())) {
+                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain()) || Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate())) {
                     throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
                             ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
                 }
@@ -192,6 +196,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             // TODO: Logic for WEEKLY notifications to be implemented
             case WEEKLY:
                 return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(
+                        filterDto.getCreatedFromDate(), filterDto.getCreatedToDate(),
                         filterDto.getNotificationStatus(), WEEKLY_SUMMARY, partnerIdList, pageable);
 
             // TODO: Logic for PARTNER notifications to be implemented
@@ -217,6 +222,16 @@ public class NotificationsServiceImpl implements NotificationsService {
         return notificationType.equalsIgnoreCase(PartnerConstants.ROOT) ||
                 notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) ||
                 notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
+    }
+
+    private void validateDate(String date, String fieldName) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate.parse(date, formatter);
+        } catch (DateTimeParseException e) {
+            throw new PartnerServiceException(ErrorCode.INVALID_DATE.getErrorCode(),
+                    String.format(ErrorCode.INVALID_DATE.getErrorMessage(), fieldName));
+        }
     }
 
     @Override

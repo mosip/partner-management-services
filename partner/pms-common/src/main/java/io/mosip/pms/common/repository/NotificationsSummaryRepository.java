@@ -68,15 +68,21 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
             "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
             "AND (n.partner_id IN (:partnerIdList)) " +
+            "AND (:createdFromDate IS NULL OR CAST(CAST(n.cr_dtimes AS TIMESTAMP) AS DATE) >= CAST(:createdFromDate AS DATE)) " +
+            "AND (:createdToDate IS NULL OR CAST(CAST(n.cr_dtimes AS TIMESTAMP) AS DATE) <= CAST(:createdToDate AS DATE)) " +
             "ORDER BY n.cr_dtimes DESC",
 
             countQuery = "SELECT COUNT(*) " +
                     "FROM notifications n " +
                     "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
                     "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
-                    "AND (n.partner_id IN (:partnerIdList)) ",
+                    "AND (n.partner_id IN (:partnerIdList)) " +
+                    "AND (:createdFromDate IS NULL OR CAST(CAST(n.cr_dtimes AS TIMESTAMP) AS DATE) >= CAST(:createdFromDate AS DATE)) " +
+                    "AND (:createdToDate IS NULL OR CAST(CAST(n.cr_dtimes AS TIMESTAMP) AS DATE) <= CAST(:createdToDate AS DATE)) ",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfWeeklyNotifications(
+            @Param("createdFromDate") String createdFromDate,
+            @Param("createdToDate") String createdToDate,
             @Param("notificationStatus") String notificationStatus,
             @Param("notificationType") String notificationType,
             @Param("partnerIdList") List<String> partnerIdList,
