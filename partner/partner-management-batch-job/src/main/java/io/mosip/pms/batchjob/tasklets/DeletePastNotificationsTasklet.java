@@ -55,7 +55,7 @@ public class DeletePastNotificationsTasklet implements org.springframework.batch
                 try {
                     notificationServiceRepository.deleteById(notification.getId());
                     deletedNotifications.add(notification);
-                    log.info("Successfully deleted Notification with Id: {}", notification.getId());
+                    log.info("Successfully deleted Notification: {}", notification);
                 } catch (Exception e) {
                     log.error("Failed to delete notification for notification ID {}: {}", notification.getId(), e.getMessage());
                 }
