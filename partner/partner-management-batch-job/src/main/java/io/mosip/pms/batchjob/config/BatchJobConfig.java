@@ -4,6 +4,7 @@
  */
 package io.mosip.pms.batchjob.config;
 
+import io.mosip.pms.batchjob.tasklets.DeletePastNotificationsTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -28,6 +29,9 @@ public class BatchJobConfig {
 	@Autowired
 	private PartnerCertificateExpiryTasklet partnerCertificateExpiryTasklet;
 
+	@Autowired
+	private DeletePastNotificationsTasklet deletePastNotificationsTasklet;
+
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
 			PlatformTransactionManager transactionManager) {
@@ -43,6 +47,13 @@ public class BatchJobConfig {
 	}
 
 	@Bean
+	public Step deletePastNotificationsStep(JobRepository jobRepository,
+											 PlatformTransactionManager transactionManager) {
+		return new StepBuilder("deletePastNotificationsStep", jobRepository)
+				.tasklet(deletePastNotificationsTasklet, transactionManager).build();
+	}
+
+	@Bean
 	public Job rootAndIntermediateCertificateExpiryJob(JobRepository jobRepository,
 			@Qualifier("rootAndIntermediateCertificateExpiryStep") Step rootAndIntermediateCertificateExpiryStep) {
 		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository)
@@ -54,5 +65,12 @@ public class BatchJobConfig {
 			@Qualifier("partnerCertificateExpiryStep") Step partnerCertificateExpiryStep) {
 		return new JobBuilder("partnerCertificateExpiryJob", jobRepository).incrementer(new RunIdIncrementer())
 				.start(partnerCertificateExpiryStep).build();
+	}
+
+	@Bean
+	public Job deletePastNotificationsJob(JobRepository jobRepository,
+										   @Qualifier("deletePastNotificationsStep") Step deletePastNotificationsStep) {
+		return new JobBuilder("deletePastNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(deletePastNotificationsStep).build();
 	}
 }
