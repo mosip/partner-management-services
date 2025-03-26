@@ -49,6 +49,10 @@ public class BatchJobScheduler {
 	@Autowired
 	private Job partnerCertificateExpiryJob;
 
+	@Qualifier("deletePastNotificationsJob")
+	@Autowired
+	private Job deletePastNotificationsJob;
+
 	@Scheduled(cron = "${mosip.pms.batch.job.root.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
 
@@ -65,7 +69,7 @@ public class BatchJobScheduler {
 			log.error(LOGDISPLAY, "RootAndIntermediateCertificateExpiryJob failed", e.getMessage(), null);
 		}
 	}
-	
+              
 	@Scheduled(cron = "${mosip.pms.batch.job.partner.cert.expiry.cron.schedule}")
 	public void partnerCertificateExpiryScheduler() {
 
@@ -80,6 +84,23 @@ public class BatchJobScheduler {
 				| JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "PartnerCertificateExpiryJob failed", e.getMessage(), null);
+		}
+	}
+
+	@Scheduled(cron = "${mosip.pms.batch.job.delete.past.notifications.cron.schedule}")
+	public void deletePastNotificationScheduler() {
+
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(deletePastNotificationsJob, jobParam);
+
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				 | JobParametersInvalidException e) {
+
+			log.error(LOGDISPLAY, "deletePastNotificationsJob failed", e.getMessage(), null);
 		}
 	}
 
