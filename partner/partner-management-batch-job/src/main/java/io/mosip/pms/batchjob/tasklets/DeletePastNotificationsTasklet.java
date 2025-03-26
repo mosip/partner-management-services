@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +39,10 @@ public class DeletePastNotificationsTasklet implements org.springframework.batch
 
     private void deletePastNotifications() {
         try {
-            LocalDateTime pastNotificationsDate = LocalDateTime.now().minusDays(pastNotificationDeletionPeriod);
+            LocalDate pastNotificationsDate = LocalDate.now().minusDays(pastNotificationDeletionPeriod);
             log.info("Fetching notifications older than {} days (before {}).", pastNotificationDeletionPeriod, pastNotificationsDate);
 
-            //fetch past notifications to delete
+            // Fetch past notifications to delete
             List<NotificationEntity> notificationsToDelete = notificationServiceRepository.getPastNotifications(pastNotificationsDate);
 
             if (notificationsToDelete.isEmpty()) {
