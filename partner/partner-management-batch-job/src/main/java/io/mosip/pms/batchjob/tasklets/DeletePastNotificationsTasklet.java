@@ -62,7 +62,7 @@ public class DeletePastNotificationsTasklet implements org.springframework.batch
             });
 
             log.info("Deleted {} notifications.", deletedNotifications.size());
-            deletedNotifications.forEach(notification -> log.info("Deleted Notification ID: {}", notification.getId()));
+            deletedNotifications.forEach(notification -> log.info("Deleted Notification: {}", notification));
 
         } catch (Exception e) {
             log.error("Error occurred while deleting past notifications: {}", e.getMessage());
