@@ -38,7 +38,7 @@ public class BatchJobHelper {
 
 	@Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
 	private List<String> skipPartnerIds;
-	
+
 	@Autowired
 	PartnerServiceRepository partnerRepository;
 
@@ -65,19 +65,20 @@ public class BatchJobHelper {
 		return partnerById;
 	}
 
-	public List<Partner> getAllActiveNonAdminPartners(List<String> keycloakPartnerAdmins) {
-		LOGGER.info("Skipping number of partners {}", skipPartnerIds.size());
+	public List<Partner> getAllActiveNonAdminPartners(List<Partner> pmsPartnerAdmins) {
+		LOGGER.info("As per configuration, number of partners for which notifications are to be skipped is {}",
+				skipPartnerIds.size());
 		List<Partner> partnersList = partnerRepository.findAllByIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue();
 		List<Partner> nonAdminPartnersList = new ArrayList<Partner>();
 		partnersList.forEach(partner -> {
 			List<String> foundList = new ArrayList<String>();
-			keycloakPartnerAdmins.forEach(keycloakPartnerAdmin -> {
-				if (keycloakPartnerAdmin.equals(partner.getId())) {
-					foundList.add(keycloakPartnerAdmin);
+			pmsPartnerAdmins.forEach(pmsPartnerAdmin -> {
+				if (pmsPartnerAdmin.getId().equals(partner.getId())) {
+					foundList.add(pmsPartnerAdmin.getId());
 				}
 			});
 			if (foundList.size() == 0 && !skipPartnerIds.contains(partner.getId())) {
-			//if (foundList.size() == 0 && partner.getId().contains("mayurad")) {	
+				//if (foundList.size() == 0 && partner.getId().contains("mayurad")) {
 				nonAdminPartnersList.add(partner);
 			}
 		});
@@ -85,14 +86,15 @@ public class BatchJobHelper {
 	}
 
 	public List<Partner> getValidPartnerAdminsInPms(List<String> keycloakPartnerAdmins) {
-		LOGGER.info("Skipping number of partners {}", skipPartnerIds.size());
+		LOGGER.info("As per configuration, number of partners for which notifications are to be skipped is {}",
+				skipPartnerIds.size());
 		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
 			Optional<Partner> partnerAdminDetails = getPartnerById(keycloakPartnerAdminId);
 			if (validateActivePartnerId(partnerAdminDetails)) {
 				if (!skipPartnerIds.contains(partnerAdminDetails.get().getId())) {
 					pmsPartnerAdmins.add(partnerAdminDetails.get());
-				} 
+				}
 			} else {
 				LOGGER.debug("this partner admin is not active or valid in PMS, {}", keycloakPartnerAdminId);
 			}
@@ -139,7 +141,7 @@ public class BatchJobHelper {
 		return cert;
 	}
 
-	public NotificationEntity saveCertificateExpiryNotification(String certificateType, int expiryPeriod,
+	public NotificationEntity saveCertificateExpiryNotification(String certificateType,
 			Partner partnerDetails, List<CertificateDetailsDto> certificateDetailsList)
 			throws BatchJobServiceException {
 		try {
@@ -175,14 +177,14 @@ public class BatchJobHelper {
 			return PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
 		case PartnerConstants.PARTNER:
 			return PartnerConstants.PARTNER_CERT_EXPIRY;
-		case PartnerConstants.WEEKLY_SUMMARY:
+		case PartnerConstants.WEEKLY:
 			return PartnerConstants.WEEKLY_SUMMARY;
 		default:
 			throw new BatchJobServiceException(ErrorCodes.INVALID_CERTIFICATE_TYPE.getCode(),
 					ErrorCodes.INVALID_CERTIFICATE_TYPE.getMessage());
 		}
 	}
-	
+
 	public String getPartnerDomain(String partnerType) throws BatchJobServiceException {
 		switch (partnerType) {
 		case PartnerConstants.DEVICE_PROVIDER_PARTNER_TYPE:
