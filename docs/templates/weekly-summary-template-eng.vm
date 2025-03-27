@@ -18,28 +18,15 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>Dear ${partnerId},</strong></p>
-                <p>We would like to bring to your attention the upcoming expirations of Partner Certificates, FTM Chip
-                    Certificates, SBI, and API keys issued by various partners in the PMS portal. Below is a summary of
-                    items set to expire within the next 7 days.</p>
+                <p>We would like to bring to your attention the upcoming expirations of Partner Certificates uploaded by various partners in the PMS portal. Below is a summary of items set to expire within the next 7 days.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Expiring Items: From ${fromDate} to ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
-                    <p style="padding: 5px 0px; font-weight: 600;">
-                        ${partnerCertificateCount}&nbsp;Partner Certificates</span>
-                    </p>
-                    <p style="padding: 5px 0px; font-weight: 600;">
-                        ${ftmChipCertificateCount}&nbsp;FTM Chip Certificates</span>
-                    </p>
-                    <p style="padding: 5px 0px; font-weight: 600;">
-                        ${apiKeyCount}&nbsp;API Keys</span>
-                    </p>
-                    <p style="padding: 5px 0px; font-weight: 600;">
-                        ${sbiDeviceCount}&nbsp;SBI Devices</span>
-                    </p>
+                    <p style="padding: 5px 0px; font-weight: 600;">${partnerCertificateCount}&nbsp;Partner Certificates</p>
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
-                    <p style="padding: 5px 0px; font-weight: 600;">Action Required<br><span style="font-weight: 400;">
-                            To ensure uninterrupted services, please inform the respective partner users to renew their
-                            certificates, API keys, and SBI before their expiration dates.</span></P>
+                    <p style="padding: 5px 0px; font-weight: 600;">Action Required<br>
+                        <span style="font-weight: 400;">To ensure uninterrupted services, please inform the respective partner users to renew their certificates before their expiration dates.</span>
+                    </P>
                 </div>
 
                 <p>We appreciate your prompt attention to this matter.</p>
