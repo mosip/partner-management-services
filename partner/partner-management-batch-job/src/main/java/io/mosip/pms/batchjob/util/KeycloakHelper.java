@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import io.mosip.pms.batchjob.config.LoggerConfiguration;
 import io.mosip.pms.batchjob.constants.ErrorCodes;
 import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
+import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.util.RestUtil;
 
 @Component
@@ -35,9 +36,13 @@ public class KeycloakHelper {
 	@Autowired
 	RestUtil restUtil;
 
+	@Autowired
+	BatchJobHelper batchJobHelper;
+	
 	@Cacheable(value = "partnerAdminIdsCache", key = "'partnerAdminIds'", unless = "#result.isEmpty()")
-	public List<String> getPartnerIdsWithPartnerAdminRole() {
-		List<String> partnerIds = new ArrayList<>();
+	public List<Partner> getPartnerIdsWithPartnerAdminRole() {
+		List<String> keycloakPartnerAdmins = new ArrayList<>();
+		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 
 		try {
 			Map<String, String> pathSegments = Map.of(USER_ROLE, PARTNER_ADMIN);
@@ -55,7 +60,7 @@ public class KeycloakHelper {
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
-						partnerIds.add(String.valueOf(userMap.get(USER_NAME)));
+						keycloakPartnerAdmins.add(String.valueOf(userMap.get(USER_NAME)));
 					}
 				}
 			} else {
@@ -63,6 +68,9 @@ public class KeycloakHelper {
 				throw new BatchJobServiceException(ErrorCodes.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getCode(),
 						"Invalid response format received from API.");
 			}
+			LOGGER.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
+			pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
+			LOGGER.info("PMS has {} Active Partner Admin users.", pmsPartnerAdmins.size());
 		} catch (HttpStatusCodeException e) {
 			LOGGER.error("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
 			throw new BatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(),
@@ -72,7 +80,7 @@ public class KeycloakHelper {
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
 		}
-		return partnerIds;
+		return pmsPartnerAdmins;
 	}
 
 }

@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
@@ -57,17 +59,22 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-		log.info("PartnerCertificateExpiryTasklet: START");
+		log.info("PartnerCertificateExpiryTasklet - Partner Certificates: START");
+		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 		List<String> totalNotificationsCreated = new ArrayList<String>();
+		Map<Partner, X509Certificate> weeklySummaryPartnerDetails = new HashMap<Partner, X509Certificate>();
 		int activePartnersCount = 0;
-		int countOfCertsExpiringInNext30Days = 0;
+		int countOfCertsExpiringWithin30Days = 0;
 		int countOfPartnersWithInvalidCerts = 0;
 		try {
-			// Step 1: Fetch Partner Admin user IDs from Keycloak
-			List<String> keycloakPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Active Partners
+			// in PMS
+			pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			pmsPartnerAdmins.forEach(admin -> {
+				log.info("PMS Active Partner Admin Id: {}", admin.getId());
+			});
 			// Step 2: Get all PMS partners which are ACTIVE and NOT partner admins
-			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(keycloakPartnerAdmins);
+			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(pmsPartnerAdmins);
 			activePartnersCount = activePartnersList.size();
 			log.info("PMS has {} Active Partner (Non Admin) users.", activePartnersCount);
 			// Step 3: For each partner get the certificate and check if it is expiring
@@ -82,35 +89,43 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 					LocalDateTime partnerCertificateExpiryDate = decodedPartnerCertificate.getNotAfter().toInstant()
 							.atZone(ZoneId.of("UTC")).toLocalDateTime();
 					log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
-					boolean isCertificateExpiring = checkIfCertificateIsExpiring(pmsPartner,
+					boolean isExpiringWithin30Days = checkIfCertificateIsExpiring(pmsPartner,
 							partnerCertificateExpiryDate, 30, true);
-					if (isCertificateExpiring) {
-						countOfCertsExpiringInNext30Days++;
+					if (isExpiringWithin30Days) {
+						countOfCertsExpiringWithin30Days++;
 						log.info("Certificate is expiring for partner id {}",
 								pmsPartner.getId() + " during the next 30 days.");
-						// Step 5: Check if the certificate is expiring after 30 days, 15 days, 10 days,
+						// Step 4: Check if the certificate is expiring after 30 days, 15 days, 10 days,
 						// 9 days and so on
 						Iterator<Integer> expiryPeriodsIterator = partnerCertExpiryPeriods.iterator();
 						while (expiryPeriodsIterator.hasNext()) {
 							Integer expiryPeriod = expiryPeriodsIterator.next();
 							log.info("Checking for certificate expiry after " + expiryPeriod + " days.");
-							boolean isCertExpiring = checkIfCertificateIsExpiring(pmsPartner, partnerCertificateExpiryDate,
-									expiryPeriod, false);
-							// Step 6: If yes, add the notification
-							if (isCertExpiring) {
-								List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
-										expiryPeriod, pmsPartner, decodedPartnerCertificate);
+							boolean isExpiringAfterExpiryPeriod = checkIfCertificateIsExpiring(pmsPartner,
+									partnerCertificateExpiryDate, expiryPeriod, false);
+							// Step 5: If yes, add the notification
+							if (isExpiringAfterExpiryPeriod) {
+								List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
+								CertificateDetailsDto certificateDetailsList = populateCertificateDetails(expiryPeriod,
+										pmsPartner, decodedPartnerCertificate);
+								expiringCertificates.add(certificateDetailsList);
 								NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
-										PartnerConstants.PARTNER, expiryPeriod, pmsPartner, certificateDetailsList);
-								// Step 7: send email notification
+										PartnerConstants.PARTNER, pmsPartner, expiringCertificates);
+								// Step 6: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification.getId());
-								log.info("Created notification with notification id " + savedNotification.getId());
+								log.info("Created partner certificate expiry notification with notification id "
+										+ savedNotification.getId());
 								totalNotificationsCreated.add(savedNotification.getId());
 								break;
 							} else {
 								log.info("Certificate is NOT expiring  after " + expiryPeriod + " days.");
 								// check for next time interval
 							}
+						}
+						boolean isExpiringWithin7Days = checkIfCertificateIsExpiring(pmsPartner,
+								partnerCertificateExpiryDate, 7, true);
+						if (isExpiringWithin7Days) {
+							weeklySummaryPartnerDetails.put(pmsPartner, decodedPartnerCertificate);
 						}
 					} else {
 						log.info("Certificate is NOT expiring for partner id {}",
@@ -124,10 +139,11 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		} catch (Exception e) {
 			log.error("Error occurred while running PartnerCertificateExpiryTasklet: {}", e.getMessage(), e);
 		}
-		log.info("Found " + countOfCertsExpiringInNext30Days
+		log.info("Found " + countOfCertsExpiringWithin30Days
 				+ " certificates which are expiring during the next 30 days. But notifications will only be created as per the configured expiry days.");
-		log.info("PartnerCertificateExpiryTasklet: DONE, created {}", totalNotificationsCreated.size()
-				+ " notifications." + " Checked certificate expiry for " + activePartnersCount + " partners.");
+		log.info("PartnerCertificateExpiryTasklet - Partner Certificates: DONE, created {}",
+				totalNotificationsCreated.size() + " notifications." + " Checked certificate expiry for "
+						+ activePartnersCount + " partners.");
 		totalNotificationsCreated.forEach(notificationId -> {
 			log.info(notificationId);
 		});
@@ -135,7 +151,46 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 			log.info("Note: Valid partner certificate is not available for " + countOfPartnersWithInvalidCerts
 					+ " partners. ");
 		}
+		createWeeklySummaryNotifications(pmsPartnerAdmins, weeklySummaryPartnerDetails);
 		return RepeatStatus.FINISHED;
+	}
+
+	private void createWeeklySummaryNotifications(List<Partner> pmsPartnerAdmins,
+			Map<Partner, X509Certificate> weeklySummaryPartnerDetails) {
+		log.info("PartnerCertificateExpiryTasklet - Weekly Summary Notifications: START");
+		try {
+			// Step 7: Create a weekly notification for all the partner admin users
+			log.info("Creating weekly summary notifications, for  {}", weeklySummaryPartnerDetails.size());
+			List<String> totalWeeklySummaryNotificationsCreated = new ArrayList<String>();
+			if (weeklySummaryPartnerDetails.size() > 0) {
+				List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
+				weeklySummaryPartnerDetails.forEach((partnerWithExpiringCert, decodedPartnerCertificate) -> {
+					log.info("Weekly Summary - adding certificate expiry details for partner id {}",
+							partnerWithExpiringCert.getId());
+					CertificateDetailsDto certificateDetailsList = populateCertificateDetails(7,
+							partnerWithExpiringCert, decodedPartnerCertificate);
+					expiringCertificates.add(certificateDetailsList);
+				});
+				Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
+				while (pmsPartnerAdminsIterator.hasNext()) {
+					Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
+					NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
+							PartnerConstants.WEEKLY, pmsPartnerAdmin, expiringCertificates);
+					// Step 6: send email notification
+					emailNotificationService.sendEmailNotification(savedNotification.getId());
+					log.info("Created weekly summary notification with notification id " + savedNotification.getId());
+					totalWeeklySummaryNotificationsCreated.add(savedNotification.getId());
+				}
+			}
+			log.info("PartnerCertificateExpiryTasklet - Weekly Summary Notifications: DONE, created {}",
+					totalWeeklySummaryNotificationsCreated.size() + " notifications, for " + pmsPartnerAdmins.size()
+							+ " partner admins.");
+			totalWeeklySummaryNotificationsCreated.forEach(notificationId -> {
+				log.info(notificationId);
+			});
+		} catch (Exception e) {
+			log.error("Error occurred while running PartnerCertificateExpiryTasklet: {}", e.getMessage(), e);
+		}
 	}
 
 	private X509Certificate getDecodedCertificate(Partner pmsPartner) {
@@ -178,9 +233,8 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		return isCertificateExpiring;
 	}
 
-	private List<CertificateDetailsDto> populateCertificateDetails(int expiryPeriod, Partner partner,
+	private CertificateDetailsDto populateCertificateDetails(int expiryPeriod, Partner partner,
 			X509Certificate expiringCertificate) {
-		List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
 		CertificateDetailsDto certificateDetails = new CertificateDetailsDto();
 		certificateDetails.setCertificateId(partner.getCertificateAlias());
 		certificateDetails.setIssuedBy(expiringCertificate.getIssuerX500Principal().getName());
@@ -191,8 +245,7 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		certificateDetails.setExpiryDateTime(
 				expiringCertificate.getNotAfter().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime().toString());
 		certificateDetails.setExpiryPeriod("" + expiryPeriod);
-		expiringCertificates.add(certificateDetails);
-		return expiringCertificates;
+		return certificateDetails;
 	}
 
 }

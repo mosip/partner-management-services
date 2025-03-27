@@ -64,21 +64,15 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			List<String> certificateTypes = new ArrayList<String>();
 			certificateTypes.add(PartnerConstants.ROOT);
 			certificateTypes.add(PartnerConstants.INTERMEDIATE);
-
-			// Step 1: Fetch Partner Admin user IDs from Keycloak
-			List<String> keycloakPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
-
-			// Step 2: Validate if each of these are valid Partner Admins in PMS
-			List<Partner> pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
+			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Active Partners
+			// in PMS
+			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
 			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
-			log.info("PMS has {} Active Partner Admin users.", pmsPartnerAdminsCount);
 			pmsPartnerAdmins.forEach(admin -> {
 				log.info("PMS Active Partner Admin Id: {}", admin.getId());
 			});
-
 			if (pmsPartnerAdminsCount > 0) {
-				// Step 3: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
+				// Step 2: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 				// days and so on
 				rootIntermediateExpiryPeriods.forEach(expiryPeriod -> {
 					LocalDate validTillDate = LocalDate.now(ZoneId.of("UTC")).plusDays(expiryPeriod);
@@ -95,16 +89,16 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 							log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
 									+ " days, {}", response.getAllPartnerCertificates().size());
 							pmsPartnerAdmins.forEach(partnerAdminDetails -> {
-								// Step 4: add the notification
+								// Step 3: add the notification
 								response.getAllPartnerCertificates().forEach(expiringCertificate -> {
 									// certificatePartnerId is null, since Root/Intermediate Certificate is not
 									// associated with any partner
 									List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
 											certificateType, expiryPeriod, null, expiringCertificate);
 									NotificationEntity savedNotification = batchJobHelper
-											.saveCertificateExpiryNotification(certificateType, expiryPeriod,
-													partnerAdminDetails, certificateDetailsList);
-									// Step 5: send email notification
+											.saveCertificateExpiryNotification(certificateType, partnerAdminDetails,
+													certificateDetailsList);
+									// Step 4: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification.getId());
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
 									totalNotificationsCreated.add(savedNotification.getId());

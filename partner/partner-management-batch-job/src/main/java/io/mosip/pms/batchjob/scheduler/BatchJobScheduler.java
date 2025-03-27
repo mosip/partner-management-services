@@ -53,7 +53,7 @@ public class BatchJobScheduler {
 	@Autowired
 	private Job deletePastNotificationsJob;
 
-	@Scheduled(cron = "${mosip.pms.batch.job.root.cert.expiry.cron.schedule}")
+	@Scheduled(cron = "${mosip.pms.batch.job.root.intermediate.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
 
 		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
