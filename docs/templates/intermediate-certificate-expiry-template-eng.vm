@@ -13,24 +13,25 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Dear ${partnerId},</strong></p>
-					<p>This is to inform you that the intermediate CA certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime}(UTC). To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.</p>
+					<p>This is to inform you that the Intermediate CA certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime} UTC to upload the certificate for renewal before the expiration date.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Certificate Details</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
 						<p style="padding: 5px 0px; font-weight: 600;">Certificate ID<br><span style="font-weight: 400;">${certificateId}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600;">Expiration Date<br><span style="font-weight: 400;">${expiryDateTime}(UTC)</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">Expiration Date & Time<br><span style="font-weight: 400;">${expiryDateTime} UTC</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Partner Domain<br><span style="font-weight: 400;">${partnerDomain}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Issued To<br><span style="font-weight: 400;">${issuedTo}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Issued By<br><span style="font-weight: 400;">${issuedBy}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Action Required<br><span style="font-weight: 400;"> Upload the certificate for renewal in ‘Certificate Trust Store’.</span></P>
 					</div>
-					<p>Failure to renew the certificate before its expiration may result in disruptions in the Certificate Trust Chain.</p>
+					<p>Failure to renew the certificate before its expiration may result in service disruptions.</p>
 					<p>To proceed with the renewal, please follow these steps:</p>
 					<ol>
 						<li>Log in to your account on the PMS Portal.</li>
-						<li>Navigate to ‘Certificate Trust Store’ in Partner Admin Dashboard and select the 'Intermediate CA' certificate tab.</li>
+						<li>Navigate to ‘Certificate Trust Store’ in Partner Admin Dashboard and select the 'Intermediate CA certificate' tab.</li>
 						<li>Click on ‘Upload Trust Certificate’ to upload the certificate for renewal and complete the process.</li>
 					</ol>
+					<p>Please note that the expiry date and time are provided in UTC format, so kindly account for any time zone differences when planning your renewal.</p>
 					<p>Thank you for your prompt attention to this matter.</p>
 					<p>Best regards,<br>MOSIP</p>
 					<p style="padding: 6px 0px;">** This is an auto-generated email. Please do not reply to this email. **</p>

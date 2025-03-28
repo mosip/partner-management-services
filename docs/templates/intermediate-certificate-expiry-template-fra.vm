@@ -13,24 +13,25 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Chère ${partnerId},</strong></p>
-					<p>Ceci est pour vous informer que le certificat CA intermédiaire avec l'ID de certificat ${certificateId} est prévu pour expirer le ${expiryDateTime}(UTC). Pour garantir une fonctionnalité continue et des services ininterrompus, nous vous demandons de télécharger le certificat pour le renouvellement avant la date d'expiration.</p>
+					<p>Ceci est pour vous informer que le certificat CA intermédiaire avec l'ID de certificat ${certificateId} est prévu pour expirer le ${expiryDateTime} UTC pour télécharger le certificat pour renouvellement avant la date d'expiration.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
 						<p style="padding: 5px 0px; font-weight: 600;">ID du certificat<br><span style="font-weight: 400;">${certificateId}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600;">Date d'expiration<br><span style="font-weight: 400;">${expiryDateTime}(UTC)</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">Date et heure d'expiration<br><span style="font-weight: 400;">${expiryDateTime} UTC</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Domaine partenaire<br><span style="font-weight: 400;">${partnerDomain}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Délivré à<br><span style="font-weight: 400;">${issuedTo}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Délivré par<br><span style="font-weight: 400;">${issuedBy}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">Action requise<br><span style="font-weight: 400;">Téléchargez le certificat à renouveler dans « Certificate Trust Store ».</span></P>
 					</div>
-					<p>Le non-renouvellement du certificat avant son expiration peut entraîner des perturbations dans la chaîne de confiance du certificat.</p>
+					<p>Le non-renouvellement du certificat avant son expiration peut entraîner des interruptions de service.</p>
 					<p>Pour procéder au renouvellement, veuillez suivre ces étapes :</p>
 					<ol>
 						<li>Connectez-vous à votre compte sur le portail PMS.</li>
-						<li>Accédez à « Certificate Trust Store » dans le tableau de bord d’administration des partenaires et sélectionnez l’onglet de certificat « Intermediate CA ».</li>
+						<li>Accédez à « Certificate Trust Store » dans le tableau de bord d’administration des partenaires et sélectionnez l’onglet « Certificat CA intermédiaire ».</li>
 						<li>Cliquez sur « Télécharger le certificat de confiance » pour télécharger le certificat à renouveler et terminer le processus.</li>
 					</ol>
+					<p>Veuillez noter que la date et l'heure d'expiration sont fournies au format UTC, veuillez donc tenir compte des différences de fuseau horaire lors de la planification de votre renouvellement.</p>
 					<p>Nous vous remercions de votre prompte attention à cette question.</p>
 					<p>Cordialement,<br>MOSIP</p>
 					<p style="padding: 6px 0px;">** Il s'agit d'un e-mail généré automatiquement. Veuillez ne pas y répondre. **</p>

@@ -13,24 +13,24 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>عزيزي ${partnerId},</strong></p>
-					<p>هذا لإعلامك بأن شهادة الشريك التي تحمل معرف الشهادة ${certificateId} من المقرر أن تنتهي صلاحيتها في ${expiryDateTime}(UTC). ولضمان استمرارية الأداء والخدمات دون انقطاع، نطلب منك تحميل الشهادة للتجديد قبل تاريخ انتهاء الصلاحية.</p>
+					<p>نود إعلامكم بأن صلاحية شهادة الشريك لنطاق ${partnerDomain} ستنتهي في ${expiryDateTime} UTC. لضمان استمرارية العمل والخدمات دون انقطاع، نرجو منكم تحميل الشهادة للتجديد قبل تاريخ انتهاء الصلاحية.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">تفاصيل الشهادة</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>
-						<p style="padding: 5px 0px; font-weight: 600;">معرف الشهادة<br><span style="font-weight: 400;">${certificateId}</span></P>
-						<p style="padding: 5px 0px; font-weight: 600;">تاريخ انتهاء الصلاحية<br><span style="font-weight: 400;">${expiryDateTime}(UTC)</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">مجال الشريك<br><span style="font-weight: 400;">${partnerDomain}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">تاريخ ووقت انتهاء الصلاحية<br><span style="font-weight: 400;">${expiryDateTime} UTC</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">صدر إلى<br><span style="font-weight: 400;">${issuedTo}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">صادر عن<br><span style="font-weight: 400;">${issuedBy}</span></P>
 						<p style="padding: 5px 0px; font-weight: 600;">الإجراء المطلوب<br><span style="font-weight: 400;">قم بتحميل الشهادة للتجديد في "شهادة الشريك".</span></P>
 					</div>
-					<p>قد يؤدي عدم تجديد الشهادة قبل انتهاء صلاحيتها إلى حدوث اضطرابات.</p>
+					<p>قد يؤدي عدم تجديد الشهادة قبل انتهاء صلاحيتها إلى انقطاع الخدمة.</p>
 					<p>للمتابعة بعملية التجديد، يرجى اتباع الخطوات التالية:</p>
 					<ol>
 						<li>قم بتسجيل الدخول إلى حسابك على بوابة PMS.</li>
-						<li>انتقل إلى قسم "شهادة الشريك".</li>
-						<li>انقر فوق "إعادة التحميل" لتحميل الشهادة المطلوبة للتجديد واستكمال العملية.</li>
+						<li>انتقل إلى "شهادة الشريك" في لوحة معلومات الشريك وانقر على زر "إعادة التحميل".</li>
+						<li>قم بتحميل الشهادة الجديدة للتجديد وأكمل العملية.</li>
 					</ol>
+					<p>يرجى ملاحظة أن تاريخ انتهاء الصلاحية والوقت مقدمان بتنسيق UTC، لذا يرجى مراعاة أي اختلافات في المنطقة الزمنية عند التخطيط لتجديدك.</p>
 					<p>شكرا لكم على اهتمامكم السريع بهذه المسألة.</p>
 					<p>أطيب التحيات،<br>MOSIP</p>
 					<p style="padding: 6px 0px;">** هذه رسالة بريد إلكتروني تم إنشاؤها تلقائيًا. يرجى عدم الرد على هذه الرسالة الإلكترونية. **</p>
