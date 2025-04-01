@@ -1,0 +1,14 @@
+GetListOfAllSBIBeforeAddingSBI:
+   Pms_GetListOfAllSBIBeforeAddingSBI_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_SBI_List_21     
+      description: Fetching all the active SBI
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIBeforAddingSBIResult
+      input: '{
+}'
+      output: ' {
+      "pageNo": "0"
+}'

@@ -216,3 +216,35 @@ partnerPolicyMapping:
     }
   ]
 }'
+
+   Pms_partnerPolicyMapping_ForRejecting_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip reject policy 19234",
+        "useCaseDescription": "Need to submit for Rejecting",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
+   Pms_partnerPolicyMapping_ForPending_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip in progress mapping policy 19234",
+        "useCaseDescription": "Need to submit for Pending",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'

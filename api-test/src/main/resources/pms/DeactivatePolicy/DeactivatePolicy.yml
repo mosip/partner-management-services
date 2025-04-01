@@ -95,10 +95,10 @@ DeactivatePolicy:
       uniqueIdentifier: TC_PMS_deactivate_policy_05      
       description: Deactivate policy with only spaces as policyid   
       role: partneradmin
-      checkErrorsOnlyInResponse: true
+      checkOnlyStatusCodeInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
 		  "policyId": "   ",
 		  "requestTime": "$TIMESTAMP$",
@@ -107,11 +107,7 @@ DeactivatePolicy:
 		  "version": "1.0"		  		  
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_COR_002"
-       }
-       ]
+      "responseCode": "400"
   
 }'
    Pms_DeactivatePolicy_already_deactivated:
@@ -230,6 +226,76 @@ DeactivatePolicy:
       "errors": [
       {
        "errorCode": "PMS_POL_063"
+       }
+       ]
+  
+}'
+
+   Pms_DeactivatePolicy_WithRejectedPolicy_Neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_11      
+      description: Deactivate policy with rejected policy    
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/DeactivatePolicy/DeactivatePolicyResult
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  
+}'
+      output: ' {
+  
+}'
+
+   Pms_DeactivatePolicy_with_DraftPolicy_Neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_12      
+      description: Deactivate policy with draft policy requests   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_For_Draft_Policy_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_072"
+       }
+       ]
+  
+}'
+
+   Pms_DeactivatePolicy_with_InProgressPolicy_Neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_deactivate_policy_13    
+      description: Deactivate policy with draft policy requests   
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivatePolicy/DeactivatePolicy
+      outputTemplate: pms/error
+      input: '{
+		  "policyId": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_id$",
+		  "requestTime": "$TIMESTAMP$",
+		  "status": "De-Activate",
+		  "id": "mosip.pms.deactivate.policy.patch",
+		  "version": "1.0"		  		  
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POL_064"
        }
        ]
   

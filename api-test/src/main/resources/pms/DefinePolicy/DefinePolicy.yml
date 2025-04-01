@@ -781,3 +781,53 @@ definePolicy:
     "desc": "$IGNORE$",
     "is_Active": false
 }'
+
+   Pms_DefinePolicy_All_Valid_For_Reject_Policy_pms_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_30
+      description: Creating a Policy using PolicyGroup
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc reject mosip policy 19234",
+	"name": "mosip reject policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "mosip policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_31
+      description: Creating a Policy using PolicyGroup
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "desc in progress mapping mosip policy 19234",
+	"name": "mosip in progress mapping policy 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "mosip policy group 19234",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "mosip policy group 19234",
+    "name": "$IGNORE$",
+    "desc": "$IGNORE$",
+    "is_Active": false
+}'

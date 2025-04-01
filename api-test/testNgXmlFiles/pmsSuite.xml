@@ -10,6 +10,7 @@
 		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport" />
 	</listeners>
 
+	
 	<test name="CreatePolicyGroup">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
@@ -726,7 +727,14 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
-	
+	<test name="GetListOfAllSBIBeforeAddingSBI">
+		<parameter name="ymlFile"
+			value="pms/GetListOfAllSBI/GetListOfAllSBIBeforeAddingSBI.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 		<test name="SaveSecureBiometricInterfaceCreateDto">
 		<parameter name="ymlFile"
 			value="pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto.yml" />
@@ -1379,7 +1387,7 @@
 		</classes>
 	</test>
 
-<test name="AuditLogUpdatePolicyGroupForPartner">
+	<test name="AuditLogUpdatePolicyGroupForPartner">
 		<parameter name="ymlFile"
 			value="pms/AuditLog/AuditLog.yml" />
 		<classes>

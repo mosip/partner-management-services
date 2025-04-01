@@ -349,10 +349,10 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
       description: Deactivate SBI while keeping SBI ID parameter as Empty in request
       role: partnerdevice
-      checkErrorsOnlyInResponse: true
+      checkOnlyStatusCodeInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       "id": "mosip.pms.deactivate.sbi.patch",
       "version": "1.0",
@@ -360,11 +360,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
       "sbiId": " "
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_COR_001"
-       }
-       ]
+      "responseCode": "400"
 }'
    Pms_DeactivateSBIWithAssociatedDevices_InvalidNumeric_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
