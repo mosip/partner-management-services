@@ -98,11 +98,7 @@ To execute the tests using Jar, use the following steps:
    ```
    java -jar -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar
    ```
-<<<<<<< HEAD
-   
-=======
 
->>>>>>> upstream/release-1.2.2.x
 # Using Eclipse IDE
 
 To execute the tests using Eclipse IDE, use the following steps:
@@ -137,7 +133,6 @@ To execute the tests using Eclipse IDE, use the following steps:
      - **VM Arguments**:
        ```
        -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression```
-<<<<<<< HEAD
 
 ## 5. **Run the Configuration**
 
@@ -154,22 +149,10 @@ To execute the tests using Eclipse IDE, use the following steps:
    
 ## Details of Arguments Used
 
-=======
-## 5. **Run the Configuration**
-   - Once the configuration is set up, click **Run** to execute the test suite.
-   - The tests will run, and the results will be shown in the **Console** tab of Eclipse.
-   **Note**: You can also run in **Debug Mode** to troubleshoot issues by setting breakpoints in your code and choosing `Debug` instead of `Run`.
-## 6. **View Test Results**
-   - After the tests are executed, you can view the detailed results in the `api-test\testng-report` directory.
----
-   
-## Details of Arguments Used
->>>>>>> upstream/release-1.2.2.x
 - **env.user**: Replace `<env_name>` with the appropriate environment name (e.g., `dev`, `qa`, etc.).
 - **env.endpoint**: The environment where the application under test is deployed. Replace `<base_env>` with the correct base URL for the environment (e.g., `https://api-internal.<env_name>.mosip.net`).
 - **env.testLevel**: Set this to `smoke` to run only smoke test cases, or `smokeAndRegression` to run both smoke and regression tests.
 - **jar**: Specify the name of the JAR file to execute. The version will change according to the development code version. For example, the current version may look like `apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar`.
-<<<<<<< HEAD
 
 ### Build and Run Info
 
@@ -183,13 +166,3 @@ To run the tests for both **Smoke** and **Regression**:
 ## License
 
 This project is licensed under the terms of the [Mozilla Public License 2.0](https://github.com/mosip/mosip-platform/blob/master/LICENSE)
-
-=======
-### Build and Run Info
-To run the tests for both **Smoke** and **Regression**:
-1. Ensure the correct environment and test level parameters are set.
-2. Execute the tests as shown in the command above to validate partner management services API functionalities.
----
-## License
-This project is licensed under the terms of the [Mozilla Public License 2.0](https://github.com/mosip/mosip-platform/blob/master/LICENSE)
->>>>>>> upstream/release-1.2.2.x

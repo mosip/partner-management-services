@@ -94,6 +94,9 @@ public class MosipTestRunner {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
+		KeycloakUserManager.removeUser();
+		KeycloakUserManager.closeKeycloakInstance();
+		
 		HealthChecker.bTerminate = true;
 		System.exit(0);
 
