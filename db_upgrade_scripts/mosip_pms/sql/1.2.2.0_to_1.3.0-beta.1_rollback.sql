@@ -19,7 +19,6 @@ drop sequence if exists pms.batch_job_seq;
 
 drop table if exists pms.notifications;
 
-ALTER TABLE pms.user_details DROP COLUMN notifications_seen;
 ALTER TABLE pms.user_details DROP COLUMN notifications_seen_dtimes;
 
 UPDATE pms.auth_policy_h SET policy_file_id = '{""shareableAttributes"":[{""attributeName"":""biometrics"",""group"":""CBEFF"",""source"":[{""attribute"":""registration-client\/NEW\/individualBiometrics"",""filter"":[{""type"":""Iris""}]},{""attribute"":""CNIE\/verification\/biometrics"",""filter"":[{""type"":""Finger""}]},{""attribute"":""CNIE\/verification\/biometrics"",""filter"":[{""type"":""Face""}]}],""encrypted"":true,""format"":""extraction""}],""dataSharePolicies"":{""typeOfShare"":""Data Share"",""validForInMinutes"":""30"",""transactionsAllowed"":""2"",""encryptionType"":""Partner Based"",""shareDomain"":""datashare.datashare"",""source"":""Packet Manager""}}' where id ='mpolicy-default-abis';

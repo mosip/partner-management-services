@@ -15,7 +15,7 @@ public interface UserManagementService {
 
 	public ResponseWrapperV2<UserDetailsDto> isUserConsentGiven();
 
-	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(NotificationsSeenRequestDto requestDto);
+	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(String userId, NotificationsSeenRequestDto requestDto);
 
 	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp();
 }

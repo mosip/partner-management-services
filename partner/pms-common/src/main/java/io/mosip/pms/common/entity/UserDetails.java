@@ -44,9 +44,6 @@ public class UserDetails {
     @Column(name = "upd_dtimes")
     private LocalDateTime updDtimes;
 
-    @Column(name = "notifications_seen")
-    private Boolean notificationsSeen;
-
     @Column(name = "notifications_seen_dtimes")
     private LocalDateTime notificationsSeenDtimes;
 }

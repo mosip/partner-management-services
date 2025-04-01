@@ -8,7 +8,6 @@ CREATE TABLE pms.user_details(
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
     upd_dtimes timestamp,
-    notifications_seen boolean DEFAULT FALSE,
     notifications_seen_dtimes timestamp,
     CONSTRAINT user_details_pk PRIMARY KEY (id),
     CONSTRAINT consent_given CHECK (consent_given IN ('YES', 'NO'))
