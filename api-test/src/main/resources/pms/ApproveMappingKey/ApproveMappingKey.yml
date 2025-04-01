@@ -150,3 +150,20 @@ ApproveMappingKey:
     }
   ]
     }'
+    
+   Pms_ApproveMappingKey_Reject_All_Valid:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      description: Reject the Mapping Key
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Rejected",
+      "mappingkey": "$ID:partnerPolicyMapping_ForRejecting_All_Valid_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping rejected successfully"
+    }'

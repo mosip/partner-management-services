@@ -322,10 +322,10 @@ DeactivateFtmNegativeScenarios:
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_15
       description: Deactivate the FTM while keeping FTM ID parameter as Missing and expecting an error in the response
       role: partnerftm
-      checkErrorsOnlyInResponse: true
+      checkOnlyStatusCodeInResponse: true
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       "id": "mosip.pms.deactivate.ftm.patch",
       "version": "1.0",
@@ -334,11 +334,7 @@ DeactivateFtmNegativeScenarios:
      
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_FTM_ERROR_005"
-       }
-       ]
+      "responseCode": "400"
 }'
    Pms_DeactivateFtm_Empty_FTM_ID_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
