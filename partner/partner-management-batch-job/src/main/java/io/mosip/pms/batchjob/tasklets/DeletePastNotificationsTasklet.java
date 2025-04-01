@@ -29,11 +29,17 @@ public class DeletePastNotificationsTasklet implements org.springframework.batch
     @Value("${mosip.pms.batch.job.past.notifications.deletion.period}")
     private Integer pastNotificationDeletionPeriod;
 
+    @Value("${mosip.pms.batch.job.enable.past.notifications.deletion}")
+    private Boolean enablePastNotificationDeletion;
+
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        log.info("DeletePastNotificationsTasklet: START");
-        deletePastNotifications();
-        log.info("DeletePastNotificationsTasklet: DONE");
+        if(enablePastNotificationDeletion) {
+            log.info("DeletePastNotificationsTasklet: START");
+            deletePastNotifications();
+            log.info("DeletePastNotificationsTasklet: DONE");
+            return RepeatStatus.FINISHED;
+        }
         return RepeatStatus.FINISHED;
     }
 
