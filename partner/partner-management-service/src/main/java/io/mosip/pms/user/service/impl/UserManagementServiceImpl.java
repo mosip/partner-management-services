@@ -28,6 +28,7 @@ import io.mosip.pms.user.service.UserManagementService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -104,7 +105,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 					userDetails.setCrBy(this.getUserBy());
 					userDetails.setCrDtimes(nowDate);
 					userDetails.setUserId(userId);
-					userDetails.setNotificationsSeen(false);
 					userDetails.setNotificationsSeenDtimes(null);
 				}
 				UserDetails respEntity = userDetailsRepository.save(userDetails);
@@ -176,10 +176,9 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	@Override
-	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(NotificationsSeenRequestDto requestDto) {
+	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(String userId, NotificationsSeenRequestDto requestDto) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -190,16 +189,14 @@ public class UserManagementServiceImpl implements UserManagementService{
 			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
 			if (optionalEntity.isPresent()) {
 				UserDetails entity = optionalEntity.get();
-				if (requestDto.isNotificationsSeen()) {
-					entity.setNotificationsSeen(true);
-					entity.setNotificationsSeenDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+				if (Objects.nonNull(requestDto.getNotificationsSeenDtimes())) {
+					entity.setNotificationsSeenDtimes(requestDto.getNotificationsSeenDtimes());
 					entity.setUpdBy(userId);
 					entity.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					UserDetails savedEntity = userDetailsRepository.save(entity);
 
 					NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
 					responseDto.setUserId(savedEntity.getUserId());
-					responseDto.setNotificationsSeen(savedEntity.getNotificationsSeen());
 					responseDto.setNotificationsSeenDtimes(savedEntity.getNotificationsSeenDtimes());
 					responseWrapper.setResponse(responseDto);
 				} else {
@@ -241,7 +238,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 
 				NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
 				responseDto.setUserId(entity.getUserId());
-				responseDto.setNotificationsSeen(entity.getNotificationsSeen());
 				responseDto.setNotificationsSeenDtimes(entity.getNotificationsSeenDtimes());
 				responseWrapper.setResponse(responseDto);
 			} else {

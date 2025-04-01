@@ -115,9 +115,7 @@ COMMENT ON COLUMN pms.notifications.upd_by IS 'Updated By: The ID or name of the
 COMMENT ON COLUMN pms.notifications.upd_dtimes IS 'Updated Timestamp: The date and time when any field in the record was last updated.';
 
 -- add new columns in user_details table
-ALTER TABLE pms.user_details Add COLUMN notifications_seen boolean DEFAULT FALSE;
 ALTER TABLE pms.user_details Add COLUMN notifications_seen_dtimes timestamp;
-COMMENT ON COLUMN pms.user_details.notifications_seen IS 'Notifications seen: Indicates whether the notifications has been seen (TRUE) or not (FALSE).';
 COMMENT ON COLUMN pms.user_details.notifications_seen_dtimes IS 'Notifications Seen Timestamp: The date and time when the notifications was seen.';
 
 UPDATE pms.auth_policy_h SET policy_file_id = '{""shareableAttributes"":[{""attributeName"":""biometrics"",""group"":""CBEFF"",""source"":[{""attribute"":""registration-client\/NEW\/individualBiometrics"",""filter"":[{""type"":""Iris""}]},{""attribute"":""CNIE\/verification\/biometrics"",""filter"":[{""type"":""Finger""}]}],""encrypted"":true,""format"":""extraction""}],""dataSharePolicies"":{""typeOfShare"":""Data Share"",""validForInMinutes"":""30"",""transactionsAllowed"":""2"",""encryptionType"":""Partner Based"",""shareDomain"":""datashare.datashare"",""source"":""Packet Manager""}}' where id ='mpolicy-default-abis';
