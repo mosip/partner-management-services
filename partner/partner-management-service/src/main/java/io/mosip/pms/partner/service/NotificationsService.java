@@ -15,6 +15,4 @@ public interface NotificationsService {
     public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto);
 
     public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId, DismissNotificationRequestDto dismissNotificationRequestDto);
-
-    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(Integer period, String type);
 }

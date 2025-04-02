@@ -65,9 +65,6 @@ public class NotificationsServiceImpl implements NotificationsService {
     @Value("${mosip.pms.api.id.dismiss.notification.patch}")
     private String patchDismissNotificationId;
 
-    @Value("${mosip.pms.api.id.expiring.certificates.count.get}")
-    private String getExpiringCertCountId;
-
     @Autowired
     PartnerHelper partnerHelper;
 
@@ -348,97 +345,6 @@ public class NotificationsServiceImpl implements NotificationsService {
         }
 
         return responseDto;
-    }
-
-    @Override
-    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(Integer period, String type) {
-        ResponseWrapperV2<ExpiryCertCountResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        try {
-            if (Objects.isNull(period) || Objects.isNull(type) || type.isBlank()) {
-                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-                        ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
-            }
-
-            // Validate cert type
-            if (!(PartnerConstants.ROOT.equals(type) || PartnerConstants.INTERMEDIATE.equals(type) || PARTNER.equals(type))) {
-                LOGGER.error("Invalid certificate type received: {}", type);
-                throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-                        "Invalid certificate type: " + type);
-            }
-
-            ExpiryCertCountResponseDto responseDto = new ExpiryCertCountResponseDto();
-            LocalDateTime validTillDateTime = LocalDateTime.now().plusDays(period).with(LocalTime.MAX);
-
-            //Get Count
-            if (PartnerConstants.ROOT.equals(type) || PartnerConstants.INTERMEDIATE.equals(type)) {
-                responseDto.setCount(getRootOrIntermediateExpiringCertificatesCount(type, validTillDateTime));
-            } else if (PARTNER.equals(type)) {
-                responseDto.setCount(getPartnerExpiringCertificatesCount(validTillDateTime));
-            }
-
-            responseDto.setCertificateType(type);
-            responseDto.setExpiryPeriod(period);
-            responseWrapper.setResponse(responseDto);
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In getExpiringCertsCount method of NotificationsServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-        } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id", "In getExpiringCertsCount method of NotificationsServiceImpl - " + ex.getMessage());
-            String errorCode = ErrorCode.EXPIRING_CERT_COUNT_FETCH_ERROR.getErrorCode();
-            String errorMessage = ErrorCode.EXPIRING_CERT_COUNT_FETCH_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-        }
-        responseWrapper.setId(getExpiringCertCountId);
-        responseWrapper.setVersion(VERSION);
-        return responseWrapper;
-    }
-
-    private long getRootOrIntermediateExpiringCertificatesCount(String type, LocalDateTime validTillDateTime) throws JsonProcessingException {
-        boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-
-        if (!isPartnerAdmin) {
-            throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_EXPIRING_CERTS_COUNT.getErrorCode(),
-                    ErrorCode.UNABLE_TO_GET_EXPIRING_CERTS_COUNT.getErrorMessage());
-        }
-
-        TrustCertTypeListRequestDto trustCertTypeListRequestDto = new TrustCertTypeListRequestDto();
-        trustCertTypeListRequestDto.setCaCertificateType(type);
-        trustCertTypeListRequestDto.setExcludeMosipCA(true);
-        trustCertTypeListRequestDto.setExpiringWithinDate(validTillDateTime);
-
-        TrustCertTypeListResponseDto responseObject = partnerHelper.getTrustCertificatesList(trustCertTypeListRequestDto);
-        return responseObject.getTotalRecords();
-    }
-
-    private long getPartnerExpiringCertificatesCount(LocalDateTime validTillDateTime) throws JsonProcessingException {
-        String userId = getUserId();
-        List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-
-        if (partnerList.isEmpty()) {
-            LOGGER.info("User ID does not exist: {}", userId);
-            throw new PartnerServiceException(
-                    ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-        }
-
-        long count = 0;
-        for (Partner partner : partnerList) {
-            if (Objects.nonNull(partner.getCertificateAlias())) {
-                PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(
-                        partner.getCertificateAlias(),
-                        "pmp.partner.certificaticate.get.rest.uri",
-                        PartnerCertDownloadResponeDto.class);
-
-                X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
-                LocalDateTime certExpiryDateTime = cert.getNotAfter().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-                if (!certExpiryDateTime.isBefore(LocalDateTime.now()) && !certExpiryDateTime.isAfter(validTillDateTime)) {
-                    count++;
-                }
-            }
-        }
-        return count;
     }
 
     private AuthUserDetails authUserDetails() {

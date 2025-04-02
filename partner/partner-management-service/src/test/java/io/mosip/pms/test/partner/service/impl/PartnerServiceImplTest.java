@@ -1522,12 +1522,12 @@ public class PartnerServiceImplTest {
 
 		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
-		pserviceImpl.getPartnerCertificatesDetails();
+		pserviceImpl.getPartnerCertificatesDetails(null);
 	}
 
 	@Test
 	public void getPartnerCertificatesDetailsTestException() throws Exception {
-		pserviceImpl.getPartnerCertificatesDetails();
+		pserviceImpl.getPartnerCertificatesDetails(null);
 	}
 
 	@Test
@@ -1545,7 +1545,7 @@ public class PartnerServiceImplTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPartnerCertificatesDetails();
+		pserviceImpl.getPartnerCertificatesDetails(null);
 	}
 
 	@Test
@@ -1560,7 +1560,7 @@ public class PartnerServiceImplTest {
 		Partner partner = new Partner();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		pserviceImpl.getPartnerCertificatesDetails();
+		pserviceImpl.getPartnerCertificatesDetails(null);
 	}
 
 	@Test

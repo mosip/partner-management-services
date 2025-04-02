@@ -232,7 +232,7 @@ public interface PartnerService {
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
 
-	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails();
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod);
 
 	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 

@@ -8,6 +8,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1662,7 +1664,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod) {
 		ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
@@ -1681,8 +1683,16 @@ public class PartnerServiceImpl implements PartnerService {
 						requestDto.setPartnerId(partner.getId());
 						PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = getPartnerCertificate(requestDto);
 						X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+						if (Objects.nonNull(expiryPeriod)) {
+							LocalDateTime certExpiryDateTime = cert.getNotAfter().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+							LocalDateTime validTillDateTime = LocalDateTime.now().plusDays(expiryPeriod).with(LocalTime.MAX);
 
-						certificateDto.setIsCertificateAvailable(true);
+							// Skip certificates that are already expired or expire beyond the expiry period
+							if (certExpiryDateTime.isBefore(LocalDateTime.now()) || certExpiryDateTime.isAfter(validTillDateTime)) {
+								continue;
+							}
+						}
+                        certificateDto.setIsCertificateAvailable(true);
 						certificateDto.setCertificateIssuedTo(PartnerUtil.getCertificateName(cert.getSubjectDN().getName()));
 						certificateDto.setCertificateUploadDateTime(cert.getNotBefore());
 						certificateDto.setCertificateExpiryDateTime(cert.getNotAfter());
