@@ -459,7 +459,8 @@ public class PartnerManagementController {
 			)
 			@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
-			@RequestParam(value = "issuedBy", required = false) String issuedBy
+			@RequestParam(value = "issuedBy", required = false) String issuedBy,
+			@RequestParam(value = "expiryPeriod", required = false) Integer expiryPeriod
 	) {
 		partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
@@ -477,6 +478,9 @@ public class PartnerManagementController {
 		}
 		if (issuedBy != null) {
 			filterDto.setIssuedBy(issuedBy);
+		}
+		if (expiryPeriod != null){
+			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return partnerManagementService.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
