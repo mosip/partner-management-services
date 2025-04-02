@@ -48,15 +48,12 @@ public class BatchJobHelper {
 	@Autowired
 	NotificationServiceRepository notificationServiceRepository;
 
-	public boolean validateActivePartnerId(Optional<Partner> partnerById) {
+	public boolean validatePartnerId(Optional<Partner> partnerById) {
 		if (partnerById.isEmpty()) {
 			return false;
 		} else {
-			if (!partnerById.get().getIsActive()) {
-				return false;
-			} else {
-				return true;
-			}
+			return true;
+
 		}
 	}
 
@@ -78,7 +75,7 @@ public class BatchJobHelper {
 				}
 			});
 			if (foundList.size() == 0 && !skipPartnerIds.contains(partner.getId())) {
-				//if (foundList.size() == 0 && partner.getId().contains("mayurad")) {
+				// if (foundList.size() == 0 && partner.getId().contains("mayurad")) {
 				nonAdminPartnersList.add(partner);
 			}
 		});
@@ -91,12 +88,12 @@ public class BatchJobHelper {
 		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
 			Optional<Partner> partnerAdminDetails = getPartnerById(keycloakPartnerAdminId);
-			if (validateActivePartnerId(partnerAdminDetails)) {
+			if (validatePartnerId(partnerAdminDetails)) {
 				if (!skipPartnerIds.contains(partnerAdminDetails.get().getId())) {
 					pmsPartnerAdmins.add(partnerAdminDetails.get());
 				}
 			} else {
-				LOGGER.debug("this partner admin is not active or valid in PMS, {}", keycloakPartnerAdminId);
+				LOGGER.debug("this partner admin is not a valid user in PMS, {}", keycloakPartnerAdminId);
 			}
 		});
 		return pmsPartnerAdmins;
@@ -141,9 +138,8 @@ public class BatchJobHelper {
 		return cert;
 	}
 
-	public NotificationEntity saveCertificateExpiryNotification(String certificateType,
-			Partner partnerDetails, List<CertificateDetailsDto> certificateDetailsList)
-			throws BatchJobServiceException {
+	public NotificationEntity saveCertificateExpiryNotification(String certificateType, Partner partnerDetails,
+			List<CertificateDetailsDto> certificateDetailsList) throws BatchJobServiceException {
 		try {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(certificateDetailsList);
