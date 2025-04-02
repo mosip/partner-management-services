@@ -134,7 +134,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             List<String> partnerIdList = new ArrayList<>();
             for (Partner partner : partnerList) {
                 partnerHelper.validatePartnerId(partner, userId);
-                if (!isPartnerAdmin && partner.getIsActive()) {
+                if (isPartnerAdmin || partner.getIsActive()) {
                     partnerIdList.add(partner.getId());
                 }
             }
