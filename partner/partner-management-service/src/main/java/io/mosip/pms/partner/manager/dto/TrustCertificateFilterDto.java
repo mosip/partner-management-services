@@ -10,4 +10,5 @@ public class TrustCertificateFilterDto {
     private String partnerDomain;
     private String issuedTo;
     private String issuedBy;
+    private Integer expiryPeriod;
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -1044,6 +1045,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			trustCertTypeListRequestDto.setCertId(filterDto.getCertificateId());
 			trustCertTypeListRequestDto.setIssuedTo(filterDto.getIssuedTo());
 			trustCertTypeListRequestDto.setIssuedBy(filterDto.getIssuedBy());
+			if (Objects.nonNull(filterDto.getExpiryPeriod())) {
+				LocalDateTime validTillDateTime = LocalDateTime.now().plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
+				trustCertTypeListRequestDto.setExpiringWithinDate(validTillDateTime);
+			}
 			trustCertTypeListRequestDto.setPageNumber(pageNo + 1);
 			trustCertTypeListRequestDto.setPageSize(pageSize);
 			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
