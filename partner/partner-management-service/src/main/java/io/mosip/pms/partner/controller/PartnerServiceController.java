@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.mosip.pms.common.dto.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -370,8 +371,8 @@ public class PartnerServiceController {
 			@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails() {
-		return  partnerService.getPartnerCertificatesDetails();
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(@RequestParam(name = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod) {
+		return  partnerService.getPartnerCertificatesDetails(expiryPeriod);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")

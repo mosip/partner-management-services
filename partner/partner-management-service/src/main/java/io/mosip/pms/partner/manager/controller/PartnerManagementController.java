@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
@@ -460,7 +461,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
 			@RequestParam(value = "issuedBy", required = false) String issuedBy,
-			@RequestParam(value = "expiryPeriod", required = false) Integer expiryPeriod
+			@RequestParam(value = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod
 	) {
 		partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();

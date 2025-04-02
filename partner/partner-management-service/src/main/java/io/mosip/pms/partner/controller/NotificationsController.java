@@ -136,28 +136,6 @@ public class NotificationsController {
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetexpiringcertificatescount())")
-    @GetMapping(value = "/expiring-certs-count")
-    @Operation(summary = "This endpoint retrieves a count of expiring certificates.",
-            description = "This endpoint is available since release-1.3.x and is used to get count of expiring certificates.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-    })
-    public ResponseWrapperV2<ExpiryCertCountResponseDto> getExpiringCertsCount(
-            @RequestParam(value = "period", required = true) Integer period,
-            @Parameter(
-                    description = "Type of certificates",
-                    in = ParameterIn.QUERY,
-                    schema = @Schema(allowableValues = {"root", "intermediate", "partner"})
-            )
-            @RequestParam(value = "type", required = true) String type
-
-    ) {
-        return notificationsService.getExpiringCertsCount(period, type);
-    }
-
     public void validatePaginationParams(Integer pageNo, Integer pageSize) {
         // Validate pageNo and pageSize
         if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {

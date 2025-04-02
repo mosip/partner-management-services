@@ -605,7 +605,7 @@ public class PartnerServiceControllerTest {
         certificateDtoList.add(certificateDto);
 
         responseWrapper.setResponse(certificateDtoList);
-        when(partnerService.getPartnerCertificatesDetails()).thenReturn(responseWrapper);
+        when(partnerService.getPartnerCertificatesDetails(any())).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-certificates-details")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
