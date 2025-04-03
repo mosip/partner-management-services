@@ -109,7 +109,7 @@ public class EmailNotificationService {
                  PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
                 CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
                 if (cert != null) {
-                    context.put("partnerId", cert.getPartnerId());
+                    context.put("partnerId", notificationEntity.getPartnerId());
                     context.put("certificateId", cert.getCertificateId());
                     context.put("expiryDateTime", cert.getExpiryDateTime());
                     context.put("partnerDomain", cert.getPartnerDomain());
