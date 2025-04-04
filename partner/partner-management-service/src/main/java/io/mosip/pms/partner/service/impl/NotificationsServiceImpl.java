@@ -324,7 +324,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     private String getUserBy() {
-        return authUserDetails().getMail();
+        return authUserDetails().getUserId();
     }
 
     public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.mosip.pms.common.util.KeyManagerHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,9 @@ public class BatchJobHelper {
 
 	@Autowired
 	NotificationServiceRepository notificationServiceRepository;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	public boolean validatePartnerId(Optional<Partner> partnerById) {
 		if (partnerById.isEmpty()) {
@@ -149,7 +153,7 @@ public class BatchJobHelper {
 			notification.setPartnerId(partnerDetails.getId());
 			notification.setNotificationType(getNotificationType(certificateType));
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerDetails.getEmailId());
+			notification.setEmailId(keyManagerHelper.encryptData(partnerDetails.getEmailId()));
 			notification.setEmailLangCode(partnerDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);

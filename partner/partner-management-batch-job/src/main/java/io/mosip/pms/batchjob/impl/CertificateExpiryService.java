@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.mosip.pms.batchjob.util.KeyManagerHelper;
+import io.mosip.pms.common.util.KeyManagerHelper;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 

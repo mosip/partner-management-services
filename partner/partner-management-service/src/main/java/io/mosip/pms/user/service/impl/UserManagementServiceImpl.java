@@ -69,8 +69,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	private String getUserBy() {
-		String crBy = authUserDetails().getMail();
-		return crBy;
+        return authUserDetails().getUserId();
 	}
 
 	@Override

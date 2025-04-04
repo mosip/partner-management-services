@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.common.util.KeyManagerHelper;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.entity.NotificationEntity;
@@ -56,6 +57,9 @@ public class EmailNotificationService {
 
     @Autowired
     TemplateHelper templateHelper;
+
+    @Autowired
+    KeyManagerHelper keyManagerHelper;
 
     @Transactional
     public void sendEmailNotification(String notificationId) {
@@ -143,7 +147,7 @@ public class EmailNotificationService {
             MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
             // Add email details
-            requestBody.add("mailTo", notificationEntity.getEmailId());
+            requestBody.add("mailTo", keyManagerHelper.decryptData(notificationEntity.getEmailId()));
             requestBody.add("mailSubject", emailSubject);
             requestBody.add("mailContent", emailTemplate);
 
