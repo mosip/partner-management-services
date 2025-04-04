@@ -1699,6 +1699,9 @@ public class PartnerServiceImpl implements PartnerService {
 						certificateDto.setPartnerId(partner.getId());
 						certificateDto.setPartnerType(partner.getPartnerTypeCode());
 					} catch (PartnerServiceException ex) {
+						if (Objects.nonNull(expiryPeriod)) {
+							continue;
+						}
 						LOGGER.info("Could not fetch partner certificate :" + ex.getMessage());
 						certificateDto.setIsCertificateAvailable(false);
 						certificateDto.setPartnerId(partner.getId());
