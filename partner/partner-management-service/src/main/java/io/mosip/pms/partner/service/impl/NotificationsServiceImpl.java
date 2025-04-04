@@ -269,13 +269,16 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             String notificationPartnerId = notificationEntity.getPartnerId();
             boolean partnerIdExists = false;
+            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 
             // check if partnerId is associated with user
             for (Partner partner : partnerList) {
                 partnerHelper.validatePartnerId(partner, userId);
                 if (partner.getId().equals(notificationPartnerId)) {
                     //check if partner is active or not
-                    partnerHelper.checkIfPartnerIsNotActive(partner);
+                    if(!isPartnerAdmin) {
+                        partnerHelper.checkIfPartnerIsNotActive(partner);
+                    }
                     partnerIdExists = true;
                     break;
                 }
