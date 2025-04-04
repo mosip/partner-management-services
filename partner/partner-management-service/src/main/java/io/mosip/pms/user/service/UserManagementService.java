@@ -17,5 +17,5 @@ public interface UserManagementService {
 
 	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(String userId, NotificationsSeenRequestDto requestDto);
 
-	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp();
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(String userId);
 }
