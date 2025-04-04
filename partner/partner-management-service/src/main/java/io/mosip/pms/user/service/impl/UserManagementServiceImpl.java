@@ -221,10 +221,9 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	@Override
-	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp() {
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(String userId) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
