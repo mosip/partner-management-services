@@ -70,7 +70,7 @@ public class KeycloakHelper {
 			}
 			LOGGER.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
 			pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
-			LOGGER.info("PMS has {} Active Partner Admin users.", pmsPartnerAdmins.size());
+			LOGGER.info("PMS has {} Partner Admin users.", pmsPartnerAdmins.size());
 		} catch (HttpStatusCodeException e) {
 			LOGGER.error("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
 			throw new BatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(),

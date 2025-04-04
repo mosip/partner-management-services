@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import io.mosip.pms.batchjob.tasklets.RootAndIntermediateCertificateExpiryTasklet;
+import io.mosip.pms.batchjob.tasklets.WeeklyNotificationsTasklet;
 import io.mosip.pms.batchjob.tasklets.PartnerCertificateExpiryTasklet;
 
 @Configuration
@@ -28,6 +29,9 @@ public class BatchJobConfig {
 
 	@Autowired
 	private PartnerCertificateExpiryTasklet partnerCertificateExpiryTasklet;
+
+	@Autowired
+	private WeeklyNotificationsTasklet weeklyNotificationsTasklet;
 
 	@Autowired
 	private DeletePastNotificationsTasklet deletePastNotificationsTasklet;
@@ -47,8 +51,14 @@ public class BatchJobConfig {
 	}
 
 	@Bean
+	public Step weeklyNotificationsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("weeklyNotificationsStep", jobRepository)
+				.tasklet(weeklyNotificationsTasklet, transactionManager).build();
+	}
+
+	@Bean
 	public Step deletePastNotificationsStep(JobRepository jobRepository,
-											 PlatformTransactionManager transactionManager) {
+			PlatformTransactionManager transactionManager) {
 		return new StepBuilder("deletePastNotificationsStep", jobRepository)
 				.tasklet(deletePastNotificationsTasklet, transactionManager).build();
 	}
@@ -68,8 +78,15 @@ public class BatchJobConfig {
 	}
 
 	@Bean
+	public Job weeklyNotificationsJob(JobRepository jobRepository,
+			@Qualifier("weeklyNotificationsStep") Step weeklyNotificationsStep) {
+		return new JobBuilder("weeklyNotificationsJob", jobRepository).incrementer(new RunIdIncrementer())
+				.start(weeklyNotificationsStep).build();
+	}
+
+	@Bean
 	public Job deletePastNotificationsJob(JobRepository jobRepository,
-										   @Qualifier("deletePastNotificationsStep") Step deletePastNotificationsStep) {
+			@Qualifier("deletePastNotificationsStep") Step deletePastNotificationsStep) {
 		return new JobBuilder("deletePastNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(deletePastNotificationsStep).build();
 	}

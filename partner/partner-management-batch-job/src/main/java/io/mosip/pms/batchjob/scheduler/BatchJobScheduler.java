@@ -48,6 +48,10 @@ public class BatchJobScheduler {
 	@Qualifier("partnerCertificateExpiryJob")
 	@Autowired
 	private Job partnerCertificateExpiryJob;
+	
+	@Qualifier("weeklyNotificationsJob")
+	@Autowired
+	private Job weeklyNotificationsJob;
 
 	@Qualifier("deletePastNotificationsJob")
 	@Autowired
@@ -101,6 +105,23 @@ public class BatchJobScheduler {
 				 | JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "deletePastNotificationsJob failed", e.getMessage(), null);
+		}
+	}
+	
+	@Scheduled(cron = "${mosip.pms.batch.job.weekly.notifications.cron.schedule}")
+	public void weeklyNotificationScheduler() {
+
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(weeklyNotificationsJob, jobParam);
+
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				 | JobParametersInvalidException e) {
+
+			log.error(LOGDISPLAY, "weeklyNotificationsJob failed", e.getMessage(), null);
 		}
 	}
 
