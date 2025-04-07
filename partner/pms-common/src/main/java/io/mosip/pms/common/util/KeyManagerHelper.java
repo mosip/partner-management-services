@@ -68,7 +68,7 @@ public class KeyManagerHelper {
 			throw e;
 		} catch (Exception e) {
 			LOGGER.debug("sessionId", "idType", "id",
-					"In getTrustCertificates method of KeyManagerHelper - " + e.getMessage());
+					"In getPartnerCertificate method of KeyManagerHelper - " + e.getMessage());
 			throw new ApiAccessibleException(
 					ApiAccessibleExceptionConstant.PARTNER_CERTIFICATE_FETCH_ERROR.getErrorCode(),
 					ApiAccessibleExceptionConstant.PARTNER_CERTIFICATE_FETCH_ERROR.getErrorMessage()
