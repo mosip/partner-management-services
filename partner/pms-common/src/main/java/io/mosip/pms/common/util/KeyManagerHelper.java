@@ -1,10 +1,13 @@
 package io.mosip.pms.common.util;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +39,17 @@ public class KeyManagerHelper {
 	@Value("${pmp.trust.certificates.post.rest.uri}")
 	private String keyManagerTrustCertificateUrl;
 
-	@Value("${pmp.encrypt.data.with.pin.post.rest.uri}")
-	private String keyManagerEncryptDataWithPinUrl;
+	@Value("${pmp.encrypt.data.post.rest.uri}")
+	private String keyManagerEncryptDataUrl;
 
-	@Value("${pmp.decrypt.data.with.pin.post.rest.uri}")
-	private String keyManagerDecryptDataWithPinUrl;
+	@Value("${pmp.decrypt.data.post.rest.uri}")
+	private String keyManagerDecryptDataUrl;
+
+	@Value("${mosip.service.keymanager.crypto.appId}")
+	private String appId;
+
+	@Value("${mosip.service.keymanager.crypto.refId}")
+	private String refId;
 
 	@Autowired
 	RestUtil restUtil;
@@ -116,14 +125,16 @@ public class KeyManagerHelper {
 	public String encryptData(String data) {
 		try {
 			CryptoRequestDto cryptoRequestDto = new CryptoRequestDto();
-			cryptoRequestDto.setData(data);
-			cryptoRequestDto.setUserPin(PartnerConstants.CRYPTO_PIN);
+			cryptoRequestDto.setData(CryptoUtil.encodeToURLSafeBase64(data.getBytes(StandardCharsets.UTF_8)));
+			cryptoRequestDto.setApplicationId(appId);
+			cryptoRequestDto.setReferenceId(refId);
+			cryptoRequestDto.setTimeStamp(LocalDateTime.now());
 
 			RequestWrapperV2<CryptoRequestDto> requestWrapper = new RequestWrapperV2<>();
 			requestWrapper.setRequest(cryptoRequestDto);
 
 			Map<String, Object> response = restUtil.postApi(
-					keyManagerEncryptDataWithPinUrl,
+					keyManagerEncryptDataUrl,
 					null,
 					"",
 					"",
@@ -131,7 +142,7 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			validateApiResponse(response, keyManagerEncryptDataWithPinUrl);
+			validateApiResponse(response, keyManagerEncryptDataUrl);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			return responseDto.getData();
@@ -150,13 +161,15 @@ public class KeyManagerHelper {
 		try {
 			CryptoRequestDto cryptoRequestDto = new CryptoRequestDto();
 			cryptoRequestDto.setData(data);
-			cryptoRequestDto.setUserPin(PartnerConstants.CRYPTO_PIN);
+			cryptoRequestDto.setApplicationId(appId);
+			cryptoRequestDto.setReferenceId(refId);
+			cryptoRequestDto.setTimeStamp(LocalDateTime.now());
 
 			RequestWrapperV2<CryptoRequestDto> requestWrapper = new RequestWrapperV2<>();
 			requestWrapper.setRequest(cryptoRequestDto);
 
 			Map<String, Object> response = restUtil.postApi(
-					keyManagerDecryptDataWithPinUrl,
+					keyManagerDecryptDataUrl,
 					null,
 					"",
 					"",
@@ -164,12 +177,18 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			validateApiResponse(response, keyManagerDecryptDataWithPinUrl);
+			validateApiResponse(response, keyManagerDecryptDataUrl);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
-			return responseDto.getData();
+			// Decode Base64-encoded response data
+			return new String(
+					Base64.getDecoder().decode(responseDto.getData()),
+					StandardCharsets.UTF_8
+			);
 		} catch (ApiAccessibleException e) {
-			throw e;
+			LOGGER.info("Error in decryptData of KeyManagerHelper: {}", e.getMessage());
+			// Return original data in case of any decryption error for backward compatibility
+			return data;
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", "Exception in decryptData of KeyManagerHelper- {}", ex.getMessage());
 			throw new ApiAccessibleException(

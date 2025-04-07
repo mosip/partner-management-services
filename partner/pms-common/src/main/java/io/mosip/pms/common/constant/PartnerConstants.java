@@ -92,6 +92,4 @@ public final class PartnerConstants {
 	
 	public static final String PARTNER_DOMAIN_DEVICE = "DEVICE";
 
-	public static final String CRYPTO_PIN = "1234";
-	
 }
