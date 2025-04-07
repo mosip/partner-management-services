@@ -196,7 +196,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 					UserDetails savedEntity = userDetailsRepository.save(entity);
 
 					NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
-					responseDto.setUserId(savedEntity.getUserId());
 					responseDto.setNotificationsSeenDtimes(savedEntity.getNotificationsSeenDtimes());
 					responseWrapper.setResponse(responseDto);
 				} else {
@@ -236,7 +235,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 				UserDetails entity = optionalEntity.get();
 
 				NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
-				responseDto.setUserId(entity.getUserId());
 				responseDto.setNotificationsSeenDtimes(entity.getNotificationsSeenDtimes());
 				responseWrapper.setResponse(responseDto);
 			} else {
