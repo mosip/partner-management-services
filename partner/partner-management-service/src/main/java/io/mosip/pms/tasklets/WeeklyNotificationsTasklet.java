@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.tasklets;
+package io.mosip.pms.tasklets;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -17,15 +16,16 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.impl.EmailNotificationService;
-import io.mosip.pms.batchjob.util.BatchJobHelper;
-import io.mosip.pms.batchjob.util.KeycloakHelper;
-import io.mosip.pms.batchjob.util.PartnerCertificateExpiryHelper;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.tasklets.service.EmailNotificationService;
+import io.mosip.pms.tasklets.util.BatchJobHelper;
+import io.mosip.pms.tasklets.util.KeycloakHelper;
+import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create weekly notifications for the Partner certificates
@@ -36,7 +36,7 @@ import io.mosip.pms.common.entity.Partner;
  */
 @Component
 public class WeeklyNotificationsTasklet implements Tasklet {
-	private Logger log = LoggerConfiguration.logConfig(WeeklyNotificationsTasklet.class);
+	private Logger log = PMSLogger.getLogger(WeeklyNotificationsTasklet.class);
 
 	@Autowired
 	KeycloakHelper keycloakHelper;

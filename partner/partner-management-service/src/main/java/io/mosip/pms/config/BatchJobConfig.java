@@ -2,9 +2,8 @@
  * Copyright
  * 
  */
-package io.mosip.pms.batchjob.config;
+package io.mosip.pms.config;
 
-import io.mosip.pms.batchjob.tasklets.DeletePastNotificationsTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -17,9 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import io.mosip.pms.batchjob.tasklets.RootAndIntermediateCertificateExpiryTasklet;
-import io.mosip.pms.batchjob.tasklets.WeeklyNotificationsTasklet;
-import io.mosip.pms.batchjob.tasklets.PartnerCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
+import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
 
 @Configuration
 public class BatchJobConfig {

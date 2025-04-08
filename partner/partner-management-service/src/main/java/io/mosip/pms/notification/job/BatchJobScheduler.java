@@ -2,9 +2,8 @@
  * Copyright
  * 
  */
-package io.mosip.pms.batchjob.scheduler;
+package io.mosip.pms.notification.job;
 
-import org.slf4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -21,7 +20,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.util.PMSLogger;
 
 /**
  * This class is a job scheduler of batch in which jobs are getting executed
@@ -32,7 +32,7 @@ import io.mosip.pms.batchjob.config.LoggerConfiguration;
 @EnableScheduling
 public class BatchJobScheduler {
 
-	private Logger log = LoggerConfiguration.logConfig(BatchJobScheduler.class);
+	private Logger log = PMSLogger.getLogger(BatchJobScheduler.class);
 
 	private static final String LOGDISPLAY = "{} - {} - {}";
 
@@ -44,11 +44,11 @@ public class BatchJobScheduler {
 	@Qualifier("rootAndIntermediateCertificateExpiryJob")
 	@Autowired
 	private Job rootAndIntermediateCertificateExpiryJob;
-	
+
 	@Qualifier("partnerCertificateExpiryJob")
 	@Autowired
 	private Job partnerCertificateExpiryJob;
-	
+
 	@Qualifier("weeklyNotificationsJob")
 	@Autowired
 	private Job weeklyNotificationsJob;
@@ -73,7 +73,7 @@ public class BatchJobScheduler {
 			log.error(LOGDISPLAY, "RootAndIntermediateCertificateExpiryJob failed", e.getMessage(), null);
 		}
 	}
-              
+
 	@Scheduled(cron = "${mosip.pms.batch.job.partner.cert.expiry.cron.schedule}")
 	public void partnerCertificateExpiryScheduler() {
 
@@ -102,12 +102,12 @@ public class BatchJobScheduler {
 			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
 
 		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				 | JobParametersInvalidException e) {
+				| JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "deletePastNotificationsJob failed", e.getMessage(), null);
 		}
 	}
-	
+
 	@Scheduled(cron = "${mosip.pms.batch.job.weekly.notifications.cron.schedule}")
 	public void weeklyNotificationScheduler() {
 
@@ -119,7 +119,7 @@ public class BatchJobScheduler {
 			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
 
 		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				 | JobParametersInvalidException e) {
+				| JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "weeklyNotificationsJob failed", e.getMessage(), null);
 		}

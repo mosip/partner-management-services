@@ -1,11 +1,10 @@
-package io.mosip.pms.batchjob.util;
+package io.mosip.pms.tasklets.util;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,16 +14,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.exception.BatchJobServiceException;
+import io.mosip.pms.partner.manager.constant.ErrorCode;
 
 @Component
 @EnableCaching
 public class KeycloakHelper {
-	private static final Logger LOGGER = LoggerConfiguration.logConfig(KeycloakHelper.class);
+	private Logger log = PMSLogger.getLogger(KeycloakHelper.class);
 
 	private static final String PARTNER_ADMIN = "PARTNER_ADMIN";
 	private static final String USER_ROLE = "userRole";
@@ -51,7 +51,7 @@ public class KeycloakHelper {
 			String urlWithPath = UriComponentsBuilder.fromUriString(roleUsersUrl).buildAndExpand(pathSegments)
 					.toUriString();
 
-			LOGGER.info("Fetching Partner Admin user IDs from URL: {}", urlWithPath);
+			log.info("Fetching Partner Admin user IDs from URL: {}", urlWithPath);
 
 			// Send API request
 			Object response = restUtil.getApiWithContentType(roleUsersUrl, pathSegments, Object.class,
@@ -64,21 +64,21 @@ public class KeycloakHelper {
 					}
 				}
 			} else {
-				LOGGER.error("Unexpected API response format while fetching Partner Admin user IDs. {}");
-				throw new BatchJobServiceException(ErrorCodes.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getCode(),
+				log.error("Unexpected API response format while fetching Partner Admin user IDs. {}");
+				throw new BatchJobServiceException(ErrorCode.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getErrorCode(),
 						"Invalid response format received from API.");
 			}
-			LOGGER.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
+			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
 			pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
-			LOGGER.info("PMS has {} Partner Admin users.", pmsPartnerAdmins.size());
+			log.info("PMS has {} Partner Admin users.", pmsPartnerAdmins.size());
 		} catch (HttpStatusCodeException e) {
-			LOGGER.error("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
-			throw new BatchJobServiceException(ErrorCodes.API_NOT_ACCESSIBLE.getCode(),
+			log.error("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
+			throw new BatchJobServiceException(ErrorCode.API_NOT_ACCESSIBLE.getErrorCode(),
 					"Failed to access the API: " + e.getMessage(), e);
 		} catch (BatchJobServiceException e) {
-			LOGGER.error("Failed to fetch Partner Admin user IDs: {}", e.getMessage(), e);
+			log.error("Failed to fetch Partner Admin user IDs: {}", e.getMessage(), e);
 		} catch (Exception e) {
-			LOGGER.error("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
+			log.error("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
 		}
 		return pmsPartnerAdmins;
 	}

@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.tasklets;
+package io.mosip.pms.tasklets;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -16,17 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.impl.CertificateExpiryService;
-import io.mosip.pms.batchjob.impl.EmailNotificationService;
-import io.mosip.pms.batchjob.util.BatchJobHelper;
-import io.mosip.pms.batchjob.util.KeycloakHelper;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.tasklets.service.EmailNotificationService;
+import io.mosip.pms.tasklets.util.BatchJobHelper;
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
+import io.mosip.pms.tasklets.util.KeycloakHelper;
 
 /**
  * This Batch Job will create notifications for the Root and Intermediate
@@ -38,13 +38,13 @@ import io.mosip.pms.common.entity.Partner;
 @Component
 public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
-	private Logger log = LoggerConfiguration.logConfig(RootAndIntermediateCertificateExpiryTasklet.class);
+	private Logger log = PMSLogger.getLogger(RootAndIntermediateCertificateExpiryTasklet.class);
 
 	@Value("#{'${mosip.pms.batch.job.root.intermediate.cert.expiry.periods}'.split(',')}")
 	private List<Integer> rootIntermediateExpiryPeriods;
 
 	@Autowired
-	CertificateExpiryService certificateExpiryService;
+	KeyManagerHelper keyManagerHelper;
 
 	@Autowired
 	BatchJobHelper batchJobHelper;
@@ -81,8 +81,8 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 					certificateTypes.forEach(certificateType -> {
 						log.info("Starting execution for " + certificateType + " certificate, for expiry period, {}",
 								expiryPeriod + " days");
-						TrustCertTypeListResponseDto response = certificateExpiryService
-								.getTrustCertificates(certificateType, validTillDateTime);
+						TrustCertTypeListResponseDto response = keyManagerHelper.getTrustCertificates(certificateType,
+								validTillDateTime);
 						log.debug("Response received, {}", response);
 						List<String> countPerCertTypeExpiryPeriod = new ArrayList<String>();
 						if (response.getAllPartnerCertificates().size() > 0) {

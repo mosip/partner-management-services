@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.config;
+package io.mosip.pms.config;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;

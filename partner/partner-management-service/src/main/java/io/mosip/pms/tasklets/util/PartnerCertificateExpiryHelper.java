@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.util;
+package io.mosip.pms.tasklets.util;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
@@ -7,44 +7,36 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.impl.CertificateExpiryService;
-import io.mosip.pms.batchjob.impl.EmailNotificationService;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.util.PMSLogger;
 
 @Component
 public class PartnerCertificateExpiryHelper {
 
-	private Logger log = LoggerConfiguration.logConfig(PartnerCertificateExpiryHelper.class);
-	
+	private Logger log = PMSLogger.getLogger(PartnerCertificateExpiryHelper.class);
+
 	@Value("#{'${mosip.pms.batch.job.partner.cert.expiry.periods}'.split(',')}")
 	private List<Integer> partnerCertExpiryPeriods;
-
-	@Autowired
-	KeycloakHelper keycloakHelper;
 
 	@Autowired
 	BatchJobHelper batchJobHelper;
 
 	@Autowired
-	CertificateExpiryService certificateExpiryService;
+	KeyManagerHelper keyManagerHelper;
 
-	@Autowired
-	EmailNotificationService emailNotificationService;
-	
 	public X509Certificate getDecodedCertificate(Partner pmsPartner) {
 		X509Certificate decodedPartnerCertificate = null;
 		if (pmsPartner.getCertificateAlias() != null) {
 			try {
-				PartnerCertDownloadResponeDto certResp = certificateExpiryService
+				PartnerCertDownloadResponeDto certResp = keyManagerHelper
 						.getPartnerCertificate(pmsPartner.getCertificateAlias());
 
 				decodedPartnerCertificate = batchJobHelper.decodeCertificateData(certResp.getCertificateData());

@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.exceptions;
+package io.mosip.pms.exception;
 
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import lombok.Getter;

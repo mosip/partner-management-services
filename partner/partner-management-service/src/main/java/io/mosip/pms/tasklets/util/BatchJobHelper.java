@@ -1,4 +1,4 @@
-package io.mosip.pms.batchjob.util;
+package io.mosip.pms.tasklets.util;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.batchjob.config.LoggerConfiguration;
-import io.mosip.pms.batchjob.constants.ErrorCodes;
-import io.mosip.pms.batchjob.exceptions.BatchJobServiceException;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
@@ -30,11 +27,14 @@ import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.exception.BatchJobServiceException;
+import io.mosip.pms.partner.manager.constant.ErrorCode;
 
 @Component
 public class BatchJobHelper {
 
-	private static final Logger LOGGER = LoggerConfiguration.logConfig(BatchJobHelper.class);
+	private Logger log = PMSLogger.getLogger(BatchJobHelper.class);
 
 	@Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
 	private List<String> skipPartnerIds;
@@ -63,7 +63,7 @@ public class BatchJobHelper {
 	}
 
 	public List<Partner> getAllActiveNonAdminPartners(List<Partner> pmsPartnerAdmins) {
-		LOGGER.info("As per configuration, number of partners for which notifications are to be skipped is {}",
+		log.info("As per configuration, number of partners for which notifications are to be skipped is {}",
 				skipPartnerIds.size());
 		List<Partner> partnersList = partnerRepository.findAllByIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue();
 		List<Partner> nonAdminPartnersList = new ArrayList<Partner>();
@@ -83,7 +83,7 @@ public class BatchJobHelper {
 	}
 
 	public List<Partner> getValidPartnerAdminsInPms(List<String> keycloakPartnerAdmins) {
-		LOGGER.info("As per configuration, number of partners for which notifications are to be skipped is {}",
+		log.info("As per configuration, number of partners for which notifications are to be skipped is {}",
 				skipPartnerIds.size());
 		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
 		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
@@ -93,7 +93,7 @@ public class BatchJobHelper {
 					pmsPartnerAdmins.add(partnerAdminDetails.get());
 				}
 			} else {
-				LOGGER.debug("this partner admin is not a valid user in PMS, {}", keycloakPartnerAdminId);
+				log.debug("this partner admin is not a valid user in PMS, {}", keycloakPartnerAdminId);
 			}
 		});
 		return pmsPartnerAdmins;
@@ -101,22 +101,22 @@ public class BatchJobHelper {
 
 	public void validateApiResponse(Map<String, Object> response, String apiUrl) {
 		if (response == null) {
-			LOGGER.error("Received null response from API: {}", apiUrl);
-			throw new BatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(),
-					ErrorCodes.API_NULL_RESPONSE.getMessage());
+			log.error("Received null response from API: {}", apiUrl);
+			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
+					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
 		}
 		if (response.containsKey(PartnerConstants.ERRORS)) {
 			List<Map<String, Object>> errorList = (List<Map<String, Object>>) response.get(PartnerConstants.ERRORS);
 			if (errorList != null && !errorList.isEmpty()) {
-				LOGGER.error("Error occurred while fetching data: {}", errorList);
+				log.error("Error occurred while fetching data: {}", errorList);
 				throw new BatchJobServiceException(String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORCODE)),
 						String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORMESSAGE)));
 			}
 		}
 		if (!response.containsKey(PartnerConstants.RESPONSE) || response.get(PartnerConstants.RESPONSE) == null) {
-			LOGGER.error("Missing response data in API call: {}", apiUrl);
-			throw new BatchJobServiceException(ErrorCodes.API_NULL_RESPONSE.getCode(),
-					ErrorCodes.API_NULL_RESPONSE.getMessage());
+			log.error("Missing response data in API call: {}", apiUrl);
+			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
+					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
 		}
 	}
 
@@ -131,9 +131,9 @@ public class BatchJobHelper {
 			cert = (X509Certificate) certificateFactory
 					.generateCertificate(new ByteArrayInputStream(decodedCertificate));
 		} catch (Exception ex) {
-			LOGGER.error("Could not decode the certificate data :" + ex.getMessage());
-			throw new BatchJobServiceException(ErrorCodes.UNABLE_TO_DECODE_CERTIFICATE.getCode(),
-					ErrorCodes.UNABLE_TO_DECODE_CERTIFICATE.getMessage());
+			log.error("Could not decode the certificate data :" + ex.getMessage());
+			throw new BatchJobServiceException(ErrorCode.UNABLE_TO_DECODE_CERTIFICATE.getErrorCode(),
+					ErrorCode.UNABLE_TO_DECODE_CERTIFICATE.getErrorMessage());
 		}
 		return cert;
 	}
@@ -155,13 +155,13 @@ public class BatchJobHelper {
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
 			notification.setCreatedDatetime(LocalDateTime.now(ZoneId.of("UTC")));
 			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
-			LOGGER.info("saving notifications, {}", notification);
+			log.info("saving notifications, {}", notification);
 			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
 			return savedNotification;
 		} catch (JsonProcessingException jpe) {
-			LOGGER.error("Error creating the notification: {}", jpe.getMessage());
-			throw new BatchJobServiceException(ErrorCodes.NOTIFICATION_CREATE_ERROR.getCode(),
-					ErrorCodes.NOTIFICATION_CREATE_ERROR.getMessage());
+			log.error("Error creating the notification: {}", jpe.getMessage());
+			throw new BatchJobServiceException(ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorCode(),
+					ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorMessage());
 		}
 	}
 
@@ -176,8 +176,8 @@ public class BatchJobHelper {
 		case PartnerConstants.WEEKLY:
 			return PartnerConstants.WEEKLY_SUMMARY;
 		default:
-			throw new BatchJobServiceException(ErrorCodes.INVALID_CERTIFICATE_TYPE.getCode(),
-					ErrorCodes.INVALID_CERTIFICATE_TYPE.getMessage());
+			throw new BatchJobServiceException(ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorCode(),
+					ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorMessage());
 		}
 	}
 
