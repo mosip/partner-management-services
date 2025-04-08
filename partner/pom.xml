@@ -80,7 +80,7 @@
         <sonar.test.exclusions>**/test/**/*.*</sonar.test.exclusions>
         <sonar.coverage.exclusions>
             **io/mosip/pms/common/**,**io/mosip/pms/policy/validator/**,**/constant/**,**/config/**,**/dto/**,**/policy/errorMessages/**,**/policy/util/**,
-            **io/mosip/pms/service/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
+            **io/mosip/pms/service/**,**io/mosip/pms/tasklets/**,**/pms/authdevice/**,**/pms/device/validator/**,**/pms/device/util/**,**/entity/**,**/exception/**,**/util/**,**/keycloak/**/**,**/SwaggerConfig.java,**/PmpPolicyApplication.java,**/job/**
         </sonar.coverage.exclusions>
         <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
         <maven.jacoco.version>0.8.11</maven.jacoco.version>
@@ -92,7 +92,6 @@
         <module>pms-common</module>
         <module>policy-management-service</module>
         <module>partner-management-service</module>
-        <module>partner-management-batch-job</module>
     </modules>
 
     <dependencies>

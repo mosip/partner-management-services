@@ -1,14 +1,46 @@
 package io.mosip.pms.partner.service.impl;
 
+import static io.mosip.pms.common.constant.PartnerConstants.API_KEY;
+import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.SBI;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
-import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -19,36 +51,9 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
-import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
-import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.security.cert.X509Certificate;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static io.mosip.pms.common.constant.PartnerConstants.*;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {

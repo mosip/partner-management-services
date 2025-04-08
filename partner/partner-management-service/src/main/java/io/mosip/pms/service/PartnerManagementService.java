@@ -1,6 +1,8 @@
 package io.mosip.pms.service;
 
 import io.mosip.kernel.auditmanager.dto.AuthorizedRolesDto;
+
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
@@ -23,6 +26,8 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 @ComponentScan(basePackages = {"io.mosip.pms.*","io.mosip.kernel.websub.api.config",
 		"io.mosip.kernel.templatemanager.velocity.builder", "${mosip.auth.adapter.impl.basepackage}", "io.mosip.kernel.authcodeflowproxy.*"},excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = AuthorizedRolesDto.class) })
+@EnableBatchProcessing
+@EnableScheduling
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class  PartnerManagementService {

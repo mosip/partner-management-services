@@ -1,13 +1,13 @@
 package io.mosip.pms.partner.service;
 
+import org.springframework.stereotype.Service;
+
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
+import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
-import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
-import org.springframework.stereotype.Service;
 
 @Service
 public interface NotificationsService {
