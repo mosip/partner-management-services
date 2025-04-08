@@ -6,8 +6,13 @@ import java.util.Base64;
 import java.util.Map;
 
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.partner.util.PartnerUtil;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
+import io.mosip.pms.common.dto.CryptoResponseDto;
+import io.mosip.pms.common.dto.CryptoRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -54,15 +59,12 @@ public class KeyManagerHelper {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	@Autowired
-	ApiResponseValidatorUtil apiResponseValidatorUtil;
-
 	public PartnerCertDownloadResponeDto getPartnerCertificate(String certificateAlias) {
 		Map<String, String> pathSegments = Map.of(PARTNER_CERT_ID, certificateAlias);
 
 		try {
 			Map<String, Object> response = restUtil.getApi(keyManagerPartnerCertificateUrl, pathSegments, Map.class);
-			apiResponseValidatorUtil.validateApiResponse(response, keyManagerPartnerCertificateUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerPartnerCertificateUrl);
 			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 					PartnerCertDownloadResponeDto.class);
 		} catch (BatchJobServiceException e) {
@@ -88,7 +90,7 @@ public class KeyManagerHelper {
 			log.info("request sent, {}", request);
 			Map<String, Object> response = restUtil.postApi(keyManagerTrustCertificateUrl, null, "", "",
 					MediaType.APPLICATION_JSON, request, Map.class);
-			apiResponseValidatorUtil.validateApiResponse(response, keyManagerTrustCertificateUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerTrustCertificateUrl);
 			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 					TrustCertTypeListResponseDto.class);
 		} catch (BatchJobServiceException e) {
@@ -121,7 +123,7 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			apiResponseValidatorUtil.validateApiResponse(response, keyManagerEncryptDataUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerEncryptDataUrl);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			return responseDto.getData();
@@ -156,7 +158,7 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			apiResponseValidatorUtil.validateApiResponse(response, keyManagerDecryptDataUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerDecryptDataUrl);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			// Decode Base64-encoded response data

@@ -2,6 +2,7 @@ package io.mosip.pms.tasklets.util;
 
 import java.util.Map;
 
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -59,10 +60,7 @@ public class TemplateHelper {
 
 	@Autowired
 	RestUtil restUtil;
-
-	@Autowired
-	ApiResponseValidatorUtil apiResponseValidatorUtil;
-
+	
 	@Cacheable(value = "emailTemplates", key = "#langCode + '_' + #notificationType")
 	public EmailTemplateDto fetchEmailTemplate(String langCode, String notificationType) {
 		log.info("Fetching email template and subject: notificationType={}, language={}", notificationType, langCode);
@@ -89,7 +87,7 @@ public class TemplateHelper {
 		Map<String, String> pathSegments = Map.of(LANG_CODE, langCode, TEMPLATE_TYPE_CODE, templateTypeCode);
 
 		Map<String, Object> response = restUtil.getApi(getTemplateUrl, pathSegments, Map.class);
-		apiResponseValidatorUtil.validateApiResponse(response, getTemplateUrl);
+		PartnerUtil.validateApiResponse(response, getTemplateUrl);
 
 		TemplatesResponseDto templatesResponseDto = objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 				TemplatesResponseDto.class);
