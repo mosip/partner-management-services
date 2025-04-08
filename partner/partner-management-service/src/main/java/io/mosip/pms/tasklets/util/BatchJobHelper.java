@@ -48,6 +48,9 @@ public class BatchJobHelper {
 	@Autowired
 	NotificationServiceRepository notificationServiceRepository;
 
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
+
 	public boolean validatePartnerId(Optional<Partner> partnerById) {
 		if (partnerById.isEmpty()) {
 			return false;
@@ -99,27 +102,6 @@ public class BatchJobHelper {
 		return pmsPartnerAdmins;
 	}
 
-	public void validateApiResponse(Map<String, Object> response, String apiUrl) {
-		if (response == null) {
-			log.error("Received null response from API: {}", apiUrl);
-			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
-					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
-		}
-		if (response.containsKey(PartnerConstants.ERRORS)) {
-			List<Map<String, Object>> errorList = (List<Map<String, Object>>) response.get(PartnerConstants.ERRORS);
-			if (errorList != null && !errorList.isEmpty()) {
-				log.error("Error occurred while fetching data: {}", errorList);
-				throw new BatchJobServiceException(String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORCODE)),
-						String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORMESSAGE)));
-			}
-		}
-		if (!response.containsKey(PartnerConstants.RESPONSE) || response.get(PartnerConstants.RESPONSE) == null) {
-			log.error("Missing response data in API call: {}", apiUrl);
-			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
-					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
-		}
-	}
-
 	public X509Certificate decodeCertificateData(String certificateData) {
 		certificateData = certificateData.replaceAll(PartnerConstants.BEGIN_CERTIFICATE, "")
 				.replaceAll(PartnerConstants.END_CERTIFICATE, "").replaceAll("\n", "");
@@ -149,7 +131,7 @@ public class BatchJobHelper {
 			notification.setPartnerId(partnerDetails.getId());
 			notification.setNotificationType(getNotificationType(certificateType));
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerDetails.getEmailId());
+			notification.setEmailId(keyManagerHelper.encryptData(partnerDetails.getEmailId()));
 			notification.setEmailLangCode(partnerDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);

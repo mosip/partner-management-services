@@ -306,7 +306,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             // Update notification status
             notificationEntity.setNotificationStatus(PartnerConstants.STATUS_DISMISSED);
             notificationEntity.setUpdatedDatetime(LocalDateTime.now());
-            notificationEntity.setUpdatedBy(getUserBy());
+            notificationEntity.setUpdatedBy(getUserId());
 
             NotificationEntity savedEntity = notificationServiceRepository.save(notificationEntity);
 
@@ -326,10 +326,6 @@ public class NotificationsServiceImpl implements NotificationsService {
         responseWrapper.setId(patchDismissNotificationId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
-    }
-
-    private String getUserBy() {
-        return authUserDetails().getMail();
     }
 
     public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
@@ -360,7 +356,6 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     private String getUserId() {
-        String userId = authUserDetails().getUserId();
-        return userId;
+        return authUserDetails().getUserId();
     }
 }

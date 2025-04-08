@@ -61,7 +61,7 @@ public class TemplateHelper {
 	RestUtil restUtil;
 
 	@Autowired
-	BatchJobHelper batchJobHelper;
+	ApiResponseValidatorUtil apiResponseValidatorUtil;
 
 	@Cacheable(value = "emailTemplates", key = "#langCode + '_' + #notificationType")
 	public EmailTemplateDto fetchEmailTemplate(String langCode, String notificationType) {
@@ -89,7 +89,7 @@ public class TemplateHelper {
 		Map<String, String> pathSegments = Map.of(LANG_CODE, langCode, TEMPLATE_TYPE_CODE, templateTypeCode);
 
 		Map<String, Object> response = restUtil.getApi(getTemplateUrl, pathSegments, Map.class);
-		batchJobHelper.validateApiResponse(response, getTemplateUrl);
+		apiResponseValidatorUtil.validateApiResponse(response, getTemplateUrl);
 
 		TemplatesResponseDto templatesResponseDto = objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 				TemplatesResponseDto.class);
