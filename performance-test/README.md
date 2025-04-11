@@ -51,41 +51,21 @@
 * Execute a dry run for 10 min.
 * Execute performance run with various loads in order to achieve targeted NFR's.
 
+### Procedure to install and execute auth-demo-service in the local machine
+
+* The following link provides installation of auth-demo-service 
+	* https://github.com/mosip/mosip-functional-tests/blob/master/README.md
+	
+* Navigate to the path where auth-demo-service has been installed and run following query for cellbox1 env.
+	*java -jar -Dmosip.base.url=https://api-internal.cellbox1.mosip.net -Dserver.port=8082 -Dauth-token-generator.rest.clientId=mosip-resident-client -Dauth-token-generator.rest.secretKey=abc@123 -Dauth-token-generator.rest.appId=resident authentication-demo-service-1.2.1-develop-SNAPSHOT.jar
 
 ### Execution points for eSignet Authentication API's
 
-*esignet_mockida_test_script.jmx
+*Pmsrevamp_Test_Script.jmx
 	
-	* Create OIDC Client in Mock Authentication System (Setup) : This threadgroup generates client id and encoded private key pair and stored in csv file. 
-	* Create Identities in Mock Identity System (Setup) : This threadgroup generates mock identities and stores in mock identity database. These identities are used for authentication in eSignet portal.
-    * S01 OTP authentication (Execution)
-		*S01 T01 GetCsrf: This API endpoint generates CSRF token.
-		*S01 T02 Oauthdetails : This API endpoint hits Oauthdetails endpoint of eSignet.
-		*S01 T03 Send OTP : This API endpoint sends OTP request for authentication.
-		*S01 T04 Authentication : This API endpoint performs authentication in eSignet portal
-		*S01 T05 Authorization : This API endpoint performs authorization in eSignet portal
-		*S01 T06 Token: Code created in the preparation will be used only once and a signed JWT key value is also required for which we are using a JSR223 Pre-processor. The Pre-processor(Generate Client Assertion) will generate a signed JWT token value using the client id and its private key from the file created in Create OIDC Client in Mock Authentication System (Setup). An access token will be generated in the response body.
-		*S01 T07 Userinfo: For execution the generated access token from the token end point api is used. Till the token is not expired it can be used for multiple samples.
-		
-*esignet_mosipida_test_script.jmx
+	* Generate Auth Token For Keycloak User And Pms Client Secret Key (Setup) : This threadgroup generates the token for keycloak user (For Policy creation) and mosip-pms-client (To generate partner)
+	* Generate Policy Group And Policies (Setup): This threadgroup creates 
 	
-	* Create Identities in MOSIP Identity System (Setup) : This threadgroup generates VIDs and passwords for eSignet authentication and stored in csv file. 
-	* Create OIDC Client in MOSIP Authentication System (Setup): This threadgroup generates client Id and encoded private key for eSignet authentication.
-    * S01 OTP authentication (Execution)
-		*S01 T01 Get Csrf Token: This API endpoint generates CSRF token.
-		*S01 T02 Oauth Details : This API endpoint hits Oauthdetails endpoint of eSignet.
-		*S01 T03 Send OTP : This API endpoint sends OTP request for authentication.
-		*S01 T04 Authentication : This API endpoint performs OTP authentication in eSignet portal
-		*S01 T05 Authorization Code : This API endpoint performs authorization in eSignet portal
-		*S01 T06 Token: Code created in the preparation will be used only once and a signed JWT key value is also required for which we are using a JSR223 Pre-processor. The Pre-processor(Generate Client Assertion) will generate a signed JWT token value using the client id and its private key from the file created in Create OIDC Client in MOSIP Authentication System (Setup). An access token will be generated in the response body.
-		*S01 T07 Userinfo: For execution the generated access token from the token end point api is used. Till the token is not expired it can be used for multiple samples.
-	* S02 Password Authentication (Execution)
-		*S02 T01 Get Csrf Token: This API endpoint generates CSRF token.
-		*S02 T02 Oauth Details : This API endpoint hits Oauthdetails endpoint of eSignet.
-		*S02 T03 Authentication : This API endpoint performs Password authentication in eSignet portal
-		*S02 T04 Authorization Code : This API endpoint performs authorization in eSignet portal
-		*S02 T05 Token: Code created in the preparation will be used only once and a signed JWT key value is also required for which we are using a JSR223 Pre-processor. The Pre-processor(Generate Client Assertion) will generate a signed JWT token value using the client id and its private key from the file created in Create OIDC Client in MOSIP Authentication System (Setup). An access token will be generated in the response body.
-		*S02 T06 Userinfo: For execution the generated access token from the token end point api is used. Till the token is not expired it can be used for multiple samples.
 	
 ### Downloading Plugin manager jar file for the purpose of installing other JMeter specific plugins
 

@@ -36,7 +36,7 @@
           </elementProp>
           <elementProp name="runTimeFilePath" elementType="Argument">
             <stringProp name="Argument.name">runTimeFilePath</stringProp>
-            <stringProp name="Argument.value">/home/ubuntu/performance-testing-aws-ebs-volume/apache-jmeter-5.3/bin/PMSRevamp/runtime-files/</stringProp>
+            <stringProp name="Argument.value">./runtime-files</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="rampUp" elementType="Argument">
@@ -64,21 +64,6 @@
             <stringProp name="Argument.value">2000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="numberOfSecureBioIds" elementType="Argument">
-            <stringProp name="Argument.name">numberOfSecureBioIds</stringProp>
-            <stringProp name="Argument.value">200</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="numberOfFtpChips" elementType="Argument">
-            <stringProp name="Argument.name">numberOfFtpChips</stringProp>
-            <stringProp name="Argument.value">600</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="numberOfMappingKeys" elementType="Argument">
-            <stringProp name="Argument.name">numberOfMappingKeys</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="idaUtilityServerIP" elementType="Argument">
             <stringProp name="Argument.name">idaUtilityServerIP</stringProp>
             <stringProp name="Argument.value">localhost</stringProp>
@@ -92,21 +77,6 @@
           <elementProp name="serverIPKeycloak" elementType="Argument">
             <stringProp name="Argument.name">serverIPKeycloak</stringProp>
             <stringProp name="Argument.value">iam.cellbox1.mosip.net</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="numberOfRootCaCertificates" elementType="Argument">
-            <stringProp name="Argument.name">numberOfRootCaCertificates</stringProp>
-            <stringProp name="Argument.value">1300</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="numberOfIntermediateCertificates" elementType="Argument">
-            <stringProp name="Argument.name">numberOfIntermediateCertificates</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="numberOfPoliciesForPartnerAdmin" elementType="Argument">
-            <stringProp name="Argument.name">numberOfPoliciesForPartnerAdmin</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
