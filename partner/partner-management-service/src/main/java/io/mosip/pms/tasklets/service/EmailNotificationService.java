@@ -4,8 +4,11 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -126,10 +129,13 @@ public class EmailNotificationService {
 			context.put("partnerId", notificationEntity.getPartnerId());
 			context.put("fromDate", createdDate);
 			context.put("toDate", createdDate.plusDays(7));
-			context.put("partnerCertificateCount",
-					notificationDetails.getCertificateDetails() != null
-							? notificationDetails.getCertificateDetails().size()
-							: 0);
+			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
+					.orElse(Collections.emptyList())
+					.stream()
+					.map(CertificateDetailsDto::getPartnerId)
+					.collect(Collectors.toList());
+
+			context.put("partnerIdList", partnerIds);
 			break;
 
 		default:
