@@ -167,7 +167,7 @@ public class KeyManagerHelper {
 					StandardCharsets.UTF_8
 			);
 		} catch (BatchJobServiceException e) {
-			log.info("Error in decryptData of KeyManagerHelper: {}", e.getMessage());
+			log.info("Decryption failed: This may be due to data being unencrypted.");
 			// Return original data in case of any decryption error for backward compatibility
 			return data;
 		} catch (Exception ex) {
