@@ -89,7 +89,7 @@ CREATE TABLE pms.notifications
     notification_type character varying(36) NOT NULL,
     notification_status character varying(36) NOT NULL,
 	notification_details_json character varying(4000) NOT NULL,
-    email_id character varying(256) NOT NULL,
+    email_id character varying(1000) NOT NULL,
     email_lang_code character varying(36) NOT NULL,
     email_sent boolean DEFAULT FALSE,
     email_sent_dtimes timestamp,

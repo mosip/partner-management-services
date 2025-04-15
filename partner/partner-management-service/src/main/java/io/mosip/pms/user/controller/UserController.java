@@ -143,13 +143,13 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotificationseentimestamp())")
-	@GetMapping(value = "users/notifications-seen-timestamp")
+	@GetMapping(value = "users/{userId}/notifications-seen-timestamp")
 	@Operation(summary = "Added in release-1.3.x. This endpoint fetches the user's notifications seen timestamp",
 			description = "This endpoint fetches the user's notifications seen timestamp. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp() {
-		return userManagementService.getNotificationsSeenTimestamp();
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(@PathVariable String userId) {
+		return userManagementService.getNotificationsSeenTimestamp(userId);
 	}
 }

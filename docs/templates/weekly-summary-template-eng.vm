@@ -22,7 +22,14 @@
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Expiring Items: From ${fromDate} to ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
-                    <p style="padding: 5px 0px; font-weight: 600;">${partnerCertificateCount}&nbsp;Partner Certificates</p>
+                    #if($partnerIdList && $partnerIdList.size() > 0)
+                        <p style="margin-bottom: 6px; font-weight: 600;">Partner Certificates are expiring for:</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($id in $partnerIdList)
+                                <li style="padding: 2px 0;">[$id]</li>
+                            #end
+                        </ul>
+                    #end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">Action Required<br>
                         <span style="font-weight: 400;">To ensure uninterrupted services, please inform the respective partner users to renew their certificates before their expiration dates.</span>

@@ -64,13 +64,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	private String getUserId() {
-		String userId = authUserDetails().getUserId();
-		return userId;
-	}
-
-	private String getUserBy() {
-		String crBy = authUserDetails().getMail();
-		return crBy;
+        return authUserDetails().getUserId();
 	}
 
 	@Override
@@ -95,14 +89,14 @@ public class UserManagementServiceImpl implements UserManagementService{
 				if (optionalEntity.isPresent()) {
 					UserDetails entity = optionalEntity.get();
 					userDetails.setId(entity.getId());
-					userDetails.setUpdBy(this.getUserBy());
+					userDetails.setUpdBy(this.getUserId());
 					userDetails.setUpdDtimes(nowDate);
 					userDetails.setCrBy(entity.getCrBy());
 					userDetails.setCrDtimes(entity.getCrDtimes());
 					userDetails.setUserId(entity.getUserId());
 				} else {
 					userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
-					userDetails.setCrBy(this.getUserBy());
+					userDetails.setCrBy(this.getUserId());
 					userDetails.setCrDtimes(nowDate);
 					userDetails.setUserId(userId);
 					userDetails.setNotificationsSeenDtimes(null);
@@ -196,7 +190,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 					UserDetails savedEntity = userDetailsRepository.save(entity);
 
 					NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
-					responseDto.setUserId(savedEntity.getUserId());
 					responseDto.setNotificationsSeenDtimes(savedEntity.getNotificationsSeenDtimes());
 					responseWrapper.setResponse(responseDto);
 				} else {
@@ -221,10 +214,9 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	@Override
-	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp() {
+	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(String userId) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -237,7 +229,6 @@ public class UserManagementServiceImpl implements UserManagementService{
 				UserDetails entity = optionalEntity.get();
 
 				NotificationsSeenResponseDto responseDto = new NotificationsSeenResponseDto();
-				responseDto.setUserId(entity.getUserId());
 				responseDto.setNotificationsSeenDtimes(entity.getNotificationsSeenDtimes());
 				responseWrapper.setResponse(responseDto);
 			} else {

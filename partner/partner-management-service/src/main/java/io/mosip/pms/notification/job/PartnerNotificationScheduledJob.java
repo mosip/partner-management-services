@@ -37,7 +37,7 @@ public class PartnerNotificationScheduledJob {
 
 	@Value("${notifications.sent.before.days:3}")
 	private int notificationsSentBeforeDays;
-
+	
 	@Scheduled(initialDelayString = "#{60 * 60 * 1000 * ${pms.notifications-schedule.init-delay}}", fixedRateString = "#{60 * 60 * 1000 * ${pms.notifications-schedule.fixed-rate}}")
 	public void getAllAPIKeys() {
 		List<NotificationDto> notificationsDto = new ArrayList<>();

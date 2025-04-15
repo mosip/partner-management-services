@@ -24,33 +24,26 @@ function installing_pms() {
   $COPY_UTIL configmap config-server-share config-server $NS
 
   INTERNAL_API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
-  PMP_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-host})
   PMP_REVAMP_UI_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-revamp-ui-host})
 
   PARTNER_MANAGER_SERVICE_NAME="pms-partner"
   POLICY_MANAGER_SERVICE_NAME="pms-policy"
-  PMS_BATCHJOB_NAME="pms-batchjob"
 
   echo Installing partner manager
   helm -n $NS install $PARTNER_MANAGER_SERVICE_NAME mosip/pms-partner \
-  --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$PMP_HOST \
   --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_REVAMP_UI_HOST \
   --version $CHART_VERSION
 
   echo Installing policy manager
   helm -n $NS install $POLICY_MANAGER_SERVICE_NAME mosip/pms-policy \
-  --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$PMP_HOST \
   --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_REVAMP_UI_HOST \
   --version $CHART_VERSION
-
-  echo Installing pms-batchjob
-  helm -n $NS install $PMS_BATCHJOB_NAME mosip/pms-batchjob --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
   echo Installed pms services
 
-  echo "Partner management portal URL: https://$PMP_HOST/pmp-ui/"
+  echo "Partner management portal URL: https://$PMP_REVAMP_UI_HOST/pmp-revamp-ui/"
   return 0
 }
 

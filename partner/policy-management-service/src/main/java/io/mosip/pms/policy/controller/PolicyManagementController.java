@@ -101,6 +101,7 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
+		requestValidator.validateReqTime(createRequest.getRequesttime());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();

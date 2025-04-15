@@ -1,14 +1,46 @@
 package io.mosip.pms.partner.service.impl;
 
+import static io.mosip.pms.common.constant.PartnerConstants.API_KEY;
+import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.SBI;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
-import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -19,36 +51,9 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
-import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
-import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.security.cert.X509Certificate;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static io.mosip.pms.common.constant.PartnerConstants.*;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
@@ -241,6 +246,12 @@ public class NotificationsServiceImpl implements NotificationsService {
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
+            if(Objects.isNull(dismissNotificationRequestDto.getNotificationStatus())) {
+                LOGGER.info("Notification status is null or empty");
+                throw new PartnerServiceException(
+                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorCode(),
+                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorMessage());
+            }
             if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)){
                 LOGGER.info("Invalid Notification status for Notification Id: {}", notificationId);
                 throw new PartnerServiceException(
@@ -256,6 +267,16 @@ public class NotificationsServiceImpl implements NotificationsService {
             }
 
             NotificationEntity notificationEntity = optionalNotification.get();
+            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+            if (notificationEntity.getNotificationType().equals(ROOT_CERT_EXPIRY) || notificationEntity.getNotificationType().equals(INTERMEDIATE_CERT_EXPIRY)
+                    || notificationEntity.getNotificationType().equals(WEEKLY_SUMMARY)) {
+                if(!isPartnerAdmin) {
+                    LOGGER.info("Partner Admin can only dismiss this notifications: {}", notificationId);
+                    throw new PartnerServiceException(
+                            ErrorCode.UNABLE_TO_DISMISS.getErrorCode(),
+                            ErrorCode.UNABLE_TO_DISMISS.getErrorMessage());
+                }
+            }
 
             String userId = getUserId();
             List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
@@ -275,7 +296,9 @@ public class NotificationsServiceImpl implements NotificationsService {
                 partnerHelper.validatePartnerId(partner, userId);
                 if (partner.getId().equals(notificationPartnerId)) {
                     //check if partner is active or not
-                    partnerHelper.checkIfPartnerIsNotActive(partner);
+                    if(!isPartnerAdmin) {
+                        partnerHelper.checkIfPartnerIsNotActive(partner);
+                    }
                     partnerIdExists = true;
                     break;
                 }
@@ -298,7 +321,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             // Update notification status
             notificationEntity.setNotificationStatus(PartnerConstants.STATUS_DISMISSED);
             notificationEntity.setUpdatedDatetime(LocalDateTime.now());
-            notificationEntity.setUpdatedBy(getUserBy());
+            notificationEntity.setUpdatedBy(getUserId());
 
             NotificationEntity savedEntity = notificationServiceRepository.save(notificationEntity);
 
@@ -318,10 +341,6 @@ public class NotificationsServiceImpl implements NotificationsService {
         responseWrapper.setId(patchDismissNotificationId);
         responseWrapper.setVersion(VERSION);
         return responseWrapper;
-    }
-
-    private String getUserBy() {
-        return authUserDetails().getMail();
     }
 
     public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
@@ -352,7 +371,6 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     private String getUserId() {
-        String userId = authUserDetails().getUserId();
-        return userId;
+        return authUserDetails().getUserId();
     }
 }

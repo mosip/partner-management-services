@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -62,6 +63,9 @@ public class PartnerManagementController {
 
 	@Autowired
 	PartnerHelper partnerHelper;
+
+	@Autowired
+	RequestValidator requestValidator;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -238,6 +242,7 @@ public class PartnerManagementController {
 	public ResponseEntity<ResponseWrapper<String>> approveRejectPolicyMappings(
 			@RequestBody @Valid RequestWrapper<StatusRequestDto> request,
 			@PathVariable String mappingkey){
+		requestValidator.validateReqTime(request.getRequesttime());
 		ResponseWrapper<String> response = new ResponseWrapper<>();		
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());		
