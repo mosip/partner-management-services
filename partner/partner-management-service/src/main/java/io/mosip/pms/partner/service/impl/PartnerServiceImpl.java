@@ -27,6 +27,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -263,6 +264,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Autowired
 	AuditUtil auditUtil;
 
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
+
 	@Value("${pmp.partner.mobileNumber.max.length:16}")
 	private int maxMobileNumberLength;
 
@@ -382,10 +386,10 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setId(request.getPartnerId());
 		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
 		partner.setName(request.getOrganizationName());
-		partner.setAddress(request.getAddress());
-		partner.setContactNo(request.getContactNumber());
+		partner.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+		partner.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 		partner.setPartnerTypeCode(partnerType);
-		partner.setEmailId(request.getEmailId());
+		partner.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
@@ -430,7 +434,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		Partner partnerFromDb = partnerRepository.findByEmailId(emailId);
+		Partner partnerFromDb = partnerRepository.findByEmailId(keyManagerHelper.encryptData(emailId));
 		if (partnerFromDb != null) {
 			LOGGER.error("Partner with email " + emailId + "already exists.");
 			return false;
@@ -487,9 +491,9 @@ public class PartnerServiceImpl implements PartnerService {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
-		response.setAddress(partner.getAddress());
-		response.setContactNumber(partner.getContactNo());
-		response.setEmailId(partner.getEmailId());
+		response.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+		response.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+		response.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
 		response.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
@@ -539,8 +543,8 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
-		partner.setAddress(partnerUpdateRequest.getAddress());
-		partner.setContactNo(partnerUpdateRequest.getContactNumber());
+		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
+		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
 		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
 		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
@@ -643,8 +647,8 @@ public class PartnerServiceImpl implements PartnerService {
 		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId, request.getEmailId());
 		String resultMessage;
 		if (contactsFromDb != null) {
-			contactsFromDb.setAddress(request.getAddress());
-			contactsFromDb.setContactNo(request.getContactNumber());
+			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setUpdBy(getLoggedInUserId());
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
@@ -653,12 +657,12 @@ public class PartnerServiceImpl implements PartnerService {
 			Partner partnerFromDb = getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
 			contactsFromDb.setId(PartnerUtil.createPartnerId());
-			contactsFromDb.setAddress(request.getAddress());
-			contactsFromDb.setContactNo(request.getContactNumber());
+			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
-			contactsFromDb.setEmailId(request.getEmailId());
+			contactsFromDb.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setIsDeleted(false);
 			resultMessage = "Contacts details added successfully.";
@@ -1492,7 +1496,7 @@ public class PartnerServiceImpl implements PartnerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);

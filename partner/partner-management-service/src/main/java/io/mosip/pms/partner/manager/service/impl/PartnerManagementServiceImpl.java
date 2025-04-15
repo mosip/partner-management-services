@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Objects;
+
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import jakarta.transaction.Transactional;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -159,6 +161,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.partner.details.get}")
 	private String getPartnerDetailsId;
 
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
+
 	public static final String VERSION = "1.0";
 
 	@Override
@@ -292,9 +297,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContactNo());
-			retrievePartnersDetails.setEmailId(partner.getEmailId());
-			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			partners.add(retrievePartnersDetails);
 		}
@@ -320,9 +325,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContactNo());
-			retrievePartnersDetails.setEmailId(partner.getEmailId());
-			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			retrievePartnersDetails.setLogoUrl(partner.getLogoUrl());
 			retrievePartnersDetails.setAdditionalInfo(
@@ -577,7 +582,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
@@ -595,7 +600,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());
@@ -789,8 +794,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
-			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
-			partnerDetailsV3Dto.setContactNumber(partner.getContactNo());
+			partnerDetailsV3Dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			partnerDetailsV3Dto.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
