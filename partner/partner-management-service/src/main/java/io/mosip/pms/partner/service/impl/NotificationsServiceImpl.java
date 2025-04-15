@@ -246,6 +246,12 @@ public class NotificationsServiceImpl implements NotificationsService {
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
                         ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
             }
+            if(Objects.isNull(dismissNotificationRequestDto.getNotificationStatus())) {
+                LOGGER.info("Notification status is null or empty");
+                throw new PartnerServiceException(
+                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorCode(),
+                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorMessage());
+            }
             if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)){
                 LOGGER.info("Invalid Notification status for Notification Id: {}", notificationId);
                 throw new PartnerServiceException(
@@ -261,6 +267,16 @@ public class NotificationsServiceImpl implements NotificationsService {
             }
 
             NotificationEntity notificationEntity = optionalNotification.get();
+            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+            if (notificationEntity.getNotificationType().equals(ROOT_CERT_EXPIRY) || notificationEntity.getNotificationType().equals(INTERMEDIATE_CERT_EXPIRY)
+                    || notificationEntity.getNotificationType().equals(WEEKLY_SUMMARY)) {
+                if(!isPartnerAdmin) {
+                    LOGGER.info("Partner Admin can only dismiss this notifications: {}", notificationId);
+                    throw new PartnerServiceException(
+                            ErrorCode.UNABLE_TO_DISMISS.getErrorCode(),
+                            ErrorCode.UNABLE_TO_DISMISS.getErrorMessage());
+                }
+            }
 
             String userId = getUserId();
             List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
@@ -274,7 +290,6 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             String notificationPartnerId = notificationEntity.getPartnerId();
             boolean partnerIdExists = false;
-            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 
             // check if partnerId is associated with user
             for (Partner partner : partnerList) {
