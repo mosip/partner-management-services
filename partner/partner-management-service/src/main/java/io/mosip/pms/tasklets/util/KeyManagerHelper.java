@@ -64,7 +64,7 @@ public class KeyManagerHelper {
 
 		try {
 			Map<String, Object> response = restUtil.getApi(keyManagerPartnerCertificateUrl, pathSegments, Map.class);
-			PartnerUtil.validateApiResponse(response, keyManagerPartnerCertificateUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerPartnerCertificateUrl, true);
 			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 					PartnerCertDownloadResponeDto.class);
 		} catch (BatchJobServiceException e) {
@@ -90,7 +90,7 @@ public class KeyManagerHelper {
 			log.info("request sent, {}", request);
 			Map<String, Object> response = restUtil.postApi(keyManagerTrustCertificateUrl, null, "", "",
 					MediaType.APPLICATION_JSON, request, Map.class);
-			PartnerUtil.validateApiResponse(response, keyManagerTrustCertificateUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerTrustCertificateUrl, true);
 			return objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 					TrustCertTypeListResponseDto.class);
 		} catch (BatchJobServiceException e) {
@@ -123,7 +123,7 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			PartnerUtil.validateApiResponse(response, keyManagerEncryptDataUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerEncryptDataUrl, true);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			return responseDto.getData();
@@ -158,7 +158,7 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
-			PartnerUtil.validateApiResponse(response, keyManagerDecryptDataUrl);
+			PartnerUtil.validateApiResponse(response, keyManagerDecryptDataUrl, false);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			// Decode Base64-encoded response data

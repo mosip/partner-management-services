@@ -99,7 +99,7 @@ public class PartnerUtil {
 		return BLANK_STRING;
 	}
 
-	public static void validateApiResponse(Map<String, Object> response, String apiUrl) {
+	public static void validateApiResponse(Map<String, Object> response, String apiUrl, boolean isErrorLoggingEnabled) {
 		if (response == null) {
 			LOGGER.error("Received null response from API: {}", apiUrl);
 			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
@@ -108,7 +108,9 @@ public class PartnerUtil {
 		if (response.containsKey(PartnerConstants.ERRORS)) {
 			List<Map<String, Object>> errorList = (List<Map<String, Object>>) response.get(PartnerConstants.ERRORS);
 			if (errorList != null && !errorList.isEmpty()) {
-				LOGGER.error("Error occurred while fetching data: {}", errorList);
+				if (isErrorLoggingEnabled) {
+					LOGGER.error("Error occurred while fetching data: {}", errorList);
+				}
 				throw new BatchJobServiceException(String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORCODE)),
 						String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORMESSAGE)));
 			}

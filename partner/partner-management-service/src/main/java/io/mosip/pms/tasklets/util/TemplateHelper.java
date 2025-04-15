@@ -87,7 +87,7 @@ public class TemplateHelper {
 		Map<String, String> pathSegments = Map.of(LANG_CODE, langCode, TEMPLATE_TYPE_CODE, templateTypeCode);
 
 		Map<String, Object> response = restUtil.getApi(getTemplateUrl, pathSegments, Map.class);
-		PartnerUtil.validateApiResponse(response, getTemplateUrl);
+		PartnerUtil.validateApiResponse(response, getTemplateUrl, true);
 
 		TemplatesResponseDto templatesResponseDto = objectMapper.convertValue(response.get(PartnerConstants.RESPONSE),
 				TemplatesResponseDto.class);
