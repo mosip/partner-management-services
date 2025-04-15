@@ -434,9 +434,17 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		Partner partnerFromDb = partnerRepository.findByEmailId(keyManagerHelper.encryptData(emailId));
+		String encryptedEmail = keyManagerHelper.encryptData(emailId);
+
+		Partner partnerFromDb = partnerRepository.findByEmailId(encryptedEmail);
+
+		if (partnerFromDb == null) {
+			// Fallback: check plain email (backward compatibility)
+			partnerFromDb = partnerRepository.findByEmailId(emailId);
+		}
+
 		if (partnerFromDb != null) {
-			LOGGER.error("Partner with email " + emailId + "already exists.");
+			LOGGER.error("Partner with email " + emailId + " already exists.");
 			return false;
 		}
 		return true;
