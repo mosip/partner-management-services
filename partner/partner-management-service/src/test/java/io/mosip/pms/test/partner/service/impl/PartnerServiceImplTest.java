@@ -606,6 +606,8 @@ public class PartnerServiceImplTest {
 	public void getPartnerDetailsTest() {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("aztayajsjo");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("47384384");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
 		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
 		RetrievePartnerDetailsResponse partnerDetails = pserviceImpl.getPartnerDetails("12345");
