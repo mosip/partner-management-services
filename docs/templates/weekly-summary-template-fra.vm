@@ -21,7 +21,14 @@
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Éléments expirant : du ${fromDate} au ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
-                    <p style="padding: 5px 0px; font-weight: 600;">${partnerCertificateCount}&nbsp;Certificats Partenaires</p>
+                    #if($partnerIdList && $partnerIdList.size() > 0)
+						<p style="margin-bottom: 6px; font-weight: 600;">Les certificats des partenaires suivants expirent :</p>
+						<ul style="padding-left: 20px; margin: 0;">
+							#foreach($id in $partnerIdList)
+								<li style="padding: 2px 0;">[$id]</li>
+							#end
+						</ul>
+					#end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">Action requise<br>
                         <span style="font-weight: 400;">Afin de garantir des services ininterrompus, veuillez informer les utilisateurs partenaires respectifs de renouveler leurs certificats avant leur date d'expiration.</span>
