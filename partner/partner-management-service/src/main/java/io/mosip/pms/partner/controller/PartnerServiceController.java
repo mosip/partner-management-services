@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -78,6 +79,9 @@ public class PartnerServiceController {
 	@Autowired
 	AuditUtil auditUtil;
 
+	@Autowired
+	RequestValidator requestValidator;
+
 	public static final String VERSION = "1.0";
 
 	/**
@@ -93,6 +97,7 @@ public class PartnerServiceController {
 	@Operation(summary = "partner self registration", description = "Saves partner details")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
+		requestValidator.validateReqTime(request.getRequesttime());
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
 		PartnerResponse partnerResponse = null;
 		PartnerRequest partnerRequest = null;
@@ -541,6 +546,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<APIKeyGenerateRequestDto> request) {
+		requestValidator.validateReqTime(request.getRequesttime());
 		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
 		response.setResponse(partnerManagerService.generateAPIKey(partnerId, request.getRequest()));

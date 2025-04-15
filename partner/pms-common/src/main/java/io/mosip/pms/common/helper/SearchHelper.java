@@ -160,6 +160,10 @@ public class SearchHelper {
 			}
 
 			for (SearchFilter filter : filters) {
+				if (filter.getColumnName() == null) {
+					throw new RequestException(SearchErrorCode.MISSING_FILTER_COLUMN.getErrorCode(),
+							SearchErrorCode.MISSING_FILTER_COLUMN.getErrorMessage());
+				}
 				Optional<Field> field = fieldList.stream()
 						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName()))
 						.findFirst();

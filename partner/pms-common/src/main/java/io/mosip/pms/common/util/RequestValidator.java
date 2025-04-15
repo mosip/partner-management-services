@@ -51,7 +51,7 @@ public class RequestValidator {
         return Optional.empty();
     }
 
-    protected void validateReqTime(LocalDateTime reqTime) {
+    public void validateReqTime(LocalDateTime reqTime) {
         if (Objects.isNull(reqTime)) {
             LOGGER.error("", "", "validateReqTime", "requesttime is null");
             throw new RequestException(ValidationErrorCode.INVALID_REQUEST_DATETIME.getErrorCode(),

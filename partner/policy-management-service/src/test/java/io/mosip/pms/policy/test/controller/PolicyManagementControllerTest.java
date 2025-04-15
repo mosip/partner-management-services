@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -82,6 +83,10 @@ public class PolicyManagementControllerTest {
 	
 	@Mock
 	private AuditUtil audit;
+
+	@Mock
+	private RequestValidator requestValidator;
+
 	@InjectMocks
 	PolicyManagementController policyManagementController;
 	
@@ -535,6 +540,7 @@ public class PolicyManagementControllerTest {
 		assertNotNull(response);
 		assertNotNull(response.getResponse());
 		assertEquals(mockedResponseDto, response.getResponse());
+		verify(requestValidator).validateReqTime(requestWrapper.getRequesttime());
 		verify(audit).setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequestDto.getName(), "policyGroupName");
 	}
 	@Test
