@@ -61,7 +61,9 @@ public enum ErrorCode {
     TEMPLATE_FETCH_ERROR("PMS-BJ-009", "Failed to fetch email template"),
     UNABLE_TO_DECODE_CERTIFICATE("PMS-BJ-010", "Unable to decode the certificate data"),
     INVALID_CERTIFICATE_TYPE("PMS-BJ-011", "Invalid certificate type"),
-    INVALID_NOTIFICATION_TYPE("PMS-BJ-011", "Invalid notification type");
+    INVALID_NOTIFICATION_TYPE("PMS-BJ-012", "Invalid notification type"),
+	DECRYPT_DATA_ERROR("PMS-BJ-013", "Failed to decrypt data using Key Manager"),
+	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager");
 	
 
 	/**

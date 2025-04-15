@@ -64,13 +64,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	private String getUserId() {
-		String userId = authUserDetails().getUserId();
-		return userId;
-	}
-
-	private String getUserBy() {
-		String crBy = authUserDetails().getMail();
-		return crBy;
+        return authUserDetails().getUserId();
 	}
 
 	@Override
@@ -95,14 +89,14 @@ public class UserManagementServiceImpl implements UserManagementService{
 				if (optionalEntity.isPresent()) {
 					UserDetails entity = optionalEntity.get();
 					userDetails.setId(entity.getId());
-					userDetails.setUpdBy(this.getUserBy());
+					userDetails.setUpdBy(this.getUserId());
 					userDetails.setUpdDtimes(nowDate);
 					userDetails.setCrBy(entity.getCrBy());
 					userDetails.setCrDtimes(entity.getCrDtimes());
 					userDetails.setUserId(entity.getUserId());
 				} else {
 					userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
-					userDetails.setCrBy(this.getUserBy());
+					userDetails.setCrBy(this.getUserId());
 					userDetails.setCrDtimes(nowDate);
 					userDetails.setUserId(userId);
 					userDetails.setNotificationsSeenDtimes(null);

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,9 @@ public class EmailNotificationService {
 
 	@Autowired
 	TemplateHelper templateHelper;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	@Transactional
 	public void sendEmailNotification(String notificationId) {
@@ -152,7 +156,7 @@ public class EmailNotificationService {
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
 			// Add email details
-			requestBody.add("mailTo", notificationEntity.getEmailId());
+			requestBody.add("mailTo", keyManagerHelper.decryptData(notificationEntity.getEmailId()));
 			requestBody.add("mailSubject", emailSubject);
 			requestBody.add("mailContent", emailTemplate);
 
