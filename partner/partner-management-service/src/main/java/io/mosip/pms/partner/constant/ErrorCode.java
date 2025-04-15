@@ -172,7 +172,7 @@ public enum ErrorCode {
 	NOTIFICATION_TYPE_NOT_SELECTED("PMS_NOTIFICATION_ERROR_015", "Notification type must be selected for filtering"),
 	INVALID_DATE("PMS_NOTIFICATION_ERROR_016", "Please enter a valid date in the %s field."),
 	WEEKLY_TYPE_NOT_SELECTED("PMS_NOTIFICATION_ERROR_017", "Filtering by createdFromDate / createdToDate is only available when 'weekly' is selected as the notificationType"),
-	UNABLE_TO_DISMISS("PMS_NOTIFICATION_ERROR_018", "Partner Admin can only dismiss this notifications"),
+	UNABLE_TO_DISMISS("PMS_NOTIFICATION_ERROR_018", "Partner Admin can only dismiss this notification"),
 	NOTIFICATION_STATUS_REQUIRED_IN_REQUEST("PMS_NOTIFICATION_ERROR_019", "Notification status is required in the request");
 
 	/**
