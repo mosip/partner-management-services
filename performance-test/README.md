@@ -50,6 +50,12 @@
 * Validate the scripts for one user.
 * Execute a dry run for 10 min.
 * Execute performance run with various loads in order to achieve targeted NFR's.
+* Download JMeter plugin manager from below url links.
+	*https://jmeter-plugins.org/get/
+* After downloading the jar file place it in below folder path.
+	*lib/ext
+* Please refer to following link to download JMeter jars.
+	https://www.blazemeter.com/blog/jmeter-plugins-manager
 
 ### Procedure to install and execute auth-demo-service in the local machine
 
@@ -213,17 +219,6 @@
 		*S20 T01 List All Api Keys: This API endpoint lists all Api keys.
 		*S20 T02 Deactivate Api Key: This API endpoint deactivates Api keys.
 	
-### Downloading Plugin manager jar file for the purpose of installing other JMeter specific plugins
-
-* Download JMeter plugin manager from below url links.
-	*https://jmeter-plugins.org/get/
-
-* After downloading the jar file place it in below folder path.
-	*lib/ext
-
-* Please refer to following link to download JMeter jars.
-	https://mosip.atlassian.net/wiki/spaces/PT/pages/1227751491/Steps+to+set+up+the+local+system#PluginManager
-		
 ### Designing the workload model for performance test execution
 * Calculation of number of users depending on Transactions per second (TPS) provided by client
 
