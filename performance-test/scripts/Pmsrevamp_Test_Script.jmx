@@ -760,7 +760,7 @@
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Generate Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Generate Authentication Partner For Policy Request Creation, Oidc Client Creation And Api Key Generation (Setup)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -3050,6 +3050,33 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Generate Device Provider, FTM Provider And Partner Admin Partners (Setup)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Load Policy Group Name From File" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">${runTimeFilePath}/policy_group_name.txt</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">policyGroupName</stringProp>
+        </CSVDataSet>
+        <hashTree/>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Setup Device Provider Partner" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">true</boolProp>
@@ -3215,7 +3242,6 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload Ca Cert Endpoint" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
@@ -3234,6 +3260,7 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <stringProp name="HTTPSampler.domain">${serverIPInternal}</stringProp>
             <stringProp name="HTTPSampler.port">${serverPortNo}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
@@ -3284,7 +3311,6 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload Inter Cert Endpoint" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
@@ -3303,6 +3329,7 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <stringProp name="HTTPSampler.domain">${serverIPInternal}</stringProp>
             <stringProp name="HTTPSampler.port">${serverPortNo}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
@@ -3983,7 +4010,6 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload Ca Cert Endpoint" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
@@ -4002,6 +4028,7 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <stringProp name="HTTPSampler.domain">${serverIPInternal}</stringProp>
             <stringProp name="HTTPSampler.port">${serverPortNo}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
@@ -4052,7 +4079,6 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload Inter Cert Endpoint" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
@@ -4071,6 +4097,7 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <stringProp name="HTTPSampler.domain">${serverIPInternal}</stringProp>
             <stringProp name="HTTPSampler.port">${serverPortNo}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
@@ -4121,7 +4148,6 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload Partner Cert Endpoint" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
@@ -4142,6 +4168,7 @@ vars.put(&quot;partnerCertificateEncoded&quot;,encodedString);</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <stringProp name="HTTPSampler.domain">${serverIPInternal}</stringProp>
             <stringProp name="HTTPSampler.port">${serverPortNo}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
@@ -19956,7 +19983,7 @@ vars.put(&quot;utcTime&quot;, utcTime);
           <stringProp name="variableNames">partnerAuthToken</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Load Pms User Auth Token From File" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Load Partner Id From File" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="filename">${runTimeFilePath}/partner_api_key.txt</stringProp>

@@ -73,7 +73,9 @@
 	
 	* Generate Policy Group And Policies (Setup): This threadgroup creates Policy Group with multiple policy names associated with it. The number of policies is defined by user-defined variable - numberOfPolicies
 	
-	* Generate Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup) : This threadgroup creates Authentication Partner, Device Provider Partner, FTM Provider Partner, Partner Admin Partner, Authentication Partner for OIDC client creation and Authentication Partner for API key generation.
+	* Generate Authentication Partner For Policy Request Creation, Oidc Client Creation And Api Key Generation (Setup) : This threadgroup creates Authentication Partner for policy creation, Authentication Partner for OIDC client creation and Authentication Partner for API key generation.
+	
+	* Generate Device Provider, FTM Provider And Partner Admin Partners (Setup) : This threadgroup creates Device Provider Partner, FTM Provider Partner, Partner Admin Partner.
 	
 	* Generate Authentication Token For Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup); This threadgroup generates Authentication Token for Authentication Partner, Device Provider Partner, FTM Provider Partner, Partner Admin Partner, Authentication Partner for OIDC client creation and Authentication Partner for API key.
 	
