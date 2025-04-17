@@ -26,7 +26,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
       outputTemplate: pms/error
       input: '{
-      "userId": "pms-111999"
+      "userId": "pms-111777"
 }'
       output: '{
       "errors": [
@@ -44,7 +44,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
       outputTemplate: pms/error
       input: '{
-      "userId": "pms-111999"
+      "userId": "pms-111777"
 }'
       output: '{
       "errors": [

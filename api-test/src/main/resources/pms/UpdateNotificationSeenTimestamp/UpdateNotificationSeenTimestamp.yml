@@ -7,13 +7,13 @@ UpdateNotificationSeenTimestamp:
       checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
-      outputTemplate: pms/device/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
+      outputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestampResult
       input: '{
       "id": "mosip.pms.users.notifications.seen.timestamp.put",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-	  "userId": "pms-111999"
+      "userId": "pms-111777"
 }'
       output: '{
 }'
