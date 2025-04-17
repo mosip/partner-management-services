@@ -1537,5 +1537,56 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="GetAllNotifications">
+		<parameter name="ymlFile"
+			value="pms/GetAllNotifications/GetAllNotifications.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="DismissNotificationNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DismissNotification/DismissNotificationNegativeScenarios.yml" />
+		<parameter name="pathParams" value="notificationId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="UpdateNotificationSeenTimestamp">
+		<parameter name="ymlFile"
+			value="pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp.yml" />
+		<parameter name="pathParams" value="userId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="UpdateNotificationSeenTimestampNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestampNegativeScenarios.yml" />
+		<parameter name="pathParams" value="userId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>	
+	<test name="GetNotificationsSeenTimestamp">
+		<parameter name="ymlFile"
+			value="pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetNotificationsSeenTimestampNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestampNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>		
 
 </suite>
