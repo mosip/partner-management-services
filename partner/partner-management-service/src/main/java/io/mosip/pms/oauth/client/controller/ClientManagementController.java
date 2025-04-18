@@ -120,7 +120,6 @@ public class ClientManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		ClientFilterDto filterDto = new ClientFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

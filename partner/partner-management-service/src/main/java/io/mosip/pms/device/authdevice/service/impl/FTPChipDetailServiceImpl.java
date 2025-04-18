@@ -681,7 +681,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	public ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, FtmChipFilterDto filterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			PageResponseV2Dto pageResponseV2Dto = new PageResponseV2Dto();
+			PageResponseV2Dto<FtmDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto();
+			partnerHelper.validateRequestParameters(partnerHelper.ftmAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 

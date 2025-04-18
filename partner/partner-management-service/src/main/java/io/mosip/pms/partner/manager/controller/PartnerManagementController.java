@@ -305,7 +305,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
@@ -359,7 +358,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -414,7 +412,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -468,7 +465,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "issuedBy", required = false) String issuedBy,
 			@RequestParam(value = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);

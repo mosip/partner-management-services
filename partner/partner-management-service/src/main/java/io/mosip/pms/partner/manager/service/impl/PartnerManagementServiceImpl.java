@@ -856,6 +856,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -881,6 +882,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageResponseV2Dto.setData(partnerSummaryDtoList);
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
@@ -899,6 +903,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
@@ -969,6 +974,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
 			if (!isPartnerAdmin) {
@@ -1038,6 +1044,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<TrustCertificateSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			TrustCertTypeListRequestDto trustCertTypeListRequestDto = new TrustCertTypeListRequestDto();
 			trustCertTypeListRequestDto.setCaCertificateType(filterDto.getCaCertificateType());
 			trustCertTypeListRequestDto.setExcludeMosipCA(true);
@@ -1062,6 +1069,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			pageResponseV2Dto.setData(responseObject.getAllPartnerCertificates());
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getTrustCertificates method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
