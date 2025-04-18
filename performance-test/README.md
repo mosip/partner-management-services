@@ -107,7 +107,8 @@
 		*S06 T01 Policy Group: This API endpoint fetches the policy group details.
 		*S06 T02 List All Policy Requests: This API endpoint lists all policy requests.
 		*S06 T03 Create Oidc Client: This API endpoint creates OIDC client Id.
-		*S06 T04 Update Oidc Client: This API endpoint updates OIDC client details.
+		*S06 T04 List All Oauths: This API endpoint lists all OIDC client Ids.
+		*S06 T05 Update Oidc Client: This API endpoint updates OIDC client details.
 		
 	* S07 Authentication Services API Key (Preparation): This threadgroup approves the policies for Api key generation.
 	
