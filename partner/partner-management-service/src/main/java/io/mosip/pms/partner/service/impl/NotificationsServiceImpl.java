@@ -144,7 +144,7 @@ public class NotificationsServiceImpl implements NotificationsService {
             Pageable pageable = PageRequest.of(pageNo, pageSize);
 
             // Fetch notifications
-            Page<NotificationEntity> page = fetchNotifications(filterDto, pageable, partnerIdList);
+            Page<NotificationEntity> page = fetchNotifications(filterDto, pageable, partnerIdList, isPartnerAdmin);
 
             if (page != null && !page.getContent().isEmpty()) {
                 pageResponseV2Dto.setPageNo(page.getNumber());
@@ -172,14 +172,22 @@ public class NotificationsServiceImpl implements NotificationsService {
         return responseWrapper;
     }
 
-    public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable, List<String> partnerIdList) {
+    public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable, List<String> partnerIdList, boolean isPartnerAdmin) {
 
         String notificationType = filterDto.getNotificationType();
 
         // Default case when notificationType is null
         if (Objects.isNull(notificationType)) {
+            List<String> notificationTypeList = new ArrayList<>();
+            if (isPartnerAdmin) {
+                notificationTypeList.add(ROOT_CERT_EXPIRY);
+                notificationTypeList.add(INTERMEDIATE_CERT_EXPIRY);
+                notificationTypeList.add(WEEKLY_SUMMARY);
+            } else {
+                notificationTypeList.add(PARTNER_CERT_EXPIRY);
+            }
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
-                    filterDto.getNotificationStatus(), partnerIdList, pageable);
+                    filterDto.getNotificationStatus(), notificationTypeList, partnerIdList, pageable);
         }
 
         switch (notificationType) {
