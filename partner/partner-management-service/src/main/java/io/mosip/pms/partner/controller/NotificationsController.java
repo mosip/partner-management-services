@@ -83,7 +83,6 @@ public class NotificationsController {
             @RequestParam(value = "createdToDate", required = false)
             @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate
     ) {
-        validatePaginationParams(pageNo, pageSize);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -134,28 +133,5 @@ public class NotificationsController {
             return validationResponse.get();
         }
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
-    }
-
-    public void validatePaginationParams(Integer pageNo, Integer pageSize) {
-        // Validate pageNo and pageSize
-        if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
-            LOGGER.error("Both pageNo and pageSize must be provided together.");
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
-        }
-
-        // Validate pageNo
-        if (Objects.nonNull(pageNo) && pageNo < 0) {
-            LOGGER.error("Invalid page no: " + pageNo);
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
-        }
-
-        // Validate pageSize
-        if (Objects.nonNull(pageSize) && pageSize <= 0) {
-            LOGGER.error("Invalid page size: " + pageSize);
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
-        }
     }
 }

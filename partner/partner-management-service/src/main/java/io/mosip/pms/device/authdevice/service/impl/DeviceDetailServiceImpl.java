@@ -591,6 +591,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<DeviceDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.deviceAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 

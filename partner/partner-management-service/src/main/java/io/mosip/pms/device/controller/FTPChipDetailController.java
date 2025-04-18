@@ -310,7 +310,6 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.ftmAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

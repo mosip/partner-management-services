@@ -1051,6 +1051,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<SbiSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.sbiAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
 			if (!isPartnerAdmin) {

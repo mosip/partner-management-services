@@ -92,6 +92,7 @@ public class NotificationsServiceImpl implements NotificationsService {
         PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 
         try {
+            validatePaginationParams(pageNo, pageSize);
             boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
             // Validate expiry date
             if (Objects.nonNull(filterDto.getExpiryDate())) {
@@ -225,6 +226,29 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             default:
                 return Page.empty(pageable); // Return empty paginated response
+        }
+    }
+
+    public void validatePaginationParams(Integer pageNo, Integer pageSize) {
+        // Validate pageNo and pageSize
+        if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
+            LOGGER.error("Both pageNo and pageSize must be provided together.");
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
+        }
+
+        // Validate pageNo
+        if (Objects.nonNull(pageNo) && pageNo < 0) {
+            LOGGER.error("Invalid page no: " + pageNo);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+
+        // Validate pageSize
+        if (Objects.nonNull(pageSize) && pageSize <= 0) {
+            LOGGER.error("Invalid page size: " + pageSize);
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
         }
     }
 
