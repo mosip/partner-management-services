@@ -315,8 +315,6 @@ public class PartnerServiceImpl implements PartnerService {
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
 					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
-		}else {
-			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
