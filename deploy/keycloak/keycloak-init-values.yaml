@@ -19,9 +19,6 @@ keycloak:
             - mapper_name: langCode
               mapper_user_attribute: langCode
               token_claim_name: langCode
-            - mapper_name: locale
-              mapper_user_attribute: locale
-              token_claim_name: locale
           saroles:
             - REGISTRATION_PROCESSOR
             - CREATE_SHARE
