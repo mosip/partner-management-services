@@ -310,12 +310,14 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-		if (request.getLangCode() != null && !getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
-					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
-		}else {
+		if (request.getLangCode() != null) {
+			if (!getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+						"partnerId");
+				throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+						ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+			}
+		} else {
 			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
