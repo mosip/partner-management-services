@@ -65,19 +65,18 @@ public class EmailNotificationService {
 	KeyManagerHelper keyManagerHelper;
 
 	@Transactional
-	public void sendEmailNotification(String notificationId) {
+	public void sendEmailNotification(NotificationEntity notificationEntity) {
 		try {
-			Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
-
-			if (optionalNotification.isEmpty()) {
-				log.error("No notification found for ID: {}", notificationId);
+			// Optional<NotificationEntity> optionalNotification =
+			// notificationServiceRepository.findById(notificationId);
+			log.info("notificationEntity: {}", notificationEntity);
+			if (notificationEntity.getId().isEmpty()) {
+				log.error("No notification found for {}", notificationEntity);
 				return;
 			}
 
-			NotificationEntity notificationEntity = optionalNotification.get();
-
 			if (notificationEntity.getEmailSent() && notificationEntity.getEmailSentDatetime() != null) {
-				log.warn("Email notification already sent for ID: {}", notificationId);
+				log.warn("Email notification already sent for ID: {}", notificationEntity.getEmailId());
 				return;
 			}
 
@@ -90,11 +89,11 @@ public class EmailNotificationService {
 			notificationEntity.setEmailSent(true);
 			notificationEntity.setEmailSentDatetime(LocalDateTime.now(ZoneId.of("UTC")));
 			notificationServiceRepository.save(notificationEntity);
-			log.debug("notification status successfully updated for ID: {}", notificationId);
+			log.debug("notification status successfully updated for ID: {}", notificationEntity.getId());
 		} catch (BatchJobServiceException e) {
-			log.error("Failed to send email for notification ID: {} - {}", notificationId, e.getMessage());
+			log.error("Failed to send email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage());
 		} catch (Exception e) {
-			log.error("Unexpected error while sending email for notification ID: {} - {}", notificationId,
+			log.error("Unexpected error while sending email for notification ID: {} - {}", notificationEntity.getId(),
 					e.getMessage());
 		}
 	}
@@ -134,9 +133,7 @@ public class EmailNotificationService {
 			context.put("fromDate", createdDate);
 			context.put("toDate", createdDate.plusDays(7));
 			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
-					.orElse(Collections.emptyList())
-					.stream()
-					.map(CertificateDetailsDto::getPartnerId)
+					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
 					.collect(Collectors.toList());
 
 			context.put("partnerIdList", partnerIds);
@@ -156,7 +153,9 @@ public class EmailNotificationService {
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
 			// Add email details
-			requestBody.add("mailTo", keyManagerHelper.decryptData(notificationEntity.getEmailId()));
+			String emailId = keyManagerHelper.decryptData(notificationEntity.getEmailId());
+			log.debug("emailId {}", emailId);
+			requestBody.add("mailTo", emailId);
 			requestBody.add("mailSubject", emailSubject);
 			requestBody.add("mailContent", emailTemplate);
 

@@ -99,7 +99,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 											.saveCertificateExpiryNotification(certificateType, partnerAdminDetails,
 													certificateDetailsList);
 									// Step 4: send email notification
-									emailNotificationService.sendEmailNotification(savedNotification.getId());
+									emailNotificationService.sendEmailNotification(savedNotification);
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
 									totalNotificationsCreated.add(savedNotification.getId());
 								});
