@@ -76,7 +76,7 @@ definePolicyGroup:
     }'
 
 
-   Pms_DefinePolicyGroup_Invalid_Request_Time_Neg:
+   Pms_DefinePolicyGroup_PastDate_Request_Time_Neg:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup with invalid request time
       role: partneradmin
@@ -92,8 +92,8 @@ definePolicyGroup:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001",
-      "message": "Invalid request parameter - value is empty or null :request.name"
+      "errorCode": "PMS_REQUEST_ERROR_006",
+      "message": "Request date should be current date"
     }
   ]
 }'
@@ -157,8 +157,8 @@ definePolicyGroup:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001",
-      "message": "Invalid request parameter - value is empty or null :request.name"
+      "errorCode": "PMS_REQUEST_ERROR_004",
+      "message": "Invalid request time"
     }
   ]
 }'
