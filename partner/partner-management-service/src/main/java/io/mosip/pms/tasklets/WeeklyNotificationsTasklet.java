@@ -134,7 +134,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 				NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
 						PartnerConstants.WEEKLY, pmsPartnerAdmin, expiringCertificates);
 				// Step 6: send email notification
-				emailNotificationService.sendEmailNotification(savedNotification.getId());
+				emailNotificationService.sendEmailNotification(savedNotification);
 				log.info("Created weekly summary notification with notification id " + savedNotification.getId());
 				totalNotificationsCreated.add(savedNotification.getId());
 			}

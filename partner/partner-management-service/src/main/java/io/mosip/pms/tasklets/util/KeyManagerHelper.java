@@ -2,17 +2,9 @@ package io.mosip.pms.tasklets.util;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Map;
 
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.pms.common.request.dto.RequestWrapperV2;
-import io.mosip.pms.partner.util.PartnerUtil;
-import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
-import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
-import io.mosip.pms.common.dto.CryptoResponseDto;
-import io.mosip.pms.common.dto.CryptoRequestDto;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -21,12 +13,20 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.CryptoRequestDto;
+import io.mosip.pms.common.dto.CryptoResponseDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.TrustCertTypeListRequestDto;
+import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.exception.BatchJobServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
+import io.mosip.pms.partner.util.PartnerUtil;
 
 @Component
 public class KeyManagerHelper {
@@ -106,7 +106,7 @@ public class KeyManagerHelper {
 	public String encryptData(String data) {
 		try {
 			CryptoRequestDto cryptoRequestDto = new CryptoRequestDto();
-			cryptoRequestDto.setData(CryptoUtil.encodeToURLSafeBase64(data.getBytes(StandardCharsets.UTF_8)));
+			cryptoRequestDto.setData(CryptoUtil.encodeToPlainBase64(data.getBytes(StandardCharsets.UTF_8)));
 			cryptoRequestDto.setApplicationId(appId);
 			cryptoRequestDto.setReferenceId(refId);
 			cryptoRequestDto.setTimeStamp(LocalDateTime.now());
@@ -148,7 +148,7 @@ public class KeyManagerHelper {
 
 			RequestWrapperV2<CryptoRequestDto> requestWrapper = new RequestWrapperV2<>();
 			requestWrapper.setRequest(cryptoRequestDto);
-
+			log.debug("calling keyManagerDecryptDataUrl ");
 			Map<String, Object> response = restUtil.postApi(
 					keyManagerDecryptDataUrl,
 					null,
@@ -158,16 +158,16 @@ public class KeyManagerHelper {
 					requestWrapper,
 					Map.class
 			);
+			log.debug("response {}", response);
 			PartnerUtil.validateApiResponse(response, keyManagerDecryptDataUrl);
 			CryptoResponseDto responseDto = objectMapper.convertValue(
 					response.get(PartnerConstants.RESPONSE), CryptoResponseDto.class);
 			// Decode Base64-encoded response data
-			return new String(
-					Base64.getDecoder().decode(responseDto.getData()),
+			return new String(Base64.decodeBase64(responseDto.getData().getBytes()),
 					StandardCharsets.UTF_8
 			);
 		} catch (BatchJobServiceException e) {
-			log.info("Error in decryptData of KeyManagerHelper: {}", e.getMessage());
+			log.info("Possible error in decryptData of KeyManagerHelper: {}, but it can be ignored since data may not be encrypted previously", e.getMessage());
 			// Return original data in case of any decryption error for backward compatibility
 			return data;
 		} catch (Exception ex) {

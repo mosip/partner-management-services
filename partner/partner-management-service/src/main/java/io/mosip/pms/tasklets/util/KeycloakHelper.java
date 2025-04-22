@@ -60,7 +60,7 @@ public class KeycloakHelper {
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
-						keycloakPartnerAdmins.add(String.valueOf(userMap.get(USER_NAME)));
+						keycloakPartnerAdmins.add(String.valueOf(userMap.get(USER_NAME)));	
 					}
 				}
 			} else {
@@ -72,13 +72,13 @@ public class KeycloakHelper {
 			pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
 			log.info("PMS has {} Partner Admin users.", pmsPartnerAdmins.size());
 		} catch (HttpStatusCodeException e) {
-			log.error("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
+			log.debug("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
 			throw new BatchJobServiceException(ErrorCode.API_NOT_ACCESSIBLE.getErrorCode(),
 					"Failed to access the API: " + e.getMessage(), e);
 		} catch (BatchJobServiceException e) {
-			log.error("Failed to fetch Partner Admin user IDs: {}", e.getMessage(), e);
+			log.debug("Failed to fetch Partner Admin user IDs: {}", e.getMessage(), e);
 		} catch (Exception e) {
-			log.error("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
+			log.debug("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
 		}
 		return pmsPartnerAdmins;
 	}

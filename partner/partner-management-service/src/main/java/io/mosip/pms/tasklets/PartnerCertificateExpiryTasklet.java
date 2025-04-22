@@ -108,7 +108,7 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 								NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
 										PartnerConstants.PARTNER, pmsPartner, expiringCertificates);
 								// Step 6: send email notification
-								emailNotificationService.sendEmailNotification(savedNotification.getId());
+								emailNotificationService.sendEmailNotification(savedNotification);
 								log.info("Created partner certificate expiry notification with notification id "
 										+ savedNotification.getId());
 								totalNotificationsCreated.add(savedNotification.getId());
