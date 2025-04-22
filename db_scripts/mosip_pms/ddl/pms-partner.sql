@@ -3,7 +3,7 @@ CREATE TABLE pms.partner(
     id character varying(36) NOT NULL,
     policy_group_id character varying(36),
     name character varying(128) NOT NULL,
-    address character varying(3000),
+    address character varying(10000),
     contact_no character varying(1000),
     email_id character varying(3000),
     email_id_hash character varying(3000),

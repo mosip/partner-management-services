@@ -137,5 +137,5 @@ ADD COLUMN email_id_hash VARCHAR(5000);
 -- Update column sizes in pms.partner
 ALTER TABLE pms.partner
     ALTER COLUMN contact_no TYPE character varying(1000),
-    ALTER COLUMN email_id TYPE character varying(3000);
-    ALTER COLUMN address TYPE character varying(3000);
+    ALTER COLUMN email_id TYPE character varying(3000),
+    ALTER COLUMN address TYPE character varying(10000);
